@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2003, David G. Lawrence
+   All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice unmodified, this list of conditions, and the following
+      disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+  
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SENDFILE(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SENDFILE(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">SENDFILE(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">sendfile</code> &#x2014; <span class="Nd">send a
+    file to a socket</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">sys/types.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/socket.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/uio.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">sendfile</code>(<var class="Fa">int fd</var>,
+    <var class="Fa">int s</var>, <var class="Fa">off_t offset</var>,
+    <var class="Fa">off_t *len</var>, <var class="Fa">struct sf_hdtr
+    *hdtr</var>, <var class="Fa">int flags</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#sendfile"><code class="Fn" id="sendfile">sendfile</code></a>()
+    system call sends a regular file specified by descriptor
+    <var class="Fa">fd</var> out a stream socket specified by descriptor
+    <var class="Fa">s</var>.</p>
+<p class="Pp">The <var class="Fa">offset</var> argument specifies where to begin
+    in the file. Should <var class="Fa">offset</var> fall beyond the end of
+    file, the system will return success and report 0 bytes sent as described
+    below.</p>
+<p class="Pp">The <var class="Fa">len</var> argument is a value-result
+    parameter, that specifies how many bytes of the file should be sent and/or
+    how many bytes have been sent. Initially the value pointed to by the
+    <var class="Fa">len</var> argument specifies how many bytes should be sent
+    with 0 having the special meaning to send until the end of file has been
+    reached. On return the value pointed to by the <var class="Fa">len</var>
+    argument indicates how many bytes have been sent, except when a header or
+    trailer is specified as shown below. The <var class="Fa">len</var> pointer
+    may not be NULL.</p>
+<p class="Pp">An optional header and/or trailer can be sent before and after the
+    file data by specifying a pointer to a <var class="Vt">struct sf_hdtr</var>,
+    which has the following structure:</p>
+<p class="Pp"></p>
+<div class="Bd Bd-indent">
+<pre>
+struct sf_hdtr {
+	struct iovec *headers;	/* pointer to header iovecs */
+	int hdr_cnt;		/* number of header iovecs */
+	struct iovec *trailers;	/* pointer to trailer iovecs */
+	int trl_cnt;		/* number of trailer iovecs */
+};
+</pre>
+</div>
+<p class="Pp" id="writev">The <var class="Fa">headers</var> and
+    <var class="Fa">trailers</var> pointers, if
+    non-<code class="Dv">NULL</code>, point to arrays of <var class="Vt">struct
+    iovec</var> structures. See the
+    <a class="permalink" href="#writev"><code class="Fn">writev</code></a>()
+    system call for information on the iovec structure. The number of iovecs in
+    these arrays is specified by <var class="Fa">hdr_cnt</var> and
+    <var class="Fa">trl_cnt</var>.</p>
+<p class="Pp">When a header or trailer is specified, the value of
+    <var class="Fa">len</var> argument indicates the maximum number of bytes in
+    the header and/or file to be sent. It does not control the trailer; if a
+    trailer exists, all of it will be sent. If the value of
+    <var class="Fa">len</var> argument is 0, all of the header and/or file will
+    be sent before the entire trailer is sent. On return, the
+    <var class="Fa">len</var> argument specifies the total number of bytes
+  sent.</p>
+<p class="Pp" id="sendfile~2">The <var class="Fa">flags</var> parameter is
+    reserved for future expansion and must be set to 0. Any other value will
+    cause
+    <a class="permalink" href="#sendfile~2"><code class="Fn">sendfile</code></a>()
+    to return <code class="Er">EINVAL</code>.</p>
+<p class="Pp" id="sendfile~3">When using a socket marked for non-blocking I/O,
+    <a class="permalink" href="#sendfile~3"><code class="Fn">sendfile</code></a>()
+    may send fewer bytes than requested. In this case, the number of bytes
+    successfully sent is returned in the via the <var class="Fa">len</var>
+    parameters and the error <code class="Er">EAGAIN</code> is returned.</p>
+<p class="Pp" id="sendfile~4">When a signal causes
+    <a class="permalink" href="#sendfile~4"><code class="Fn">sendfile</code></a>()
+    to return the error <code class="Er">EINTR</code>, the
+    <var class="Fa">len</var> argument may return 0 without necessarily meaning
+    the end of file has been reached as the signal may have been caught before
+    any data was sent.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="IMPLEMENTATION_NOTES"><a class="permalink" href="#IMPLEMENTATION_NOTES">IMPLEMENTATION
+  NOTES</a></h1>
+<p class="Pp">The Mac OS X implementation of <code class="Fn">sendfile</code>()
+    uses 64 bits types for size and offset parameters so there is no need for a
+    64 bits version <code class="Fn">sendfile64</code>() as found on some other
+    operating systems.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">The <code class="Fn">sendfile</code>() function returns the
+    value&#x00A0;0 if successful; otherwise the value&#x00A0;-1 is returned and
+    the global variable <var class="Va">errno</var> is set to indicate the
+    error.</p>
+<p class="Pp">The number of bytes sent is returned via the parameter
+    <var class="Fa">len</var>. A value of 0 means the end of the file specified
+    by descriptor <var class="Fa">fd</var> has been reached or that the value
+    passed in <var class="Fa">offset</var> falls beyond the end of file.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<dl class="Bl-tag">
+  <dt id="EAGAIN">[<a class="permalink" href="#EAGAIN"><code class="Er">EAGAIN</code></a>]</dt>
+  <dd>The socket is marked for non-blocking I/O and not all data was sent due to
+      the socket buffer being full. If specified, the number of bytes
+      successfully sent will be returned in <var class="Fa">*len</var>.</dd>
+  <dt id="EBADF">[<a class="permalink" href="#EBADF"><code class="Er">EBADF</code></a>]</dt>
+  <dd>The <var class="Fa">fd</var> argument is not a valid file descriptor.</dd>
+  <dt id="ENOTSUP">[<a class="permalink" href="#ENOTSUP"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd>The <var class="Fa">fd</var> argument does not refer to a regular
+    file.</dd>
+  <dt id="EBADF~2">[<a class="permalink" href="#EBADF~2"><code class="Er">EBADF</code></a>]</dt>
+  <dd>The <var class="Fa">s</var> argument is not a valid socket
+    descriptor.</dd>
+  <dt id="ENOTSOCK">[<a class="permalink" href="#ENOTSOCK"><code class="Er">ENOTSOCK</code></a>]</dt>
+  <dd>The <var class="Fa">s</var> argument does not refer stream oriented
+      socket.</dd>
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>An invalid address was specified for an argument.</dd>
+  <dt id="EINTR">[<a class="permalink" href="#EINTR"><code class="Er">EINTR</code></a>]</dt>
+  <dd>A signal interrupted <code class="Fn">sendfile</code>() before it could be
+      completed. If specified, the number of bytes successfully sent will be
+      returned in <var class="Fa">*len</var>.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Fa">offset</var> argument is negative.</dd>
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Fa">len</var> argument is NULL.</dd>
+  <dt id="EINVAL~3">[<a class="permalink" href="#EINVAL~3"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Fa">flags</var> argument is not set to 0.</dd>
+  <dt id="EIO">[<a class="permalink" href="#EIO"><code class="Er">EIO</code></a>]</dt>
+  <dd>An error occurred while reading from <var class="Fa">fd</var>.</dd>
+  <dt id="ENOTCONN">[<a class="permalink" href="#ENOTCONN"><code class="Er">ENOTCONN</code></a>]</dt>
+  <dd>The <var class="Fa">s</var> argument points to an unconnected socket.</dd>
+  <dt id="ENOTSOCK~2">[<a class="permalink" href="#ENOTSOCK~2"><code class="Er">ENOTSOCK</code></a>]</dt>
+  <dd>The <var class="Fa">s</var> argument is not a socket.</dd>
+  <dt id="EOPNOTSUPP">[<a class="permalink" href="#EOPNOTSUPP"><code class="Er">EOPNOTSUPP</code></a>]</dt>
+  <dd>The file system for descriptor <var class="Fa">fd</var> does not support
+      <code class="Fn">sendfile</code>().</dd>
+  <dt id="EPIPE">[<a class="permalink" href="#EPIPE"><code class="Er">EPIPE</code></a>]</dt>
+  <dd>The socket peer has closed the connection.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/open">open(2)</a>,
+    <a class="Xr" href="../2/send">send(2)</a>,
+    <a class="Xr" href="../2/socket">socket(2)</a>,
+    <a class="Xr" href="../2/writev">writev(2)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">sendfile</code>() system call first appeared
+    in Darwin 9.0 (Mac OS X version 10.5) .</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<p class="Pp">This manual page is based on the FreeBSD version written by
+    <span class="An">David G. Lawrence</span>
+  &#x27E8;dg@dglawrence.com&#x27E9;</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">March 31, 2006</td>
+    <td class="foot-os">Mac OS X</td>
+  </tr>
+</table>
+</body>
+</html>

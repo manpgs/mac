@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  Copyright (c) 2007-2015 Apple Inc.  All Rights Reserved.
+  
+  To check for errors: /usr/bin/groff -I/usr/share/man -S -Wall -mtty-char -mandoc -Tascii tmutil.8
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>TMUTIL(8)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">TMUTIL(8)</td>
+    <td class="head-vol">System Manager's Manual</td>
+    <td class="head-rtitle">TMUTIL(8)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">tmutil</code> &#x2014; <span class="Nd">Time
+    Machine utility</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">tmutil</code></td>
+    <td><var class="Ar">verb</var> [options]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><code class="Nm">tmutil</code> provides methods of controlling and
+    interacting with Time Machine, as well as examining and manipulating Time
+    Machine backups. Common abilities include restoring data from backups,
+    editing exclusions, and comparing backups.</p>
+<p class="Pp">Several, but not all, verbs require root and Full Disk Access
+    privileges. Full Disk Access privileges can be granted to the Terminal
+    application used to run tmutil from the Privacy tab in the Security &amp;
+    Privacy preference pane.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BACKUP_STRUCTURE"><a class="permalink" href="#BACKUP_STRUCTURE">BACKUP
+  STRUCTURE</a></h1>
+<p class="Pp">Throughout this manual, specific language is used to describe
+    particular &quot;realms&quot; associated with Time Machine backups. It is
+    important to understand this terminology to make effective use of
+    <code class="Nm">tmutil</code> and its manual.</p>
+<dl class="Bl-hang">
+  <dt><i class="Em">backup source</i></dt>
+  <dd>
+    <br/>
+    A volume currently being backed up by Time Machine.</dd>
+  <dt><i class="Em">backup disk</i></dt>
+  <dd>
+    <br/>
+    The HFS+ or APFS volume that contains Time Machine backups.</dd>
+  <dt><i class="Em">backup destination</i></dt>
+  <dd>
+    <br/>
+    In the case of a local destination, a synonym for backup disk. For network
+      destinations, this is the AFP or SMB share on which the backup disk image
+      resides.</dd>
+  <dt><i class="Em">backup disk image</i></dt>
+  <dd>(or <i class="Em">backup image)</i>
+    <br/>
+    A sparsebundle that, when mounted, is the backing store for a volume that is
+      a backup disk.</dd>
+  <dt><i class="Em">backup store</i></dt>
+  <dd>
+    <br/>
+    The top-level &quot;Backups.backupdb&quot; directory at the root of an HFS+
+      backup disk. E.g.,
+    <p class="Pp">/Volumes/Chronoton/Backups.backupdb</p>
+    <p class="Pp">n.b. APFS backup disks do not have backup stores.</p>
+  </dd>
+  <dt id="machine"><a class="permalink" href="#machine"><i class="Em">machine
+    directory</i></a></dt>
+  <dd>
+    <br/>
+    On HFS+, a directory inside a backup store that contains all the backups for
+      a particular computer. On APFS, the root of the backup disk is a machine
+      directory. For local HFS+ destinations, a backup store can contain
+      multiple machine directories, all for separate computers. E.g.,
+    <p class="Pp">/Volumes/Chronoton/Backups.backupdb/thermopylae</p>
+  </dd>
+  <dt id="backup"><a class="permalink" href="#backup"><i class="Em">backup</i></a></dt>
+  <dd>
+    <br/>
+    A directory inside a machine directory or APFS backup volume snapshot that
+      represents a single initial or incremental backup of one computer. E.g.,
+    <p class="Pp">/Volumes/Chronoton/Backups.backupdb/thermopylae/2011-07-03-123456</p>
+    <p class="Pp">com.apple.TimeMachine.2011-07-03-123456.backup</p>
+  </dd>
+  <dt id="local"><a class="permalink" href="#local"><i class="Em">local
+    snapshot</i></a></dt>
+  <dd>(or
+      <a class="permalink" href="#snapshot)"><i class="Em" id="snapshot)">snapshot)</i></a>
+    <br/>
+    An APFS snapshot of an APFS source volume included in the backup. E.g.,
+    <p class="Pp">com.apple.TimeMachine.2011-07-03-123456.local</p>
+  </dd>
+  <dt id="volume"><a class="permalink" href="#volume"><i class="Em">volume
+    store</i></a></dt>
+  <dd>
+    <br/>
+    A directory inside a backup that represents a single initial or incremental
+      backup of one backup source. E.g.,
+    <p class="Pp">/Volumes/Chronoton/Backups.backupdb/thermopylae/2011-07-03-123456/Mac
+        HD</p>
+    <p class="Pp">/Volumes/.timemachine/*/2011-07-03-123456.backup/2011-07-03-123456.backup/Mac
+        HD</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="VERBS"><a class="permalink" href="#VERBS">VERBS</a></h1>
+<p class="Pp">Each verb is listed with its description and individual
+  arguments.</p>
+<dl class="Bl-hang">
+  <dt id="setdestination"><a class="permalink" href="#setdestination"><b class="Sy">setdestination</b></a>
+    [<code class="Fl">-ap</code>]</dt>
+  <dd><var class="Ar">arg</var>
+    <br/>
+    Configure a local HFS+ or APFS volume, AFP share, or SMB share as a backup
+      destination. Requires root and Full Disk Access privileges.
+    <p class="Pp">When the <code class="Fl">-</code><b class="Sy">a</b> option
+        is provided, <var class="Ar">arg</var> will be added to the list of
+        destinations. Time Machine will automatically choose a backup
+        destination from the list when performing backups. When the
+        <code class="Fl">-</code><b class="Sy">a</b> option is not provided, the
+        current list of destinations will be replaced by
+        <var class="Ar">arg.</var></p>
+    <p class="Pp">If you wish to set an HFS+ or APFS volume as the backup
+        destination, <var class="Ar">arg</var> should be the mount point of the
+        volume in question. When setting an AFP or SMB destination
+        <var class="Ar">arg</var> takes the form:</p>
+    <p class="Pp"><span class="Pa">protocol://user[:pass]@host/share</span></p>
+    <p class="Pp" id="ps">In the AFP and SMB cases, the password component of
+        the URL is optional; you may instead specify the
+        <code class="Fl">-</code><b class="Sy">p</b> option to enter the
+        password at a non-echoing interactive prompt. This is of particular
+        interest to the security-conscious, as all arguments provided to a
+        program are visible by all users on the system via the
+        <a class="permalink" href="#ps"><b class="Sy">ps</b></a> tool.</p>
+  </dd>
+  <dt id="destinationinfo"><a class="permalink" href="#destinationinfo"><b class="Sy">destinationinfo</b></a>
+    [<code class="Fl">-X</code>]</dt>
+  <dd>
+    <br/>
+    Print information about destinations currently configured for use with Time
+      Machine. For each backup destination, the following information may be
+      displayed:
+    <p class="Pp"></p>
+    <dl class="Bl-hang Bd-indent Bl-compact">
+      <dt>Name</dt>
+      <dd>The volume label as shown in Finder.</dd>
+      <dt>Kind</dt>
+      <dd>Whether the destination is locally attached storage or a network
+          device.</dd>
+      <dt>URL</dt>
+      <dd>In the case of a network destination, the URL used for Time Machine
+          configuration.</dd>
+      <dt>Mount Point</dt>
+      <dd>If the volume is currently mounted, the path in the file system at
+          which it was mounted.</dd>
+      <dt>ID</dt>
+      <dd>The unique identifier for the destination.</dd>
+    </dl>
+    <p class="Pp">When more than one destination is configured, the most recent
+        backup destination will be marked with the &gt; indicator.</p>
+    <p class="Pp">When the <code class="Fl">-</code><b class="Sy">X</b> option
+        is provided, output will be printed in XML property list format.</p>
+  </dd>
+  <dt id="removedestination"><a class="permalink" href="#removedestination"><b class="Sy">removedestination</b></a></dt>
+  <dd><var class="Ar">identifier</var>
+    <br/>
+    Remove the destination with the specified unique identifier from the Time
+      Machine configuration. Requires root and Full Disk Access privileges.
+    <p class="Pp" id="destinationinfo.">To obtain the unique identifier for a
+        destination, see
+        <a class="permalink" href="#destinationinfo."><b class="Sy">destinationinfo.</b></a></p>
+  </dd>
+  <dt id="addexclusion"><a class="permalink" href="#addexclusion"><b class="Sy">addexclusion</b></a>
+    [<code class="Fl">-pv</code>]</dt>
+  <dd><var class="Ar">item ...</var>
+    <br/>
+    Configure an exclusion that tells Time Machine not to back up a file,
+      directory, or volume during future backups.
+    <p class="Pp">There are three kinds of user-configurable exclusions in Time
+        Machine:</p>
+    <p class="Pp">The first kind of exclusion, which is the default behavior for
+        the <b class="Sy">addexclusion</b> verb, is a location-independent
+        (&quot;sticky&quot;) exclusion that follows a file or directory. When
+        the file or directory is moved, the exclusion goes with the item to the
+        new location. Additionally, when the item is copied, the copy retains
+        the exclusion.</p>
+    <p class="Pp" id="to">The second kind of exclusion is a fixed-path
+        exclusion. With this, you tell Time Machine that you want a specific
+        path to be excluded, agnostic of the item at that path. If there is no
+        file or directory at the specified path, the exclusion has no effect; if
+        the item previously at the path has been moved or renamed, the item is
+        not excluded, because it does not currently reside at the excluded path.
+        As a consequence of these semantics, moving a file or directory
+        <a class="permalink" href="#to"><i class="Em">to</i></a> the path will
+        cause the item to be excluded--fixed-path exclusions are not
+        automatically cleaned up when items are moved or deleted and will take
+        effect again once an item exists at an excluded path.</p>
+    <p class="Pp">The third kind of exclusion is a volume exclusion. These track
+        volumes based on file system UUID, which is persistent across volume
+        name and mount path changes. Erasing the volume will cause Time Machine
+        to apply default behavior for the newly erased volume.</p>
+    <p class="Pp">The <code class="Fl">-</code><b class="Sy">p</b> option
+        configures fixed-path exclusions. The
+        <code class="Fl">-</code><b class="Sy">v</b> option configures volume
+        exclusions. Both require root and Full Disk Access privileges. The
+        <code class="Fl">-</code><b class="Sy">v</b> option is the only
+        supported way to exclude or unexclude a volume; behavior is undefined if
+        a sticky or fixed-path exclusion is specified.</p>
+  </dd>
+  <dt id="removeexclusion"><a class="permalink" href="#removeexclusion"><b class="Sy">removeexclusion</b></a>
+    [<code class="Fl">-pv</code>]</dt>
+  <dd><var class="Ar">item ...</var>
+    <br/>
+    Configure Time Machine to back up a file, directory, or volume during future
+      backups. This verb follows the same usage, exclusion style, and privilege
+      semantics as <b class="Sy">addexclusion</b>.</dd>
+  <dt id="isexcluded"><a class="permalink" href="#isexcluded"><b class="Sy">isexcluded</b></a>
+    [<code class="Fl">-X</code>]</dt>
+  <dd><var class="Ar">item ...</var>
+    <br/>
+    Determine if a file, directory, or volume are excluded from Time Machine
+      backups.
+    <p class="Pp">When the <code class="Fl">-</code><b class="Sy">X</b> option
+        is provided, output will be printed in XML property list format.</p>
+    <p class="Pp"># example output for an excluded item
+      <br/>
+      thermopylae:~ thoth$ tmutil isexcluded /Users/admin/Desktop/foo.txt
+      <br/>
+      [Excluded] /Users/admin/Desktop/foo.txt</p>
+    <p class="Pp"># example output for an item that is not excluded
+      <br/>
+      thermopylae:~ thoth$ tmutil isexcluded /Users/admin/Desktop/bar.txt
+      <br/>
+      [Included] /Users/admin/Desktop/bar.txt</p>
+  </dd>
+  <dt id="enable"><a class="permalink" href="#enable"><b class="Sy">enable</b></a></dt>
+  <dd>
+    <br/>
+    Turn on automatic backups. Requires root and Full Disk Access
+    privileges.</dd>
+  <dt id="disable"><a class="permalink" href="#disable"><b class="Sy">disable</b></a></dt>
+  <dd>
+    <br/>
+    Turn off automatic backups. Requires root and Full Disk Access
+    privileges.</dd>
+  <dt id="startbackup"><a class="permalink" href="#startbackup"><b class="Sy">startbackup</b></a></dt>
+  <dd>[<code class="Fl">-a</code> | <code class="Fl">--auto</code>]
+      [<code class="Fl">-b</code> | <code class="Fl">--block</code>]
+      [<code class="Fl">-r</code> | <code class="Fl">--rotation</code>]
+      [<code class="Fl">-d</code> | <code class="Fl">--destination</code>
+      <var class="Ar">dest_id</var>]
+    <br/>
+    Begin a backup if one is not already running.
+    <p class="Pp"><b class="Sy">Options:</b></p>
+    <dl class="Bl-hang Bd-indent Bl-compact">
+      <dt id="auto"><a class="permalink" href="#auto"><code class="Fl">--auto</code></a></dt>
+      <dd>Run the backup in a mode similar to system-scheduled backups.</dd>
+      <dt id="block"><a class="permalink" href="#block"><code class="Fl">--block</code></a></dt>
+      <dd>Wait (block) until the backup is finished before exiting.</dd>
+      <dt id="rotation"><a class="permalink" href="#rotation"><code class="Fl">--rotation</code></a></dt>
+      <dd>Allow automatic destination rotation during the backup.</dd>
+      <dt id="destination"><a class="permalink" href="#destination"><code class="Fl">--destination</code></a></dt>
+      <dd>Perform the backup to the destination corresponding to the specified
+          ID.</dd>
+    </dl>
+    <p class="Pp">The <code class="Fl">-</code><b class="Sy">-auto</b> option
+        provides a supported mechanism with which to trigger
+        &quot;automatic-like&quot; backups, similar to automatic backups that
+        are scheduled by the system. While this is not identical to true
+        system-scheduled backups, it provides custom schedulers the ability to
+        achieve some (but not all) behavior normally exhibited when operating in
+        automatic mode.</p>
+  </dd>
+  <dt id="stopbackup"><a class="permalink" href="#stopbackup"><b class="Sy">stopbackup</b></a></dt>
+  <dd>
+    <br/>
+    Cancel a backup currently in progress.</dd>
+  <dt id="compare"><a class="permalink" href="#compare"><b class="Sy">compare</b></a>
+    [<code class="Fl">-@acdefglmnstuEUX</code>]</dt>
+  <dd>[<code class="Fl">-D</code> <var class="Ar">depth</var>]
+      [<code class="Fl">-I</code> <var class="Ar">name</var>]
+      [<var class="Ar">backup_path</var> | <var class="Ar">path1 path2</var>]
+    <br/>
+    Perform a backup diff.
+    <p class="Pp">If no arguments are provided, <code class="Nm">tmutil</code>
+        will compare the computer to the latest backup. If a backup path is
+        provided as the sole argument, <code class="Nm">tmutil</code> will
+        compare the computer to the specified backup. If two path arguments are
+        provided, <code class="Nm">tmutil</code> will compare those two items to
+        each other. <code class="Nm">tmutil</code> will attempt to inform you
+        when you have asked it to do something that doesn't make sense or isn't
+        supported.</p>
+    <p class="Pp" id="@gmstu.">The <b class="Sy">compare</b> verb allows you to
+        specify what properties to compare. If you specify no property options,
+        <code class="Nm">tmutil</code> assumes a default property set of
+        <code class="Fl">-</code><a class="permalink" href="#@gmstu."><b class="Sy">@gmstu.</b></a>
+        Specifying any property option overrides the default set.</p>
+    <p class="Pp"><b class="Sy">Options:</b></p>
+    <dl class="Bl-hang Bd-indent Bl-compact">
+      <dt id="a"><a class="permalink" href="#a"><code class="Fl">-a</code></a></dt>
+      <dd>Compare all supported metadata.</dd>
+      <dt id="n"><a class="permalink" href="#n"><code class="Fl">-n</code></a></dt>
+      <dd>No metadata comparison.</dd>
+      <dt id="@"><a class="permalink" href="#@"><code class="Fl">-@</code></a></dt>
+      <dd>Compare extended attributes.</dd>
+      <dt id="c"><a class="permalink" href="#c"><code class="Fl">-c</code></a></dt>
+      <dd>Compare creation times.</dd>
+      <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a></dt>
+      <dd>Compare file data forks.</dd>
+      <dt id="e"><a class="permalink" href="#e"><code class="Fl">-e</code></a></dt>
+      <dd>Compare ACLs.</dd>
+      <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a></dt>
+      <dd>Compare file flags.</dd>
+      <dt id="g"><a class="permalink" href="#g"><code class="Fl">-g</code></a></dt>
+      <dd>Compare GIDs.</dd>
+      <dt id="m"><a class="permalink" href="#m"><code class="Fl">-m</code></a></dt>
+      <dd>Compare file modes.</dd>
+      <dt id="s"><a class="permalink" href="#s"><code class="Fl">-s</code></a></dt>
+      <dd>Compare sizes.</dd>
+      <dt id="t"><a class="permalink" href="#t"><code class="Fl">-t</code></a></dt>
+      <dd>Compare modification times.</dd>
+      <dt id="u"><a class="permalink" href="#u"><code class="Fl">-u</code></a></dt>
+      <dd>Compare UIDs.</dd>
+      <dt id="D"><a class="permalink" href="#D"><code class="Fl">-D</code></a></dt>
+      <dd>Limit traversal depth to <var class="Ar">depth</var> levels from the
+          beginning of iteration.</dd>
+      <dt id="E"><a class="permalink" href="#E"><code class="Fl">-E</code></a></dt>
+      <dd>Don't take exclusions into account when comparing items inside
+          volumes.</dd>
+      <dt id="I"><a class="permalink" href="#I"><code class="Fl">-I</code></a></dt>
+      <dd>Ignore paths with a path component equal to <var class="Ar">name</var>
+          during iteration. This may be specified multiple times.</dd>
+      <dt id="U"><a class="permalink" href="#U"><code class="Fl">-U</code></a></dt>
+      <dd>Ignore logical volume identity (volume UUIDs) when directly comparing
+          a local volume or volume store to a volume store.</dd>
+      <dt id="X"><a class="permalink" href="#X"><code class="Fl">-X</code></a></dt>
+      <dd>Print output in XML property list format.</dd>
+    </dl>
+  </dd>
+  <dt id="verifychecksums"><a class="permalink" href="#verifychecksums"><b class="Sy">verifychecksums</b></a></dt>
+  <dd><var class="Ar">path ...</var>
+    <br/>
+    Compute a checksum of data contained within a backup and verify the
+      result(s) against checksum information computed at the time of backup.
+    <p class="Pp">No output is generated for matching checksums. Issues are
+        reported using the following legend:</p>
+    <p class="Pp"></p>
+    <dl class="Bl-hang Bd-indent Bl-compact">
+      <dt>!</dt>
+      <dd>The file's current checksum does not match the expected recorded
+          checksum.</dd>
+      <dt>?</dt>
+      <dd>The file's recorded checksum is invalid.</dd>
+    </dl>
+    <p class="Pp">Beginning in OS X 10.11, Time Machine records checksums of
+        files copied into backups. Checksums are not retroactively computed for
+        files that were copied by earlier releases of OS X.</p>
+  </dd>
+  <dt id="restore"><a class="permalink" href="#restore"><b class="Sy">restore</b></a>
+    [<code class="Fl">-v</code>]</dt>
+  <dd><var class="Ar">src ... dst</var>
+    <br/>
+    Restore the item <var class="Ar">src</var>, which is inside a backup, to the
+      location <var class="Ar">dst</var>. The <var class="Ar">dst</var> argument
+      mimics the destination path semantics of the
+      <a class="permalink" href="#cp"><b class="Sy" id="cp">cp</b></a> tool. You
+      may provide multiple source paths to restore. The last path argument must
+      be a destination.
+    <p class="Pp">When using the <b class="Sy">restore</b> verb,
+        <code class="Nm">tmutil</code> behaves largely like Finder. Custom Time
+        Machine metadata (extended security and other) will be removed from the
+        restored data, and other metadata will be preserved.</p>
+    <p class="Pp" id="tmutil">Root and Full Disk Access privileges may be
+        required to perform restores. When restoring with
+        <a class="permalink" href="#tmutil"><b class="Sy">tmutil</b></a> as
+        root, ownership of the restored items will match the state of the items
+        in the backup.</p>
+  </dd>
+  <dt id="delete"><a class="permalink" href="#delete"><b class="Sy">delete</b></a>
+    [<code class="Fl">-d</code> <var class="Ar">backup_mount_point</var>
+    <code class="Fl">-t</code> <var class="Ar">timestamp</var>]</dt>
+  <dd>[<code class="Fl">-p</code> <var class="Ar">path</var>]
+    <br/>
+    Deletes the backups with the specified timestamp from the backup volume
+      mounted at the specified mountpoint. The -t option followed by a timestamp
+      can be used multiple times to specify multiple backups to delete. For HFS
+      backup disks, a specific path to delete can also be specified using the -p
+      option. This verb can delete items from backups that were not made by, or
+      are not claimed by, the current machine. Requires root and Full Disk
+      Access privileges.</dd>
+  <dt id="deleteinprogress"><a class="permalink" href="#deleteinprogress"><b class="Sy">deleteinprogress</b></a>
+    <var class="Ar">machine_directory</var></dt>
+  <dd>
+    <br/>
+    Delete all in-progress backups for a machine directory. Requires root and
+      Full Disk Access privileges. On APFS backup destinations, this reverts the
+      destination volume to the last backup.</dd>
+  <dt id="latestbackup"><a class="permalink" href="#latestbackup"><b class="Sy">latestbackup</b></a>
+    [<code class="Fl">-d</code> <var class="Ar">backup_mount_point</var>
+    [<code class="Fl">-m</code> [<code class="Fl">-t</code>]]]</dt>
+  <dd>
+    <br/>
+    List this computer's latest completed backup. The
+      <code class="Fl">-</code><b class="Sy">d</b> option specifies a
+      destination volume to list backups from. When
+      <code class="Fl">-</code><b class="Sy">m</b> is provided,
+      <b class="Sy">latestbackup</b> will attempt to mount the backups and list
+      their mounted paths. The <code class="Fl">-</code><b class="Sy">t</b>
+      option will show only the backup timestamp rather than the full name or
+      path.
+    <br/>
+    Requires root and Full Disk Access privileges.</dd>
+  <dt id="listbackups"><a class="permalink" href="#listbackups"><b class="Sy">listbackups</b></a>
+    [<code class="Fl">-d</code> <var class="Ar">backup_mount_point</var>
+    [<code class="Fl">-m</code> [<code class="Fl">-t</code>]]]</dt>
+  <dd>
+    <br/>
+    List all of this computer's completed backups. The
+      <code class="Fl">-</code><b class="Sy">d</b> option specifies a
+      destination volume to list backups from. When
+      <code class="Fl">-</code><b class="Sy">m</b> is provided,
+      <b class="Sy">listbackups</b> will attempt to mount backups and list their
+      mounted paths. The <code class="Fl">-</code><b class="Sy">t</b> option
+      will show only the backup timestamp rather than the full name or path.
+    <br/>
+    Requires root and Full Disk Access privileges.</dd>
+  <dt id="machinedirectory"><a class="permalink" href="#machinedirectory"><b class="Sy">machinedirectory</b></a></dt>
+  <dd>
+    <br/>
+    Print the path to the current machine directory for this computer.</dd>
+  <dt id="calculatedrift"><a class="permalink" href="#calculatedrift"><b class="Sy">calculatedrift</b></a></dt>
+  <dd><var class="Ar">machine_directory</var>
+    <br/>
+    Analyze the backups in an HFS machine directory and determine the amount of
+      change between each. Averages are printed after all backups have been
+      analyzed. This may require root and Full Disk Access privileges, depending
+      on the contents of the machine directory.</dd>
+  <dt id="uniquesize"><a class="permalink" href="#uniquesize"><b class="Sy">uniquesize</b></a></dt>
+  <dd><var class="Ar">path ...</var>
+    <br/>
+    Analyze the specified path in an HFS+ backup or path to an APFS backup and
+      determine its unique size. The figure reported by
+      <b class="Sy">uniquesize</b> represents things that only exist in the
+      specified path; things that are present in other backups are not
+    tallied.</dd>
+  <dt id="inheritbackup"><a class="permalink" href="#inheritbackup"><b class="Sy">inheritbackup</b></a></dt>
+  <dd><var class="Ar">{machine_directory</var> |
+      <var class="Ar">sparsebundle}</var>
+    <br/>
+    Claim a machine directory or sparsebundle for use by the current machine.
+      Requires root and Full Disk Access privileges.
+    <p class="Pp">Machine directories and sparsebundles are owned by one
+        computer at a time, and are tracked by unique identifiers rather than
+        computer name, host name, or ethernet address. The
+        <b class="Sy">inheritbackup</b> verb reassigns the identity of the
+        specified item, reconfiguring it so the current host recognizes it
+        during backups. When inheriting a sparsebundle, the machine directory
+        within will also be claimed.</p>
+    <p class="Pp">Inheriting is typically only one step in the process of
+        configuring a backup for use by a machine. You may also need to use
+        <b class="Sy">setdestination</b>, <b class="Sy">associatedisk</b>, or
+        both, depending on the situation.</p>
+    <p class="Pp">One machine can own multiple machine directories and
+        sparsebundles, but it is ill-advised for them to reside in the same
+        place. In such a situation, which will be chosen during a backup is
+        undefined. As a result, <b class="Sy">inheritbackup</b> will attempt to
+        detect possible identity collisions before making changes.</p>
+  </dd>
+  <dt id="associatedisk"><a class="permalink" href="#associatedisk"><b class="Sy">associatedisk</b></a></dt>
+  <dd><var class="Ar">mount_point snapshot_volume</var>
+    <br/>
+    Bind a volume store directory to the specified local disk, thereby
+      reconfiguring the backup history. Requires root and Full Disk Access
+      privileges.
+    <p class="Pp">In Mac OS X, HFS+ and APFS volumes have a persistent UUID that
+        is assigned when the file system is created. Time Machine uses this
+        identifier to make an association between a source volume and a volume
+        store. Erasing the source volume creates a new file system on the disk,
+        and the previous UUID is not retained. The new UUID causes the source
+        volume -&gt; volume store association to be broken. If one were just
+        erasing the volume and starting over, it would likely be of no real
+        consequence, and the new UUID would not be a concern; when erasing a
+        volume in order to clone another volume to it, recreating the
+        association may be desired.</p>
+    <p class="Pp">A concrete example of when and how you would use
+        <b class="Sy">associatedisk</b>:</p>
+    <p class="Pp">After having problems with a volume, you decide to erase it
+        and manually restore its contents from a Time Machine backup or copy of
+        another nature. (I.e., not via Time Machine System Restore or Migration
+        Assistant.) On your next incremental backup, the data will be copied
+        anew, as though none of it had been backed up before. Technically, it is
+        true that the data has not been backed up, given the new UUID. However,
+        this is probably not what you want Time Machine to do. You would then
+        use <b class="Sy">associatedisk</b> to reconfigure the backup so it
+        appears that this volume has been backed up previously:</p>
+    <p class="Pp">thermopylae:~ thoth$ sudo tmutil associatedisk [-a]
+        &quot;/Volumes/MyNewStuffDisk&quot;
+        &quot;/Volumes/Chronoton/Backups.backupdb/thermopylae/Latest/MyStuff&quot;</p>
+    <p class="Pp">The result of the above command would associate the volume
+        store <span class="Pa">MyStuff</span> in the specified backup with the
+        source volume <span class="Pa">MyNewStuffDisk</span>. The volume store
+        would also be renamed to match. The
+        <code class="Fl">-</code><b class="Sy">a</b> option tells
+        <b class="Sy">associatedisk</b> to find all volume stores in the same
+        machine directory that match the identity of
+        <span class="Pa">MyStuff</span>, and then perform the association on all
+        of them.</p>
+  </dd>
+  <dt id="localsnapshot"><a class="permalink" href="#localsnapshot"><b class="Sy">localsnapshot</b></a></dt>
+  <dd>
+    <br/>
+    Create new local Time Machine snapshots of all APFS volumes included in the
+      Time Machine backup.</dd>
+  <dt id="listlocalsnapshots"><a class="permalink" href="#listlocalsnapshots"><b class="Sy">listlocalsnapshots</b></a></dt>
+  <dd><var class="Ar">mount_point</var>
+    <br/>
+    List local Time Machine snapshots of the specified volume.</dd>
+  <dt id="listlocalsnapshotdates"><a class="permalink" href="#listlocalsnapshotdates"><b class="Sy">listlocalsnapshotdates</b></a></dt>
+  <dd>[<var class="Ar">mount_point</var>]
+    <br/>
+    List the creation dates of all local Time Machine snapshots.
+    <p class="Pp">Specify <var class="Ar">mount_point</var> to list snapshot
+        creation dates from a specific volume.</p>
+    <p class="Pp">Listed dates are formatted YYYY-MM-DD-HHMMSS.</p>
+  </dd>
+  <dt id="deletelocalsnapshots"><a class="permalink" href="#deletelocalsnapshots"><b class="Sy">deletelocalsnapshots</b></a></dt>
+  <dd><var class="Ar">{mount_point</var> | <var class="Ar">date}</var>
+    <br/>
+    If a date is specified, delete all local Time Machine snapshots on all
+      mounted disks for the specified <var class="Ar">date</var> (formatted
+      YYYY-MM-DD-HHMMSS). If a disk is specified, delete all local Time Machine
+      snapshots on the specified <var class="Ar">disk</var></dd>
+  <dt id="thinlocalsnapshots"><a class="permalink" href="#thinlocalsnapshots"><b class="Sy">thinlocalsnapshots</b></a></dt>
+  <dd><var class="Ar">mount_point</var> [<var class="Ar">purge_amount</var>]
+      [<var class="Ar">urgency</var>]
+    <br/>
+    Thin local Time Machine snapshots for the specified volume.
+    <p class="Pp">When <var class="Ar">purge_amount</var> and
+        <var class="Ar">urgency</var> are specified, tmutil will attempt (with
+        <var class="Ar">urgency</var> level 1-4) to reclaim
+        <var class="Ar">purge_amount</var> in bytes by thinning snapshots.</p>
+    <p class="Pp">If <var class="Ar">urgency</var> is not specified, the default
+        urgency will be used.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h1>
+<p class="Pp">In most situations, <code class="Nm">tmutil</code> exits 0 on
+    success, &gt;0 otherwise.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">10 June 2015</td>
+    <td class="foot-os">Mac OS X</td>
+  </tr>
+</table>
+</body>
+</html>

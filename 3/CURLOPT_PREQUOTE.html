@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_PREQUOTE(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_PREQUOTE(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_PREQUOTE(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_PREQUOTE - commands to run before an FTP transfer</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#include &lt;curl/curl.h&gt;</p>
+<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PREQUOTE,
+  <br/>
+   struct curl_slist *cmds);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a pointer to a linked list of FTP commands to pass to the
+    server after the transfer type is set. The linked list should be a fully
+    valid list of struct curl_slist structs properly filled in as described for
+    <i>CURLOPT_QUOTE(3)</i>. Disable this operation again by setting a NULL to
+    this option.</p>
+<p class="Pp">While <i>CURLOPT_QUOTE(3)</i> and <i>CURLOPT_POSTQUOTE(3)</i> work
+    for SFTP, this option does not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">FTP</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+struct curl_slist *cmdlist = NULL;
+cmdlist = curl_slist_append(cmdlist, &quot;SYST&quot;);
+curl = curl_easy_init();
+if(curl) {
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;ftp://example.com/foo.bin&quot;);
+<br/>
+  /* pass in the FTP commands to run */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_PREQUOTE, cmdlist);
+<br/>
+  ret = curl_easy_perform(curl);
+<br/>
+  curl_easy_cleanup(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Along with the protocol support</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK if the option is supported, and
+    CURLE_UNKNOWN_OPTION if not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_QUOTE</b>(3), <b>CURLOPT_POSTQUOTE</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

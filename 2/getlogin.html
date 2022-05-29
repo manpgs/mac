@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  	$NetBSD: getlogin.2,v 1.4 1995/02/27 12:33:03 cgd Exp $
+  
+   Copyright (c) 1989, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+  	@(#)getlogin.2	8.1 (Berkeley) 6/9/93
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GETLOGIN(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GETLOGIN(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">GETLOGIN(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">getlogin</code>, <code class="Nm">setlogin</code>
+    &#x2014; <span class="Nd">get/set login name</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp"><var class="Ft">char *</var>
+  <br/>
+  <code class="Fn">getlogin</code>(<var class="Fa">void</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">setlogin</code>(<var class="Fa">const char *name</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#getlogin"><code class="Fn" id="getlogin">getlogin</code></a>()
+    routine returns the login name of the user associated with the current
+    session, as previously set by <code class="Fn">setlogin</code>(). The name
+    is normally associated with a login shell at the time a session is created,
+    and is inherited by all processes descended from the login shell. (This is
+    true even if some of those processes assume another user ID, for example
+    when <a class="Xr" href="../1/su">su(1)</a> is used.)</p>
+<p class="Pp" id="setlogin"><a class="permalink" href="#setlogin"><code class="Fn">setlogin</code></a>()
+    sets the login name of the user associated with the current session to
+    <var class="Fa">name</var>. This call is restricted to the super-user, and
+    is normally used only when a new session is being created on behalf of the
+    named user (for example, at login time, or when a remote shell is
+  invoked).</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">If a call to <code class="Fn">getlogin</code>() succeeds, it
+    returns a pointer to a null-terminated string in a static buffer. If the
+    name has not been set, it returns <code class="Dv">NULL</code>. If a call to
+    <code class="Fn">setlogin</code>() succeeds, a value of 0 is returned. If
+    <code class="Fn">setlogin</code>() fails, a value of -1 is returned and an
+    error code is placed in the global location <var class="Va">errno</var>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The following errors may be returned by these calls:</p>
+<dl class="Bl-tag">
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>The <var class="Fa">name</var> parameter gave an invalid address.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Fa">name</var> parameter pointed to a string that was too
+      long. Login names are limited to <code class="Dv">MAXLOGNAME</code> (from
+      &#x27E8;<span class="Pa">sys/param.h</span>&#x27E9;) characters, currently
+      12.</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The caller tried to set the login name and was not the super-user.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/setsid">setsid(2)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">Login names are limited in length by
+    <code class="Fn">setlogin</code>(). However, lower limits are placed on
+    login names elsewhere in the system (<code class="Dv">UT_NAMESIZE</code> in
+    &#x27E8;<span class="Pa">utmp.h</span>&#x27E9;).</p>
+<p class="Pp">In earlier versions of the system,
+    <code class="Fn">getlogin</code>() failed unless the process was associated
+    with a login terminal. The current implementation (using
+    <code class="Fn">setlogin</code>()) allows getlogin to succeed even when the
+    process has no controlling terminal. In earlier versions of the system, the
+    value returned by <code class="Fn">getlogin</code>() could not be trusted
+    without checking the user ID. Portable programs should probably still make
+    this check.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">getlogin</code>() function first appeared in
+    4.4BSD.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 9, 1993</td>
+    <td class="foot-os">BSD 4.2</td>
+  </tr>
+</table>
+</body>
+</html>

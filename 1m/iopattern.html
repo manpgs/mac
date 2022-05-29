@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>iopattern(1m)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">iopattern(1m)</td>
+    <td class="head-vol">USER COMMANDS</td>
+    <td class="head-rtitle">iopattern(1m)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">iopattern - print disk I/O pattern. Uses DTrace.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>iopattern</b> [-v] [-d device] [-f filename] [-m mount_point]
+    [interval [count]]</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This prints details on the I/O access pattern for the disks, such
+    as percentage of events that were of a random or sequential nature. By
+    default totals for all disks are printed.</p>
+<p class="Pp">An event is considered random when the heads seek. This program
+    prints the percentage of events that are random. The size of the seek is not
+    measured - it's either random or not.</p>
+<p class="Pp">Since this uses DTrace, only users with root privileges can run
+    this command.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="v"><a class="permalink" href="#v">-v</a></dt>
+  <dd>print timestamp, string</dd>
+  <dt id="d"><a class="permalink" href="#d">-d device</a></dt>
+  <dd>instance name to snoop (eg, dad0)</dd>
+  <dt id="f"><a class="permalink" href="#f">-f filename</a></dt>
+  <dd>full pathname of file to snoop</dd>
+  <dt id="m"><a class="permalink" href="#m">-m mount_point</a></dt>
+  <dd>mountpoint for filesystem to snoop</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<dl class="Bl-tag">
+  <dt id="Default"><a class="permalink" href="#Default">Default output, print
+    I/O summary every 1 second,</a></dt>
+  <dd># <b>iopattern</b></dd>
+  <dt id="Print"><a class="permalink" href="#Print">Print 10 second
+    samples,</a></dt>
+  <dd># <b>iopattern</b> 10</dd>
+  <dt id="Print~2"><a class="permalink" href="#Print~2">Print 12 x 5 second
+    samples,</a></dt>
+  <dd># <b>iopattern</b> 5 12</dd>
+  <dt id="Snoop"><a class="permalink" href="#Snoop">Snoop events on the root
+    filesystem only,</a></dt>
+  <dd># <b>iopattern</b> -m /</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FIELDS"><a class="permalink" href="#FIELDS">FIELDS</a></h1>
+<dl class="Bl-tag">
+  <dt>%RAN</dt>
+  <dd>percentage of events of a random nature</dd>
+  <dt>%SEQ</dt>
+  <dd>percentage of events of a sequential nature</dd>
+  <dt id="COUNT"><a class="permalink" href="#COUNT">COUNT</a></dt>
+  <dd>number of I/O events</dd>
+  <dt id="MIN"><a class="permalink" href="#MIN">MIN</a></dt>
+  <dd>minimum I/O event size</dd>
+  <dt id="MAX"><a class="permalink" href="#MAX">MAX</a></dt>
+  <dd>maximum I/O event size</dd>
+  <dt id="AVG"><a class="permalink" href="#AVG">AVG</a></dt>
+  <dd>average I/O event size</dd>
+  <dt id="KR"><a class="permalink" href="#KR">KR</a></dt>
+  <dd>total kilobytes read during sample</dd>
+  <dt id="KW"><a class="permalink" href="#KW">KW</a></dt>
+  <dd>total kilobytes written during sample</dd>
+  <dt id="DEVICE"><a class="permalink" href="#DEVICE">DEVICE</a></dt>
+  <dd>device name</dd>
+  <dt id="MOUNT"><a class="permalink" href="#MOUNT">MOUNT</a></dt>
+  <dd>mount point</dd>
+  <dt id="FILE"><a class="permalink" href="#FILE">FILE</a></dt>
+  <dd>filename (basename) for I/O operation</dd>
+  <dt id="TIME"><a class="permalink" href="#TIME">TIME</a></dt>
+  <dd>timestamp, string</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="IDEA"><a class="permalink" href="#IDEA">IDEA</a></h1>
+<p class="Pp">Ryan Matteson</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DOCUMENTATION"><a class="permalink" href="#DOCUMENTATION">DOCUMENTATION</a></h1>
+<p class="Pp">See the DTraceToolkit for further documentation under the Docs
+    directory. The DTraceToolkit docs may include full worked examples with
+    verbose descriptions explaining the output.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT"><a class="permalink" href="#EXIT">EXIT</a></h1>
+<p class="Pp">iopattern will run forever until Ctrl-C is hit, or the specified
+    count is reached.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
+<p class="Pp">Brendan Gregg [Sydney, Australia]</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">iosnoop(1M), iotop(1M), dtrace(1M)</p>
+<p class="Pp"></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">July 25, 2005</td>
+    <td class="foot-os">version 0.70</td>
+  </tr>
+</table>
+</body>
+</html>

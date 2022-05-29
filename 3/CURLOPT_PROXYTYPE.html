@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_PROXYTYPE(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_PROXYTYPE(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_PROXYTYPE(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_PROXYTYPE - proxy protocol type</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#include &lt;curl/curl.h&gt;</p>
+<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PROXYTYPE, long
+    type);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass one of the values below to set the type of the proxy.</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="CURLPROXY_HTTP"><a class="permalink" href="#CURLPROXY_HTTP">CURLPROXY_HTTP</a></dt>
+  <dd>HTTP Proxy. Default.</dd>
+  <dt id="CURLPROXY_HTTPS"><a class="permalink" href="#CURLPROXY_HTTPS">CURLPROXY_HTTPS</a></dt>
+  <dd>HTTPS Proxy. (Added in 7.52.0 for OpenSSL, GnuTLS and NSS)</dd>
+  <dt id="CURLPROXY_HTTP_1_0"><a class="permalink" href="#CURLPROXY_HTTP_1_0">CURLPROXY_HTTP_1_0</a></dt>
+  <dd>HTTP 1.0 Proxy. This is very similar to CURLPROXY_HTTP except it uses
+      HTTP/1.0 for any CONNECT tunnelling. It does not change the HTTP version
+      of the actual HTTP requests, controlled by
+    <i>CURLOPT_HTTP_VERSION(3)</i>.</dd>
+  <dt id="CURLPROXY_SOCKS4"><a class="permalink" href="#CURLPROXY_SOCKS4">CURLPROXY_SOCKS4</a></dt>
+  <dd>SOCKS4 Proxy.</dd>
+  <dt id="CURLPROXY_SOCKS4A"><a class="permalink" href="#CURLPROXY_SOCKS4A">CURLPROXY_SOCKS4A</a></dt>
+  <dd>SOCKS4a Proxy. Proxy resolves URL hostname.</dd>
+  <dt id="CURLPROXY_SOCKS5"><a class="permalink" href="#CURLPROXY_SOCKS5">CURLPROXY_SOCKS5</a></dt>
+  <dd>SOCKS5 Proxy.</dd>
+  <dt id="CURLPROXY_SOCKS5_HOSTNAME"><a class="permalink" href="#CURLPROXY_SOCKS5_HOSTNAME">CURLPROXY_SOCKS5_HOSTNAME</a></dt>
+  <dd>SOCKS5 Proxy. Proxy resolves URL hostname.</dd>
+</dl>
+</div>
+<p class="Pp">Often it is more convenient to specify the proxy type with the
+    scheme part of the <i>CURLOPT_PROXY(3)</i> string.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">CURLPROXY_HTTP</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">Most</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  CURLcode ret;
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com/&quot;);
+<br/>
+  curl_easy_setopt(curl, CURLOPT_PROXY, &quot;local.example.com:1080&quot;);
+<br/>
+  /* set the proxy type */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+<br/>
+  ret = curl_easy_perform(curl);
+<br/>
+  curl_easy_cleanup(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Always</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_PROXY</b>(3), <b>CURLOPT_PROXYPORT</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

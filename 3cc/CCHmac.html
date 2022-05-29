@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CCHMAC(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CCHMAC(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">CCHMAC(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">CCHmacInit</code>,
+    <code class="Nm">CCHmacUpdate</code>, <code class="Nm">CCHmacFinal</code>,
+    <code class="Nm">CCHmac</code> &#x2014; <span class="Nd">Common HMAC
+    Algorithm Interfaces</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp">These functions are found in libSystem.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">CommonCrypto/CommonHMAC.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">CCHmacInit</code>(<var class="Fa" style="white-space: nowrap;">CCHmacContext
+    *ctx</var>, <var class="Fa" style="white-space: nowrap;">CCHmacAlgorithm
+    algorithm</var>, <var class="Fa" style="white-space: nowrap;">const void
+    *key</var>, <var class="Fa" style="white-space: nowrap;">size_t
+    keyLength</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">CCHmacUpdate</code>(<var class="Fa" style="white-space: nowrap;">CCHmacContext
+    *ctx</var>, <var class="Fa" style="white-space: nowrap;">const void
+    *data</var>, <var class="Fa" style="white-space: nowrap;">size_t
+    dataLength</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">CCHmacFinal</code>(<var class="Fa" style="white-space: nowrap;">CCHmacContext
+    *ctx</var>, <var class="Fa" style="white-space: nowrap;">void
+    *macOut</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">CCHmac</code>(<var class="Fa" style="white-space: nowrap;">CCHmacAlgorithm
+    algorithm</var>, <var class="Fa" style="white-space: nowrap;">const void
+    *key</var>, <var class="Fa" style="white-space: nowrap;">size_t
+    keyLength</var>, <var class="Fa" style="white-space: nowrap;">const void
+    *data</var>, <var class="Fa" style="white-space: nowrap;">size_t
+    dataLength</var>, <var class="Fa" style="white-space: nowrap;">void
+    *macOut</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This interface provides access to a number of HMAC algorithms. The
+    following algorithms are available:</p>
+<dl class="Bl-tag">
+  <dt>kCCHmacAlgSHA1</dt>
+  <dd>- HMAC with SHA1 digest</dd>
+  <dt>kCCHmacAlgMD5</dt>
+  <dd>- HMAC with MD5 digest</dd>
+  <dt>kCCHmacAlgSHA256</dt>
+  <dd>- HMAC with SHA256 digest</dd>
+  <dt>kCCHmacAlgSHA384</dt>
+  <dd>- HMAC with SHA384 digest</dd>
+  <dt>kCCHmacAlgSHA224</dt>
+  <dd>- HMAC with SHA224 digest</dd>
+  <dt>kCCHmacAlgSHA512</dt>
+  <dd>- HMAC with SHA512 digest</dd>
+</dl>
+<p class="Pp" id="timingsafe_bcmp">The MAC must be verified by comparing the
+    computed and expected values using
+    <a class="permalink" href="#timingsafe_bcmp"><code class="Fn">timingsafe_bcmp</code></a>()
+    Other comparison functions (e.g.
+    <a class="permalink" href="#memcmp"><code class="Fn" id="memcmp">memcmp</code></a>()
+    ) must not be used as they may be vulnerable to practical timing attacks,
+    leading to MAC forgery.</p>
+<p class="Pp" id="CCHmacInit">The object declared in this interface,
+    CCHmacContext, provides a handle for use with the
+    <a class="permalink" href="#CCHmacInit"><code class="Fn">CCHmacInit</code></a>()
+    <a class="permalink" href="#CCHmacUpdate"><code class="Fn" id="CCHmacUpdate">CCHmacUpdate</code></a>()
+    and
+    <a class="permalink" href="#CCHmacFinal"><code class="Fn" id="CCHmacFinal">CCHmacFinal</code></a>()
+    calls to complete the HMAC operation. In addition there is a one shot
+    function,
+    <a class="permalink" href="#CCHmac"><code class="Fn" id="CCHmac">CCHmac</code></a>()
+    that performs a complete HMAC on a single piece of data.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">These functions are available in OS X 10.5 and later.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../3cc/CC_MD5">CC_MD5(3cc)</a>,
+    <a class="Xr" href="../3cc/CC_SHA">CC_SHA(3cc)</a>,
+    <a class="Xr" href="../3cc/CC_crypto">CC_crypto(3cc)</a>,
+    <a class="Xr" href="../3cc/CCCrypto">CCCrypto(3cc)</a></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">March 22, 2007</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

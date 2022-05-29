@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   $OpenBSD: arch.1,v 1.10 2017/07/06 16:50:58 schwarze Exp $
+  
+   Copyright (c) 1994 SigmaSoft, Th. Lockert
+   All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+  
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+   IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+   OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+   IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  
+   Modifications made 8/20/97 (c) Apple Computer, Inc.
+   Modifications made 11/12/06 (c) Apple Computer, Inc.
+   Modifications made 02/15/21 (c) Apple Inc.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>ARCH(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ARCH(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">ARCH(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">arch</code> &#x2014; <span class="Nd">print
+    architecture type or run selected architecture of a universal
+  binary</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">arch</code></td>
+    <td></td>
+  </tr>
+</table>
+<br/>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">arch</code></td>
+    <td>[<code class="Fl">-32</code>] [<code class="Fl">-64</code>]
+      [[<code class="Fl">-</code><var class="Ar">arch_name</var> |
+      <code class="Fl">-arch</code> <var class="Ar">arch_name</var>]...]
+      [<code class="Fl">-c</code>] [<code class="Fl">-d</code>
+      <var class="Ar">envname</var>]... [<code class="Fl">-e</code>
+      <var class="Ar">envname=value</var>]... [<code class="Fl">-h</code>]
+      <var class="Ar">prog</var> [<var class="Ar">args</var>
+      <span class="No">...</span>]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <code class="Nm">arch</code> command with no arguments,
+    displays the machine's architecture type.</p>
+<p class="Pp">The other use of the <code class="Nm">arch</code> command is to
+    run a selected architecture of a universal binary. A universal binary
+    contains code that can run on different architectures. By default, the
+    operating system will select the architecture that most closely matches the
+    processor type. A 64-bit architecture is preferred over a 32-bit
+    architecture on a 64-bit processor, while only 32-bit architectures can run
+    on a 32-bit processor.</p>
+<p class="Pp">When the most natural architecture is unavailable, the operating
+    system will try to pick another architecture. On 64-bit processors, a 32-bit
+    architecture is tried. Otherwise, no architecture is run, and an error
+    results.</p>
+<p class="Pp">The <code class="Nm">arch</code> command can be used to alter the
+    operating system's normal selection order. The most common use is to select
+    the 32-bit architecture on a 64-bit processor, even if a 64-bit architecture
+    is available.</p>
+<p class="Pp">The <var class="Ar">arch_name</var> argument must be one of the
+    currently supported architectures:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>i386</dt>
+  <dd>32-bit intel</dd>
+  <dt>x86_64</dt>
+  <dd>64-bit intel</dd>
+  <dt>x86_64h</dt>
+  <dd>64-bit intel (haswell)</dd>
+  <dt>arm64</dt>
+  <dd>64-bit arm</dd>
+  <dt>arm64e</dt>
+  <dd>64-bit arm (Apple Silicon)</dd>
+</dl>
+</div>
+<p class="Pp">If the binary does not contain code for
+    <var class="Ar">arch_name</var>, the <code class="Nm">arch</code> command
+    may try to select a close match. If arm64 is specified and not found, arm64e
+    will be tried next. If this happens, the order the architectures will be
+    tried is not guaranteed.</p>
+<p class="Pp">Either prefix the architecture with a hyphen, or (for
+    compatibility with other commands), use <code class="Fl">-arch</code>
+    followed by the architecture.</p>
+<p class="Pp">If more than one architecture is specified, the operating system
+    will try each one in order, skipping an architecture that is not supported
+    on the current processor, or is unavailable in the universal binary.</p>
+<p class="Pp">The other options are:</p>
+<dl class="Bl-tag">
+  <dt id="32"><a class="permalink" href="#32"><code class="Fl">-32</code></a></dt>
+  <dd>Add the native 32-bit architecture to the list of architectures.</dd>
+  <dt id="64"><a class="permalink" href="#64"><code class="Fl">-64</code></a></dt>
+  <dd>Add the native 64-bit architecture to the list of architectures.</dd>
+  <dt id="c"><a class="permalink" href="#c"><code class="Fl">-c</code></a></dt>
+  <dd>Clears the environment that will be passed to the command to be run.</dd>
+  <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a>
+    <var class="Ar">envname</var></dt>
+  <dd>Deletes the named environment variable from the environment that will be
+      passed to the command to be run.</dd>
+  <dt id="e"><a class="permalink" href="#e"><code class="Fl">-e</code></a>
+    <var class="Ar">envname=value</var></dt>
+  <dd>Assigns the given value to the named environment variable in the
+      environment that will be passed to the command to be run. Any existing
+      environment variable with the same name will be replaced.</dd>
+  <dt id="h"><a class="permalink" href="#h"><code class="Fl">-h</code></a></dt>
+  <dd>Prints a usage message and exits.</dd>
+</dl>
+<p class="Pp">The <var class="Ar">prog</var> argument is the command to run,
+    followed by any arguments to pass to the command. It can be a full or
+    partial path, while a lone name will be looked up in the user's command
+    search path.</p>
+<p class="Pp">If no architectures are specified on the command line, the
+    <code class="Nm">arch</code> command takes the basename of the
+    <var class="Ar">prog</var> argument and searches for the first property list
+    file with that basename and the <span class="Pa">.plist</span> suffix, in
+    the <span class="Pa">archSettings</span> sub-directory in each of the
+    standard domains, in the following order:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>~/Library/archSettings</dt>
+  <dd>User settings</dd>
+  <dt>/Library/archSettings</dt>
+  <dd>Local settings</dd>
+  <dt>/Network/Library/archSettings</dt>
+  <dd>Network settings</dd>
+  <dt>/System/Library/archSettings</dt>
+  <dd>System settings</dd>
+</dl>
+</div>
+<p class="Pp">This property list contains the architecture order preferences, as
+    well as the full path to the real executable. Please refer to the
+    <a class="Sx" href="#EXAMPLES">EXAMPLES</a> section for an example of the
+    property list file format.</p>
+<section class="Ss">
+<h2 class="Ss" id="Making_links_to_the_arch_command"><a class="permalink" href="#Making_links_to_the_arch_command">Making
+  links to the arch command</a></h2>
+<p class="Pp">When a link is made to <code class="Nm">arch</code> command with a
+    different name, that name is used to find the corresponding property list
+    file. Thus, other commands can be wrapped so that they have custom
+    architecture selection order.</p>
+<p class="Pp">Because of some internal logic in the code, hard links to the
+    <code class="Nm">arch</code> command may not work quite right. It is best to
+    avoid using hard links, and only use symbolic links to the
+    <code class="Nm">arch</code> command.</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
+<p class="Pp">The environment variable <code class="Ev">ARCHPREFERENCE</code>
+    can be used to provide architecture order preferences. It is checked before
+    looking for the corresponding property list file.</p>
+<p class="Pp">The value of the environment variable
+    <code class="Ev">ARCHPREFERENCE</code> is composed of one or more
+    specifiers, separated by semicolons. A specifier is made up of one, two or
+    three fields, separated by colons. Architectures specified in order, are
+    separated by commas and make up the last (mandatory) field. The first field,
+    if specified, is a name of a program, which selects this specifier if that
+    name matches the program name in question. If the name field is empty or
+    there is no name field, the specifier matches any program name. Thus,
+    ordering of specifiers is important, and the one with no name should be
+    last.</p>
+<p class="Pp">When the <code class="Nm">arch</code> command is called directly,
+    the <var class="Ar">prog</var> name provides the path information to the
+    executable (possibly via the command search path). When a name is specified
+    in a <code class="Ev">ARCHPREFERENCE</code> specifier, the path information
+    can alternately be specified as a second field following the name. When the
+    <code class="Nm">arch</code> command is called indirectly via a link, this
+    path information must be specified. If not specified as a second field in a
+    specifier, the executable path will be looked up in the corresponding
+    property list file.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="archSettings_Property_List_Format"><a class="permalink" href="#archSettings_Property_List_Format">archSettings
+  Property List Format</a></h2>
+<p class="Pp">This is an example of a property list file as is expected in one
+    of the <span class="Pa">archSettings</span> locations mentioned above:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE plist PUBLIC &quot;-//Apple Computer//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+        &lt;key&gt;ExecutablePath&lt;/key&gt;
+        &lt;string&gt;$execpath&lt;/string&gt;
+        &lt;key&gt;PreferredOrder&lt;/key&gt;
+        &lt;array&gt;
+                &lt;string&gt;x86_64&lt;/string&gt;
+                &lt;string&gt;arm64&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;PropertyListVersion&lt;/key&gt;
+        &lt;string&gt;1.0&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+</pre>
+</div>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="ARCHPREFERENCE_Values"><a class="permalink" href="#ARCHPREFERENCE_Values">ARCHPREFERENCE
+  Values</a></h2>
+<dl class="Bl-tag">
+  <dt>i386,x86_64,x86_64h,arm64,arm64e</dt>
+  <dd>A specifier that matches any name.</dd>
+  <dt>foo:i386,x86_64,x86_64h,arm64,arm64e</dt>
+  <dd>A specifier that matches the program named <code class="Nm">foo</code>
+      (the full executable path is in the <span class="Pa">foo.plist</span>
+      file).</dd>
+  <dt>foo:/op/bin/boo:i386,x86_64,x86_64h,arm64,arm64e</dt>
+  <dd>A specifier with all fields specified.</dd>
+  <dt>baz:i386;x86_64;x86_64h,arm64,arm64e</dt>
+  <dd>A specifier for <code class="Nm">baz</code> and a second specifier that
+      would match any other name.</dd>
+</dl>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/machine">machine(1)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">Running the <code class="Nm">arch</code> command on an interpreter
+    script may not work if the interpreter is a link to the arch command.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">February 15, 2021</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

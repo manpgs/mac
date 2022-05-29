@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1989-1993 The Regents of the University of California.
+   Copyright (c) 1994-1997 Sun Microsystems, Inc.
+  
+   See the file "license.terms" for information on usage and redistribution
+   of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+  
+   RCS: @(#) $Id: RecordEval.3,v 1.10 2007/12/13 15:22:31 dgp Exp $
+  
+   The -*- nroff -*- definitions below are for supplemental macros used
+   in Tcl/Tk manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO ?manpage?
+  	Start of list of standard options for a Tk widget. The manpage
+  	argument defines where to look up the standard options; if
+  	omitted, defaults to "options". The options follow on successive
+  	lines, in three columns separated by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   .QW arg1 ?arg2?
+  	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+  
+   .PQ arg1 ?arg2?
+  	Print an open parenthesis, arg1 in quotes, then arg2 normally
+  	(for trailing punctuation) and then a closing parenthesis.
+  
+   RCS: @(#) $Id: man.macros,v 1.9 2008/01/29 15:32:33 dkf Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>Tcl_RecordAndEval(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">Tcl_RecordAndEval(3)</td>
+    <td class="head-vol">Tcl Library Procedures</td>
+    <td class="head-rtitle">Tcl_RecordAndEval(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">Tcl_RecordAndEval - save command on history list before
+  evaluating</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+<b>#include &lt;tcl.h&gt;</b>
+
+int
+<b>Tcl_RecordAndEval</b>(<i>interp, cmd, flags</i>)
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ARGUMENTS"><a class="permalink" href="#ARGUMENTS">ARGUMENTS</a></h1>
+<dl class="Bl-tag">
+  <dt>Tcl_Interp <i>*interp</i> (in)</dt>
+  <dd>Tcl interpreter in which to evaluate command.</dd>
+  <dt>const char <i>*cmd</i> (in)</dt>
+  <dd>Command (or sequence of commands) to execute.</dd>
+  <dt>int <i>flags</i> (in)</dt>
+  <dd>An OR'ed combination of flag bits. <b>TCL_NO_EVAL</b> means record the
+      command but do not evaluate it. <b>TCL_EVAL_GLOBAL</b> means evaluate the
+      command at global level instead of the current stack level.
+    <pre>
+
+    </pre>
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><b>Tcl_RecordAndEval</b> is invoked to record a command as an
+    event on the history list and then execute it using <b>Tcl_Eval</b> (or
+    <b>Tcl_GlobalEval</b> if the <b>TCL_EVAL_GLOBAL</b> bit is set in
+    <i>flags</i>). It returns a completion code such as <b>TCL_OK</b> just like
+    <b>Tcl_Eval</b> and it leaves information in the interpreter's result. If
+    you do not want the command recorded on the history list then you should
+    invoke <b>Tcl_Eval</b> instead of <b>Tcl_RecordAndEval</b>. Normally
+    <b>Tcl_RecordAndEval</b> is only called with top-level commands typed by the
+    user, since the purpose of history is to allow the user to re-issue
+    recently-invoked commands. If the <i>flags</i> argument contains the
+    <b>TCL_NO_EVAL</b> bit then the command is recorded without being
+  evaluated.</p>
+<p class="Pp">Note that <b>Tcl_RecordAndEval</b> has been largely replaced by
+    the object-based procedure <b>Tcl_RecordAndEvalObj</b>. That object-based
+    procedure records and optionally executes a command held in a Tcl object
+    instead of a string.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">Tcl_RecordAndEvalObj</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">command, event, execute, history, interpreter, record</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">7.4</td>
+    <td class="foot-os">Tcl</td>
+  </tr>
+</table>
+</body>
+</html>

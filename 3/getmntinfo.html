@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1989, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)getmntinfo.3	8.1 (Berkeley) 6/9/93
+   $FreeBSD: src/lib/libc/gen/getmntinfo.3,v 1.13 2007/01/09 00:27:54 imp Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GETMNTINFO(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GETMNTINFO(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">GETMNTINFO(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">getmntinfo</code>
+    <code class="Nm">getmntinfo_r_np</code> <code class="Nm">getmntinfo64</code>
+    &#x2014; <span class="Nd">get information about mounted file
+  systems</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">sys/param.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/ucred.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/mount.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">getmntinfo</code>(<var class="Fa" style="white-space: nowrap;">struct
+    statfs **mntbufp</var>, <var class="Fa" style="white-space: nowrap;">int
+    flags</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">getmntinfo_r_np</code>(<var class="Fa" style="white-space: nowrap;">struct
+    statfs **mntbufp</var>, <var class="Fa" style="white-space: nowrap;">int
+    flags</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="TRANSITIIONAL_SYNOPSIS_(NOW_DEPRECATED)"><a class="permalink" href="#TRANSITIIONAL_SYNOPSIS_(NOW_DEPRECATED)">TRANSITIIONAL
+  SYNOPSIS (NOW DEPRECATED)</a></h1>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <a class="permalink" href="#getmntinfo64"><code class="Fn" id="getmntinfo64">getmntinfo64</code></a>(<var class="Fa">struct
+    statfs64 **mntbufp</var>, <var class="Fa">int flags</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#getmntinfo"><code class="Fn" id="getmntinfo">getmntinfo</code></a>()
+    function returns an array of <var class="Ft">statfs</var> structures
+    describing each currently mounted file system (see
+    <a class="Xr" href="../2/statfs">statfs(2)</a>). As
+    <a class="Xr" href="../2/statfs">statfs(2)</a> indicates, the structure is
+    defined differently depending on whether the macro
+    _DARWIN_FEATURE_64_BIT_INODE is defined (see
+    <a class="Xr" href="../2/stat">stat(2)</a> for more information on this
+    macro).</p>
+<p class="Pp" id="getmntinfo~2">The
+    <a class="permalink" href="#getmntinfo~2"><code class="Fn">getmntinfo</code></a>()
+    and <code class="Fn">getmntinfo_r_np</code>() functions pass their
+    <var class="Fa">flags</var> argument transparently to
+    <a class="Xr" href="../2/getfsstat">getfsstat(2)</a>.</p>
+<p class="Pp" id="getmntinfo~3">The
+    <a class="permalink" href="#getmntinfo~3"><code class="Fn">getmntinfo</code></a>()
+    function maintains ownership of the results buffer it allocates, and may
+    overwrite or free this buffer in subsequent calls to
+    <code class="Fn">getmntinfo</code>(). For this reason,
+    <code class="Fn">getmntinfo</code>() is not thread-safe.</p>
+<p class="Pp" id="getmntinfo_r_np">The
+    <a class="permalink" href="#getmntinfo_r_np"><code class="Fn">getmntinfo_r_np</code></a>()
+    function is a thread-safe equivalent of <code class="Fn">getmntinfo</code>()
+    that allocates a new results buffer on every call and transfers ownership of
+    this buffer to the caller. The caller is responsible for freeing this memory
+    with <a class="Xr" href="../3/free">free(3)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">On successful completion, <code class="Fn">getmntinfo</code>() and
+    <code class="Fn">getmntinfo_r_np</code>() return a count of the number of
+    elements in the array. The pointer to the array is stored into
+    <var class="Fa">mntbufp</var>.</p>
+<p class="Pp">If an error occurs, zero is returned and the external variable
+    <var class="Va">errno</var> is set to indicate the error. The
+    <code class="Fn">getmntinfo</code>() function may modify the
+    <var class="Fa">mbtbufp</var> pointer even in the case of an error. In this
+    situation, callers should consider any previous information returned by
+    <code class="Fn">getmntinfo</code>() to be lost. The
+    <code class="Fn">getmntinfo_r_np</code>() function will not modify the
+    <var class="Fa">mntbufp</var> pointer in the case of an error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">getmntinfo</code>() and
+    <code class="Fn">getmntinfo_r_np</code>() functions may fail and set errno
+    for any of the errors specified for the library routines
+    <a class="Xr" href="../2/getfsstat">getfsstat(2)</a> or
+    <a class="Xr" href="../3/malloc">malloc(3)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="TRANSITIONAL_DESCRIPTION_(NOW_DEPRECATED)"><a class="permalink" href="#TRANSITIONAL_DESCRIPTION_(NOW_DEPRECATED)">TRANSITIONAL
+  DESCRIPTION (NOW DEPRECATED)</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#getmntinfo64~2"><code class="Fn" id="getmntinfo64~2">getmntinfo64</code></a>()
+    routine is equivalent to its corresponding non-64-suffixed routine, when
+    64-bit inodes are in effect. It was added before there was support for the
+    symbol variants, and so is now deprecated. Instead of using it, set the
+    <code class="Dv">_DARWIN_USE_64_BIT_INODE</code> macro before including
+    header files to force 64-bit inode support.</p>
+<p class="Pp">The <var class="Ft">statfs64</var> structure used by this
+    deprecated routine is the same as the <var class="Ft">statfs</var> structure
+    when 64-bit inodes are in effect.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/getfsstat">getfsstat(2)</a>,
+    <a class="Xr" href="../2/mount">mount(2)</a>,
+    <a class="Xr" href="../2/stat">stat(2)</a>,
+    <a class="Xr" href="../2/statfs">statfs(2)</a>,
+    <a class="Xr" href="../8/mount">mount(8)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">getmntinfo</code>() function first appeared
+    in <span class="Ux">4.4BSD</span>. The
+    <code class="Fn">getmntinfo_r_np</code>() function first appeared in macOS
+    10.13.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">The <code class="Fn">getmntinfo</code>() function writes the array
+    of structures to an internal static object and returns a pointer to that
+    object. Subsequent calls to <code class="Fn">getmntinfo</code>() will modify
+    the same object.</p>
+<p class="Pp">The memory allocated by <code class="Fn">getmntinfo</code>()
+    cannot be <a class="Xr" href="../3/free">free(3)</a>'d by the
+  application.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">April 12, 2017</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

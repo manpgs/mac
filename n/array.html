@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1993-1994 The Regents of the University of California.
+   Copyright (c) 1994-1996 Sun Microsystems, Inc.
+  
+   See the file "license.terms" for information on usage and redistribution
+   of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+  
+   RCS: @(#) $Id: array.n,v 1.21 2007/12/13 15:22:32 dgp Exp $
+  
+   The -*- nroff -*- definitions below are for supplemental macros used
+   in Tcl/Tk manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO ?manpage?
+  	Start of list of standard options for a Tk widget. The manpage
+  	argument defines where to look up the standard options; if
+  	omitted, defaults to "options". The options follow on successive
+  	lines, in three columns separated by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   .QW arg1 ?arg2?
+  	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+  
+   .PQ arg1 ?arg2?
+  	Print an open parenthesis, arg1 in quotes, then arg2 normally
+  	(for trailing punctuation) and then a closing parenthesis.
+  
+   RCS: @(#) $Id: man.macros,v 1.9 2008/01/29 15:32:33 dkf Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>array(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">array(n)</td>
+    <td class="head-vol">Tcl Built-In Commands</td>
+    <td class="head-rtitle">array(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">array - Manipulate array variables</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>array </b><i>option arrayName</i> ?<i>arg arg ...</i>?</p>
+<pre>
+
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This command performs one of several operations on the variable
+    given by <i>arrayName</i>. Unless otherwise specified for individual
+    commands below, <i>arrayName</i> must be the name of an existing array
+    variable. The <i>option</i> argument determines what action is carried out
+    by the command. The legal <i>options</i> (which may be abbreviated) are:</p>
+<dl class="Bl-tag">
+  <dt id="array"><a class="permalink" href="#array"><b>array anymore
+    </b><i>arrayName searchId</i></a></dt>
+  <dd>Returns 1 if there are any more elements left to be processed in an array
+      search, 0 if all elements have already been returned. <i>SearchId</i>
+      indicates which search on <i>arrayName</i> to check, and must have been
+      the return value from a previous invocation of <b>array startsearch</b>.
+      This option is particularly useful if an array has an element with an
+      empty name, since the return value from <b>array nextelement</b> will not
+      indicate whether the search has been completed.</dd>
+  <dt id="array~2"><a class="permalink" href="#array~2"><b>array donesearch
+    </b><i>arrayName searchId</i></a></dt>
+  <dd>This command terminates an array search and destroys all the state
+      associated with that search. <i>SearchId</i> indicates which search on
+      <i>arrayName</i> to destroy, and must have been the return value from a
+      previous invocation of <b>array startsearch</b>. Returns an empty
+    string.</dd>
+  <dt id="array~3"><a class="permalink" href="#array~3"><b>array exists
+    </b><i>arrayName</i></a></dt>
+  <dd>Returns 1 if <i>arrayName</i> is an array variable, 0 if there is no
+      variable by that name or if it is a scalar variable.</dd>
+  <dt id="array~4"><a class="permalink" href="#array~4"><b>array get
+    </b><i>arrayName</i> ?<i>pattern</i>?</a></dt>
+  <dd>Returns a list containing pairs of elements. The first element in each
+      pair is the name of an element in <i>arrayName</i> and the second element
+      of each pair is the value of the array element. The order of the pairs is
+      undefined. If <i>pattern</i> is not specified, then all of the elements of
+      the array are included in the result. If <i>pattern</i> is specified, then
+      only those elements whose names match <i>pattern</i> (using the matching
+      rules of <b>string match</b>) are included. If <i>arrayName</i> is not the
+      name of an array variable, or if the array contains no elements, then an
+      empty list is returned. If traces on the array modify the list of
+      elements, the elements returned are those that exist both before and after
+      the call to <b>array get</b>.</dd>
+  <dt id="array~5"><a class="permalink" href="#array~5"><b>array names
+    </b><i>arrayName</i> ?<i>mode</i>? ?<i>pattern</i>?</a></dt>
+  <dd>Returns a list containing the names of all of the elements in the array
+      that match <i>pattern</i>. <i>Mode</i> may be one of <b>-exact</b>,
+      <b>-glob</b>, or <b>-regexp</b>. If specified, <i>mode</i> designates
+      which matching rules to use to match <i>pattern</i> against the names of
+      the elements in the array. If not specified, <i>mode</i> defaults to
+      <b>-glob</b>. See the documentation for <b>string match</b> for
+      information on glob style matching, and the documentation for
+      <b>regexp</b> for information on regexp matching. If <i>pattern</i> is
+      omitted then the command returns all of the element names in the array. If
+      there are no (matching) elements in the array, or if <i>arrayName</i> is
+      not the name of an array variable, then an empty string is returned.</dd>
+  <dt id="array~6"><a class="permalink" href="#array~6"><b>array nextelement
+    </b><i>arrayName searchId</i></a></dt>
+  <dd>Returns the name of the next element in <i>arrayName</i>, or an empty
+      string if all elements of <i>arrayName</i> have already been returned in
+      this search. The <i>searchId</i> argument identifies the search, and must
+      have been the return value of an <b>array startsearch</b> command.
+      Warning: if elements are added to or deleted from the array, then all
+      searches are automatically terminated just as if <b>array donesearch</b>
+      had been invoked; this will cause <b>array nextelement</b> operations to
+      fail for those searches.</dd>
+  <dt id="array~7"><a class="permalink" href="#array~7"><b>array set
+    </b><i>arrayName list</i></a></dt>
+  <dd>Sets the values of one or more elements in <i>arrayName</i>. <i>list</i>
+      must have a form like that returned by <b>array get</b>, consisting of an
+      even number of elements. Each odd-numbered element in <i>list</i> is
+      treated as an element name within <i>arrayName</i>, and the following
+      element in <i>list</i> is used as a new value for that array element. If
+      the variable <i>arrayName</i> does not already exist and <i>list</i> is
+      empty, <i>arrayName</i> is created with an empty array value.</dd>
+  <dt id="array~8"><a class="permalink" href="#array~8"><b>array size
+    </b><i>arrayName</i></a></dt>
+  <dd>Returns a decimal string giving the number of elements in the array. If
+      <i>arrayName</i> is not the name of an array then 0 is returned.</dd>
+  <dt id="array~9"><a class="permalink" href="#array~9"><b>array startsearch
+    </b><i>arrayName</i></a></dt>
+  <dd>This command initializes an element-by-element search through the array
+      given by <i>arrayName</i>, such that invocations of the <b>array
+      nextelement</b> command will return the names of the individual elements
+      in the array. When the search has been completed, the <b>array
+      donesearch</b> command should be invoked. The return value is a search
+      identifier that must be used in <b>array nextelement</b> and <b>array
+      donesearch</b> commands; it allows multiple searches to be underway
+      simultaneously for the same array. It is currently more efficient and
+      easier to use either the <b>array</b> <b>get</b> or <b>array names</b>,
+      together with <b>foreach</b>, to iterate over all but very large arrays.
+      See the examples below for how to do this.</dd>
+  <dt id="array~10"><a class="permalink" href="#array~10"><b>array statistics
+    </b><i>arrayName</i></a></dt>
+  <dd>Returns statistics about the distribution of data within the hashtable
+      that represents the array. This information includes the number of entries
+      in the table, the number of buckets, and the utilization of the
+    buckets.</dd>
+  <dt id="array~11"><a class="permalink" href="#array~11"><b>array unset
+    </b><i>arrayName</i> ?<i>pattern</i>?</a></dt>
+  <dd>Unsets all of the elements in the array that match <i>pattern</i> (using
+      the matching rules of <b>string match</b>). If <i>arrayName</i> is not the
+      name of an array variable or there are no matching elements in the array,
+      no error will be raised. If <i>pattern</i> is omitted and <i>arrayName</i>
+      is an array variable, then the command unsets the entire array. The
+      command always returns an empty string.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<div class="Bd-indent">
+<pre>
+<b>array set</b> colorcount {
+<br/>
+   red   1
+<br/>
+   green 5
+<br/>
+   blue  4
+<br/>
+   white 9
+}
+foreach {color count} [<b>array get</b> colorcount] {
+<br/>
+   puts &quot;Color: $color Count: $count&quot;
+}
+<br/>
+  <b>&#x2192;</b> Color: blue Count: 4
+<br/>
+    Color: white Count: 9
+<br/>
+    Color: green Count: 5
+<br/>
+    Color: red Count: 1
+foreach color [<b>array names</b> colorcount] {
+<br/>
+   puts &quot;Color: $color Count: $colorcount($color)&quot;
+}
+<br/>
+  <b>&#x2192;</b> Color: blue Count: 4
+<br/>
+    Color: white Count: 9
+<br/>
+    Color: green Count: 5
+<br/>
+    Color: red Count: 1
+foreach color [lsort [<b>array names</b> colorcount]] {
+<br/>
+   puts &quot;Color: $color Count: $colorcount($color)&quot;
+}
+<br/>
+  <b>&#x2192;</b> Color: blue Count: 4
+<br/>
+    Color: green Count: 5
+<br/>
+    Color: red Count: 1
+<br/>
+    Color: white Count: 9
+<b>array statistics</b> colorcount
+<br/>
+  <b>&#x2192;</b> 4 entries in table, 4 buckets
+<br/>
+    number of buckets with 0 entries: 1
+<br/>
+    number of buckets with 1 entries: 2
+<br/>
+    number of buckets with 2 entries: 1
+<br/>
+    number of buckets with 3 entries: 0
+<br/>
+    number of buckets with 4 entries: 0
+<br/>
+    number of buckets with 5 entries: 0
+<br/>
+    number of buckets with 6 entries: 0
+<br/>
+    number of buckets with 7 entries: 0
+<br/>
+    number of buckets with 8 entries: 0
+<br/>
+    number of buckets with 9 entries: 0
+<br/>
+    number of buckets with 10 or more entries: 0
+<br/>
+    average search distance for entry: 1.2
+</pre>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">list(n), string(n), variable(n), trace(n), foreach(n)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">array, element names, search</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">8.3</td>
+    <td class="foot-os">Tcl</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Generated from file '/AppleInternal/Library/BuildRoots/66382bca-8bca-11ec-aade-6613bcf0e2ee/Library/Caches/com.apple.xbs/Sources/tcl/tcl_ext/tcllib/tcllib/modules/multiplexer/multiplexer.man' by tcllib/doctools with format 'nroff'
+  
+   The definitions below are for supplemental macros used in Tcl/Tk
+   manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO
+  	Start of list of standard options for a Tk widget.  The
+  	options follow on successive lines, in four columns separated
+  	by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>multiplexer(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">multiplexer(n)</td>
+    <td class="head-vol">One-to-many communication with sockets.</td>
+    <td class="head-rtitle">multiplexer(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">multiplexer - One-to-many communication with sockets.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">package require <b>Tcl 8.2</b></p>
+<p class="Pp">package require <b>logger </b></p>
+<p class="Pp">package require <b>multiplexer ?0.2?</b></p>
+<p class="Pp"><b>::multiplexer::create</b></p>
+<p class="Pp"><b>${multiplexer_instance}::Init</b> <i>port</i></p>
+<p class="Pp"><b>${multiplexer_instance}::Config</b> <i>key</i> <i>value</i></p>
+<p class="Pp"><b>${multiplexer_instance}::AddFilter</b> <i>cmdprefix</i></p>
+<p class="Pp"><b>cmdprefix</b> <i>data</i> <i>chan</i> <i>clientaddress</i>
+    <i>clientport</i></p>
+<p class="Pp"><b>${multiplexer_instance}::AddAccessFilter</b>
+  <i>cmdprefix</i></p>
+<p class="Pp"><b>cmdprefix</b> <i>chan</i> <i>clientaddress</i>
+    <i>clientport</i></p>
+<p class="Pp"><b>${multiplexer_instance}::AddExitFilter</b> <i>cmdprefix</i></p>
+<p class="Pp"><b>cmdprefix</b> <i>chan</i> <i>clientaddress</i>
+    <i>clientport</i></p>
+<p class="Pp"></p>
+<pre>
+
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <b>multiplexer</b> package provides a generic system for
+    one-to-many communication utilizing sockets. For example, think of a chat
+    system where one user sends a message which is then broadcast to all the
+    other connected users.</p>
+<p class="Pp">It is possible to have different multiplexers running
+    concurrently.</p>
+<dl class="Bl-tag">
+  <dt><b>::multiplexer::create</b></dt>
+  <dd>The <b>create</b> command creates a new multiplexer 'instance'. For
+      example:
+    <pre>
+set mp [::multiplexer::create]
+    </pre>
+    This instance can then be manipulated like so:
+    <pre>
+${mp}::Init 35100
+    </pre>
+  </dd>
+  <dt><b>${multiplexer_instance}::Init</b> <i>port</i></dt>
+  <dd>This starts the multiplexer listening on the specified port.</dd>
+  <dt><b>${multiplexer_instance}::Config</b> <i>key</i> <i>value</i></dt>
+  <dd>Use <b>Config</b> to configure the multiplexer instance. Configuration
+      options currently include:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="sendtoorigin"><a class="permalink" href="#sendtoorigin"><b>sendtoorigin</b></a></dt>
+  <dd>A boolean flag. If <b>true</b>, the sender will receive a copy of the sent
+      message. Defaults to <b>false</b>.</dd>
+  <dt id="debuglevel"><a class="permalink" href="#debuglevel"><b>debuglevel</b></a></dt>
+  <dd>Sets the debug level to use for the multiplexer instance, according to
+      those specified by the <b>logger</b> package (debug, info, notice, warn,
+      error, critical).</dd>
+</dl>
+</div>
+<dl class="Bl-tag">
+  <dt><b>${multiplexer_instance}::AddFilter</b> <i>cmdprefix</i></dt>
+  <dd>Command to add a filter for data that passes through the multiplexer
+      instance. The registered <i>cmdprefix</i> is called when data arrives at a
+      multiplexer instance. If there is more than one filter command registered
+      at the instance they will be called in the order of registristation, and
+      each filter will get the result of the preceding filter as its argument.
+      The first filter gets the incoming data as its argument. The result
+      returned by the last filter is the data which will be broadcast to all
+      clients of the multiplexer instance. The command prefix is called as</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="cmdprefix"><a class="permalink" href="#cmdprefix"><b>cmdprefix</b>
+    <i>data</i> <i>chan</i> <i>clientaddress</i> <i>clientport</i></a></dt>
+  <dd>Takes the incoming <i>data</i>, modifies it, and returns that as its
+      result. The last three arguments contain information about the client
+      which sent the data to filter: The channel connecting us to the client,
+      its ip-address, and its ip-port.</dd>
+</dl>
+</div>
+<dl class="Bl-tag">
+  <dt><b>${multiplexer_instance}::AddAccessFilter</b> <i>cmdprefix</i></dt>
+  <dd>Command to add an access filter. The registered <i>cmdprefix</i> is called
+      when a new client socket tries to connect to the multixer instance. If
+      there is more than one access filter command registered at the instance
+      they will be called in the order of registristation. If any of the called
+      commands returns <b>-1</b> the access to the multiplexer instance is
+      denied and the client channel is closed immediately. Any other result
+      grants the client access to the multiplexer instance. The command prefix
+      is called as</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="cmdprefix~2"><a class="permalink" href="#cmdprefix~2"><b>cmdprefix</b>
+    <i>chan</i> <i>clientaddress</i> <i>clientport</i></a></dt>
+  <dd>The arguments contain information about the client which tries to
+      connected to the instance: The channel connecting us to the client, its
+      ip-address, and its ip-port.</dd>
+</dl>
+</div>
+<dl class="Bl-tag">
+  <dt><b>${multiplexer_instance}::AddExitFilter</b> <i>cmdprefix</i></dt>
+  <dd>Adds filter to be run when client socket generates an EOF condition. The
+      registered <i>cmdprefix</i> is called when a client socket of the multixer
+      signals EOF. If there is more than one exit filter command registered at
+      the instance they will be called in the order of registristation. Errors
+      thrown by an exit filter are ignored, but logged. Any result returned by
+      an exit filter is ignored. The command prefix is called as</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="cmdprefix~3"><a class="permalink" href="#cmdprefix~3"><b>cmdprefix</b>
+    <i>chan</i> <i>clientaddress</i> <i>clientport</i></a></dt>
+  <dd>The arguments contain information about the client which signaled the EOF:
+      The channel connecting us to the client, its ip-address, and its
+    ip-port.</dd>
+</dl>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS,_IDEAS,_FEEDBACK"><a class="permalink" href="#BUGS,_IDEAS,_FEEDBACK">BUGS,
+  IDEAS, FEEDBACK</a></h1>
+<p class="Pp">This document, and the package it describes, will undoubtedly
+    contain bugs and other problems. Please report such in the category
+    <i>multiplexer</i> of the <i>Tcllib SF Trackers</i>
+    [http://sourceforge.net/tracker/?group_id=12883]. Please also report any
+    ideas for enhancements you may have for either package and/or
+  documentation.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">chat, multiplexer</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CATEGORY"><a class="permalink" href="#CATEGORY">CATEGORY</a></h1>
+<p class="Pp">Programming tools</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">0.2</td>
+    <td class="foot-os">multiplexer</td>
+  </tr>
+</table>
+</body>
+</html>

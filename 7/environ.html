@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1983, 1990, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+  	@(#)environ.7	8.3 (Berkeley) 4/19/94
+   $FreeBSD$
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>ENVIRON(7)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ENVIRON(7)</td>
+    <td class="head-vol">Miscellaneous Information Manual</td>
+    <td class="head-rtitle">ENVIRON(7)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">environ</code> &#x2014; <span class="Nd">user
+    environment</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><var class="Ar">extern char **environ</var>;</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">An array of strings called the <var class="Ar">environment</var>
+    is made available by <a class="Xr" href="../2/execve">execve(2)</a> when a
+    process begins. By convention these strings have the form
+    &#x201C;<var class="Ar">name=value</var>&#x201D;. The following names are
+    used by various commands:</p>
+<dl class="Bl-tag">
+  <dt id="BLOCKSIZE"><a class="permalink" href="#BLOCKSIZE"><code class="Ev">BLOCKSIZE</code></a></dt>
+  <dd>The size of the block units used by several commands, most notably
+      <a class="Xr" href="../1/df">df(1)</a>,
+      <a class="Xr" href="../1/du">du(1)</a> and
+      <a class="Xr" href="../1/ls">ls(1)</a>. This variable is processed by the
+      <a class="Xr" href="../3/getbsize">getbsize(3)</a> function.</dd>
+  <dt id="COLUMNS"><a class="permalink" href="#COLUMNS"><code class="Ev">COLUMNS</code></a></dt>
+  <dd>The user's preferred width in column positions for the terminal. Utilities
+      such as <a class="Xr" href="../1/ls">ls(1)</a> and
+      <a class="Xr" href="../1/who">who(1)</a> use this to format output into
+      columns. If unset or empty, utilities will use an
+      <a class="Xr" href="../2/ioctl">ioctl(2)</a> call to ask the terminal
+      driver for the width.</dd>
+  <dt id="EDITOR"><a class="permalink" href="#EDITOR"><code class="Ev">EDITOR</code></a></dt>
+  <dd>Default editor name.</dd>
+  <dt id="EXINIT"><a class="permalink" href="#EXINIT"><code class="Ev">EXINIT</code></a></dt>
+  <dd>A startup list of commands read by <a class="Xr" href="../1/ex">ex(1)</a>
+      and <a class="Xr" href="../1/vi">vi(1)</a>.</dd>
+  <dt id="HOME"><a class="permalink" href="#HOME"><code class="Ev">HOME</code></a></dt>
+  <dd>A user's login directory, set by
+      <a class="Xr" href="../1/login">login(1)</a> from the password file
+      <a class="Xr" href="../5/passwd">passwd(5)</a>.</dd>
+  <dt id="LANG"><a class="permalink" href="#LANG"><code class="Ev">LANG</code></a></dt>
+  <dd>This variable configures all programs which use
+      <a class="Xr" href="../3/setlocale">setlocale(3)</a> to use the specified
+      locale unless the <code class="Ev">LC_*</code> variables are set.</dd>
+  <dt id="LC_ALL"><a class="permalink" href="#LC_ALL"><code class="Ev">LC_ALL</code></a></dt>
+  <dd>Overrides the values of <code class="Ev">LC_COLLATE</code>,
+      <code class="Ev">LC_CTYPE</code>, <code class="Ev">LC_MESSAGES</code>,
+      <code class="Ev">LC_MONETARY</code>, <code class="Ev">LC_NUMERIC</code>,
+      <code class="Ev">LC_TIME</code> and <code class="Ev">LANG</code>.</dd>
+  <dt id="LC_COLLATE"><a class="permalink" href="#LC_COLLATE"><code class="Ev">LC_COLLATE</code></a></dt>
+  <dd>Locale to be used for ordering of strings.</dd>
+  <dt id="LC_CTYPE"><a class="permalink" href="#LC_CTYPE"><code class="Ev">LC_CTYPE</code></a></dt>
+  <dd>Locale to be used for character classification (letter, space, digit,
+      etc.) and for interpreting byte sequences as multibyte characters.</dd>
+  <dt id="LC_MESSAGES"><a class="permalink" href="#LC_MESSAGES"><code class="Ev">LC_MESSAGES</code></a></dt>
+  <dd>Locale to be used for diagnostic messages.</dd>
+  <dt id="LC_MONETARY"><a class="permalink" href="#LC_MONETARY"><code class="Ev">LC_MONETARY</code></a></dt>
+  <dd>Locale to be used for interpreting monetary input and formatting
+    output.</dd>
+  <dt id="LC_NUMERIC"><a class="permalink" href="#LC_NUMERIC"><code class="Ev">LC_NUMERIC</code></a></dt>
+  <dd>Locale to be used for interpreting numeric input and formatting
+    output.</dd>
+  <dt id="LC_TIME"><a class="permalink" href="#LC_TIME"><code class="Ev">LC_TIME</code></a></dt>
+  <dd>Locale to be used for interpreting dates input and for formatting
+    output.</dd>
+  <dt id="MAIL"><a class="permalink" href="#MAIL"><code class="Ev">MAIL</code></a></dt>
+  <dd>The location of the user's mailbox instead of the default in /var/mail,
+      used by <a class="Xr" href="../1/mail">mail(1)</a>,
+      <a class="Xr" href="../1/sh">sh(1)</a>, and many other mail clients.</dd>
+  <dt id="NLSPATH"><a class="permalink" href="#NLSPATH"><code class="Ev">NLSPATH</code></a></dt>
+  <dd>List of directories to be searched for the message catalog referred to by
+      <code class="Ev">LC_MESSAGES</code>. See
+      <a class="Xr" href="../3/catopen">catopen(3)</a>.</dd>
+  <dt id="PAGER"><a class="permalink" href="#PAGER"><code class="Ev">PAGER</code></a></dt>
+  <dd>Default paginator program. The program specified by this variable is used
+      by <a class="Xr" href="../1/mail">mail(1)</a>,
+      <a class="Xr" href="../1/man">man(1)</a>,
+      <a class="Xr" href="../1/ftp">ftp(1)</a>, etc, to display information
+      which is longer than the current display.</dd>
+  <dt id="PATH"><a class="permalink" href="#PATH"><code class="Ev">PATH</code></a></dt>
+  <dd>The sequence of directories, separated by colons, searched by
+      <a class="Xr" href="../1/csh">csh(1)</a>,
+      <a class="Xr" href="../1/sh">sh(1)</a>,
+      <a class="Xr" href="../3/system">system(3)</a>,
+      <a class="Xr" href="../3/execvp">execvp(3)</a>, etc, when looking for an
+      executable file. <code class="Ev">PATH</code> is set to ``/usr/bin:/bin''
+      initially by <a class="Xr" href="../1/login">login(1)</a>.</dd>
+  <dt id="PRINTER"><a class="permalink" href="#PRINTER"><code class="Ev">PRINTER</code></a></dt>
+  <dd>The name of the default printer to be used by
+      <a class="Xr" href="../1/lpr">lpr(1)</a>,
+      <a class="Xr" href="../1/lpq">lpq(1)</a>, and
+      <a class="Xr" href="../1/lprm">lprm(1)</a>.</dd>
+  <dt id="PWD"><a class="permalink" href="#PWD"><code class="Ev">PWD</code></a></dt>
+  <dd>The current directory pathname.</dd>
+  <dt id="SHELL"><a class="permalink" href="#SHELL"><code class="Ev">SHELL</code></a></dt>
+  <dd>The full pathname of the user's login shell.</dd>
+  <dt id="TERM"><a class="permalink" href="#TERM"><code class="Ev">TERM</code></a></dt>
+  <dd>The kind of terminal for which output is to be prepared. This information
+      is used by commands, such as <a class="Xr" href="../1/nroff">nroff(1)</a>
+      or <a class="Xr" href="../1/plot">plot(1)</a> which may exploit special
+      terminal capabilities. See <span class="Pa">/usr/share/misc/termcap</span>
+      (<a class="Xr" href="../5/termcap">termcap(5)</a>) for a list of terminal
+      types.</dd>
+  <dt id="TERMCAP"><a class="permalink" href="#TERMCAP"><code class="Ev">TERMCAP</code></a></dt>
+  <dd>The string describing the terminal in <code class="Ev">TERM</code>, or, if
+      it begins with a '/', the name of the termcap file. See
+      <code class="Ev">TERMPATH</code> below, and
+      <a class="Xr" href="../5/termcap">termcap(5)</a>.</dd>
+  <dt id="TERMPATH"><a class="permalink" href="#TERMPATH"><code class="Ev">TERMPATH</code></a></dt>
+  <dd>A sequence of pathnames of termcap files, separated by colons or spaces,
+      which are searched for terminal descriptions in the order listed. Having
+      no <code class="Ev">TERMPATH</code> is equivalent to a
+      <code class="Ev">TERMPATH</code> of
+      &#x201C;<span class="Pa">$HOME/.termcap:/etc/termcap</span>&#x201D;.
+      <code class="Ev">TERMPATH</code> is ignored if
+      <code class="Ev">TERMCAP</code> contains a full pathname.</dd>
+  <dt id="TMPDIR"><a class="permalink" href="#TMPDIR"><code class="Ev">TMPDIR</code></a></dt>
+  <dd>The directory in which to store temporary files. Most applications use
+      either &#x201C;/tmp&#x201D; or &#x201C;/var/tmp&#x201D;. Setting this
+      variable will make them use another directory.</dd>
+  <dt id="TZ"><a class="permalink" href="#TZ"><code class="Ev">TZ</code></a></dt>
+  <dd>The timezone to use when displaying dates. The normal format is a pathname
+      relative to &#x201C;<span class="Pa">/usr/share/zoneinfo</span>&#x201D;.
+      For example, the command &#x201C;env TZ=America/Los_Angeles date&#x201D;
+      displays the current time in California. See
+      <a class="Xr" href="../3/tzset">tzset(3)</a> for more information.</dd>
+  <dt id="USER"><a class="permalink" href="#USER"><code class="Ev">USER</code></a></dt>
+  <dd>The login name of the user.</dd>
+</dl>
+<p class="Pp">Further names may be placed in the environment by the
+    <code class="Ic">export</code> command and <var class="Ar">name=value</var>
+    arguments in <a class="Xr" href="../1/sh">sh(1)</a>, or by the
+    <code class="Ic">setenv</code> command if you use
+    <a class="Xr" href="../1/csh">csh(1)</a>. It is unwise to change certain
+    <a class="Xr" href="../1/sh">sh(1)</a> variables that are frequently
+    exported by <span class="Pa">.profile</span> files, such as
+    <code class="Ev">MAIL</code>, <code class="Ev">PS1</code>,
+    <code class="Ev">PS2</code>, and <code class="Ev">IFS</code>, unless you
+    know what you are doing.</p>
+<p class="Pp">The current environment variables can be printed with
+    <a class="Xr" href="../1/env">env(1)</a>,
+    <a class="Xr" href="../1/set">set(1)</a> or
+    <a class="Xr" href="../1/printenv">printenv(1)</a> in
+    <a class="Xr" href="../1/sh">sh(1)</a> and
+    <a class="Xr" href="../1/env">env(1)</a>,
+    <a class="Xr" href="../1/printenv">printenv(1)</a> or the
+    <code class="Cm">printenv</code> built-in command in
+    <a class="Xr" href="../1/csh">csh(1)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROGRAMMING"><a class="permalink" href="#PROGRAMMING">PROGRAMMING</a></h1>
+<p class="Pp">Programs can query and modify the environment, using the
+    environment routines <a class="Xr" href="../3/getenv">getenv(3)</a>,
+    <a class="Xr" href="../3/putenv">putenv(3)</a>,
+    <a class="Xr" href="../3/setenv">setenv(3)</a> and
+    <a class="Xr" href="../3/unsetenv">unsetenv(3)</a>. Direct access can be
+    made through the global variable <var class="Va">environ</var>, though it is
+    recommended that changes to the enviroment still be made through the
+    environment routines.</p>
+<p class="Pp" id="_NSGetEnviron">Shared libraries and bundles don't have direct
+    access to <var class="Va">environ</var>, which is only available to the
+    loader <a class="Xr" href="../1/ld">ld(1)</a> when a complete program is
+    being linked. The environment routines can still be used, but if direct
+    access to <var class="Va">environ</var> is needed, the
+    <a class="permalink" href="#_NSGetEnviron"><code class="Fn">_NSGetEnviron</code></a>()
+    routine, defined in
+    <code class="In">&lt;<a class="In">crt_externs.h</a>&gt;</code>, can be used
+    to retrieve the address of <var class="Va">environ</var> at runtime.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/cd">cd(1)</a>,
+    <a class="Xr" href="../1/csh">csh(1)</a>,
+    <a class="Xr" href="../1/env">env(1)</a>,
+    <a class="Xr" href="../1/ex">ex(1)</a>,
+    <a class="Xr" href="../1/login">login(1)</a>,
+    <a class="Xr" href="../1/printenv">printenv(1)</a>,
+    <a class="Xr" href="../1/sh">sh(1)</a>,
+    <a class="Xr" href="../2/execve">execve(2)</a>,
+    <a class="Xr" href="../3/execle">execle(3)</a>,
+    <a class="Xr" href="../3/getenv">getenv(3)</a>,
+    <a class="Xr" href="../3/putenv">putenv(3)</a>,
+    <a class="Xr" href="../3/setenv">setenv(3)</a>,
+    <a class="Xr" href="../3/unsetenv">unsetenv(3)</a>,
+    <a class="Xr" href="../3/setlocale">setlocale(3)</a>,
+    <a class="Xr" href="../3/system">system(3)</a>,
+    <a class="Xr" href="../3/termcap">termcap(3)</a>,
+    <a class="Xr" href="../5/termcap">termcap(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">environ</code> manual page appeared in
+    <span class="Ux">4.2BSD</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">April 12, 2003</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

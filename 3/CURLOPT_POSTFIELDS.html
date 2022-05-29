@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_POSTFIELDS(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_POSTFIELDS(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_POSTFIELDS(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_POSTFIELDS - data to POST to server</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#include &lt;curl/curl.h&gt;</p>
+<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_POSTFIELDS, char
+    *postdata);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a char * as parameter, pointing to the full data to send in
+    an HTTP POST operation. You must make sure that the data is formatted the
+    way you want the server to receive it. libcurl will not convert or encode it
+    for you in any way. For example, the web server may assume that this data is
+    url-encoded.</p>
+<p class="Pp">The data pointed to is NOT copied by the library: as a
+    consequence, it must be preserved by the calling application until the
+    associated transfer finishes. This behavior can be changed (so libcurl does
+    copy the data) by setting the <i>CURLOPT_COPYPOSTFIELDS(3)</i> option.</p>
+<p class="Pp">This POST is a normal application/x-www-form-urlencoded kind (and
+    libcurl will set that Content-Type by default when this option is used),
+    which is commonly used by HTML forms. Change Content-Type with
+    <i>CURLOPT_HTTPHEADER(3)</i>.</p>
+<p class="Pp">You can use <i>curl_easy_escape(3)</i> to url-encode your data, if
+    necessary. It returns a pointer to an encoded string that can be passed as
+    <i>postdata</i>.</p>
+<p class="Pp">Using <i>CURLOPT_POSTFIELDS(3)</i> implies setting
+    <i>CURLOPT_POST(3)</i> to 1.</p>
+<p class="Pp">If <i>CURLOPT_POSTFIELDS(3)</i> is explicitly set to NULL then
+    libcurl will get the POST data from the read callback. If you want to send a
+    zero-byte POST set <i>CURLOPT_POSTFIELDS(3)</i> to an empty string, or set
+    <i>CURLOPT_POST(3)</i> to 1 and <i>CURLOPT_POSTFIELDSIZE(3)</i> to 0.</p>
+<p class="Pp">libcurl will use assume this option points to a nul-terminated
+    string unless you also set <i>CURLOPT_POSTFIELDSIZE(3)</i> to specify the
+    length of the provided data, which then is strictly required if you want to
+    send off nul bytes included in the data.</p>
+<p class="Pp">Using POST with HTTP 1.1 implies the use of a &quot;Expect:
+    100-continue&quot; header, and libcurl will add that header automatically if
+    the POST is either known to be larger than 1MB or if the expected size is
+    unknown. You can disable this header with <i>CURLOPT_HTTPHEADER(3)</i> as
+    usual.</p>
+<p class="Pp">To make multipart/formdata posts (aka RFC2388-posts), check out
+    the <i>CURLOPT_HTTPPOST(3)</i> option combined with
+  <i>curl_formadd(3)</i>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">HTTP</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  const char *data = &quot;data to send&quot;;
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
+<br/>
+  /* size of the POST data */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, 12L);
+<br/>
+  /* pass in a pointer to the data - libcurl will not copy */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+<br/>
+  curl_easy_perform(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Always</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_POSTFIELDSIZE</b>(3), <b>CURLOPT_READFUNCTION</b>(3),
+  </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">September 8, 2021</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

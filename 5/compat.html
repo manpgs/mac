@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>COMPAT(5)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">COMPAT(5)</td>
+    <td class="head-vol">File Formats Manual</td>
+    <td class="head-rtitle">COMPAT(5)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">compat</code> &#x2014;
+    <span class="Nd">manipulate compatibility settings</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="Ev">COMMAND_MODE=legacy|unix2003</code>
+  <br/>
+  <code class="Ev">SYSTEM_VERSION_COMPAT=1</code></p>
+<p class="Pp">
+  <br/>
+  <code class="Fd">#define _POSIX_C_SOURCE</code>
+  <br/>
+  <code class="Fd">#define _DARWIN_C_SOURCE</code>
+  <br/>
+  <code class="Fd">#define _NONSTD_SOURCE</code>
+  <br/>
+  <code class="Fd">defined(__LP64__)</code></p>
+<p class="Pp">
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/cdefs.h</a>&gt;</code></p>
+<p class="Pp"><code class="Fd">defined(_DARWIN_FEATURE_UNIX_CONFORMANCE)</code></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Setting the environment variable
+    <code class="Ev">COMMAND_MODE</code> to the value legacy causes utility
+    programs to behave as closely to Mac OS X 10.3's utility programs as
+    possible. When in this mode all of 10.3's flags are accepted, and in some
+    cases extra flags are accepted, but no flags that were used in 10.3 will
+    have been removed or changed in meaning. Any behavioral changes in this mode
+    are documented in the LEGACY sections of the individual utilities.</p>
+<p class="Pp">Setting the environment variable
+    <code class="Ev">COMMAND_MODE</code> to the value unix2003 causes utility
+    programs to obey the <span class="St">Version&#x00A0;3 of the Single UNIX
+    Specification (&#x201C;SUSv3&#x201D;)</span> standards even if doing so
+    would alter the behavior of flags used in 10.3.</p>
+<p class="Pp">The value of <code class="Ev">COMMAND_MODE</code> is case
+    insensitive and if it is unset or set to something other than legacy or
+    unix2003 it behaves as if it were set to unix2003.</p>
+<p class="Pp">Setting the environment variable
+    <code class="Ev">SYSTEM_VERSION_COMPAT</code> to 1 causes the system version
+    to be reported as 10.16 when running on macOS 11 or later.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COMPILATION"><a class="permalink" href="#COMPILATION">COMPILATION</a></h1>
+<p class="Pp">Defining <code class="Dv">_NONSTD_SOURCE</code> will result in a
+    compilation error. This is no longer supported.</p>
+<p class="Pp">Defining <code class="Dv">_POSIX_C_SOURCE</code> or
+    <code class="Dv">_DARWIN_C_SOURCE</code> causes library and kernel calls to
+    conform to the SUSv3 standards even if doing so would alter the behavior of
+    functions used in 10.3. Defining <code class="Dv">_POSIX_C_SOURCE</code>
+    also removes functions, types, and other interfaces that are not part of
+    SUSv3 from the normal C namespace, unless
+    <code class="Dv">_DARWIN_C_SOURCE</code> is also defined (i.e.,
+    <code class="Dv">_DARWIN_C_SOURCE</code> is
+    <code class="Dv">_POSIX_C_SOURCE</code> with non-POSIX extensions). In any
+    of these cases, the <code class="Dv">_DARWIN_FEATURE_UNIX_CONFORMANCE</code>
+    feature macro will be defined to the SUS conformance level (it is undefined
+    otherwise).</p>
+<p class="Pp">Starting in Mac OS X 10.5, if none of the macros
+    <code class="Dv">_NONSTD_SOURCE</code>,
+    <code class="Dv">_POSIX_C_SOURCE</code> or
+    <code class="Dv">_DARWIN_C_SOURCE</code> are defined, and the environment
+    variable <code class="Ev">MACOSX_DEPLOYMENT_TARGET</code> is either
+    undefined or set to 10.5 or greater (or equivalently, the
+    <a class="Xr" href="../1/clang">clang(1)</a> option
+    <code class="Fl">-mmacosx-version-min</code> is either not specified or set
+    to 10.5 or greater), then UNIX conformance will be on by default, and
+    non-POSIX extensions will also be available (this is the equivalent of
+    defining <code class="Dv">_DARWIN_C_SOURCE</code>).</p>
+<p class="Pp">In order to provide both legacy and conformance versions of
+    functions, two versions of affected functions are provided. Legacy variants
+    have symbol names with no suffix in order to maintain ABI compatibility.
+    Conformance versions have a $UNIX2003 suffix appended to their symbol name.
+    These $UNIX2003 suffixes are automatically appended by the compiler
+    tool-chain and should not be used directly.</p>
+<p class="Pp">All currently supported platforms only have conformance variants
+    available and do not have the legacy $UNIX2003 suffix.</p>
+<p class="Pp"></p>
+<table class="tbl" style="border-top-style: double;">
+  <tr>
+    <td style="text-align: center;">user defines</td>
+    <td style="text-align: center; border-right-style: solid;">deployment</td>
+    <td style="text-align: center;">namespace</td>
+    <td style="text-align: center;">conformance</td>
+    <td style="text-align: center;">suffix</td>
+  </tr>
+  <tr style="border-bottom-style: solid;">
+    <td style="text-align: center;"></td>
+    <td style="text-align: center; border-right-style: solid;">target</td>
+  </tr>
+  <tr>
+    <td>(none)</td>
+    <td style="text-align: center; border-right-style: solid;">(any)</td>
+    <td style="text-align: center;">full</td>
+    <td style="text-align: center;">SUSv3 conformance</td>
+    <td style="text-align: center;">(none)</td>
+  </tr>
+  <tr>
+    <td>_NONSTD_SOURCE</td>
+    <td style="text-align: center; border-right-style: solid;">(any)</td>
+    <td colspan="3" style="text-align: center;">(error)</td>
+  </tr>
+  <tr>
+    <td>_DARWIN_C_SOURCE</td>
+    <td style="text-align: center; border-right-style: solid;">(any)</td>
+    <td style="text-align: center;">full</td>
+    <td style="text-align: center;">SUSv3 conformance</td>
+    <td style="text-align: center;">(none)</td>
+  </tr>
+  <tr style="border-bottom-style: solid;">
+    <td>_POSIX_C_SOURCE</td>
+    <td style="text-align: center; border-right-style: solid;">(any)</td>
+    <td style="text-align: center;">strict</td>
+    <td style="text-align: center;">SUSv3 conformance</td>
+    <td style="text-align: center;">(none)</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">With COMMAND_MODE set to anything other than legacy, utility
+    functions conform to <span class="St">Version&#x00A0;3 of the Single UNIX
+    Specification (&#x201C;SUSv3&#x201D;)</span>.</p>
+<p class="Pp">With <code class="Dv">_POSIX_C_SOURCE</code> or
+    <code class="Dv">_DARWIN_C_SOURCE</code> system and library calls conform to
+    <span class="St">Version&#x00A0;3 of the Single UNIX Specification
+    (&#x201C;SUSv3&#x201D;)</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">Different parts of a program can be compiled with different
+    compatibility settings. The resultant program will normally work as
+    expected, for example a regex created by the SUSv3
+    <code class="Fn">regcomp</code>(<var class="Fa">3</var>) can be passed to
+    the legacy <code class="Fn">regfree</code>(<var class="Fa">3</var>) with no
+    unexpected results. Some cases are less clear cut, for example what does the
+    programmer intend when they use the SUSv3
+    <code class="Fn">regcomp</code>(<var class="Fa">3</var>) to compile a regex,
+    but the legacy <code class="Fn">regexec</code>(<var class="Fa">3</var>) to
+    execute it? Any interpretation will surprise someone.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">July 21, 2020</td>
+    <td class="foot-os">Darwin</td>
+  </tr>
+</table>
+</body>
+</html>

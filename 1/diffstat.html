@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  *****************************************************************************
+   Copyright 1994-2018,2019 by Thomas E. Dickey                               *
+   All Rights Reserved.                                                       *
+                                                                              *
+   Permission to use, copy, modify, and distribute this software and its      *
+   documentation for any purpose and without fee is hereby granted, provided  *
+   that the above copyright notice appear in all copies and that both that    *
+   copyright notice and this permission notice appear in supporting           *
+   documentation, and that the name of the above listed copyright holder(s)   *
+   not be used in advertising or publicity pertaining to distribution of the  *
+   software without specific, written prior permission.                       *
+                                                                              *
+   THE ABOVE LISTED COPYRIGHT HOLDER(S) DISCLAIM ALL WARRANTIES WITH REGARD   *
+   TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND  *
+   FITNESS, IN NO EVENT SHALL THE ABOVE LISTED COPYRIGHT HOLDER(S) BE LIABLE  *
+   FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES          *
+   WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN      *
+   ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR *
+   IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                *
+  *****************************************************************************
+   $Id: diffstat.1,v 1.40 2019/11/29 01:34:39 tom Exp $
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>DIFFSTAT(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">DIFFSTAT(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">DIFFSTAT(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><b>diffstat</b> - make histogram from diff-output</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>diffstat</b><i> [options] [file-specifications]</i></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This program reads the output of <b>diff</b> and displays a
+    histogram of the insertions, deletions, and modifications per-file.
+    <b>Diffstat</b> is a program that is useful for reviewing large, complex
+    patch files. It reads from one or more input files which contain output from
+    <b>diff</b>, producing a histogram of the total lines changed for each file
+    referenced.</p>
+<p class="Pp">If the input filename ends with &#x201C;.bz2&#x201D;,
+    &#x201C;.gz&#x201D;, &#x201C;.lzma&#x201D;, &#x201C;.xz&#x201D;,
+    &#x201C;.z&#x201D; or &#x201C;.Z&#x201D;, <b>diffstat</b> will read the
+    uncompressed data via a pipe from the corresponding program. It also can
+    infer the compression type from files piped via the standard input.</p>
+<p class="Pp"><b>Diffstat</b> recognizes the most popular types of output from
+    <b>diff</b>:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="unified"><a class="permalink" href="#unified">unified</a></dt>
+  <dd>preferred by the <b>patch</b> utility.</dd>
+  <dt id="context"><a class="permalink" href="#context">context</a></dt>
+  <dd>best for readability, but not very compact.</dd>
+  <dt id="default"><a class="permalink" href="#default">default</a></dt>
+  <dd>not good for much, but simple to generate.</dd>
+</dl>
+</div>
+<p class="Pp"><b>Diffstat</b> detects the lines that are output by <b>diff</b>
+    to tell which files are compared, and then counts the markers in the first
+    column that denote the type of change (insertion, deletion or modification).
+    These are shown in the histogram as &quot;+&quot;, &quot;-&quot; and
+    &quot;!&quot; characters.</p>
+<p class="Pp">If no filename is given on the command line, <b>diffstat</b> reads
+    the differences from the standard input.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="b"><a class="permalink" href="#b"><b>-b</b></a></dt>
+  <dd>ignore lines matching &quot;Binary files XXX and YYY differ&quot; in the
+      <b>diff</b></dd>
+  <dt id="c"><a class="permalink" href="#c"><b>-c</b></a></dt>
+  <dd>prefix each line of output with &quot;#&quot;, making it a comment-line
+      for shell scripts.</dd>
+  <dt id="C"><a class="permalink" href="#C"><b>-C</b></a></dt>
+  <dd>add SGR color escape sequences to highlight the histogram.</dd>
+  <dt id="D"><a class="permalink" href="#D"><b>-D</b><i>
+    destination</i></a></dt>
+  <dd>specify a directory containing files which can be referred to as the
+      result of applying the differences. <b>diffstat</b> will count the lines
+      in the corresponding files (after adjusting the names by the <b>-p</b>
+      option) to obtain the total number of lines in each file.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>The remainder, after subtracting modified and deleted lines, is shown as
+      &quot;unchanged lines&quot;.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="d"><a class="permalink" href="#d"><b>-d</b></a></dt>
+  <dd>The debug prints a lot of information. It is normally compiled-in, but can
+      be suppressed.</dd>
+  <dt id="e"><a class="permalink" href="#e"><b>-e</b><i> file</i></a></dt>
+  <dd>redirect standard error to <i>file</i>.</dd>
+  <dt id="E"><a class="permalink" href="#E"><b>-E</b></a></dt>
+  <dd>strip out ANSI escape sequences on each line before parsing the
+      differences. This allows <b>diffstat</b> to be used with
+    <b>colordiff</b>.</dd>
+  <dt id="f"><a class="permalink" href="#f"><b>-f</b><i> format</i></a></dt>
+  <dd>specify the format of the histogram.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>0</dt>
+  <dd>for concise, which shows only the value and a single histogram code for
+      each of insert (+), delete (-) or modify (!)</dd>
+  <dt>1</dt>
+  <dd>for normal output,</dd>
+  <dt>2</dt>
+  <dd>to fill in the histogram with dots,</dd>
+  <dt>4</dt>
+  <dd>to print each value with the histogram.</dd>
+</dl>
+</div>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>Any nonzero value gives a histogram. The dots and individual values can be
+      combined, e.g., <b>-f6</b> gives both.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="h"><a class="permalink" href="#h"><b>-h</b></a></dt>
+  <dd>prints the usage message and exits.</dd>
+  <dt id="k"><a class="permalink" href="#k"><b>-k</b></a></dt>
+  <dd>suppress the merging of filenames in the report.</dd>
+  <dt id="K"><a class="permalink" href="#K"><b>-K</b></a></dt>
+  <dd>attempt to improve the annotation of &quot;only&quot; files by looking for
+      a match in the resulting set of files and inferring whether the file was
+      added or removed.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>This does not currently work in combination with <b>-R</b> because
+      <b>diffstat</b> maintains only the resulting set of files.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="l"><a class="permalink" href="#l"><b>-l</b></a></dt>
+  <dd>lists only the filenames. No histogram is generated.</dd>
+  <dt id="m"><a class="permalink" href="#m"><b>-m</b></a></dt>
+  <dd>merge insert/delete counts from each &quot;chunk&quot; of the patch file
+      to approximate a count of the modified lines.</dd>
+  <dt id="n"><a class="permalink" href="#n"><b>-n</b><i> number</i></a></dt>
+  <dd>specify the minimum width used for filenames. If you do not specify this,
+      <b>diffstat</b> uses the length of the longest filename, after stripping
+      common prefixes.</dd>
+  <dt id="N"><a class="permalink" href="#N"><b>-N</b><i> number</i></a></dt>
+  <dd>specify the maximum width used for filenames. Names longer than this limit
+      are truncated on the left. If you do not specify this, <b>diffstat</b>
+      next checks the <b>-n</b> option.</dd>
+  <dt id="o"><a class="permalink" href="#o"><b>-o</b><i> file</i></a></dt>
+  <dd>redirect standard output to <i>file</i>.</dd>
+  <dt id="p"><a class="permalink" href="#p"><b>-p</b><i> number</i></a></dt>
+  <dd>override the logic that strips common pathnames, simulating the
+      <b>patch</b> &quot;-p&quot; option.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>If you do not give a <b>-p</b> option, <b>diffstat</b> examines the
+      differences and strips the common prefix from the pathnames. This is not
+      what <b>patch</b> does.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="q"><a class="permalink" href="#q"><b>-q</b></a></dt>
+  <dd>suppress the &quot;0 files changed&quot; message for empty diffs.</dd>
+  <dt id="r"><a class="permalink" href="#r"><b>-r code</b></a></dt>
+  <dd>provides optional rounding of the data shown in histogram, rather than
+      truncating with error adjustments.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>0</dt>
+  <dd>is the default. No rounding is performed, but accumulated errors are added
+      to following columns.</dd>
+  <dt>1</dt>
+  <dd>rounds the data</dd>
+  <dt>2</dt>
+  <dd>rounds the data and adjusts the histogram to ensure that it displays
+      something if there are any differences even if those would normally be
+      rounded to zero.</dd>
+</dl>
+</div>
+<dl class="Bl-tag">
+  <dt id="R"><a class="permalink" href="#R"><b>-R</b></a></dt>
+  <dd>Assume patch was created with old and new files swapped.</dd>
+  <dt id="s"><a class="permalink" href="#s"><b>-s</b></a></dt>
+  <dd>show only the summary line, e.g., number of insertions and deletions.</dd>
+  <dt id="S"><a class="permalink" href="#S"><b>-S</b><i> source</i></a></dt>
+  <dd>this is like the <b>-D</b> option, but specifies a location where the
+      original files (before applying differences) can be found.</dd>
+  <dt id="t"><a class="permalink" href="#t"><b>-t</b></a></dt>
+  <dd>overrides the histogram, generates output of comma separated values for
+      the number of changed lines found in the differences for each file:
+      inserted, deleted and modified.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>If <b>-S</b> or <b>-D</b> options are given, the number of unchanged lines
+      precedes the number of changes.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="T"><a class="permalink" href="#T"><b>-T</b></a></dt>
+  <dd>prints the numbers that the <b>-t</b> option would show, between the
+      pathname and histogram.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>The width of the number of changes is determined by the largest value (but
+      at least 3). The width given in the <b>-w</b> option is separate from the
+      width of these numbers.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="u"><a class="permalink" href="#u"><b>-u</b></a></dt>
+  <dd>suppress the sorting of filenames in the report.</dd>
+  <dt id="v"><a class="permalink" href="#v"><b>-v</b></a></dt>
+  <dd>show progress, e.g., if the output is redirected to a file, write progress
+      messages to the standard error.</dd>
+  <dt id="V"><a class="permalink" href="#V"><b>-V</b></a></dt>
+  <dd>prints the current version number and exits.</dd>
+  <dt id="w"><a class="permalink" href="#w"><b>-w</b><i> number</i></a></dt>
+  <dd>specify the maximum width of the histogram. The histogram will never be
+      shorter than 10 columns, just in case the filenames get too large.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>The default is 80 columns, unless the output is to a terminal. In that
+      case, the default width is the terminal's width.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
+<p class="Pp"><b>Diffstat</b> runs in a POSIX environment.</p>
+<p class="Pp">You can override the compiled-in paths of programs used for
+    decompressing input files by setting environment variables corresponding to
+    their name:</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>
+DIFFSTAT_BZCAT_PATH
+DIFFSTAT_BZIP2_PATH
+DIFFSTAT_COMPRESS_PATH
+DIFFSTAT_GZIP_PATH
+DIFFSTAT_LZCAT_PATH
+DIFFSTAT_PCAT_PATH
+DIFFSTAT_UNCOMPRESS_PATH
+DIFFSTAT_XZ_PATH
+DIFFSTAT_ZCAT_PATH
+</pre>
+</div>
+<p class="Pp">However, <b>diffstat</b> assumes that the resulting program uses
+    the same command-line options, e.g., &quot;-c&quot; to decompress to the
+    standard output.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<p class="Pp"><b>Diffstat</b> is a single binary module, which uses no auxiliary
+    files.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp"><b>Diffstat</b> makes a lot of assumptions about the format of
+    <b>diff</b>'s output.</p>
+<p class="Pp">There is no way to obtain a filename from the standard <b>diff</b>
+    between two files with no options. Context diffs work, as well as unified
+    diffs.</p>
+<p class="Pp">There's no easy way to determine the degree of overlap between the
+    &quot;before&quot; and &quot;after&quot; displays of modified lines.
+    <b>diffstat</b> simply counts the number of inserted and deleted lines to
+    approximate modified lines for the <b>-m</b> option.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>diff</b>(1), <b>patch</b>(1).</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
+<p class="Pp">Thomas Dickey &lt;dickey@invisible-island.net&gt;.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date"></td>
+    <td class="foot-os"></td>
+  </tr>
+</table>
+</body>
+</html>

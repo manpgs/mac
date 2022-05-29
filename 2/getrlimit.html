@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  	$NetBSD: getrlimit.2,v 1.8 1995/10/12 15:40:58 jtc Exp $
+  
+   Copyright (c) 1980, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)getrlimit.2	8.1 (Berkeley) 6/4/93
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GETRLIMIT(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GETRLIMIT(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">GETRLIMIT(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">getrlimit</code>,
+    <code class="Nm">setrlimit</code> &#x2014; <span class="Nd">control maximum
+    system resource consumption</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/resource.h&gt;</a></code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">getrlimit</code>(<var class="Fa">int resource</var>,
+    <var class="Fa">struct rlimit *rlp</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">setrlimit</code>(<var class="Fa">int resource</var>,
+    <var class="Fa">const struct rlimit *rlp</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Limits on the consumption of system resources by the current
+    process and each process it creates may be obtained with the
+    <a class="permalink" href="#getrlimit"><code class="Fn" id="getrlimit">getrlimit</code></a>()
+    call, and set with the
+    <a class="permalink" href="#setrlimit"><code class="Fn" id="setrlimit">setrlimit</code></a>()
+    call.</p>
+<p class="Pp">The <var class="Fa">resource</var> parameter is one of the
+    following:</p>
+<dl class="Bl-tag">
+  <dt id="RLIMIT_CORE"><a class="permalink" href="#RLIMIT_CORE"><code class="Li">RLIMIT_CORE</code></a></dt>
+  <dd>The largest size (in bytes) <a class="Xr" href="../1/core">core</a> file
+      that may be created.</dd>
+  <dt id="RLIMIT_CPU"><a class="permalink" href="#RLIMIT_CPU"><code class="Li">RLIMIT_CPU</code></a></dt>
+  <dd>The maximum amount of cpu time (in seconds) to be used by each
+    process.</dd>
+  <dt id="RLIMIT_DATA"><a class="permalink" href="#RLIMIT_DATA"><code class="Li">RLIMIT_DATA</code></a></dt>
+  <dd>The maximum size (in bytes) of the data segment for a process; this
+      defines how far a program may extend its break with the
+      <a class="Xr" href="../2/sbrk">sbrk(2)</a> system call.</dd>
+  <dt id="RLIMIT_FSIZE"><a class="permalink" href="#RLIMIT_FSIZE"><code class="Li">RLIMIT_FSIZE</code></a></dt>
+  <dd>The largest size (in bytes) file that may be created.</dd>
+  <dt id="RLIMIT_MEMLOCK"><a class="permalink" href="#RLIMIT_MEMLOCK"><code class="Li">RLIMIT_MEMLOCK</code></a></dt>
+  <dd>The maximum size (in bytes) which a process may lock into memory using the
+      <a class="Xr" href="../2/mlock">mlock(2)</a> function.</dd>
+  <dt id="RLIMIT_NOFILE"><a class="permalink" href="#RLIMIT_NOFILE"><code class="Li">RLIMIT_NOFILE</code></a></dt>
+  <dd>The maximum number of open files for this process.</dd>
+  <dt id="RLIMIT_NPROC"><a class="permalink" href="#RLIMIT_NPROC"><code class="Li">RLIMIT_NPROC</code></a></dt>
+  <dd>The maximum number of simultaneous processes for this user id.</dd>
+  <dt id="RLIMIT_RSS"><a class="permalink" href="#RLIMIT_RSS"><code class="Li">RLIMIT_RSS</code></a></dt>
+  <dd>The maximum size (in bytes) to which a process's resident set size may
+      grow. This imposes a limit on the amount of physical memory to be given to
+      a process; if memory is tight, the system will prefer to take memory from
+      processes that are exceeding their declared resident set size.</dd>
+  <dt id="RLIMIT_STACK"><a class="permalink" href="#RLIMIT_STACK"><code class="Li">RLIMIT_STACK</code></a></dt>
+  <dd>The maximum size (in bytes) of the stack segment for a process; this
+      defines how far a program's stack segment may be extended. Stack extension
+      is performed automatically by the system.</dd>
+</dl>
+<p class="Pp" id="rlimit">A resource limit is specified as a soft limit and a
+    hard limit. When a soft limit is exceeded a process may receive a signal
+    (for example, if the cpu time or file size is exceeded), but it will be
+    allowed to continue execution until it reaches the hard limit (or modifies
+    its resource limit). The
+    <a class="permalink" href="#rlimit"><i class="Em">rlimit</i></a> structure
+    is used to specify the hard and soft limits on a resource,</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+struct rlimit {
+	rlim_t	rlim_cur;	/* current (soft) limit */
+	rlim_t	rlim_max;	/* hard limit */
+};
+</pre>
+</div>
+<p class="Pp">Only the super-user may raise the maximum limits. Other users may
+    only alter <var class="Fa">rlim_cur</var> within the range from 0 to
+    <var class="Fa">rlim_max</var> or (irreversibly) lower
+    <var class="Fa">rlim_max</var>.</p>
+<p class="Pp">Because this information is stored in the per-process information,
+    this system call must be executed directly by the shell if it is to affect
+    all future processes created by the shell; <code class="Ic">limit</code> is
+    thus a built-in command to <a class="Xr" href="../1/csh">csh(1)</a> and
+    <code class="Ic">ulimit</code> is the <a class="Xr" href="../1/sh">sh(1)</a>
+    equivalent.</p>
+<p class="Pp">The system refuses to extend the data or stack space when the
+    limits would be exceeded in the normal way: a
+    <a class="Xr" href="../1/break">break</a> call fails if the data space limit
+    is reached. When the stack limit is reached, the process receives a
+    segmentation fault (<code class="Dv">SIGSEGV</code>); if this signal is not
+    caught by a handler using the signal stack, this signal will kill the
+    process.</p>
+<p class="Pp">A file I/O operation that would create a file larger that the
+    process' soft limit will cause the write to fail and a signal
+    <code class="Dv">SIGXFSZ</code> to be generated; this normally terminates
+    the process, but may be caught. When the soft cpu time limit is exceeded, a
+    signal <code class="Dv">SIGXCPU</code> is sent to the offending process.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">A 0 return value indicates that the call succeeded, changing or
+    returning the resource limit. A return value of -1 indicates that an error
+    occurred, and an error code is stored in the global location
+    <var class="Va">errno</var>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">getrlimit</code>() and
+    <code class="Fn">setrlimit</code>() system calls will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>The address specified for <var class="Fa">rlp</var> is invalid.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd><var class="Fa">resource</var> is invalid.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">setrlimit</code>() call will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The specified limit is invalid (e.g., RLIM_INFINITY or lower than
+      rlim_cur).</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The limit specified would have raised the maximum limit value and the
+      caller is not the super-user.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_SYNOPSIS"><a class="permalink" href="#LEGACY_SYNOPSIS">LEGACY
+  SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/types.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;sys/time.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;sys/resource.h&gt;</a></code></p>
+<p class="Pp">The include files
+    <code class="In">&lt;<a class="In">sys/types.h</a>&gt;</code> and
+    <code class="In">&lt;<a class="In">sys/time.h</a>&gt;</code> are
+  necessary.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COMPATIBILITY"><a class="permalink" href="#COMPATIBILITY">COMPATIBILITY</a></h1>
+<p class="Pp"><code class="Fn">setrlimit</code>() now returns with
+    <var class="Va">errno</var> set to EINVAL in places that historically
+    succeeded. It no longer accepts &quot;rlim_cur = RLIM_INFINITY&quot; for
+    RLIM_NOFILE. Use &quot;rlim_cur = min(OPEN_MAX, rlim_max)&quot;.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/csh">csh(1)</a>,
+    <a class="Xr" href="../1/sh">sh(1)</a>,
+    <a class="Xr" href="../2/quota">quota(2)</a>,
+    <a class="Xr" href="../2/sigaction">sigaction(2)</a>,
+    <a class="Xr" href="../2/sigaltstack">sigaltstack(2)</a>,
+    <a class="Xr" href="../3/sysctl">sysctl(3)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">getrlimit</code>() function call appeared in
+    <span class="Ux">4.2BSD</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 4, 1993</td>
+    <td class="foot-os">BSD 4</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLMOPT_TIMERDATA(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLMOPT_TIMERDATA(3)</td>
+    <td class="head-vol">curl_multi_setopt options</td>
+    <td class="head-rtitle">CURLMOPT_TIMERDATA(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLMOPT_TIMERDATA - custom pointer to pass to timer callback</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+#include &lt;curl/curl.h&gt;
+CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERDATA, void *pointer);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">A data <b>pointer</b> to pass to the timer callback set with the
+    <i>CURLMOPT_TIMERFUNCTION(3)</i> option.</p>
+<p class="Pp">This pointer will not be touched by libcurl but will only be
+    passed in to the timer callbacks's <b>userp</b> argument.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">All</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+static gboolean timeout_cb(gpointer user_data)
+{
+<br/>
+  int running;
+<br/>
+  if(user_data) {
+<br/>
+    g_free(user_data);
+<br/>
+    curl_multi_setopt(curl_handle, CURLMOPT_TIMERDATA, NULL);
+<br/>
+  }
+<br/>
+  curl_multi_socket_action(multi, CURL_SOCKET_TIMEOUT, 0, &amp;running);
+<br/>
+  return G_SOURCE_REMOVE;
+}
+static int timerfunc(CURLM *multi, long timeout_ms, void *userp)
+{
+<br/>
+  guint *id = userp;
+<br/>
+  if(id)
+<br/>
+    g_source_remove(*id);
+<br/>
+  /* -1 means we should just delete our timer. */
+<br/>
+  if(timeout_ms == -1) {
+<br/>
+    g_free(id);
+<br/>
+    id = NULL;
+<br/>
+  }
+<br/>
+  else {
+<br/>
+    if(!id)
+<br/>
+      id = g_new(guint, 1);
+<br/>
+    *id = g_timeout_add(timeout_ms, timeout_cb, id);
+<br/>
+  }
+<br/>
+  curl_multi_setopt(multi, CURLMOPT_TIMERDATA, id);
+<br/>
+  return 0;
+}
+curl_multi_setopt(multi, CURLMOPT_TIMERFUNCTION, timerfunc);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.16.0</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLM_OK if the option is supported, and
+    CURLM_UNKNOWN_OPTION if not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLMOPT_TIMERFUNCTION</b>(3),
+    <b>CURLMOPT_SOCKETFUNCTION</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  	$NetBSD: setuid.2,v 1.3 1995/02/27 12:37:06 cgd Exp $
+  
+   Copyright (c) 1983, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)setuid.2	8.1 (Berkeley) 6/4/93
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SETUID(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SETUID(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">SETUID(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">setegid</code>, <code class="Nm">seteuid</code>,
+    <code class="Nm">setgid</code>, <code class="Nm">setuid</code> &#x2014;
+    <span class="Nd">set user and group ID</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">setegid</code>(<var class="Fa">gid_t egid</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">seteuid</code>(<var class="Fa">uid_t euid</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">setgid</code>(<var class="Fa">gid_t gid</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">setuid</code>(<var class="Fa">uid_t uid</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#setuid"><code class="Fn" id="setuid">setuid</code></a>()
+    function sets the real and effective user IDs and the saved set-user-ID of
+    the current process to the specified value. The
+    <code class="Fn">setuid</code>() function is permitted if the effective user
+    ID is that of the super user, or if the specified user ID is the same as the
+    effective user ID. If not, but the specified user ID is the same as the real
+    user ID, <code class="Fn">setuid</code>() will set the effective user ID to
+    the real user ID.</p>
+<p class="Pp" id="setgid">The
+    <a class="permalink" href="#setgid"><code class="Fn">setgid</code></a>()
+    function sets the real and effective group IDs and the saved set-group-ID of
+    the current process to the specified value. The
+    <code class="Fn">setgid</code>() function is permitted if the effective user
+    ID is that of the super user, or if the specified group ID is the same as
+    the effective group ID. If not, but the specified group ID is the same as
+    the real group ID, <code class="Fn">setgid</code>() will set the effective
+    group ID to the real group ID.</p>
+<p class="Pp" id="seteuid">The
+    <a class="permalink" href="#seteuid"><code class="Fn">seteuid</code></a>()
+    function
+    (<a class="permalink" href="#setegid"><code class="Fn" id="setegid">setegid</code></a>())
+    sets the effective user ID (group ID) of the current process. The effective
+    user ID may be set to the value of the real user ID or the saved set-user-ID
+    (see <a class="Xr" href="../2/intro">intro(2)</a> and
+    <a class="Xr" href="../2/execve">execve(2)</a>); in this way, the effective
+    user ID of a set-user-ID executable may be toggled by switching to the real
+    user ID, then re-enabled by reverting to the set-user-ID value. Similarly,
+    the effective group ID may be set to the value of the real group ID or the
+    saved set-group-ID.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">Upon success, these functions return 0; otherwise -1 is
+  returned.</p>
+<p class="Pp">If the user is not the super user, or the uid specified is not the
+    real, effective ID, or saved ID, these functions return -1.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">setegid</code>(),
+    <code class="Fn">seteuid</code>(), <code class="Fn">setgid</code>(), and
+    <code class="Fn">setuid</code>() system calls will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The value of the {group,user} ID argument is invalid and is not supported
+      by the implementation.</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The process does not have appropriate privileges and the ID argument does
+      not match the real ID or the saved set-{group,user}-ID.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_SYNOPSIS"><a class="permalink" href="#LEGACY_SYNOPSIS">LEGACY
+  SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/types.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp">The include file
+    <code class="In">&lt;<a class="In">sys/types.h</a>&gt;</code> is necessary
+    for all functions.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/getgid">getgid(2)</a>,
+    <a class="Xr" href="../2/getuid">getuid(2)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">setuid</code>() and
+    <code class="Fn">setgid</code>() functions are compliant with the
+    <span class="St">IEEE Std 1003.1-1990 (&#x201C;POSIX.1&#x201D;)</span>
+    specification with <code class="Li">_POSIX_SAVED_IDS</code> defined, with
+    the extensions allowed in section B.4.2.2. The
+    <code class="Fn">seteuid</code>() and <code class="Fn">setegid</code>()
+    functions are extensions based on the POSIX concept of
+    <code class="Li">_POSIX_SAVED_IDS</code>, and have been proposed for a
+    future revision of the standard.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 4, 1993</td>
+    <td class="foot-os">BSD 4.2</td>
+  </tr>
+</table>
+</body>
+</html>

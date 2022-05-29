@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  	$NetBSD: unlink.2,v 1.7 1995/02/27 12:39:13 cgd Exp $
+  
+   Copyright (c) 1980, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)unlink.2	8.1 (Berkeley) 6/4/93
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>UNLINK(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">UNLINK(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">UNLINK(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">unlink</code>, <code class="Nm">unlinkat</code>
+    &#x2014; <span class="Nd">remove directory entry</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">unlink</code>(<var class="Fa">const char *path</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">unlinkat</code>(<var class="Fa" style="white-space: nowrap;">int
+    fd</var>, <var class="Fa" style="white-space: nowrap;">const char
+    *path</var>, <var class="Fa" style="white-space: nowrap;">int
+  flag</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#unlink"><code class="Fn" id="unlink">unlink</code></a>()
+    function removes the link named by <var class="Fa">path</var> from its
+    directory and decrements the link count of the file which was referenced by
+    the link. If that decrement reduces the link count of the file to zero, and
+    no process has the file open, then all resources associated with the file
+    are reclaimed. If one or more process have the file open when the last link
+    is removed, the link is removed, but the removal of the file is delayed
+    until all references to it have been closed.</p>
+<p class="Pp" id="unlinkat">The
+    <a class="permalink" href="#unlinkat"><code class="Fn">unlinkat</code></a>()
+    system call is equivalent to <code class="Fn">unlink</code>() or
+    <a class="permalink" href="#rmdir"><code class="Fn" id="rmdir">rmdir</code></a>()
+    except in the case where <var class="Fa">path</var> specifies a relative
+    path. In this case the directory entry to be removed is determined relative
+    to the directory associated with the file descriptor
+    <var class="Fa">fd</var> instead of the current working directory.</p>
+<p class="Pp">The values for <var class="Fa">flag</var> are constructed by a
+    bitwise-inclusive OR of flags from the following list, defined in
+    <code class="In">&lt;<a class="In">fcntl.h</a>&gt;</code>:</p>
+<dl class="Bl-tag">
+  <dt id="AT_REMOVEDIR"><a class="permalink" href="#AT_REMOVEDIR"><code class="Dv">AT_REMOVEDIR</code></a></dt>
+  <dd>Remove the directory entry specified by <var class="Fa">fd</var> and
+      <var class="Fa">path</var> as a directory, not a normal file.</dd>
+</dl>
+<p class="Pp" id="unlinkat~2">If
+    <a class="permalink" href="#unlinkat~2"><code class="Fn">unlinkat</code></a>()
+    is passed the special value <code class="Dv">AT_FDCWD</code> in the
+    <var class="Fa">fd</var> parameter, the current working directory is used
+    and the behavior is identical to a call to <var class="Fa">unlink</var> or
+    <var class="Fa">rmdir</var> respectively, depending on whether or not the
+    <code class="Dv">AT_REMOVEDIR</code> bit is set in flag.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">Upon successful completion, a value of 0 is returned. Otherwise, a
+    value of -1 is returned and <var class="Va">errno</var> is set to indicate
+    the error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">unlink</code>() system call will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
+  <dd>Search permission is denied for a component of the path prefix.</dd>
+  <dt id="EACCES~2">[<a class="permalink" href="#EACCES~2"><code class="Er">EACCES</code></a>]</dt>
+  <dd>Write permission is denied on the directory containing the link to be
+      removed.</dd>
+  <dt id="EBUSY">[<a class="permalink" href="#EBUSY"><code class="Er">EBUSY</code></a>]</dt>
+  <dd>The entry to be unlinked is the mount point for a mounted file
+    system.</dd>
+  <dt id="EBUSY~2">[<a class="permalink" href="#EBUSY~2"><code class="Er">EBUSY</code></a>]</dt>
+  <dd>The file named by the <var class="Fa">path</var> argument cannot be
+      unlinked because it is being used by the system or by another
+    process.</dd>
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd><var class="Fa">Path</var> points outside the process's allocated address
+      space.</dd>
+  <dt id="EIO">[<a class="permalink" href="#EIO"><code class="Er">EIO</code></a>]</dt>
+  <dd>An I/O error occurs while deleting the directory entry or deallocating the
+      inode.</dd>
+  <dt id="ELOOP">[<a class="permalink" href="#ELOOP"><code class="Er">ELOOP</code></a>]</dt>
+  <dd>Too many symbolic links are encountered in translating the pathname. This
+      is taken to be indicative of a looping symbolic link.</dd>
+  <dt id="ENAMETOOLONG">[<a class="permalink" href="#ENAMETOOLONG"><code class="Er">ENAMETOOLONG</code></a>]</dt>
+  <dd>A component of a pathname exceeds <code class="Dv">{NAME_MAX}</code>
+      characters, or an entire path name exceeds
+      <code class="Dv">{PATH_MAX}</code> characters (possibly as a result of
+      expanding a symlink).</dd>
+  <dt id="ENOENT">[<a class="permalink" href="#ENOENT"><code class="Er">ENOENT</code></a>]</dt>
+  <dd>The named file does not exist.</dd>
+  <dt id="ENOTDIR">[<a class="permalink" href="#ENOTDIR"><code class="Er">ENOTDIR</code></a>]</dt>
+  <dd>A component of the path prefix is not a directory.</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The named file is a directory and the effective user ID of the process is
+      not the super-user.</dd>
+  <dt id="EPERM~2">[<a class="permalink" href="#EPERM~2"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The directory containing the file is marked sticky, and neither the
+      containing directory nor the file to be removed are owned by the effective
+      user ID.</dd>
+  <dt id="EROFS">[<a class="permalink" href="#EROFS"><code class="Er">EROFS</code></a>]</dt>
+  <dd>The named file resides on a read-only file system.</dd>
+</dl>
+<p class="Pp">In addition to the errors returned by the
+    <code class="Fn">unlink</code>(), the <code class="Fn">unlinkat</code>() may
+    fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EBADF">[<a class="permalink" href="#EBADF"><code class="Er">EBADF</code></a>]</dt>
+  <dd>The <var class="Fa">path</var> argument does not specify an absolute path
+      and the <var class="Fa">fd</var> argument is neither
+      <code class="Dv">AT_FDCWD</code> nor a valid file descriptor open for
+      searching.</dd>
+  <dt id="ENOTEMPTY">[<a class="permalink" href="#ENOTEMPTY"><code class="Er">ENOTEMPTY</code></a>]</dt>
+  <dd>The <var class="Fa">flag</var> parameter has the
+      <code class="Dv">AT_REMOVEDIR</code> bit set and the
+      <var class="Fa">path</var> argument names a directory that is not an empty
+      directory, or there are hard links to the directory other than dot or a
+      single entry in dot-dot.</dd>
+  <dt id="ENOTDIR~2">[<a class="permalink" href="#ENOTDIR~2"><code class="Er">ENOTDIR</code></a>]</dt>
+  <dd>The <var class="Fa">flag</var> parameter has the
+      <code class="Dv">AT_REMOVEDIR</code> bit set and
+      <var class="Fa">path</var> does not name a directory.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The value of the <var class="Fa">flag</var> argument is not valid.</dd>
+  <dt id="ENOTDIR~3">[<a class="permalink" href="#ENOTDIR~3"><code class="Er">ENOTDIR</code></a>]</dt>
+  <dd>The <var class="Fa">path</var> argument is not an absolute path and
+      <var class="Fa">fd</var> is neither <code class="Dv">AT_FDCWD</code> nor a
+      file descriptor associated with a directory.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/close">close(2)</a>,
+    <a class="Xr" href="../2/link">link(2)</a>,
+    <a class="Xr" href="../2/rmdir">rmdir(2)</a>,
+    <a class="Xr" href="../7/symlink">symlink(7)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">unlinkat</code>() system call is expected to
+    conform to POSIX.1-2008 .</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">An <code class="Fn">unlink</code>() function call appeared in
+    <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>. The
+    <code class="Fn">unlinkat</code>() system call appeared in OS X 10.10</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 4, 1993</td>
+    <td class="foot-os">BSD 4</td>
+  </tr>
+</table>
+</body>
+</html>

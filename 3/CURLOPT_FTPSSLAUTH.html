@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_FTPSSLAUTH(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_FTPSSLAUTH(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_FTPSSLAUTH(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_FTPSSLAUTH - order in which to attempt TLS vs SSL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#include &lt;curl/curl.h&gt;</p>
+<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_FTPSSLAUTH, long
+    order);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a long using one of the values from below, to alter how
+    libcurl issues &quot;AUTH TLS&quot; or &quot;AUTH SSL&quot; when FTP over
+    SSL is activated. This is only interesting if <i>CURLOPT_USE_SSL(3)</i> is
+    also set.</p>
+<p class="Pp">Possible <i>order</i> values:</p>
+<dl class="Bl-tag">
+  <dt id="CURLFTPAUTH_DEFAULT"><a class="permalink" href="#CURLFTPAUTH_DEFAULT">CURLFTPAUTH_DEFAULT</a></dt>
+  <dd>Allow libcurl to decide.</dd>
+  <dt id="CURLFTPAUTH_SSL"><a class="permalink" href="#CURLFTPAUTH_SSL">CURLFTPAUTH_SSL</a></dt>
+  <dd>Try &quot;AUTH SSL&quot; first, and only if that fails try &quot;AUTH
+      TLS&quot;.</dd>
+  <dt id="CURLFTPAUTH_TLS"><a class="permalink" href="#CURLFTPAUTH_TLS">CURLFTPAUTH_TLS</a></dt>
+  <dd>Try &quot;AUTH TLS&quot; first, and only if that fails try &quot;AUTH
+      SSL&quot;.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">CURLFTPAUTH_DEFAULT</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">FTP</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;ftp://example.com/file.txt&quot;);
+<br/>
+  curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_TRY);
+<br/>
+  /* funny server, ask for SSL before TLS */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_FTPSSLAUTH, CURLFTPAUTH_SSL);
+<br/>
+  ret = curl_easy_perform(curl);
+<br/>
+  curl_easy_cleanup(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.12.2</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK if the option is supported, and
+    CURLE_UNKNOWN_OPTION if not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_USE_SSL</b>(3), <b>CURLOPT_FTP_SSL_CCC</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">September 8, 2021</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  Modified from man(1) of FreeBSD, the NetBSD mdoc.template, and mdoc.samples.
+  See Also:
+  man mdoc.samples for a complete listing of options
+  man mdoc for the short list of editing options
+   DATE
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>security(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">security(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">security(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">security</code> &#x2014; <span class="Nd">Command
+    line interface to keychains and Security framework</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">security</code></td>
+    <td>[<code class="Fl">-hilqv</code>] [<code class="Fl">-p</code>
+      <var class="Ar">prompt</var>] [<var class="Ar">command</var>]
+      [<var class="Ar">command_options</var>]
+      [<var class="Ar">command_args</var>]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">A simple command line interface which lets you administer
+    keychains, manipulate keys and certificates, and do just about anything the
+    Security framework is capable of from the command line.</p>
+<p class="Pp">By default <code class="Nm">security</code> will execute the
+    <var class="Ar">command</var> supplied and report if anything went
+  wrong.</p>
+<p class="Pp">If the <code class="Fl">-i</code> or <code class="Fl">-p</code>
+    options are provided, <code class="Nm">security</code> will enter
+    interactive mode and allow the user to enter multiple commands on stdin.
+    When EOF is read from stdin <code class="Nm">security</code> will exit.</p>
+<p class="Pp">Here is a complete list of the options available:</p>
+<dl class="Bl-tag">
+  <dt id="h"><a class="permalink" href="#h"><code class="Fl">-h</code></a></dt>
+  <dd>If no arguments are specified, show a list of all commands. If arguments
+      are provided, show usage for each the specified commands. This option is
+      essentially the same as the <code class="Nm">help</code> command.</dd>
+  <dt id="i"><a class="permalink" href="#i"><code class="Fl">-i</code></a></dt>
+  <dd>Run <code class="Nm">security</code> in interactive mode. A prompt
+      (<code class="Li">security&gt;</code> by default) will be displayed and
+      the user will be able to type commands on stdin until an EOF is
+      encountered.</dd>
+  <dt id="l"><a class="permalink" href="#l"><code class="Fl">-l</code></a></dt>
+  <dd>Before <code class="Nm">security</code> exits, run
+    <div class="Bd Bd-indent"><code class="Li">/usr/bin/leaks
+      -nocontext</code></div>
+    on itself to see if the command(s) you executed had any leaks.</dd>
+  <dt id="p"><a class="permalink" href="#p"><code class="Fl">-p</code></a>
+    <var class="Ar">prompt</var></dt>
+  <dd>This option implies the <code class="Fl">-i</code> option but changes the
+      default prompt to the argument specified instead.</dd>
+  <dt id="q"><a class="permalink" href="#q"><code class="Fl">-q</code></a></dt>
+  <dd>Will make <code class="Nm">security</code> less verbose.</dd>
+  <dt id="v"><a class="permalink" href="#v"><code class="Fl">-v</code></a></dt>
+  <dd>Will make <code class="Nm">security</code> more verbose.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SECURITY_COMMAND_SUMMARY"><a class="permalink" href="#SECURITY_COMMAND_SUMMARY">SECURITY
+  COMMAND SUMMARY</a></h1>
+<p class="Pp"><code class="Nm">security</code> provides a rich variety of
+    commands (<var class="Ar">command</var> in the
+    <a class="Sx" href="#SYNOPSIS">SYNOPSIS</a>), each of which often has a
+    wealth of options, to allow access to the broad functionality provided by
+    the Security framework. However, you don't have to master every detail for
+    <code class="Nm">security</code> to be useful to you.</p>
+<p class="Pp">Here are brief descriptions of all the
+    <code class="Nm">security</code> commands:</p>
+<p class="Pp"></p>
+<dl class="Bl-tag Bl-compact">
+  <dt><code class="Nm">help</code></dt>
+  <dd>Show all commands, or show usage for a command.</dd>
+  <dt><code class="Nm">list-keychains</code></dt>
+  <dd>Display or manipulate the keychain search list.</dd>
+  <dt><code class="Nm">default-keychain</code></dt>
+  <dd>Display or set the default keychain.</dd>
+  <dt><code class="Nm">login-keychain</code></dt>
+  <dd>Display or set the login keychain.</dd>
+  <dt><code class="Nm">create-keychain</code></dt>
+  <dd>Create keychains.</dd>
+  <dt><code class="Nm">delete-keychain</code></dt>
+  <dd>Delete keychains and remove them from the search list.</dd>
+  <dt><code class="Nm">lock-keychain</code></dt>
+  <dd>Lock the specified keychain.</dd>
+  <dt><code class="Nm">unlock-keychain</code></dt>
+  <dd>Unlock the specified keychain.</dd>
+  <dt><code class="Nm">set-keychain-settings</code></dt>
+  <dd>Set settings for a keychain.</dd>
+  <dt><code class="Nm">set-keychain-password</code></dt>
+  <dd>Set password for a keychain.</dd>
+  <dt><code class="Nm">show-keychain-info</code></dt>
+  <dd>Show the settings for keychain.</dd>
+  <dt><code class="Nm">dump-keychain</code></dt>
+  <dd>Dump the contents of one or more keychains.</dd>
+  <dt><code class="Nm">create-keypair</code></dt>
+  <dd>Create an asymmetric key pair.</dd>
+  <dt><code class="Nm">add-generic-password</code></dt>
+  <dd>Add a generic password item.</dd>
+  <dt><code class="Nm">add-internet-password</code></dt>
+  <dd>Add an internet password item.</dd>
+  <dt><code class="Nm">add-certificates</code></dt>
+  <dd>Add certificates to a keychain.</dd>
+  <dt><code class="Nm">find-generic-password</code></dt>
+  <dd>Find a generic password item.</dd>
+  <dt><code class="Nm">delete-generic-password</code></dt>
+  <dd>Delete a generic password item.</dd>
+  <dt><code class="Nm">set-generic-password-partition-list</code></dt>
+  <dd>Set the partition list of a generic password item.</dd>
+  <dt><code class="Nm">find-internet-password</code></dt>
+  <dd>Find an internet password item.</dd>
+  <dt><code class="Nm">delete-internet-password</code></dt>
+  <dd>Delete an internet password item.</dd>
+  <dt><code class="Nm">set-internet-password-partition-list</code></dt>
+  <dd>Set the partition list of a internet password item.</dd>
+  <dt><code class="Nm">find-key</code></dt>
+  <dd>Find keys in the keychain</dd>
+  <dt><code class="Nm">set-key-partition-list</code></dt>
+  <dd>Set the partition list of a key.</dd>
+  <dt><code class="Nm">find-certificate</code></dt>
+  <dd>Find a certificate item.</dd>
+  <dt><code class="Nm">find-identity</code></dt>
+  <dd>Find an identity (certificate + private key).</dd>
+  <dt><code class="Nm">delete-certificate</code></dt>
+  <dd>Delete a certificate from a keychain.</dd>
+  <dt><code class="Nm">delete-identity</code></dt>
+  <dd>Delete a certificate and its private key from a keychain.</dd>
+  <dt><code class="Nm">set-identity-preference</code></dt>
+  <dd>Set the preferred identity to use for a service.</dd>
+  <dt><code class="Nm">get-identity-preference</code></dt>
+  <dd>Get the preferred identity to use for a service.</dd>
+  <dt><code class="Nm">create-db</code></dt>
+  <dd>Create a db using the DL.</dd>
+  <dt><code class="Nm">export</code></dt>
+  <dd>Export items from a keychain.</dd>
+  <dt><code class="Nm">import</code></dt>
+  <dd>Import items into a keychain.</dd>
+  <dt><code class="Nm">cms</code></dt>
+  <dd>Encode or decode CMS messages.</dd>
+  <dt><code class="Nm">install-mds</code></dt>
+  <dd>Install (or re-install) the MDS database.</dd>
+  <dt><code class="Nm">add-trusted-cert</code></dt>
+  <dd>Add trusted certificate(s).</dd>
+  <dt><code class="Nm">remove-trusted-cert</code></dt>
+  <dd>Remove trusted certificate(s).</dd>
+  <dt><code class="Nm">dump-trust-settings</code></dt>
+  <dd>Display contents of trust settings.</dd>
+  <dt><code class="Nm">user-trust-settings-enable</code></dt>
+  <dd>Display or manipulate user-level trust settings.</dd>
+  <dt><code class="Nm">trust-settings-export</code></dt>
+  <dd>Export trust settings.</dd>
+  <dt><code class="Nm">trust-settings-import</code></dt>
+  <dd>Import trust settings.</dd>
+  <dt><code class="Nm">verify-cert</code></dt>
+  <dd>Verify certificate(s).</dd>
+  <dt><code class="Nm">authorize</code></dt>
+  <dd>Perform authorization operations.</dd>
+  <dt><code class="Nm">authorizationdb</code></dt>
+  <dd>Make changes to the authorization policy database.</dd>
+  <dt><code class="Nm">execute-with-privileges</code></dt>
+  <dd>Execute tool with privileges.</dd>
+  <dt><code class="Nm">leaks</code></dt>
+  <dd>Run <span class="Pa">/usr/bin/leaks</span> on this process.</dd>
+  <dt><code class="Nm">smartcards</code></dt>
+  <dd>Enable, disable or list disabled smartcard tokens.</dd>
+  <dt><code class="Nm">list-smartcards</code></dt>
+  <dd>Display available smartcards.</dd>
+  <dt><code class="Nm">export-smartcard</code></dt>
+  <dd>Export/display items from a smartcard.</dd>
+  <dt><code class="Nm">error</code></dt>
+  <dd>Display a descriptive message for the given error code(s).</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COMMON_COMMAND_OPTIONS"><a class="permalink" href="#COMMON_COMMAND_OPTIONS">COMMON
+  COMMAND OPTIONS</a></h1>
+<p class="Pp">This section describes the <var class="Ar">command_options</var>
+    that are available across all <code class="Nm">security</code> commands.</p>
+<dl class="Bl-tag">
+  <dt id="h~2"><a class="permalink" href="#h~2"><code class="Fl">-h</code></a></dt>
+  <dd>Show a usage message for the specified command. This option is essentially
+      the same as the <var class="Ar">help</var> command.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SECURITY_COMMANDS"><a class="permalink" href="#SECURITY_COMMANDS">SECURITY
+  COMMANDS</a></h1>
+<p class="Pp">Here (finally) are details on all the
+    <code class="Nm">security</code> commands and the options each accepts.</p>
+<ul class="Bl-item">
+  <li><code class="Nm">help</code> [<code class="Fl">-h</code>] Show all
+      commands, or show usage for a command.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">list-keychains</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-d</code>
+      <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var>]
+      [<code class="Fl">-s</code> [<var class="Ar">keychain...</var>]] Display
+      or manipulate the keychain search list.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a>
+            <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var></dt>
+          <dd>Use the specified preference domain.</dd>
+          <dt id="s"><a class="permalink" href="#s"><code class="Fl">-s</code></a></dt>
+          <dd>Set the search list to the specified keychains.</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">default-keychain</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-d</code>
+      <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var>]
+      [<code class="Fl">-s</code> [<var class="Ar">keychain</var>]] Display or
+      set the default keychain.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="d~2"><a class="permalink" href="#d~2"><code class="Fl">-d</code></a>
+            <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var></dt>
+          <dd>Use the specified preference domain.</dd>
+          <dt id="s~2"><a class="permalink" href="#s~2"><code class="Fl">-s</code></a></dt>
+          <dd>Set the default keychain to the specified
+              <var class="Ar">keychain</var>. Unset it if no keychain is
+              specified.</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">login-keychain</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-d</code>
+      <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var>]
+      [<code class="Fl">-s</code> [<var class="Ar">keychain</var>]] Display or
+      set the login keychain.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="d~3"><a class="permalink" href="#d~3"><code class="Fl">-d</code></a>
+            <var class="Ar">user</var>|<var class="Ar">system</var>|<var class="Ar">common</var>|<var class="Ar">dynamic</var></dt>
+          <dd>Use the specified preference domain.</dd>
+          <dt id="s~3"><a class="permalink" href="#s~3"><code class="Fl">-s</code></a></dt>
+          <dd>Set the login keychain to the specified
+              <var class="Ar">keychain</var>. Unset it if no keychain is
+              specified.</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">create-keychain</code> [<code class="Fl">-hP</code>]
+      [<code class="Fl">-p</code> <var class="Ar">password</var>]
+      [<var class="Ar">keychain...</var>] Create keychains.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="P"><a class="permalink" href="#P"><code class="Fl">-P</code></a></dt>
+          <dd>Prompt the user for a password using the SecurityAgent.</dd>
+          <dt id="p~2"><a class="permalink" href="#p~2"><code class="Fl">-p</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Use <var class="Ar">password</var> as the password for the
+              keychains being created.</dd>
+        </dl>
+      </li>
+      <li>If neither <code class="Fl">-P</code> or <code class="Fl">-p</code>
+          <var class="Ar">password</var> are specified, the user is prompted for
+          a password on the command line. Use of the -p option is insecure.</li>
+    </ul>
+  </li>
+  <li><code class="Nm">delete-keychain</code> [<code class="Fl">-h</code>]
+      [<var class="Ar">keychain...</var>] Delete keychains and remove them from
+      the search list.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">lock-keychain</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code>|<var class="Ar">keychain</var>] Lock
+      <var class="Ar">keychain</var>, or the default keychain if none is
+      specified. If the <code class="Fl">-a</code> option is specified, all
+      keychains are locked.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">unlock-keychain</code> [<code class="Fl">-hu</code>]
+      [<code class="Fl">-p</code> <var class="Ar">password</var>]
+      [<var class="Ar">keychain</var>] Unlock <var class="Ar">keychain</var>, or
+      the default keychain if none is specified.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">set-keychain-settings</code>
+      [<code class="Fl">-hlu</code>] [<code class="Fl">-t</code>
+      <var class="Ar">timeout</var>] [<var class="Ar">keychain</var>] Set
+      settings for <var class="Ar">keychain</var>, or the default keychain if
+      none is specified.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="l~2"><a class="permalink" href="#l~2"><code class="Fl">-l</code></a></dt>
+          <dd>Lock keychain when the system sleeps.</dd>
+          <dt id="u"><a class="permalink" href="#u"><code class="Fl">-u</code></a></dt>
+          <dd>Lock keychain after timeout interval.</dd>
+          <dt id="t"><a class="permalink" href="#t"><code class="Fl">-t</code></a>
+            <var class="Ar">timeout</var></dt>
+          <dd>Specify <var class="Ar">timeout</var> interval in seconds
+              (omitting this option specifies &quot;no timeout&quot;).</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">set-keychain-password</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-o</code> <var class="Ar">oldPassword</var>]
+      [<code class="Fl">-p</code> <var class="Ar">newPassword</var>]
+      [<var class="Ar">keychain</var>] Set password for
+      <var class="Ar">keychain</var>, or the default keychain if none is
+      specified.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="o"><a class="permalink" href="#o"><code class="Fl">-o</code></a>
+            <var class="Ar">oldPassword</var></dt>
+          <dd>Old keychain password (if not provided, will prompt)</dd>
+          <dt id="p~3"><a class="permalink" href="#p~3"><code class="Fl">-p</code></a>
+            <var class="Ar">newPassword</var></dt>
+          <dd>New keychain password (if not provided, will prompt)</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">show-keychain-info</code> [<code class="Fl">-h</code>]
+      [<var class="Ar">keychain</var>] Show the settings for
+      <var class="Ar">keychain</var>.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">dump-keychain</code> [<code class="Fl">-adhir</code>]
+      Dump the contents of one or more keychains.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a"><a class="permalink" href="#a"><code class="Fl">-a</code></a></dt>
+          <dd>Dump access control list of items</dd>
+          <dt id="d~4"><a class="permalink" href="#d~4"><code class="Fl">-d</code></a></dt>
+          <dd>Dump (decrypted) data of items</dd>
+          <dt id="i~2"><a class="permalink" href="#i~2"><code class="Fl">-i</code></a></dt>
+          <dd>Interactive access control list editing mode</dd>
+          <dt id="r"><a class="permalink" href="#r"><code class="Fl">-r</code></a></dt>
+          <dd>Dump raw (encrypted) data of items</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">create-keypair</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code> <var class="Ar">alg</var>]
+      [<code class="Fl">-s</code> <var class="Ar">size</var>]
+      [<code class="Fl">-f</code> <var class="Ar">date</var>]
+      [<code class="Fl">-t</code> <var class="Ar">date</var>]
+      [<code class="Fl">-d</code> <var class="Ar">days</var>]
+      [<code class="Fl">-k</code> <var class="Ar">keychain</var>]
+      [<code class="Fl">-A</code>|<code class="Fl">-T</code>
+      <var class="Ar">appPath</var>] [<var class="Ar">name</var>] Create an
+      asymmetric key pair.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~2"><a class="permalink" href="#a~2"><code class="Fl">-a</code></a>
+            <var class="Ar">alg</var></dt>
+          <dd>Use <var class="Ar">alg</var> as the algorithm, can be rsa, dh,
+              dsa or fee (default rsa)</dd>
+          <dt id="s~4"><a class="permalink" href="#s~4"><code class="Fl">-s</code></a>
+            <var class="Ar">size</var></dt>
+          <dd>Specify the keysize in bits (default 512)</dd>
+          <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a>
+            <var class="Ar">date</var></dt>
+          <dd>Make a key valid from the specified date (ex: &quot;13/11/10
+              3:30pm&quot;)</dd>
+          <dt id="t~2"><a class="permalink" href="#t~2"><code class="Fl">-t</code></a>
+            <var class="Ar">date</var></dt>
+          <dd>Make a key valid to the specified date</dd>
+          <dt id="d~5"><a class="permalink" href="#d~5"><code class="Fl">-d</code></a>
+            <var class="Ar">days</var></dt>
+          <dd>Make a key valid for the number of days specified from today</dd>
+          <dt id="k"><a class="permalink" href="#k"><code class="Fl">-k</code></a>
+            <var class="Ar">keychain</var></dt>
+          <dd>Use the specified keychain rather than the default</dd>
+          <dt id="A"><a class="permalink" href="#A"><code class="Fl">-A</code></a></dt>
+          <dd>Allow any application to access this key without warning
+              (insecure, not recommended!)</dd>
+          <dt id="T"><a class="permalink" href="#T"><code class="Fl">-T</code></a>
+            <var class="Ar">appPath</var></dt>
+          <dd>Specify an application which may access this key (multiple
+              <code class="Fl">-T</code> options are allowed)</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">add-generic-password</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code> <var class="Ar">account</var>]
+      [<code class="Fl">-s</code> <var class="Ar">service</var>]
+      [<code class="Fl">-w</code> <var class="Ar">password</var>]
+      [<var class="Ar">options...</var>] [<var class="Ar">keychain</var>] Add a
+      generic password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~3"><a class="permalink" href="#a~3"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Specify account name (required)</dd>
+          <dt id="c"><a class="permalink" href="#c"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Specify item creator (optional four-character code)</dd>
+          <dt id="C"><a class="permalink" href="#C"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Specify item type (optional four-character code)</dd>
+          <dt id="D"><a class="permalink" href="#D"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Specify kind (default is &quot;application password&quot;)</dd>
+          <dt id="G"><a class="permalink" href="#G"><code class="Fl">-G</code></a>
+            <var class="Ar">value</var></dt>
+          <dd>Specify generic attribute value (optional)</dd>
+          <dt id="j"><a class="permalink" href="#j"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Specify comment string (optional)</dd>
+          <dt id="l~3"><a class="permalink" href="#l~3"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Specify label (if omitted, service name is used as default
+            label)</dd>
+          <dt id="s~5"><a class="permalink" href="#s~5"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Specify service name (required)</dd>
+          <dt id="p~4"><a class="permalink" href="#p~4"><code class="Fl">-p</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Specify password to be added (legacy option, equivalent to
+              <code class="Fl">-w</code>)</dd>
+          <dt id="w"><a class="permalink" href="#w"><code class="Fl">-w</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Specify password to be added. Put at end of command to be prompted
+              (recommended)</dd>
+          <dt id="A~2"><a class="permalink" href="#A~2"><code class="Fl">-A</code></a></dt>
+          <dd>Allow any application to access this item without warning
+              (insecure, not recommended!)</dd>
+          <dt id="T~2"><a class="permalink" href="#T~2"><code class="Fl">-T</code></a>
+            <var class="Ar">appPath</var></dt>
+          <dd>Specify an application which may access this item (multiple
+              <code class="Fl">-T</code> options are allowed)</dd>
+          <dt id="U"><a class="permalink" href="#U"><code class="Fl">-U</code></a></dt>
+          <dd>Update item if it already exists (if omitted, the item cannot
+              already exist)</dd>
+          <dt id="X"><a class="permalink" href="#X"><code class="Fl">-X</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Specify password data to be added as a hexadecimal string</dd>
+        </dl>
+      </li>
+      <li>By default, the application which creates an item is trusted to access
+          its data without warning. You can remove this default access by
+          explicitly specifying an empty app pathname:
+          <code class="Fl">-T</code> &quot;&quot;. If no keychain is specified,
+          the password is added to the default keychain.
+        <ul class="Bl-item">
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">add-internet-password</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code> <var class="Ar">account</var>]
+      [<code class="Fl">-s</code> <var class="Ar">server</var>]
+      [<code class="Fl">-w</code> <var class="Ar">password</var>]
+      [<var class="Ar">options...</var>] [<var class="Ar">keychain</var>] Add an
+      internet password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~4"><a class="permalink" href="#a~4"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Specify account name (required)</dd>
+          <dt id="c~2"><a class="permalink" href="#c~2"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Specify item creator (optional four-character code)</dd>
+          <dt id="C~2"><a class="permalink" href="#C~2"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Specify item type (optional four-character code)</dd>
+          <dt id="d~6"><a class="permalink" href="#d~6"><code class="Fl">-d</code></a>
+            <var class="Ar">domain</var></dt>
+          <dd>Specify security domain string (optional)</dd>
+          <dt id="D~2"><a class="permalink" href="#D~2"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Specify kind (default is &quot;application password&quot;)</dd>
+          <dt id="j~2"><a class="permalink" href="#j~2"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Specify comment string (optional)</dd>
+          <dt id="l~4"><a class="permalink" href="#l~4"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Specify label (if omitted, service name is used as default
+            label)</dd>
+          <dt id="p~5"><a class="permalink" href="#p~5"><code class="Fl">-p</code></a>
+            <var class="Ar">path</var></dt>
+          <dd>Specify path string (optional)</dd>
+          <dt id="P~2"><a class="permalink" href="#P~2"><code class="Fl">-P</code></a>
+            <var class="Ar">port</var></dt>
+          <dd>Specify port number (optional)</dd>
+          <dt id="r~2"><a class="permalink" href="#r~2"><code class="Fl">-r</code></a>
+            <var class="Ar">protocol</var></dt>
+          <dd>Specify protocol (optional four-character SecProtocolType, e.g.
+              &quot;http&quot;, &quot;ftp &quot;)</dd>
+          <dt id="s~6"><a class="permalink" href="#s~6"><code class="Fl">-s</code></a>
+            <var class="Ar">server</var></dt>
+          <dd>Specify server name (required)</dd>
+          <dt id="t~3"><a class="permalink" href="#t~3"><code class="Fl">-t</code></a>
+            <var class="Ar">authenticationType</var></dt>
+          <dd>Specify authentication type (as a four-character
+              SecAuthenticationType, default is &quot;dflt&quot;)</dd>
+          <dt id="w~2"><a class="permalink" href="#w~2"><code class="Fl">-w</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Specify password to be added. Put at end of command to be prompted
+              (recommended)</dd>
+          <dt id="A~3"><a class="permalink" href="#A~3"><code class="Fl">-A</code></a></dt>
+          <dd>Allow any application to access this item without warning
+              (insecure, not recommended!)</dd>
+          <dt id="T~3"><a class="permalink" href="#T~3"><code class="Fl">-T</code></a>
+            <var class="Ar">appPath</var></dt>
+          <dd>Specify an application which may access this item (multiple
+              <code class="Fl">-T</code> options are allowed)</dd>
+          <dt id="U~2"><a class="permalink" href="#U~2"><code class="Fl">-U</code></a></dt>
+          <dd>Update item if it already exists (if omitted, the item cannot
+              already exist)</dd>
+          <dt id="X~2"><a class="permalink" href="#X~2"><code class="Fl">-X</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Specify password data to be added as a hexadecimal string</dd>
+        </dl>
+      </li>
+      <li>By default, the application which creates an item is trusted to access
+          its data without warning. You can remove this default access by
+          explicitly specifying an empty app pathname:
+          <code class="Fl">-T</code> &quot;&quot;. If no keychain is specified,
+          the password is added to the default keychain.
+        <ul class="Bl-item">
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">add-certificates</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-k</code> <var class="Ar">keychain</var>]
+      <var class="Ar">file...</var> Add certficates contained in the specified
+      <var class="Ar">files</var> to the default keychain. The files must
+      contain one DER encoded X509 certificate each.
+    <dl class="Bl-tag Bl-compact">
+      <dt id="k~2"><a class="permalink" href="#k~2"><code class="Fl">-k</code></a>
+        <var class="Ar">keychain</var></dt>
+      <dd>Use <var class="Ar">keychain</var> rather than the default
+        keychain.</dd>
+    </dl>
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">find-generic-password</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code> <var class="Ar">account</var>]
+      [<code class="Fl">-s</code> <var class="Ar">service</var>]
+      [<code class="Fl">-</code><var class="Ar">options...</var>]
+      [<code class="Fl">-g</code>]
+      [<code class="Fl">-</code><var class="Ar">keychain...</var>] Find a
+      generic password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~5"><a class="permalink" href="#a~5"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~3"><a class="permalink" href="#c~3"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~3"><a class="permalink" href="#C~3"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="D~3"><a class="permalink" href="#D~3"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="G~2"><a class="permalink" href="#G~2"><code class="Fl">-G</code></a>
+            <var class="Ar">value</var></dt>
+          <dd>Match value string (generic attribute)</dd>
+          <dt id="j~3"><a class="permalink" href="#j~3"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~5"><a class="permalink" href="#l~5"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="s~7"><a class="permalink" href="#s~7"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Match service string</dd>
+          <dt id="g"><a class="permalink" href="#g"><code class="Fl">-g</code></a></dt>
+          <dd>Display the password for the item found</dd>
+          <dt id="w~3"><a class="permalink" href="#w~3"><code class="Fl">-w</code></a></dt>
+          <dd>Display the password(only) for the item found</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">delete-generic-password</code>
+      [<code class="Fl">-h</code>] [<code class="Fl">-a</code>
+      <var class="Ar">account</var>] [<code class="Fl">-s</code>
+      <var class="Ar">service</var>]
+      [<code class="Fl">-</code><var class="Ar">options...</var>]
+      [<code class="Fl">-</code><var class="Ar">keychain...</var>] Delete a
+      generic password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~6"><a class="permalink" href="#a~6"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~4"><a class="permalink" href="#c~4"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~4"><a class="permalink" href="#C~4"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="D~4"><a class="permalink" href="#D~4"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="G~3"><a class="permalink" href="#G~3"><code class="Fl">-G</code></a>
+            <var class="Ar">value</var></dt>
+          <dd>Match value string (generic attribute)</dd>
+          <dt id="j~4"><a class="permalink" href="#j~4"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~6"><a class="permalink" href="#l~6"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="s~8"><a class="permalink" href="#s~8"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Match service string</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">delete-internet-password</code>
+      [<code class="Fl">-h</code>] [<code class="Fl">-a</code>
+      <var class="Ar">account</var>] [<code class="Fl">-s</code>
+      <var class="Ar">server</var>] [<var class="Ar">options...</var>]
+      [<var class="Ar">keychain...</var>] Delete an internet password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~7"><a class="permalink" href="#a~7"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~5"><a class="permalink" href="#c~5"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~5"><a class="permalink" href="#C~5"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="d~7"><a class="permalink" href="#d~7"><code class="Fl">-d</code></a>
+            <var class="Ar">securityDomain</var></dt>
+          <dd>Match securityDomain string</dd>
+          <dt id="D~5"><a class="permalink" href="#D~5"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="j~5"><a class="permalink" href="#j~5"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~7"><a class="permalink" href="#l~7"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="p~6"><a class="permalink" href="#p~6"><code class="Fl">-p</code></a>
+            <var class="Ar">path</var></dt>
+          <dd>Match path string</dd>
+          <dt id="P~3"><a class="permalink" href="#P~3"><code class="Fl">-P</code></a>
+            <var class="Ar">port</var></dt>
+          <dd>Match port number</dd>
+          <dt id="r~3"><a class="permalink" href="#r~3"><code class="Fl">-r</code></a>
+            <var class="Ar">protocol</var></dt>
+          <dd>Match protocol (four-character code)</dd>
+          <dt id="s~9"><a class="permalink" href="#s~9"><code class="Fl">-s</code></a>
+            <var class="Ar">server</var></dt>
+          <dd>Match server string</dd>
+          <dt id="t~4"><a class="permalink" href="#t~4"><code class="Fl">-t</code></a>
+            <var class="Ar">authenticationType</var></dt>
+          <dd>Match authenticationType (four-character code)</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">find-internet-password</code>
+      [<code class="Fl">-h</code>] [<code class="Fl">-a</code>
+      <var class="Ar">account</var>] [<code class="Fl">-s</code>
+      <var class="Ar">server</var>] [<var class="Ar">options...</var>]
+      [<code class="Fl">-g</code>] [<var class="Ar">keychain...</var>] Find an
+      internet password item.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~8"><a class="permalink" href="#a~8"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~6"><a class="permalink" href="#c~6"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~6"><a class="permalink" href="#C~6"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="d~8"><a class="permalink" href="#d~8"><code class="Fl">-d</code></a>
+            <var class="Ar">securityDomain</var></dt>
+          <dd>Match securityDomain string</dd>
+          <dt id="D~6"><a class="permalink" href="#D~6"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="j~6"><a class="permalink" href="#j~6"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~8"><a class="permalink" href="#l~8"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="p~7"><a class="permalink" href="#p~7"><code class="Fl">-p</code></a>
+            <var class="Ar">path</var></dt>
+          <dd>Match path string</dd>
+          <dt id="P~4"><a class="permalink" href="#P~4"><code class="Fl">-P</code></a>
+            <var class="Ar">port</var></dt>
+          <dd>Match port number</dd>
+          <dt id="r~4"><a class="permalink" href="#r~4"><code class="Fl">-r</code></a>
+            <var class="Ar">protocol</var></dt>
+          <dd>Match protocol (four-character code)</dd>
+          <dt id="s~10"><a class="permalink" href="#s~10"><code class="Fl">-s</code></a>
+            <var class="Ar">server</var></dt>
+          <dd>Match server string</dd>
+          <dt id="t~5"><a class="permalink" href="#t~5"><code class="Fl">-t</code></a>
+            <var class="Ar">authenticationType</var></dt>
+          <dd>Match authenticationType (four-character code)</dd>
+          <dt id="g~2"><a class="permalink" href="#g~2"><code class="Fl">-g</code></a></dt>
+          <dd>Display the password for the item found</dd>
+          <dt id="w~4"><a class="permalink" href="#w~4"><code class="Fl">-w</code></a></dt>
+          <dd>Display the password(only) for the item found</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">find-key</code> [<var class="Ar">options...</var>]
+      [<var class="Ar">keychain...</var>] Search the keychain for keys.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~9"><a class="permalink" href="#a~9"><code class="Fl">-a</code></a>
+            <var class="Ar">application-label</var></dt>
+          <dd>Match &quot;application label&quot; string</dd>
+          <dt id="c~7"><a class="permalink" href="#c~7"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="d~9"><a class="permalink" href="#d~9"><code class="Fl">-d</code></a></dt>
+          <dd>Match keys that can decrypt</dd>
+          <dt id="D~7"><a class="permalink" href="#D~7"><code class="Fl">-D</code></a>
+            <var class="Ar">description</var></dt>
+          <dd>Match &quot;description&quot; string</dd>
+          <dt id="e"><a class="permalink" href="#e"><code class="Fl">-e</code></a></dt>
+          <dd>Match keys that can encrypt</dd>
+          <dt id="j~7"><a class="permalink" href="#j~7"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~9"><a class="permalink" href="#l~9"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="r~5"><a class="permalink" href="#r~5"><code class="Fl">-r</code></a></dt>
+          <dd>Match keys that can derive</dd>
+          <dt id="s~11"><a class="permalink" href="#s~11"><code class="Fl">-s</code></a></dt>
+          <dd>Match keys that can sign</dd>
+          <dt id="t~6"><a class="permalink" href="#t~6"><code class="Fl">-t</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Type of key to find: one of &quot;symmetric&quot;,
+              &quot;public&quot;, or &quot;private&quot;</dd>
+          <dt id="u~2"><a class="permalink" href="#u~2"><code class="Fl">-u</code></a></dt>
+          <dd>Match keys that can unwrap</dd>
+          <dt id="v~2"><a class="permalink" href="#v~2"><code class="Fl">-v</code></a></dt>
+          <dd>Match keys that can verify</dd>
+          <dt id="w~5"><a class="permalink" href="#w~5"><code class="Fl">-w</code></a></dt>
+          <dd>Match keys that can wrap</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">set-generic-password-partition-list</code>
+      [<code class="Fl">-a</code> <var class="Ar">account</var>]
+      [<code class="Fl">-s</code> <var class="Ar">service</var>]
+      [<code class="Fl">-S</code> <var class="Ar">&lt;partition list (comma
+      separated)&gt;</var>] [<code class="Fl">-k</code>
+      <var class="Ar">&lt;keychain password&gt;</var>]
+      [<var class="Ar">options...</var>] [<var class="Ar">keychain</var>] Sets
+      the &quot;partition list&quot; for a generic password. The &quot;partition
+      list&quot; is an extra parameter in the ACL which limits access to the
+      item based on an application's code signature. You must present the
+      keychain's password to change a partition list.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="S"><a class="permalink" href="#S"><code class="Fl">-S</code></a>
+            <var class="Ar">partition-list</var></dt>
+          <dd>Comma-separated partition list. See output of &quot;security
+              dump-keychain&quot; for examples.</dd>
+          <dt id="k~3"><a class="permalink" href="#k~3"><code class="Fl">-k</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Password for keychain</dd>
+          <dt id="a~10"><a class="permalink" href="#a~10"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~8"><a class="permalink" href="#c~8"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~7"><a class="permalink" href="#C~7"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="D~8"><a class="permalink" href="#D~8"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="G~4"><a class="permalink" href="#G~4"><code class="Fl">-G</code></a>
+            <var class="Ar">value</var></dt>
+          <dd>Match value string (generic attribute)</dd>
+          <dt id="j~8"><a class="permalink" href="#j~8"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~10"><a class="permalink" href="#l~10"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="s~12"><a class="permalink" href="#s~12"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Match service string</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">set-internet-password-partition-list</code>
+      [<code class="Fl">-a</code> <var class="Ar">account</var>]
+      [<code class="Fl">-s</code> <var class="Ar">server</var>]
+      [<code class="Fl">-S</code> <var class="Ar">&lt;partition list (comma
+      separated)&gt;</var>] [<code class="Fl">-k</code>
+      <var class="Ar">&lt;keychain password&gt;</var>]
+      [<var class="Ar">options...</var>] [<var class="Ar">keychain</var>] Sets
+      the &quot;partition list&quot; for an internet password. The
+      &quot;partition list&quot; is an extra parameter in the ACL which limits
+      access to the item based on an application's code signature. You must
+      present the keychain's password to change a partition list.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="S~2"><a class="permalink" href="#S~2"><code class="Fl">-S</code></a>
+            <var class="Ar">partition-list</var></dt>
+          <dd>Comma-separated partition list. See output of &quot;security
+              dump-keychain&quot; for examples.</dd>
+          <dt id="k~4"><a class="permalink" href="#k~4"><code class="Fl">-k</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Password for keychain</dd>
+          <dt id="a~11"><a class="permalink" href="#a~11"><code class="Fl">-a</code></a>
+            <var class="Ar">account</var></dt>
+          <dd>Match account string</dd>
+          <dt id="c~9"><a class="permalink" href="#c~9"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="C~8"><a class="permalink" href="#C~8"><code class="Fl">-C</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Match type (four-character code)</dd>
+          <dt id="d~10"><a class="permalink" href="#d~10"><code class="Fl">-d</code></a>
+            <var class="Ar">securityDomain</var></dt>
+          <dd>Match securityDomain string</dd>
+          <dt id="D~9"><a class="permalink" href="#D~9"><code class="Fl">-D</code></a>
+            <var class="Ar">kind</var></dt>
+          <dd>Match kind string</dd>
+          <dt id="j~9"><a class="permalink" href="#j~9"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~11"><a class="permalink" href="#l~11"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="p~8"><a class="permalink" href="#p~8"><code class="Fl">-p</code></a>
+            <var class="Ar">path</var></dt>
+          <dd>Match path string</dd>
+          <dt id="P~5"><a class="permalink" href="#P~5"><code class="Fl">-P</code></a>
+            <var class="Ar">port</var></dt>
+          <dd>Match port number</dd>
+          <dt id="r~6"><a class="permalink" href="#r~6"><code class="Fl">-r</code></a>
+            <var class="Ar">protocol</var></dt>
+          <dd>Match protocol (four-character code)</dd>
+          <dt id="s~13"><a class="permalink" href="#s~13"><code class="Fl">-s</code></a>
+            <var class="Ar">server</var></dt>
+          <dd>Match server string</dd>
+          <dt id="t~7"><a class="permalink" href="#t~7"><code class="Fl">-t</code></a>
+            <var class="Ar">authenticationType</var></dt>
+          <dd>Match authenticationType (four-character code)</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">set-key-partition-list</code> [<code class="Fl">-S</code>
+      <var class="Ar">&lt;partition list (comma separated)&gt;</var>]
+      [<code class="Fl">-k</code> <var class="Ar">&lt;keychain
+      password&gt;</var>] [<var class="Ar">options...</var>]
+      [<var class="Ar">keychain</var>] Sets the &quot;partition list&quot; for a
+      key. The &quot;partition list&quot; is an extra parameter in the ACL which
+      limits access to the key based on an application's code signature. You
+      must present the keychain's password to change a partition list. If you'd
+      like to run /usr/bin/codesign with the key, &quot;apple:&quot; must be an
+      element of the partition list.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="S~3"><a class="permalink" href="#S~3"><code class="Fl">-S</code></a>
+            <var class="Ar">partition-list</var></dt>
+          <dd>Comma-separated partition list. See output of &quot;security
+              dump-keychain&quot; for examples.</dd>
+          <dt id="k~5"><a class="permalink" href="#k~5"><code class="Fl">-k</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>Password for keychain</dd>
+          <dt id="a~12"><a class="permalink" href="#a~12"><code class="Fl">-a</code></a>
+            <var class="Ar">application-label</var></dt>
+          <dd>Match &quot;application label&quot; string</dd>
+          <dt id="c~10"><a class="permalink" href="#c~10"><code class="Fl">-c</code></a>
+            <var class="Ar">creator</var></dt>
+          <dd>Match creator (four-character code)</dd>
+          <dt id="d~11"><a class="permalink" href="#d~11"><code class="Fl">-d</code></a></dt>
+          <dd>Match keys that can decrypt</dd>
+          <dt id="D~10"><a class="permalink" href="#D~10"><code class="Fl">-D</code></a>
+            <var class="Ar">description</var></dt>
+          <dd>Match &quot;description&quot; string</dd>
+          <dt id="e~2"><a class="permalink" href="#e~2"><code class="Fl">-e</code></a></dt>
+          <dd>Match keys that can encrypt</dd>
+          <dt id="j~10"><a class="permalink" href="#j~10"><code class="Fl">-j</code></a>
+            <var class="Ar">comment</var></dt>
+          <dd>Match comment string</dd>
+          <dt id="l~12"><a class="permalink" href="#l~12"><code class="Fl">-l</code></a>
+            <var class="Ar">label</var></dt>
+          <dd>Match label string</dd>
+          <dt id="r~7"><a class="permalink" href="#r~7"><code class="Fl">-r</code></a></dt>
+          <dd>Match keys that can derive</dd>
+          <dt id="s~14"><a class="permalink" href="#s~14"><code class="Fl">-s</code></a></dt>
+          <dd>Match keys that can sign</dd>
+          <dt id="t~8"><a class="permalink" href="#t~8"><code class="Fl">-t</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Type of key to find: one of &quot;symmetric&quot;,
+              &quot;public&quot;, or &quot;private&quot;</dd>
+          <dt id="u~3"><a class="permalink" href="#u~3"><code class="Fl">-u</code></a></dt>
+          <dd>Match keys that can unwrap</dd>
+          <dt id="v~3"><a class="permalink" href="#v~3"><code class="Fl">-v</code></a></dt>
+          <dd>Match keys that can verify</dd>
+          <dt id="w~6"><a class="permalink" href="#w~6"><code class="Fl">-w</code></a></dt>
+          <dd>Match keys that can wrap</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">find-certificate</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-a</code>] [<code class="Fl">-c</code>
+      <var class="Ar">name</var>] [<code class="Fl">-e</code>
+      <var class="Ar">emailAddress</var>] [<code class="Fl">-m</code>]
+      [<code class="Fl">-p</code>] [<code class="Fl">-Z</code>]
+      [<var class="Ar">keychain...</var>] Find a certificate item. If no
+      <var class="Ar">keychain</var> arguments are provided, the default search
+      list is used.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~13"><a class="permalink" href="#a~13"><code class="Fl">-a</code></a></dt>
+          <dd>Find all matching certificates, not just the first one</dd>
+          <dt id="c~11"><a class="permalink" href="#c~11"><code class="Fl">-c</code></a>
+            <var class="Ar">name</var></dt>
+          <dd>Match on <var class="Ar">name</var> when searching (optional)</dd>
+          <dt id="e~3"><a class="permalink" href="#e~3"><code class="Fl">-e</code></a>
+            <var class="Ar">emailAddress</var></dt>
+          <dd>Match on <var class="Ar">emailAddress</var> when searching
+              (optional)</dd>
+          <dt id="m"><a class="permalink" href="#m"><code class="Fl">-m</code></a></dt>
+          <dd>Show the email addresses in the certificate</dd>
+          <dt id="p~9"><a class="permalink" href="#p~9"><code class="Fl">-p</code></a></dt>
+          <dd>Output certificate in pem format. Default is to dump the
+              attributes and keychain the cert is in.</dd>
+          <dt id="Z"><a class="permalink" href="#Z"><code class="Fl">-Z</code></a></dt>
+          <dd>Print SHA-256 (and SHA-1) hash of the certificate</dd>
+        </dl>
+      </li>
+      <li id="Examples"><a class="permalink" href="#Examples"><b class="Sy">Examples</b></a>
+        <dl class="Bl-tag">
+          <dt>security&gt; find-certificate -a -p &gt; allcerts.pem</dt>
+          <dd>Exports all certificates from all keychains into a pem file called
+              allcerts.pem.</dd>
+          <dt>security&gt; find-certificate -a -e me@foo.com -p &gt;
+            certs.pem</dt>
+          <dd>Exports all certificates from all keychains with the email address
+              me@foo.com into a pem file called certs.pem.</dd>
+          <dt>security&gt; find-certificate -a -c MyName -Z login.keychain |
+            grep ^SHA-256</dt>
+          <dd>Print the SHA-256 hash of every certificate in 'login.keychain'
+              whose common name includes 'MyName'</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">find-identity</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-p</code> <var class="Ar">policy</var>]
+      [<code class="Fl">-s</code> <var class="Ar">string</var>]
+      [<code class="Fl">-v</code>] [<var class="Ar">keychain...</var>] Find an
+      identity (certificate + private key) satisfying a given policy. If no
+      <var class="Ar">policy</var> arguments are provided, the X.509 basic
+      policy is assumed. If no <var class="Ar">keychain</var> arguments are
+      provided, the default search list is used.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="p~10"><a class="permalink" href="#p~10"><code class="Fl">-p</code></a>
+            <var class="Ar">policy</var></dt>
+          <dd>Specify <var class="Ar">policy</var> to evaluate (multiple -p
+              options are allowed). Supported policies: basic, ssl-client,
+              ssl-server, smime, eap, ipsec, ichat, codesigning, sys-default,
+              sys-kerberos-kdc</dd>
+          <dt id="s~15"><a class="permalink" href="#s~15"><code class="Fl">-s</code></a>
+            <var class="Ar">string</var></dt>
+          <dd>Specify optional policy-specific <var class="Ar">string</var>
+              (e.g. a DNS hostname for SSL, or RFC822 email address for
+            S/MIME)</dd>
+          <dt id="v~4"><a class="permalink" href="#v~4"><code class="Fl">-v</code></a></dt>
+          <dd>Show valid identities only (default is to show all
+            identities)</dd>
+        </dl>
+      </li>
+      <li id="Examples~2"><a class="permalink" href="#Examples~2"><b class="Sy">Examples</b></a>
+        <dl class="Bl-tag">
+          <dt>security&gt; find-identity -v -p ssl-client</dt>
+          <dd>Display valid identities that can be used for SSL client
+              authentication</dd>
+          <dt>security&gt; find-identity -p ssl-server -s www.domain.com</dt>
+          <dd>Display identities for a SSL server running on the host
+              'www.domain.com'</dd>
+          <dt>security&gt; find-identity -p smime -s user@domain.com</dt>
+          <dd>Display identities that can be used to sign a message from
+              'user@domain.com'</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">delete-certificate</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-c</code> <var class="Ar">name</var>]
+      [<code class="Fl">-Z</code> <var class="Ar">hash</var>]
+      [<code class="Fl">-t</code>] [<var class="Ar">keychain...</var>] Delete a
+      certificate from a keychain. If no <var class="Ar">keychain</var>
+      arguments are provided, the default search list is used.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="c~12"><a class="permalink" href="#c~12"><code class="Fl">-c</code></a>
+            <var class="Ar">name</var></dt>
+          <dd>Specify certificate to delete by its common name</dd>
+          <dt id="Z~2"><a class="permalink" href="#Z~2"><code class="Fl">-Z</code></a>
+            <var class="Ar">hash</var></dt>
+          <dd>Specify certificate to delete by its SHA-256 (or SHA-1) hash</dd>
+          <dt id="t~9"><a class="permalink" href="#t~9"><code class="Fl">-t</code></a></dt>
+          <dd>Also delete user trust settings for this certificate</dd>
+        </dl>
+      </li>
+      <li>The certificate to be deleted must be uniquely specified either by a
+          string found in its common name, or by its SHA-256 (or SHA-1)
+        hash.</li>
+    </ul>
+  </li>
+  <li><code class="Nm">delete-identity</code> [<code class="Fl">-h</code>]
+      [<code class="Fl">-c</code> <var class="Ar">name</var>]
+      [<code class="Fl">-Z</code> <var class="Ar">hash</var>]
+      [<code class="Fl">-t</code>] [<var class="Ar">keychain...</var>] Delete a
+      certificate and its private key from a keychain. If no
+      <var class="Ar">keychain</var> arguments are provided, the default search
+      list is used.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="c~13"><a class="permalink" href="#c~13"><code class="Fl">-c</code></a>
+            <var class="Ar">name</var></dt>
+          <dd>Specify certificate to delete by its common name</dd>
+          <dt id="Z~3"><a class="permalink" href="#Z~3"><code class="Fl">-Z</code></a>
+            <var class="Ar">hash</var></dt>
+          <dd>Specify certificate to delete by its SHA-256 (or SHA-1) hash</dd>
+          <dt id="t~10"><a class="permalink" href="#t~10"><code class="Fl">-t</code></a></dt>
+          <dd>Also delete user trust settings for this identity certificate</dd>
+        </dl>
+      </li>
+      <li>The identity to be deleted must be uniquely specified either by a
+          string found in its common name, or by its SHA-256 (or SHA-1)
+        hash.</li>
+    </ul>
+  </li>
+  <li><code class="Nm">set-identity-preference</code>
+      [<code class="Fl">-h</code>] [<code class="Fl">-n</code>]
+      [<code class="Fl">-c</code> <var class="Ar">identity</var>]
+      [<code class="Fl">-s</code> <var class="Ar">service</var>]
+      [<code class="Fl">-u</code> <var class="Ar">keyUsage</var>]
+      [<code class="Fl">-Z</code> <var class="Ar">hash</var>]
+      [<var class="Ar">keychain...</var>] Set the preferred identity to use for
+      a service.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="n"><a class="permalink" href="#n"><code class="Fl">-n</code></a></dt>
+          <dd>Specify no identity (clears existing preference for the given
+              service)</dd>
+          <dt id="c~14"><a class="permalink" href="#c~14"><code class="Fl">-c</code></a>
+            <var class="Ar">identity</var></dt>
+          <dd>Specify identity by common name of the certificate</dd>
+          <dt id="s~16"><a class="permalink" href="#s~16"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Specify service (may be a URL, RFC822 email address, DNS host, or
+              other name) for which this identity is to be preferred</dd>
+          <dt id="u~4"><a class="permalink" href="#u~4"><code class="Fl">-u</code></a>
+            <var class="Ar">keyUsage</var></dt>
+          <dd>Specify key usage (optional)</dd>
+          <dt id="Z~4"><a class="permalink" href="#Z~4"><code class="Fl">-Z</code></a>
+            <var class="Ar">hash</var></dt>
+          <dd>Specify identity by SHA-256 (or SHA-1) hash of certificate
+              (optional)</dd>
+        </dl>
+      </li>
+      <li>The identity is located by searching the specified keychain(s) for a
+          certificate whose common name contains the given identity string. If
+          no keychains are specified to search, the default search list is used.
+          Different identity preferences can be set for individual key usages.
+          You can differentiate between two identities which contain the same
+          string by providing a SHA-256 (or SHA-1) hash of the certificate in
+          addition to, or instead of, the name.</li>
+      <li id="PARTIAL"><a class="permalink" href="#PARTIAL"><b class="Sy">PARTIAL
+          PATHS AND WILDCARDS</b></a></li>
+      <li>Prior to 10.5.4, identity preferences for SSL/TLS client
+          authentication could only be set on a per-URL basis. The URL being
+          visited had to match the service name exactly for the preference to be
+          in effect.</li>
+      <li>In 10.5.4, it became possible to specify identity preferences on a
+          per-server basis, by using a service name with a partial path URL to
+          match more specific paths on the same server. For example, if an
+          identity preference for &quot;https://www.apache-ssl.org/&quot;
+          exists, it will be in effect for
+          &quot;https://www.apache-ssl.org/cgi/cert-export&quot;, and so on.
+          Note that partial path URLs must end with a trailing slash
+        character.</li>
+      <li>Starting with 10.6, it is possible to specify identity preferences on
+          a per-domain basis, by using the wildcard character '*' as the
+          leftmost component of the service name. Unlike SSL wildcards, an
+          identity preference wildcard can match more than one subdomain. For
+          example, an identity preference for the name &quot;*.army.mil&quot;
+          will match &quot;server1.subdomain1.army.mil&quot; or
+          &quot;server2.subdomain2.army.mil&quot;. Likewise, a preference for
+          &quot;*.mil&quot; will match both &quot;server.army.mil&quot; and
+          &quot;server.navy.mil&quot;.</li>
+      <li id="KEY"><a class="permalink" href="#KEY"><b class="Sy">KEY USAGE
+          CODES</b></a></li>
+      <li>
+        <br/>
+         0 - preference is in effect for all possible key usages (default)
+        <br/>
+         1 - encryption only
+        <br/>
+         2 - decryption only
+        <br/>
+         4 - signing only
+        <br/>
+         8 - signature verification only
+        <br/>
+         16 - signing with message recovery only
+        <br/>
+         32 - signature verification with message recovery only
+        <br/>
+         64 - key wrapping only
+        <br/>
+         128 - key unwrapping only
+        <br/>
+         256 - key derivation only
+        <dl class="Bl-tag">
+          <dt>To specify more than one usage, add values together.</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">get-identity-preference</code>
+      [<code class="Fl">-h</code>] [<code class="Fl">-s</code>
+      <var class="Ar">service</var>] [<code class="Fl">-u</code>
+      <var class="Ar">keyUsage</var>] [<code class="Fl">-p</code>]
+      [<code class="Fl">-c</code>] [<code class="Fl">-Z</code>] Get the
+      preferred identity to use for a service.
+    <ul class="Bl-item Bd-indent">
+      <li>
+        <dl class="Bl-tag Bl-compact">
+          <dt id="s~17"><a class="permalink" href="#s~17"><code class="Fl">-s</code></a>
+            <var class="Ar">service</var></dt>
+          <dd>Specify service (may be a URL, RFC822 email address, DNS host, or
+              other name)</dd>
+          <dt id="u~5"><a class="permalink" href="#u~5"><code class="Fl">-u</code></a>
+            <var class="Ar">keyUsage</var></dt>
+          <dd>Specify key usage (optional)</dd>
+          <dt id="p~11"><a class="permalink" href="#p~11"><code class="Fl">-p</code></a></dt>
+          <dd>Output identity certificate in pem format</dd>
+          <dt id="c~15"><a class="permalink" href="#c~15"><code class="Fl">-c</code></a></dt>
+          <dd>Print common name of the preferred identity certificate</dd>
+          <dt id="Z~5"><a class="permalink" href="#Z~5"><code class="Fl">-Z</code></a></dt>
+          <dd>Print SHA-256 (and SHA-1) hash of the preferred identity
+              certificate</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">create-db</code> [<code class="Fl">-aho0</code>]
+      [<code class="Fl">-g</code>
+      <var class="Ar">dl</var>|<var class="Ar">cspdl</var>]
+      [<code class="Fl">-m</code> <var class="Ar">mode</var>]
+      [<var class="Ar">name</var>] Create a db using the DL. If
+      <var class="Ar">name</var> isn't provided <code class="Nm">security</code>
+      will prompt the user to type a name.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="a~14"><a class="permalink" href="#a~14"><code class="Fl">-a</code></a></dt>
+          <dd>Turn off autocommit</dd>
+          <dt id="g~3"><a class="permalink" href="#g~3"><code class="Fl">-g</code></a>
+            <var class="Ar">dl</var>|<var class="Ar">cspdl</var></dt>
+          <dd>Use the AppleDL (default) or AppleCspDL</dd>
+          <dt id="m~2"><a class="permalink" href="#m~2"><code class="Fl">-m</code></a>
+            <var class="Ar">mode</var></dt>
+          <dd>Set the file permissions to <var class="Ar">mode</var>.</dd>
+          <dt id="o~2"><a class="permalink" href="#o~2"><code class="Fl">-o</code></a></dt>
+          <dd>Force using openparams argument</dd>
+          <dt id="0"><a class="permalink" href="#0"><code class="Fl">-0</code></a></dt>
+          <dd>Force using version 0 openparams</dd>
+        </dl>
+      </li>
+      <li id="Examples~3"><a class="permalink" href="#Examples~3"><b class="Sy">Examples</b></a>
+        <dl class="Bl-tag">
+          <dt>security&gt; create-db -m 0644 test.db</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+          <dt>security&gt; create-db -g cspdl -a test2.db</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">export</code> [<code class="Fl">-k</code>
+      <var class="Ar">keychain</var>] [<code class="Fl">-t</code>
+      <var class="Ar">type</var>] [<code class="Fl">-f</code>
+      <var class="Ar">format</var>] [<code class="Fl">-w</code>]
+      [<code class="Fl">-p</code> <var class="Ar">format</var>]
+      [<code class="Fl">-P</code> <var class="Ar">passphrase</var>]
+      [<code class="Fl">-o</code> <var class="Ar">outfile</var>] Export one or
+      more items from a keychain to one of a number of external representations.
+      If <var class="Ar">keychain</var> isn't provided, items will be exported
+      from the user's default keychain.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="k~6"><a class="permalink" href="#k~6"><code class="Fl">-k</code></a>
+            <var class="Ar">keychain</var></dt>
+          <dd>Specify keychain from which item(s) will be exported.</dd>
+          <dt id="t~11"><a class="permalink" href="#t~11"><code class="Fl">-t</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Specify the type of items to export. Possible types are certs,
+              allKeys, pubKeys, privKeys, identities, and all. The default is
+              all. An identity consists of both a certificate and the
+              corresponding private key.</dd>
+          <dt id="f~2"><a class="permalink" href="#f~2"><code class="Fl">-f</code></a>
+            <var class="Ar">format</var></dt>
+          <dd>Specify the format of the exported data. Possible formats are
+              openssl, bsafe, pkcs7, pkcs8, pkcs12, x509, openssh1, openssh2,
+              and pemseq. The default is pemseq if more than one item is being
+              exported. The default is openssl if one key is being exported. The
+              default is x509 if one certificate is being exported.</dd>
+          <dt id="w~7"><a class="permalink" href="#w~7"><code class="Fl">-w</code></a></dt>
+          <dd>Specifies that private keys are to be wrapped on export.</dd>
+          <dt id="p~12"><a class="permalink" href="#p~12"><code class="Fl">-p</code></a></dt>
+          <dd>Specifies that PEM armour is to be applied to the output
+            data.</dd>
+          <dt id="P~6"><a class="permalink" href="#P~6"><code class="Fl">-P</code></a>
+            <var class="Ar">passphrase</var></dt>
+          <dd>Specify the wrapping passphrase immediately. The default is to
+              obtain a secure passphrase via GUI.</dd>
+          <dt id="o~3"><a class="permalink" href="#o~3"><code class="Fl">-o</code></a>
+            <var class="Ar">outfile</var></dt>
+          <dd>Write the output data to <var class="Ar">outfile</var>. Default is
+              to write data to stdout.</dd>
+        </dl>
+      </li>
+      <li id="Examples~4"><a class="permalink" href="#Examples~4"><b class="Sy">Examples</b></a>
+        <dl class="Bl-tag">
+          <dt>security&gt; export -k login.keychain -t certs -o
+            /tmp/certs.pem</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+          <dt>security&gt; export -k newcert.keychain -t identities -f pkcs12 -o
+            /tmp/mycerts.p12</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">import</code> inputfile [<code class="Fl">-k</code>
+      <var class="Ar">keychain</var>] [<code class="Fl">-t</code>
+      <var class="Ar">type</var>] [<code class="Fl">-f</code>
+      <var class="Ar">format</var>] [<code class="Fl">-w</code>]
+      [<code class="Fl">-P</code> <var class="Ar">passphrase</var>]
+      [<var class="Ar">options...</var>] Import one or more items from
+      <var class="Ar">inputfile</var> into a keychain. If
+      <var class="Ar">keychain</var> isn't provided, items will be imported into
+      the user's default keychain.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="k~7"><a class="permalink" href="#k~7"><code class="Fl">-k</code></a>
+            <var class="Ar">keychain</var></dt>
+          <dd>Specify keychain into which item(s) will be imported.</dd>
+          <dt id="t~12"><a class="permalink" href="#t~12"><code class="Fl">-t</code></a>
+            <var class="Ar">type</var></dt>
+          <dd>Specify the type of items to import. Possible types are cert, pub,
+              priv, session, cert, and agg. Pub, priv, and session refer to
+              keys; agg is one of the aggregate types (pkcs12 and PEM sequence).
+              The command can often figure out what item_type an item contains
+              based in the filename and/or item_format.</dd>
+          <dt id="f~3"><a class="permalink" href="#f~3"><code class="Fl">-f</code></a>
+            <var class="Ar">format</var></dt>
+          <dd>Specify the format of the exported data. Possible formats are
+              openssl, bsafe, raw, pkcs7, pkcs8, pkcs12, x509, openssh1,
+              openssh2, and pemseq. The command can often figure out what format
+              an item is in based in the filename and/or item_type.</dd>
+          <dt id="w~8"><a class="permalink" href="#w~8"><code class="Fl">-w</code></a></dt>
+          <dd>Specify that private keys are wrapped and must be unwrapped on
+              import.</dd>
+          <dt id="x"><a class="permalink" href="#x"><code class="Fl">-x</code></a></dt>
+          <dd>Specify that private keys are non-extractable after being
+              imported.</dd>
+          <dt id="P~7"><a class="permalink" href="#P~7"><code class="Fl">-P</code></a>
+            <var class="Ar">passphrase</var></dt>
+          <dd>Specify the unwrapping passphrase immediately. The default is to
+              obtain a secure passphrase via GUI.</dd>
+          <dt id="a~15"><a class="permalink" href="#a~15"><code class="Fl">-a</code></a>
+            <var class="Ar">attrName</var> <var class="Ar">attrValue</var></dt>
+          <dd>Specify optional extended attribute name and value. Can be used
+              multiple times. This is only valid when importing keys.</dd>
+          <dt id="A~4"><a class="permalink" href="#A~4"><code class="Fl">-A</code></a></dt>
+          <dd>Allow any application to access the imported key without warning
+              (insecure, not recommended!)</dd>
+          <dt id="T~4"><a class="permalink" href="#T~4"><code class="Fl">-T</code></a>
+            <var class="Ar">appPath</var></dt>
+          <dd>Specify an application which may access the imported key (multiple
+              <code class="Fl">-T</code> options are allowed)</dd>
+        </dl>
+      </li>
+      <li id="Examples~5"><a class="permalink" href="#Examples~5"><b class="Sy">Examples</b></a>
+        <dl class="Bl-tag">
+          <dt>security&gt; import /tmp/certs.pem -k</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+          <dt>security&gt; import /tmp/mycerts.p12 -t agg -k
+            newcert.keychain</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+          <dt>security&gt; import /tmp/mycerts.p12 -f pkcs12 -k
+            newcert.keychain</dt>
+          <dd style="width: auto;">&#x00A0;</dd>
+        </dl>
+      </li>
+    </ul>
+  </li>
+  <li><code class="Nm">cms</code>
+      [<code class="Fl">-C</code>|<code class="Fl">-D</code>|<code class="Fl">-E</code>|<code class="Fl">-S</code>]
+      [<var class="Ar">options...</var>] Encode or decode CMS messages.
+    <dl class="Bl-tag Bl-compact">
+      <dt id="C~9"><a class="permalink" href="#C~9"><code class="Fl">-C</code></a></dt>
+      <dd>create a CMS encrypted message</dd>
+      <dt id="D~11"><a class="permalink" href="#D~11"><code class="Fl">-D</code></a></dt>
+      <dd>decode a CMS message</dd>
+      <dt id="E"><a class="permalink" href="#E"><code class="Fl">-E</code></a></dt>
+      <dd>create a CMS enveloped message</dd>
+      <dt id="S~4"><a class="permalink" href="#S~4"><code class="Fl">-S</code></a></dt>
+      <dd>create a CMS signed message</dd>
+    </dl>
+    <ul class="Bl-item Bd-indent">
+      <li>Decoding options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="c~16"><a class="permalink" href="#c~16"><code class="Fl">-c</code></a>
+            <var class="Ar">content</var></dt>
+          <dd>use this detached content file</dd>
+          <dt id="h~3"><a class="permalink" href="#h~3"><code class="Fl">-h</code></a>
+            <var class="Ar">level</var></dt>
+          <dd>generate email headers with info about CMS message (output
+              <var class="Ar">level</var> &gt;= 0)</dd>
+          <dt id="n~2"><a class="permalink" href="#n~2"><code class="Fl">-n</code></a></dt>
+          <dd>suppress output of content</dd>
+        </dl>
+      </li>
+      <li>Encoding options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="r~8"><a class="permalink" href="#r~8"><code class="Fl">-r</code></a>
+            <var class="Ar">id,...</var></dt>
+          <dd>create envelope for comma-delimited list of recipients, where id
+              can be a certificate nickname or email address</dd>
+          <dt id="G~5"><a class="permalink" href="#G~5"><code class="Fl">-G</code></a></dt>
+          <dd>include a signing time attribute</dd>
+          <dt id="H"><a class="permalink" href="#H"><code class="Fl">-H</code></a>
+            <var class="Ar">hash</var></dt>
+          <dd>hash = MD2|MD4|MD5|SHA1|SHA256|SHA384|SHA512 (default: SHA1)</dd>
+          <dt id="N"><a class="permalink" href="#N"><code class="Fl">-N</code></a>
+            <var class="Ar">nick</var></dt>
+          <dd>use certificate named &quot;nick&quot; for signing</dd>
+          <dt id="P~8"><a class="permalink" href="#P~8"><code class="Fl">-P</code></a></dt>
+          <dd>include a SMIMECapabilities attribute</dd>
+          <dt id="T~5"><a class="permalink" href="#T~5"><code class="Fl">-T</code></a></dt>
+          <dd>do not include content in CMS message</dd>
+          <dt id="Y"><a class="permalink" href="#Y"><code class="Fl">-Y</code></a>
+            <var class="Ar">nick</var></dt>
+          <dd>include an EncryptionKeyPreference attribute with certificate (use
+              &quot;NONE&quot; to omit)</dd>
+          <dt id="Z~6"><a class="permalink" href="#Z~6"><code class="Fl">-Z</code></a>
+            <var class="Ar">hash</var></dt>
+          <dd>find a certificate by subject key ID</dd>
+        </dl>
+      </li>
+      <li>Common options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="e~4"><a class="permalink" href="#e~4"><code class="Fl">-e</code></a>
+            <var class="Ar">envelope</var></dt>
+          <dd>specify envelope file (valid with <code class="Fl">-D</code> or
+              <code class="Fl">-E</code>)</dd>
+          <dt id="k~8"><a class="permalink" href="#k~8"><code class="Fl">-k</code></a>
+            <var class="Ar">keychain</var></dt>
+          <dd>specify keychain to use</dd>
+          <dt id="i~3"><a class="permalink" href="#i~3"><code class="Fl">-i</code></a>
+            <var class="Ar">infile</var></dt>
+          <dd>use infile as source of data (default: stdin)</dd>
+          <dt id="o~4"><a class="permalink" href="#o~4"><code class="Fl">-o</code></a>
+            <var class="Ar">outfile</var></dt>
+          <dd>use outfile as destination of data (default: stdout)</dd>
+          <dt id="p~13"><a class="permalink" href="#p~13"><code class="Fl">-p</code></a>
+            <var class="Ar">password</var></dt>
+          <dd>use password as key db password (default: prompt)</dd>
+          <dt id="s~18"><a class="permalink" href="#s~18"><code class="Fl">-s</code></a></dt>
+          <dd>pass data a single byte at a time to CMS</dd>
+          <dt id="u~6"><a class="permalink" href="#u~6"><code class="Fl">-u</code></a>
+            <var class="Ar">certusage</var></dt>
+          <dd>set type of certificate usage (default: certUsageEmailSigner)</dd>
+          <dt id="v~5"><a class="permalink" href="#v~5"><code class="Fl">-v</code></a></dt>
+          <dd>print debugging information</dd>
+        </dl>
+      </li>
+      <li>Cert usage codes:
+        <br/>
+         0 - certUsageSSLClient
+        <br/>
+         1 - certUsageSSLServer
+        <br/>
+         2 - certUsageSSLServerWithStepUp
+        <br/>
+         3 - certUsageSSLCA
+        <br/>
+         4 - certUsageEmailSigner
+        <br/>
+         5 - certUsageEmailRecipient
+        <br/>
+         6 - certUsageObjectSigner
+        <br/>
+         7 - certUsageUserCertImport
+        <br/>
+         8 - certUsageVerifyCA
+        <br/>
+         9 - certUsageProtectedObjectSigner
+        <br/>
+         10 - certUsageStatusResponder
+        <br/>
+         11 - certUsageAnyCA</li>
+      <li></li>
+    </ul>
+  </li>
+  <li><code class="Nm">install-mds</code> Install (or re-install) the Module
+      Directory Services (MDS) database. This is a system tool which is not
+      normally used by users. There are no options.
+    <ul class="Bl-item Bd-indent">
+    </ul>
+  </li>
+  <li><code class="Nm">add-trusted-cert</code> [<code class="Fl">-d</code>]
+      [<code class="Fl">-r</code> <var class="Ar">resultType</var>]
+      [<code class="Fl">-p</code> <var class="Ar">policy</var>]
+      [<code class="Fl">-a</code> <var class="Ar">appPath</var>]
+      [<code class="Fl">-s</code> <var class="Ar">policyString</var>]
+      [<code class="Fl">-e</code> <var class="Ar">allowedError</var>]
+      [<code class="Fl">-u</code> <var class="Ar">keyUsage</var>]
+      [<code class="Fl">-k</code> <var class="Ar">keychain</var>]
+      [<code class="Fl">-i</code> <var class="Ar">settingsFileIn</var>]
+      [<code class="Fl">-o</code> <var class="Ar">settingsFileOut</var>]
+      certFile Add certificate (in DER or PEM format) from
+      <var class="Ar">certFile</var> to per-user or local Admin Trust Settings.
+      When modifying per-user Trust Settings, user authentication is required
+      via an authentication dialog. When modifying admin Trust Settings, the
+      process must be running as root, or admin authentication is required.
+    <ul class="Bl-item Bd-indent">
+      <li>Options:
+        <dl class="Bl-tag Bl-compact">
+          <dt id="d~12"><a class="permalink" href="#d~12"><code class="Fl">-d</code></a></dt>
+          <dd>Add to admin cert store; default is user.</dd>
+          <dt id="r~9"><a class="permalink" href="#r~9"><code class="Fl">-r</code></a>
+            <var class="Ar">resultType</var></dt>
+          <dd>resultType = trustRoot|trustAsRoot|deny|unspecified; default is
+              trustRoot.</dd>
+          <dt id="p~14"><a class="permalink" href="#p~14"><code class="Fl">-p</code></a>
+            <var class="Ar">policy</var></dt>
+          <dd>Specify policy constraint (ssl, smime, codeSign, IPSec, basic,
+              swUpdate, pkgSign, eap, macappstore, appleID, timestamping).</dd>
+          <dt id="a~16"><a class="permalink" href="#a~16"><code class="Fl">-a</code></a>
+            <var class="Ar">appPath</var></dt>
+          <dd>Specify application constraint.</dd>
+          <dt id="s~19"><a class="permalink" href="#s~19"><code class="Fl">-s</code></a>
+            <var class="Ar">policyString</var></dt>
+          <dd>Specify policy-specific string.</dd>
+          <dt id="e~5"><a class="permalink" href="#e~5"><code class="Fl">-e</code></a>
+            <var class="Ar">allowedError</var></dt>
+          <dd>Specify allowed error (an integer value, or one of: certExpired,
+              hostnameMismatch)</dd>
+          <dt id="u~7"><a class="permalink" href="#u~7"><code class="Fl">-u</code></a>
+            <var class="Ar">keyUsage</var></dt>
+          <dd>Specify key usage, an integer.</dd>
+          <dt id="k~9"><a class="permalink" href="#k~9"><code class="Fl">-k</code></a>
+            <var class="Ar">keychain</var></dt>
+          <dd>Specify keychain to which cert is added.</dd>
+          <dt id="i~4"><a class="permalink" href="#i~4"><code class="Fl">-i</code></a>
+            <var class="Ar">settingsFileIn</var></dt>
+          <dd>Input trust settings file; default is user domain.</dd>
+          <dt id="o~5"><a class="permalink" href="#o~5"><code class="Fl">-o</code></a>
+            <var class="Ar">settingsFileOut</var></dt>
+          <dd>Output trust settings file; default is user domain.</dd>
+        </dl>
+      </li>
+      <li id="Key"><a class="permalink" href="#Key"><b class="Sy">Key usage
+          codes:</b></a>
+        <br/>
+         -1 - Any
+        <br/>
+         1 - Sign
+        <br/>
+         2 - Encrypt/Decrypt Data
+        <br/>
+         4 - Encrypt/Decrypt Key
+        <br/>
+         8 - Sign certificate
+        <br/>
+         16 - Sign revocation
+        <br/>
+         32 - Key exchange
+        <br/>
+         To specify more than one usage, add values together (except -1 -
+        Any).</li>
+      <li id="Examples~6"><a class="permalink" href="#Examples~6"><b class="Sy">Examples</b></a>
+        <div class="Bd Bd-indent"><code class="Li">security&gt; add-trusted-cert
+          /tmp/cert.der</code></div>
+        <div class="Bd Bd-indent"><code class="Li">security&gt; add-trusted-cert
+          -d .tmp/cert.der</code></div>
+        <dl class="Bl-tag">
+        </dl>
+      </li>
+      <li><code class="Nm">remove-trusted-cert</code>
+          [<code class="Fl">-d</code>] certFile Remove certificate (in DER or
+          PEM format) in <var class="Ar">certFile</var> from per-user or local
+          Admin Trust Settings. When modifying per-user Trust Settings, user
+          authentication is required via an authentication dialog. When
+          modifying admin Trust Settings, the process must be running as root,
+          or admin authentication is required.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="d~13"><a class="permalink" href="#d~13"><code class="Fl">-d</code></a></dt>
+              <dd>Remove from admin cert store; default is user.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">dump-trust-settings</code>
+          [<code class="Fl">-s</code>] [<code class="Fl">-d</code>] Display
+          Trust Settings.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="s~20"><a class="permalink" href="#s~20"><code class="Fl">-s</code></a></dt>
+              <dd>Display trusted system certs; default is user.</dd>
+              <dt id="d~14"><a class="permalink" href="#d~14"><code class="Fl">-d</code></a></dt>
+              <dd>Display trusted admin certs; default is user.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">user-trust-settings-enable</code>
+          [<code class="Fl">-d</code>] [<code class="Fl">-e</code>] Display or
+          manipulate user-level Trust Settings. With no arguments, shows the
+          current state of the user-level Trust Settings enable. Otherwise
+          enables or disables user-level Trust Settings.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="d~15"><a class="permalink" href="#d~15"><code class="Fl">-d</code></a></dt>
+              <dd>Disable user-level Trust Settings.</dd>
+              <dt id="e~6"><a class="permalink" href="#e~6"><code class="Fl">-e</code></a></dt>
+              <dd>Enable user-level Trust Settings.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">trust-settings-export</code>
+          [<code class="Fl">-s</code>] [<code class="Fl">-d</code>]
+          settings_file Export Trust Settings to the specified file.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="s~21"><a class="permalink" href="#s~21"><code class="Fl">-s</code></a></dt>
+              <dd>Export system Trust Settings; default is user.</dd>
+              <dt id="d~16"><a class="permalink" href="#d~16"><code class="Fl">-d</code></a></dt>
+              <dd>Export admin Trust Settings; default is user.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">trust-settings-import</code>
+          [<code class="Fl">-d</code>] settings_file Import Trust Settings from
+          the specified file. When modifying per-user Trust Settings, user
+          authentication is required via an authentication dialog. When
+          modifying admin Trust Settings, the process must be running as root,
+          or admin authentication is required.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="d~17"><a class="permalink" href="#d~17"><code class="Fl">-d</code></a></dt>
+              <dd>Import admin Trust Settings; default is user.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">verify-cert</code> [<code class="Fl">-c</code>
+          <var class="Ar">certFile</var>] [<code class="Fl">-r</code>
+          <var class="Ar">rootCertFile</var>] [<code class="Fl">-p</code>
+          <var class="Ar">policy</var>] [<code class="Fl">-C</code>]
+          [<code class="Fl">-d</code> <var class="Ar">date</var>]
+          [<code class="Fl">-k</code> <var class="Ar">keychain</var>]
+          [<code class="Fl">-n</code> <var class="Ar">name</var>]
+          [<code class="Fl">-N</code>] [<code class="Fl">-L</code>]
+          [<code class="Fl">-l</code>] [<code class="Fl">-e</code>
+          <var class="Ar">emailAddress</var>] [<code class="Fl">-s</code>
+          <var class="Ar">sslHost</var>] [<code class="Fl">-q</code>]
+          [<code class="Fl">-R</code> <var class="Ar">revCheckOption</var>]
+          [<code class="Fl">-P</code>] [<code class="Fl">-t</code>]
+          [<code class="Fl">-v</code>] [<var class="Ar">url</var>] Verify one or
+          more certificates. If a direct URL argument is provided, a TLS
+          connection is attempted and the certificate presented by that server
+          is evaluated according to standard SSL server policy; other
+          certificates or policy options will be ignored in this case.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="c~17"><a class="permalink" href="#c~17"><code class="Fl">-c</code></a>
+                <var class="Ar">certFile</var></dt>
+              <dd>Certificate to verify, in DER or PEM format. Can be specified
+                  more than once; leaf certificate has to be specified
+                first.</dd>
+              <dt id="r~10"><a class="permalink" href="#r~10"><code class="Fl">-r</code></a>
+                <var class="Ar">rootCertFile</var></dt>
+              <dd>Root certificate, in DER or PEM format. Can be specified more
+                  than once. If not specified, the system anchor certificates
+                  are used. If one root certificate is specified, and zero
+                  (non-root) certificates are specified, the root certificate is
+                  verified against itself.</dd>
+              <dt id="p~15"><a class="permalink" href="#p~15"><code class="Fl">-p</code></a>
+                <var class="Ar">policy</var></dt>
+              <dd>Specify verification policy (ssl, smime, codeSign, IPSec,
+                  basic, swUpdate, pkgSign, eap, appleID, macappstore,
+                  timestamping). Default is basic.</dd>
+              <dt id="C~10"><a class="permalink" href="#C~10"><code class="Fl">-C</code></a></dt>
+              <dd>Specify this evaluation is for client usage, if the
+                  verification policy (e.g. ssl) distinguishes between client
+                  and server usage. Default is server usage.</dd>
+              <dt id="d~18"><a class="permalink" href="#d~18"><code class="Fl">-d</code></a>
+                <var class="Ar">date</var></dt>
+              <dd>Date to set for verification. Specified in the format of
+                  YYYY-MM-DD-hh:mm:ss (time optional). e.g: 2016-04-25-15:59:59
+                  for April 25, 2016 at 3:59:59 pm in GMT</dd>
+              <dt id="k~10"><a class="permalink" href="#k~10"><code class="Fl">-k</code></a>
+                <var class="Ar">keychain</var></dt>
+              <dd>Keychain to search for intermediate CA certificates. Can be
+                  specified multiple times. Default is the current user's
+                  keychain search list.</dd>
+              <dt id="n~3"><a class="permalink" href="#n~3"><code class="Fl">-n</code></a>
+                <var class="Ar">name</var></dt>
+              <dd>Specify a name to be verified, e.g. the SSL host name for the
+                  ssl policy, or RFC822 email address for the smime policy. For
+                  backward compatibility, if the -n option is provided without
+                  an argument, it will be interpreted as equivalent to -N.</dd>
+              <dt id="N~2"><a class="permalink" href="#N~2"><code class="Fl">-N</code></a></dt>
+              <dd>Avoid searching any keychains.</dd>
+              <dt id="L"><a class="permalink" href="#L"><code class="Fl">-L</code></a></dt>
+              <dd>Use local certificates only. If an issuing CA certificate is
+                  missing, this option will avoid accessing the network to fetch
+                  it.</dd>
+              <dt id="l~13"><a class="permalink" href="#l~13"><code class="Fl">-l</code></a></dt>
+              <dd>Specifies that the leaf certificate is a CA cert. By default,
+                  a leaf certificate with a Basic Constraints extension with the
+                  CA bit set fails verification.</dd>
+              <dt id="e~7"><a class="permalink" href="#e~7"><code class="Fl">-e</code></a>
+                <var class="Ar">emailAddress</var></dt>
+              <dd>Specify email address for the smime policy. (This option is
+                  deprecated; use -n instead.)</dd>
+              <dt id="s~22"><a class="permalink" href="#s~22"><code class="Fl">-s</code></a>
+                <var class="Ar">sslHost</var></dt>
+              <dd>Specify SSL host name for the ssl policy. (This option is
+                  deprecated; use -n instead.)</dd>
+              <dt id="q~2"><a class="permalink" href="#q~2"><code class="Fl">-q</code></a></dt>
+              <dd>Quiet, no stdout or stderr.</dd>
+              <dt id="R"><a class="permalink" href="#R"><code class="Fl">-R</code></a>
+                <var class="Ar">revCheckOption</var></dt>
+              <dd>Specify a revocation checking option for this evaluation
+                  (ocsp, require, offline). Can be specified multiple times;
+                  e.g. to enable revocation checking via the OCSP method and
+                  require a positive response, use &quot;-R ocsp -R
+                  require&quot;. The offline option will consult previously
+                  cached responses, but will not make a request to a revocation
+                  server.</dd>
+              <dt id="P~9"><a class="permalink" href="#P~9"><code class="Fl">-P</code></a></dt>
+              <dd>Output the constructed certificate chain in PEM format.</dd>
+              <dt id="t~13"><a class="permalink" href="#t~13"><code class="Fl">-t</code></a></dt>
+              <dd>Output certificate contents as text.</dd>
+              <dt id="v~6"><a class="permalink" href="#v~6"><code class="Fl">-v</code></a></dt>
+              <dd>Specify verbose output, including per-certificate trust
+                  results.</dd>
+            </dl>
+          </li>
+          <li id="Examples~7"><a class="permalink" href="#Examples~7"><b class="Sy">Examples</b></a>
+            <dl class="Bl-tag">
+              <dt>security&gt; verify-cert -c applestore0.cer -c applestore1.cer
+                -p ssl -n store.apple.com</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+              <dt>security&gt; verify-cert -r serverbasic.crt</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+              <dt>security&gt; verify-cert -v https://www.apple.com</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">authorize</code> [<code class="Fl">-updPiew</code>]
+          [<var class="Ar">right...</var>] Authorize requested right(s). The
+          extend-rights flag will be passed by default.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="u~8"><a class="permalink" href="#u~8"><code class="Fl">-u</code></a></dt>
+              <dd>Allow user interaction.</dd>
+              <dt id="p~16"><a class="permalink" href="#p~16"><code class="Fl">-p</code></a></dt>
+              <dd>Allow returning partial rights.</dd>
+              <dt id="d~19"><a class="permalink" href="#d~19"><code class="Fl">-d</code></a></dt>
+              <dd>Destroy acquired rights.</dd>
+              <dt id="P~10"><a class="permalink" href="#P~10"><code class="Fl">-P</code></a></dt>
+              <dd>Pre-authorize rights only.</dd>
+              <dt id="l~14"><a class="permalink" href="#l~14"><code class="Fl">-l</code></a></dt>
+              <dd>Operate authorization in least privileged mode.</dd>
+              <dt id="i~5"><a class="permalink" href="#i~5"><code class="Fl">-i</code></a></dt>
+              <dd>Internalize authref passed on stdin.</dd>
+              <dt id="e~8"><a class="permalink" href="#e~8"><code class="Fl">-e</code></a></dt>
+              <dd>Externalize authref to stdout</dd>
+              <dt id="w~9"><a class="permalink" href="#w~9"><code class="Fl">-w</code></a></dt>
+              <dd>Wait while holding AuthorizationRef until stdout is closed.
+                  This will allow client to read externalized AuthorizationRef
+                  from pipe.</dd>
+            </dl>
+          </li>
+          <li id="Examples~8"><a class="permalink" href="#Examples~8"><b class="Sy">Examples</b></a>
+            <dl class="Bl-tag">
+              <dt>security&gt; security authorize -ud my-right</dt>
+              <dd>Basic authorization of my-right.</dd>
+              <dt>security&gt; security -q authorize -uew my-right | security -q
+                authorize -i my-right</dt>
+              <dd>Authorizing a right and passing it to another command as a way
+                  to add authorization to shell scripts.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">authorizationdb</code> <var class="Ar">read
+          &lt;right-name&gt;</var></li>
+      <li><code class="Nm">authorizationdb</code> <var class="Ar">write
+          &lt;right-name&gt; [allow|deny|&lt;rulename&gt;]</var></li>
+      <li><code class="Nm">authorizationdb</code> <var class="Ar">remove
+          &lt;right-name&gt;</var> Read/Modify authorization policy database.
+          Without a rulename write will read a dictionary as a plist from stdin.
+        <ul class="Bl-item Bd-indent">
+          <li id="Examples~9"><a class="permalink" href="#Examples~9"><b class="Sy">Examples</b></a>
+            <dl class="Bl-tag">
+              <dt>security&gt; security authorizationdb read
+                system.privilege.admin &gt; /tmp/aewp-def</dt>
+              <dd>Read definition of system.privilege.admin right.</dd>
+              <dt>security&gt; security authorizationdb write system.preferences
+                &lt; /tmp/aewp-def</dt>
+              <dd>Set system.preferences to definition of system.privilege.admin
+                  right.</dd>
+              <dt>security&gt; security authorizationdb write system.preferences
+                authenticate-admin</dt>
+              <dd>Every change to preferences requires an Admin user to
+                  authenticate.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">execute-with-privileges</code>
+          <var class="Ar">&lt;program&gt;</var> [<var class="Ar">args...</var>]
+          Execute tool with privileges. On success stdin will be read and
+          forwarded to the tool.
+        <ul class="Bl-item Bd-indent">
+        </ul>
+      </li>
+      <li><code class="Nm">leaks</code> [<code class="Fl">-h</code>]
+          [<code class="Fl">-cycles</code>] [<code class="Fl">-nocontext</code>]
+          [<code class="Fl">-nostacks</code>] [<code class="Fl">-exclude</code>
+          <var class="Ar">symbol</var>] Run
+          <code class="Li">/usr/bin/leaks</code> on this process. This can help
+          find memory leaks after running certain commands.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="cycles"><a class="permalink" href="#cycles"><code class="Fl">-cycles</code></a></dt>
+              <dd>Use a stricter algorithm (See
+                  <a class="Xr" href="../1/leaks">leaks(1)</a> for
+                details).</dd>
+              <dt id="nocontext"><a class="permalink" href="#nocontext"><code class="Fl">-nocontext</code></a></dt>
+              <dd>Withhold the hex dumps of the leaked memory.</dd>
+              <dt id="nostacks"><a class="permalink" href="#nostacks"><code class="Fl">-nostacks</code></a></dt>
+              <dd>Don't show stack traces of leaked memory.</dd>
+              <dt id="exclude"><a class="permalink" href="#exclude"><code class="Fl">-exclude</code></a>
+                <var class="Ar">symbol</var></dt>
+              <dd>Ignore leaks called from <var class="Ar">symbol</var>.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">smartcards</code> <var class="Ar">token</var>
+          [<code class="Fl">-l</code>] [<code class="Fl">-e</code>
+          <var class="Ar">token</var>] [<code class="Fl">-d</code>
+          <var class="Ar">token</var>] Enable, disable or list disabled
+          smartcard tokens.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="l~15"><a class="permalink" href="#l~15"><code class="Fl">-l</code></a></dt>
+              <dd>List disabled smartcard tokens.</dd>
+              <dt id="e~9"><a class="permalink" href="#e~9"><code class="Fl">-e</code></a>
+                <var class="Ar">token</var></dt>
+              <dd>Enable smartcard token.</dd>
+              <dt id="d~20"><a class="permalink" href="#d~20"><code class="Fl">-d</code></a>
+                <var class="Ar">token</var></dt>
+              <dd>Disable smartcard token.</dd>
+            </dl>
+          </li>
+          <li id="To"><a class="permalink" href="#To"><b class="Sy">To list
+              tokens available in the system</b></a></li>
+          <li>
+            <dl class="Bl-tag Bl-compact">
+              <dt>pluginkit -m -p com.apple.ctk-tokens</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+            </dl>
+          </li>
+          <li id="Examples~10"><a class="permalink" href="#Examples~10"><b class="Sy">Examples</b></a></li>
+          <li>
+            <dl class="Bl-tag Bl-compact">
+              <dt>security smartcards token -l</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+              <dt>security smartcards token -d
+                com.apple.CryptoTokenKit.pivtoken</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+              <dt>security smartcards token -e
+                com.apple.CryptoTokenKit.pivtoken</dt>
+              <dd style="width: auto;">&#x00A0;</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">list-smartcards</code> Display
+          <var class="Ar">id</var>s of available smartcards.
+        <ul class="Bl-item Bd-indent">
+        </ul>
+      </li>
+      <li><code class="Nm">export-smartcard</code> <var class="Ar">token</var>
+          [<code class="Fl">-i</code> <var class="Ar">id</var>]
+          [<code class="Fl">-t</code>
+          <var class="Ar">certs</var>|<var class="Ar">privKeys</var>|<var class="Ar">identities</var>|<var class="Ar">all</var>]
+          [<code class="Fl">-e</code> <var class="Ar">exportPath</var>]
+          Export/display items from a smartcard. If <var class="Ar">id</var>
+          isn't provided, items from all smartcards will be displayed.
+        <ul class="Bl-item Bd-indent">
+          <li>Options:
+            <dl class="Bl-tag Bl-compact">
+              <dt id="i~6"><a class="permalink" href="#i~6"><code class="Fl">-i</code></a>
+                <var class="Ar">id</var></dt>
+              <dd>Export/display items from token specified by token
+                  <var class="Ar">id</var>, available <var class="Ar">id</var>s
+                  can be listed by list-smartcards command.</dd>
+              <dt id="t~14"><a class="permalink" href="#t~14"><code class="Fl">-t</code></a>
+                <var class="Ar">certs</var>|<var class="Ar">privKeys</var>|<var class="Ar">identities</var>|<var class="Ar">all</var></dt>
+              <dd>Display items of the specified type (Default:
+                  <var class="Ar">all</var>)</dd>
+              <dt id="e~10"><a class="permalink" href="#e~10"><code class="Fl">-e</code></a>
+                <var class="Ar">exportPath</var></dt>
+              <dd>Specify path to export certificates and public keys. If
+                  <var class="Ar">exportPath</var>
+                <br/>
+                 is specified screen output is suppressed. This option cannot be
+                  combined with -t option.</dd>
+            </dl>
+          </li>
+        </ul>
+      </li>
+      <li><code class="Nm">error</code> [<code class="Fl">-h</code>]
+          [<var class="Ar">&lt;error code(s)...&gt;</var>] Display an error
+          string for the given security-related error code. The error can be in
+          decimal or hex, e.g. 1234 or 0x1234. Multiple errors can be separated
+          by spaces.
+        <ul class="Bl-item Bd-indent">
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
+<dl class="Bl-tag">
+  <dt id="MallocStackLogging"><a class="permalink" href="#MallocStackLogging"><code class="Ev">MallocStackLogging</code></a></dt>
+  <dd>When using the <code class="Nm">leaks</code> command or the
+      <code class="Fl">-l</code> option it's probably a good idea to set this
+      environment variable before <code class="Nm">security</code> is started.
+      Doing so will allow leaks to display symbolic backtraces.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<dl class="Bl-tag">
+  <dt><span class="Pa">~/Library/Preferences/com.apple.security.plist</span></dt>
+  <dd>
+    <p class="Pp">Property list file containing the current user's default
+        keychain and keychain search list.</p>
+  </dd>
+  <dt><span class="Pa">/Library/Preferences/com.apple.security.plist</span></dt>
+  <dd>
+    <p class="Pp">Property list file containing the system default keychain and
+        keychain search list. This is used by processes started at boot time, or
+        those requesting to use the system search domain, such as system
+        daemons.</p>
+  </dd>
+  <dt><span class="Pa">/Library/Preferences/com.apple.security-common.plist</span></dt>
+  <dd>
+    <p class="Pp">Property list file containing the common keychain search list,
+        which is appended to every user's search list and to the system search
+        list.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/certtool">certtool(1)</a>,
+    <a class="Xr" href="../1/leaks">leaks(1)</a>,
+    <a class="Xr" href="../8/pluginkit">pluginkit(8)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp"><code class="Nm">security</code> was first introduced in Mac OS X
+    version 10.3.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp"><code class="Nm">security</code> still needs more commands before
+    it can be considered complete. In particular, it should someday supersede
+    both the <code class="Li">certtool</code> and
+    <code class="Li">systemkeychain</code> commands.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">March 15, 2017</td>
+    <td class="foot-os">Darwin</td>
+  </tr>
+</table>
+</body>
+</html>

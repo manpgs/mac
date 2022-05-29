@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLMOPT_PUSHDATA(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLMOPT_PUSHDATA(3)</td>
+    <td class="head-vol">curl_multi_setopt options</td>
+    <td class="head-rtitle">CURLMOPT_PUSHDATA(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLMOPT_PUSHDATA - pointer to pass to push callback</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+#include &lt;curl/curl.h&gt;
+CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHDATA, void *pointer);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Set <i>pointer</i> to pass as the last argument to the
+    <i>CURLMOPT_PUSHFUNCTION(3)</i> callback. The pointer will not be touched or
+    used by libcurl itself, only passed on to the callback function.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">HTTP(S)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+/* only allow pushes for file names starting with &quot;push-&quot; */
+int push_callback(CURL *parent,
+<br/>
+                  CURL *easy,
+<br/>
+                  size_t num_headers,
+<br/>
+                  struct curl_pushheaders *headers,
+<br/>
+                  void *userp)
+{
+<br/>
+  char *headp;
+<br/>
+  int *transfers = (int *)userp;
+<br/>
+  FILE *out;
+<br/>
+  headp = curl_pushheader_byname(headers, &quot;:path&quot;);
+<br/>
+  if(headp &amp;&amp; !strncmp(headp, &quot;/push-&quot;, 6)) {
+<br/>
+    fprintf(stderr, &quot;The PATH is %s\n&quot;, headp);
+<br/>
+    /* save the push here */
+<br/>
+    out = fopen(&quot;pushed-stream&quot;, &quot;wb&quot;);
+<br/>
+    /* write to this file */
+<br/>
+    curl_easy_setopt(easy, CURLOPT_WRITEDATA, out);
+<br/>
+    (*transfers)++; /* one more */
+<br/>
+    return CURL_PUSH_OK;
+<br/>
+  }
+<br/>
+  return CURL_PUSH_DENY;
+}
+curl_multi_setopt(multi, CURLMOPT_PUSHFUNCTION, push_callback);
+curl_multi_setopt(multi, CURLMOPT_PUSHDATA, &amp;counter);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.44.0</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLM_OK if the option is supported, and
+    CURLM_UNKNOWN_OPTION if not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLMOPT_PUSHFUNCTION</b>(3), <b>CURLMOPT_PIPELINING</b>(3),
+    <b>CURLOPT_PIPEWAIT</b>(3), <b>RFC</b>7540</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

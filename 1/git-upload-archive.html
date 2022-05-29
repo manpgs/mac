@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-upload-archive
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+        Date: 06/06/2021
+      Manual: Git Manual
+      Source: Git 2.32.0
+    Language: English
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GIT-UPLOAD-ARCHIVE(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GIT-UPLOAD-ARCHIVE(1)</td>
+    <td class="head-vol">Git Manual</td>
+    <td class="head-rtitle">GIT-UPLOAD-ARCHIVE(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">git-upload-archive - Send archive back to git-archive</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+<i>git upload-archive</i> &lt;directory&gt;
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Invoked by <i>git archive --remote</i> and sends a generated
+    archive to the other end over the Git protocol.</p>
+<p class="Pp">This command is usually not invoked directly by the end user. The
+    UI for the protocol is on the <i>git archive</i> side, and the program pair
+    is meant to be used to get an archive from a remote repository.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SECURITY"><a class="permalink" href="#SECURITY">SECURITY</a></h1>
+<p class="Pp">In order to protect the privacy of objects that have been removed
+    from history but may not yet have been pruned, <b>git-upload-archive</b>
+    avoids serving archives for commits and trees that are not reachable from
+    the repository&#x2019;s refs. However, because calculating object
+    reachability is computationally expensive, <b>git-upload-archive</b>
+    implements a stricter but easier-to-check set of rules:</p>
+<p class="Pp"></p>
+<div class="Bd-indent"> 1.Clients may request a commit or tree that is pointed
+  to directly by a ref. E.g., <b>git archive --remote=origin v1.0</b>.</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 2.Clients may request a sub-tree within a commit or tree
+  using the <b>ref:path</b> syntax. E.g., <b>git archive --remote=origin
+  v1.0:Documentation</b>.</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 3.Clients may <i>not</i> use other sha1 expressions,
+  even if the end result is reachable. E.g., neither a relative commit like
+  <b>master^</b> nor a literal sha1 like <b>abcd1234</b> is allowed, even if the
+  result is reachable from the refs.</div>
+<p class="Pp">Note that rule 3 disallows many cases that do not have any privacy
+    implications. These rules are subject to change in future versions of git,
+    and the server accessed by <b>git archive --remote</b> may or may not follow
+    these exact rules.</p>
+<p class="Pp">If the config option <b>uploadArchive.allowUnreachable</b> is
+    true, these rules are ignored, and clients may use arbitrary sha1
+    expressions. This is useful if you do not care about the privacy of
+    unreachable objects, or if your object database is already publicly
+    available for access via non-smart-http.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<p class="Pp">&lt;directory&gt;</p>
+<div class="Bd-indent">The repository to get a tar archive from.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<p class="Pp">Part of the <b>git</b>(1) suite</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">06/06/2021</td>
+    <td class="foot-os">Git 2.32.0</td>
+  </tr>
+</table>
+</body>
+</html>

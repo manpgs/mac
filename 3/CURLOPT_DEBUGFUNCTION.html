@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_DEBUGFUNCTION(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_DEBUGFUNCTION(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_DEBUGFUNCTION(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_DEBUGFUNCTION - debug callback</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+#include &lt;curl/curl.h&gt;
+typedef enum {
+<br/>
+  CURLINFO_TEXT = 0,
+<br/>
+  CURLINFO_HEADER_IN,    /* 1 */
+<br/>
+  CURLINFO_HEADER_OUT,   /* 2 */
+<br/>
+  CURLINFO_DATA_IN,      /* 3 */
+<br/>
+  CURLINFO_DATA_OUT,     /* 4 */
+<br/>
+  CURLINFO_SSL_DATA_IN,  /* 5 */
+<br/>
+  CURLINFO_SSL_DATA_OUT, /* 6 */
+<br/>
+  CURLINFO_END
+} curl_infotype;
+int debug_callback(CURL *handle,
+<br/>
+                   curl_infotype type,
+<br/>
+                   char *data,
+<br/>
+                   size_t size,
+<br/>
+                   void *userptr);
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_DEBUGFUNCTION,
+<br/>
+                          debug_callback);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a pointer to your callback function, which should match the
+    prototype shown above.</p>
+<p class="Pp"><i>CURLOPT_DEBUGFUNCTION(3)</i> replaces the standard debug
+    function used when <i>CURLOPT_VERBOSE(3)</i> is in effect. This callback
+    receives debug information, as specified in the <i>type</i> argument. This
+    function must return 0. The <i>data</i> pointed to by the char * passed to
+    this function WILL NOT be null-terminated, but will be exactly of the
+    <i>size</i> as told by the <i>size</i> argument.</p>
+<p class="Pp">The <i>userptr</i> argument is the pointer set with
+    <i>CURLOPT_DEBUGDATA(3)</i>.</p>
+<p class="Pp">Available curl_infotype values:</p>
+<dl class="Bl-tag">
+  <dt id="CURLINFO_TEXT"><a class="permalink" href="#CURLINFO_TEXT">CURLINFO_TEXT</a></dt>
+  <dd>The data is informational text.</dd>
+  <dt id="CURLINFO_HEADER_IN"><a class="permalink" href="#CURLINFO_HEADER_IN">CURLINFO_HEADER_IN</a></dt>
+  <dd>The data is header (or header-like) data received from the peer.</dd>
+  <dt id="CURLINFO_HEADER_OUT"><a class="permalink" href="#CURLINFO_HEADER_OUT">CURLINFO_HEADER_OUT</a></dt>
+  <dd>The data is header (or header-like) data sent to the peer.</dd>
+  <dt id="CURLINFO_DATA_IN"><a class="permalink" href="#CURLINFO_DATA_IN">CURLINFO_DATA_IN</a></dt>
+  <dd>The data is protocol data received from the peer.</dd>
+  <dt id="CURLINFO_DATA_OUT"><a class="permalink" href="#CURLINFO_DATA_OUT">CURLINFO_DATA_OUT</a></dt>
+  <dd>The data is protocol data sent to the peer.</dd>
+  <dt id="CURLINFO_SSL_DATA_OUT"><a class="permalink" href="#CURLINFO_SSL_DATA_OUT">CURLINFO_SSL_DATA_OUT</a></dt>
+  <dd>The data is SSL/TLS (binary) data sent to the peer.</dd>
+  <dt id="CURLINFO_SSL_DATA_IN"><a class="permalink" href="#CURLINFO_SSL_DATA_IN">CURLINFO_SSL_DATA_IN</a></dt>
+  <dd>The data is SSL/TLS (binary) data received from the peer.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">All</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+static
+void dump(const char *text,
+<br/>
+          FILE *stream, unsigned char *ptr, size_t size)
+{
+<br/>
+  size_t i;
+<br/>
+  size_t c;
+<br/>
+  unsigned int width=0x10;
+<br/>
+  fprintf(stream, &quot;%s, %10.10ld bytes (0x%8.8lx)\n&quot;,
+<br/>
+          text, (long)size, (long)size);
+<br/>
+  for(i=0; i&lt;size; i+= width) {
+<br/>
+    fprintf(stream, &quot;%4.4lx: &quot;, (long)i);
+<br/>
+    /* show hex to the left */
+<br/>
+    for(c = 0; c &lt; width; c++) {
+<br/>
+      if(i+c &lt; size)
+<br/>
+        fprintf(stream, &quot;%02x &quot;, ptr[i+c]);
+<br/>
+      else
+<br/>
+        fputs(&quot;   &quot;, stream);
+<br/>
+    }
+<br/>
+    /* show data on the right */
+<br/>
+    for(c = 0; (c &lt; width) &amp;&amp; (i+c &lt; size); c++) {
+<br/>
+      char x = (ptr[i+c] &gt;= 0x20 &amp;&amp; ptr[i+c] &lt; 0x80) ? ptr[i+c] : '.';
+<br/>
+      fputc(x, stream);
+<br/>
+    }
+<br/>
+    fputc('\n', stream); /* newline */
+<br/>
+  }
+}
+static
+int my_trace(CURL *handle, curl_infotype type,
+<br/>
+             char *data, size_t size,
+<br/>
+             void *userp)
+{
+<br/>
+  const char *text;
+<br/>
+  (void)handle; /* prevent compiler warning */
+<br/>
+  (void)userp;
+<br/>
+  switch (type) {
+<br/>
+  case CURLINFO_TEXT:
+<br/>
+    fprintf(stderr, &quot;== Info: %s&quot;, data);
+<br/>
+  default: /* in case a new one is introduced to shock us */
+<br/>
+    return 0;
+<br/>
+  case CURLINFO_HEADER_OUT:
+<br/>
+    text = &quot;=&gt; Send header&quot;;
+<br/>
+    break;
+<br/>
+  case CURLINFO_DATA_OUT:
+<br/>
+    text = &quot;=&gt; Send data&quot;;
+<br/>
+    break;
+<br/>
+  case CURLINFO_SSL_DATA_OUT:
+<br/>
+    text = &quot;=&gt; Send SSL data&quot;;
+<br/>
+    break;
+<br/>
+  case CURLINFO_HEADER_IN:
+<br/>
+    text = &quot;&lt;= Recv header&quot;;
+<br/>
+    break;
+<br/>
+  case CURLINFO_DATA_IN:
+<br/>
+    text = &quot;&lt;= Recv data&quot;;
+<br/>
+    break;
+<br/>
+  case CURLINFO_SSL_DATA_IN:
+<br/>
+    text = &quot;&lt;= Recv SSL data&quot;;
+<br/>
+    break;
+<br/>
+  }
+<br/>
+  dump(text, stderr, (unsigned char *)data, size);
+<br/>
+  return 0;
+}
+int main(void)
+{
+<br/>
+  CURL *curl;
+<br/>
+  CURLcode res;
+<br/>
+  curl = curl_easy_init();
+<br/>
+  if(curl) {
+<br/>
+    curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_trace);
+<br/>
+    /* the DEBUGFUNCTION has no effect until we enable VERBOSE */
+<br/>
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+<br/>
+    /* example.com is redirected, so we tell libcurl to follow redirection */
+<br/>
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+<br/>
+    curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com/&quot;);
+<br/>
+    res = curl_easy_perform(curl);
+<br/>
+    /* Check for errors */
+<br/>
+    if(res != CURLE_OK)
+<br/>
+      fprintf(stderr, &quot;curl_easy_perform() failed: %s\n&quot;,
+<br/>
+              curl_easy_strerror(res));
+<br/>
+    /* always cleanup */
+<br/>
+    curl_easy_cleanup(curl);
+<br/>
+  }
+<br/>
+  return 0;
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Always</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_VERBOSE</b>(3), <b>CURLOPT_DEBUGDATA</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

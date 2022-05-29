@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1990, 1993, 1994
+  	The Regents of the University of California.  All rights reserved.
+  
+   This code is derived from software contributed to Berkeley by
+   the Institute of Electrical and Electronics Engineers, Inc.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)stty.1	8.4 (Berkeley) 4/18/94
+   $FreeBSD: src/bin/stty/stty.1,v 1.27 2001/11/29 15:46:54 green Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>STTY(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">STTY(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">STTY(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">stty</code> &#x2014; <span class="Nd">set the
+    options for a terminal device interface</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">stty</code></td>
+    <td>[<code class="Fl">-a</code> | <code class="Fl">-e</code> |
+      <code class="Fl">-g</code>] [<code class="Fl">-f</code>
+      <var class="Ar">file</var>] [operands]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <code class="Nm">stty</code> utility sets or reports on
+    terminal characteristics for the device that is its standard input. If no
+    options or operands are specified, it reports the settings of a subset of
+    characteristics as well as additional ones if they differ from their default
+    values. Otherwise it modifies the terminal state according to the specified
+    arguments. Some combinations of arguments are mutually exclusive on some
+    terminal types.</p>
+<p class="Pp">The following options are available:</p>
+<dl class="Bl-tag">
+  <dt id="a"><a class="permalink" href="#a"><code class="Fl">-a</code></a></dt>
+  <dd>Display all the current settings for the terminal to standard output as
+      per <span class="St">IEEE Std 1003.2
+    (&#x201C;POSIX.2&#x201D;)</span>.</dd>
+  <dt id="e"><a class="permalink" href="#e"><code class="Fl">-e</code></a></dt>
+  <dd>Display all the current settings for the terminal to standard output in
+      the traditional <span class="Ux">BSD</span> ``all'' and ``everything''
+      formats.</dd>
+  <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a></dt>
+  <dd>Open and use the terminal named by <var class="Ar">file</var> rather than
+      using standard input. The file is opened using the
+      <code class="Dv">O_NONBLOCK</code> flag of
+      <a class="permalink" href="#open"><code class="Fn" id="open">open</code></a>(),
+      making it possible to set or display settings on a terminal that might
+      otherwise block on the open.</dd>
+  <dt id="g"><a class="permalink" href="#g"><code class="Fl">-g</code></a></dt>
+  <dd>Display all the current settings for the terminal to standard output in a
+      form that may be used as an argument to a subsequent invocation of
+      <code class="Nm">stty</code> to restore the current terminal state as per
+      <span class="St">IEEE Std 1003.2 (&#x201C;POSIX.2&#x201D;)</span>.</dd>
+</dl>
+<p class="Pp">The following arguments are available to set the terminal
+    characteristics:</p>
+<section class="Ss">
+<h2 class="Ss" id="Control_Modes:"><a class="permalink" href="#Control_Modes:">Control
+  Modes:</a></h2>
+<p class="Pp">Control mode flags affect hardware characteristics associated with
+    the terminal. This corresponds to the c_cflag in the termios structure.</p>
+<dl class="Bl-tag">
+  <dt><var class="Ar">number</var></dt>
+  <dd>Set terminal baud rate to the number given, if possible. If the baud rate
+      is set to zero, modem control is no longer asserted.</dd>
+  <dt id="clocal"><a class="permalink" href="#clocal"><code class="Cm">clocal</code></a>
+    (<code class="Fl">-clocal</code>)</dt>
+  <dd>Assume a line without (with) modem control.</dd>
+  <dt id="cread"><a class="permalink" href="#cread"><code class="Cm">cread</code></a>
+    (<code class="Fl">-cread</code>)</dt>
+  <dd>Enable (disable) the receiver.</dd>
+  <dt id="crtscts"><a class="permalink" href="#crtscts"><code class="Cm">crtscts</code></a>
+    (<code class="Fl">-crtscts</code>)</dt>
+  <dd>Enable (disable) RTS/CTS flow control.</dd>
+  <dt id="cs5"><a class="permalink" href="#cs5"><code class="Cm">cs5 cs6 cs7
+    cs8</code></a></dt>
+  <dd>Select character size, if possible.</dd>
+  <dt id="cstopb"><a class="permalink" href="#cstopb"><code class="Cm">cstopb</code></a>
+    (<code class="Fl">-cstopb</code>)</dt>
+  <dd>Use two (one) stop bits per character.</dd>
+  <dt id="hup"><a class="permalink" href="#hup"><code class="Cm">hup</code></a>
+    (<code class="Fl">-hup</code>)</dt>
+  <dd>Same as <code class="Cm">hupcl</code>
+    (<code class="Fl">-hupcl</code>).</dd>
+  <dt id="hupcl"><a class="permalink" href="#hupcl"><code class="Cm">hupcl</code></a>
+    (<code class="Fl">-hupcl</code>)</dt>
+  <dd>Stop asserting modem control (do not stop asserting modem control) on last
+      close.</dd>
+  <dt id="ispeed"><a class="permalink" href="#ispeed"><code class="Cm">ispeed</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>Set terminal input baud rate to the number given, if possible. If the
+      input baud rate is set to zero, the input baud rate is set to the value of
+      the output baud rate.</dd>
+  <dt id="ospeed"><a class="permalink" href="#ospeed"><code class="Cm">ospeed</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>Set terminal output baud rate to the number given, if possible. If the
+      output baud rate is set to zero, modem control is no longer asserted.</dd>
+  <dt id="parenb"><a class="permalink" href="#parenb"><code class="Cm">parenb</code></a>
+    (<code class="Fl">-parenb</code>)</dt>
+  <dd>Enable (disable) parity generation and detection.</dd>
+  <dt id="parodd"><a class="permalink" href="#parodd"><code class="Cm">parodd</code></a>
+    (<code class="Fl">-parodd</code>)</dt>
+  <dd>Select odd (even) parity.</dd>
+  <dt id="speed"><a class="permalink" href="#speed"><code class="Cm">speed</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>This sets both <code class="Cm">ispeed</code> and
+      <code class="Cm">ospeed</code> to <var class="Ar">number</var>.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Input_Modes:"><a class="permalink" href="#Input_Modes:">Input
+  Modes:</a></h2>
+<p class="Pp">This corresponds to the c_iflag in the termios structure.</p>
+<dl class="Bl-tag">
+  <dt id="brkint"><a class="permalink" href="#brkint"><code class="Cm">brkint</code></a>
+    (<code class="Fl">-brkint</code>)</dt>
+  <dd>Signal (do not signal) <code class="Dv">INTR</code> on break.</dd>
+  <dt id="icrnl"><a class="permalink" href="#icrnl"><code class="Cm">icrnl</code></a>
+    (<code class="Fl">-icrnl</code>)</dt>
+  <dd>Map (do not map) <code class="Dv">CR</code> to <code class="Dv">NL</code>
+      on input.</dd>
+  <dt id="ignbrk"><a class="permalink" href="#ignbrk"><code class="Cm">ignbrk</code></a>
+    (<code class="Fl">-ignbrk</code>)</dt>
+  <dd>Ignore (do not ignore) break on input.</dd>
+  <dt id="igncr"><a class="permalink" href="#igncr"><code class="Cm">igncr</code></a>
+    (<code class="Fl">-igncr</code>)</dt>
+  <dd>Ignore (do not ignore) <code class="Dv">CR</code> on input.</dd>
+  <dt id="ignpar"><a class="permalink" href="#ignpar"><code class="Cm">ignpar</code></a>
+    (<code class="Fl">-ignpar</code>)</dt>
+  <dd>Ignore (do not ignore) characters with parity errors.</dd>
+  <dt id="imaxbel"><a class="permalink" href="#imaxbel"><code class="Cm">imaxbel</code></a>
+    (<code class="Fl">-imaxbel</code>)</dt>
+  <dd>The system imposes a limit of <code class="Dv">MAX_INPUT</code> (currently
+      255) characters in the input queue. If <code class="Cm">imaxbel</code> is
+      set and the input queue limit has been reached, subsequent input causes
+      the system to send an ASCII BEL character to the output queue (the
+      terminal beeps at you). Otherwise, if <code class="Cm">imaxbel</code> is
+      unset and the input queue is full, the next input character causes the
+      entire input and output queues to be discarded.</dd>
+  <dt id="inlcr"><a class="permalink" href="#inlcr"><code class="Cm">inlcr</code></a>
+    (<code class="Fl">-inlcr</code>)</dt>
+  <dd>Map (do not map) <code class="Dv">NL</code> to <code class="Dv">CR</code>
+      on input.</dd>
+  <dt id="inpck"><a class="permalink" href="#inpck"><code class="Cm">inpck</code></a>
+    (<code class="Fl">-inpck</code>)</dt>
+  <dd>Enable (disable) input parity checking.</dd>
+  <dt id="istrip"><a class="permalink" href="#istrip"><code class="Cm">istrip</code></a>
+    (<code class="Fl">-istrip</code>)</dt>
+  <dd>Strip (do not strip) input characters to seven bits.</dd>
+  <dt id="iutf8"><a class="permalink" href="#iutf8"><code class="Cm">iutf8</code></a>
+    (<code class="Fl">-iutf8</code>)</dt>
+  <dd>Assume input characters are UTF-8 encoded.</dd>
+  <dt id="ixany"><a class="permalink" href="#ixany"><code class="Cm">ixany</code></a>
+    (<code class="Fl">-ixany</code>)</dt>
+  <dd>Allow any character (allow only <code class="Dv">START</code>) to restart
+      output.</dd>
+  <dt id="ixoff"><a class="permalink" href="#ixoff"><code class="Cm">ixoff</code></a>
+    (<code class="Fl">-ixoff</code>)</dt>
+  <dd>Request that the system send (not send) <code class="Dv">START/STOP</code>
+      characters when the input queue is nearly empty/full.</dd>
+  <dt id="ixon"><a class="permalink" href="#ixon"><code class="Cm">ixon</code></a>
+    (<code class="Fl">-ixon</code>)</dt>
+  <dd>Enable (disable) <code class="Dv">START/STOP</code> output control. Output
+      from the system is stopped when the system receives
+      <code class="Dv">STOP</code> and started when the system receives
+      <code class="Dv">START</code>, or if <code class="Cm">ixany</code> is set,
+      any character restarts output.</dd>
+  <dt id="parmrk"><a class="permalink" href="#parmrk"><code class="Cm">parmrk</code></a>
+    (<code class="Fl">-parmrk</code>)</dt>
+  <dd>Mark (do not mark) characters with parity errors.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Output_Modes:"><a class="permalink" href="#Output_Modes:">Output
+  Modes:</a></h2>
+<p class="Pp">This corresponds to the c_oflag of the termios structure.</p>
+<dl class="Bl-tag">
+  <dt id="bs0"><a class="permalink" href="#bs0"><code class="Cm">bs0
+    bs1</code></a></dt>
+  <dd>Select the style of delay for backspaces (e.g., set BSDLY to BS0).</dd>
+  <dt id="cr0"><a class="permalink" href="#cr0"><code class="Cm">cr0 cr1 cr2
+    cr3</code></a></dt>
+  <dd>Select the style of delay for carriage returns (e.g., set CRDLY to
+    CR0).</dd>
+  <dt id="ff0"><a class="permalink" href="#ff0"><code class="Cm">ff0
+    ff1</code></a></dt>
+  <dd>Select the style of delay for form feeds (e.g., set FFDLY to FF0).</dd>
+  <dt id="nl0"><a class="permalink" href="#nl0"><code class="Cm">nl0
+    nl1</code></a></dt>
+  <dd>Select the style of delay for newlines (e.g., set NLDLY to NL0).</dd>
+  <dt id="ocrnl"><a class="permalink" href="#ocrnl"><code class="Cm">ocrnl</code></a>
+    (<code class="Fl">-ocrnl</code>)</dt>
+  <dd>Map (do not map) carriage return to newline on output.</dd>
+  <dt id="ofdel"><a class="permalink" href="#ofdel"><code class="Cm">ofdel</code></a>
+    (<code class="Fl">-odell</code>)</dt>
+  <dd>Use DELs (NULs) as fill characters.</dd>
+  <dt id="ofill"><a class="permalink" href="#ofill"><code class="Cm">ofill</code></a>
+    (<code class="Fl">-ofill</code>)</dt>
+  <dd>Use fill characters (use timing) for delays.</dd>
+  <dt id="onlcr"><a class="permalink" href="#onlcr"><code class="Cm">onlcr</code></a>
+    (<code class="Fl">-onlcr</code>)</dt>
+  <dd>Map (do not map) <code class="Dv">NL</code> to
+      <code class="Dv">CR-NL</code> on output.</dd>
+  <dt id="onlret"><a class="permalink" href="#onlret"><code class="Cm">onlret</code></a>
+    (<code class="Fl">-onlret</code>)</dt>
+  <dd>On the terminal, NL performs (does not perform) the CR function.</dd>
+  <dt id="onocr"><a class="permalink" href="#onocr"><code class="Cm">onocr</code></a>
+    (<code class="Fl">-onocr</code>)</dt>
+  <dd>Do not (do) output CRs at column zero.</dd>
+  <dt id="opost"><a class="permalink" href="#opost"><code class="Cm">opost</code></a>
+    (<code class="Fl">-opost</code>)</dt>
+  <dd>Post-process output (do not post-process output; ignore all other output
+      modes).</dd>
+  <dt id="oxtabs"><a class="permalink" href="#oxtabs"><code class="Cm">oxtabs</code></a>
+    (<code class="Fl">-oxtabs</code>)</dt>
+  <dd>Expand (do not expand) tabs to spaces on output.</dd>
+  <dt id="tab0"><a class="permalink" href="#tab0"><code class="Cm">tab0 tab1
+    tab2 tab3</code></a></dt>
+  <dd>Select the style of delay for horizontal tabs (e.g., set TABDLY to
+    TAB0).</dd>
+  <dt id="tabs"><a class="permalink" href="#tabs"><code class="Cm">tabs</code></a>
+    (<code class="Fl">-tabs</code>)</dt>
+  <dd>Same as <code class="Cm">tab0</code> (<code class="Cm">tab3</code>).</dd>
+  <dt id="vt0"><a class="permalink" href="#vt0"><code class="Cm">vt0
+    vt1</code></a></dt>
+  <dd>Select the style of delay for vertical tabs (e.g., set VTDLY to VT0).</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Local_Modes:"><a class="permalink" href="#Local_Modes:">Local
+  Modes:</a></h2>
+<p class="Pp">Local mode flags (lflags) affect various and sundry
+    characteristics of terminal processing. Historically the term
+    &quot;local&quot; pertained to new job control features implemented by Jim
+    Kulp on a Pdp 11/70 at IIASA. Later, the driver ran on the first VAX at
+    Evans Hall, UC Berkeley, where the job control details were greatly
+    modified, but the structure definitions and names remained essentially
+    unchanged. The second interpretation of the 'l' in lflag is ``line
+    discipline flag'', which corresponds to the <var class="Ar">c_lflag</var> of
+    the <var class="Ar">termios</var> structure.</p>
+<dl class="Bl-tag">
+  <dt id="altwerase"><a class="permalink" href="#altwerase"><code class="Cm">altwerase</code></a>
+    (<code class="Fl">-altwerase</code>)</dt>
+  <dd>Use (do not use) an alternate word erase algorithm when processing
+      <code class="Dv">WERASE</code> characters. This alternate algorithm
+      considers sequences of alphanumeric/underscores as words. It also skips
+      the first preceding character in its classification (as a convenience,
+      since the one preceding character could have been erased with simply an
+      <code class="Dv">ERASE</code> character.)</dd>
+  <dt id="echo"><a class="permalink" href="#echo"><code class="Cm">echo</code></a>
+    (<code class="Fl">-echo</code>)</dt>
+  <dd>Echo back (do not echo back) every character typed.</dd>
+  <dt id="echoctl"><a class="permalink" href="#echoctl"><code class="Cm">echoctl</code></a>
+    (<code class="Fl">-echoctl</code>)</dt>
+  <dd>If <code class="Cm">echoctl</code> is set, echo control characters as ^X.
+      Otherwise, control characters echo as themselves.</dd>
+  <dt id="echoe"><a class="permalink" href="#echoe"><code class="Cm">echoe</code></a>
+    (<code class="Fl">-echoe</code>)</dt>
+  <dd>The <code class="Dv">ERASE</code> character shall (shall not) visually
+      erase the last character in the current line from the display, if
+      possible.</dd>
+  <dt id="echok"><a class="permalink" href="#echok"><code class="Cm">echok</code></a>
+    (<code class="Fl">-echok</code>)</dt>
+  <dd>Echo (do not echo) <code class="Dv">NL</code> after
+      <code class="Dv">KILL</code> character.</dd>
+  <dt id="echoke"><a class="permalink" href="#echoke"><code class="Cm">echoke</code></a>
+    (<code class="Fl">-echoke</code>)</dt>
+  <dd>The <code class="Dv">KILL</code> character shall (shall not) visually
+      erase the current line from the display, if possible.</dd>
+  <dt id="echonl"><a class="permalink" href="#echonl"><code class="Cm">echonl</code></a>
+    (<code class="Fl">-echonl</code>)</dt>
+  <dd>Echo (do not echo) <code class="Dv">NL</code>, even if echo is
+    disabled.</dd>
+  <dt id="echoprt"><a class="permalink" href="#echoprt"><code class="Cm">echoprt</code></a>
+    (<code class="Fl">-echoprt</code>)</dt>
+  <dd>For printing terminals. If set, echo erased characters backwards within
+      ``\'' and ``/''. Otherwise, disable this feature.</dd>
+  <dt id="flusho"><a class="permalink" href="#flusho"><code class="Cm">flusho</code></a>
+    (<code class="Fl">-flusho</code>)</dt>
+  <dd>Indicates output is (is not) being discarded.</dd>
+  <dt id="icanon"><a class="permalink" href="#icanon"><code class="Cm">icanon</code></a>
+    (<code class="Fl">-icanon</code>)</dt>
+  <dd>Enable (disable) canonical input (<code class="Dv">ERASE</code> and
+      <code class="Dv">KILL</code> processing).</dd>
+  <dt id="iexten"><a class="permalink" href="#iexten"><code class="Cm">iexten</code></a>
+    (<code class="Fl">-iexten</code>)</dt>
+  <dd>Enable (disable) any implementation-defined special control characters
+      that are not currently controlled by <code class="Cm">icanon</code>,
+      <code class="Cm">isig</code>, <code class="Cm">ixoff</code>, or
+      <code class="Cm">ixon</code>.</dd>
+  <dt id="isig"><a class="permalink" href="#isig"><code class="Cm">isig</code></a>
+    (<code class="Fl">-isig</code>)</dt>
+  <dd>Enable (disable) the checking of characters against the special control
+      characters <code class="Dv">INTR</code>, <code class="Dv">QUIT</code>, and
+      <code class="Dv">SUSP</code>.</dd>
+  <dt id="mdmbuf"><a class="permalink" href="#mdmbuf"><code class="Cm">mdmbuf</code></a>
+    (<code class="Fl">-mdmbuf</code>)</dt>
+  <dd>If set, flow control output based on condition of Carrier Detect.
+      Otherwise, writes return an error if Carrier Detect is low (and Carrier is
+      not being ignored with the <code class="Dv">CLOCAL</code> flag.)</dd>
+  <dt id="noflsh"><a class="permalink" href="#noflsh"><code class="Cm">noflsh</code></a>
+    (<code class="Fl">-noflsh</code>)</dt>
+  <dd>Disable (enable) flush after <code class="Dv">INTR</code>,
+      <code class="Dv">QUIT</code>, or <code class="Dv">SUSP</code>.</dd>
+  <dt id="pendin"><a class="permalink" href="#pendin"><code class="Cm">pendin</code></a>
+    (<code class="Fl">-pendin</code>)</dt>
+  <dd>Indicates input is (is not) pending after a switch from non-canonical to
+      canonical mode and will be re-input when a read becomes pending or more
+      input arrives.</dd>
+  <dt id="tostop"><a class="permalink" href="#tostop"><code class="Cm">tostop</code></a>
+    (<code class="Fl">-tostop</code>)</dt>
+  <dd>Send (do not send) <code class="Dv">SIGTTOU</code> for background output.
+      This causes background jobs to stop if they attempt terminal output.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Control_Characters:"><a class="permalink" href="#Control_Characters:">Control
+  Characters:</a></h2>
+<dl class="Bl-tag">
+  <dt><var class="Ar">control-character</var> <var class="Ar">string</var></dt>
+  <dd>Set <var class="Ar">control-character</var> to
+      <var class="Ar">string</var>. If string is a single character, the control
+      character is set to that character. If string is the two character
+      sequence &quot;^-&quot; or the string &quot;undef&quot; the control
+      character is disabled (i.e. set to
+      {<code class="Dv">_POSIX_VDISABLE</code>}.)
+    <p class="Pp">Recognized control-characters:</p>
+    <div class="Bd Pp Bd-indent">
+    <table class="Bl-column">
+      <tr>
+        <td>control-</td>
+      </tr>
+      <tr>
+        <td>character</td>
+        <td>Subscript</td>
+        <td>Description</td>
+      </tr>
+      <tr>
+        <td>_________</td>
+        <td>_________</td>
+        <td>_______________</td>
+      </tr>
+      <tr>
+        <td>eof</td>
+        <td>VEOF</td>
+        <td>EOF <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>eol</td>
+        <td>VEOL</td>
+        <td>EOL <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>eol2</td>
+        <td>VEOL2</td>
+        <td>EOL2 <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>erase</td>
+        <td>VERASE</td>
+        <td>ERASE <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>erase2</td>
+        <td>VERASE2</td>
+        <td>ERASE2 <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>werase</td>
+        <td>VWERASE</td>
+        <td>WERASE <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>intr</td>
+        <td>VINTR</td>
+        <td>INTR <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>kill</td>
+        <td>VKILL</td>
+        <td>KILL <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>quit</td>
+        <td>VQUIT</td>
+        <td>QUIT <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>susp</td>
+        <td>VSUSP</td>
+        <td>SUSP <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>start</td>
+        <td>VSTART</td>
+        <td>START <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>stop</td>
+        <td>VSTOP</td>
+        <td>STOP <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>dsusp</td>
+        <td>VDSUSP</td>
+        <td>DSUSP <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>lnext</td>
+        <td>VLNEXT</td>
+        <td>LNEXT <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>reprint</td>
+        <td>VREPRINT</td>
+        <td>REPRINT <span class="No">character</span></td>
+      </tr>
+      <tr>
+        <td>status</td>
+        <td>VSTATUS</td>
+        <td>STATUS <span class="No">character</span></td>
+      </tr>
+    </table>
+    </div>
+  </dd>
+  <dt id="min"><a class="permalink" href="#min"><code class="Cm">min</code></a>
+    <var class="Ar">number</var></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+  <dt id="time"><a class="permalink" href="#time"><code class="Cm">time</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>Set the value of min or time to number. <code class="Dv">MIN</code> and
+      <code class="Dv">TIME</code> are used in Non-Canonical mode input
+      processing (-icanon).</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Combination_Modes:"><a class="permalink" href="#Combination_Modes:">Combination
+  Modes:</a></h2>
+<dl class="Bl-tag">
+  <dt><var class="Ar">saved settings</var></dt>
+  <dd>Set the current terminal characteristics to the saved settings produced by
+      the <code class="Fl">-g</code> option.</dd>
+  <dt id="cols"><a class="permalink" href="#cols"><code class="Cm">cols</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>Same as <code class="Cm">columns</code>.</dd>
+  <dt id="columns"><a class="permalink" href="#columns"><code class="Cm">columns</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>The terminal size is recorded as having <var class="Ar">number</var>
+      columns.</dd>
+  <dt id="crt"><a class="permalink" href="#crt"><code class="Cm">crt</code></a>
+    (<code class="Fl">-crt</code>)</dt>
+  <dd>Set (disable) all modes suitable for a CRT display device.</dd>
+  <dt id="dec"><a class="permalink" href="#dec"><code class="Cm">dec</code></a></dt>
+  <dd>Set modes suitable for users of Digital Equipment Corporation systems
+      (<code class="Dv">ERASE</code>, <code class="Dv">KILL</code>, and
+      <code class="Dv">INTR</code> characters are set to ^?, ^U, and ^C;
+      <code class="Dv">ixany</code> is disabled, and <code class="Dv">crt</code>
+      is enabled.)</dd>
+  <dt id="ek"><a class="permalink" href="#ek"><code class="Cm">ek</code></a></dt>
+  <dd>Reset <code class="Dv">ERASE</code>, <code class="Dv">ERASE2</code>, and
+      <code class="Dv">KILL</code> characters back to system defaults.</dd>
+  <dt id="evenp"><a class="permalink" href="#evenp"><code class="Fl">-evenp</code></a></dt>
+  <dd>Same as <code class="Fl">-oddp</code> and
+    <code class="Fl">-parity</code>.</dd>
+  <dt id="evenp~2"><a class="permalink" href="#evenp~2"><code class="Cm">evenp</code></a></dt>
+  <dd>Enable <code class="Cm">parenb</code> and <code class="Cm">cs7</code>;
+      disable <code class="Cm">parodd</code>.</dd>
+  <dt id="extproc"><a class="permalink" href="#extproc"><code class="Cm">extproc</code></a>
+    (<code class="Fl">-extproc</code>)</dt>
+  <dd>If set, this flag indicates that some amount of terminal processing is
+      being performed by either the terminal hardware or by the remote side
+      connected to a pty.</dd>
+  <dt id="kerninfo"><a class="permalink" href="#kerninfo"><code class="Cm">kerninfo</code></a>
+    (<code class="Fl">-kerninfo</code>)</dt>
+  <dd>Enable (disable) the system generated status line associated with
+      processing a <code class="Dv">STATUS</code> character (usually set to ^T).
+      The status line consists of the system load average, the current command
+      name, its process ID, the event the process is waiting on (or the status
+      of the process), the user and system times, percent cpu, and current
+      memory usage.</dd>
+  <dt id="nl"><a class="permalink" href="#nl"><code class="Cm">nl</code></a>
+    (<code class="Fl">-nl</code>)</dt>
+  <dd>Enable (disable) <code class="Cm">icrnl</code>. In addition,
+      <code class="Fl">-nl</code> unsets <code class="Cm">inlcr</code> and
+      <code class="Cm">igncr</code>.</dd>
+  <dt id="oddp"><a class="permalink" href="#oddp"><code class="Fl">-oddp</code></a></dt>
+  <dd>Same as <code class="Fl">-evenp</code> and
+      <code class="Fl">-parity</code>.</dd>
+  <dt id="oddp~2"><a class="permalink" href="#oddp~2"><code class="Cm">oddp</code></a></dt>
+  <dd>Enable <code class="Cm">parenb</code>, <code class="Cm">cs7</code>, and
+      <code class="Cm">parodd</code>.</dd>
+  <dt id="parity"><a class="permalink" href="#parity"><code class="Fl">-parity</code></a></dt>
+  <dd>Disable <code class="Cm">parenb</code>; set
+    <code class="Cm">cs8</code>.</dd>
+  <dt id="parity~2"><a class="permalink" href="#parity~2"><code class="Cm">parity</code></a></dt>
+  <dd>Same as <code class="Cm">evenp</code>.</dd>
+  <dt id="raw"><a class="permalink" href="#raw"><code class="Cm">raw</code></a>
+    (<code class="Fl">-raw</code>)</dt>
+  <dd>If set, change the modes of the terminal so that no input or output
+      processing is performed. If unset, change the modes of the terminal to
+      some reasonable state that performs input and output processing. Note that
+      since the terminal driver no longer has a single
+      <code class="Dv">RAW</code> bit, it is not possible to intuit what flags
+      were set prior to setting <code class="Cm">raw</code>. This means that
+      unsetting <code class="Cm">raw</code> may not put back all the setting
+      that were previously in effect. To set the terminal into a raw state and
+      then accurately restore it, the following shell code is recommended:
+    <div class="Bd Pp">
+    <pre>
+save_state=$(stty -g)
+stty raw
+...
+stty &quot;$save_state&quot;
+    </pre>
+    </div>
+  </dd>
+  <dt id="rows"><a class="permalink" href="#rows"><code class="Cm">rows</code></a>
+    <var class="Ar">number</var></dt>
+  <dd>The terminal size is recorded as having <var class="Ar">number</var>
+    rows.</dd>
+  <dt id="sane"><a class="permalink" href="#sane"><code class="Cm">sane</code></a></dt>
+  <dd>Resets all modes to reasonable values for interactive terminal use.</dd>
+  <dt id="size"><a class="permalink" href="#size"><code class="Cm">size</code></a></dt>
+  <dd>The size of the terminal is printed as two numbers on a single line, first
+      rows, then columns.</dd>
+  <dt id="tty"><a class="permalink" href="#tty"><code class="Cm">tty</code></a></dt>
+  <dd>Set the line discipline to the standard terminal line discipline
+      <code class="Dv">TTYDISC</code>.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Compatibility_Modes:"><a class="permalink" href="#Compatibility_Modes:">Compatibility
+  Modes:</a></h2>
+<p class="Pp">These modes remain for compatibility with the previous version of
+    the <code class="Nm">stty</code> command.</p>
+<dl class="Bl-tag">
+  <dt id="all"><a class="permalink" href="#all"><code class="Cm">all</code></a></dt>
+  <dd>Reports all the terminal modes as with <code class="Cm">stty</code>
+      <code class="Fl">-a</code>, except that the control characters are printed
+      in a columnar format.</dd>
+  <dt id="brk"><a class="permalink" href="#brk"><code class="Cm">brk</code></a>
+    <var class="Ar">value</var></dt>
+  <dd>Same as the control character <code class="Cm">eol</code>.</dd>
+  <dt id="cbreak"><a class="permalink" href="#cbreak"><code class="Cm">cbreak</code></a></dt>
+  <dd>If set, enables <code class="Cm">brkint</code>,
+      <code class="Cm">ixon</code>, <code class="Cm">imaxbel</code>,
+      <code class="Cm">opost</code>, <code class="Cm">isig</code>,
+      <code class="Cm">iexten</code>, and <code class="Fl">-icanon</code>. If
+      unset, same as <code class="Cm">sane</code>.</dd>
+  <dt id="cooked"><a class="permalink" href="#cooked"><code class="Cm">cooked</code></a></dt>
+  <dd>Same as <code class="Cm">sane</code>.</dd>
+  <dt id="crtbs"><a class="permalink" href="#crtbs"><code class="Cm">crtbs</code></a>
+    (<code class="Fl">-crtbs</code>)</dt>
+  <dd>Same as <code class="Cm">echoe</code>.</dd>
+  <dt id="crterase"><a class="permalink" href="#crterase"><code class="Cm">crterase</code></a>
+    (<code class="Fl">-crterase</code>)</dt>
+  <dd>Same as <code class="Cm">echoe</code>.</dd>
+  <dt id="crtkill"><a class="permalink" href="#crtkill"><code class="Cm">crtkill</code></a>
+    (<code class="Fl">-crtkill</code>)</dt>
+  <dd>Same as <code class="Cm">echoke</code>.</dd>
+  <dt id="ctlecho"><a class="permalink" href="#ctlecho"><code class="Cm">ctlecho</code></a>
+    (<code class="Fl">-ctlecho</code>)</dt>
+  <dd>Same as <code class="Cm">echoctl</code>.</dd>
+  <dt id="decctlq"><a class="permalink" href="#decctlq"><code class="Cm">decctlq</code></a>
+    (<code class="Fl">-decctlq</code>)</dt>
+  <dd>The converse of <code class="Cm">ixany</code>.</dd>
+  <dt id="everything"><a class="permalink" href="#everything"><code class="Cm">everything</code></a></dt>
+  <dd>Same as <code class="Cm">all</code>.</dd>
+  <dt id="flush"><a class="permalink" href="#flush"><code class="Cm">flush</code></a>
+    <var class="Ar">value</var></dt>
+  <dd>Same as the control character <code class="Cm">discard</code>.</dd>
+  <dt id="litout"><a class="permalink" href="#litout"><code class="Cm">litout</code></a>
+    (<code class="Fl">-litout</code>)</dt>
+  <dd>The converse of <code class="Cm">opost</code>.</dd>
+  <dt id="new"><a class="permalink" href="#new"><code class="Cm">new</code></a></dt>
+  <dd>Same as <code class="Cm">tty</code>.</dd>
+  <dt id="newcrt"><a class="permalink" href="#newcrt"><code class="Cm">newcrt</code></a>
+    (<code class="Fl">-newcrt</code>)</dt>
+  <dd>Same as <code class="Cm">crt</code>.</dd>
+  <dt id="old"><a class="permalink" href="#old"><code class="Cm">old</code></a></dt>
+  <dd>Same as <code class="Cm">tty</code>.</dd>
+  <dt id="pass8"><a class="permalink" href="#pass8"><code class="Cm">pass8</code></a></dt>
+  <dd>The converse of <code class="Cm">parity</code>.</dd>
+  <dt id="prterase"><a class="permalink" href="#prterase"><code class="Cm">prterase</code></a>
+    (<code class="Fl">-prterase</code>)</dt>
+  <dd>Same as <code class="Cm">echoprt</code>.</dd>
+  <dt id="rprnt"><a class="permalink" href="#rprnt"><code class="Cm">rprnt</code></a>
+    <var class="Ar">value</var></dt>
+  <dd>Same as the control character <code class="Cm">reprint</code>.</dd>
+  <dt id="tabs~2"><a class="permalink" href="#tabs~2"><code class="Cm">tabs</code></a>
+    (<code class="Fl">-tabs</code>)</dt>
+  <dd>The converse of <code class="Cm">oxtabs</code>.</dd>
+  <dt id="tandem"><a class="permalink" href="#tandem"><code class="Cm">tandem</code></a>
+    (<code class="Fl">-tandem</code>)</dt>
+  <dd>Same as <code class="Cm">ixoff</code>.</dd>
+</dl>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DIAGNOSTICS"><a class="permalink" href="#DIAGNOSTICS">DIAGNOSTICS</a></h1>
+<p class="Pp">The <code class="Nm">stty</code> utility exits&#x00A0;0 on
+    success, and&#x00A0;&gt;0 if an error occurs.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_DESCRIPTION"><a class="permalink" href="#LEGACY_DESCRIPTION">LEGACY
+  DESCRIPTION</a></h1>
+<p class="Pp">In legacy operation, the <code class="Cm">bs[01]</code>,
+    <code class="Cm">cr[0-3]</code>, <code class="Cm">ff[01]</code>,
+    <code class="Cm">nl[01]</code>, <code class="Cm">tab[0-3]</code>, and
+    <code class="Cm">vt[01]</code> control modes are not accepted, nor are
+    <code class="Cm">ocrnl</code> (<code class="Fl">-ocrnl</code>),
+    <code class="Cm">ofdel</code> (<code class="Fl">-ofdel</code>),
+    <code class="Cm">ofill</code> (<code class="Fl">-ofill</code>),
+    <code class="Cm">onlret</code> (<code class="Fl">-onlret</code>), and
+    <code class="Cm">onocr</code> (<code class="Fl">-onocr</code>).</p>
+<p class="Pp">For more information about legacy mode, see
+    <a class="Xr" href="../5/compat">compat(5)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../4/termios">termios(4)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Nm">stty</code> utility is expected to be
+    <span class="St">IEEE Std 1003.2 (&#x201C;POSIX.2&#x201D;)</span>
+    compatible. The flags <code class="Fl">-e</code> and
+    <code class="Fl">-f</code> are extensions to the standard.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">April 18, 1994</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2002 Kyle Martin.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+  
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+   $FreeBSD: src/lib/libc/gen/ulimit.3,v 1.5 2003/01/04 01:11:49 tjr Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>ULIMIT(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">ULIMIT(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">ULIMIT(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">ulimit</code> &#x2014; <span class="Nd">get and
+    set process limits</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">ulimit.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">long</var>
+  <br/>
+  <code class="Fn">ulimit</code>(<var class="Fa">int cmd</var>,
+    <var class="Fa">...</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#ulimit"><code class="Fn" id="ulimit">ulimit</code></a>()
+    function will get and set process limits. Currently, this is limited to the
+    maximum file size. The <var class="Fa">cmd</var> argument is one of the
+    following:</p>
+<dl class="Bl-tag">
+  <dt id="UL_GETFSIZE"><a class="permalink" href="#UL_GETFSIZE"><code class="Dv">UL_GETFSIZE</code></a></dt>
+  <dd>will return the maximum file size of the current process, in units of
+      512-byte blocks.</dd>
+  <dt id="UL_SETFSIZE"><a class="permalink" href="#UL_SETFSIZE"><code class="Dv">UL_SETFSIZE</code></a></dt>
+  <dd>will attempt to set the maximum file size of the current process and its
+      children, using the second argument (expressed as a long).</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">Upon successful completion, <code class="Fn">ulimit</code>()
+    returns the value requested; otherwise, the value -1 is returned and the
+    global variable <var class="Va">errno</var> is set to indicate the
+  error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">ulimit</code>() function will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The command specified was invalid.</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The limit specified to <code class="Fn">ulimit</code>() would have raised
+      the maximum limit value, and the caller is not the super-user.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/getrlimit">getrlimit(2)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">ulimit</code>() function conforms to
+    <span class="St">IEEE Std 1003.1-2001 (&#x201C;POSIX.1&#x201D;)</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">ulimit</code>() function first appeared in
+    <span class="Ux">FreeBSD 5.0</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">The <code class="Fn">ulimit</code>() function provides limited
+    precision for setting and retrieving process limits. If there is a need for
+    greater precision than the type <var class="Vt">long</var> provides, the
+    <a class="Xr" href="../2/getrlimit">getrlimit(2)</a> and
+    <a class="Xr" href="../2/setrlimit">setrlimit(2)</a> functions should be
+    considered.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">January 4, 2003</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

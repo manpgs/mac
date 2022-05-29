@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Generated from file '/AppleInternal/Library/BuildRoots/66382bca-8bca-11ec-aade-6613bcf0e2ee/Library/Caches/com.apple.xbs/Sources/tcl/tcl_ext/tcllib/tcllib/modules/nns/nns_auto.man' by tcllib/doctools with format 'nroff'
+   Copyright (c) 2007-2008 Andreas Kupries <andreas_kupries@users.sourceforge.net>
+  
+   The definitions below are for supplemental macros used in Tcl/Tk
+   manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO
+  	Start of list of standard options for a Tk widget.  The
+  	options follow on successive lines, in four columns separated
+  	by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>nameserv::auto(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">nameserv::auto(n)</td>
+    <td class="head-vol">Name service facility</td>
+    <td class="head-rtitle">nameserv::auto(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">nameserv::auto - Name service facility, Client Extension</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">package require <b>Tcl 8.4</b></p>
+<p class="Pp">package require <b>nameserv::auto ?0.3?</b></p>
+<p class="Pp">package require <b>nameserv </b></p>
+<p class="Pp"></p>
+<pre>
+
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Please read the document <i>Name service facility,
+    introduction</i> first.</p>
+<p class="Pp">This package provides the <i>exact</i> same API as is provided by
+    package <b>nameserv</b>, i.e the regular name service client. It differs
+    from the former by taking measures to ensure that longer-lived data, i.e.
+    bound names, continuous and unfulfilled async searches, survive the loss of
+    the connection to the name server as much as is possible.</p>
+<p class="Pp">This means that the bound names and continuous and unfulfilled
+    async searches are remembered client-side and automatically re-entered into
+    the server when the connection comes back after its loss. For bound names
+    there is one important limitation to such restoration: It is possible that a
+    name of this client was bound by a different client while the connection was
+    gone. Such names are fully lost, and the best the package can and will do is
+    to inform the user of this.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="API"><a class="permalink" href="#API">API</a></h1>
+<p class="Pp">The user-visible API is mainly identical the API of
+    <b>nameserv</b> and is therefore not described here. Please read the
+    documentation of <b>nameserv</b>.</p>
+<p class="Pp">The differences are explained in the sections <b>OPTIONS</b> and
+    <b>EVENTS</b>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<p class="Pp">This package supports all the option of package <b>nameserv</b>,
+    and one more. The additional option allows the user to specifies the time
+    interval between attempts to restore a lost connection.</p>
+<dl class="Bl-tag">
+  <dt id="delay"><a class="permalink" href="#delay"><b>-delay</b>
+    <i>milliseconds</i></a></dt>
+  <dd>The value of this option is an integer value &gt; 0 which specifies the
+      interval to wait between attempts to restore a lost connection, in
+      milliseconds. The default value is <b>1000</b>, i.e. one second.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EVENTS"><a class="permalink" href="#EVENTS">EVENTS</a></h1>
+<p class="Pp">This package generates all of the events of package
+    <b>nameserv</b>, and two more. Both events are generated for the tag
+    <i>nameserv</i>.</p>
+<dl class="Bl-tag">
+  <dt id="lost_name"><a class="permalink" href="#lost_name"><i>lost-name</i></a></dt>
+  <dd>This event is generated when a bound name is truly lost, i.e. could not be
+      restored after the temporary loss of the connection to the name server. It
+      indicates that a different client took ownership of the name while this
+      client was out of contact.
+    <p class="Pp">The detail information of the event will be a Tcl dictionary
+        containing two keys, <b>name</b>, and <b>data</b>. Their values hold all
+        the information about the lost name.</p>
+  </dd>
+  <dt id="re_connection"><a class="permalink" href="#re_connection"><i>re-connection</i></a></dt>
+  <dd>This event is generated when the connection to the server is restored. The
+      remembered data has been restored when the event is posted.
+    <p class="Pp">The event has no detail information.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESIGN"><a class="permalink" href="#DESIGN">DESIGN</a></h1>
+<p class="Pp">The package is implemented on top of the regular nameservice
+    client, i.e. package <b>nameserv</b>. It detects the loss of the connection
+    by listening for <i>lost-connection</i> events, on the tag
+  <i>nameserv</i>.</p>
+<p class="Pp">It reacts to such events by starting a periodic timer and trying
+    to reconnect to the server whenver this timer triggers. On success the timer
+    is canceled, a <i>re-connection</i> event generated, and the package
+    proceeds to re-enter the remembered bound names and continous searches.</p>
+<p class="Pp">Another loss of the connection, be it during or after re-entering
+    the remembered information simply restarts the timer and subsequent
+    reconnection attempts.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS,_IDEAS,_FEEDBACK"><a class="permalink" href="#BUGS,_IDEAS,_FEEDBACK">BUGS,
+  IDEAS, FEEDBACK</a></h1>
+<p class="Pp">This document, and the package it describes, will undoubtedly
+    contain bugs and other problems. Please report such in the category
+    <i>nameserv</i> of the <i>Tcllib SF Trackers</i>
+    [http://sourceforge.net/tracker/?group_id=12883]. Please also report any
+    ideas for enhancements you may have for either package and/or
+  documentation.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">nameserv(n)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">automatic, client, name service, reconnect, restore</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CATEGORY"><a class="permalink" href="#CATEGORY">CATEGORY</a></h1>
+<p class="Pp">Networking</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
+<pre>
+Copyright (c) 2007-2008 Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;
+</pre>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">0.3</td>
+    <td class="foot-os">nns</td>
+  </tr>
+</table>
+</body>
+</html>

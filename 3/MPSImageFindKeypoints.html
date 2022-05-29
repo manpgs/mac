@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSImageFindKeypoints(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSImageFindKeypoints(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSImageFindKeypoints(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSImageFindKeypoints</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSImageKeypoint.h&gt;</p>
+<p class="Pp">Inherits <b>MPSKernel</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) - <b>initWithDevice:info:</b>
+  <br/>
+  (nonnull instancetype) - <b>initWithDevice:</b>
+  <br/>
+  (nullable instancetype) - <b>initWithCoder:device:</b>
+  <br/>
+  (void) -
+    <b>encodeToCommandBuffer:sourceTexture:regions:numberOfRegions:keypointCountBuffer:keypointCountBufferOffset:keypointDataBuffer:keypointDataBufferOffset:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp"><b>MPSImageKeypointRangeInfo</b> <b>keypointRangeInfo</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Additional_Inherited_Members"><a class="permalink" href="#Additional_Inherited_Members">Additional
+  Inherited Members</a></h2>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">The <b>MPSImageFindKeypoints</b> kernel is used to find a list of
+    keypoints whose values are &gt;= minimumPixelThresholdValue in
+    <b>MPSImageKeypointRangeInfo</b>. The keypoints are generated for a
+    specified region in the image.
+  <br/>
+   The pixel format of the source image must be MTLPixelFormatR8Unorm.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (nonnull id&lt; MTLCommandBuffer
+  &gt;) commandBuffer(nonnull id&lt; MTLTexture &gt;) source(const MTLRegion
+  *__nonnull) regions(NSUInteger) numberOfRegions(nonnull id&lt; MTLBuffer &gt;)
+  keypointCountBuffer(NSUInteger) keypointCountBufferOffset(nonnull id&lt;
+  MTLBuffer &gt;) keypointDataBuffer(NSUInteger) keypointDataBufferOffset</h2>
+<p class="Pp">Encode the filter to a command buffer using a
+    MTLComputeCommandEncoder. The filter will not begin to execute until after
+    the command buffer has been enqueued and committed.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer.
+<br/>
+<i>source</i> <b>A</b> valid MTLTexture containing the source image for the
+  filter.
+<br/>
+<i>regions</i> An array of rectangles that describe regions in the image. The
+  list of keypoints is generated for each individual rectangle specifed.
+<br/>
+<i>keypointCountBuffer</i> The list of keypoints for each specified region
+<br/>
+<i>keypointCountBufferOffset</i> Byte offset into keypointCountBufferOffset
+  buffer at which to write the keypoint results. Must be a multiple of 32 bytes.
+<br/>
+<i>keypointDataBuffer</i> <b>A</b> valid MTLBuffer to receive the keypoint data
+  results for each rectangle. The keypoint data for keypoints in each rectangle
+  are stored consecutively. The keypoint data for each rectangle starts at the
+  following offset: MPSImageKeypointRangeInfo.maximumKeyPoints * rectangle index
+<br/>
+<i>keypointDataBufferOffset</i> Byte offset into keypointData buffer at which to
+  write the keypoint results. Must be a multiple of 32 bytes.</div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nullable instancetype) <b>initWithCoder:</b> (NSCoder
+  *__nonnull) aDecoder(nonnull id&lt; MTLDevice &gt;) device</h2>
+<p class="Pp"><b>NSSecureCoding</b> compatability While the standard
+    NSSecureCoding/NSCoding method -initWithCoder: should work, since the file
+    can't know which device your data is allocated on, we have to guess and may
+    guess incorrectly. To avoid that problem, use initWithCoder:device
+  instead.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>aDecoder</i> The NSCoder subclass with your serialized
+  <b>MPSKernel</b>
+<br/>
+<i>device</i> The MTLDevice on which to make the <b>MPSKernel</b></div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> new <b>MPSKernel</b> object, or nil if
+  failure.</div>
+<p class="Pp">Reimplemented from <b>MPSKernel</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithDevice: (nonnull id&lt;
+  MTLDevice &gt;) device</h2>
+<p class="Pp">Standard init with default properties per filter type</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device that the filter will be used on.
+  May not be NULL.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent">a pointer to the newly initialized object. This will
+  fail, returning nil if the device is not supported. Devices must be
+  MTLFeatureSet_iOS_GPUFamily2_v1 or later.</div>
+<p class="Pp">Reimplemented from <b>MPSKernel</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) <b>initWithDevice:</b> (nonnull id&lt;
+  MTLDevice &gt;) device(const <b>MPSImageKeypointRangeInfo</b> *__nonnull)
+  info</h2>
+<p class="Pp">Specifies information to find keypoints in an image.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device the filter will run on
+<br/>
+<i>info</i> Pointer to the <b>MPSImageKeypointRangeInfo</b> struct</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSImageFindKeypoints</b> object or
+  nil, if failure.</div>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- keypointRangeInfo [read]<b>, [nonatomic]</b>,
+  [assign]<b></b></h2>
+<p class="Pp">Return a structure describing the keypoint range info Returns a
+    <b>MPSImageKeypointRangeInfo</b> structure</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

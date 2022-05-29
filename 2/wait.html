@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+  	$NetBSD: wait.2,v 1.6 1995/02/27 12:39:37 cgd Exp $
+  
+   Copyright (c) 1980, 1991, 1993, 1994
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)wait.2	8.2 (Berkeley) 4/19/94
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>WAIT(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">WAIT(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">WAIT(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">wait</code>, <code class="Nm">wait3</code>,
+    <code class="Nm">wait4</code>, <code class="Nm">waitpid</code> &#x2014;
+    <span class="Nd">wait for process termination</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/wait.h&gt;</a></code></p>
+<p class="Pp"><var class="Ft">pid_t</var>
+  <br/>
+  <code class="Fn">wait</code>(<var class="Fa">int *stat_loc</var>);</p>
+<p class="Pp"><var class="Ft">pid_t</var>
+  <br/>
+  <code class="Fn">wait3</code>(<var class="Fa">int *stat_loc</var>,
+    <var class="Fa">int options</var>, <var class="Fa">struct rusage
+    *rusage</var>);</p>
+<p class="Pp"><var class="Ft">pid_t</var>
+  <br/>
+  <code class="Fn">wait4</code>(<var class="Fa">pid_t pid</var>,
+    <var class="Fa">int *stat_loc</var>, <var class="Fa">int options</var>,
+    <var class="Fa">struct rusage *rusage</var>);</p>
+<p class="Pp"><var class="Ft">pid_t</var>
+  <br/>
+  <code class="Fn">waitpid</code>(<var class="Fa">pid_t pid</var>,
+    <var class="Fa">int *stat_loc</var>, <var class="Fa">int options</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#wait"><code class="Fn" id="wait">wait</code></a>()
+    function suspends execution of its calling process until
+    <var class="Fa">stat_loc</var> information is available for a terminated
+    child process, or a signal is received. On return from a successful
+    <code class="Fn">wait</code>() call, the <var class="Fa">stat_loc</var> area
+    contains termination information about the process that exited as defined
+    below.</p>
+<p class="Pp" id="wait4">The
+    <a class="permalink" href="#wait4"><code class="Fn">wait4</code></a>() call
+    provides a more general interface for programs that need to wait for certain
+    child processes, that need resource utilization statistics accumulated by
+    child processes, or that require options. The other wait functions are
+    implemented using <code class="Fn">wait4</code>().</p>
+<p class="Pp">The <var class="Fa">pid</var> parameter specifies the set of child
+    processes for which to wait. If <var class="Fa">pid</var> is -1, the call
+    waits for any child process. If <var class="Fa">pid</var> is 0, the call
+    waits for any child process in the process group of the caller. If
+    <var class="Fa">pid</var> is greater than zero, the call waits for the
+    process with process id <var class="Fa">pid</var>. If
+    <var class="Fa">pid</var> is less than -1, the call waits for any process
+    whose process group id equals the absolute value of
+    <var class="Fa">pid</var>.</p>
+<p class="Pp">The <var class="Fa">stat_loc</var> parameter is defined below. The
+    <var class="Fa">options</var> parameter contains the bitwise OR of any of
+    the following options. The <code class="Dv">WNOHANG</code> option is used to
+    indicate that the call should not block if there are no processes that wish
+    to report status. If the <code class="Dv">WUNTRACED</code> option is set,
+    children of the current process that are stopped due to a
+    <code class="Dv">SIGTTIN</code>, <code class="Dv">SIGTTOU</code>,
+    <code class="Dv">SIGTSTP</code>, or <code class="Dv">SIGSTOP</code> signal
+    also have their status reported.</p>
+<p class="Pp">If <var class="Fa">rusage</var> is non-zero, a summary of the
+    resources used by the terminated process and all its children is returned
+    (this information is currently not available for stopped processes).</p>
+<p class="Pp" id="wait4~2">When the <code class="Dv">WNOHANG</code> option is
+    specified and no processes wish to report status,
+    <a class="permalink" href="#wait4~2"><code class="Fn">wait4</code></a>()
+    returns a process id of 0.</p>
+<p class="Pp" id="waitpid">The
+    <a class="permalink" href="#waitpid"><code class="Fn">waitpid</code></a>()
+    call is identical to <code class="Fn">wait4</code>() with an
+    <var class="Fa">rusage</var> value of zero. The older
+    <a class="permalink" href="#wait3"><code class="Fn" id="wait3">wait3</code></a>()
+    call is the same as <code class="Fn">wait4</code>() with a
+    <var class="Fa">pid</var> value of -1.</p>
+<p class="Pp">The following macros may be used to test the manner of exit of the
+    process. One of the first three macros will evaluate to a non-zero (true)
+    value:</p>
+<dl class="Bl-tag">
+  <dt id="WIFEXITED"><a class="permalink" href="#WIFEXITED"><code class="Fn">WIFEXITED</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>True if the process terminated normally by a call to
+      <a class="Xr" href="../2/_exit">_exit(2)</a> or
+      <a class="Xr" href="../3/exit">exit(3)</a>.</dd>
+  <dt id="WIFSIGNALED"><a class="permalink" href="#WIFSIGNALED"><code class="Fn">WIFSIGNALED</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>True if the process terminated due to receipt of a signal.</dd>
+  <dt id="WIFSTOPPED"><a class="permalink" href="#WIFSTOPPED"><code class="Fn">WIFSTOPPED</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>True if the process has not terminated, but has stopped and can be
+      restarted. This macro can be true only if the wait call specified the
+      <code class="Dv">WUNTRACED</code> option or if the child process is being
+      traced (see <a class="Xr" href="../2/ptrace">ptrace(2)</a>).</dd>
+</dl>
+<p class="Pp">Depending on the values of those macros, the following macros
+    produce the remaining status information about the child process:</p>
+<dl class="Bl-tag">
+  <dt id="WEXITSTATUS"><a class="permalink" href="#WEXITSTATUS"><code class="Fn">WEXITSTATUS</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>If <code class="Fn">WIFEXITED</code>(<var class="Fa">status</var>) is
+      true, evaluates to the low-order 8 bits of the argument passed to
+      <a class="Xr" href="../2/_exit">_exit(2)</a> or
+      <a class="Xr" href="../3/exit">exit(3)</a> by the child.</dd>
+  <dt id="WTERMSIG"><a class="permalink" href="#WTERMSIG"><code class="Fn">WTERMSIG</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>If <code class="Fn">WIFSIGNALED</code>(<var class="Fa">status</var>) is
+      true, evaluates to the number of the signal that caused the termination of
+      the process.</dd>
+  <dt id="WCOREDUMP"><a class="permalink" href="#WCOREDUMP"><code class="Fn">WCOREDUMP</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>If <code class="Fn">WIFSIGNALED</code>(<var class="Fa">status</var>) is
+      true, evaluates as true if the termination of the process was accompanied
+      by the creation of a core file containing an image of the process when the
+      signal was received.</dd>
+  <dt id="WSTOPSIG"><a class="permalink" href="#WSTOPSIG"><code class="Fn">WSTOPSIG</code></a>(<var class="Fa">status</var>)</dt>
+  <dd>If <code class="Fn">WIFSTOPPED</code>(<var class="Fa">status</var>) is
+      true, evaluates to the number of the signal that caused the process to
+      stop.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<p class="Pp">See <a class="Xr" href="../2/sigaction">sigaction(2)</a> for a
+    list of termination signals. A status of 0 indicates normal termination.</p>
+<p class="Pp">If a parent process terminates without waiting for all of its
+    child processes to terminate, the remaining child processes are assigned the
+    parent process 1 ID (the init process ID).</p>
+<p class="Pp" id="wait~2">If a signal is caught while any of the
+    <a class="permalink" href="#wait~2"><code class="Fn">wait</code></a>() calls
+    is pending, the call may be interrupted or restarted when the
+    signal-catching routine returns, depending on the options in effect for the
+    signal; see <a class="Xr" href="../2/intro">intro(2)</a>, System call
+    restart.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">If <code class="Fn">wait</code>() returns due to a stopped or
+    terminated child process, the process ID of the child is returned to the
+    calling process. Otherwise, a value of -1 is returned and
+    <var class="Va">errno</var> is set to indicate the error.</p>
+<p class="Pp">If <code class="Fn">wait3</code>(),
+    <code class="Fn">wait4</code>(), or <code class="Fn">waitpid</code>()
+    returns due to a stopped or terminated child process, the process ID of the
+    child is returned to the calling process. If there are no children not
+    previously awaited, -1 is returned with <var class="Va">errno</var> set to
+    [<code class="Er">ECHILD</code>]. Otherwise, if
+    <code class="Dv">WNOHANG</code> is specified and there are no stopped or
+    exited children, 0 is returned. If an error is detected or a caught signal
+    aborts the call, a value of -1 is returned and <var class="Va">errno</var>
+    is set to indicate the error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">wait</code>() system call will fail and
+    return immediately if:</p>
+<dl class="Bl-tag">
+  <dt id="ECHILD">[<a class="permalink" href="#ECHILD"><code class="Er">ECHILD</code></a>]</dt>
+  <dd>The calling process has no existing unwaited-for child processes.</dd>
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>The <var class="Fa">status</var> or <var class="Fa">rusage</var> argument
+      points to an illegal address (may not be detected before the exit of a
+      child process).</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>Invalid or undefined flags are passed in the <var class="Fa">options</var>
+      argument.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">wait3</code>() and
+    <code class="Fn">waitpid</code>() calls will fail and return immediately
+  if:</p>
+<dl class="Bl-tag">
+  <dt id="ECHILD~2">[<a class="permalink" href="#ECHILD~2"><code class="Er">ECHILD</code></a>]</dt>
+  <dd>The process specified by <var class="Fa">pid</var> does not exist or is
+      not a child of the calling process, or the process group specified by
+      <var class="Fa">pid</var> does not exist or does not have any member
+      process that is a child of the calling process.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">waitpid</code>() call will fail and return
+    immediately if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The options argument is not valid.</dd>
+</dl>
+<p class="Pp">Any of these calls will fail and return immediately if:</p>
+<dl class="Bl-tag">
+  <dt id="EINTR">[<a class="permalink" href="#EINTR"><code class="Er">EINTR</code></a>]</dt>
+  <dd>The call is interrupted by a caught signal or the signal does not have the
+      <code class="Dv">SA_RESTART</code> flag set.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">wait</code>() and
+    <code class="Fn">waitpid</code>() functions are defined by POSIX;
+    <code class="Fn">wait3</code>() and <code class="Fn">wait4</code>() are not
+    specified by POSIX. The <code class="Fn">WCOREDUMP</code>() macro and the
+    ability to restart a pending <code class="Fn">wait</code>() call are
+    extensions to the POSIX interface.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_SYNOPSIS"><a class="permalink" href="#LEGACY_SYNOPSIS">LEGACY
+  SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/types.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;sys/wait.h&gt;</a></code></p>
+<p class="Pp">The include file
+    <code class="In">&lt;<a class="In">sys/types.h</a>&gt;</code> is
+  necessary.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/sigaction">sigaction(2)</a>,
+    <a class="Xr" href="../3/exit">exit(3)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">A <code class="Fn">wait</code>() function call appeared in
+    <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">April 19, 1994</td>
+    <td class="foot-os">BSD 4</td>
+  </tr>
+</table>
+</body>
+</html>

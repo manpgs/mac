@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1989-1993 The Regents of the University of California.
+   Copyright (c) 1994-1996 Sun Microsystems, Inc.
+  
+   See the file "license.terms" for information on usage and redistribution
+   of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+  
+   RCS: @(#) $Id: SetRecLmt.3,v 1.3 1999/04/16 00:46:33 stanton Exp $
+  
+   The -*- nroff -*- definitions below are for supplemental macros used
+   in Tcl/Tk manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO ?manpage?
+  	Start of list of standard options for a Tk widget. The manpage
+  	argument defines where to look up the standard options; if
+  	omitted, defaults to "options". The options follow on successive
+  	lines, in three columns separated by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   .QW arg1 ?arg2?
+  	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+  
+   .PQ arg1 ?arg2?
+  	Print an open parenthesis, arg1 in quotes, then arg2 normally
+  	(for trailing punctuation) and then a closing parenthesis.
+  
+   RCS: @(#) $Id: man.macros,v 1.9 2008/01/29 15:32:33 dkf Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>Tcl_SetRecursionLimit(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">Tcl_SetRecursionLimit(3)</td>
+    <td class="head-vol">Tcl Library Procedures</td>
+    <td class="head-rtitle">Tcl_SetRecursionLimit(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">Tcl_SetRecursionLimit - set maximum allowable nesting depth in
+    interpreter</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+<b>#include &lt;tcl.h&gt;</b>
+
+int
+<b>Tcl_SetRecursionLimit</b>(<i>interp, depth</i>)
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ARGUMENTS"><a class="permalink" href="#ARGUMENTS">ARGUMENTS</a></h1>
+<dl class="Bl-tag">
+  <dt>Tcl_Interp <i>*interp</i> (in)</dt>
+  <dd>Interpreter whose recursion limit is to be set. Must be greater than
+    zero.</dd>
+  <dt>int <i>depth</i> (in)</dt>
+  <dd>New limit for nested calls to <b>Tcl_Eval</b> for <i>interp</i>.
+    <pre>
+
+    </pre>
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">At any given time Tcl enforces a limit on the number of recursive
+    calls that may be active for <b>Tcl_Eval</b> and related procedures such as
+    <b>Tcl_GlobalEval</b>. Any call to <b>Tcl_Eval</b> that exceeds this depth
+    is aborted with an error. By default the recursion limit is 1000.</p>
+<p class="Pp"><b>Tcl_SetRecursionLimit</b> may be used to change the maximum
+    allowable nesting depth for an interpreter. The <i>depth</i> argument
+    specifies a new limit for <i>interp</i>, and <b>Tcl_SetRecursionLimit</b>
+    returns the old limit. To read out the old limit without modifying it,
+    invoke <b>Tcl_SetRecursionLimit</b> with <i>depth</i> equal to 0.</p>
+<p class="Pp">The <b>Tcl_SetRecursionLimit</b> only sets the size of the Tcl
+    call stack: it cannot by itself prevent stack overflows on the C stack being
+    used by the application. If your machine has a limit on the size of the C
+    stack, you may get stack overflows before reaching the limit set by
+    <b>Tcl_SetRecursionLimit</b>. If this happens, see if there is a mechanism
+    in your system for increasing the maximum size of the C stack.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">nesting depth, recursion</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">7.0</td>
+    <td class="foot-os">Tcl</td>
+  </tr>
+</table>
+</body>
+</html>

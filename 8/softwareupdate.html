@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>softwareupdate(8)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">softwareupdate(8)</td>
+    <td class="head-vol">System Manager's Manual</td>
+    <td class="head-rtitle">softwareupdate(8)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">softwareupdate</code> &#x2014;
+    <span class="Nd">system software update tool</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">softwareupdate</code></td>
+    <td><var class="Ar">command</var> [<var class="Ar">args ...</var>]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Software Update checks for new and updated versions of your
+    software based on information about your computer and current software.</p>
+<p class="Pp">Invoke <code class="Nm">softwareupdate</code> by specifying a
+    <var class="Ar">command</var> followed by zero or more
+    <var class="Ar">args</var>.</p>
+<p class="Pp"><code class="Nm">softwareupdate</code> requires admin
+    authentication for all commands except <code class="Cm">--list</code>. If
+    you run <code class="Nm">softwareupdate</code> as a normal admin user, you
+    will be prompted for a password where required. Alternatively, you can run
+    <code class="Nm">softwareupdate</code> as root and avoid all further
+    authentication prompts.</p>
+<p class="Pp">The following <var class="Ar">commands</var> are available:</p>
+<dl class="Bl-tag">
+  <dt id="l"><a class="permalink" href="#l"><code class="Fl">-l</code></a> |
+    <a class="permalink" href="#list"><code class="Fl" id="list">--list</code></a></dt>
+  <dd>List all available updates.</dd>
+  <dt id="i"><a class="permalink" href="#i"><code class="Fl">-i</code></a> |
+    <a class="permalink" href="#install"><code class="Fl" id="install">--install</code></a></dt>
+  <dd>Each update specified by <var class="Ar">args</var> is downloaded and
+      installed. <var class="Ar">args</var> can be one of the following:
+    <dl class="Bl-tag">
+      <dt><var class="Ar">-r</var> | <var class="Ar">--recommended</var></dt>
+      <dd>All updates that are recommended for your system. These are prefixed
+          with a <i class="Em">*</i> character in the
+          <code class="Cm">--list</code> output.</dd>
+      <dt><var class="Ar">--os-only</var></dt>
+      <dd>Only macOS updates</dd>
+      <dt><var class="Ar">--safari-only</var></dt>
+      <dd>Only safari updates</dd>
+      <dt><var class="Ar">-R</var> | <var class="Ar">--restart</var></dt>
+      <dd>Automatically restart (or shut down) if required to complete
+          installation. If the user invoking this tool is logged in then macOS
+          will attempt to quit all applications, logout, and restart. If the
+          user is not logged in, macOS will trigger a forced reboot if
+          necessary. If you wish to always perform a forced reboot, pass -f
+          (--force).</dd>
+      <dt><var class="Ar">-a</var> | <var class="Ar">--all</var></dt>
+      <dd>All updates that are applicable to your system, including those
+          non-recommended ones, which are prefixed with a <i class="Em">-</i>
+          character in the <code class="Cm">--list</code> output.
+          (Non-recommended updates are uncommon in any case.)</dd>
+      <dt><var class="Ar">item ...</var></dt>
+      <dd>One or more specified updates. The <code class="Cm">--list</code>
+          output shows the item names you can specify here, prefixed by the
+          <i class="Em">*</i> or <i class="Em">-</i> characters. See
+          <a class="Sx" href="#EXAMPLES">EXAMPLES</a>.</dd>
+      <dt><var class="Ar">--stdinpass</var></dt>
+      <dd>Password to authenticate as an owner. Apple Silicon only.</dd>
+      <dt><var class="Ar">--user</var></dt>
+      <dd>Local username to authenticate as an owner. Apple Silicon only.</dd>
+    </dl>
+  </dd>
+  <dt id="list-full-installers"><a class="permalink" href="#list-full-installers"><code class="Fl">--list-full-installers</code></a></dt>
+  <dd>List the available macOS Installers.</dd>
+  <dt id="fetch-full-installer"><a class="permalink" href="#fetch-full-installer"><code class="Fl">--fetch-full-installer</code></a></dt>
+  <dd>Install the latest recommended macOS Installer. Use
+      --full-installer-version to specify the version of macOS to install. ie.
+      --full-installer-version 10.15</dd>
+  <dt id="install-rosetta"><a class="permalink" href="#install-rosetta"><code class="Fl">--install-rosetta</code></a></dt>
+  <dd>Install Rosetta. Only applies to Apple silicon Macs. Pass
+      --agree-to-license to agree to the software license agreement without any
+      user interaction.</dd>
+  <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a> |
+    <a class="permalink" href="#download"><code class="Fl" id="download">--download</code></a></dt>
+  <dd>Each update specified by <var class="Ar">args</var> is downloaded but not
+      installed. The values of <var class="Ar">args</var> are the same as for
+      the <code class="Cm">--install</code> command. Updates downloaded with
+      <code class="Cm">--download</code> can be subsequently installed with
+      <code class="Cm">--install</code>, or through the App Store (as long as
+      they remain applicable to your system). Updates are downloaded to
+      <span class="Pa">/Library/Updates</span>, but are not designed to be
+      installed by double-clicking the packages in that directory: always use
+      <code class="Cm">--install</code> or the App Store to actually perform the
+      install.</dd>
+  <dt id="schedule"><a class="permalink" href="#schedule"><code class="Fl">--schedule</code></a></dt>
+  <dd>Returns the per-machine automatic (background) check preference.</dd>
+  <dt id="h"><a class="permalink" href="#h"><code class="Fl">-h</code></a> |
+    <a class="permalink" href="#help"><code class="Fl" id="help">--help</code></a></dt>
+  <dd>Print command usage.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">The following examples are shown as given to the shell:</p>
+<dl class="Bl-tag">
+  <dt id="softwareupdate"><a class="permalink" href="#softwareupdate"><code class="Li">softwareupdate
+    --list</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+</dl>
+<div class="Bd Pp Bd-indent">
+<pre>
+Software Update Tool
+
+Finding available software
+Software Update found the following new or updated software:
+   * Label: MacBookAirEFIUpdate2.4-2.4
+        Title: MacBook Air EFI Firmware Update, Version: 2.4, Size: 3817K, Recommended: YES, Action: restart,
+   * Label: ProAppsQTCodecs-1.0
+        Title: ProApps QuickTime codecs, Version: 1.0, Size: 968K, Recommended: YES,
+   * Label: JavaForOSX-1.0
+        Title: Java for OS X 2012-005, Version: 1.0, Size: 65288K, Recommended: YES,
+</pre>
+</div>
+<dl class="Bl-tag">
+  <dt id="sudo"><a class="permalink" href="#sudo"><code class="Li">sudo
+    softwareupdate --install JavaForOSX-1.0</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+</dl>
+<div class="Bd Pp Bd-indent">
+<pre>
+Software Update Tool
+
+Finding available software
+
+Downloading Java for OS X 2012-005
+Downloaded Java for OS X 2012-005
+Installing Java for OS X 2012-005
+Done with Java for OS X 2012-005
+Done.
+</pre>
+</div>
+<dl class="Bl-tag">
+  <dt id="sudo~2"><a class="permalink" href="#sudo~2"><code class="Li">sudo
+    softwareupdate --schedule</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+</dl>
+<div class="Bd Pp Bd-indent">
+<pre>
+Automatic check is on
+</pre>
+</div>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">September 11, 2012</td>
+    <td class="foot-os">Mac OS X</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2000-2021 Apple Inc.  All rights reserved.
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>NVRAM(8)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">NVRAM(8)</td>
+    <td class="head-vol">System Manager's Manual</td>
+    <td class="head-rtitle">NVRAM(8)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">nvram</code> &#x2014; <span class="Nd">manipulate
+    firmware NVRAM variables</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">nvram</code></td>
+    <td>[<code class="Fl">-x</code>] [<code class="Fl">-p</code>]
+      [<code class="Fl">-f</code> <var class="Ar">filename</var>]
+      [<code class="Fl">-d</code> <var class="Ar">name</var>]
+      [<code class="Fl">-c</code>] [<var class="Ar">name</var> [=
+      <var class="Ar">value</var> [...]]]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <code class="Nm">nvram</code> command allows manipulation of
+    firmware NVRAM variables. It can be used to get or set a variable. It can
+    also be used to print all of the variables or set a list of variables from a
+    file. Changes to NVRAM variables are only saved by clean restart or
+    shutdown.</p>
+<p class="Pp">In principle, <var class="Ar">name</var> can be any string. In
+    practice, not all strings will be accepted. Some variables require
+    administrator privilege to get or set.</p>
+<p class="Pp">The given <var class="Ar">value</var> must match the data type
+    required for <var class="Ar">name</var>. Binary data can be set using the
+    %xx notation, where xx is the hex value of the byte. The type for new
+    variables is always binary data.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a>
+    <var class="Ar">name</var></dt>
+  <dd>Deletes the named firmware variable.</dd>
+  <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a>
+    <var class="Ar">filename</var></dt>
+  <dd>Set firmware variables from a text file. The file must be a list of
+      &quot;name value&quot; statements. The first space on each line is taken
+      to be the separator between &quot;name&quot; and &quot;value&quot;. If the
+      last character of a line is \, the value extends to the next line.</dd>
+  <dt id="x"><a class="permalink" href="#x"><code class="Fl">-x</code></a></dt>
+  <dd>Use XML format for reading and writing variables. This option must be used
+      before the <code class="Fl">-p</code> or <code class="Fl">-f</code>
+      options, since arguments are processed in order.</dd>
+  <dt id="c"><a class="permalink" href="#c"><code class="Fl">-c</code></a></dt>
+  <dd>Delete all of the firmware variables.</dd>
+  <dt id="p"><a class="permalink" href="#p"><code class="Fl">-p</code></a></dt>
+  <dd>Print all of the firmware variables.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">example% nvram boot-args=&quot;-s rd=*hd:10&quot;</p>
+<p class="Pp">Set the boot-args variable to &quot;-s rd=*hd:10&quot;. This would
+    specify single user mode with the root device in hard drive partition
+  10.</p>
+<p class="Pp">example% nvram my-variable=&quot;String One%00String
+    Two%00%00&quot;</p>
+<p class="Pp">Create a new variable, my-variable, containing a list of two
+    C-strings that is terminated by a NUL.</p>
+<p class="Pp">example% nvram -d my-variable</p>
+<p class="Pp">Deletes the variable named my-variable.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">January 25, 2021</td>
+    <td class="foot-os">macOS</td>
+  </tr>
+</table>
+</body>
+</html>

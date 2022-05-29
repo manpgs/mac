@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSMatrix(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSMatrix(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSMatrix(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSMatrix</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSMatrixTypes.h&gt;</p>
+<p class="Pp">Inherits NSObject.</p>
+<p class="Pp">Inherited by <b>MPSTemporaryMatrix</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) - <b>initWithBuffer:descriptor:</b>
+  <br/>
+  (nonnull instancetype) - <b>initWithDevice:descriptor:</b>
+  <br/>
+  (nonnull instancetype) - <b>init</b>
+  <br/>
+  (void) - <b>synchronizeOnCommandBuffer:</b>
+  <br/>
+  (NSUInteger) - <b>resourceSize</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp">id&lt; MTLDevice &gt; <b>device</b>
+  <br/>
+  NSUInteger <b>rows</b>
+  <br/>
+  NSUInteger <b>columns</b>
+  <br/>
+  NSUInteger <b>matrices</b>
+  <br/>
+  <b>MPSDataType</b> <b>dataType</b>
+  <br/>
+  NSUInteger <b>rowBytes</b>
+  <br/>
+  NSUInteger <b>matrixBytes</b>
+  <br/>
+  id&lt; MTLBuffer &gt; <b>data</b>
+  <br/>
+  <br/>
+</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">This depends on Metal.framework</p>
+<p class="Pp"><b>A</b> <b>MPSMatrix</b> object describes a set of 2-dimensional
+    arrays of data and provides storage for its values. <b>MPSMatrix</b> objects
+    serve as inputs and outputs of MPSMatrixKernel objects.</p>
+<p class="Pp">Implementation note: <b>A</b> <b>MPSMatrix</b> object maintains
+    its internal storage using a MTLBuffer object and thus the same rules for
+    maintaining coherency of a MTLBuffer's data between CPU memory and GPU
+    memory apply to a <b>MPSMatrix</b>. An <b>MPSMatrix</b> object's data refers
+    to an array of matrices. Data is assumed to be ordered by matrix first,
+    followed by row, followed by column.</p>
+<p class="Pp">For example, index [i,j] of the k'th matrix of an <b>MPSMatrix</b>
+    is located at byte offset: k * matrixBytes + i * rowBytes + j *
+    sizeof(dataType)</p>
+<p class="Pp">Where matrixBytes is a multiple of rowBytes at least equal to rows
+    * rowBytes.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) init </h2>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithBuffer: (nonnull id&lt;
+  MTLBuffer &gt;) buffer(nonnull <b>MPSMatrixDescriptor</b> *) descriptor</h2>
+<p class="Pp">Initialize a <b>MPSMatrix</b> object with a MTLBuffer.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>buffer</i> The MTLBuffer object which contains the
+  data to use for the <b>MPSMatrix</b>. May not be NULL.
+<br/>
+<i>descriptor</i> The <b>MPSMatrixDescriptor</b>. May not be NULL.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSMatrix</b> object or nil, if
+  failure.</div>
+<p class="Pp">This function returns a <b>MPSMatrix</b> object which uses the
+    supplied MTLBuffer. The dimensions and stride of the matrix are specified by
+    the <b>MPSMatrixDescriptor</b> object.</p>
+<p class="Pp">The provided MTLBuffer must have enough storage to hold</p>
+<p class="Pp"></p>
+<pre>
+(descriptor.matrices-1) * descriptor.matrixBytes +
+(descriptor.rows-1) * descriptor.rowBytes +
+<br/>
+ descriptor.columns * (element size) bytes.
+</pre>
+<p class="Pp">Reimplemented in <b>MPSTemporaryMatrix</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithDevice: (nonnull id&lt;
+  MTLDevice &gt;) device(<b>MPSMatrixDescriptor</b> *__nonnull) descriptor</h2>
+<p class="Pp">Initialize a <b>MPSMatrix</b> object with a descriptor. Allocate
+    the buffer.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device with which it will be used
+<br/>
+<i>descriptor</i> The shape and style of the matrix</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSMatrix</b> object or nil The matrix
+  object will be created, but the storage to hold the matrix data will only be
+  allocated when it is needed, typically when the data property is invoked. In
+  conjunction with -resourceSize, this will allow you to estimate storage needs
+  without actually creating the backing store for the matrix.</div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (NSUInteger) resourceSize </h2>
+<p class="Pp">Get the number of bytes used to allocate underyling MTLResources
+    This is the size of the backing store of underlying MTLResources. It does
+    not include all storage used by the object, for example the storage used to
+    hold the <b>MPSMatrix</b> instantiation and MTLBuffer is not included. It
+    only measures the size of the allocation used to hold the matrix data in the
+    buffer. This value is subject to change between different devices and
+    operating systems.</p>
+<p class="Pp">Except when -initWithBuffer:descriptor: is used, most MPSMatrixes
+    are allocated without a backing store. The backing store is allocated lazily
+    when it is needed, typically when the .texture property is called.
+    Consequently, in most cases, it should be inexpensive to make a
+    <b>MPSImage</b> to see how much memory it will need, and release it if it is
+    too large.</p>
+<p class="Pp">This method may fail in certain circumstances, such as when the
+    <b>MPSImage</b> is created with -initWithTexture:featureChannels:. In such
+    cases, 0 will be returned.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) synchronizeOnCommandBuffer: (__nonnull id&lt;
+  MTLCommandBuffer &gt;) commandBuffer</h2>
+<p class="Pp">Flush the underlying MTLBuffer from the device's caches, and
+    invalidate any CPU caches if needed. This will call [id
+    &lt;MTLBlitEncoder&gt; synchronizeResource: ] on the matrix's MTLBuffer, if
+    any. This is necessary for all MTLStorageModeManaged resources. For other
+    resources, including temporary resources (these are all
+    MTLStorageModePrivate), and buffers that have not yet been allocated,
+    nothing is done. It is more efficient to use this method than to attempt to
+    do this yourself with the data property.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> The commandbuffer on which to
+  synchronize</div>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- columns [read]<i>, [nonatomic]</i>, [assign]<i></i></h2>
+<p class="Pp">The number of columns in a matrix in the <b>MPSMatrix</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- data [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">An MTLBuffer to store the data.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- dataType [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The type of the <b>MPSMatrix</b> data.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- device [read]<b>, [nonatomic]</b>, [retain]<b></b></h2>
+<p class="Pp">The device on which the <b>MPSMatrix</b> will be used.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- matrices [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The number of matrices in the <b>MPSMatrix</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- matrixBytes [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The stride, in bytes, between corresponding elements of
+    consecutive matrices.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- rowBytes [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The stride, in bytes, between corresponding elements of
+    consecutive rows.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- rows [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The number of rows in a matrix in the <b>MPSMatrix</b>.</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

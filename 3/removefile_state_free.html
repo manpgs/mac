@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2015-21 Apple Inc.
+   All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. Neither the name of Apple Inc. ("Apple") nor the names of its
+      contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY APPLE AND ITS CONTRIBUTORS "AS IS" AND ANY
+   EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   DISCLAIMED. IN NO EVENT SHALL APPLE OR ITS CONTRIBUTORS BE LIABLE FOR ANY
+   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>REMOVEFILE(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">REMOVEFILE(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">REMOVEFILE(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">removefile</code>,
+    <code class="Nm">removefileat</code>,
+    <code class="Nm">removefile_state_alloc</code>,
+    <code class="Nm">removefile_state_free</code>,
+    <code class="Nm">removefile_state_get</code>,
+    <code class="Nm">removefile_state_set</code> &#x2014;
+    <span class="Nd">remove files or directories</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">removefile.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefile</code>(<var class="Fa" style="white-space: nowrap;">const
+    char *path</var>,
+    <var class="Fa" style="white-space: nowrap;">removefile_state_t state</var>,
+    <var class="Fa" style="white-space: nowrap;">removefile_flags_t
+    flags</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefileat</code>(<var class="Fa" style="white-space: nowrap;">int
+    fd</var>, <var class="Fa" style="white-space: nowrap;">const char
+    *path</var>, <var class="Fa" style="white-space: nowrap;">removefile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">removefile_flags_t
+    flags</var>);</p>
+<p class="Pp"><var class="Ft">removefile_state_t</var>
+  <br/>
+  <code class="Fn">removefile_state_alloc</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefile_state_free</code>(<var class="Fa" style="white-space: nowrap;">removefile_state_t
+    state</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefile_state_get</code>(<var class="Fa" style="white-space: nowrap;">removefile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">uint32_t
+    key</var>, <var class="Fa" style="white-space: nowrap;">void *
+  dst</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefile_state_set</code>(<var class="Fa" style="white-space: nowrap;">removefile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">uint32_t
+    key</var>, <var class="Fa" style="white-space: nowrap;">const void *
+    value</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">removefile_cancel</code>(<var class="Fa" style="white-space: nowrap;">removefile_state_t
+    state</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">These functions are used to remove a file or directory. Various
+    levels of overwriting may be specified to prevent other people from
+    recovering any information about the file.</p>
+<p class="Pp" id="removefile_state_alloc">The
+    <a class="permalink" href="#removefile_state_alloc"><code class="Fn">removefile_state_alloc</code></a>()
+    function initializes a <var class="Vt">removefile_state_t</var> object
+    (which is an opaque data type). This object can be passed to
+    <code class="Fn">removefile</code>().
+    <code class="Fn">removefile_state_get</code>() and
+    <code class="Fn">removefile_state_set</code>() can be used to manipulate the
+    state (see below). The
+    <a class="permalink" href="#removefile_state_free"><code class="Fn" id="removefile_state_free">removefile_state_free</code></a>()
+    function is used to deallocate the object and its contents.</p>
+<p class="Pp" id="removefileat">The
+    <a class="permalink" href="#removefileat"><code class="Fn">removefileat</code></a>()
+    function is equivalent to the <code class="Fn">removefile</code>() function
+    except in the case where the <var class="Va">path</var> specifies a relative
+    path. In that case the file to be removed is determined relative to the
+    directory associated with the file descriptor <var class="Va">fd</var>
+    instead of the current working directory. If the special value AT_FDCWD is
+    passed in the <var class="Va">fd</var> argument, the current working
+    directory is used and the behavior is identical to a call to
+    <a class="permalink" href="#removefile."><code class="Fn" id="removefile.">removefile.</code></a>()</p>
+<p class="Pp" id="removefile">The
+    <a class="permalink" href="#removefile"><code class="Fn">removefile</code></a>()
+    function removes files and directories located at the named
+    <var class="Va">path</var> filesystem location. The named
+    <var class="Va">path</var> location can be specified as either an absolute
+    path or relative to the working directory of the calling process. If the
+    <var class="Va">state</var> parameter is the return value from
+    <code class="Fn">removefile_state_alloc</code>(), then
+    <code class="Fn">removefile</code>() will use the information from the state
+    object; if it is <code class="Dv">NULL</code>, then
+    <code class="Fn">removefile</code>() will work normally, but less control
+    will be available to the caller. The <var class="Va">flags</var> parameter
+    controls deletion options:</p>
+<dl class="Bl-tag">
+  <dt id="REMOVEFILE_RECURSIVE"><a class="permalink" href="#REMOVEFILE_RECURSIVE"><code class="Dv">REMOVEFILE_RECURSIVE</code></a></dt>
+  <dd>If the <var class="Va">path</var> location is a directory, then
+      recursively delete the entire directory.</dd>
+  <dt id="REMOVEFILE_KEEP_PARENT"><a class="permalink" href="#REMOVEFILE_KEEP_PARENT"><code class="Dv">REMOVEFILE_KEEP_PARENT</code></a></dt>
+  <dd>The file or directory at the <var class="Va">path</var> location is not
+      deleted. If specified in conjunction with REMOVEFILE_RECURSIVE, then all
+      of the contents of the directory at <var class="Va">path</var> location
+      will be deleted, but not the directory itself.</dd>
+  <dt id="REMOVEFILE_CROSS_MOUNT"><a class="permalink" href="#REMOVEFILE_CROSS_MOUNT"><code class="Dv">REMOVEFILE_CROSS_MOUNT</code></a></dt>
+  <dd>By default, recursive traversals do not cross mount points. This option
+      allows <code class="Fn">removefile</code>() to descend into directories
+      that have a different device number than the file from which the descent
+      began.</dd>
+  <dt id="REMOVEFILE_SECURE_7_PASS"><a class="permalink" href="#REMOVEFILE_SECURE_7_PASS"><code class="Dv">REMOVEFILE_SECURE_7_PASS</code></a></dt>
+  <dd>Overwrite the file with 7 US DoD compliant passes (0xF6, 0x00, 0xFF,
+      random, 0x00, 0xFF, random).</dd>
+  <dt id="REMOVEFILE_SECURE_35_PASS"><a class="permalink" href="#REMOVEFILE_SECURE_35_PASS"><code class="Dv">REMOVEFILE_SECURE_35_PASS</code></a></dt>
+  <dd>Overwrite the file using 35-pass Gutmann algorithm.</dd>
+  <dt id="REMOVEFILE_SECURE_3_PASS"><a class="permalink" href="#REMOVEFILE_SECURE_3_PASS"><code class="Dv">REMOVEFILE_SECURE_3_PASS</code></a></dt>
+  <dd>Overwrite the file twice with random bytes, and then with 0xAA.</dd>
+  <dt id="REMOVEFILE_SECURE_1_PASS"><a class="permalink" href="#REMOVEFILE_SECURE_1_PASS"><code class="Dv">REMOVEFILE_SECURE_1_PASS</code></a></dt>
+  <dd>Overwrite with a single pass of random data.</dd>
+  <dt id="REMOVEFILE_SECURE_1_PASS_ZERO"><a class="permalink" href="#REMOVEFILE_SECURE_1_PASS_ZERO"><code class="Dv">REMOVEFILE_SECURE_1_PASS_ZERO</code></a></dt>
+  <dd>Overwrite with a single pass of zeroes.</dd>
+  <dt id="REMOVEFILE_ALLOW_LONG_PATHS"><a class="permalink" href="#REMOVEFILE_ALLOW_LONG_PATHS"><code class="Dv">REMOVEFILE_ALLOW_LONG_PATHS</code></a></dt>
+  <dd>Allow the <var class="Va">path</var> location to exceed the PATH_MAX
+      constant. This requires changing the working directory of the process that
+      has called into <code class="Fn">removefile</code>() temporarily. This
+      does not remove the requirement that no component of the
+      <var class="Va">path</var> location exceeds NAME_MAX characters.</dd>
+</dl>
+<p class="Pp" id="removefile_state_get">The
+    <a class="permalink" href="#removefile_state_get"><code class="Fn">removefile_state_get</code></a>()
+    and
+    <a class="permalink" href="#removefile_state_set"><code class="Fn" id="removefile_state_set">removefile_state_set</code></a>()
+    functions can be used to manipulate the
+    <var class="Ft">removefile_state_t</var> object returned by
+    <code class="Fn">removefile_state_alloc</code>(). In both functions, the
+    <var class="Va">dst</var> or the <var class="Va">value</var> parameter's
+    type depends on the <var class="Va">key</var> parameter that is passed
+  in.</p>
+<dl class="Bl-tag">
+  <dt id="REMOVEFILE_STATE_CONFIRM_CALLBACK"><a class="permalink" href="#REMOVEFILE_STATE_CONFIRM_CALLBACK"><code class="Dv">REMOVEFILE_STATE_CONFIRM_CALLBACK</code></a></dt>
+  <dd>Get or set the callback function of type
+      <var class="Va">removefile_callback_t</var> to be called prior to file
+      deletion.</dd>
+  <dt id="REMOVEFILE_STATE_CONFIRM_CONTEXT"><a class="permalink" href="#REMOVEFILE_STATE_CONFIRM_CONTEXT"><code class="Dv">REMOVEFILE_STATE_CONFIRM_CONTEXT</code></a></dt>
+  <dd>Get or set any parameters of type <var class="Va">void *</var> that are
+      needed for the confirm callback function.</dd>
+  <dt id="REMOVEFILE_STATE_ERROR_CALLBACK"><a class="permalink" href="#REMOVEFILE_STATE_ERROR_CALLBACK"><code class="Dv">REMOVEFILE_STATE_ERROR_CALLBACK</code></a></dt>
+  <dd>Get or set the callback function of type
+      <var class="Va">removefile_callback_t</var> to be called when an error is
+      detected.</dd>
+  <dt id="REMOVEFILE_STATE_ERROR_CONTEXT"><a class="permalink" href="#REMOVEFILE_STATE_ERROR_CONTEXT"><code class="Dv">REMOVEFILE_STATE_ERROR_CONTEXT</code></a></dt>
+  <dd>Get or set any parameters of type <var class="Va">void *</var> that are
+      needed for the error callback function.</dd>
+  <dt id="REMOVEFILE_STATE_ERRNO"><a class="permalink" href="#REMOVEFILE_STATE_ERRNO"><code class="Dv">REMOVEFILE_STATE_ERRNO</code></a></dt>
+  <dd>Get or set the current errno of type <var class="Va">int</var></dd>
+  <dt id="REMOVEFILE_STATE_STATUS_CALLBACK"><a class="permalink" href="#REMOVEFILE_STATE_STATUS_CALLBACK"><code class="Dv">REMOVEFILE_STATE_STATUS_CALLBACK</code></a></dt>
+  <dd>Get or set the callback function of type
+      <var class="Va">removefile_callback_t</var> to be called subsequent to
+      file deletion.</dd>
+  <dt id="REMOVEFILE_STATE_STATUS_CONTEXT"><a class="permalink" href="#REMOVEFILE_STATE_STATUS_CONTEXT"><code class="Dv">REMOVEFILE_STATE_STATUS_CONTEXT</code></a></dt>
+  <dd>Get or set any parameters of type <var class="Va">void *</var> that are
+      needed for the status callback function.</dd>
+</dl>
+<p class="Pp">The <var class="Va">removefile_callback_t</var> function pointer
+    is defined as the following:</p>
+<p class="Pp"><var class="Ft">int</var> <var class="Va">(*removefile_callback_t)
+    (removefile_state_t state, const char *path</var>, <var class="Va">void
+    *context)</var></p>
+<p class="Pp">The return value of the callback function is given as:</p>
+<dl class="Bl-tag">
+  <dt id="REMOVEFILE_PROCEED"><a class="permalink" href="#REMOVEFILE_PROCEED"><code class="Dv">REMOVEFILE_PROCEED</code></a></dt>
+  <dd>File is deleted and
+      <a class="permalink" href="#removefile~2"><code class="Fn" id="removefile~2">removefile</code></a>()
+      continues operation as normal.</dd>
+  <dt id="REMOVEFILE_SKIP"><a class="permalink" href="#REMOVEFILE_SKIP"><code class="Dv">REMOVEFILE_SKIP</code></a></dt>
+  <dd>Current file is not deleted and <code class="Fn">removefile</code>()
+      continues operation as normal.</dd>
+  <dt id="REMOVEFILE_STOP"><a class="permalink" href="#REMOVEFILE_STOP"><code class="Dv">REMOVEFILE_STOP</code></a></dt>
+  <dd>Current file is not deleted and <code class="Fn">removefile</code>() exits
+      without continuing further.</dd>
+</dl>
+<p class="Pp" id="removefile_cancel">The
+    <a class="permalink" href="#removefile_cancel"><code class="Fn">removefile_cancel</code></a>()
+    function is used to cancel a remove that is in progress.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">The family of <code class="Fn">removefile</code>() functions
+    returns less than 0 on error, and 0 on success.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp"><code class="Fn">removefile</code>() will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
+  <dd>The <var class="Va">path</var> location specifies a file or directory for
+      which the calling process does not have proper permissions.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>A callback returned an invalid return value (not REMOVEFILE_PROCEED,
+      REMOVEFILE_SKIP, or REMOVEFILE_STOP)</dd>
+  <dt id="EMLINK">[<a class="permalink" href="#EMLINK"><code class="Er">EMLINK</code></a>]</dt>
+  <dd>The <var class="Va">path</var> location refers to a symbolic link.</dd>
+  <dt id="ENAMETOOLONG">[<a class="permalink" href="#ENAMETOOLONG"><code class="Er">ENAMETOOLONG</code></a>]</dt>
+  <dd>A component of the <var class="Va">path</var> location exceeds NAME_MAX
+      characters, or the entire <var class="Va">path</var> location exceeds
+      PATH_MAX characters (and REMOVEFILE_ALLOW_LONG_PATHS is not passed).</dd>
+  <dt id="ENOMEM">[<a class="permalink" href="#ENOMEM"><code class="Er">ENOMEM</code></a>]</dt>
+  <dd>A memory allocation failed.</dd>
+  <dt id="ENOTEMPTY">[<a class="permalink" href="#ENOTEMPTY"><code class="Er">ENOTEMPTY</code></a>]</dt>
+  <dd>The <var class="Va">path</var> location specifies a directory that
+      contains an immutable file which cannot be deleted.</dd>
+  <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
+  <dd>The <var class="Va">path</var> location specifies an immutable file that
+      cannot be deleted.</dd>
+</dl>
+<p class="Pp"><code class="Fn">removefile_cancel</code>() will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>A <var class="Va">NULL</var> parameter was passed into
+      <code class="Fn">removefile_cancel</code>().</dd>
+</dl>
+<p class="Pp">In addition, all functions may return an error from an underlying
+    library or system call.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<p class="Pp">Write protected files owned by another user cannot be removed by
+    <a class="permalink" href="#removefile~3"><code class="Fn" id="removefile~3">removefile</code></a>(),
+    regardless of the permissions on the directory containing the file.</p>
+<p class="Pp" id="removefile~4">If multiple of the REMOVEFILE_SECURE_1_PASS,
+    REMOVEFILE_SECURE_7_PASS, and REMOVEFILE_SECURE_35_PASS flags are specified,
+    <a class="permalink" href="#removefile~4"><code class="Fn">removefile</code></a>()
+    will proceed using the flag that specifies the highest number of overwriting
+    passes.</p>
+<p class="Pp" id="removefile~5"><a class="permalink" href="#removefile~5"><code class="Fn">removefile</code></a>()
+    is pathname-based; this means that, when descending into a hierarchy, there
+    are potential race conditions that may add risk when run with
+  privileges.</p>
+<p class="Pp" id="removefile~6"><a class="permalink" href="#removefile~6"><code class="Fn">removefile</code></a>()
+    operates on symbolic links, rather than the target of the link.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<div class="Bd Bd-indent">
+<pre>
+/* Initialize a state variable */
+removefile_state_t s;
+s = removefile_state_alloc();
+/* Recursively remove all files and directories while keeping parent tmp directory. */
+removefile(&quot;/tmp&quot;, s, REMOVEFILE_RECURSIVE | REMOVEFILE_KEEP_PARENT);
+/* Release the state variable */
+removefile_state_free(s);
+
+/* A more complex way to call removefile() -- define a callback function */
+int removefile_status_callback(removefile_state_t state, const char * path, void * context) {
+   fprintf(stderr, &quot;File deleted: %s&quot;, path);
+   return REMOVEFILE_PROCEED;
+}
+/* Initialize a state variable */
+s = removefile_state_alloc();
+/* Set callback function properties */
+removefile_state_set(s, REMOVEFILE_STATE_CONFIRM_CALLBACK, removefile_confirm_callback);
+removefile_state_set(s, REMOVEFILE_STATE_CONFIRM_CONTEXT, NULL);
+/* Recursively remove all files and directories while keeping parent tmp directory,
+   calling a confirm callback prior to each file deletion. */
+removefile(&quot;/tmp&quot;, s, REMOVEFILE_RECURSIVE | REMOVEFILE_KEEP_PARENT);
+/* Release the state variable. */
+removefile_state_free(s);
+</pre>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/unlink">unlink(1)</a>,
+    <a class="Xr" href="../2/sync">sync(2)</a>,
+    <a class="Xr" href="../3/sync_volume_np">sync_volume_np(3)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">removefile</code>() API was introduced in Mac
+    OS X 10.5.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">March 30, 2021</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

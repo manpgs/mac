@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-mergetool
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+        Date: 06/06/2021
+      Manual: Git Manual
+      Source: Git 2.32.0
+    Language: English
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GIT-MERGETOOL(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GIT-MERGETOOL(1)</td>
+    <td class="head-vol">Git Manual</td>
+    <td class="head-rtitle">GIT-MERGETOOL(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">git-mergetool - Run merge conflict resolution tools to resolve
+    merge conflicts</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+<i>git mergetool</i> [--tool=&lt;tool&gt;] [-y | --[no-]prompt] [&lt;file&gt;...]
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Use <b>git mergetool</b> to run one of several merge utilities to
+    resolve merge conflicts. It is typically run after <i>git merge</i>.</p>
+<p class="Pp">If one or more &lt;file&gt; parameters are given, the merge tool
+    program will be run to resolve differences on each file (skipping those
+    without conflicts). Specifying a directory will include all unresolved files
+    in that path. If no &lt;file&gt; names are specified, <i>git mergetool</i>
+    will run the merge tool program on every file with merge conflicts.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<p class="Pp">-t &lt;tool&gt;, --tool=&lt;tool&gt;</p>
+<div class="Bd-indent">Use the merge resolution program specified by
+  &lt;tool&gt;. Valid values include emerge, gvimdiff, kdiff3, meld, vimdiff,
+  and tortoisemerge. Run <b>git mergetool --tool-help</b> for the list of valid
+  &lt;tool&gt; settings.
+<p class="Pp">If a merge resolution program is not specified, <i>git
+    mergetool</i> will use the configuration variable <b>merge.tool</b>. If the
+    configuration variable <b>merge.tool</b> is not set, <i>git mergetool</i>
+    will pick a suitable default.</p>
+<p class="Pp">You can explicitly provide a full path to the tool by setting the
+    configuration variable <b>mergetool.&lt;tool&gt;.path</b>. For example, you
+    can configure the absolute path to kdiff3 by setting
+    <b>mergetool.kdiff3.path</b>. Otherwise, <i>git mergetool</i> assumes the
+    tool is available in PATH.</p>
+<p class="Pp">Instead of running one of the known merge tool programs, <i>git
+    mergetool</i> can be customized to run an alternative program by specifying
+    the command line to invoke in a configuration variable
+    <b>mergetool.&lt;tool&gt;.cmd</b>.</p>
+<p class="Pp">When <i>git mergetool</i> is invoked with this tool (either
+    through the <b>-t</b> or <b>--tool</b> option or the <b>merge.tool</b>
+    configuration variable) the configured command line will be invoked with
+    <b>$BASE</b> set to the name of a temporary file containing the common base
+    for the merge, if available; <b>$LOCAL</b> set to the name of a temporary
+    file containing the contents of the file on the current branch;
+    <b>$REMOTE</b> set to the name of a temporary file containing the contents
+    of the file to be merged, and <b>$MERGED</b> set to the name of the file to
+    which the merge tool should write the result of the merge resolution.</p>
+<p class="Pp">If the custom merge tool correctly indicates the success of a
+    merge resolution with its exit code, then the configuration variable
+    <b>mergetool.&lt;tool&gt;.trustExitCode</b> can be set to <b>true</b>.
+    Otherwise, <i>git mergetool</i> will prompt the user to indicate the success
+    of the resolution after the custom tool has exited.</p>
+</div>
+<p class="Pp">--tool-help</p>
+<div class="Bd-indent">Print a list of merge tools that may be used with
+  <b>--tool</b>.</div>
+<p class="Pp">-y, --no-prompt</p>
+<div class="Bd-indent">Don&#x2019;t prompt before each invocation of the merge
+  resolution program. This is the default if the merge resolution program is
+  explicitly specified with the <b>--tool</b> option or with the
+  <b>merge.tool</b> configuration variable.</div>
+<p class="Pp">--prompt</p>
+<div class="Bd-indent">Prompt before each invocation of the merge resolution
+  program to give the user a chance to skip the path.</div>
+<p class="Pp">-g, --gui</p>
+<div class="Bd-indent">When <i>git-mergetool</i> is invoked with the <b>-g</b>
+  or <b>--gui</b> option the default merge tool will be read from the configured
+  <b>merge.guitool</b> variable instead of <b>merge.tool</b>. If
+  <b>merge.guitool</b> is not set, we will fallback to the tool configured under
+  <b>merge.tool</b>.</div>
+<p class="Pp">--no-gui</p>
+<div class="Bd-indent">This overrides a previous <b>-g</b> or <b>--gui</b>
+  setting and reads the default merge tool will be read from the configured
+  <b>merge.tool</b> variable.</div>
+<p class="Pp">-O&lt;orderfile&gt;</p>
+<div class="Bd-indent">Process files in the order specified in the
+  &lt;orderfile&gt;, which has one shell glob pattern per line. This overrides
+  the <b>diff.orderFile</b> configuration variable (see <b>git-config</b>(1)).
+  To cancel <b>diff.orderFile</b>, use <b>-O/dev/null</b>.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<p class="Pp">mergetool.&lt;tool&gt;.path</p>
+<div class="Bd-indent">Override the path for the given tool. This is useful in
+  case your tool is not in the PATH.</div>
+<p class="Pp">mergetool.&lt;tool&gt;.cmd</p>
+<div class="Bd-indent">Specify the command to invoke the specified merge tool.
+  The specified command is evaluated in shell with the following variables
+  available: <i>BASE</i> is the name of a temporary file containing the common
+  base of the files to be merged, if available; <i>LOCAL</i> is the name of a
+  temporary file containing the contents of the file on the current branch;
+  <i>REMOTE</i> is the name of a temporary file containing the contents of the
+  file from the branch being merged; <i>MERGED</i> contains the name of the file
+  to which the merge tool should write the results of a successful merge.</div>
+<p class="Pp">mergetool.&lt;tool&gt;.hideResolved</p>
+<div class="Bd-indent">Allows the user to override the global
+  <b>mergetool.hideResolved</b> value for a specific tool. See
+  <b>mergetool.hideResolved</b> for the full description.</div>
+<p class="Pp">mergetool.&lt;tool&gt;.trustExitCode</p>
+<div class="Bd-indent">For a custom merge command, specify whether the exit code
+  of the merge command can be used to determine whether the merge was
+  successful. If this is not set to true then the merge target file timestamp is
+  checked and the merge assumed to have been successful if the file has been
+  updated, otherwise the user is prompted to indicate the success of the
+  merge.</div>
+<p class="Pp">mergetool.meld.hasOutput</p>
+<div class="Bd-indent">Older versions of <b>meld</b> do not support the
+  <b>--output</b> option. Git will attempt to detect whether <b>meld</b>
+  supports <b>--output</b> by inspecting the output of <b>meld --help</b>.
+  Configuring <b>mergetool.meld.hasOutput</b> will make Git skip these checks
+  and use the configured value instead. Setting <b>mergetool.meld.hasOutput</b>
+  to <b>true</b> tells Git to unconditionally use the <b>--output</b> option,
+  and <b>false</b> avoids using <b>--output</b>.</div>
+<p class="Pp">mergetool.meld.useAutoMerge</p>
+<div class="Bd-indent">When the <b>--auto-merge</b> is given, meld will merge
+  all non-conflicting parts automatically, highlight the conflicting parts and
+  wait for user decision. Setting <b>mergetool.meld.useAutoMerge</b> to
+  <b>true</b> tells Git to unconditionally use the <b>--auto-merge</b> option
+  with <b>meld</b>. Setting this value to <b>auto</b> makes git detect whether
+  <b>--auto-merge</b> is supported and will only use <b>--auto-merge</b> when
+  available. A value of <b>false</b> avoids using <b>--auto-merge</b>
+  altogether, and is the default value.</div>
+<p class="Pp">mergetool.hideResolved</p>
+<div class="Bd-indent">During a merge Git will automatically resolve as many
+  conflicts as possible and write the <i>MERGED</i> file containing conflict
+  markers around any conflicts that it cannot resolve; <i>LOCAL</i> and
+  <i>REMOTE</i> normally represent the versions of the file from before
+  Git&#x2019;s conflict resolution. This flag causes <i>LOCAL</i> and
+  <i>REMOTE</i> to be overwriten so that only the unresolved conflicts are
+  presented to the merge tool. Can be configured per-tool via the
+  <b>mergetool.&lt;tool&gt;.hideResolved</b> configuration variable. Defaults to
+  <b>false</b>.</div>
+<p class="Pp">mergetool.keepBackup</p>
+<div class="Bd-indent">After performing a merge, the original file with conflict
+  markers can be saved as a file with a <b>.orig</b> extension. If this variable
+  is set to <b>false</b> then this file is not preserved. Defaults to
+  <b>true</b> (i.e. keep the backup files).</div>
+<p class="Pp">mergetool.keepTemporaries</p>
+<div class="Bd-indent">When invoking a custom merge tool, Git uses a set of
+  temporary files to pass to the tool. If the tool returns an error and this
+  variable is set to <b>true</b>, then these temporary files will be preserved,
+  otherwise they will be removed after the tool has exited. Defaults to
+  <b>false</b>.</div>
+<p class="Pp">mergetool.writeToTemp</p>
+<div class="Bd-indent">Git writes temporary <i>BASE</i>, <i>LOCAL</i>, and
+  <i>REMOTE</i> versions of conflicting files in the worktree by default. Git
+  will attempt to use a temporary directory for these files when set
+  <b>true</b>. Defaults to <b>false</b>.</div>
+<p class="Pp">mergetool.prompt</p>
+<div class="Bd-indent">Prompt before each invocation of the merge resolution
+  program.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="TEMPORARY_FILES"><a class="permalink" href="#TEMPORARY_FILES">TEMPORARY
+  FILES</a></h1>
+<p class="Pp"><b>git mergetool</b> creates <b>*.orig</b> backup files while
+    resolving merges. These are safe to remove once a file has been merged and
+    its <b>git mergetool</b> session has completed.</p>
+<p class="Pp">Setting the <b>mergetool.keepBackup</b> configuration variable to
+    <b>false</b> causes <b>git mergetool</b> to automatically remove the backup
+    as files are successfully merged.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<p class="Pp">Part of the <b>git</b>(1) suite</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">06/06/2021</td>
+    <td class="foot-os">Git 2.32.0</td>
+  </tr>
+</table>
+</body>
+</html>

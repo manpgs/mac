@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1980, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)read.2	8.4 (Berkeley) 2/26/94
+   $FreeBSD: src/lib/libc/sys/read.2,v 1.9.2.6 2001/12/14 18:34:01 ru Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>READ(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">READ(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">READ(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">pread</code>, <code class="Nm">read</code>,
+    <code class="Nm">preadv</code>, <code class="Nm">readv</code> &#x2014;
+    <span class="Nd">read input</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">sys/types.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">sys/uio.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">unistd.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">pread</code>(<var class="Fa">int d</var>,
+    <var class="Fa">void *buf</var>, <var class="Fa">size_t nbyte</var>,
+    <var class="Fa">off_t offset</var>);</p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">read</code>(<var class="Fa">int fildes</var>,
+    <var class="Fa">void *buf</var>, <var class="Fa">size_t nbyte</var>);</p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">preadv</code>(<var class="Fa">int d</var>,
+    <var class="Fa">const struct iovec *iov</var>, <var class="Fa">int
+    iovcnt</var>, <var class="Fa">off_t offset</var>);</p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">readv</code>(<var class="Fa">int d</var>,
+    <var class="Fa">const struct iovec *iov</var>, <var class="Fa">int
+    iovcnt</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><a class="permalink" href="#read"><code class="Fn" id="read">read</code></a>()
+    attempts to read <var class="Fa">nbyte</var> bytes of data from the object
+    referenced by the descriptor <var class="Fa">fildes</var> into the buffer
+    pointed to by <var class="Fa">buf</var>. <code class="Fn">readv</code>()
+    performs the same action, but scatters the input data into the
+    <var class="Fa">iovcnt</var> buffers specified by the members of the
+    <var class="Fa">iov</var> array: iov[0], iov[1], ..., iov[iovcnt-1].
+    <code class="Fn">pread</code>() and <code class="Fn">preadv</code>() perform
+    the same functions, but read from the specified position in the file without
+    modifying the file pointer.</p>
+<p class="Pp" id="readv">For
+    <a class="permalink" href="#readv"><code class="Fn">readv</code></a>() and
+    <a class="permalink" href="#preadv"><code class="Fn" id="preadv">preadv</code></a>(),
+    the <var class="Fa">iovec</var> structure is defined as:</p>
+<p class="Pp"></p>
+<div class="Bd Bd-indent">
+<pre>
+struct iovec {
+	char   *iov_base;  /* Base address. */
+	size_t iov_len;    /* Length. */
+};
+</pre>
+</div>
+<p class="Pp" id="readv~2">Each <var class="Fa">iovec</var> entry specifies the
+    base address and length of an area in memory where data should be placed.
+    <a class="permalink" href="#readv~2"><code class="Fn">readv</code></a>() and
+    <a class="permalink" href="#preadv~2"><code class="Fn" id="preadv~2">preadv</code></a>()
+    will always fill an area completely before proceeding to the next.</p>
+<p class="Pp" id="read~2">On objects capable of seeking, the
+    <a class="permalink" href="#read~2"><code class="Fn">read</code></a>()
+    starts at a position given by the pointer associated with
+    <var class="Fa">fildes</var> (see
+    <a class="Xr" href="../2/lseek">lseek(2)</a>). Upon return from
+    <code class="Fn">read</code>(), the pointer is incremented by the number of
+    bytes actually read.</p>
+<p class="Pp">Objects that are not capable of seeking always read from the
+    current position. The value of the pointer associated with such an object is
+    undefined.</p>
+<p class="Pp" id="read~3">Upon successful completion,
+    <a class="permalink" href="#read~3"><code class="Fn">read</code></a>(),
+    <code class="Fn">readv</code>(), <code class="Fn">pread</code>(), and
+    <code class="Fn">preadv</code>() return the number of bytes actually read
+    and placed in the buffer. The system guarantees to read the number of bytes
+    requested if the descriptor references a normal file that has that many
+    bytes left before the end-of-file, but in no other case.</p>
+<p class="Pp" id="read~4"><a class="permalink" href="#read~4"><code class="Fn">read</code></a>()
+    and
+    <a class="permalink" href="#pread"><code class="Fn" id="pread">pread</code></a>()
+    will fail if the parameter <var class="Fa">nbyte</var> exceeds
+    <code class="Dv">INT_MAX</code>, and they do not attempt a partial read.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">If successful, the number of bytes actually read is returned. Upon
+    reading end-of-file, zero is returned. Otherwise, a -1 is returned and the
+    global variable <var class="Va">errno</var> is set to indicate the
+  error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">read</code>(),
+    <code class="Fn">readv</code>(), <code class="Fn">pread</code>(), and
+    <code class="Fn">preadv</code>() calls will succeed unless:</p>
+<dl class="Bl-tag">
+  <dt id="EAGAIN">[<a class="permalink" href="#EAGAIN"><code class="Er">EAGAIN</code></a>]</dt>
+  <dd>The file was marked for non-blocking I/O, and no data were ready to be
+      read.</dd>
+  <dt id="EBADF">[<a class="permalink" href="#EBADF"><code class="Er">EBADF</code></a>]</dt>
+  <dd><var class="Fa">fildes</var> is not a valid file or socket descriptor open
+      for reading.</dd>
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd><var class="Fa">Buf</var> points outside the allocated address space.</dd>
+  <dt id="EINTR">[<a class="permalink" href="#EINTR"><code class="Er">EINTR</code></a>]</dt>
+  <dd>A read from a slow device was interrupted before any data arrived by the
+      delivery of a signal.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The pointer associated with <var class="Fa">fildes</var> was
+    negative.</dd>
+  <dt id="EIO">[<a class="permalink" href="#EIO"><code class="Er">EIO</code></a>]</dt>
+  <dd>An I/O error occurred while reading from the file system.</dd>
+  <dt id="EIO~2">[<a class="permalink" href="#EIO~2"><code class="Er">EIO</code></a>]</dt>
+  <dd>The process group is orphaned.</dd>
+  <dt id="EIO~3">[<a class="permalink" href="#EIO~3"><code class="Er">EIO</code></a>]</dt>
+  <dd>The file is a regular file, <var class="Fa">nbyte</var> is greater than 0,
+      the starting position is before the end-of-file, and the starting position
+      is greater than or equal to the offset maximum established for the open
+      file descriptor associated with <var class="Fa">fildes</var>.</dd>
+  <dt id="EISDIR">[<a class="permalink" href="#EISDIR"><code class="Er">EISDIR</code></a>]</dt>
+  <dd>An attempt is made to read a directory.</dd>
+  <dt id="ENOBUFS">[<a class="permalink" href="#ENOBUFS"><code class="Er">ENOBUFS</code></a>]</dt>
+  <dd>An attempt to allocate a memory buffer fails.</dd>
+  <dt id="ENOMEM">[<a class="permalink" href="#ENOMEM"><code class="Er">ENOMEM</code></a>]</dt>
+  <dd>Insufficient memory is available.</dd>
+  <dt id="ENXIO">[<a class="permalink" href="#ENXIO"><code class="Er">ENXIO</code></a>]</dt>
+  <dd>An action is requested of a device that does not exist.</dd>
+  <dt id="ENXIO~2">[<a class="permalink" href="#ENXIO~2"><code class="Er">ENXIO</code></a>]</dt>
+  <dd>A requested action cannot be performed by the device.</dd>
+  <dt id="ESTALE">[<a class="permalink" href="#ESTALE"><code class="Er">ESTALE</code></a>]</dt>
+  <dd>An attempt to read a remote file through NFS that has already been deleted
+      in the server.</dd>
+  <dt id="ETIMEDOUT">[<a class="permalink" href="#ETIMEDOUT"><code class="Er">ETIMEDOUT</code></a>]</dt>
+  <dd>The connection timed out while reading a remote file from a soft mounted
+      NFS volume (see
+    <a class="Xr" href="../8/mount_nfs">mount_nfs(8)</a>).</dd>
+  <dt id="ETIMEDOUT~2">[<a class="permalink" href="#ETIMEDOUT~2"><code class="Er">ETIMEDOUT</code></a>]</dt>
+  <dd>The file is a &#x201C;dataless&#x201D; file that requires materialization
+      and materialization timed out or encountered some other temporary
+    failure.</dd>
+  <dt id="EDEADLK">[<a class="permalink" href="#EDEADLK"><code class="Er">EDEADLK</code></a>]</dt>
+  <dd>The file is a &#x201C;dataless&#x201D; file that requires materialization
+      and the I/O policy of the current thread or process disallows dataless
+      file materialization (see
+      <a class="Xr" href="../3/getiopolicy_np">getiopolicy_np(3)</a>).</dd>
+</dl>
+<p class="Pp"><code class="Fn">pread</code>() and
+    <code class="Fn">preadv</code>() calls may also return the following
+  errors:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The specified file offset is invalid.</dd>
+  <dt id="ESPIPE">[<a class="permalink" href="#ESPIPE"><code class="Er">ESPIPE</code></a>]</dt>
+  <dd>The file descriptor is associated with a pipe, socket, or FIFO.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">read</code>() call may also return the
+    following errors:</p>
+<dl class="Bl-tag">
+  <dt id="ECONNRESET">[<a class="permalink" href="#ECONNRESET"><code class="Er">ECONNRESET</code></a>]</dt>
+  <dd>The connection is closed by the peer during a read attempt on a
+    socket.</dd>
+  <dt id="ENOTCONN">[<a class="permalink" href="#ENOTCONN"><code class="Er">ENOTCONN</code></a>]</dt>
+  <dd>A read is attempted on an unconnected socket.</dd>
+  <dt id="ETIMEDOUT~3">[<a class="permalink" href="#ETIMEDOUT~3"><code class="Er">ETIMEDOUT</code></a>]</dt>
+  <dd>A transmission timeout occurs during a read attempt on a socket.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">read</code>() and
+    <code class="Fn">pread</code>() call may also return the following
+  error:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~3">[<a class="permalink" href="#EINVAL~3"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The value provided for <var class="Fa">nbyte</var> exceeds
+      <code class="Dv">INT_MAX</code>.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">readv</code>() and
+    <code class="Fn">preadv</code>() calls may also return one of the following
+    errors:</p>
+<dl class="Bl-tag">
+  <dt id="EFAULT~2">[<a class="permalink" href="#EFAULT~2"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>Part of the <var class="Fa">iov</var> points outside the process's
+      allocated address space.</dd>
+  <dt id="EINVAL~4">[<a class="permalink" href="#EINVAL~4"><code class="Er">EINVAL</code></a>]</dt>
+  <dd><var class="Fa">Iovcnt</var> was less than or equal to 0, or greater than
+      16.</dd>
+  <dt id="EINVAL~5">[<a class="permalink" href="#EINVAL~5"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>One of the <var class="Fa">iov_len</var> values in the
+      <var class="Fa">iov</var> array was negative.</dd>
+  <dt id="EINVAL~6">[<a class="permalink" href="#EINVAL~6"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The sum of the <var class="Fa">iov_len</var> values in the
+      <var class="Fa">iov</var> array overflowed a 32-bit integer.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_SYNOPSIS"><a class="permalink" href="#LEGACY_SYNOPSIS">LEGACY
+  SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/types.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;sys/uio.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp">The include files
+    <code class="In">&lt;<a class="In">sys/types.h</a>&gt;</code> and
+    <code class="In">&lt;<a class="In">sys/uio.h</a>&gt;</code> are necessary
+    for all functions.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/dup">dup(2)</a>,
+    <a class="Xr" href="../2/fcntl">fcntl(2)</a>,
+    <a class="Xr" href="../2/open">open(2)</a>,
+    <a class="Xr" href="../2/pipe">pipe(2)</a>,
+    <a class="Xr" href="../2/select">select(2)</a>,
+    <a class="Xr" href="../2/socket">socket(2)</a>,
+    <a class="Xr" href="../2/socketpair">socketpair(2)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">read</code>() function call is expected to
+    conform to <span class="St">IEEE Std 1003.1-1990
+    (&#x201C;POSIX.1&#x201D;)</span>. The <code class="Fn">readv</code>() and
+    <code class="Fn">pread</code>() functions are expected to conform to
+    <span class="St">X/Open Portability Guide Issue&#x00A0;4, Version&#x00A0;2
+    (&#x201C;XPG4.2&#x201D;)</span>. <code class="Fn">preadv</code>() is
+    nonstandard.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">pread</code>() function call appeared in
+    <span class="Ux">AT&amp;T System&#x00A0;V Release&#x00A0;4 UNIX</span>. The
+    <code class="Fn">readv</code>() function call appeared in
+    <span class="Ux">4.2BSD</span>. A <code class="Fn">read</code>() function
+    call appeared in <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 3, 2021</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

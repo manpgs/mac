@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Generated from file '/AppleInternal/Library/BuildRoots/66382bca-8bca-11ec-aade-6613bcf0e2ee/Library/Caches/com.apple.xbs/Sources/tcl/tcl_ext/tklib/tklib/modules/controlwidget/controlwidget.man' by tcllib/doctools with format 'nroff'
+   Copyright (c) 2010 Ron Fox <rfox@...>
+   Copyright (c) 2010 Gerhard Reithofer <...@...>
+   Copyright (c) 2010 Marco Maggi <...@...>
+   Copyright (c) 2010 Arjen Markus <arjenmarkus@users.sourceforge.net>
+  
+   The definitions below are for supplemental macros used in Tcl/Tk
+   manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO
+  	Start of list of standard options for a Tk widget.  The
+  	options follow on successive lines, in four columns separated
+  	by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>controlwidget(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">controlwidget(n)</td>
+    <td class="head-vol">controlwidget</td>
+    <td class="head-rtitle">controlwidget(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">controlwidget - Collection of widgets for displaying and
+    controlling numerical values</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">package require <b>Tcl ?8.5?</b></p>
+<p class="Pp">package require <b>Tk ?8.5?</b></p>
+<p class="Pp">package require <b>snit ?2.0?</b></p>
+<p class="Pp">package require <b>controlwidget ?0.1?</b></p>
+<p class="Pp"><b>::controlwidget::meter</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::slider</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::equalizerBar</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::thermometer</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::voltmeter</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::tachometer</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::rdial</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>$widget</b> get</p>
+<p class="Pp"><b>$widget</b> set <i>value</i></p>
+<p class="Pp"><b>::controlwidget::led</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>::controlwidget::radioMatrix</b> <i>w</i> <i>args</i></p>
+<p class="Pp"><b>$led</b> on</p>
+<p class="Pp"><b>$led</b> off</p>
+<p class="Pp"><b>$led</b> setstate <i>state</i></p>
+<p class="Pp"><b>$matrix</b> get</p>
+<p class="Pp"><b>$matrix</b> set <i>index</i></p>
+<p class="Pp"></p>
+<pre>
+
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The controlwidget package focuses on the display and interactive
+    control of numerical values. It mimicks several of the meters and controls
+    found in laboratory settings but also daily life: volt meters, equalizers
+    and tachometers to name a few. They can be seen as alternatives for the
+    <i>scale widget</i>.</p>
+<p class="Pp"><i>Note:</i> The package has not sofar been tested extensively,
+    and that may result in an unexpected appearance if you use sizes that are
+    different than the defaults. Also not all options for the coloring of the
+    various parts and fonts and so on have been tested, so that may be another
+    source of bugs.</p>
+<p class="Pp">A last note: some parts have not been included in any option, most
+    notably the colors of parts that require lighter and darker shades to
+    cooperate.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="TYPES_OF_WIDGETS"><a class="permalink" href="#TYPES_OF_WIDGETS">TYPES
+  OF WIDGETS</a></h1>
+<p class="Pp">The package distinguishes several typed of widgets:</p>
+<ul class="Bl-bullet">
+  <li>Vertical meters: the value of the variable is translated into a vertical
+      position, like with the coloured bars you find on your stereo
+      installation.</li>
+  <li>Angle displays: the value of the variable is related to the angle of a
+      needle, like with tachometers.</li>
+  <li>Interactive widgets: most widgets allow you to change the value of the
+      variable by pressing the mouse button on the needle and shifting it up and
+      down or left and right.</li>
+  <li>Non-interactive widgets: some widgets, like the thermometer widget, do not
+      allow such interaction.</li>
+  <li>Logical or choice widgets: some widgets display the values as either
+      on/off (or true/false) or as one of a set of discrete choices.</li>
+</ul>
+<p class="Pp">All widgets have in common, however, that you can connect them to
+    a variable and that changing the variable changes the display. Forthermore,
+    all widgets have the set and get methods to interact with the value that the
+    widget displays (whether that is stored in a global variable or not).</p>
+<p class="Pp">They also have in common that their appearance and behaviour is
+    determined by one or more options that you can set at creation time and
+    often later on as well. The widgets are all based on the <i>snit</i>
+    package, so that the methods <b>configure</b> and <b>cget</b> are available
+    to set and get these options.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COMMANDS"><a class="permalink" href="#COMMANDS">COMMANDS</a></h1>
+<p class="Pp">Currently the package contains these widgets of the <i>vertical
+    meter</i> type:</p>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::meter</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a vertical meter consisting of an axis and a moveable arrow.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget"><a class="permalink" href="#widget">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments"><a class="permalink" href="#arguments">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable"><a class="permalink" href="#variable"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the meter</dd>
+  <dt id="background"><a class="permalink" href="#background"><b>background</b>
+    color</a></dt>
+  <dd>Background color for the widget</dd>
+  <dt id="height"><a class="permalink" href="#height"><b>height</b>
+    pixels</a></dt>
+  <dd>Height of the widget</dd>
+  <dt id="width"><a class="permalink" href="#width"><b>width</b> pixels</a></dt>
+  <dd>Width of the widget</dd>
+  <dt id="arrowthickness"><a class="permalink" href="#arrowthickness"><b>arrowthickness</b>
+    pixels</a></dt>
+  <dd>Thickness of the displayed arrow in pixels</dd>
+  <dt id="arrowcolor"><a class="permalink" href="#arrowcolor"><b>arrowcolor</b>
+    color</a></dt>
+  <dd>Color of the displayed arrow</dd>
+  <dt id="readonly"><a class="permalink" href="#readonly"><b>readonly</b>
+    boolean</a></dt>
+  <dd>Whether the arrow can be moved interactively or not</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::slider</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a widget containing one or more vertical sliders and an axis. You
+      can shift the slider handles interactively via the mouse.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~2"><a class="permalink" href="#widget~2">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~2"><a class="permalink" href="#arguments~2">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~2"><a class="permalink" href="#variable~2"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the (list) variable to be associated with the widget</dd>
+  <dt id="number"><a class="permalink" href="#number"><b>number</b>
+    integer</a></dt>
+  <dd>Number of sliders in the widget</dd>
+  <dt id="background~2"><a class="permalink" href="#background~2"><b>background</b>
+    color</a></dt>
+  <dd>Background color for the widget</dd>
+  <dt id="height~2"><a class="permalink" href="#height~2"><b>height</b>
+    pixels</a></dt>
+  <dd>Height of the widget</dd>
+  <dt id="width~2"><a class="permalink" href="#width~2"><b>width</b>
+    pixels</a></dt>
+  <dd>Width of the widget</dd>
+  <dt id="sliderthickness"><a class="permalink" href="#sliderthickness"><b>sliderthickness</b>
+    pixels</a></dt>
+  <dd>Thickness of the slider handles</dd>
+  <dt id="sliderwidth"><a class="permalink" href="#sliderwidth"><b>sliderwidth</b>
+    color</a></dt>
+  <dd>Width of the slider handles</dd>
+  <dt id="troughwidth"><a class="permalink" href="#troughwidth"><b>troughwidth</b>
+    color</a></dt>
+  <dd>Width of the troughs holding the sliders</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::equalizerBar</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a widget containing one or more vertical bars resembling those
+      found on hifi graphical equalizers. Note that it is a read-only
+    widget.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~3"><a class="permalink" href="#widget~3">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~3"><a class="permalink" href="#arguments~3">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~3"><a class="permalink" href="#variable~3"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the (list) variable to be associated with the widget</dd>
+  <dt id="number~2"><a class="permalink" href="#number~2"><b>number</b>
+    integer</a></dt>
+  <dd>Number of bars in the widget</dd>
+  <dt id="background~3"><a class="permalink" href="#background~3"><b>background</b>
+    color</a></dt>
+  <dd>Background color for the widget</dd>
+  <dt id="height~3"><a class="permalink" href="#height~3"><b>height</b>
+    pixels</a></dt>
+  <dd>Height of the widget</dd>
+  <dt id="width~3"><a class="permalink" href="#width~3"><b>width</b>
+    pixels</a></dt>
+  <dd>Width of the widget</dd>
+  <dt id="barwidth"><a class="permalink" href="#barwidth"><b>barwidth</b>
+    pixels</a></dt>
+  <dd>Width of the bars</dd>
+  <dt id="segments"><a class="permalink" href="#segments"><b>segments</b>
+    integer</a></dt>
+  <dd>Number of segments the bars are divided in</dd>
+  <dt id="safecolor"><a class="permalink" href="#safecolor"><b>safecolor</b>
+    color</a></dt>
+  <dd>Color for values lower than the warning level</dd>
+  <dt id="warningcolor"><a class="permalink" href="#warningcolor"><b>warningcolor</b>
+    color</a></dt>
+  <dd>Color for values greater than the warning level</dd>
+  <dt id="warninglevel"><a class="permalink" href="#warninglevel"><b>warninglevel</b>
+    double</a></dt>
+  <dd>Threshold value, determines at what level the color changes</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::thermometer</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a thermometer widget (read-only)</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~4"><a class="permalink" href="#widget~4">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~4"><a class="permalink" href="#arguments~4">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~4"><a class="permalink" href="#variable~4"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the (list) variable to be associated with the widget</dd>
+  <dt id="background~4"><a class="permalink" href="#background~4"><b>background</b>
+    color</a></dt>
+  <dd>Background color for the widget</dd>
+  <dt id="height~4"><a class="permalink" href="#height~4"><b>height</b>
+    pixels</a></dt>
+  <dd>Height of the widget</dd>
+  <dt id="width~4"><a class="permalink" href="#width~4"><b>width</b>
+    pixels</a></dt>
+  <dd>Width of the widget</dd>
+  <dt id="linethickness"><a class="permalink" href="#linethickness"><b>linethickness</b>
+    pixels</a></dt>
+  <dd>Thickness of the line representing the &quot;temperature&quot;</dd>
+  <dt id="linecolor"><a class="permalink" href="#linecolor"><b>linecolor</b>
+    color</a></dt>
+  <dd>Color of the line</dd>
+</dl>
+</div>
+</div>
+<p class="Pp">These widgets all use a vertical axis and have the following
+    options in common for configuring the axis:</p>
+<dl class="Bl-tag">
+  <dt id="axisformat"><a class="permalink" href="#axisformat"><b>axisformat</b>
+    string</a></dt>
+  <dd>Format string for formatting the numbers along the axis</dd>
+  <dt id="axisfont"><a class="permalink" href="#axisfont"><b>axisfont</b>
+    string</a></dt>
+  <dd>Name of the font to be used for the numbers</dd>
+  <dt id="axiscolor"><a class="permalink" href="#axiscolor"><b>axiscolor</b>
+    color</a></dt>
+  <dd>Color of the axis (including the numbers)</dd>
+  <dt id="from"><a class="permalink" href="#from"><b>from</b> color</a></dt>
+  <dd>Lower value for the axis</dd>
+  <dt id="to"><a class="permalink" href="#to"><b>to</b> color</a></dt>
+  <dd>Upper value for the axis</dd>
+  <dt id="majorticks"><a class="permalink" href="#majorticks"><b>majorticks</b>
+    integer</a></dt>
+  <dd>Number of major tickmarks to draw (each is labelled)</dd>
+  <dt id="minorticks"><a class="permalink" href="#minorticks"><b>minorticks</b>
+    integer</a></dt>
+  <dd>Number of minor tickmarks to draw between two major tickmarks</dd>
+  <dt id="log"><a class="permalink" href="#log"><b>log</b> boolean</a></dt>
+  <dd>Use a logarithmic axis (true) or a linear axis (false)</dd>
+</dl>
+<p class="Pp">The package contains the following widget based on angle
+  displays:</p>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::voltmeter</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a voltmeter-like widget.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~5"><a class="permalink" href="#widget~5">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~5"><a class="permalink" href="#arguments~5">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~5"><a class="permalink" href="#variable~5"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the meter</dd>
+  <dt id="value"><a class="permalink" href="#value"><b>value</b> value</a></dt>
+  <dd>Value for the meter (if not associated with a variable)</dd>
+  <dt id="min"><a class="permalink" href="#min"><b>min</b> value</a></dt>
+  <dd>The minimum value for data in the display</dd>
+  <dt id="max"><a class="permalink" href="#max"><b>max</b> value</a></dt>
+  <dd>The maximum value for data in the display</dd>
+  <dt id="labels"><a class="permalink" href="#labels"><b>labels</b>
+    list</a></dt>
+  <dd>The labels to be shown along the scale. (These are simply considered
+      texts, so no relation with the minimum and maximum perse)</dd>
+  <dt id="title"><a class="permalink" href="#title"><b>title</b> string</a></dt>
+  <dd>String to be shown below the dial</dd>
+  <dt id="width~5"><a class="permalink" href="#width~5"><b>width</b>
+    pixels</a></dt>
+  <dd>The width of the widget</dd>
+  <dt id="height~5"><a class="permalink" href="#height~5"><b>height</b>
+    pixels</a></dt>
+  <dd>The height of the widget</dd>
+  <dt id="borderwidth"><a class="permalink" href="#borderwidth"><b>borderwidth</b>
+    pixels</a></dt>
+  <dd>The width of the border surrounding the entire widget</dd>
+  <dt id="relief"><a class="permalink" href="#relief"><b>relief</b>
+    string</a></dt>
+  <dd>The relief of the border surrounding the entire widget</dd>
+  <dt id="highlightthickness"><a class="permalink" href="#highlightthickness"><b>highlightthickness</b>
+    pixels</a></dt>
+  <dd>The width of the border to indicate the widget has keyboard focus</dd>
+  <dt id="labelfont"><a class="permalink" href="#labelfont"><b>labelfont</b>
+    fontname</a></dt>
+  <dd>Font of the labels to the scale</dd>
+  <dt id="titlefont"><a class="permalink" href="#titlefont"><b>titlefont</b>
+    fontname</a></dt>
+  <dd>Font of the title below the dial</dd>
+  <dt id="dialcolor"><a class="permalink" href="#dialcolor"><b>dialcolor</b>
+    color</a></dt>
+  <dd>Color of the dial holding the needle</dd>
+  <dt id="needlecolor"><a class="permalink" href="#needlecolor"><b>needlecolor</b>
+    color</a></dt>
+  <dd>Color of the needle</dd>
+  <dt id="scalecolor"><a class="permalink" href="#scalecolor"><b>scalecolor</b>
+    color</a></dt>
+  <dd>Color of the scale (arc and tickmarks)</dd>
+  <dt id="labelcolor"><a class="permalink" href="#labelcolor"><b>labelcolor</b>
+    color</a></dt>
+  <dd>Color of the labels to the scale</dd>
+  <dt id="titlecolor"><a class="permalink" href="#titlecolor"><b>titlecolor</b>
+    color</a></dt>
+  <dd>Color of the title below the dial</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::tachometer</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a tachometer-like widget.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~6"><a class="permalink" href="#widget~6">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~6"><a class="permalink" href="#arguments~6">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget. In addition to the ones given for the voltmeter widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~6"><a class="permalink" href="#variable~6"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the meter</dd>
+  <dt id="value~2"><a class="permalink" href="#value~2"><b>value</b>
+    value</a></dt>
+  <dd>Value for the meter (if not associated with a variable)</dd>
+  <dt id="dangerlevel"><a class="permalink" href="#dangerlevel"><b>dangerlevel</b>
+    value</a></dt>
+  <dd>Level above which values are indicated with a different color</dd>
+  <dt id="dangercolor"><a class="permalink" href="#dangercolor"><b>dangercolor</b>
+    color</a></dt>
+  <dd>Color for the values above the &quot;danger level&quot;</dd>
+  <dt id="dangerwidth"><a class="permalink" href="#dangerwidth"><b>dangerwidth</b>
+    pixels</a></dt>
+  <dd>Width for the colored band indicating the &quot;danger level&quot;</dd>
+  <dt id="pincolor"><a class="permalink" href="#pincolor"><b>pincolor</b>
+    color</a></dt>
+  <dd>Color for the needle and the pin</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::rdial</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a rotating dial. You can drag the dial to change the value. With
+      the shift button depressed the value changes slowly, with the control
+      button depressed it changes fast.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~7"><a class="permalink" href="#widget~7">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~7"><a class="permalink" href="#arguments~7">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~7"><a class="permalink" href="#variable~7"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the dial</dd>
+  <dt id="value~3"><a class="permalink" href="#value~3"><b>value</b>
+    value</a></dt>
+  <dd>Value for the dial (if not associated with a variable)</dd>
+  <dt id="orient"><a class="permalink" href="#orient"><b>orient</b>
+    string</a></dt>
+  <dd>Whether a horizontal disk/dial is required (&quot;horizontal&quot;) or a
+      vertical one (&quot;vertical&quot;)</dd>
+  <dt id="step"><a class="permalink" href="#step"><b>step</b> value</a></dt>
+  <dd>Initial step for incrementing or decrementing the value</dd>
+  <dt id="slow"><a class="permalink" href="#slow"><b>slow</b> value</a></dt>
+  <dd>Factor on the step size for incrementing or decrementing the value
+    slowly</dd>
+  <dt id="fast"><a class="permalink" href="#fast"><b>fast</b> value</a></dt>
+  <dd>Factor on the step size for incrementing or decrementing the value
+    fast</dd>
+  <dt id="scale"><a class="permalink" href="#scale"><b>scale</b> value</a></dt>
+  <dd>Scale value to be applied to the actual value</dd>
+  <dt id="callback"><a class="permalink" href="#callback"><b>callback</b>
+    command</a></dt>
+  <dd>Command to be called when the value changes</dd>
+  <dt id="width~6"><a class="permalink" href="#width~6"><b>width</b>
+    pixels</a></dt>
+  <dd>The width of the widget</dd>
+  <dt id="height~6"><a class="permalink" href="#height~6"><b>height</b>
+    pixels</a></dt>
+  <dd>The height of the widget</dd>
+  <dt id="background~5"><a class="permalink" href="#background~5"><b>background</b>
+    color</a></dt>
+  <dd>The background color of the widget (coloring of the disk/dial)</dd>
+  <dt id="foreground"><a class="permalink" href="#foreground"><b>foreground</b>
+    color</a></dt>
+  <dd>The foreground color of the widget (the marker lines)</dd>
+</dl>
+</div>
+</div>
+<p class="Pp">All these widgets have the following methods:</p>
+<dl class="Bl-tag">
+  <dt><b>$widget</b> get</dt>
+  <dd>Return the current value or values shown in the widget</dd>
+  <dt><b>$widget</b> set <i>value</i></dt>
+  <dd>Reset the value or values shown in the widget. If the widget is associated
+      with a variable, that variable is set as well.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="value~4"><a class="permalink" href="#value~4">value
+    <i>double/list</i></a></dt>
+  <dd>New value or values for the widget</dd>
+</dl>
+</div>
+<p class="Pp">Two further widgets are available, meant to display logical
+    values:</p>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::led</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a LED-like widget.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~8"><a class="permalink" href="#widget~8">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~8"><a class="permalink" href="#arguments~8">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget. In addition to the ones given for the voltmeter widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~8"><a class="permalink" href="#variable~8"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the LED</dd>
+  <dt id="size"><a class="permalink" href="#size"><b>size</b> pixels</a></dt>
+  <dd>Diameter of the LED widget</dd>
+  <dt id="on"><a class="permalink" href="#on"><b>on</b> color</a></dt>
+  <dd>Color to use for the &quot;on&quot; state</dd>
+  <dt id="off"><a class="permalink" href="#off"><b>off</b> color</a></dt>
+  <dd>Color to use for the &quot;off&quot; state</dd>
+</dl>
+</div>
+</div>
+<dl class="Bl-tag">
+  <dt><b>::controlwidget::radioMatrix</b> <i>w</i> <i>args</i></dt>
+  <dd>Create a matrix of radio buttons that behaves as a single widget.</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="widget~9"><a class="permalink" href="#widget~9">widget <i>w</i>
+    (in)</a></dt>
+  <dd>Name of the widget to be created.</dd>
+  <dt id="arguments~9"><a class="permalink" href="#arguments~9">arguments
+    <i>args</i> (in)</a></dt>
+  <dd>List of key-value pairs, controlling the appearance and behaviour of the
+      widget. In addition to the ones given for the voltmeter widget:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="variable~9"><a class="permalink" href="#variable~9"><b>variable</b>
+    name</a></dt>
+  <dd>Name of the variable to be associated with the matrix</dd>
+  <dt id="orient~2"><a class="permalink" href="#orient~2"><b>orient</b>
+    string</a></dt>
+  <dd>The way the radio buttons are to be arranged (horizontal or vertical
+      first)</dd>
+  <dt id="rows"><a class="permalink" href="#rows"><b>rows</b> integer</a></dt>
+  <dd>Number of rows in the matrix</dd>
+  <dt id="columns"><a class="permalink" href="#columns"><b>columns</b>
+    integer</a></dt>
+  <dd>Number of columns in the matrix</dd>
+  <dt id="command"><a class="permalink" href="#command"><b>command</b>
+    list</a></dt>
+  <dd>Command associated with the radio buttons. Invoked when the active radio
+      button changes.</dd>
+</dl>
+</div>
+</div>
+<p class="Pp">The LED widget has the following public methods:</p>
+<dl class="Bl-tag">
+  <dt><b>$led</b> on</dt>
+  <dd>Set the state to &quot;on&quot;</dd>
+  <dt><b>$led</b> off</dt>
+  <dd>Set the state to &quot;off&quot;</dd>
+  <dt><b>$led</b> setstate <i>state</i></dt>
+  <dd>Set the state according to the value of &quot;state&quot;</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="state"><a class="permalink" href="#state">state <i>boolean</i>
+    (in)</a></dt>
+  <dd>New state for the LED widget</dd>
+</dl>
+</div>
+<p class="Pp">The radioMatrix widget has two public methods:</p>
+<dl class="Bl-tag">
+  <dt><b>$matrix</b> get</dt>
+  <dd>Return the index of the currently selected radio button</dd>
+  <dt><b>$matrix</b> set <i>index</i></dt>
+  <dd>Select the radio button with index &quot;index&quot;</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="index"><a class="permalink" href="#index">index
+    <i>integer</i></a></dt>
+  <dd>Index of the radio button to be set</dd>
+</dl>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ACKNOWLEDGMENTS"><a class="permalink" href="#ACKNOWLEDGMENTS">ACKNOWLEDGMENTS</a></h1>
+<p class="Pp">The code for most of these widgets first appeared on the Wiki. In
+    many cases, Arjen Markus merely refactored the code a bit and
+    &quot;snitified&quot; some of them. The original code was developed by the
+    following people:</p>
+<ul class="Bl-bullet">
+  <li>Vertical meter, LED display, radio matrix: Ron Fox</li>
+  <li>Rotating dials: Gerhard Reithofer</li>
+  <li>Voltmeter and tachometer: Marco Maggi</li>
+  <li>Code for moving the needle: ?</li>
+</ul>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">controlling, displaying, numerical values, scale widget</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
+<pre>
+Copyright (c) 2010 Ron Fox &lt;rfox@...&gt;
+Copyright (c) 2010 Gerhard Reithofer &lt;...@...&gt;
+Copyright (c) 2010 Marco Maggi &lt;...@...&gt;
+Copyright (c) 2010 Arjen Markus &lt;arjenmarkus@users.sourceforge.net&gt;
+</pre>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">0.1</td>
+    <td class="foot-os">controlwidget</td>
+  </tr>
+</table>
+</body>
+</html>

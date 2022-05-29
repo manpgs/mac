@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SLAPAUTH(8C)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SLAPAUTH(8C)</td>
+    <td class="head-vol"></td>
+    <td class="head-rtitle">SLAPAUTH(8C)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">slapauth - Check a list of string-represented IDs for LDAP
+    authc/authz</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>/usr/sbin/slapauth</b> [<b>-d</b><i>&#x00A0;debug-level]</i>
+    [<b>-f</b><i>&#x00A0;slapd.conf]</i> [<b>-F</b><i>&#x00A0;confdir]</i>
+    [<b>-M</b><i>&#x00A0;mech]</i>
+    [<b>-o</b><i>&#x00A0;option[</i><b>=</b><i>value]]</i>
+    [<b>-R</b><i>&#x00A0;realm]</i> [<b>-U</b><i>&#x00A0;authcID]</i>
+    [<b>-v</b>] [<b>-X</b><i>&#x00A0;authzID]</i>
+  <i>ID</i>&#x00A0;[<i>...</i>]</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><b>Slapauth</b> is used to check the behavior of the slapd in
+    mapping identities for authentication and authorization purposes, as
+    specified in <b>slapd.conf</b>(5). It opens the <b>slapd.conf</b>(5)
+    configuration file or the <b>slapd-config</b>(5) backend, reads in the
+    <b>authz-policy</b>/<b>olcAuthzPolicy</b> and
+    <b>authz-regexp</b>/<b>olcAuthzRegexp</b> directives, and then parses the
+    <i>ID</i> list given on the command-line.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="d"><a class="permalink" href="#d"><b>-d</b><i>&#x00A0;debug-level</i></a></dt>
+  <dd>enable debugging messages as defined by the specified <i>debug-level</i>;
+      see <b>slapd</b>(8) for details.</dd>
+  <dt id="f"><a class="permalink" href="#f"><b>-f</b><i>&#x00A0;slapd.conf</i></a></dt>
+  <dd>specify an alternative <b>slapd.conf</b>(5) file.</dd>
+  <dt id="F"><a class="permalink" href="#F"><b>-F</b><i>&#x00A0;confdir</i></a></dt>
+  <dd>specify a config directory. If both <b>-f</b> and <b>-F</b> are specified,
+      the config file will be read and converted to config directory format and
+      written to the specified directory. If neither option is specified, an
+      attempt to read the default config directory will be made before trying to
+      use the default config file. If a valid config directory exists then the
+      default config file is ignored.</dd>
+  <dt id="M"><a class="permalink" href="#M"><b>-M</b><i>&#x00A0;mech</i></a></dt>
+  <dd>specify a mechanism.</dd>
+  <dt id="o"><a class="permalink" href="#o"><b>-o</b><i>&#x00A0;option[</i><b>=</b><i>value]</i></a></dt>
+  <dd>Specify an <i>option</i> with a(n optional) <i>value</i>. Possible generic
+      options/values are:</dd>
+</dl>
+<p class="Pp"></p>
+<pre>
+<br/>
+              syslog=&lt;subsystems&gt;  (see `-s' in slapd(8))
+<br/>
+              syslog-level=&lt;level&gt; (see `-S' in slapd(8))
+<br/>
+              syslog-user=&lt;user&gt;   (see `-l' in slapd(8))
+</pre>
+<dl class="Bl-tag">
+  <dt id="R"><a class="permalink" href="#R"><b>-R</b><i>&#x00A0;realm</i></a></dt>
+  <dd>specify a realm.</dd>
+  <dt id="U"><a class="permalink" href="#U"><b>-U</b><i>&#x00A0;authcID</i></a></dt>
+  <dd>specify an ID to be used as <i>authcID</i> throughout the test session. If
+      present, and if no <i>authzID</i> is given, the IDs in the ID list are
+      treated as <i>authzID</i>.</dd>
+  <dt id="X"><a class="permalink" href="#X"><b>-X</b><i>&#x00A0;authzID</i></a></dt>
+  <dd>specify an ID to be used as <i>authzID</i> throughout the test session. If
+      present, and if no <i>authcID</i> is given, the IDs in the ID list are
+      treated as <i>authcID</i>. If both <i>authcID</i> and <i>authzID</i> are
+      given via command line switch, the ID list cannot be present.</dd>
+  <dt id="v"><a class="permalink" href="#v"><b>-v</b></a></dt>
+  <dd>enable verbose mode.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">The command</p>
+<p class="Pp"></p>
+<pre>
+	/usr/sbin/slapauth -f //etc/openldap/slapd.conf -v \
+<br/>
+            -U bjorn -X u:bjensen
+</pre>
+tests whether the user <i>bjorn</i> can assume the identity of the user
+  <i>bjensen</i> provided the directives
+<p class="Pp"></p>
+<pre>
+	authz-policy from
+	authz-regexp &quot;^uid=([^,]+).*,cn=auth$&quot;
+		&quot;ldap:///dc=example,dc=net??sub?uid=$1&quot;
+</pre>
+are defined in <b>slapd.conf</b>(5).
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>ldap</b>(3), <b>slapd</b>(8), <b>slaptest</b>(8)</p>
+<p class="Pp">&quot;OpenLDAP Administrator's Guide&quot;
+    (http://www.OpenLDAP.org/doc/admin/)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ACKNOWLEDGEMENTS"><a class="permalink" href="#ACKNOWLEDGEMENTS">ACKNOWLEDGEMENTS</a></h1>
+<p class="Pp"><b>OpenLDAP Software</b> is developed and maintained by The
+    OpenLDAP Project &lt;http://www.openldap.org/&gt;. <b>OpenLDAP Software</b>
+    is derived from University of Michigan LDAP 3.3 Release.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">2011/11/24</td>
+    <td class="foot-os">OpenLDAP 2.4.28</td>
+  </tr>
+</table>
+</body>
+</html>

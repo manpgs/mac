@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSCNNConvolutionWeightsAndBiasesState(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSCNNConvolutionWeightsAndBiasesState(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSCNNConvolutionWeightsAndBiasesState(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSCNNConvolutionWeightsAndBiasesState</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSCNNConvolution.h&gt;</p>
+<p class="Pp">Inherits <b>MPSState</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) - <b>initWithWeights:biases:</b>
+  <br/>
+  (nonnull instancetype) - <b>initWithDevice:cnnConvolutionDescriptor:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) +
+    <b>temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer:cnnConvolutionDescriptor:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp">__nonnull id&lt; MTLBuffer &gt; <b>weights</b>
+  <br/>
+  __nullable id&lt; MTLBuffer &gt; <b>biases</b>
+  <br/>
+  <br/>
+</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">The <b>MPSCNNConvolutionWeightsAndBiasesState</b> is returned by
+    exportWeightsAndBiasesWithCommandBuffer: method on <b>MPSCNNConvolution</b>
+    object. This is mainly used for GPU side weights/biases update process.
+    During training, application can keep a copy of weights, velocity, momentum
+    MTLBuffers in its data source, update the weights (in-place or out of place)
+    with gradients obtained from <b>MPSCNNConvolutionGradientState</b> and call
+    [<b>MPSCNNConvolution</b> reloadWeightsAndBiasesWithCommandBuffer] with
+    resulting updated MTLBuffer. If application does not want to keep a copy of
+    weights/biases, it can call [<b>MPSCNNConvolution</b>
+    exportWeightsAndBiasesWithCommandBuffer:] to get the current weights from
+    convolution itself, do the updated and call reloadWithCommandBuffer.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithDevice: (__nonnull id&lt;
+  MTLDevice &gt;) device(<b>MPSCNNConvolutionDescriptor</b> *__nonnull)
+  descriptor</h2>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithWeights: (__nonnull id&lt;
+  MTLBuffer &gt;) weights(__nullable id&lt; MTLBuffer &gt;) biases</h2>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="+_(nonnull_instancetype)_temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer:_(__nonnull_id__MTLCommandBuffer__)_commandBuffer("><a class="permalink" href="#+_(nonnull_instancetype)_temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer:_(__nonnull_id__MTLCommandBuffer__)_commandBuffer(">+
+  (nonnull instancetype)
+  temporaryCNNConvolutionWeightsAndBiasesStateWithCommandBuffer: (__nonnull
+  id&lt; MTLCommandBuffer &gt;) commandBuffer(<b>MPSCNNConvolutionDescriptor</b>
+  *__nonnull) descriptor</a></h2>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- biases [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp"><b>A</b> buffer that contains the biases. Each value is float and
+    there are ouputFeatureChannels values.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- weights [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp"><b>A</b> buffer that contains the weights. Each value in the
+    buffer is a float. The layout of the weights with respect to the weights is
+    the same as the weights layout provided by data source i.e. it can be
+    interpreted as 4D array</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+ weights[outputFeatureChannels][kernelHeight][kernelWidth][inputFeatureChannels/groups]
+</pre>
+<p class="Pp"></p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

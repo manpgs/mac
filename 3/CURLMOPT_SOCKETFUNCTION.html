@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2019, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLMOPT_SOCKETFUNCTION(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLMOPT_SOCKETFUNCTION(3)</td>
+    <td class="head-vol">curl_multi_setopt options</td>
+    <td class="head-rtitle">CURLMOPT_SOCKETFUNCTION(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLMOPT_SOCKETFUNCTION - callback informed about what to wait
+  for</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+#include &lt;curl/curl.h&gt;
+int socket_callback(CURL *easy,      /* easy handle */
+<br/>
+                    curl_socket_t s, /* socket */
+<br/>
+                    int what,        /* describes the socket */
+<br/>
+                    void *userp,     /* private callback pointer */
+<br/>
+                    void *socketp);  /* private socket pointer */
+CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION, socket_callback);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a pointer to your callback function, which should match the
+    prototype shown above.</p>
+<p class="Pp">When the <i>curl_multi_socket_action(3)</i> function is called, it
+    informs the application about updates in the socket (file descriptor) status
+    by doing none, one, or multiple calls to the <b>socket_callback</b>. The
+    callback function gets status updates with changes since the previous time
+    the callback was called. If the given callback pointer is set to NULL, no
+    callback will be called.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CALLBACK_ARGUMENTS"><a class="permalink" href="#CALLBACK_ARGUMENTS">CALLBACK
+  ARGUMENTS</a></h1>
+<p class="Pp"><i>easy</i> identifies the specific transfer for which this update
+    is related.</p>
+<p class="Pp"><i>s</i> is the specific socket this function invocation concerns.
+    If the <b>what</b> argument is not CURL_POLL_REMOVE then it holds
+    information about what activity on this socket the application is supposed
+    to monitor. Subsequent calls to this callback might update the <b>what</b>
+    bits for a socket that is already monitored.</p>
+<p class="Pp"><b>userp</b> is set with <i>CURLMOPT_SOCKETDATA(3)</i>.</p>
+<p class="Pp"><b>socketp</b> is set with <i>curl_multi_assign(3)</i> or will be
+    NULL.</p>
+<p class="Pp">The <b>what</b> parameter informs the callback on the status of
+    the given socket. It can hold one of these values:</p>
+<dl class="Bl-tag">
+  <dt id="CURL_POLL_IN"><a class="permalink" href="#CURL_POLL_IN">CURL_POLL_IN</a></dt>
+  <dd>Wait for incoming data. For the socket to become readable.</dd>
+  <dt id="CURL_POLL_OUT"><a class="permalink" href="#CURL_POLL_OUT">CURL_POLL_OUT</a></dt>
+  <dd>Wait for outgoing data. For the socket to become writable.</dd>
+  <dt id="CURL_POLL_INOUT"><a class="permalink" href="#CURL_POLL_INOUT">CURL_POLL_INOUT</a></dt>
+  <dd>Wait for incoming and outgoing data. For the socket to become readable or
+      writable.</dd>
+  <dt id="CURL_POLL_REMOVE"><a class="permalink" href="#CURL_POLL_REMOVE">CURL_POLL_REMOVE</a></dt>
+  <dd>The specified socket/file descriptor is no longer used by libcurl.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">NULL (no callback)</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">All</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+static int sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
+{
+<br/>
+  GlobalInfo *g = (GlobalInfo*) cbp;
+<br/>
+  SockInfo *fdp = (SockInfo*) sockp;
+<br/>
+  if(what == CURL_POLL_REMOVE) {
+<br/>
+    remsock(fdp);
+<br/>
+  }
+<br/>
+  else {
+<br/>
+    if(!fdp) {
+<br/>
+      addsock(s, e, what, g);
+<br/>
+    }
+<br/>
+    else {
+<br/>
+      setsock(fdp, s, e, what, g);
+<br/>
+    }
+<br/>
+  }
+<br/>
+  return 0;
+}
+main()
+{
+<br/>
+  GlobalInfo setup;
+<br/>
+  /* ... use socket callback and custom pointer */
+<br/>
+  curl_multi_setopt(multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
+<br/>
+  curl_multi_setopt(multi, CURLMOPT_SOCKETDATA, &amp;setup);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.15.4</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLM_OK.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLMOPT_SOCKETDATA</b>(3), <b>curl_multi_socket_action</b>(3),
+    <b>CURLMOPT_TIMERFUNCTION</b>(3) </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Generated from file '/AppleInternal/Library/BuildRoots/66382bca-8bca-11ec-aade-6613bcf0e2ee/Library/Caches/com.apple.xbs/Sources/tcl/tcl_ext/tklib/tklib/modules/canvas/canvas_sqmap.man' by tcllib/doctools with format 'nroff'
+  
+   The definitions below are for supplemental macros used in Tcl/Tk
+   manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO
+  	Start of list of standard options for a Tk widget.  The
+  	options follow on successive lines, in four columns separated
+  	by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   RCS: @(#) $Id: man.macros,v 1.1 2009/01/30 04:56:47 andreas_kupries Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>canvas::sqmap(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">canvas::sqmap(n)</td>
+    <td class="head-vol">Variations on a canvas</td>
+    <td class="head-rtitle">canvas::sqmap(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">canvas::sqmap - Canvas with map background based on square
+  tiles</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">package require <b>Tcl 8.4</b></p>
+<p class="Pp">package require <b>Tk 8.4</b></p>
+<p class="Pp">package require <b>snit </b></p>
+<p class="Pp">package require <b>uevent::onidle </b></p>
+<p class="Pp">package require <b>cache::async </b></p>
+<p class="Pp">package require <b>canvas::sqmap ?0.3.1?</b></p>
+<p class="Pp"><b>::canvas::sqmap</b> <i>pathName</i> ?options?</p>
+<p class="Pp"><i>canvasName</i> <b>image set</b> <i>cell</i> <i>image</i></p>
+<p class="Pp"><i>canvasName</i> <b>image unset</b> <i>cell</i></p>
+<p class="Pp"><i>canvasName</i> <b>flush</b></p>
+<p class="Pp"></p>
+<pre>
+
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This package provides an extended canvas widget for the display of
+    maps based on a set of square image tiles. The tiles are the background of
+    the canvas, with all other canvas items added always shown in front of them.
+    The number of tiles shown, tile size, and where to get the images to show
+    are all configurable.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="API"><a class="permalink" href="#API">API</a></h1>
+<dl class="Bl-tag">
+  <dt><b>::canvas::sqmap</b> <i>pathName</i> ?options?</dt>
+  <dd>Creates the canvas <i>pathName</i> and configures it. The new widget
+      supports all of the options and methods of a regular canvas, plus the
+      options and methods described below.
+    <p class="Pp">The result of the command is <i>pathName</i>.</p>
+  </dd>
+</dl>
+<section class="Ss">
+<h2 class="Ss" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
+<dl class="Bl-tag">
+  <dt id="grid_cell_width"><a class="permalink" href="#grid_cell_width"><b>-grid-cell-width</b></a></dt>
+  <dd>The value for this option is a non-negative integer. It specifies the
+      width of the cells the background is made up of.</dd>
+  <dt id="grid_cell_height"><a class="permalink" href="#grid_cell_height"><b>-grid-cell-height</b></a></dt>
+  <dd>The value for this option is a non-negative integer. It specifies the
+      height of the cells the background is made up of.</dd>
+  <dt id="grid_cell_command"><a class="permalink" href="#grid_cell_command"><b>-grid-cell-command</b></a></dt>
+  <dd>The value for this option is a command prefix. It is invoked whenever the
+      canvas needs the image for a specific cell of the background, with two
+      additional arguments, the id of the cell, and a command prefix to invoke
+      when the image is ready, or known to not exist.
+    <p class="Pp">The id of the cell is a 2-element list containing the row and
+        column number of the cell, in this order. The result command prefix
+        (named &quot;$result&quot; in the example below) has to be invoked with
+        either two or three arguments, i.e.</p>
+    <pre>
+<br/>
+    $result set   $cellid $image ; # image is known and ready
+<br/>
+    $result unset $cellid        ; # image does not exist
+    </pre>
+    This option may be left undefined, i.e. the canvas can operate without it.
+      In that case the only images shown in grid cells are those explicitly set
+      with the method <b>image set</b>, see the next section. All other grid
+      cells will simply be empty.</dd>
+  <dt id="viewport_command"><a class="permalink" href="#viewport_command"><b>-viewport-command</b></a></dt>
+  <dd>This option specifies a command prefix to invoke when the viewport of the
+      canvas is changed, to allow users keep track of where in the scroll-region
+      we are at all times. This can be used, for example, to drive derivate
+      displays, or to keep items in view by moving them as the viewport
+    moves.</dd>
+  <dt id="image_on_load"><a class="permalink" href="#image_on_load"><b>-image-on-load</b></a></dt>
+  <dd>The value for this option is an image. If specified the image is shown in
+      a cell while the actual image for that cell is getting loaded through the
+      callback specified by the <b>-grid-cell-command</b>.</dd>
+  <dt id="image_on_unset"><a class="permalink" href="#image_on_unset"><b>-image-on-unset</b></a></dt>
+  <dd>The value for this option is an image. If specified the image is shown in
+      a cell for which the callback specified by the <b>-grid-cell-command</b>
+      reported that there is no actual image to be shown.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h2>
+<dl class="Bl-tag">
+  <dt id="canvasName"><a class="permalink" href="#canvasName"><i>canvasName</i>
+    <b>image set</b> <i>cell</i> <i>image</i></a></dt>
+  <dd>Invoking this method places the <i>image</i> into the specified
+      <i>cell</i> of the background. The cell is given as a 2-element list
+      containing row and column number, in this order.
+    <p class="Pp">Note that an image is allowed to be associated with and
+        displayed in multiple cells of the canvas.</p>
+  </dd>
+  <dt id="canvasName~2"><a class="permalink" href="#canvasName~2"><i>canvasName</i>
+    <b>image unset</b> <i>cell</i></a></dt>
+  <dd>Invoking this method declares the specified <i>cell</i> of the background
+      as empty, an existing image shown by this cell will be forgotten. The cell
+      is given as a 2-element list containing row and column number, in this
+      order.</dd>
+  <dt id="canvasName~3"><a class="permalink" href="#canvasName~3"><i>canvasName</i>
+    <b>flush</b></a></dt>
+  <dd>Invoking this method forces the canvas to completely reload the images for
+      all cells. Do not use this method if the canvas is operated without a
+      <b>-grid-cell-command</b>, as in that case the canvas will simply forget
+      all images without being able to reload them.</dd>
+</dl>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="IMAGE_OWNERSHIP"><a class="permalink" href="#IMAGE_OWNERSHIP">IMAGE
+  OWNERSHIP</a></h1>
+<p class="Pp">Note that the canvas <i>does not</i> take ownership of the images
+    it shows in the background. In other words, when we say that the canvas
+    forgets an image this means only that the association between a grid cell
+    and shown image is broken. The image is <i>not</i> deleted. Managing the
+    lifecycle of the images shown by the canvas is responsibility of the user of
+    the canvas.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">canvas, cell, grid, image, map, square map, tile</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">0.3.1</td>
+    <td class="foot-os">canvas</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_UPLOAD(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_UPLOAD(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_UPLOAD(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_UPLOAD - data upload</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#include &lt;curl/curl.h&gt;</p>
+<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_UPLOAD, long
+    upload);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The long parameter <i>upload</i> set to 1 tells the library to
+    prepare for and perform an upload. The <i>CURLOPT_READDATA(3)</i> and
+    <i>CURLOPT_INFILESIZE(3)</i> or <i>CURLOPT_INFILESIZE_LARGE(3)</i> options
+    are also interesting for uploads. If the protocol is HTTP, uploading means
+    using the PUT request unless you tell libcurl otherwise.</p>
+<p class="Pp">Using PUT with HTTP 1.1 implies the use of a &quot;Expect:
+    100-continue&quot; header. You can disable this header with
+    <i>CURLOPT_HTTPHEADER(3)</i> as usual.</p>
+<p class="Pp">If you use PUT to an HTTP 1.1 server, you can upload data without
+    knowing the size before starting the transfer if you use chunked encoding.
+    You enable this by adding a header like &quot;Transfer-Encoding:
+    chunked&quot; with <i>CURLOPT_HTTPHEADER(3)</i>. With HTTP 1.0 or without
+    chunked transfer, you must specify the size.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">0, default is download</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">Most</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  /* we want to use our own read function */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_callback);
+<br/>
+  /* enable uploading */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+<br/>
+  /* specify target */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;ftp://example.com/dir/to/newfile&quot;);
+<br/>
+  /* now specify which pointer to pass to our callback */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_READDATA, hd_src);
+<br/>
+  /* Set the size of the file to upload */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_INFILESIZE_LARGE, (curl_off_t)fsize);
+<br/>
+  /* Now run off and do what you've been told! */
+<br/>
+  curl_easy_perform(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Always</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_PUT</b>(3), <b>CURLOPT_READFUNCTION</b>(3),
+    <b>CURLOPT_INFILESIZE_LARGE</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">September 8, 2021</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1980, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. All advertising materials mentioning features or use of this software
+      must display the following acknowledgement:
+  	This product includes software developed by the University of
+  	California, Berkeley and its contributors.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+       @(#)write.2	8.5 (Berkeley) 4/2/94
+   $FreeBSD: src/lib/libc/sys/write.2,v 1.12.2.7 2001/12/14 18:34:02 ru Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>WRITE(2)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">WRITE(2)</td>
+    <td class="head-vol">System Calls Manual</td>
+    <td class="head-rtitle">WRITE(2)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">pwrite</code>, <code class="Nm">write</code>,
+    <code class="Nm">pwritev</code>, <code class="Nm">writev</code> &#x2014;
+    <span class="Nd">write output</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">unistd.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">pwrite</code>(<var class="Fa">int fildes</var>,
+    <var class="Fa">const void *buf</var>, <var class="Fa">size_t nbyte</var>,
+    <var class="Fa">off_t offset</var>);</p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">write</code>(<var class="Fa">int fildes</var>,
+    <var class="Fa">const void *buf</var>, <var class="Fa">size_t
+  nbyte</var>);</p>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">sys/uio.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">writev</code>(<var class="Fa">int fildes</var>,
+    <var class="Fa">const struct iovec *iov</var>, <var class="Fa">int
+    iovcnt</var>);</p>
+<p class="Pp"><var class="Ft">ssize_t</var>
+  <br/>
+  <code class="Fn">pwritev</code>(<var class="Fa">int fildes</var>,
+    <var class="Fa">const struct iovec *iov</var>, <var class="Fa">int
+    iovcnt</var>, <var class="Fa">off_t offset</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><a class="permalink" href="#write"><code class="Fn" id="write">write</code></a>()
+    attempts to write <var class="Fa">nbyte</var> of data to the object
+    referenced by the descriptor <var class="Fa">fildes</var> from the buffer
+    pointed to by <var class="Fa">buf</var>. <code class="Fn">writev</code>()
+    performs the same action, but gathers the output data from the
+    <var class="Fa">iovcnt</var> buffers specified by the members of the
+    <var class="Fa">iov</var> array: iov[0], iov[1], ..., iov[iovcnt-1].
+    <code class="Fn">pwrite</code>() and <code class="Fn">pwritev</code>()
+    perform the same functions, but write to the specified position in the file
+    without modifying the file pointer.</p>
+<p class="Pp" id="writev">For
+    <a class="permalink" href="#writev"><code class="Fn">writev</code></a>() and
+    <a class="permalink" href="#pwritev"><code class="Fn" id="pwritev">pwritev</code></a>(),
+    the <var class="Fa">iovec</var> structure is defined as:</p>
+<p class="Pp"></p>
+<div class="Bd Bd-indent">
+<pre>
+struct iovec {
+	char   *iov_base;  /* Base address. */
+	size_t iov_len;    /* Length. */
+};
+</pre>
+</div>
+<p class="Pp" id="writev~2">Each <var class="Fa">iovec</var> entry specifies the
+    base address and length of an area in memory from which data should be
+    written.
+    <a class="permalink" href="#writev~2"><code class="Fn">writev</code></a>()
+    and
+    <a class="permalink" href="#pwritev~2"><code class="Fn" id="pwritev~2">pwritev</code></a>()
+    will always write a complete area before proceeding to the next.</p>
+<p class="Pp" id="write~2">On objects capable of seeking, the
+    <a class="permalink" href="#write~2"><code class="Fn">write</code></a>()
+    starts at a position given by the pointer associated with
+    <var class="Fa">fildes</var>, see
+    <a class="Xr" href="../2/lseek">lseek(2)</a>. Upon return from
+    <code class="Fn">write</code>(), the pointer is incremented by the number of
+    bytes which were written.</p>
+<p class="Pp">Objects that are not capable of seeking always write from the
+    current position. The value of the pointer associated with such an object is
+    undefined.</p>
+<p class="Pp" id="write~3">If the real user is not the super-user, then
+    <a class="permalink" href="#write~3"><code class="Fn">write</code></a>()
+    clears the set-user-id bit on a file. This prevents penetration of system
+    security by a user who &#x201C;captures&#x201D; a writable set-user-id file
+    owned by the super-user.</p>
+<p class="Pp" id="write~4">When using non-blocking I/O on objects, such as
+    sockets, that are subject to flow control,
+    <a class="permalink" href="#write~4"><code class="Fn">write</code></a>() and
+    <code class="Fn">writev</code>() may write fewer bytes than requested; the
+    return value must be noted, and the remainder of the operation should be
+    retried when possible.</p>
+<p class="Pp" id="write~5"><a class="permalink" href="#write~5"><code class="Fn">write</code></a>()
+    and
+    <a class="permalink" href="#pwrite"><code class="Fn" id="pwrite">pwrite</code></a>()
+    will fail if the parameter <var class="Fa">nbyte</var> exceeds
+    <code class="Dv">INT_MAX</code>, and they do not attempt a partial
+  write.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">Upon successful completion the number of bytes which were written
+    is returned. Otherwise, a -1 is returned and the global variable
+    <var class="Va">errno</var> is set to indicate the error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">write</code>(),
+    <code class="Fn">writev</code>(), <code class="Fn">pwrite</code>(), and
+    <code class="Fn">pwritev</code>() system calls will fail and the file
+    pointer will remain unchanged if:</p>
+<dl class="Bl-tag">
+  <dt id="EDQUOT">[<a class="permalink" href="#EDQUOT"><code class="Er">EDQUOT</code></a>]</dt>
+  <dd>The user's quota of disk blocks on the file system containing the file is
+      exhausted.</dd>
+  <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
+  <dd>Part of <var class="Fa">iov</var> or data to be written to the file points
+      outside the process's allocated address space.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The pointer associated with <var class="Fa">fildes</var> is negative.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">write</code>() and
+    <code class="Fn">pwrite</code>() system calls will fail and the file pointer
+    will remain unchanged if:</p>
+<dl class="Bl-tag">
+  <dt id="EAGAIN">[<a class="permalink" href="#EAGAIN"><code class="Er">EAGAIN</code></a>]</dt>
+  <dd>The file is marked for non-blocking I/O, and no data could be written
+      immediately.</dd>
+  <dt id="EBADF">[<a class="permalink" href="#EBADF"><code class="Er">EBADF</code></a>]</dt>
+  <dd><var class="Fa">fildes</var> is not a valid file descriptor open for
+      writing.</dd>
+  <dt id="ECONNRESET">[<a class="permalink" href="#ECONNRESET"><code class="Er">ECONNRESET</code></a>]</dt>
+  <dd>A write is attempted on a socket that is not connected.</dd>
+  <dt id="EFBIG">[<a class="permalink" href="#EFBIG"><code class="Er">EFBIG</code></a>]</dt>
+  <dd>An attempt is made to write a file that exceeds the process's file size
+      limit or the maximum file size.</dd>
+  <dt id="EFBIG~2">[<a class="permalink" href="#EFBIG~2"><code class="Er">EFBIG</code></a>]</dt>
+  <dd>The file is a regular file, <var class="Fa">nbyte</var> is greater than 0,
+      and the starting position is greater than or equal to the offset maximum
+      established in the open file description associated with
+      <var class="Fa">fildes</var>.</dd>
+  <dt id="EINTR">[<a class="permalink" href="#EINTR"><code class="Er">EINTR</code></a>]</dt>
+  <dd>A signal interrupts the write before it could be completed.</dd>
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The value provided for <var class="Fa">nbyte</var> exceeds
+      <code class="Dv">INT_MAX</code>.</dd>
+  <dt id="EIO">[<a class="permalink" href="#EIO"><code class="Er">EIO</code></a>]</dt>
+  <dd>An I/O error occurs while reading from or writing to the file system.</dd>
+  <dt id="ENETDOWN">[<a class="permalink" href="#ENETDOWN"><code class="Er">ENETDOWN</code></a>]</dt>
+  <dd>A write is attempted on a socket and the local network interface used to
+      reach the destination is down.</dd>
+  <dt id="ENETUNREACH">[<a class="permalink" href="#ENETUNREACH"><code class="Er">ENETUNREACH</code></a>]</dt>
+  <dd>A write is attempted on a socket and no route to the network is
+    present.</dd>
+  <dt id="ENOSPC">[<a class="permalink" href="#ENOSPC"><code class="Er">ENOSPC</code></a>]</dt>
+  <dd>There is no free space remaining on the file system containing the
+    file.</dd>
+  <dt id="ENXIO">[<a class="permalink" href="#ENXIO"><code class="Er">ENXIO</code></a>]</dt>
+  <dd>A request is made of a nonexistent device, or the request is outside the
+      capabilities of the device.</dd>
+  <dt id="EPIPE">[<a class="permalink" href="#EPIPE"><code class="Er">EPIPE</code></a>]</dt>
+  <dd>An attempt is made to write to a pipe that is not open for reading by any
+      process.</dd>
+  <dt id="EPIPE~2">[<a class="permalink" href="#EPIPE~2"><code class="Er">EPIPE</code></a>]</dt>
+  <dd>An attempt is made to write to a socket of type
+      <code class="Dv">SOCK_STREAM</code> that is not connected to a peer
+      socket.</dd>
+  <dt id="EDEADLK">[<a class="permalink" href="#EDEADLK"><code class="Er">EDEADLK</code></a>]</dt>
+  <dd>The file is a &#x201C;dataless&#x201D; file that requires materialization
+      and the I/O policy of the current thread or process disallows dataless
+      file materialization (see
+      <a class="Xr" href="../3/getiopolicy_np">getiopolicy_np(3)</a>).</dd>
+</dl>
+<p class="Pp">The <code class="Fn">write</code>() and
+    <code class="Fn">writev</code>() calls may also return the following
+  errors:</p>
+<dl class="Bl-tag">
+  <dt id="EAGAIN~2">[<a class="permalink" href="#EAGAIN~2"><code class="Er">EAGAIN</code></a>]</dt>
+  <dd>See EWOULDBLOCK, below.</dd>
+  <dt id="EWOULDBLOCK">[<a class="permalink" href="#EWOULDBLOCK"><code class="Er">EWOULDBLOCK</code></a>]</dt>
+  <dd>The file descriptor is for a socket, is marked O_NONBLOCK, and write would
+      block. The exact error code depends on the protocol, but EWOULDBLOCK is
+      more common.</dd>
+</dl>
+<p class="Pp">In addition, <code class="Fn">writev</code>() may return one of
+    the following errors:</p>
+<dl class="Bl-tag">
+  <dt id="EDESTADDRREQ">[<a class="permalink" href="#EDESTADDRREQ"><code class="Er">EDESTADDRREQ</code></a>]</dt>
+  <dd>The destination is no longer available when writing to a
+      <span class="Ux">UNIX</span> domain datagram socket on which
+      <a class="Xr" href="../2/connect">connect(2)</a> or
+      <a class="Xr" href="../2/connectx">connectx(2)</a> had been used to set a
+      destination address.</dd>
+  <dt id="ENOBUFS">[<a class="permalink" href="#ENOBUFS"><code class="Er">ENOBUFS</code></a>]</dt>
+  <dd>The mbuf pool has been completely exhausted when writing to a socket.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">writev</code>() and
+    <code class="Fn">pwritev</code>() calls may also return the following
+    errors:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~3">[<a class="permalink" href="#EINVAL~3"><code class="Er">EINVAL</code></a>]</dt>
+  <dd><var class="Fa">Iovcnt</var> is less than or equal to 0, or greater than
+      <code class="Dv">UIO_MAXIOV</code>.</dd>
+  <dt id="EINVAL~4">[<a class="permalink" href="#EINVAL~4"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>One of the <var class="Fa">iov_len</var> values in the
+      <var class="Fa">iov</var> array is negative.</dd>
+  <dt id="EINVAL~5">[<a class="permalink" href="#EINVAL~5"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The sum of the <var class="Fa">iov_len</var> values in the
+      <var class="Fa">iov</var> array overflows a 32-bit integer.</dd>
+</dl>
+<p class="Pp">The <code class="Fn">pwrite</code>() and
+    <code class="Fn">pwritev</code>() calls may also return the following
+    errors:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL~6">[<a class="permalink" href="#EINVAL~6"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The specified file offset is invalid.</dd>
+  <dt id="ESPIPE">[<a class="permalink" href="#ESPIPE"><code class="Er">ESPIPE</code></a>]</dt>
+  <dd>The file descriptor is associated with a pipe, socket, or FIFO.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LEGACY_SYNOPSIS"><a class="permalink" href="#LEGACY_SYNOPSIS">LEGACY
+  SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    <a class="In">&lt;sys/types.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;sys/uio.h&gt;</a></code> <code class="In">#include
+    <a class="In">&lt;unistd.h&gt;</a></code></p>
+<p class="Pp">These include files are needed for all three functions.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/fcntl">fcntl(2)</a>,
+    <a class="Xr" href="../2/lseek">lseek(2)</a>,
+    <a class="Xr" href="../2/open">open(2)</a>,
+    <a class="Xr" href="../2/pipe">pipe(2)</a>,
+    <a class="Xr" href="../2/select">select(2)</a>,
+    <a class="Xr" href="../5/compat">compat(5)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">write</code>() function call is expected to
+    conform to <span class="St">IEEE Std 1003.1-1990
+    (&#x201C;POSIX.1&#x201D;)</span>. The <code class="Fn">writev</code>() and
+    <code class="Fn">pwrite</code>() functions are expected to conform to
+    <span class="St">X/Open Portability Guide Issue&#x00A0;4, Version&#x00A0;2
+    (&#x201C;XPG4.2&#x201D;)</span>. <code class="Fn">pwritev</code>() is
+    nonstandard.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">pwrite</code>() function call appeared in
+    <span class="Ux">AT&amp;T System&#x00A0;V Release&#x00A0;4 UNIX</span>. The
+    <code class="Fn">writev</code>() function call appeared in
+    <span class="Ux">4.2BSD</span>. A <code class="Fn">write</code>() function
+    call appeared in <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 3, 2021</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

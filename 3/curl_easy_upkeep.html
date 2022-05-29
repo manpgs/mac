@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>curl_easy_upkeep(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">curl_easy_upkeep(3)</td>
+    <td class="head-vol">libcurl Manual</td>
+    <td class="head-rtitle">curl_easy_upkeep(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">curl_easy_upkeep - Perform any connection upkeep checks.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
+<p class="Pp"><b>CURLcode curl_easy_upkeep(CURL *</b><i>handle</i><b>);</b></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Some protocols have &quot;connection upkeep&quot; mechanisms.
+    These mechanisms usually send some traffic on existing connections in order
+    to keep them alive; this can prevent connections from being closed due to
+    overzealous firewalls, for example.</p>
+<p class="Pp">Currently the only protocol with a connection upkeep mechanism is
+    HTTP/2: when the connection upkeep interval is exceeded and
+    <i>curl_easy_upkeep(3)</i> is called, an HTTP/2 PING frame is sent on the
+    connection.</p>
+<p class="Pp">This function must be explicitly called in order to perform the
+    upkeep work. The connection upkeep interval is set with
+    <i>CURLOPT_UPKEEP_INTERVAL_MS(3)</i>.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.62.0.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">On success, returns <b>CURLE_OK</b>.</p>
+<p class="Pp">On failure, returns the appropriate error code.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  /* Make a connection to an HTTP/2 server. */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
+<br/>
+  /* Set the interval to 30000ms / 30s */
+<br/>
+  curl_easy_setopt(curl, CURLOPT_UPKEEP_INTERVAL_MS, 30000L);
+<br/>
+  curl_easy_perform(curl);
+<br/>
+  /* Perform more work here. */
+<br/>
+  /* While the connection is being held open, curl_easy_upkeep() can be
+<br/>
+     called. If curl_easy_upkeep() is called and the time since the last
+<br/>
+     upkeep exceeds the interval, then an HTTP/2 PING is sent. */
+<br/>
+  curl_easy_upkeep(curl);
+<br/>
+  /* Perform more work here. */
+<br/>
+  /* always cleanup */
+<br/>
+  curl_easy_cleanup(curl);
+}
+</pre>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 5, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

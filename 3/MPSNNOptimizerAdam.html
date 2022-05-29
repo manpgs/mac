@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSNNOptimizerAdam(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSNNOptimizerAdam(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSNNOptimizerAdam(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSNNOptimizerAdam</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSNNOptimizers.h&gt;</p>
+<p class="Pp">Inherits <b>MPSNNOptimizer</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) - <b>initWithDevice:</b>
+  <br/>
+  (nonnull instancetype) - <b>initWithDevice:learningRate:</b>
+  <br/>
+  (nonnull instancetype) -
+    <b>initWithDevice:beta1:beta2:epsilon:timeStep:optimizerDescriptor:</b>
+  <br/>
+  (void) -
+    <b>encodeToCommandBuffer:inputGradientVector:inputValuesVector:inputMomentumVector:inputVelocityVector:resultValuesVector:</b>
+  <br/>
+  (void) -
+    <b>encodeToCommandBuffer:convolutionGradientState:convolutionSourceState:inputMomentumVectors:inputVelocityVectors:resultState:</b>
+  <br/>
+  (void) -
+    <b>encodeToCommandBuffer:batchNormalizationState:inputMomentumVectors:inputVelocityVectors:resultState:</b>
+  <br/>
+  (void) -
+    <b>encodeToCommandBuffer:batchNormalizationGradientState:batchNormalizationSourceState:inputMomentumVectors:inputVelocityVectors:resultState:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp">double <b>beta1</b>
+  <br/>
+  double <b>beta2</b>
+  <br/>
+  float <b>epsilon</b>
+  <br/>
+  NSUInteger <b>timeStep</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Additional_Inherited_Members"><a class="permalink" href="#Additional_Inherited_Members">Additional
+  Inherited Members</a></h2>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">The <b>MPSNNOptimizerAdam</b> performs an Adam Update</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+        Initialization time
+<br/>
+        m[0] = 0 (Initialize initial 1st moment vector aka momentum, user is responsible for this)
+<br/>
+        v[0] = 0 (Initialize initial 2nd moment vector aka velocity, user is responsible for this)
+<br/>
+        t    = 0 (Initialize timestep)
+<br/>
+        https://arxiv.org/abs/1412.6980
+<br/>
+        At update time:
+<br/>
+        t = t + 1
+<br/>
+        lr[t] = learningRate * sqrt(1 - beta2^t) / (1 - beta1^t)
+<br/>
+        m[t]     = beta1 * m[t-1] + (1 - beta1) * g
+<br/>
+        v[t]     = beta2 * v[t-1] + (1 - beta2) * (g ^ 2)
+<br/>
+        variable = variable - lr[t] * m[t] / (sqrt(v[t]) + epsilon)
+<br/>
+        where,
+<br/>
+          g    is gradient of error wrt variable
+<br/>
+          v[t] is velocity
+<br/>
+          m[t] is momentum
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (__nonnull id&lt;
+  MTLCommandBuffer &gt;) commandBuffer(<b>MPSCNNBatchNormalizationState</b>
+  *__nonnull)
+  batchNormalizationGradientState(<b>MPSCNNBatchNormalizationState</b>
+  *__nonnull) batchNormalizationSourceState(nullable NSArray&lt;
+  <b>MPSVector</b> * &gt; *) inputMomentumVectors(nullable NSArray&lt;
+  <b>MPSVector</b> * &gt; *) inputVelocityVectors(nonnull
+  <b>MPSCNNNormalizationGammaAndBetaState</b> *) resultState</h2>
+<p class="Pp">Encode an <b>MPSNNOptimizerAdam</b> object to a command buffer to
+    perform out of place update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer to
+  receive the encoded kernel.
+<br/>
+<i>batchNormalizationGradientState</i> <b>A</b> valid
+  <b>MPSCNNBatchNormalizationState</b> object which specifies the input state
+  with gradients for this update.
+<br/>
+<i>batchNormalizationSourceState</i> <b>A</b> valid
+  <b>MPSCNNBatchNormalizationState</b> object which specifies the input state
+  with original gamma/beta for this update.
+<br/>
+<i>inputMomentumVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient momentum vectors which will be updated and overwritten. The index 0
+  corresponds to gamma, index 1 corresponds to beta, array can be of size 1 in
+  which case beta won't be updated
+<br/>
+<i>inputVelocityVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient velocity vectors which will be updated and overwritten. The index 0
+  corresponds to gamma, index 1 corresponds to beta, array can be of size 1 in
+  which case beta won't be updated
+<br/>
+<i>resultState</i> <b>A</b> valid <b>MPSCNNNormalizationGammaAndBetaState</b>
+  object which specifies the resultValues state which will be updated and
+  overwritten.</div>
+<p class="Pp">The following operations would be applied</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+        t = t + 1
+<br/>
+        lr[t] = learningRate * sqrt(1 - beta2^t) / (1 - beta1^t)
+<br/>
+        m[t]     = beta1 * m[t-1] + (1 - beta1) * g
+<br/>
+        v[t]     = beta2 * v[t-1] + (1 - beta2) * (g ^ 2)
+<br/>
+        variable = variable - lr[t] * m[t] / (sqrt(v[t]) + epsilon)
+</pre>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (__nonnull id&lt;
+  MTLCommandBuffer &gt;) commandBuffer(<b>MPSCNNBatchNormalizationState</b>
+  *__nonnull) batchNormalizationState(nullable NSArray&lt; <b>MPSVector</b> *
+  &gt; *) inputMomentumVectors(nullable NSArray&lt; <b>MPSVector</b> * &gt; *)
+  inputVelocityVectors(nonnull <b>MPSCNNNormalizationGammaAndBetaState</b> *)
+  resultState</h2>
+<p class="Pp">Encode an <b>MPSNNOptimizerAdam</b> object to a command buffer to
+    perform out of place update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer to
+  receive the encoded kernel.
+<br/>
+<i>batchNormalizationState</i> <b>A</b> valid
+  <b>MPSCNNBatchNormalizationState</b> object which specifies the input state
+  with gradients and original gamma/beta for this update.
+<br/>
+<i>inputMomentumVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient momentum vectors which will be updated and overwritten. The index 0
+  corresponds to gamma, index 1 corresponds to beta, array can be of size 1 in
+  which case beta won't be updated
+<br/>
+<i>inputVelocityVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient velocity vectors which will be updated and overwritten. The index 0
+  corresponds to gamma, index 1 corresponds to beta, array can be of size 1 in
+  which case beta won't be updated
+<br/>
+<i>resultState</i> <b>A</b> valid <b>MPSCNNNormalizationGammaAndBetaState</b>
+  object which specifies the resultValues state which will be updated and
+  overwritten.</div>
+<p class="Pp">The following operations would be applied</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+        t = t + 1
+<br/>
+        lr[t] = learningRate * sqrt(1 - beta2^t) / (1 - beta1^t)
+<br/>
+        m[t]     = beta1 * m[t-1] + (1 - beta1) * g
+<br/>
+        v[t]     = beta2 * v[t-1] + (1 - beta2) * (g ^ 2)
+<br/>
+        variable = variable - lr[t] * m[t] / (sqrt(v[t]) + epsilon)
+</pre>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (__nonnull id&lt;
+  MTLCommandBuffer &gt;) commandBuffer(<b>MPSCNNConvolutionGradientState</b>
+  *__nonnull)
+  convolutionGradientState(<b>MPSCNNConvolutionWeightsAndBiasesState</b>
+  *__nonnull) convolutionSourceState(nullable NSArray&lt; <b>MPSVector</b> *
+  &gt; *) inputMomentumVectors(nullable NSArray&lt; <b>MPSVector</b> * &gt; *)
+  inputVelocityVectors(nonnull <b>MPSCNNConvolutionWeightsAndBiasesState</b> *)
+  resultState</h2>
+<p class="Pp">Encode an <b>MPSNNOptimizerAdam</b> object to a command buffer to
+    perform out of place update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer to
+  receive the encoded kernel.
+<br/>
+<i>convolutionGradientState</i> <b>A</b> valid
+  <b>MPSCNNConvolutionGradientState</b> object which specifies the input state
+  with gradients for this update.
+<br/>
+<i>convolutionSourceState</i> <b>A</b> valid
+  <b>MPSCNNConvolutionWeightsAndBiasesState</b> object which specifies the input
+  state with values to be updated.
+<br/>
+<i>inputMomentumVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient momentum vectors which will be updated and overwritten. The index 0
+  corresponds to weights, index 1 corresponds to biases, array can be of size 1
+  in which case biases won't be updated
+<br/>
+<i>inputVelocityVectors</i> An array <b>MPSVector</b> object which specifies the
+  gradient velocity vectors which will be updated and overwritten. The index 0
+  corresponds to weights, index 1 corresponds to biases, array can be of size 1
+  in which case biases won't be updated
+<br/>
+<i>resultState</i> <b>A</b> valid <b>MPSCNNConvolutionWeightsAndBiasesState</b>
+  object which specifies the resultValues state which will be updated and
+  overwritten.</div>
+<p class="Pp">The following operations would be applied</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+        t = t + 1
+<br/>
+        lr[t] = learningRate * sqrt(1 - beta2^t) / (1 - beta1^t)
+<br/>
+        m[t]     = beta1 * m[t-1] + (1 - beta1) * g
+<br/>
+        v[t]     = beta2 * v[t-1] + (1 - beta2) * (g ^ 2)
+<br/>
+        variable = variable - lr[t] * m[t] / (sqrt(v[t]) + epsilon)
+</pre>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (nonnull id&lt; MTLCommandBuffer
+  &gt;) commandBuffer(nonnull <b>MPSVector</b> *) inputGradientVector(nonnull
+  <b>MPSVector</b> *) inputValuesVector(nonnull <b>MPSVector</b> *)
+  inputMomentumVector(nonnull <b>MPSVector</b> *) inputVelocityVector(nonnull
+  <b>MPSVector</b> *) resultValuesVector</h2>
+<p class="Pp">Encode an <b>MPSNNOptimizerAdam</b> object to a command buffer to
+    perform out of place update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer to
+  receive the encoded kernel.
+<br/>
+<i>inputGradientVector</i> <b>A</b> valid <b>MPSVector</b> object which
+  specifies the input vector of gradients for this update.
+<br/>
+<i>inputValuesVector</i> <b>A</b> valid <b>MPSVector</b> object which specifies
+  the input vector of values to be updated.
+<br/>
+<i>inputMomentumVector</i> <b>A</b> valid <b>MPSVector</b> object which
+  specifies the gradient momentum vector which will be updated and overwritten.
+<br/>
+<i>inputVelocityVector</i> <b>A</b> valid <b>MPSVector</b> object which
+  specifies the gradient velocity vector which will be updated and overwritten.
+<br/>
+<i>resultValuesVector</i> <b>A</b> valid <b>MPSVector</b> object which specifies
+  the resultValues vector which will be updated and overwritten.</div>
+<p class="Pp">The following operations would be applied</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+        t = t + 1
+<br/>
+        lr[t] = learningRate * sqrt(1 - beta2^t) / (1 - beta1^t)
+<br/>
+        m[t]     = beta1 * m[t-1] + (1 - beta1) * g
+<br/>
+        v[t]     = beta2 * v[t-1] + (1 - beta2) * (g ^ 2)
+<br/>
+        variable = variable - lr[t] * m[t] / (sqrt(v[t]) + epsilon)
+</pre>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithDevice: (nonnull id&lt;
+  MTLDevice &gt;) device</h2>
+<p class="Pp">Standard init with default properties per filter type</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device that the filter will be used on.
+  May not be NULL.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent">a pointer to the newly initialized object. This will
+  fail, returning nil if the device is not supported. Devices must be
+  MTLFeatureSet_iOS_GPUFamily2_v1 or later.</div>
+<p class="Pp">Reimplemented from <b>MPSNNOptimizer</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) <b>initWithDevice:</b> (nonnull id&lt;
+  MTLDevice &gt;) device(double) beta1(double) beta2(float) epsilon(NSUInteger)
+  timeStep(nonnull <b>MPSNNOptimizerDescriptor</b> *) optimizerDescriptor</h2>
+<p class="Pp">Full initialization for the adam update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device on which the kernel will
+  execute.
+<br/>
+<i>beta1</i> The beta1 to update values
+<br/>
+<i>beta2</i> The beta2 to update values
+<br/>
+<i>epsilon</i> The epsilon at which we update values
+<br/>
+<i>timeStep</i> The timeStep at which values will start updating
+<br/>
+<i>optimizerDescriptor</i> The optimizerDescriptor which will have a bunch of
+  properties to be applied</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSNNOptimizerAdam</b> object or nil,
+  if failure.</div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) <b>initWithDevice:</b> (nonnull id&lt;
+  MTLDevice &gt;) device(float) learningRate</h2>
+<p class="Pp">Convenience initialization for the adam update</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device on which the kernel will
+  execute.
+<br/>
+<i>learningRate</i> The learningRate at which we will update values</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSNNOptimizerAdam</b> object or nil,
+  if failure.</div>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- beta1 [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The beta1 at which we update values Default value is 0.9</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- beta2 [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The beta2 at which we update values Default value is 0.999</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- epsilon [read]<b>, [nonatomic]</b>, [assign]<b></b></h2>
+<p class="Pp">The epsilon at which we update values This value is usually used
+    to ensure to avoid divide by 0, default value is 1e-8</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- timeStep [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">Current timeStep for the update, number of times update has
+    occurred</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

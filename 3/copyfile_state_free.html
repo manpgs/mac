@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2021 Apple Computer, Inc.  All rights reserved.
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>COPYFILE(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">COPYFILE(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">COPYFILE(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">copyfile</code>,
+    <code class="Nm">fcopyfile</code>,
+    <code class="Nm">copyfile_state_alloc</code>,
+    <code class="Nm">copyfile_state_free</code>,
+    <code class="Nm">copyfile_state_get</code>,
+    <code class="Nm">copyfile_state_set</code> &#x2014; <span class="Nd">copy a
+    file</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">copyfile.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">copyfile</code>(<var class="Fa" style="white-space: nowrap;">const
+    char *from</var>, <var class="Fa" style="white-space: nowrap;">const char
+    *to</var>, <var class="Fa" style="white-space: nowrap;">copyfile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">copyfile_flags_t
+    flags</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">fcopyfile</code>(<var class="Fa" style="white-space: nowrap;">int
+    from</var>, <var class="Fa" style="white-space: nowrap;">int to</var>,
+    <var class="Fa" style="white-space: nowrap;">copyfile_state_t state</var>,
+    <var class="Fa" style="white-space: nowrap;">copyfile_flags_t
+  flags</var>);</p>
+<p class="Pp"><var class="Ft">copyfile_state_t</var>
+  <br/>
+  <code class="Fn">copyfile_state_alloc</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">copyfile_state_free</code>(<var class="Fa" style="white-space: nowrap;">copyfile_state_t
+    state</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">copyfile_state_get</code>(<var class="Fa" style="white-space: nowrap;">copyfile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">uint32_t
+    flag</var>, <var class="Fa" style="white-space: nowrap;">void *
+  dst</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">copyfile_state_set</code>(<var class="Fa" style="white-space: nowrap;">copyfile_state_t
+    state</var>, <var class="Fa" style="white-space: nowrap;">uint32_t
+    flag</var>, <var class="Fa" style="white-space: nowrap;">const void *
+    src</var>);</p>
+<p class="Pp"><var class="Ft">typedef int</var>
+  <br/>
+  <code class="Fn">(*copyfile_callback_t)</code>(<var class="Fa" style="white-space: nowrap;">int
+    what</var>, <var class="Fa" style="white-space: nowrap;">int stage</var>,
+    <var class="Fa" style="white-space: nowrap;">copyfile_state_t state</var>,
+    <var class="Fa" style="white-space: nowrap;">const char * src</var>,
+    <var class="Fa" style="white-space: nowrap;">const char * dst</var>,
+    <var class="Fa" style="white-space: nowrap;">void * ctx</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">These functions are used to copy a file's data and/or metadata.
+    (Metadata consists of permissions, extended attributes, access control
+    lists, and so forth.)</p>
+<p class="Pp" id="copyfile_state_alloc">The
+    <a class="permalink" href="#copyfile_state_alloc"><code class="Fn">copyfile_state_alloc</code></a>()
+    function initializes a <var class="Vt">copyfile_state_t</var> object (which
+    is an opaque data type). This object can be passed to
+    <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>();
+    <code class="Fn">copyfile_state_get</code>() and
+    <code class="Fn">copyfile_state_set</code>() can be used to manipulate the
+    state (see below). The
+    <a class="permalink" href="#copyfile_state_free"><code class="Fn" id="copyfile_state_free">copyfile_state_free</code></a>()
+    function is used to deallocate the object and its contents.</p>
+<p class="Pp" id="copyfile">The
+    <a class="permalink" href="#copyfile"><code class="Fn">copyfile</code></a>()
+    function can copy the named <var class="Va">from</var> file to the named
+    <var class="Va">to</var> file; the <code class="Fn">fcopyfile</code>()
+    function does the same, but using the file descriptors of already-opened
+    files. If the <var class="Va">state</var> parameter is the return value from
+    <code class="Fn">copyfile_state_alloc</code>(), then
+    <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>()
+    will use the information from the state object; if it is
+    <code class="Dv">NULL</code>, then both functions will work normally, but
+    less control will be available to the caller. The
+    <var class="Va">flags</var> parameter controls which contents are
+  copied:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_ACL"><a class="permalink" href="#COPYFILE_ACL"><code class="Dv">COPYFILE_ACL</code></a></dt>
+  <dd>Copy the source file's access control lists.</dd>
+  <dt id="COPYFILE_STAT"><a class="permalink" href="#COPYFILE_STAT"><code class="Dv">COPYFILE_STAT</code></a></dt>
+  <dd>Copy the source file's POSIX information (mode, modification time,
+    etc.).</dd>
+  <dt id="COPYFILE_XATTR"><a class="permalink" href="#COPYFILE_XATTR"><code class="Dv">COPYFILE_XATTR</code></a></dt>
+  <dd>Copy the source file's extended attributes.</dd>
+  <dt id="COPYFILE_DATA"><a class="permalink" href="#COPYFILE_DATA"><code class="Dv">COPYFILE_DATA</code></a></dt>
+  <dd>Copy the source file's data.</dd>
+</dl>
+<p class="Pp">These values may be or'd together; several convenience macros are
+    provided:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_SECURITY"><a class="permalink" href="#COPYFILE_SECURITY"><code class="Dv">COPYFILE_SECURITY</code></a></dt>
+  <dd>Copy the source file's POSIX and ACL information; equivalent to
+      <code class="Dv">(COPYFILE_STAT|COPYFILE_ACL)</code>.</dd>
+  <dt id="COPYFILE_METADATA"><a class="permalink" href="#COPYFILE_METADATA"><code class="Dv">COPYFILE_METADATA</code></a></dt>
+  <dd>Copy the metadata; equivalent to
+      <code class="Dv">(COPYFILE_SECURITY|COPYFILE_XATTR)</code>.</dd>
+  <dt id="COPYFILE_ALL"><a class="permalink" href="#COPYFILE_ALL"><code class="Dv">COPYFILE_ALL</code></a></dt>
+  <dd>Copy the entire file; equivalent to
+      <code class="Dv">(COPYFILE_METADATA|COPYFILE_DATA)</code>.</dd>
+</dl>
+<p class="Pp" id="copyfile~2">The
+    <a class="permalink" href="#copyfile~2"><code class="Fn">copyfile</code></a>()
+    and <code class="Fn">fcopyfile</code>() functions can also have their
+    behavior modified by the following flags:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_RECURSIVE"><a class="permalink" href="#COPYFILE_RECURSIVE"><code class="Dv">COPYFILE_RECURSIVE</code></a></dt>
+  <dd>Causes <code class="Fn">copyfile</code>() to recursively copy a hierarchy.
+      This flag is not used by <code class="Fn">fcopyfile</code>(); see below
+      for more information.</dd>
+  <dt id="COPYFILE_CHECK"><a class="permalink" href="#COPYFILE_CHECK"><code class="Dv">COPYFILE_CHECK</code></a></dt>
+  <dd>Return a bitmask (corresponding to the <var class="Va">flags</var>
+      argument) indicating which contents would be copied; no data are actually
+      copied. (E.g., if <var class="Va">flags</var> was set to
+      <code class="Dv">COPYFILE_CHECK|COPYFILE_METADATA</code>, and the
+      <var class="Va">from</var> file had extended attributes but no ACLs, the
+      return value would be <code class="Dv">COPYFILE_XATTR .)</code></dd>
+  <dt id="COPYFILE_PACK"><a class="permalink" href="#COPYFILE_PACK"><code class="Dv">COPYFILE_PACK</code></a></dt>
+  <dd>Serialize the <var class="Va">from</var> file. The
+      <var class="Va">to</var> file is an AppleDouble-format file.</dd>
+  <dt id="COPYFILE_UNPACK"><a class="permalink" href="#COPYFILE_UNPACK"><code class="Dv">COPYFILE_UNPACK</code></a></dt>
+  <dd>Unserialize the <var class="Va">from</var> file. The
+      <var class="Va">from</var> file is an AppleDouble-format file; the
+      <var class="Va">to</var> file will have the extended attributes, ACLs,
+      resource fork, and FinderInfo data from the <var class="Va">to</var> file,
+      regardless of the <var class="Va">flags</var> argument passed in.</dd>
+  <dt id="COPYFILE_EXCL"><a class="permalink" href="#COPYFILE_EXCL"><code class="Dv">COPYFILE_EXCL</code></a></dt>
+  <dd>Fail if the <var class="Va">to</var> file already exists. (This is only
+      applicable for the <code class="Fn">copyfile</code>() function.)</dd>
+  <dt id="COPYFILE_NOFOLLOW_SRC"><a class="permalink" href="#COPYFILE_NOFOLLOW_SRC"><code class="Dv">COPYFILE_NOFOLLOW_SRC</code></a></dt>
+  <dd>Do not follow the <var class="Va">from</var> file, if it is a symbolic
+      link. (This is only applicable for the <code class="Fn">copyfile</code>()
+      function.)</dd>
+  <dt id="COPYFILE_NOFOLLOW_DST"><a class="permalink" href="#COPYFILE_NOFOLLOW_DST"><code class="Dv">COPYFILE_NOFOLLOW_DST</code></a></dt>
+  <dd>Do not follow the <var class="Va">to</var> file, if it is a symbolic link.
+      (This is only applicable for the <code class="Fn">copyfile</code>()
+      function.)</dd>
+  <dt id="COPYFILE_MOVE"><a class="permalink" href="#COPYFILE_MOVE"><code class="Dv">COPYFILE_MOVE</code></a></dt>
+  <dd>Unlink (using <a class="Xr" href="../3/remove">remove(3)</a>) the
+      <var class="Fa">from</var> file. (This is only applicable for the
+      <code class="Fn">copyfile</code>() function.) No error is returned if
+      <a class="Xr" href="../3/remove">remove(3)</a> fails. Note that
+      <a class="Xr" href="../3/remove">remove(3)</a> removes a symbolic link
+      itself, not the target of the link.</dd>
+  <dt id="COPYFILE_UNLINK"><a class="permalink" href="#COPYFILE_UNLINK"><code class="Dv">COPYFILE_UNLINK</code></a></dt>
+  <dd>Unlink the <var class="Va">to</var> file before starting. (This is only
+      applicable for the <code class="Fn">copyfile</code>() function.)</dd>
+  <dt id="COPYFILE_CLONE_FORCE"><a class="permalink" href="#COPYFILE_CLONE_FORCE"><code class="Dv">COPYFILE_CLONE_FORCE</code></a></dt>
+  <dd>Clone the file instead. This is a force flag i.e. if cloning fails, an
+      error is returned. This flag is equivalent to (COPYFILE_EXCL |
+      COPYFILE_ACL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA |
+      COPYFILE_NOFOLLOW_SRC). Note that if cloning is successful, progress
+      callbacks will not be invoked. Note also that there is no support for
+      cloning directories: if a directory is provided as the source, an error
+      will be returned. Since this flag implies COPYFILE_NOFOLLOW_SRC, symbolic
+      links themselves will be cloned instead of their targets. (This is only
+      applicable for the <code class="Fn">copyfile</code>() function.)</dd>
+  <dt id="COPYFILE_CLONE"><a class="permalink" href="#COPYFILE_CLONE"><code class="Dv">COPYFILE_CLONE</code></a></dt>
+  <dd>Try to clone the file instead. This is a best try flag i.e. if cloning
+      fails, fallback to copying the file. This flag is equivalent to
+      (COPYFILE_EXCL | COPYFILE_ACL | COPYFILE_STAT | COPYFILE_XATTR |
+      COPYFILE_DATA | COPYFILE_NOFOLLOW_SRC). Note that if cloning is
+      successful, progress callbacks will not be invoked. Note also that there
+      is no support for cloning directories: if a directory is provided as the
+      source and COPYFILE_CLONE_FORCE is not passed, this will instead copy the
+      directory. Since this flag implies COPYFILE_NOFOLLOW_SRC, symbolic links
+      themselves will be cloned instead of their targets. Recursive copying
+      however is supported, see below for more information. (This is only
+      applicable for the <code class="Fn">copyfile</code>() function.)</dd>
+  <dt id="COPYFILE_DATA_SPARSE"><a class="permalink" href="#COPYFILE_DATA_SPARSE"><code class="Dv">COPYFILE_DATA_SPARSE</code></a></dt>
+  <dd>Copy a file sparsely. This requires that the source and destination file
+      systems support sparse files with hole sizes at least as large as their
+      block sizes. This also requires that the source file is sparse, and for
+      <code class="Fn">fcopyfile</code>() the source file descriptor's offset be
+      a multiple of the minimum hole size. If COPYFILE_DATA is also specified,
+      this will fall back to a full copy if sparse copying cannot be performed
+      for any reason; otherwise, an error is returned.</dd>
+  <dt id="COPYFILE_NOFOLLOW"><a class="permalink" href="#COPYFILE_NOFOLLOW"><code class="Dv">COPYFILE_NOFOLLOW</code></a></dt>
+  <dd>This is a convenience macro, equivalent to
+      <code class="Dv">(COPYFILE_NOFOLLOW_DST</code> |
+      <a class="permalink" href="#COPYFILE_NOFOLLOW_SRC)"><code class="Dv" id="COPYFILE_NOFOLLOW_SRC)">COPYFILE_NOFOLLOW_SRC)</code></a>.</dd>
+  <dt id="COPYFILE_RUN_IN_PLACE"><a class="permalink" href="#COPYFILE_RUN_IN_PLACE"><code class="Dv">COPYFILE_RUN_IN_PLACE</code></a></dt>
+  <dd>If the src file has quarantine information, add the
+      QTN_FLAG_DO_NOT_TRANSLOCATE flag to the quarantine information of the dst
+      file. This allows a bundle to run in place instead of being
+    translocated.</dd>
+  <dt id="COPYFILE_PRESERVE_DST_TRACKED"><a class="permalink" href="#COPYFILE_PRESERVE_DST_TRACKED"><code class="Dv">COPYFILE_PRESERVE_DST_TRACKED</code></a></dt>
+  <dd>Preserve the UF_TRACKED flag at <var class="Va">to</var> when copying
+      metadata, regardless of whether <var class="Va">from</var> has it set.
+      This flag is used in conjunction with COPYFILE_STAT, or COPYFILE_CLONE
+      (for its fallback case).</dd>
+</dl>
+<p class="Pp">Copying files into a directory is supported. If
+    <var class="Va">to</var> is a directory, <var class="Va">from</var> will be
+    copied into <var class="Va">to</var> (if <var class="Va">from</var> is a
+    directory, copying its contents requires use of the COPYFILE_RECURSIVE
+    parameter, which is documented below).</p>
+<p class="Pp" id="copyfile_state_get">The
+    <a class="permalink" href="#copyfile_state_get"><code class="Fn">copyfile_state_get</code></a>()
+    and
+    <a class="permalink" href="#copyfile_state_set"><code class="Fn" id="copyfile_state_set">copyfile_state_set</code></a>()
+    functions can be used to manipulate the
+    <var class="Ft">copyfile_state_t</var> object returned by
+    <code class="Fn">copyfile_state_alloc</code>(). In both functions, the
+    <var class="Va">dst</var> parameter's type depends on the
+    <var class="Va">flag</var> parameter that is passed in.</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_STATE_SRC_FD"><a class="permalink" href="#COPYFILE_STATE_SRC_FD"><code class="Dv">COPYFILE_STATE_SRC_FD</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+  <dt id="COPYFILE_STATE_DST_FD"><a class="permalink" href="#COPYFILE_STATE_DST_FD"><code class="Dv">COPYFILE_STATE_DST_FD</code></a></dt>
+  <dd>Get or set the file descriptor associated with the source (or destination)
+      file. If this has not been initialized yet, the value will be -2. The
+      <var class="Va">dst</var> (for
+      <code class="Fn">copyfile_state_get</code>()) and
+      <var class="Va">src</var> (for
+      <code class="Fn">copyfile_state_set</code>()) parameters are pointers to
+      <var class="Vt">int</var>.</dd>
+  <dt id="COPYFILE_STATE_SRC_FILENAME"><a class="permalink" href="#COPYFILE_STATE_SRC_FILENAME"><code class="Dv">COPYFILE_STATE_SRC_FILENAME</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+  <dt id="COPYFILE_STATE_DST_FILENAME"><a class="permalink" href="#COPYFILE_STATE_DST_FILENAME"><code class="Dv">COPYFILE_STATE_DST_FILENAME</code></a></dt>
+  <dd>Get or set the filename associated with the source (or destination) file.
+      If it has not been initialized yet, the value will be
+      <code class="Dv">NULL</code>. For
+      <code class="Fn">copyfile_state_set</code>(), the
+      <var class="Va">src</var> parameter is a pointer to a C string (i.e.,
+      <var class="Vt">char* );</var>
+      <code class="Fn">copyfile_state_set</code>() makes a private copy of this
+      string. For <code class="Fn">copyfile_state_get</code>() function, the
+      <var class="Va">dst</var> parameter is a pointer to a pointer to a C
+      string (i.e., <var class="Vt">char** );</var> the returned value is a
+      pointer to the <var class="Va">state 's</var> copy, and must not be
+      modified or released.</dd>
+  <dt id="COPYFILE_STATE_STATUS_CB"><a class="permalink" href="#COPYFILE_STATE_STATUS_CB"><code class="Dv">COPYFILE_STATE_STATUS_CB</code></a></dt>
+  <dd>Get or set the callback status function (currently only used for recursive
+      copies; see below for details). The <var class="Va">src</var> parameter is
+      a pointer to a function of type <var class="Vt">copyfile_callback_t</var>
+      (see above).</dd>
+  <dt id="COPYFILE_STATE_STATUS_CTX"><a class="permalink" href="#COPYFILE_STATE_STATUS_CTX"><code class="Dv">COPYFILE_STATE_STATUS_CTX</code></a></dt>
+  <dd>Get or set the context parameter for the status call-back function (see
+      below for details). The <var class="Va">src</var> parameter is a
+      <var class="Vt">void&#x00A0;*</var>.</dd>
+  <dt id="COPYFILE_STATE_QUARANTINE"><a class="permalink" href="#COPYFILE_STATE_QUARANTINE"><code class="Dv">COPYFILE_STATE_QUARANTINE</code></a></dt>
+  <dd>Get or set the quarantine information with the source file. The
+      <var class="Va">src</var> parameter is a pointer to an opaque object (type
+      <var class="Vt">void&#x00A0;*</var> ).</dd>
+  <dt id="COPYFILE_STATE_COPIED"><a class="permalink" href="#COPYFILE_STATE_COPIED"><code class="Dv">COPYFILE_STATE_COPIED</code></a></dt>
+  <dd>Get the number of data bytes copied so far. (Only valid for
+      <code class="Fn">copyfile_state_get</code>(); see below for more details
+      about callbacks.) If a <code class="Dv">COPYFILE_CLONE</code> or
+      <code class="Dv">COPYFILE_CLONE_FORCE</code> operation successfully cloned
+      the requested objects, then this value will be 0. The
+      <var class="Va">dst</var> parameter is a pointer to
+      <var class="Vt">off_t</var> (type <var class="Vt">off_t&#x00A0;*
+    ).</var></dd>
+  <dt id="COPYFILE_STATE_XATTRNAME"><a class="permalink" href="#COPYFILE_STATE_XATTRNAME"><code class="Dv">COPYFILE_STATE_XATTRNAME</code></a></dt>
+  <dd>Get the name of the extended attribute during a callback for
+      <code class="Dv">COPYFILE_COPY_XATTR</code> (see below for details). This
+      field cannot be set, and may be <code class="Dv">NULL</code>.</dd>
+  <dt id="COPYFILE_STATE_WAS_CLONED"><a class="permalink" href="#COPYFILE_STATE_WAS_CLONED"><code class="Dv">COPYFILE_STATE_WAS_CLONED</code></a></dt>
+  <dd>True if a <code class="Dv">COPYFILE_CLONE</code> or
+      <code class="Dv">COPYFILE_CLONE_FORCE</code> operation successfully cloned
+      the requested objects. The <var class="Va">dst</var> parameter is a
+      pointer to <var class="Vt">bool</var> (type <var class="Vt">bool&#x00A0;*
+      ).</var></dd>
+  <dt id="COPYFILE_STATE_SRC_BSIZE"><a class="permalink" href="#COPYFILE_STATE_SRC_BSIZE"><code class="Dv">COPYFILE_STATE_SRC_BSIZE</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+  <dt id="COPYFILE_STATE_DST_BSIZE"><a class="permalink" href="#COPYFILE_STATE_DST_BSIZE"><code class="Dv">COPYFILE_STATE_DST_BSIZE</code></a></dt>
+  <dd style="width: auto;">&#x00A0;</dd>
+  <dt id="COPYFILE_STATE_BSIZE"><a class="permalink" href="#COPYFILE_STATE_BSIZE"><code class="Dv">COPYFILE_STATE_BSIZE</code></a></dt>
+  <dd>Get or set the copy blocksize associated with the source or destination
+      file (or both). The caller must ensure that its environment does not
+      restrict a memory allocation of this size. If the copy blocksize for the
+      destination file is specified to be larger than the copy blocksize for the
+      source file, it will be ignored. If this has not been initialized by the
+      caller, the value will be 0. The <var class="Va">dst</var> parameter and
+      the <var class="Va">src</var> parameter are pointers to
+      <var class="Vt">uint32_t</var> (type <var class="Vt">uint32_t&#x00A0;*
+      ).</var></dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Recursive_Copies"><a class="permalink" href="#Recursive_Copies">Recursive
+  Copies</a></h1>
+<p class="Pp">When given the <code class="Dv">COPYFILE_RECURSIVE</code> flag,
+    <code class="Fn">copyfile</code>() (but not
+    <code class="Fn">fcopyfile</code>()) will use the
+    <a class="Xr" href="../3/fts">fts(3)</a> functions to recursively descend
+    into the source file-system object. It then calls
+    <code class="Fn">copyfile</code>() on each of the entries it finds that way.
+    If a call-back function is given (using
+    <code class="Fn">copyfile_state_set</code>() and
+    <code class="Dv">COPYFILE_STATE_STATUS_CB ),</code> the call-back function
+    will be called four times for each directory object, and twice for all other
+    objects. (Each directory will be examined twice, once on entry -- before
+    copying each of the objects contained in the directory -- and once on exit
+    -- after copying each object contained in the directory, in order to perform
+    some final cleanup.)</p>
+<p class="Pp">The call-back function will have one of the following values as
+    the first argument, indicating what is being copied:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_RECURSE_FILE"><a class="permalink" href="#COPYFILE_RECURSE_FILE"><code class="Dv">COPYFILE_RECURSE_FILE</code></a></dt>
+  <dd>The object being copied is a file (or, rather, something other than a
+      directory).</dd>
+  <dt id="COPYFILE_RECURSE_DIR"><a class="permalink" href="#COPYFILE_RECURSE_DIR"><code class="Dv">COPYFILE_RECURSE_DIR</code></a></dt>
+  <dd>The object being copied is a directory, and is being entered. (That is,
+      none of the filesystem objects contained within the directory have been
+      copied yet.)</dd>
+  <dt id="COPYFILE_RECURSE_DIR_CLEANUP"><a class="permalink" href="#COPYFILE_RECURSE_DIR_CLEANUP"><code class="Dv">COPYFILE_RECURSE_DIR_CLEANUP</code></a></dt>
+  <dd>The object being copied is a directory, and all of the objects contained
+      have been copied. At this stage, the destination directory being copied
+      will have any extra permissions that were added to allow the copying will
+      be removed.</dd>
+  <dt id="COPYFILE_RECURSE_ERROR"><a class="permalink" href="#COPYFILE_RECURSE_ERROR"><code class="Dv">COPYFILE_RECURSE_ERROR</code></a></dt>
+  <dd>There was an error in processing an element of the source hierarchy; this
+      happens when <a class="Xr" href="../3/fts">fts(3)</a> returns an error or
+      unknown file type. (Currently, the second argument to the call-back
+      function will always be <code class="Dv">COPYFILE_ERR</code> in this
+      case.)</dd>
+</dl>
+<p class="Pp">The second argument to the call-back function will indicate the
+    stage of the copy, and will be one of the following values:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_START"><a class="permalink" href="#COPYFILE_START"><code class="Dv">COPYFILE_START</code></a></dt>
+  <dd>Before copying has begun. The third parameter will be a newly-created
+      <var class="Vt">copyfile_state_t</var> object with the call-back function
+      and context pre-loaded.</dd>
+  <dt id="COPYFILE_FINISH"><a class="permalink" href="#COPYFILE_FINISH"><code class="Dv">COPYFILE_FINISH</code></a></dt>
+  <dd>After copying has successfully finished.</dd>
+  <dt id="COPYFILE_ERR"><a class="permalink" href="#COPYFILE_ERR"><code class="Dv">COPYFILE_ERR</code></a></dt>
+  <dd>Indicates an error has happened at some stage. If the first argument to
+      the call-back function is <code class="Dv">COPYFILE_RECURSE_ERROR</code>,
+      then an error occurred while processing the source hierarchy; otherwise,
+      it will indicate what type of object was being copied, and
+      <code class="Dv">errno</code> will be set to indicate the error.</dd>
+</dl>
+<p class="Pp">The fourth and fifth parameters are the source and destination
+    paths that are to be copied (or have been copied, or failed to copy,
+    depending on the second argument).</p>
+<p class="Pp">The last argument to the call-back function will be the value set
+    by <code class="Dv">COPYFILE_STATE_STATUS_CTX</code>, if any.</p>
+<p class="Pp">The call-back function is required to return one of the following
+    values:</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_CONTINUE"><a class="permalink" href="#COPYFILE_CONTINUE"><code class="Dv">COPYFILE_CONTINUE</code></a></dt>
+  <dd>The copy will continue as expected.</dd>
+  <dt id="COPYFILE_SKIP"><a class="permalink" href="#COPYFILE_SKIP"><code class="Dv">COPYFILE_SKIP</code></a></dt>
+  <dd>This object will be skipped, and the next object will be processed. (Note
+      that, when entering a directory, returning
+      <code class="Dv">COPYFILE_SKIP</code> from the call-back function will
+      prevent the contents of the directory from being copied.)</dd>
+  <dt id="COPYFILE_QUIT"><a class="permalink" href="#COPYFILE_QUIT"><code class="Dv">COPYFILE_QUIT</code></a></dt>
+  <dd>The entire copy is aborted at this stage. Any filesystem objects created
+      up to this point will remain.
+      <a class="permalink" href="#copyfile~3"><code class="Fn" id="copyfile~3">copyfile</code></a>()
+      will return -1, but <code class="Dv">errno</code> will be unmodified.</dd>
+</dl>
+<p class="Pp">The call-back function must always return one of the values listed
+    above; if not, the results are undefined.</p>
+<p class="Pp">The call-back function will be called twice for each object (and
+    an additional two times for directory cleanup); the first call will have a
+    <var class="Ar">stage</var> parameter of
+    <code class="Dv">COPYFILE_START</code>; the second time, that value will be
+    either <code class="Dv">COPYFILE_FINISH</code> or
+    <code class="Dv">COPYFILE_ERR</code> to indicate a successful completion, or
+    an error during processing. In the event of an error, the
+    <code class="Dv">errno</code> value will be set appropriately.</p>
+<p class="Pp" id="copyfile~4">Note that recursive cloning is also supported with
+    the <code class="Dv">COPYFILE_CLONE</code> flag (but not the
+    <code class="Dv">COPYFILE_CLONE_FORCE</code> flag). A recursive clone
+    operation invokes
+    <a class="permalink" href="#copyfile~4"><code class="Fn">copyfile</code></a>()
+    with <code class="Dv">COPYFILE_CLONE</code> on every entry found in the
+    source file-system object. Because <code class="Fn">copyfile</code>() does
+    not allow the cloning of directories, a recursive clone will instead copy
+    any directory it finds (while cloning its contents). As symbolic links may
+    point to directories, they are not followed during recursive clones even if
+    the source is a symbolic link. Additionally, because the
+    <code class="Dv">COPYFILE_CLONE</code> flag implies the
+    <code class="Dv">COPYFILE_EXCL</code> flag, recursive clones require a
+    nonexistent destination.</p>
+<p class="Pp">The <code class="Dv">COPYFILE_PACK</code>,
+    <code class="Dv">COPYFILE_UNPACK</code>,
+    <code class="Dv">COPYFILE_MOVE</code>, and
+    <code class="Dv">COPYFILE_UNLINK</code> flags are not used during a
+    recursive copy, and will result in an error being returned.</p>
+<p class="Pp" id="copyfile~5">Note that if the source path ends in a
+    <var class="Va">/</var> its contents are copied rather than the directory
+    itself (like cp(1)). The behavior of a recursive copy on a directory
+    hierarchy also depends on the contents of the destination. If the
+    destination is a directory, the source directory (or its contents, if the
+    source path ends in a <var class="Va">/</var> ) will be copied into it. If
+    the destination exists but is not a directory, and the source is a non-empty
+    directory, the copy will fail; the exact error set depends on the flags
+    provided to
+    <a class="permalink" href="#copyfile~5"><code class="Fn">copyfile</code></a>()
+    initially.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Progress_Callback"><a class="permalink" href="#Progress_Callback">Progress
+  Callback</a></h1>
+<p class="Pp">In addition to the recursive callbacks described above,
+    <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>()
+    will also use a callback to report data (e.g.,
+    <code class="Dv">COPYFILE_DATA</code>) progress. If given, the callback will
+    be invoked on each <a class="Xr" href="../2/write">write(2)</a> call. The
+    first argument to the callback function will be
+    <code class="Dv">COPYFILE_COPY_DATA</code>. The second argument will either
+    be <code class="Dv">COPYFILE_PROGRESS</code> (indicating that the write was
+    successful), or <code class="Dv">COPYFILE_ERR</code> (indicating that there
+    was an error of some sort).</p>
+<p class="Pp" id="copyfile_state_get~2">The amount of data bytes copied so far
+    can be retrieved using
+    <a class="permalink" href="#copyfile_state_get~2"><code class="Fn">copyfile_state_get</code></a>(),
+    with the <code class="Dv">COPYFILE_STATE_COPIED</code> requestor (the
+    argument type is a pointer to <var class="Vt">off_t ).</var></p>
+<p class="Pp" id="copyfile_state_get~3">When copying extended attributes, the
+    first argument to the callback function will be
+    <code class="Dv">COPYFILE_COPY_XATTR</code>. The other arguments will be as
+    described for <code class="Dv">COPYFILE_COPY_DATA</code>; the name of the
+    extended attribute being copied may be retrieved using
+    <a class="permalink" href="#copyfile_state_get~3"><code class="Fn">copyfile_state_get</code></a>()
+    and the parameter <code class="Dv">COPYFILE_STATE_XATTRNAME</code>. When
+    using <code class="Dv">COPYFILE_PACK</code>, the callback may be called with
+    <code class="Dv">COPYFILE_START</code> for each of the extended attributes
+    first, followed by <code class="Dv">COPYFILE_PROGRESS</code> before getting
+    and packing the data for each individual attribute, and then
+    <code class="Dv">COPYFILE_FINISH</code> when finished with each individual
+    attribute. (That is, <code class="Dv">COPYFILE_START</code> may be called
+    for all of the extended attributes, before the first callback with
+    <code class="Dv">COPYFILE_PROGRESS</code> is invoked.) Any attribute skipped
+    by returning <code class="Dv">COPYFILE_SKIP</code> from the
+    <code class="Dv">COPYFILE_START</code> callback will not be placed into the
+    packed output file.</p>
+<p class="Pp">The return value for the data callback must be one of</p>
+<dl class="Bl-tag">
+  <dt id="COPYFILE_CONTINUE~2"><a class="permalink" href="#COPYFILE_CONTINUE~2"><code class="Dv">COPYFILE_CONTINUE</code></a></dt>
+  <dd>The copy will continue as expected. (In the case of error, it will attempt
+      to write the data again.)</dd>
+  <dt id="COPYFILE_SKIP~2"><a class="permalink" href="#COPYFILE_SKIP~2"><code class="Dv">COPYFILE_SKIP</code></a></dt>
+  <dd>The data copy will be aborted, but without error.</dd>
+  <dt id="COPYFILE_QUIT~2"><a class="permalink" href="#COPYFILE_QUIT~2"><code class="Dv">COPYFILE_QUIT</code></a></dt>
+  <dd>The data copy will be aborted; in the case of
+      <code class="Dv">COPYFILE_PROGRESS</code>, <code class="Dv">errno</code>
+      will be set to <code class="Dv">ECANCELED</code>.</dd>
+</dl>
+<p class="Pp" id="fcopyfile">While the <var class="Va">src</var> and
+    <var class="Va">dst</var> parameters will be passed in, they may be
+    <code class="Dv">NULL</code> in the case of
+    <a class="permalink" href="#fcopyfile"><code class="Fn">fcopyfile</code></a>().</p>
+<p class="Pp">Note that progress callbacks are not invoked when a clone is
+    requested (e.g. <code class="Dv">COPYFILE_CLONE</code>) unless the clone
+    cannot be performed and a copy is performed instead.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">Except when given the <code class="Dv">COPYFILE_CHECK</code> flag,
+    <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>()
+    return less than 0 on error, and 0 on success. All of the other functions
+    return 0 on success, and less than 0 on error.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="WARNING"><a class="permalink" href="#WARNING">WARNING</a></h1>
+<p class="Pp">Both
+    <a class="permalink" href="#copyfile~6"><code class="Fn" id="copyfile~6">copyfile</code></a>()
+    and <code class="Fn">fcopyfile</code>() can copy symbolic links; there is a
+    gap between when the source link is examined and the actual copy is started,
+    and this can be a potential security risk, especially if the process has
+    elevated privileges.</p>
+<p class="Pp">When performing a recursive copy, if the source hierarchy changes
+    while the copy is occurring, the results are undefined.</p>
+<p class="Pp" id="fcopyfile~2"><a class="permalink" href="#fcopyfile~2"><code class="Fn">fcopyfile</code></a>()
+    does not reset the seek position for either source or destination. This can
+    result in the destination file being a different size than the source
+  file.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<div class="Bd Bd-indent">
+<pre>
+/* Initialize a state variable */
+copyfile_state_t s;
+s = copyfile_state_alloc();
+/* Copy the data and extended attributes of one file to another */
+copyfile(&quot;/tmp/f1&quot;, &quot;/tmp/f2&quot;, s, COPYFILE_DATA | COPYFILE_XATTR);
+/* Convert a file to an AppleDouble file for serialization */
+copyfile(&quot;/tmp/f2&quot;, &quot;/tmp/tmpfile&quot;, NULL, COPYFILE_ALL | COPYFILE_PACK);
+/* Release the state variable */
+copyfile_state_free(s);
+/* A more complex way to call copyfile() */
+s = copyfile_state_alloc();
+copyfile_state_set(s, COPYFILE_STATE_SRC_FILENAME, &quot;/tmp/foo&quot;);
+/* One of src or dst must be set... rest can come from the state */
+copyfile(NULL, &quot;/tmp/bar&quot;, s, COPYFILE_ALL);
+/* Now copy the same source file to another destination file */
+copyfile(NULL, &quot;/tmp/car&quot;, s, COPYFILE_ALL);
+copyfile_state_free(s);
+/* Remove extended attributes from a file */
+copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);
+</pre>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp"><code class="Fn">copyfile</code>() and
+    <code class="Fn">fcopyfile</code>() will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>An invalid flag was passed in with
+      <code class="Dv">COPYFILE_RECURSIVE</code>.</dd>
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Va">from</var> or <var class="Va">to</var> parameter to
+      <code class="Fn">copyfile</code>() was a <code class="Dv">NULL</code>
+      pointer.</dd>
+  <dt id="EINVAL~3">[<a class="permalink" href="#EINVAL~3"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Va">from</var> or <var class="Va">to</var> parameter to
+      <code class="Fn">fcopyfile</code>() was a negative number.</dd>
+  <dt id="ENOMEM">[<a class="permalink" href="#ENOMEM"><code class="Er">ENOMEM</code></a>]</dt>
+  <dd>A memory allocation failed.</dd>
+  <dt id="ENOTSUP">[<a class="permalink" href="#ENOTSUP"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd>The source file was not a directory, symbolic link, or regular file.</dd>
+  <dt id="ENOTSUP~2">[<a class="permalink" href="#ENOTSUP~2"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd>COPYFILE_CLONE_FORCE was specified and file cloning is not supported.</dd>
+  <dt id="ENOTSUP~3">[<a class="permalink" href="#ENOTSUP~3"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd>COPYFILE_DATA_SPARSE was specified, sparse copying is not supported, and
+      COPYFILE_DATA was not specified.</dd>
+  <dt id="ECANCELED">[<a class="permalink" href="#ECANCELED"><code class="Er">ECANCELED</code></a>]</dt>
+  <dd>The copy was cancelled by callback.</dd>
+  <dt id="EEXIST">[<a class="permalink" href="#EEXIST"><code class="Er">EEXIST</code></a>]</dt>
+  <dd>The <var class="Va">to</var> parameter to
+      <code class="Fn">copyfile</code>() already existed and was passed in with
+      <code class="Dv">COPYFILE_EXCL</code>.</dd>
+  <dt id="ENOENT">[<a class="permalink" href="#ENOENT"><code class="Er">ENOENT</code></a>]</dt>
+  <dd>The <var class="Va">from</var> parameter to
+      <code class="Fn">copyfile</code>() did not exist.</dd>
+  <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
+  <dd>Search permission is denied for a component of the path prefix for the
+      <var class="Va">from</var> or <var class="Va">to</var> parameters.</dd>
+  <dt id="EACCES~2">[<a class="permalink" href="#EACCES~2"><code class="Er">EACCES</code></a>]</dt>
+  <dd>Write permission is denied for a component of the path prefix for the
+      <var class="Va">to</var> parameter.</dd>
+</dl>
+<p class="Pp">In addition, both functions may set <code class="Dv">errno</code>
+    via an underlying library or system call.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../2/getxattr">getxattr(2)</a>,
+    <a class="Xr" href="../2/listxattr">listxattr(2)</a>,
+    <a class="Xr" href="../2/setxattr">setxattr(2)</a>,
+    <a class="Xr" href="../3/acl">acl(3)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Fn">copyfile</code>() API was introduced in Mac
+    OS X 10.5.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">Recursive copies do not honor hard links.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">May 19, 2021</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

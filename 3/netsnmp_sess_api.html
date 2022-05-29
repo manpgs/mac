@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>NETSNMP_SESS_API(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">NETSNMP_SESS_API(3)</td>
+    <td class="head-vol">Net-SNMP</td>
+    <td class="head-rtitle">NETSNMP_SESS_API(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">snmp_sess_init, snmp_sess_open, snmp_sess_session, snmp_sess_send,
+    snmp_sess_async_send, snmp_sess_select_info, snmp_sess_read,
+    snmp_sess_timeout, snmp_sess_close, snmp_sess_error - session functions</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>#include &lt;net-snmp/session_api.h&gt;</b></p>
+<p class="Pp"><b>void snmp_sess_init(struct snmp_session
+    *</b><i>session</i><b>);</b></p>
+<p class="Pp"><b>void *snmp_sess_open(struct snmp_session
+    *</b><i>session</i><b>);</b></p>
+<p class="Pp"><b>struct snmp_session *snmp_sess_session(void
+    *</b><i>handle</i><b>);</b></p>
+<p class="Pp"><b>int snmp_sess_send(void *</b><i>handle</i><b>, struct snmp_pdu
+    *</b><i>pdu</i><b>);</b></p>
+<p class="Pp"><b>int snmp_sess_async_send(void *</b><i>handle</i><b>,</b>
+  <br/>
+  <b> struct snmp_pdu *</b><i>pdu</i><b>, </b>
+  <br/>
+  <b> snmp_callback </b><i>callback</i><b>, </b>
+  <br/>
+  <b> void *</b><i>callbackData</i><b>);</b></p>
+<p class="Pp"><b>int snmp_sess_select_info(void *</b><i>handle</i><b>,</b>
+  <br/>
+  <b> int *</b><i>numfds</i><b>, fd_set *</b><i>fdset</i><b>, </b>
+  <br/>
+  <b> struct timeval *</b><i>timeout</i><b>, </b>
+  <br/>
+  <b> int *</b><i>block</i><b>);</b></p>
+<p class="Pp"><b>int snmp_sess_read(void *</b><i>handle</i><b>, fd_set
+    *</b><i>fdset</i><b>);</b></p>
+<p class="Pp"><b>void snmp_sess_timeout(void *</b><i>handle</i><b>);</b></p>
+<p class="Pp"><b>int snmp_sess_close(void *</b><i>handle</i><b>);</b></p>
+<p class="Pp"><b>void snmp_sess_error(void *</b><i>handle</i><b>, int
+    *</b><i>pcliberr</i><b>, </b>
+  <br/>
+  <b> int *</b><i>psnmperr</i><b>, char **</b><i>pperrstring</i><b>);</b></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">These functions define a subset of the API that can be used to
+    manage single SNMP sessions in a multi-threaded application. Except for
+    <b>snmp_sess_session()</b>, these functions are single session versions of
+    the traditional SNMP library API.</p>
+<p class="Pp">Note that these functions use an opaque pointer (<i>handle</i> in
+    the above prototypes) to identify a single session in lieu of a
+    <i>session</i> pointer (as in the traditional API).</p>
+<p class="Pp"><b>snmp_sess_init()</b> prepares a struct snmp_session that
+    sources transport characteristics and common information that will be used
+    for a set of SNMP transactions. After this structure is passed to
+    <b>snmp_sess_open()</b> to create an SNMP session, the structure is no
+    longer used. Instead the opaque pointer returned by <b>snmp_sess_open()</b>
+    is used to refer to that session henceforth.</p>
+<p class="Pp">SNMP sessions that are created with <b>snmp_sess_open()</b> are
+    not affected by, and SHOULD NOT BE USED WITH, <b>snmp_select_info()</b>,
+    <b>snmp_read()</b>, <b>snmp_timeout()</b> nor <b>snmp_close()</b>. Rather
+    the equivalent single session functions described here should be used.</p>
+<p class="Pp"><b>snmp_sess_init()</b> and <b>snmp_sess_open()</b> each take as
+    input a pointer to a struct snmp_session object. This structure contains
+    information for a set of transactions that will share similar transport
+    characteristics. <b>snmp_sess_session()</b> takes the opaque session handle
+    and returns a pointer to its associated struct snmp_session.</p>
+<p class="Pp"><b>snmp_sess_send()</b> and <b>snmp_sess_async_send()</b> each
+    take a <i>pdu</i> parameter, which points to a struct snmp_pdu object
+    containing information that describes a transaction that will be performed
+    over an open session.</p>
+<p class="Pp">Consult snmp_api.h for the definitions of these structures.</p>
+<p class="Pp"><b>snmp_sess_select_info()</b>, <b>snmp_sess_read()</b> and
+    <b>snmp_sess_timeout()</b> provide an interface for the use of the
+    <b>select</b>(2) system call so that SNMP transactions for a single session
+    can occur asynchronously.</p>
+<p class="Pp"><b>snmp_sess_select_info()</b> is passed the information that
+    would have been passed to <b>select</b>(2) in the absence of SNMP. For
+    example, this might include file descriptors associated with the main loop
+    of a graphical application. This information is modified so that SNMP will
+    get the service it requires from the call to <b>select</b>(2). In this case,
+    <i>numfds</i>, <i>fdset</i> and <i>timeout</i> correspond to the
+    <i>nfds</i>, <i>readfds</i> and <i>timeout</i> arguments to <b>select</b>(2)
+    respectively. The only exception is that timeout must ALWAYS point to an
+    allocated (but perhaps uninitialized) <i>struct timeval</i> (it cannot be
+    NULL as for <b>select</b>(2)). If <i>timeout</i> would have been passed as
+    NULL, <i>block</i> is instead set to true, and <i>timeout</i> is treated as
+    undefined. This same rule applies upon return from
+    <b>snmp_select_info()</b>.</p>
+<p class="Pp">After calling <b>snmp_sess_select_info() ,</b> <b>select</b>(2)
+    should be called with the returned data. When it returns,
+    <b>snmp_sess_read()</b> should then be called with the <i>fd_set</i>
+    returned from <b>select</b>(2). This will read any input from this session's
+    SNMP socket. If <b>select</b>(2) times out (that is, it returns zero),
+    <b>snmp_sess_timeout()</b> should be called to see if a timeout has occurred
+    on the SNMP session.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DIAGNOSTICS"><a class="permalink" href="#DIAGNOSTICS">DIAGNOSTICS</a></h1>
+<p class="Pp">Error return status from <b>snmp_sess_open()</b> is indicated by
+    return of a NULL pointer. Error return status from <b>snmp_sess_close()</b>
+    and <b>snmp_sess_send()</b> is indicated by a return value of 0. A
+    successful status will return 1.</p>
+<p class="Pp">Further information can be obtained by using
+    <b>snmp_sess_error()</b> to see what type of error has occurred. This
+    function returns the SNMP <i>snmp_errno</i> variable, the value of the
+    system <i>errno</i> variable, and a string interpretation of both variables.
+    The string must be freed after use by the caller.</p>
+<p class="Pp">For errors returned by <b>snmp_sess_open()</b>, use the
+    corresponding function <b>snmp_error()</b> instead of
+    <b>snmp_sess_error()</b>.</p>
+<p class="Pp">Consult snmp_api.h for the complete set of SNMP library error
+    values. The SNMP library error value <i>snmperr</i> can be one of the
+    following values:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="SNMPERR_GENERR"><a class="permalink" href="#SNMPERR_GENERR">SNMPERR_GENERR</a></dt>
+  <dd>A generic error occurred.</dd>
+  <dt id="SNMPERR_BAD_LOCPORT"><a class="permalink" href="#SNMPERR_BAD_LOCPORT">SNMPERR_BAD_LOCPORT</a></dt>
+  <dd>The local port was bad because it had already been allocated or permission
+      was denied.</dd>
+  <dt id="SNMPERR_BAD_ADDRESS"><a class="permalink" href="#SNMPERR_BAD_ADDRESS">SNMPERR_BAD_ADDRESS</a></dt>
+  <dd>The host name or address given was not useable.</dd>
+  <dt id="SNMPERR_BAD_SESSION"><a class="permalink" href="#SNMPERR_BAD_SESSION">SNMPERR_BAD_SESSION</a></dt>
+  <dd>The specified session was not open.</dd>
+  <dt id="SNMPERR_TOO_LONG"><a class="permalink" href="#SNMPERR_TOO_LONG">SNMPERR_TOO_LONG</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_NO_SOCKET"><a class="permalink" href="#SNMPERR_NO_SOCKET">SNMPERR_NO_SOCKET</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_V2_IN_V1"><a class="permalink" href="#SNMPERR_V2_IN_V1">SNMPERR_V2_IN_V1</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_V1_IN_V2"><a class="permalink" href="#SNMPERR_V1_IN_V2">SNMPERR_V1_IN_V2</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_REPEATERS"><a class="permalink" href="#SNMPERR_BAD_REPEATERS">SNMPERR_BAD_REPEATERS</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_REPETITIONS"><a class="permalink" href="#SNMPERR_BAD_REPETITIONS">SNMPERR_BAD_REPETITIONS</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_ASN1_BUILD"><a class="permalink" href="#SNMPERR_BAD_ASN1_BUILD">SNMPERR_BAD_ASN1_BUILD</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_SENDTO"><a class="permalink" href="#SNMPERR_BAD_SENDTO">SNMPERR_BAD_SENDTO</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_RCVFROM"><a class="permalink" href="#SNMPERR_BAD_RCVFROM">SNMPERR_BAD_RCVFROM</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_PARSE"><a class="permalink" href="#SNMPERR_BAD_PARSE">SNMPERR_BAD_PARSE</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_VERSION"><a class="permalink" href="#SNMPERR_BAD_VERSION">SNMPERR_BAD_VERSION</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_BAD_COMMUNITY"><a class="permalink" href="#SNMPERR_BAD_COMMUNITY">SNMPERR_BAD_COMMUNITY</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_NOAUTH_DESPRIV"><a class="permalink" href="#SNMPERR_NOAUTH_DESPRIV">SNMPERR_NOAUTH_DESPRIV</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_ABORT"><a class="permalink" href="#SNMPERR_ABORT">SNMPERR_ABORT</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_UNKNOWN_PDU"><a class="permalink" href="#SNMPERR_UNKNOWN_PDU">SNMPERR_UNKNOWN_PDU</a></dt>
+  <dd></dd>
+  <dt id="SNMPERR_TIMEOUT"><a class="permalink" href="#SNMPERR_TIMEOUT">SNMPERR_TIMEOUT</a></dt>
+  <dd></dd>
+</dl>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>select</b>(2), <b>snmp_api</b>(3), <b>snmp_api.h</b></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">19 May 2011</td>
+    <td class="foot-os">V5.6.2.1</td>
+  </tr>
+</table>
+</body>
+</html>

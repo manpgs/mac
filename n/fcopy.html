@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1993 The Regents of the University of California.
+   Copyright (c) 1994-1997 Sun Microsystems, Inc.
+  
+   See the file "license.terms" for information on usage and redistribution
+   of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+  
+   RCS: @(#) $Id: fcopy.n,v 1.17 2007/12/13 15:22:32 dgp Exp $
+  
+   The -*- nroff -*- definitions below are for supplemental macros used
+   in Tcl/Tk manual entries.
+  
+   .AP type name in/out ?indent?
+  	Start paragraph describing an argument to a library procedure.
+  	type is type of argument (int, etc.), in/out is either "in", "out",
+  	or "in/out" to describe whether procedure reads or modifies arg,
+  	and indent is equivalent to second arg of .IP (shouldn't ever be
+  	needed;  use .AS below instead)
+  
+   .AS ?type? ?name?
+  	Give maximum sizes of arguments for setting tab stops.  Type and
+  	name are examples of largest possible arguments that will be passed
+  	to .AP later.  If args are omitted, default tab stops are used.
+  
+   .BS
+  	Start box enclosure.  From here until next .BE, everything will be
+  	enclosed in one large box.
+  
+   .BE
+  	End of box enclosure.
+  
+   .CS
+  	Begin code excerpt.
+  
+   .CE
+  	End code excerpt.
+  
+   .VS ?version? ?br?
+  	Begin vertical sidebar, for use in marking newly-changed parts
+  	of man pages.  The first argument is ignored and used for recording
+  	the version when the .VS was added, so that the sidebars can be
+  	found and removed when they reach a certain age.  If another argument
+  	is present, then a line break is forced before starting the sidebar.
+  
+   .VE
+  	End of vertical sidebar.
+  
+   .DS
+  	Begin an indented unfilled display.
+  
+   .DE
+  	End of indented unfilled display.
+  
+   .SO ?manpage?
+  	Start of list of standard options for a Tk widget. The manpage
+  	argument defines where to look up the standard options; if
+  	omitted, defaults to "options". The options follow on successive
+  	lines, in three columns separated by tabs.
+  
+   .SE
+  	End of list of standard options for a Tk widget.
+  
+   .OP cmdName dbName dbClass
+  	Start of description of a specific option.  cmdName gives the
+  	option's name as specified in the class command, dbName gives
+  	the option's name in the option database, and dbClass gives
+  	the option's class in the option database.
+  
+   .UL arg1 arg2
+  	Print arg1 underlined, then print arg2 normally.
+  
+   .QW arg1 ?arg2?
+  	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+  
+   .PQ arg1 ?arg2?
+  	Print an open parenthesis, arg1 in quotes, then arg2 normally
+  	(for trailing punctuation) and then a closing parenthesis.
+  
+   RCS: @(#) $Id: man.macros,v 1.9 2008/01/29 15:32:33 dkf Exp $
+  
+  	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>fcopy(n)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">fcopy(n)</td>
+    <td class="head-vol">Tcl Built-In Commands</td>
+    <td class="head-rtitle">fcopy(n)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<br/>
+<pre>
+
+</pre>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">fcopy - Copy data from one channel to another</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>fcopy </b><i>inchan</i> <i>outchan</i> ?<b>-size
+    </b><i>size</i>? ?<b>-command </b><i>callback</i>?</p>
+<pre>
+
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <b>fcopy</b> command copies data from one I/O channel,
+    <i>inchan</i> to another I/O channel, <i>outchan</i>. The <b>fcopy</b>
+    command leverages the buffering in the Tcl I/O system to avoid extra copies
+    and to avoid buffering too much data in main memory when copying large files
+    to slow destinations like network sockets.</p>
+<p class="Pp">The <b>fcopy</b> command transfers data from <i>inchan</i> until
+    end of file or <i>size</i> bytes have been transferred. If no <b>-size</b>
+    argument is given, then the copy goes until end of file. All the data read
+    from <i>inchan</i> is copied to <i>outchan</i>. Without the <b>-command</b>
+    option, <b>fcopy</b> blocks until the copy is complete and returns the
+    number of bytes written to <i>outchan</i>.</p>
+<p class="Pp">The <b>-command</b> argument makes <b>fcopy</b> work in the
+    background. In this case it returns immediately and the <i>callback</i> is
+    invoked later when the copy completes. The <i>callback</i> is called with
+    one or two additional arguments that indicates how many bytes were written
+    to <i>outchan</i>. If an error occurred during the background copy, the
+    second argument is the error string associated with the error. With a
+    background copy, it is not necessary to put <i>inchan</i> or <i>outchan</i>
+    into non-blocking mode; the <b>fcopy</b> command takes care of that
+    automatically. However, it is necessary to enter the event loop by using the
+    <b>vwait</b> command or by using Tk.</p>
+<p class="Pp">You are not allowed to do other I/O operations with <i>inchan</i>
+    or <i>outchan</i> during a background <b>fcopy</b>. If either <i>inchan</i>
+    or <i>outchan</i> get closed while the copy is in progress, the current copy
+    is stopped and the command callback is <i>not</i> made. If <i>inchan</i> is
+    closed, then all data already queued for <i>outchan</i> is written out.</p>
+<p class="Pp">Note that <i>inchan</i> can become readable during a background
+    copy. You should turn off any <b>fileevent</b> handlers during a background
+    copy so those handlers do not interfere with the copy. Any I/O attempted by
+    a <b>fileevent</b> handler will get a &#x201C;channel busy&#x201D;
+  error.</p>
+<p class="Pp"><b>Fcopy</b> translates end-of-line sequences in <i>inchan</i> and
+    <i>outchan</i> according to the <b>-translation</b> option for these
+    channels. See the manual entry for <b>fconfigure</b> for details on the
+    <b>-translation</b> option. The translations mean that the number of bytes
+    read from <i>inchan</i> can be different than the number of bytes written to
+    <i>outchan</i>. Only the number of bytes written to <i>outchan</i> is
+    reported, either as the return value of a synchronous <b>fcopy</b> or as the
+    argument to the callback for an asynchronous <b>fcopy</b>.</p>
+<p class="Pp"><b>Fcopy</b> obeys the encodings and character translations
+    configured for the channels. This means that the incoming characters are
+    converted internally first UTF-8 and then into the encoding of the channel
+    <b>fcopy</b> writes to. See the manual entry for <b>fconfigure</b> for
+    details on the <b>-encoding</b> and <b>-translation</b> options. No
+    conversion is done if both channels are set to encoding
+    &#x201C;binary&#x201D; and have matching translations. If only the output
+    channel is set to encoding &#x201C;binary&#x201D; the system will write the
+    internal UTF-8 representation of the incoming characters. If only the input
+    channel is set to encoding &#x201C;binary&#x201D; the system will assume
+    that the incoming bytes are valid UTF-8 characters and convert them
+    according to the output encoding. The behaviour of the system for bytes
+    which are not valid UTF-8 characters is undefined in this case.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">The first example transfers the contents of one channel exactly to
+    another. Note that when copying one file to another, it is better to use
+    <b>file copy</b> which also copies file metadata (e.g. the file access
+    permissions) where possible.</p>
+<div class="Bd-indent">
+<pre>
+fconfigure $in -translation binary
+fconfigure $out -translation binary
+<b>fcopy</b> $in $out
+</pre>
+</div>
+<p class="Pp">This second example shows how the callback gets passed the number
+    of bytes transferred. It also uses vwait to put the application into the
+    event loop. Of course, this simplified example could be done without the
+    command callback.</p>
+<div class="Bd-indent">
+<pre>
+proc Cleanup {in out bytes {error {}}} {
+<br/>
+    global total
+<br/>
+    set total $bytes
+<br/>
+    close $in
+<br/>
+    close $out
+<br/>
+    if {[string length $error] != 0} {
+	# error occurred during the copy
+<br/>
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+<b>fcopy</b> $in $out -command [list Cleanup $in $out]
+vwait total
+</pre>
+</div>
+<p class="Pp">The third example copies in chunks and tests for end of file in
+    the command callback</p>
+<div class="Bd-indent">
+<pre>
+proc CopyMore {in out chunk bytes {error {}}} {
+<br/>
+    global total done
+<br/>
+    incr total $bytes
+<br/>
+    if {([string length $error] != 0) || [eof $in]} {
+	set done $total
+	close $in
+	close $out
+<br/>
+    } else {
+	<b>fcopy</b> $in $out -size $chunk \
+<br/>
+                -command [list CopyMore $in $out $chunk]
+<br/>
+    }
+}
+set in [open $file1]
+set out [socket $server $port]
+set chunk 1024
+set total 0
+<b>fcopy</b> $in $out -size $chunk \
+<br/>
+        -command [list CopyMore $in $out $chunk]
+vwait done
+</pre>
+</div>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">eof(n), fblocked(n), fconfigure(n), file(n)</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
+<p class="Pp">blocking, channel, end of line, end of file, nonblocking, read,
+    translation</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">8.0</td>
+    <td class="foot-os">Tcl</td>
+  </tr>
+</table>
+</body>
+</html>

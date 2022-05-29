@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>&lt;MPSNNPadding &gt;(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">&lt;MPSNNPadding &gt;(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">&lt;MPSNNPadding &gt;(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">&lt;MPSNNPadding &gt;</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSNeuralNetworkTypes.h&gt;</p>
+<p class="Pp">Inherits &lt;NSObject&gt;, and &lt;NSSecureCoding&gt;.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(<b>MPSNNPaddingMethod</b>) - <b>paddingMethod</b>
+  <br/>
+  (NSString *__nonnull) - <b>label</b>
+  <br/>
+  (<b>MPSImageDescriptor</b> *__nonnull) -
+    <b>destinationImageDescriptorForSourceImages:sourceStates:forKernel:suggestedDescriptor:</b>
+  <br/>
+  (instancetype __nullable) - <b>inverse</b>
+  <br/>
+  <br/>
+</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (<b>MPSImageDescriptor</b> * __nonnull <b>MPSNNPadding</b>)
+  destinationImageDescriptorForSourceImages: (NSArray&lt; <b>MPSImage</b> * &gt;
+  *__nonnull) sourceImages(NSArray&lt; <b>MPSState</b> * &gt; *__nullable)
+  sourceStates(<b>MPSKernel</b> *__nonnull) kernel(<b>MPSImageDescriptor</b>
+  *__nonnull) inDescriptor [optional]<b></b></h2>
+<p class="Pp">Determine padding and sizing of result images <b>A</b>
+    MPSNNPaddingMethod must both return a valid <b>MPSImageDescriptor</b> and
+    set the MPSKernel.offset to the correct value. This is a required feature if
+    the MPSNNPaddingMethodCustom bit is set in the paddingMethod.</p>
+<p class="Pp">Some code that may prove helpful:</p>
+<p class="Pp"></p>
+<pre>
+const int centeringPolicy = 0;  // When kernelSize is even: 0 pad bottom right. 1 pad top left.    Centers the kernel for even sized kernels.
+typedef enum Style{
+<br/>
+    StyleValidOnly = -1,
+<br/>
+    StyleSame = 0,
+<br/>
+    StyleFull = 1
+}Style;
+// Typical destination size in one dimension for forward filters (most filters)
+static int DestSize( int sourceSize, int stride, int filterWindowSize, Style style ){
+<br/>
+    sourceSize += style * (filterWindowSize - 1);       // adjust how many pixels we are allowed to read
+<br/>
+    return (sourceSize + stride - 1) / stride;          // sourceSize / stride, round up
+}
+// Typical destination size in one dimension for reverse filters (e.g. convolution transpose)
+static int DestSizeReverse( int sourceSize, int stride, int filterWindowSize, Style style ){
+<br/>
+    return (sourceSize-1) * stride +        // center tap for the last N-1 results. Take stride into account
+<br/>
+            1 +                             // center tap for the first result
+<br/>
+            style * (filterWindowSize-1);   // add or subtract (or ignore) the filter extent
+}
+// Find the MPSOffset in one dimension
+static int Offset( int sourceSize, int stride, int filterWindowSize, Style style ){
+<br/>
+    // The correction needed to adjust from position of left edge to center per MPSOffset definition
+<br/>
+    int correction = filterWindowSize / 2;
+<br/>
+    // exit if all we want is to start consuming pixels at the left edge of the image.
+<br/>
+    if( 0 )
+<br/>
+        return correction;
+<br/>
+    // Center the area consumed in the source image:
+<br/>
+    // Calculate the size of the destination image
+<br/>
+    int destSize = DestSize( sourceSize, stride, filterWindowSize, style ); // use DestSizeReverse here instead as appropriate
+<br/>
+    // calculate extent of pixels we need to read in source to populate the destination
+<br/>
+    int readSize = (destSize-1) * stride + filterWindowSize;
+<br/>
+    // calculate number of missing pixels in source
+<br/>
+    int extraSize = readSize - sourceSize;
+<br/>
+    // number of missing pixels on left side
+<br/>
+    int leftExtraPixels = (extraSize + centeringPolicy) / 2;
+<br/>
+    // account for the fact that the offset is based on the center pixel, not the left edge
+<br/>
+    return correction - leftExtraPixels;
+}
+</pre>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>sourceImages</i> The list of source images to be used
+<br/>
+<i>sourceStates</i> The list of source states to be used
+<br/>
+<i>kernel</i> The <b>MPSKernel</b> the padding method will be applied to. Set
+  the kernel.offset
+<br/>
+<i>inDescriptor</i> MPS will prepare a starting guess based on the padding
+  policy (exclusive of MPSNNPaddingMethodCustom) set for the object. You should
+  adjust the offset and image size accordingly. It is on an
+  autoreleasepool.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent">The <b>MPSImageDescriptor</b> to use to make a
+  <b>MPSImage</b> to capture the results from the filter. The
+  <b>MPSImageDescriptor</b> is assumed to be on an autoreleasepool. Your method
+  must also set the kernel.offset property.</div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (instancetype __nullable <b>MPSNNPadding</b>) inverse
+  [optional]<b></b></h2>
+<p class="Pp">Make a 'inverted' padding policy suitable for a training gradient
+    pass.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (NSString*__nonnull <b>MPSNNPadding</b>) label
+  [optional]<b></b></h2>
+<p class="Pp"><b>A</b> human readable string that describes the padding policy.
+    Useful for verbose debugging support.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (<b>MPSNNPaddingMethod</b> <b>MPSNNPadding</b>) paddingMethod
+  [required]<b></b></h2>
+<p class="Pp">Get the preferred padding method for the node</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

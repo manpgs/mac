@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSMatrixNeuron(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSMatrixNeuron(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSMatrixNeuron(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSMatrixNeuron</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSMatrixNeuron.h&gt;</p>
+<p class="Pp">Inherits <b>MPSMatrixUnaryKernel</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(void) - <b>setNeuronType:parameterA:parameterB:parameterC:</b>
+  <br/>
+  (<b>MPSCNNNeuronType</b>) - <b>neuronType</b>
+  <br/>
+  (float) - <b>neuronParameterA</b>
+  <br/>
+  (float) - <b>neuronParameterB</b>
+  <br/>
+  (float) - <b>neuronParameterC</b>
+  <br/>
+  (void) - <b>setNeuronToPReLUWithParametersA:</b>
+  <br/>
+  (nonnull instancetype) - <b>initWithDevice:</b>
+  <br/>
+  (void) - <b>encodeToCommandBuffer:inputMatrix:biasVector:resultMatrix:</b>
+  <br/>
+  (nullable instancetype) - <b>initWithCoder:device:</b>
+  <br/>
+  (nonnull instancetype) - <b>copyWithZone:device:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp">NSUInteger <b>sourceNumberOfFeatureVectors</b>
+  <br/>
+  NSUInteger <b>sourceInputFeatureChannels</b>
+  <br/>
+  double <b>alpha</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Additional_Inherited_Members"><a class="permalink" href="#Additional_Inherited_Members">Additional
+  Inherited Members</a></h2>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp"><b>MPSMatrixNeuron.h</b> MetalPerformanceShaders.framework</p>
+<p class="Pp"><b>Copyright:</b></p>
+<div class="Bd-indent">Copyright (c) 2018 Apple Inc. All rights reserved.
+  MPSMatrices fused with neurons</div>
+<p class="Pp">This depends on Metal.framework.</p>
+<p class="Pp"><b>A</b> neuron activation kernel that operates on matrices.</p>
+<p class="Pp"><b>A</b> <b>MPSMatrixNeuron</b> object computes:</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+            y = neuron(alpha * x + bias)
+<br/>
+        y is the output matrix, x is the input matrix corresponding
+<br/>
+        to a collection of input vectors and bias is a vector which is broadcast
+<br/>
+        and accumulated to each row of the intermediate result.
+<br/>
+        alpha is a scale factor applied to the input.
+<br/>
+        neuron() defines the pointwise function that is applied to the intermediate result.
+<br/>
+        Note: This function computes the same result as MPSMatrixFullyConnected that has
+<br/>
+                unit weight matrix.
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) copyWithZone: (nullable NSZone *)
+  zone(nullable id&lt; MTLDevice &gt;) device</h2>
+<p class="Pp">Make a copy of this kernel for a new device -</p>
+<p class="Pp"><b>See also:</b></p>
+<div class="Bd-indent"><b>MPSKernel</b></div>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>zone</i> The NSZone in which to allocate the object
+<br/>
+<i>device</i> The device for the new <b>MPSKernel</b>. If nil, then use
+  self.device.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> pointer to a copy of this <b>MPSKernel</b>. This
+  will fail, returning nil if the device is not supported. Devices must be
+  MTLFeatureSet_iOS_GPUFamily2_v1 or later.</div>
+<p class="Pp">Reimplemented from <b>MPSKernel</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) encodeToCommandBuffer: (nonnull id&lt; MTLCommandBuffer
+  &gt;) commandBuffer(<b>MPSMatrix</b> *__nonnull) inputMatrix(<b>MPSVector</b>
+  *__nullable) biasVector(<b>MPSMatrix</b> *__nonnull) resultMatrix</h2>
+<p class="Pp">Encode a <b>MPSMatrixNeuron</b> object to a command buffer.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>commandBuffer</i> <b>A</b> valid MTLCommandBuffer to
+  receive the encoded kernel.
+<br/>
+<i>inputMatrix</i> <b>A</b> valid <b>MPSMatrix</b> object which specifies the
+  input array.
+<br/>
+<i>biasVector</i> <b>A</b> valid <b>MPSVector</b> object which specifies the
+  bias values, or a null object to indicate that no bias is to be applied.
+<br/>
+<i>resultMatrix</i> <b>A</b> valid <b>MPSMatrix</b> object which specifies the
+  output array.</div>
+<p class="Pp">Encodes the operation to the specified command buffer.
+    resultMatrix must be large enough to hold a
+    MIN(sourceNumberOfFeatureVectors, inputMatrix.rows - sourceMatrixOrigin.x) x
+    MIN(inputMatrix.columns - sourceMatrixOrigin.y, sourceInputFeatureChannels)
+    array.</p>
+<p class="Pp">The bias vector must contain at least MIN(inputMatrix.columns -
+    sourceMatrixOrigin.y, sourceInputFeatureChannels) elements.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nullable instancetype) <b>initWithCoder:</b> (NSCoder
+  *__nonnull) aDecoder(nonnull id&lt; MTLDevice &gt;) device</h2>
+<p class="Pp"><b>NSSecureCoding</b> compatability See
+    <b>MPSKernel::initWithCoder</b>.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>aDecoder</i> The NSCoder subclass with your serialized
+  <b>MPSMatrixNeuron</b>
+<br/>
+<i>device</i> The MTLDevice on which to make the <b>MPSMatrixNeuron</b>
+  object.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> new <b>MPSMatrixNeuron</b> object, or nil if
+  failure.</div>
+<p class="Pp">Reimplemented from <b>MPSKernel</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) initWithDevice: (nonnull id&lt;
+  MTLDevice &gt;) device</h2>
+<p class="Pp">Standard init with default properties per filter type</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>device</i> The device that the filter will be used on.
+  May not be NULL.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent">a pointer to the newly initialized object. This will
+  fail, returning nil if the device is not supported. Devices must be
+  MTLFeatureSet_iOS_GPUFamily2_v1 or later.</div>
+<p class="Pp">Reimplemented from <b>MPSKernel</b>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (float) neuronParameterA </h2>
+<p class="Pp">Getter funtion for neuronType set using
+    setNeuronType:parameterA:parameterB:parameterC method</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (float) neuronParameterB </h2>
+<p class="Pp">Getter funtion for neuronType set using
+    setNeuronType:parameterA:parameterB:parameterC method</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (float) neuronParameterC </h2>
+<p class="Pp">Getter funtion for neuronType set using
+    setNeuronType:parameterA:parameterB:parameterC method</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (<b>MPSCNNNeuronType</b>) neuronType </h2>
+<p class="Pp">Getter funtion for neuronType set using
+    setNeuronType:parameterA:parameterB:parameterC method</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) setNeuronToPReLUWithParametersA: (NSData *__nonnull)
+  A</h2>
+<p class="Pp">Add per output value neuron parameters <b>A</b> for PReLu neuron
+    activation functions.</p>
+<p class="Pp">This method sets the neuron to PReLU, zeros parameters <b>A</b>
+    and B and sets the per output value neuron parameters <b>A</b> to an array
+    containing a unique value of <b>A</b> for each output value.</p>
+<p class="Pp">If the neuron function is f(v,a,b), it will apply</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+   resultMatrix(i, j) = f( input(i, j), A[j], B[j] )
+where j in [0, sourceInputFeatureChannels]
+</pre>
+<p class="Pp">See https://arxiv.org/pdf/1502.01852.pdf for details.</p>
+<p class="Pp">All other neuron types, where parameter <b>A</b> and parameter B
+    are shared across output values must be set using
+    -setNeuronType:parameterA:parameterB:</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i></i><b>A</b><i></i><b> An array containing float
+  values for neuron parameter </b><b>A</b><b>. Number of entries must be equal
+  to MIN(inputMatrix.columns - sourceMatrixOrigin.y,
+  sourceInputFeatureChannels)</b></div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (void) setNeuronType: (<b>MPSCNNNeuronType</b>)
+  neuronType(float) parameterA(float) parameterB(float) parameterC</h2>
+<p class="Pp">Specifies a neuron activation function to be used.</p>
+<p class="Pp">This method can be used to add a neuron activation funtion of
+    given type with associated scalar parameters <b>A</b>, B, and C that are
+    shared across all output values. Note that this method can only be used to
+    specify neurons which are specified by three (or fewer) parameters shared
+    across all output values (or channels, in CNN nomenclature). It is an error
+    to call this method for neuron activation functions like
+    MPSCNNNeuronTypePReLU, which require per-channel parameter values. For those
+    kind of neuron activation functions, use appropriate setter functions. An
+    <b>MPSMatrixNeuron</b> kernel is initialized with a default neuron function
+    of MPSCNNNeuronTypeNone.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>neuronType</i> Type of neuron activation function. For
+  full list see <b>MPSCNNNeuronType.h</b>
+<br/>
+<i>parameterA</i> parameterA of neuron activation that is shared across all
+  output values.
+<br/>
+<i>parameterB</i> parameterB of neuron activation that is shared across all
+  output values.
+<br/>
+<i>parameterC</i> parameterC of neuron activation that is shared across all
+  output values.</div>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- alpha [read]<i>, [write]</i>, [nonatomic]<i>, [assign]</i></h2>
+<p class="Pp">The scale factor to apply to the input. Specified in double
+    precision. Will be converted to the appropriate precision in the
+    implementation subject to rounding and/or clamping as necessary. Defaults to
+    1.0 at initialization time.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- sourceInputFeatureChannels [read]<i>, [write]</i>,
+  [nonatomic]<i>, [assign]</i></h2>
+<p class="Pp">The input size to to use in the operation. This is equivalent to
+    the number of columns in the primary (input array) source matrix to consider
+    and the number of channels to produce for the output matrix. This property
+    is modifiable and defaults to NSUIntegerMax. At encode time the larger of
+    this property or the available input size is used. The value of
+    NSUIntegerMax thus indicates that all available columns in the input array
+    (beginning at sourceMatrixOrigin.y) should be considered. Defines also the
+    number of output feature channels. Note: The value used in the operation
+    will be MIN(inputMatrix.columns - sourceMatrixOrigin.y,
+    sourceInputFeatureChannels)</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- sourceNumberOfFeatureVectors [read]<i>, [write]</i>,
+  [nonatomic]<i>, [assign]</i></h2>
+<p class="Pp">The number of input vectors which make up the input array. This is
+    equivalent to the number of rows to consider from the primary source matrix.
+    This property is modifiable and defaults to NSUIntegerMax. At encode time
+    the larger of this property or the available number of inputs is used. The
+    value of NSUIntegerMax thus indicates that all available input rows
+    (beginning at sourceMatrixOrigin.x) should be considered.</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

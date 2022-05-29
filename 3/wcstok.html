@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1998 Softweyr LLC.  All rights reserved.
+  
+   strtok_r, from Berkeley strtok
+   Oct 13, 1998 by Wes Peters <wes@softweyr.com>
+  
+   Copyright (c) 1988, 1991, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   This code is derived from software contributed to Berkeley by
+   the American National Standards Committee X3, on Information
+   Processing Systems.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+  
+   1. Redistributions of source code must retain the above copyright
+      notices, this list of conditions and the following disclaimer.
+  
+   2. Redistributions in binary form must reproduce the above
+      copyright notices, this list of conditions and the following
+      disclaimer in the documentation and/or other materials provided
+      with the distribution.
+  
+   3. All advertising materials mentioning features or use of this
+      software must display the following acknowledgement:
+  
+  	This product includes software developed by Softweyr LLC, the
+        University of California, Berkeley, and its contributors.
+  
+   4. Neither the name of Softweyr LLC, the University nor the names
+      of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written
+      permission.
+  
+   THIS SOFTWARE IS PROVIDED BY SOFTWEYR LLC, THE REGENTS AND
+   CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   DISCLAIMED.  IN NO EVENT SHALL SOFTWEYR LLC, THE REGENTS, OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+   $FreeBSD: src/lib/libc/string/wcstok.3,v 1.4 2002/10/15 09:49:54 tjr Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>WCSTOK(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">WCSTOK(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">WCSTOK(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">wcstok</code> &#x2014; <span class="Nd">split
+    wide-character string into tokens</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+  &lt;<a class="In">wchar.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">wchar_t *</var>
+  <br/>
+  <code class="Fn">wcstok</code>(<var class="Fa">wchar_t *restrict ws1</var>,
+    <var class="Fa">const wchar_t *restrict ws2</var>, <var class="Fa">wchar_t
+    **restrict ptr</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#wcstok"><code class="Fn" id="wcstok">wcstok</code></a>()
+    function is used to isolate sequential tokens in a null-terminated wide
+    character string, <var class="Fa">ws1</var>. These tokens are separated in
+    the string by at least one of the characters in <var class="Fa">ws2</var>.
+    The first time that <code class="Fn">wcstok</code>() is called,
+    <var class="Fa">ws1</var> should be specified; subsequent calls, wishing to
+    obtain further tokens from the same string, should pass a null pointer
+    instead. The separator string, <var class="Fa">ws2</var>, must be supplied
+    each time, and may change between calls. The context pointer,
+    <var class="Fa">ptr</var>, must be provided on each call.</p>
+<p class="Pp" id="wcstok~2">The
+    <a class="permalink" href="#wcstok~2"><code class="Fn">wcstok</code></a>()
+    function is the wide character counterpart of the
+    <a class="permalink" href="#strtok_r"><code class="Fn" id="strtok_r">strtok_r</code></a>()
+    function.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h1>
+<p class="Pp">The <code class="Fn">wcstok</code>() function returns a pointer to
+    the beginning of each subsequent token in the string, after replacing the
+    token itself with a null wide character (L'\0'). When no more tokens remain,
+    a null pointer is returned.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">The following code fragment splits a wide character string on
+    ASCII space, tab, and newline characters, writing the resulting tokens to
+    standard output:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+const wchar_t *seps = L&quot; \t\n&quot;;
+wchar_t *last, *tok, text[] = L&quot; \none\ttwo\t\tthree  \n&quot;;
+
+for (tok = wcstok(text, seps, &amp;last); tok != NULL;
+    tok = wcstok(NULL, seps, &amp;last))
+	wprintf(L&quot;%ls\n&quot;, tok);
+</pre>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="COMPATIBILITY"><a class="permalink" href="#COMPATIBILITY">COMPATIBILITY</a></h1>
+<p class="Pp">Some early implementations of <code class="Fn">wcstok</code>()
+    omit the context pointer argument, <var class="Fa">ptr</var>, and maintain
+    state across calls in a static variable like
+    <code class="Fn">strtok</code>() does.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../3/strtok">strtok(3)</a>,
+    <a class="Xr" href="../3/wcschr">wcschr(3)</a>,
+    <a class="Xr" href="../3/wcscspn">wcscspn(3)</a>,
+    <a class="Xr" href="../3/wcspbrk">wcspbrk(3)</a>,
+    <a class="Xr" href="../3/wcsrchr">wcsrchr(3)</a>,
+    <a class="Xr" href="../3/wcsspn">wcsspn(3)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp">The <code class="Fn">wcstok</code>() function conforms to
+    <span class="St">ISO/IEC 9899:1999
+  (&#x201C;ISO&#x00A0;C99&#x201D;)</span>.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 3, 2002</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

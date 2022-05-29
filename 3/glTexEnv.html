@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   te
+  macro stdmacro
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GLTEXENV(3G)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GLTEXENV(3G)</td>
+    <td class="head-vol"></td>
+    <td class="head-rtitle">GLTEXENV(3G)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><b>glTexEnvf, glTexEnvi, glTexEnvfv, glTexEnviv</b> - set texture
+    environment parameters</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh">C SPECIFICATION</h1>
+<p class="Pp">void <b>glTexEnvf</b>( GLenum <i>target</i>,</p>
+<pre>
+	GLenum <i>pname</i>,
+	GLfloat <i>param</i> )
+</pre>
+<p class="Pp">void <b>glTexEnvi</b>( GLenum <i>target</i>,</p>
+<pre>
+	GLenum <i>pname</i>,
+	GLint <i>param</i> )
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PARAMETERS"><a class="permalink" href="#PARAMETERS">PARAMETERS</a></h1>
+<dl class="Bl-tag">
+  <dt id="target"><a class="permalink" href="#target"><i>target</i></a></dt>
+  <dd>Specifies a texture environment. Must be <b>GL_TEXTURE_ENV</b>.</dd>
+  <dt id="pname"><a class="permalink" href="#pname"><i>pname</i></a></dt>
+  <dd>Specifies the symbolic name of a single-valued texture environment
+      parameter. Must be <b>GL_TEXTURE_ENV_MODE</b>.</dd>
+  <dt id="param"><a class="permalink" href="#param"><i>param</i></a></dt>
+  <dd>Specifies a single symbolic constant, one of <b>GL_MODULATE</b>,
+      <b>GL_DECAL</b>, <b>GL_BLEND</b>, or <b>GL_REPLACE</b>.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh">C SPECIFICATION</h1>
+<p class="Pp">void <b>glTexEnvfv</b>( GLenum <i>target</i>,</p>
+<pre>
+	GLenum <i>pname</i>,
+	const GLfloat <i>*params</i> )
+</pre>
+<p class="Pp">void <b>glTexEnviv</b>( GLenum <i>target</i>,</p>
+<pre>
+	GLenum <i>pname</i>,
+	const GLint <i>*params</i> )
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PARAMETERS~2"><a class="permalink" href="#PARAMETERS~2">PARAMETERS</a></h1>
+<dl class="Bl-tag">
+  <dt id="target~2"><a class="permalink" href="#target~2"><i>target</i></a></dt>
+  <dd>Specifies a texture environment. Must be <b>GL_TEXTURE_ENV</b>.</dd>
+  <dt id="pname~2"><a class="permalink" href="#pname~2"><i>pname</i></a></dt>
+  <dd>Specifies the symbolic name of a texture environment parameter. Accepted
+      values are <b>GL_TEXTURE_ENV_MODE</b> and
+    <b>GL_TEXTURE_ENV_COLOR</b>.</dd>
+  <dt id="params"><a class="permalink" href="#params"><i>params</i></a></dt>
+  <dd>Specifies a pointer to a parameter array that contains either a single
+      symbolic constant or an RGBA color.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">A texture environment specifies how texture values are interpreted
+    when a fragment is textured. <i>target</i> must be <b>GL_TEXTURE_ENV</b>.
+    <i>pname</i> can be either <b>GL_TEXTURE_ENV_MODE</b> or
+    <b>GL_TEXTURE_ENV_COLOR</b>.</p>
+<p class="Pp">If <i>pname</i> is <b>GL_TEXTURE_ENV_MODE</b>, then <i>params</i>
+    is (or points to) the symbolic name of a texture function. Four texture
+    functions may be specified: <b>GL_MODULATE</b>, <b>GL_DECAL</b>,
+    <b>GL_BLEND</b>, and <b>GL_REPLACE</b>.</p>
+<p class="Pp">A texture function acts on the fragment to be textured using the
+    texture image value that applies to the fragment (see <b>glTexParameter</b>)
+    and produces an RGBA color for that fragment. The following table shows how
+    the RGBA color is produced for each of the three texture functions that can
+    be chosen. C is a triple of color values (RGB) and A is the associated alpha
+    value. RGBA values extracted from a texture image are in the range [0,1].
+    The subscript f refers to the incoming fragment, the subscript t to the
+    texture image, the subscript c to the texture environment color, and
+    subscript v indicates a value produced by the texture function.</p>
+<p class="Pp">A texture image can have up to four components per texture element
+    (see <b>glTexImage1D</b>, <b>glTexImage2D</b>, <b>glTexImage3D</b>,
+    <b>glCopyTexImage1D</b>, and <b>glCopyTexImage2D</b>). In a one-component
+    image, Lt indicates that single component. A two-component image uses Lt and
+    At. A three-component image has only a color value, Ct. A four-component
+    image has both a color value Ct and an alpha value At.</p>
+<p class="Pp"></p>
+<p class="Pp">
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | Base Internal | GL_REPLACE | GL_MODULATE |
+  <br/>
+   | Format | | |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_ALPHA |C=Cf |C=Cf |
+  <br/>
+   | |A=At |A=Af At |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_LUMINANCE |C=Lt |C=CfLt |
+  <br/>
+   | |A=Af |A=Af |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_LUMINANCE_ |C=Lt |C=CfLt |
+  <br/>
+   | ALPHA |A=At |A=AfAt |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_INTENSITY |C=It |C=CfIt |
+  <br/>
+   | |A=It |A=AfIt |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_RGB |C=Ct |C=CfCt |
+  <br/>
+   | |A=Af |A=Af |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_RGBA |C=Ct |C=CfCt |
+  <br/>
+   | |A=At |A=AfAt |
+  <br/>
+   +---------------+--------------+---------------+</p>
+<p class="Pp"></p>
+<p class="Pp">
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | Base Internal | GL_DECAL | GL_BLEND |
+  <br/>
+   | Format | | |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_ALPHA |undefined |C=Cf |
+  <br/>
+   | | |A=AfAt |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_LUMINANCE |undefined |C=Cf(1-Lt) + |
+  <br/>
+   | | |CcLt |
+  <br/>
+   | | |A=Af |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_LUMINANCE_ |undefined |C=Cf(1-Lt) + |
+  <br/>
+   | ALPHA | |CcLt |
+  <br/>
+   | | |A=AfAt |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_INTENSITY |undefined |C=Cf(1-It) + |
+  <br/>
+   | | |CcIt |
+  <br/>
+   | | |A=Af(1-It) + |
+  <br/>
+   | | |AcIt |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_RGB |C=Ct |C=Cf(1-Ct) + |
+  <br/>
+   | |A=Af |CcCt |
+  <br/>
+   | | |A=Af |
+  <br/>
+   +---------------+--------------+---------------+
+  <br/>
+   | GL_RGBA |C=C(1-At) + |C=Cf(1-Ct) + |
+  <br/>
+   | |CtAt |CcCt |
+  <br/>
+   | |A=Af |A=AfAt |
+  <br/>
+   +---------------+--------------+---------------+</p>
+<p class="Pp">If <i>pname</i> is <b>GL_TEXTURE_ENV_COLOR</b>, <i>params</i> is a
+    pointer to an array that holds an RGBA color consisting of four values.
+    Integer color components are interpreted linearly such that the most
+    positive integer maps to 1.0, and the most negative integer maps to -1.0.
+    The values are clamped to the range [0,1] when they are specified. Cc takes
+    these four values.</p>
+<p class="Pp"><b>GL_TEXTURE_ENV_MODE</b> defaults to <b>GL_MODULATE</b> and
+    <b>GL_TEXTURE_ENV_COLOR</b> defaults to (0, 0, 0, 0).</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<p class="Pp"><b>GL_REPLACE</b> may only be used if the GL version is 1.1 or
+    greater.</p>
+<p class="Pp">Internal formats other than 1, 2, 3, or 4 may only be used if the
+    GL version is 1.1 or greater.</p>
+<p class="Pp">When the <b>GL_ARB_multitexture</b> extension is supported,
+    <b>glTexEnv</b> controls the texture environment for the current active
+    texture unit, selected by <b>glActiveTextureARB</b>. <b>GL_INVALID_ENUM</b>
+    is generated when <i>target</i> or <i>pname</i> is not one of the accepted
+    defined values, or when <i>params</i> should have a defined constant value
+    (based on the value of <i>pname</i>) and does not.</p>
+<p class="Pp"><b>GL_INVALID_OPERATION</b> is generated if <b>glTexEnv</b> is
+    executed between the execution of <b>glBegin</b> and the corresponding
+    execution of <b>glEnd</b>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ASSOCIATED_GETS"><a class="permalink" href="#ASSOCIATED_GETS">ASSOCIATED
+  GETS</a></h1>
+<p class="Pp"><b>glGetTexEnv</b></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>glActiveTextureARB</b>, <b>glCopyPixels</b>,
+    <b>glCopyTexImage1D</b>, <b>glCopyTexImage2D</b>,
+    <b>glCopyTexSubImage1D</b>, <b>glCopyTexSubImage2D</b>,
+    <b>glCopyTexSubImage3D</b>, <b>glTexImage1D</b>, <b>glTexImage2D</b>,
+    <b>glTexImage3D</b>, <b>glTexParameter</b>, <b>glTexSubImage1D</b>,
+    <b>glTexSubImage2D</b>, <b>glTexSubImage3D</b></p>
+<p class="Pp"></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date"></td>
+    <td class="foot-os"></td>
+  </tr>
+</table>
+</body>
+</html>

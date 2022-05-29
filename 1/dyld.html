@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>DYLD(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">DYLD(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">DYLD(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">dyld - the dynamic linker</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">DYLD_FRAMEWORK_PATH
+  <br/>
+  DYLD_FALLBACK_FRAMEWORK_PATH
+  <br/>
+  DYLD_VERSIONED_FRAMEWORK_PATH
+  <br/>
+  DYLD_LIBRARY_PATH
+  <br/>
+  DYLD_FALLBACK_LIBRARY_PATH
+  <br/>
+  DYLD_VERSIONED_LIBRARY_PATH
+  <br/>
+  DYLD_IMAGE_SUFFIX
+  <br/>
+  DYLD_INSERT_LIBRARIES
+  <br/>
+  DYLD_PRINT_TO_FILE
+  <br/>
+  DYLD_PRINT_LIBRARIES
+  <br/>
+  DYLD_PRINT_LOADERS
+  <br/>
+  DYLD_PRINT_SEARCHING
+  <br/>
+  DYLD_PRINT_APIS
+  <br/>
+  DYLD_PRINT_BINDINGS
+  <br/>
+  DYLD_PRINT_INITIALIZERS
+  <br/>
+  DYLD_PRINT_SEGMENTS
+  <br/>
+  DYLD_PRINT_ENV
+  <br/>
+  DYLD_SHARED_REGION
+  <br/>
+  DYLD_SHARED_CACHE_DIR</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The dynamic linker (dyld) checks the following environment
+    variables during the launch of each process.
+  <br/>
+  Note: If System Integrity Protection is enabled, these environment variables
+    are ignored when executing binaries protected by System Integrity
+    Protection.</p>
+<dl class="Bl-tag">
+  <dt id="DYLD_FRAMEWORK_PATH"><a class="permalink" href="#DYLD_FRAMEWORK_PATH"><b>DYLD_FRAMEWORK_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain frameworks. The
+      dynamic linker searches these directories before it searches for the
+      framework by its install name. It allows you to test new versions of
+      existing frameworks. (A framework is a library install name that ends in
+      the form XXX.framework/Versions/A/XXX or XXX.framework/XXX, where XXX and
+      A are any name.)</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>For each framework that a program uses, the dynamic linker looks for the
+      framework in each directory in <small>DYLD_FRAMEWORK_PATH</small> in turn.
+      If it looks in all those directories and can't find the framework, it uses
+      whatever it would have loaded if DYLD_FRAMEWORK_PATH had not been
+    set.</dd>
+  <dt></dt>
+  <dd>Use the <b>-L</b> option to <i>otool</i>(1) to discover the frameworks and
+      shared libraries that the executable is linked against.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="DYLD_FALLBACK_FRAMEWORK_PATH"><a class="permalink" href="#DYLD_FALLBACK_FRAMEWORK_PATH"><b>DYLD_FALLBACK_FRAMEWORK_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain frameworks. If
+      a framework is not found at its install path, dyld uses this as a list of
+      directories to search for the framework.
+    <p class="Pp">By default, it is set to
+        /Library/Frameworks:/System/Library/Frameworks</p>
+  </dd>
+  <dt id="DYLD_VERSIONED_FRAMEWORK_PATH"><a class="permalink" href="#DYLD_VERSIONED_FRAMEWORK_PATH"><b>DYLD_VERSIONED_FRAMEWORK_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain potential
+      override frameworks. The dynamic linker searches these directories for
+      frameworks. For each framework found dyld looks at its LC_ID_DYLIB and
+      gets the current_version and install name. Dyld then looks for the
+      framework at the install name path. Whichever has the larger
+      current_version value will be used in the process whenever a framework
+      with that install name is required. This is similar to DYLD_FRAMEWORK_PATH
+      except instead of always overriding, it only overrides if the supplied
+      framework is newer. Note: dyld does not check the framework's Info.plist
+      to find its version. Dyld only checks the -current_version number supplied
+      when the framework was created.</dd>
+  <dt id="DYLD_LIBRARY_PATH"><a class="permalink" href="#DYLD_LIBRARY_PATH"><b>DYLD_LIBRARY_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain libraries. The
+      dynamic linker searches these directories before it searches the default
+      locations for libraries. It allows you to test new versions of existing
+      libraries.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt></dt>
+  <dd>For each dylib that a program uses, the dynamic linker looks for its leaf
+      name in each directory in <small>DYLD_LIBRARY_PATH.</small></dd>
+  <dt></dt>
+  <dd>Use the <b>-L</b> option to <i>otool</i>(1) to discover the frameworks and
+      shared libraries that the executable is linked against.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="DYLD_FALLBACK_LIBRARY_PATH"><a class="permalink" href="#DYLD_FALLBACK_LIBRARY_PATH"><b>DYLD_FALLBACK_LIBRARY_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain libraries. If a
+      dylib is not found at its install path, dyld uses this as a list of
+      directories to search for the dylib. By default, it is set to
+      /usr/local/lib:/usr/lib.</dd>
+  <dt id="DYLD_VERSIONED_LIBRARY_PATH"><a class="permalink" href="#DYLD_VERSIONED_LIBRARY_PATH"><b>DYLD_VERSIONED_LIBRARY_PATH</b></a></dt>
+  <dd>This is a colon separated list of directories that contain potential
+      override libraries. The dynamic linker searches these directories for
+      dynamic libraries. For each library found dyld looks at its LC_ID_DYLIB
+      and gets the current_version and install name. Dyld then looks for the
+      library at the install name path. Whichever has the larger current_version
+      value will be used in the process whenever a dylib with that install name
+      is required. This is similar to DYLD_LIBRARY_PATH except instead of always
+      overriding, it only overrides is the supplied library is newer.</dd>
+  <dt id="DYLD_IMAGE_SUFFIX"><a class="permalink" href="#DYLD_IMAGE_SUFFIX"><b>DYLD_IMAGE_SUFFIX</b></a></dt>
+  <dd>This is set to a string of a suffix to try to be used for all shared
+      libraries used by the program. For libraries ending in &quot;.dylib&quot;
+      the suffix is applied just before the &quot;.dylib&quot;. For all other
+      libraries the suffix is appended to the library name. This is useful for
+      using conventional &quot;_profile&quot; and &quot;_debug&quot; libraries
+      and frameworks.</dd>
+  <dt id="DYLD_INSERT_LIBRARIES"><a class="permalink" href="#DYLD_INSERT_LIBRARIES"><b>DYLD_INSERT_LIBRARIES</b></a></dt>
+  <dd>This is a colon separated list of additional dynamic libraries to load
+      before the ones specified in the program. If instead, your goal is to
+      substitute a library that would normally be loaded, use
+      <small>DYLD_LIBRARY_PATH</small> or <small>DYLD_FRAMEWORK_PATH</small>
+      instead.</dd>
+  <dt id="DYLD_PRINT_TO_FILE"><a class="permalink" href="#DYLD_PRINT_TO_FILE"><b>DYLD_PRINT_TO_FILE</b></a></dt>
+  <dd>This is a path to a (writable) file. Normally, the dynamic linker writes
+      all logging output (triggered by DYLD_PRINT_* settings) to file descriptor
+      2 (which is usually stderr). But this setting causes the dynamic linker to
+      write logging output to the specified file.</dd>
+  <dt id="DYLD_PRINT_ENV"><a class="permalink" href="#DYLD_PRINT_ENV"><b>DYLD_PRINT_ENV</b></a></dt>
+  <dd>If set, causes dyld to print a line of key=valule for each enviroment
+      variable in the process.</dd>
+  <dt id="DYLD_PRINT_LIBRARIES"><a class="permalink" href="#DYLD_PRINT_LIBRARIES"><b>DYLD_PRINT_LIBRARIES</b></a></dt>
+  <dd>If set, causes dyld to print a line for each mach-o image loaded into a
+      process. This is useful to make sure that the use of
+      <small>DYLD_LIBRARY_PATH</small> is getting what you want.</dd>
+  <dt id="DYLD_PRINT_LOADERS"><a class="permalink" href="#DYLD_PRINT_LOADERS"><b>DYLD_PRINT_LOADERS</b></a></dt>
+  <dd>If set, causes dyld to print a line whether each image is tracked by a
+      JustInTimeLoader or a PrebuiltLoader. Additionally, it prints if a
+      PrebuiltLoaderSet was used to launch the process or if a PrebuiltLoader
+      was written to make the next launch faster.</dd>
+  <dt id="DYLD_PRINT_SEARCHING"><a class="permalink" href="#DYLD_PRINT_SEARCHING"><b>DYLD_PRINT_SEARCHING</b></a></dt>
+  <dd>If set, causes dyld to print a line about each file system path checked
+      when searching for an image to load.</dd>
+  <dt id="DYLD_PRINT_INITIALIZERS"><a class="permalink" href="#DYLD_PRINT_INITIALIZERS"><b>DYLD_PRINT_INITIALIZERS</b></a></dt>
+  <dd>If set, causes dyld to print out a line when running each initializer in
+      every image. Initializers run by dyld include constructors for C++
+      statically allocated objects, functions marked with
+      __attribute__((constructor)), and -init functions.</dd>
+  <dt id="DYLD_PRINT_APIS"><a class="permalink" href="#DYLD_PRINT_APIS"><b>DYLD_PRINT_APIS</b></a></dt>
+  <dd>If set, causes dyld to print a line whenever a dyld API is called (e.g.
+      dlopen()).</dd>
+  <dt id="DYLD_PRINT_SEGMENTS"><a class="permalink" href="#DYLD_PRINT_SEGMENTS"><b>DYLD_PRINT_SEGMENTS</b></a></dt>
+  <dd>If set, causes dyld to print out a line containing the name and address
+      range of each mach-o segment that dyld maps. In addition it prints
+      information about if the image was from the dyld shared cache.</dd>
+  <dt id="DYLD_PRINT_BINDINGS"><a class="permalink" href="#DYLD_PRINT_BINDINGS"><b>DYLD_PRINT_BINDINGS</b></a></dt>
+  <dd>If set, causes dyld to print a line each time a symbolic name is
+    bound.</dd>
+  <dt id="DYLD_SHARED_REGION"><a class="permalink" href="#DYLD_SHARED_REGION"><b>DYLD_SHARED_REGION</b></a></dt>
+  <dd>This can be &quot;use&quot; (the default) or &quot;private&quot;. Setting
+      it to &quot;private&quot; tells dyld to remove the shared region from the
+      process address space and mmap() back in a private copy of the dyld shared
+      cache in the shared region address range. This is only useful if the
+      shared cache on disk has been updated and is different than the shared
+      cache in use.</dd>
+  <dt id="DYLD_SHARED_CACHE_DIR"><a class="permalink" href="#DYLD_SHARED_CACHE_DIR"><b>DYLD_SHARED_CACHE_DIR</b></a></dt>
+  <dd>This is a directory containing dyld shared cache files. This variable can
+      be used in conjunction with DYLD_SHARED_REGION=private to run a process
+      with an alternate shared cache.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DYNAMIC_LIBRARY_LOADING"><a class="permalink" href="#DYNAMIC_LIBRARY_LOADING">DYNAMIC
+  LIBRARY LOADING</a></h1>
+<p class="Pp">Unlike many other operating systems, Darwin does not locate
+    dependent dynamic libraries via their leaf file name. Instead the full path
+    to each dylib is used (e.g. /usr/lib/libSystem.B.dylib). But there are times
+    when a full path is not appropriate; for instance, may want your binaries to
+    be installable in anywhere on the disk. To support that, there are three
+    @xxx/ variables that can be used as a path prefix. At runtime dyld
+    substitutes a dynamically generated path for the @xxx/ prefix.</p>
+<dl class="Bl-tag">
+  <dt><b>@executable_path/</b></dt>
+  <dd>This variable is replaced with the path to the directory containing the
+      main executable for the process. This is useful for loading
+      dylibs/frameworks embedded in a .app directory. If the main executable
+      file is at /some/path/My.app/Contents/MacOS/My and a framework dylib file
+      is at /some/path/My.app/Contents/Frameworks/Foo.framework/Versions/A/Foo,
+      then the framework load path could be encoded as
+      @executable_path/../Frameworks/Foo.framework/Versions/A/Foo and the .app
+      directory could be moved around in the file system and dyld will still be
+      able to load the embedded framework.</dd>
+  <dt><b>@loader_path/</b></dt>
+  <dd>This variable is replaced with the path to the directory containing the
+      mach-o binary which contains the load command using @loader_path. Thus, in
+      every binary, @loader_path resolves to a different path, whereas
+      @executable_path always resolves to the same path. @loader_path is useful
+      as the load path for a framework/dylib embedded in a plug-in, if the final
+      file system location of the plugin-in unknown (so absolute paths cannot be
+      used) or if the plug-in is used by multiple applications (so
+      @executable_path cannot be used). If the plug-in mach-o file is at
+      /some/path/Myfilter.plugin/Contents/MacOS/Myfilter and a framework dylib
+      file is at
+      /some/path/Myfilter.plugin/Contents/Frameworks/Foo.framework/Versions/A/Foo,
+      then the framework load path could be encoded as
+      @loader_path/../Frameworks/Foo.framework/Versions/A/Foo and the
+      Myfilter.plugin directory could be moved around in the file system and
+      dyld will still be able to load the embedded framework.</dd>
+  <dt><b>@rpath/</b></dt>
+  <dd>Dyld maintains a current stack of paths called the run path list. When
+      @rpath is encountered it is substituted with each path in the run path
+      list until a loadable dylib if found. The run path stack is built from the
+      LC_RPATH load commands in the depencency chain that lead to the current
+      dylib load. You can add an LC_RPATH load command to an image with the
+      -rpath option to ld(1). You can even add a LC_RPATH load command path that
+      starts with @loader_path/, and it will push a path on the run path stack
+      that relative to the image containing the LC_RPATH. The use of @rpath is
+      most useful when you have a complex directory structure of programs and
+      dylibs which can be installed anywhere, but keep their relative positions.
+      This scenario could be implemented using @loader_path, but every client of
+      a dylib could need a different load path because its relative position in
+      the file system is different. The use of @rpath introduces a level of
+      indirection that simplies things. You pick a location in your directory
+      structure as an anchor point. Each dylib then gets an install path that
+      starts with @rpath and is the path to the dylib relative to the anchor
+      point. Each main executable is linked with -rpath @loader_path/zzz, where
+      zzz is the path from the executable to the anchor point. At runtime dyld
+      sets it run path to be the anchor point, then each dylib is found relative
+      to the anchor point.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">dyldinfo(1), ld(1), otool(1)</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 1, 2020</td>
+    <td class="foot-os">Apple Inc.</td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2017, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLINFO_TLS_SESSION(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLINFO_TLS_SESSION(3)</td>
+    <td class="head-vol">curl_easy_getinfo options</td>
+    <td class="head-rtitle">CURLINFO_TLS_SESSION(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLINFO_TLS_SESSION - get TLS session info</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>
+#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SESSION,
+<br/>
+                           struct curl_tlssessioninfo **session);
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><b>This option has been superseded</b> by
+    <i>CURLINFO_TLS_SSL_PTR(3)</i> which was added in 7.48.0. The only reason
+    you would use this option instead is if you could be using a version of
+    libcurl earlier than 7.48.0.</p>
+<p class="Pp">This option is exactly the same as <i>CURLINFO_TLS_SSL_PTR(3)</i>
+    except in the case of OpenSSL. If the session <i>backend</i> is
+    CURLSSLBACKEND_OPENSSL the session <i>internals</i> pointer varies depending
+    on the option:</p>
+<p class="Pp">CURLINFO_TLS_SESSION OpenSSL session <i>internals</i> is SSL_CTX
+    *.</p>
+<p class="Pp">CURLINFO_TLS_SSL_PTR OpenSSL session <i>internals</i> is SSL
+  *.</p>
+<p class="Pp">You can obtain an SSL_CTX pointer from an SSL pointer using
+    OpenSSL function SSL_get_SSL_CTX. Therefore unless you need compatibility
+    with older versions of libcurl use <i>CURLINFO_TLS_SSL_PTR(3)</i>. Refer to
+    that document for more information.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">All TLS-based</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+CURL *curl = curl_easy_init();
+if(curl) {
+<br/>
+  CURLcode res;
+<br/>
+  struct curl_tlssessioninfo *tls;
+<br/>
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
+<br/>
+  res = curl_easy_perform(curl);
+<br/>
+  curl_easy_getinfo(curl, CURLINFO_TLS_SESSION, &amp;tls);
+<br/>
+  curl_easy_cleanup(curl);
+}
+</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.34.0, and supported OpenSSL, GnuTLS, NSS and gskit only
+    up until 7.48.0 was released.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK if the option is supported, and
+    CURLE_UNKNOWN_OPTION if not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>curl_easy_getinfo</b>(3), <b>curl_easy_setopt</b>(3),
+    <b>CURLINFO_TLS_SSL_PTR</b>(3), </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">November 4, 2020</td>
+    <td class="foot-os">libcurl 7.79.1</td>
+  </tr>
+</table>
+</body>
+</html>

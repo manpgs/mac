@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSLSTMDescriptor(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSLSTMDescriptor(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSLSTMDescriptor(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSLSTMDescriptor</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSRNNLayer.h&gt;</p>
+<p class="Pp">Inherits <b>MPSRNNDescriptor</b>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) +
+    <b>createLSTMDescriptorWithInputFeatureChannels:outputFeatureChannels:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp">BOOL <b>memoryWeightsAreDiagonal</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>inputGateInputWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt;
+    <b>inputGateRecurrentWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>inputGateMemoryWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>forgetGateInputWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt;
+    <b>forgetGateRecurrentWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>forgetGateMemoryWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>outputGateInputWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt;
+    <b>outputGateRecurrentWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>outputGateMemoryWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>cellGateInputWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>cellGateRecurrentWeights</b>
+  <br/>
+  id&lt; <b>MPSCNNConvolutionDataSource</b> &gt; <b>cellGateMemoryWeights</b>
+  <br/>
+  <b>MPSCNNNeuronType</b> <b>cellToOutputNeuronType</b>
+  <br/>
+  float <b>cellToOutputNeuronParamA</b>
+  <br/>
+  float <b>cellToOutputNeuronParamB</b>
+  <br/>
+  float <b>cellToOutputNeuronParamC</b>
+  <br/>
+  <br/>
+</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">This depends on Metal.framework The <b>MPSLSTMDescriptor</b>
+    specifies a LSTM block/layer descriptor. The RNN layer initialized with a
+    <b>MPSLSTMDescriptor</b> transforms the input data (image or matrix), the
+    memory cell data and previous output with a set of filters, each producing
+    one feature map in the output data and memory cell, according to the LSTM
+    formulae detailed below. The user may provide the LSTM unit a single input
+    or a sequence of inputs.</p>
+<p class="Pp"></p>
+<pre>
+Description of operation:
+</pre>
+<p class="Pp">Let x_j be the input data (at time index t of sequence, j index
+    containing quadruplet: batch index, x,y and feature index (x=y=0 for
+    matrices)). Let h0_j be the recurrent input (previous output) data from
+    previous time step (at time index t-1 of sequence). Let h1_i be the output
+    data produced at this time step. Let c0_j be the previous memory cell data
+    (at time index t-1 of sequence). Let c1_i be the new memory cell data (at
+    time index t-1 of sequence).</p>
+<p class="Pp">Let Wi_ij, Ui_ij, Vi_ij, be the input gate weights for input,
+    recurrent input and memory cell (peephole) data respectively Let bi_i be the
+    bias for the input gate</p>
+<p class="Pp">Let Wf_ij, Uf_ij, Vf_ij, be the forget gate weights for input,
+    recurrent input and memory cell data respectively Let bf_i be the bias for
+    the forget gate</p>
+<p class="Pp">Let Wo_ij, Uo_ij, Vo_ij, be the output gate weights for input,
+    recurrent input and memory cell data respectively Let bo_i be the bias for
+    the output gate</p>
+<p class="Pp">Let Wc_ij, Uc_ij, Vc_ij, be the memory cell gate weights for
+    input, recurrent input and memory cell data respectively Let bc_i be the
+    bias for the memory cell gate</p>
+<p class="Pp">Let gi(x), gf(x), go(x), gc(x) be neuron activation function for
+    the input, forget, output gate and memory cell gate Let gh(x) be the
+    activation function applied to result memory cell data</p>
+<p class="Pp">Then the new memory cell data c1_j and output image h1_i are
+    computed as follows:</p>
+<p class="Pp"></p>
+<pre>
+<br/>
+    I_i = gi(  Wi_ij * x_j  +  Ui_ij * h0_j  +  Vi_ij * c0_j  + bi_i  )
+<br/>
+    F_i = gf(  Wf_ij * x_j  +  Uf_ij * h0_j  +  Vf_ij * c0_j  + bf_i  )
+<br/>
+    C_i = gc(  Wc_ij * x_j  +  Uc_ij * h0_j  +  Vc_ij * c0_j  + bc_i  )
+c1_i = F_i c0_i  +  I_i C_i
+<br/>
+    O_i = go(  Wo_ij * x_j  +  Uo_ij * h0_j  +  Vo_ij * c1_j  + bo_i  )
+h1_i = O_i gh( c1_i )
+</pre>
+<p class="Pp">The '*' stands for convolution (see
+    <b>MPSRNNImageInferenceLayer</b>) or matrix-vector/matrix multiplication
+    (see <b>MPSRNNMatrixInferenceLayer</b>). Summation is over index j (except
+    for the batch index), but there is no summation over repeated index i - the
+    output index. Note that for validity all intermediate images have to be of
+    same size and all U and V matrices have to be square (ie.
+    outputFeatureChannels == inputFeatureChannels in those). Also the bias terms
+    are scalars wrt. spatial dimensions.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="+_(nonnull_instancetype)_createLSTMDescriptorWithInputFeatureChannels:_(NSUInteger)_inputFeatureChannels(NSUInteger)_outputFeatureChannels"><a class="permalink" href="#+_(nonnull_instancetype)_createLSTMDescriptorWithInputFeatureChannels:_(NSUInteger)_inputFeatureChannels(NSUInteger)_outputFeatureChannels">+
+  (nonnull instancetype) createLSTMDescriptorWithInputFeatureChannels:
+  (NSUInteger) inputFeatureChannels(NSUInteger) outputFeatureChannels</a></h2>
+<p class="Pp">Creates a LSTM descriptor.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>inputFeatureChannels</i> The number of feature
+  channels in the input image/matrix. Must be &gt;= 1.
+<br/>
+<i>outputFeatureChannels</i> The number of feature channels in the output
+  image/matrix. Must be &gt;= 1.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid MPSNNLSTMDescriptor object or nil, if
+  failure.</div>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- cellGateInputWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Wc_ij', bias 'bc_i' and neuron 'gc' from the
+    LSTM formula. If nil then assumed zero weights, bias and no neuron (identity
+    mapping). Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellGateMemoryWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Vc_ij' - the 'peephole' weights - from the LSTM
+    formula. if YES == memoryWeightsAreDiagonal, then the number of weights used
+    is the number of features in the memory cell image/matrix. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellGateRecurrentWeights [read]<b>, [write]</b>,
+  [nonatomic]<b>, [retain]</b></h2>
+<p class="Pp">Contains weights 'Uc_ij' from the LSTM formula. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellToOutputNeuronParamA [read]<b>, [write]</b>,
+  [nonatomic]<b>, [assign]</b></h2>
+<p class="Pp">Neuron parameter <b>A</b> for 'gh'. Defaults to 1.0f.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellToOutputNeuronParamB [read]<b>, [write]</b>,
+  [nonatomic]<b>, [assign]</b></h2>
+<p class="Pp">Neuron parameter B for 'gh'. Defaults to 1.0f.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellToOutputNeuronParamC [read]<b>, [write]</b>,
+  [nonatomic]<b>, [assign]</b></h2>
+<p class="Pp">Neuron parameter C for 'gh'. Defaults to 1.0f.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- cellToOutputNeuronType [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">Neuron type definition for 'gh', see <b>MPSCNNNeuronType</b>.
+    Defaults to MPSCNNNeuronTypeTanH.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- forgetGateInputWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Wf_ij', bias 'bf_i' and neuron 'gf' from the
+    LSTM formula. If nil then assumed zero weights, bias and no neuron (identity
+    mapping).Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- forgetGateMemoryWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Vf_ij' - the 'peephole' weights - from the LSTM
+    formula. if YES == memoryWeightsAreDiagonal, then the number of weights used
+    is the number of features in the memory cell image/matrix. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- forgetGateRecurrentWeights [read]<b>, [write]</b>,
+  [nonatomic]<b>, [retain]</b></h2>
+<p class="Pp">Contains weights 'Uf_ij' from the LSTM formula. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- inputGateInputWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Wi_ij', bias 'bi_i' and neuron 'gi' from the
+    LSTM formula. If nil then assumed zero weights, bias and no neuron (identity
+    mapping). Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- inputGateMemoryWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Vi_ij' - the 'peephole' weights - from the LSTM
+    formula. if YES == memoryWeightsAreDiagonal, then the number of weights used
+    is the number of features in the memory cell image/matrix. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- inputGateRecurrentWeights [read]<b>, [write]</b>,
+  [nonatomic]<b>, [retain]</b></h2>
+<p class="Pp">Contains weights 'Ui_ij' from the LSTM formula. If nil then
+    assumed zero weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- memoryWeightsAreDiagonal [read]<b>, [write]</b>,
+  [nonatomic]<b>, [assign]</b></h2>
+<p class="Pp">If YES, then the 'peephole' weight matrices will be diagonal
+    matrices represented as vectors of length the number of features in memory
+    cells, that will be multiplied pointwise with the peephole matrix or image
+    in order to achieve the diagonal (nonmixing) update. Defaults to NO.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- outputGateInputWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Wo_ij', bias 'bo_i' and neuron 'go' from the
+    LSTM formula. If nil then assumed zero weights, bias and no neuron (identity
+    mapping). Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- outputGateMemoryWeights [read]<b>, [write]</b>, [nonatomic]<b>,
+  [retain]</b></h2>
+<p class="Pp">Contains weights 'Vo_ij' - the 'peephole' weights - from the LSTM.
+    if YES == memoryWeightsAreDiagonal, then the number of weights used is the
+    number of features in the memory cell image/matrix. If nil then assumed zero
+    weights. Defaults to nil.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- outputGateRecurrentWeights [read]<b>, [write]</b>,
+  [nonatomic]<b>, [retain]</b></h2>
+<p class="Pp">Contains weights 'Uo_ij' from the LSTM formula. If nil then
+    assumed zero weights. Defaults to nil.</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

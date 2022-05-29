@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>opensnoop(1m)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">opensnoop(1m)</td>
+    <td class="head-vol">USER COMMANDS</td>
+    <td class="head-rtitle">opensnoop(1m)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">opensnoop - snoop file opens as they occur. Uses DTrace.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>opensnoop</b> [-a|-A|-ceFghstvxZ] [-f pathname] [-n name] [-p
+    PID]</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">opensnoop tracks file opens. As a process issues a file open,
+    details such as UID, PID and pathname are printed out.</p>
+<p class="Pp">The returned file descriptor is printed, a value of -1 indicates
+    an error. This can be useful for troubleshooting to determine if
+    applications are attempting to open files that do not exist.</p>
+<p class="Pp">Since this uses DTrace, only users with root privileges can run
+    this command.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<dl class="Bl-tag">
+  <dt id="a"><a class="permalink" href="#a">-a</a></dt>
+  <dd>print all data</dd>
+  <dt id="A"><a class="permalink" href="#A">-A</a></dt>
+  <dd>dump all data, space delimited</dd>
+  <dt id="c"><a class="permalink" href="#c">-c</a></dt>
+  <dd>print current working directory of process</dd>
+  <dt id="e"><a class="permalink" href="#e">-e</a></dt>
+  <dd>print errno value</dd>
+  <dt id="F"><a class="permalink" href="#F">-F</a></dt>
+  <dd>print the flags passed to open</dd>
+  <dt id="g"><a class="permalink" href="#g">-g</a></dt>
+  <dd>print full command arguments</dd>
+  <dt id="s"><a class="permalink" href="#s">-s</a></dt>
+  <dd>print start time, us</dd>
+  <dt id="t"><a class="permalink" href="#t">-t</a></dt>
+  <dd>print user stack trace</dd>
+  <dt id="v"><a class="permalink" href="#v">-v</a></dt>
+  <dd>print start time, string</dd>
+  <dt id="x"><a class="permalink" href="#x">-x</a></dt>
+  <dd>only print failed opens</dd>
+  <dt id="Z"><a class="permalink" href="#Z">-Z</a></dt>
+  <dd>print zonename</dd>
+  <dt id="f"><a class="permalink" href="#f">-f pathname</a></dt>
+  <dd>file pathname to snoop</dd>
+  <dt id="n"><a class="permalink" href="#n">-n name</a></dt>
+  <dd>process name to snoop</dd>
+  <dt id="p"><a class="permalink" href="#p">-p PID</a></dt>
+  <dd>process ID to snoop</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<dl class="Bl-tag">
+  <dt id="Default"><a class="permalink" href="#Default">Default output, print
+    file opens by process as they occur,</a></dt>
+  <dd># <b>opensnoop</b></dd>
+  <dt id="Print"><a class="permalink" href="#Print">Print human readable
+    timestamps,</a></dt>
+  <dd># <b>opensnoop</b> -v</dd>
+  <dt id="See"><a class="permalink" href="#See">See error codes,</a></dt>
+  <dd># <b>opensnoop</b> -e</dd>
+  <dt id="Snoop"><a class="permalink" href="#Snoop">Snoop this file
+    only,</a></dt>
+  <dd># <b>opensnoop</b> -f /etc/passwd</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FIELDS"><a class="permalink" href="#FIELDS">FIELDS</a></h1>
+<dl class="Bl-tag">
+  <dt id="ZONE"><a class="permalink" href="#ZONE">ZONE</a></dt>
+  <dd>Zone name</dd>
+  <dt id="UID"><a class="permalink" href="#UID">UID</a></dt>
+  <dd>User ID</dd>
+  <dt id="PID"><a class="permalink" href="#PID">PID</a></dt>
+  <dd>Process ID</dd>
+  <dt id="PPID"><a class="permalink" href="#PPID">PPID</a></dt>
+  <dd>Parent Process ID</dd>
+  <dt id="FD"><a class="permalink" href="#FD">FD</a></dt>
+  <dd>File Descriptor (-1 is error)</dd>
+  <dt id="FLAGS"><a class="permalink" href="#FLAGS">FLAGS</a></dt>
+  <dd>Flags passed to open</dd>
+  <dt id="ERR"><a class="permalink" href="#ERR">ERR</a></dt>
+  <dd>errno value (see /usr/include/sys/errno.h)</dd>
+  <dt id="CWD"><a class="permalink" href="#CWD">CWD</a></dt>
+  <dd>current working directory of process</dd>
+  <dt id="PATH"><a class="permalink" href="#PATH">PATH</a></dt>
+  <dd>pathname for file open</dd>
+  <dt id="COMM"><a class="permalink" href="#COMM">COMM</a></dt>
+  <dd>command name for the process</dd>
+  <dt id="ARGS"><a class="permalink" href="#ARGS">ARGS</a></dt>
+  <dd>argument listing for the process</dd>
+  <dt id="TIME"><a class="permalink" href="#TIME">TIME</a></dt>
+  <dd>timestamp for the open event, us</dd>
+  <dt id="STRTIME"><a class="permalink" href="#STRTIME">STRTIME</a></dt>
+  <dd>timestamp for the open event, string</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DOCUMENTATION"><a class="permalink" href="#DOCUMENTATION">DOCUMENTATION</a></h1>
+<p class="Pp">See the DTraceToolkit for further documentation under the Docs
+    directory. The DTraceToolkit docs may include full worked examples with
+    verbose descriptions explaining the output.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT"><a class="permalink" href="#EXIT">EXIT</a></h1>
+<p class="Pp">opensnoop will run forever until Ctrl-C is hit.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">occasionally the pathname for the file open cannot be read and the
+    following error will be seen,</p>
+<p class="Pp">dtrace: error on enabled probe ID 6 (...): invalid address</p>
+<p class="Pp">this is normal behaviour.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
+<p class="Pp">Brendan Gregg [Sydney, Australia]</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">dtrace(1M), truss(1)</p>
+<p class="Pp"></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">January 12, 2006</td>
+    <td class="foot-os">version 1.60</td>
+  </tr>
+</table>
+</body>
+</html>

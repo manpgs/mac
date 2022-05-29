@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 1990, 1993
+  	The Regents of the University of California.  All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   4. Neither the name of the University nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+  
+  	@(#)dbopen.3	8.5 (Berkeley) 1/2/94
+   $FreeBSD: src/lib/libc/db/man/dbopen.3,v 1.13 2007/01/09 00:27:51 imp Exp $
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>DBOPEN(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">DBOPEN(3)</td>
+    <td class="head-vol">Library Functions Manual</td>
+    <td class="head-rtitle">DBOPEN(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">dbopen</code> &#x2014; <span class="Nd">database
+    access methods</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">sys/types.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">db.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">fcntl.h</a>&gt;</code>
+  <br/>
+  <code class="In">#include &lt;<a class="In">limits.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">DB *</var>
+  <br/>
+  <code class="Fn">dbopen</code>(<var class="Fa" style="white-space: nowrap;">const
+    char *file</var>, <var class="Fa" style="white-space: nowrap;">int
+    flags</var>, <var class="Fa" style="white-space: nowrap;">int mode</var>,
+    <var class="Fa" style="white-space: nowrap;">DBTYPE type</var>,
+    <var class="Fa" style="white-space: nowrap;">const void
+  *openinfo</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#dbopen"><code class="Fn" id="dbopen">dbopen</code></a>()
+    function is the library interface to database files. The supported file
+    formats are btree, hashed and UNIX file oriented. The btree format is a
+    representation of a sorted, balanced tree structure. The hashed format is an
+    extensible, dynamic hashing scheme. The flat-file format is a byte stream
+    file with fixed or variable length records. The formats and file format
+    specific information are described in detail in their respective manual
+    pages <a class="Xr" href="../3/btree">btree(3)</a>,
+    <a class="Xr" href="../3/hash">hash(3)</a> and
+    <a class="Xr" href="../3/recno">recno(3)</a>.</p>
+<p class="Pp" id="dbopen~2">The
+    <a class="permalink" href="#dbopen~2"><code class="Fn">dbopen</code></a>()
+    function opens <var class="Fa">file</var> for reading and/or writing. Files
+    never intended to be preserved on disk may be created by setting the
+    <var class="Fa">file</var> argument to <code class="Dv">NULL</code>.</p>
+<p class="Pp">The <var class="Fa">flags</var> and <var class="Fa">mode</var>
+    arguments are as specified to the <a class="Xr" href="../2/open">open(2)</a>
+    routine, however, only the <code class="Dv">O_CREAT</code>,
+    <code class="Dv">O_EXCL</code>, <code class="Dv">O_EXLOCK</code>,
+    <code class="Dv">O_NONBLOCK</code>, <code class="Dv">O_RDONLY</code>,
+    <code class="Dv">O_RDWR</code>, <code class="Dv">O_SHLOCK</code> and
+    <code class="Dv">O_TRUNC</code> flags are meaningful. (Note, opening a
+    database file <code class="Dv">O_WRONLY</code> is not possible.)</p>
+<p class="Pp">The <var class="Fa">type</var> argument is of type
+    <var class="Ft">DBTYPE</var> (as defined in the
+    <code class="In">&lt;<a class="In">db.h</a>&gt;</code> include file) and may
+    be set to <code class="Dv">DB_BTREE</code>, <code class="Dv">DB_HASH</code>
+    or <code class="Dv">DB_RECNO</code>.</p>
+<p class="Pp">The <var class="Fa">openinfo</var> argument is a pointer to an
+    access method specific structure described in the access method's manual
+    page. If <var class="Fa">openinfo</var> is <code class="Dv">NULL</code>,
+    each access method will use defaults appropriate for the system and the
+    access method.</p>
+<p class="Pp" id="dbopen~3">The
+    <a class="permalink" href="#dbopen~3"><code class="Fn">dbopen</code></a>()
+    function returns a pointer to a <var class="Ft">DB</var> structure on
+    success and <code class="Dv">NULL</code> on error. The
+    <var class="Ft">DB</var> structure is defined in the
+    <code class="In">&lt;<a class="In">db.h</a>&gt;</code> include file, and
+    contains at least the following fields:</p>
+<div class="Bd Pp">
+<pre>
+typedef struct {
+	DBTYPE type;
+	int (*close)(DB *db);
+	int (*del)(const DB *db, const DBT *key, u_int flags);
+	int (*fd)(const DB *db);
+	int (*get)(const DB *db, const DBT *key, DBT *data, u_int flags);
+	int (*put)(const DB *db, DBT *key, const DBT *data,
+	     u_int flags);
+	int (*sync)(const DB *db, u_int flags);
+	int (*seq)(const DB *db, DBT *key, DBT *data, u_int flags);
+} DB;
+</pre>
+</div>
+<p class="Pp" id="dbopen~4">These elements describe a database type and a set of
+    functions performing various actions. These functions take a pointer to a
+    structure as returned by
+    <a class="permalink" href="#dbopen~4"><code class="Fn">dbopen</code></a>(),
+    and sometimes one or more pointers to key/data structures and a flag
+  value.</p>
+<dl class="Bl-tag">
+  <dt><var class="Va">type</var></dt>
+  <dd>The type of the underlying access method (and file format).</dd>
+  <dt><var class="Va">close</var></dt>
+  <dd>A pointer to a routine to flush any cached information to disk, free any
+      allocated resources, and close the underlying file(s). Since key/data
+      pairs may be cached in memory, failing to sync the file with a
+      <var class="Va">close</var> or <var class="Va">sync</var> function may
+      result in inconsistent or lost information. <var class="Va">close</var>
+      routines return -1 on error (setting <var class="Va">errno</var>) and 0 on
+      success.</dd>
+  <dt><var class="Va">del</var></dt>
+  <dd>A pointer to a routine to remove key/data pairs from the database.
+    <p class="Pp">The <var class="Fa">flags</var> argument may be set to the
+        following value:</p>
+    <dl class="Bl-tag">
+      <dt id="R_CURSOR"><a class="permalink" href="#R_CURSOR"><code class="Dv">R_CURSOR</code></a></dt>
+      <dd>Delete the record referenced by the cursor. The cursor must have
+          previously been initialized.</dd>
+    </dl>
+    <p class="Pp"><var class="Va">delete</var> routines return -1 on error
+        (setting <var class="Va">errno</var>), 0 on success, and 1 if the
+        specified <var class="Fa">key</var> was not in the file.</p>
+  </dd>
+  <dt id="dbopen~5"><var class="Va">fd</var></dt>
+  <dd>A pointer to a routine which returns a file descriptor representative of
+      the underlying database. A file descriptor referencing the same file will
+      be returned to all processes which call
+      <a class="permalink" href="#dbopen~5"><code class="Fn">dbopen</code></a>()
+      with the same <var class="Fa">file</var> name. This file descriptor may be
+      safely used as an argument to the
+      <a class="Xr" href="../2/fcntl">fcntl(2)</a> and
+      <a class="Xr" href="../2/flock">flock(2)</a> locking functions. The file
+      descriptor is not necessarily associated with any of the underlying files
+      used by the access method. No file descriptor is available for in memory
+      databases. <var class="Va">Fd</var> routines return -1 on error (setting
+      <var class="Va">errno</var>), and the file descriptor on success.</dd>
+  <dt><var class="Va">get</var></dt>
+  <dd>A pointer to a routine which is the interface for keyed retrieval from the
+      database. The address and length of the data associated with the specified
+      <var class="Fa">key</var> are returned in the structure referenced by
+      <var class="Fa">data</var>. <var class="Va">get</var> routines return -1
+      on error (setting <var class="Va">errno</var>), 0 on success, and 1 if the
+      <var class="Fa">key</var> was not in the file.</dd>
+  <dt><var class="Va">put</var></dt>
+  <dd>A pointer to a routine to store key/data pairs in the database.
+    <p class="Pp">The <var class="Fa">flags</var> argument may be set to one of
+        the following values:</p>
+    <dl class="Bl-tag">
+      <dt id="R_CURSOR~2"><a class="permalink" href="#R_CURSOR~2"><code class="Dv">R_CURSOR</code></a></dt>
+      <dd>Replace the key/data pair referenced by the cursor. The cursor must
+          have previously been initialized.</dd>
+      <dt id="R_IAFTER"><a class="permalink" href="#R_IAFTER"><code class="Dv">R_IAFTER</code></a></dt>
+      <dd>Append the data immediately after the data referenced by
+          <var class="Fa">key</var>, creating a new key/data pair. The record
+          number of the appended key/data pair is returned in the
+          <var class="Fa">key</var> structure. (Applicable only to the
+          <code class="Dv">DB_RECNO</code> access method.)</dd>
+      <dt id="R_IBEFORE"><a class="permalink" href="#R_IBEFORE"><code class="Dv">R_IBEFORE</code></a></dt>
+      <dd>Insert the data immediately before the data referenced by
+          <var class="Fa">key</var>, creating a new key/data pair. The record
+          number of the inserted key/data pair is returned in the
+          <var class="Fa">key</var> structure. (Applicable only to the
+          <code class="Dv">DB_RECNO</code> access method.)</dd>
+      <dt id="R_NOOVERWRITE"><a class="permalink" href="#R_NOOVERWRITE"><code class="Dv">R_NOOVERWRITE</code></a></dt>
+      <dd>Enter the new key/data pair only if the key does not previously
+        exist.</dd>
+      <dt id="R_SETCURSOR"><a class="permalink" href="#R_SETCURSOR"><code class="Dv">R_SETCURSOR</code></a></dt>
+      <dd>Store the key/data pair, setting or initializing the position of the
+          cursor to reference it. (Applicable only to the
+          <code class="Dv">DB_BTREE</code> and <code class="Dv">DB_RECNO</code>
+          access methods.)</dd>
+    </dl>
+    <p class="Pp"><code class="Dv">R_SETCURSOR</code> is available only for the
+        <code class="Dv">DB_BTREE</code> and <code class="Dv">DB_RECNO</code>
+        access methods because it implies that the keys have an inherent order
+        which does not change.</p>
+    <p class="Pp"><code class="Dv">R_IAFTER</code> and
+        <code class="Dv">R_IBEFORE</code> are available only for the
+        <code class="Dv">DB_RECNO</code> access method because they each imply
+        that the access method is able to create new keys. This is only true if
+        the keys are ordered and independent, record numbers for example.</p>
+    <p class="Pp">The default behavior of the <var class="Va">put</var> routines
+        is to enter the new key/data pair, replacing any previously existing
+        key.</p>
+    <p class="Pp"><var class="Va">put</var> routines return -1 on error (setting
+        <var class="Va">errno</var>), 0 on success, and 1 if the
+        <code class="Dv">R_NOOVERWRITE</code> flag was set and the key already
+        exists in the file.</p>
+  </dd>
+  <dt><var class="Va">seq</var></dt>
+  <dd>A pointer to a routine which is the interface for sequential retrieval
+      from the database. The address and length of the key are returned in the
+      structure referenced by <var class="Fa">key</var>, and the address and
+      length of the data are returned in the structure referenced by
+      <var class="Fa">data</var>.
+    <p class="Pp">Sequential key/data pair retrieval may begin at any time, and
+        the position of the &#x201C;cursor&#x201D; is not affected by calls to
+        the <var class="Va">del</var>, <var class="Va">get</var>,
+        <var class="Va">put</var>, or <var class="Va">sync</var> routines.
+        Modifications to the database during a sequential scan will be reflected
+        in the scan, i.e., records inserted behind the cursor will not be
+        returned while records inserted in front of the cursor will be
+      returned.</p>
+    <p class="Pp" id="must">The <var class="Fa">flags</var> argument
+        <a class="permalink" href="#must"><i class="Em">must</i></a> be set to
+        one of the following values:</p>
+    <dl class="Bl-tag">
+      <dt id="R_CURSOR~3"><a class="permalink" href="#R_CURSOR~3"><code class="Dv">R_CURSOR</code></a></dt>
+      <dd>The data associated with the specified key is returned. This differs
+          from the <var class="Va">get</var> routines in that it sets or
+          initializes the cursor to the location of the key as well. (Note, for
+          the <code class="Dv">DB_BTREE</code> access method, the returned key
+          is not necessarily an exact match for the specified key. The returned
+          key is the smallest key greater than or equal to the specified key,
+          permitting partial key matches and range searches.)</dd>
+      <dt id="R_FIRST"><a class="permalink" href="#R_FIRST"><code class="Dv">R_FIRST</code></a></dt>
+      <dd>The first key/data pair of the database is returned, and the cursor is
+          set or initialized to reference it.</dd>
+      <dt id="R_LAST"><a class="permalink" href="#R_LAST"><code class="Dv">R_LAST</code></a></dt>
+      <dd>The last key/data pair of the database is returned, and the cursor is
+          set or initialized to reference it. (Applicable only to the
+          <code class="Dv">DB_BTREE</code> and <code class="Dv">DB_RECNO</code>
+          access methods.)</dd>
+      <dt id="R_NEXT"><a class="permalink" href="#R_NEXT"><code class="Dv">R_NEXT</code></a></dt>
+      <dd>Retrieve the key/data pair immediately after the cursor. If the cursor
+          is not yet set, this is the same as the
+          <code class="Dv">R_FIRST</code> flag.</dd>
+      <dt id="R_PREV"><a class="permalink" href="#R_PREV"><code class="Dv">R_PREV</code></a></dt>
+      <dd>Retrieve the key/data pair immediately before the cursor. If the
+          cursor is not yet set, this is the same as the
+          <code class="Dv">R_LAST</code> flag. (Applicable only to the
+          <code class="Dv">DB_BTREE</code> and <code class="Dv">DB_RECNO</code>
+          access methods.)</dd>
+    </dl>
+    <p class="Pp"><code class="Dv">R_LAST</code> and
+        <code class="Dv">R_PREV</code> are available only for the
+        <code class="Dv">DB_BTREE</code> and <code class="Dv">DB_RECNO</code>
+        access methods because they each imply that the keys have an inherent
+        order which does not change.</p>
+    <p class="Pp"><var class="Va">seq</var> routines return -1 on error (setting
+        <var class="Va">errno</var>), 0 on success and 1 if there are no
+        key/data pairs less than or greater than the specified or current key.
+        If the <code class="Dv">DB_RECNO</code> access method is being used, and
+        if the database file is a character special file and no complete
+        key/data pairs are currently available, the <var class="Va">seq</var>
+        routines return 2.</p>
+  </dd>
+  <dt><var class="Va">sync</var></dt>
+  <dd>A pointer to a routine to flush any cached information to disk. If the
+      database is in memory only, the <var class="Va">sync</var> routine has no
+      effect and will always succeed.
+    <p class="Pp">The <var class="Fa">flags</var> argument may be set to the
+        following value:</p>
+    <dl class="Bl-tag">
+      <dt id="R_RECNOSYNC"><a class="permalink" href="#R_RECNOSYNC"><code class="Dv">R_RECNOSYNC</code></a></dt>
+      <dd>If the <code class="Dv">DB_RECNO</code> access method is being used,
+          this flag causes the <var class="Va">sync</var> routine to apply to
+          the btree file which underlies the recno file, not the recno file
+          itself. (See the <var class="Va">bfname</var> field of the
+          <a class="Xr" href="../3/recno">recno(3)</a> manual page for more
+          information.)</dd>
+    </dl>
+    <p class="Pp"><var class="Va">sync</var> routines return -1 on error
+        (setting <var class="Va">errno</var>) and 0 on success.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KEY/DATA_PAIRS"><a class="permalink" href="#KEY/DATA_PAIRS">KEY/DATA
+  PAIRS</a></h1>
+<p class="Pp">Access to all file types is based on key/data pairs. Both keys and
+    data are represented by the following data structure:</p>
+<div class="Bd Pp">
+<pre>
+typedef struct {
+	void *data;
+	size_t size;
+} DBT;
+</pre>
+</div>
+<p class="Pp">The elements of the <var class="Ft">DBT</var> structure are
+    defined as follows:</p>
+<dl class="Bl-tag">
+  <dt><var class="Va">data</var></dt>
+  <dd>A pointer to a byte string.</dd>
+  <dt><var class="Va">size</var></dt>
+  <dd>The length of the byte string.</dd>
+</dl>
+<p class="Pp">Key and data byte strings may reference strings of essentially
+    unlimited length although any two of them must fit into available memory at
+    the same time. It should be noted that the access methods provide no
+    guarantees about byte string alignment.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">The <code class="Fn">dbopen</code>() routine may fail and set
+    <var class="Va">errno</var> for any of the errors specified for the library
+    routines <a class="Xr" href="../2/open">open(2)</a> and
+    <a class="Xr" href="../3/malloc">malloc(3)</a> or the following:</p>
+<dl class="Bl-tag">
+  <dt id="EFTYPE">[<a class="permalink" href="#EFTYPE"><code class="Er">EFTYPE</code></a>]</dt>
+  <dd>A file is incorrectly formatted.</dd>
+  <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>An argument has been specified (hash function, pad byte etc.) that is
+      incompatible with the current file specification or which is not
+      meaningful for the function (for example, use of the cursor without prior
+      initialization) or there is a mismatch between the version number of file
+      and the software.</dd>
+</dl>
+<p class="Pp">The <var class="Va">close</var> routines may fail and set
+    <var class="Va">errno</var> for any of the errors specified for the library
+    routines <a class="Xr" href="../2/close">close(2)</a>,
+    <a class="Xr" href="../2/read">read(2)</a>,
+    <a class="Xr" href="../2/write">write(2)</a>,
+    <a class="Xr" href="../3/free">free(3)</a>, or
+    <a class="Xr" href="../2/fsync">fsync(2)</a>.</p>
+<p class="Pp">The <var class="Va">del</var>, <var class="Va">get</var>,
+    <var class="Va">put</var> and <var class="Va">seq</var> routines may fail
+    and set <var class="Va">errno</var> for any of the errors specified for the
+    library routines <a class="Xr" href="../2/read">read(2)</a>,
+    <a class="Xr" href="../2/write">write(2)</a>,
+    <a class="Xr" href="../3/free">free(3)</a> or
+    <a class="Xr" href="../3/malloc">malloc(3)</a>.</p>
+<p class="Pp">The <var class="Va">fd</var> routines will fail and set
+    <var class="Va">errno</var> to <code class="Er">ENOENT</code> for in memory
+    databases.</p>
+<p class="Pp">The <var class="Va">sync</var> routines may fail and set
+    <var class="Va">errno</var> for any of the errors specified for the library
+    routine <a class="Xr" href="../2/fsync">fsync(2)</a>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../3/btree">btree(3)</a>,
+    <a class="Xr" href="../3/hash">hash(3)</a>,
+    <a class="Xr" href="../3/mpool">mpool(3)</a>,
+    <a class="Xr" href="../3/recno">recno(3)</a></p>
+<p class="Pp"><cite class="Rs"><span class="RsA">Margo Seltzer</span> and
+    <span class="RsA">Michael Olson</span>, <span class="RsT">LIBTP: Portable,
+    Modular Transactions for UNIX</span>, <span class="RsR">USENIX
+    proceedings</span>, <span class="RsD">Winter 1992</span>.</cite></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<p class="Pp">The typedef <var class="Ft">DBT</var> is a mnemonic for
+    &#x201C;data base thang&#x201D;, and was used because noone could think of a
+    reasonable name that was not already used.</p>
+<p class="Pp">The file descriptor interface is a kluge and will be deleted in a
+    future version of the interface.</p>
+<p class="Pp">None of the access methods provide any form of concurrent access,
+    locking, or transactions.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">January 2, 1994</td>
+    <td class="foot-os">macOS 12.4</td>
+  </tr>
+</table>
+</body>
+</html>

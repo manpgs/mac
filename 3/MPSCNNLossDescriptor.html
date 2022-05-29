@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   -*- nroff -*-
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MPSCNNLossDescriptor(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">MPSCNNLossDescriptor(3)</td>
+    <td class="head-vol">MetalPerformanceShaders.framework</td>
+    <td class="head-rtitle">MPSCNNLossDescriptor(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">MPSCNNLossDescriptor</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp">#import &lt;MPSCNNLoss.h&gt;</p>
+<p class="Pp">Inherits NSObject, and &lt;NSCopying&gt;.</p>
+<section class="Ss">
+<h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull instancetype) - <b>init</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
+  Methods</a></h2>
+<br/>
+<p class="Pp">(nonnull <b>MPSCNNLossDescriptor</b> *) +
+    <b>cnnLossDescriptorWithType:reductionType:</b>
+  <br/>
+  <br/>
+</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Properties"><a class="permalink" href="#Properties">Properties</a></h2>
+<br/>
+<p class="Pp"><b>MPSCNNLossType</b> <b>lossType</b>
+  <br/>
+  <b>MPSCNNReductionType</b> <b>reductionType</b>
+  <br/>
+  float <b>weight</b>
+  <br/>
+  float <b>labelSmoothing</b>
+  <br/>
+  NSUInteger <b>numberOfClasses</b>
+  <br/>
+  float <b>epsilon</b>
+  <br/>
+  float <b>delta</b>
+  <br/>
+  <br/>
+</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Detailed_Description"><a class="permalink" href="#Detailed_Description">Detailed
+  Description</a></h1>
+<p class="Pp">This depends on Metal.framework. The <b>MPSCNNLossDescriptor</b>
+    specifies a loss filter descriptor. The same descriptor can be used to
+    initialize both the <b>MPSCNNLoss</b> and the MPSCNNLossGradient
+  filters.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Method_Documentation"><a class="permalink" href="#Method_Documentation">Method
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="+_(nonnull_"><a class="permalink" href="#+_(nonnull_">+
+  (nonnull <b>MPSCNNLossDescriptor</b>*) cnnLossDescriptorWithType:
+  (<b>MPSCNNLossType</b>) lossType(<b>MPSCNNReductionType</b>)
+  reductionType</a></h2>
+<p class="Pp">Make a descriptor for a <b>MPSCNNLoss</b> or MPSCNNLossGradient
+    object.</p>
+<p class="Pp"><b>Parameters:</b></p>
+<div class="Bd-indent"><i>lossType</i> The type of a loss filter.
+<br/>
+<i>reductionType</i> The type of a reduction operation to apply. This argument
+  is ignored in the MPSCNNLossGradient filter.</div>
+<p class="Pp"><b>Returns:</b></p>
+<div class="Bd-indent"><b>A</b> valid <b>MPSCNNLossDescriptor</b> object or nil,
+  if failure.</div>
+</section>
+<section class="Ss">
+<h2 class="Ss">- (nonnull instancetype) init </h2>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Property_Documentation"><a class="permalink" href="#Property_Documentation">Property
+  Documentation</a></h1>
+<section class="Ss">
+<h2 class="Ss">- delta [read]<b>, [write]</b>, [nonatomic]<b>, [assign]</b></h2>
+<p class="Pp">The delta parameter. The default value is 1.0f. This parameter is
+    valid only for the loss functions of the following type(s):
+    MPSCNNLossTypeHuber.</p>
+<p class="Pp">Given predictions and labels (ground truth), it is applied in the
+    following way: if (|predictions - labels| &lt;= delta, loss = 0.5f *
+    predictions^2 if (|predictions - labels| &gt; delta, loss = 0.5 * delta^2 +
+    delta * (|predictions - labels| - delta)</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- epsilon [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The epsilon parameter. The default value is 1e-7. This parameter
+    is valid only for the loss functions of the following type(s):
+    MPSCNNLossTypeLog.</p>
+<p class="Pp">Given predictions and labels (ground truth), it is applied in the
+    following way: -(labels * log(predictions + epsilon)) - ((1 - labels) *
+    log(1 - predictions + epsilon))</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- labelSmoothing [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The label smoothing parameter. The default value is 0.0f. This
+    parameter is valid only for the loss functions of the following type(s):
+    MPSCNNLossFunctionTypeSoftmaxCrossEntropy,
+    MPSCNNLossFunctionTypeSigmoidCrossEntropy.</p>
+<p class="Pp">MPSCNNLossFunctionTypeSoftmaxCrossEntropy: given labels (ground
+    truth), it is applied in the following way: labels = labelSmoothing &gt; 0 ?
+    labels * (1 - labelSmoothing) + labelSmoothing / numberOfClasses :
+  labels</p>
+<p class="Pp">MPSCNNLossFunctionTypeSigmoidCrossEntropy: given labels (ground
+    truth), it is applied in the following way: labels = labelSmoothing &gt; 0 ?
+    labels * (1 - labelSmoothing) + 0.5 * labelSmoothing : labels</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- lossType [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The type of a loss filter. This parameter specifies the type of a
+    loss filter.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- numberOfClasses [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The number of classes parameter. The default value is 1. This
+    parameter is valid only for the loss functions of the following type(s):
+    MPSCNNLossFunctionTypeSoftmaxCrossEntropy.</p>
+<p class="Pp">Given labels (ground truth), it is applied in the following way:
+    labels = labelSmoothing &gt; 0 ? labels * (1 - labelSmoothing) +
+    labelSmoothing / numberOfClasses : labels</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- reductionType [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The type of a reduction operation performed in the loss filter.
+    This parameter specifies the type of a reduction operation performed in the
+    loss filter.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss">- weight [read]<b>, [write]</b>, [nonatomic]<b>,
+  [assign]</b></h2>
+<p class="Pp">The scale factor to apply to each element of a result. Each
+    element of a result is multiplied by the weight value. The default value is
+    1.0f.</p>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Author"><a class="permalink" href="#Author">Author</a></h1>
+<p class="Pp">Generated automatically by Doxygen for
+    MetalPerformanceShaders.framework from the source code.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">Mon Jul 9 2018</td>
+    <td class="foot-os">Version MetalPerformanceShaders-119.3</td>
+  </tr>
+</table>
+</body>
+</html>

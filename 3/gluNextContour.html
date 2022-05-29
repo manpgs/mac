@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   e
+  macro stdmacro
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>GLUNEXTCONTOUR(3G)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">GLUNEXTCONTOUR(3G)</td>
+    <td class="head-vol"></td>
+    <td class="head-rtitle">GLUNEXTCONTOUR(3G)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><b>gluNextContour</b> - mark the beginning of another contour</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="C_SPECIFICATION"><a class="permalink" href="#C_SPECIFICATION">C
+  SPECIFICATION</a></h1>
+<p class="Pp">void <b>gluNextContour</b>( GLUtesselator* <i>tess</i>,</p>
+<pre>
+	GLenum <i>type</i> )
+</pre>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PARAMETERS"><a class="permalink" href="#PARAMETERS">PARAMETERS</a></h1>
+<dl class="Bl-tag">
+  <dt id="tess"><a class="permalink" href="#tess"><i>tess</i></a></dt>
+  <dd>Specifies the tessellation object (created with <b>gluNewTess</b>).</dd>
+  <dt id="type"><a class="permalink" href="#type"><i>type</i></a></dt>
+  <dd>Specifies the type of the contour being defined. Valid values are
+      <b>GLU_EXTERIOR</b>, <b>GLU_INTERIOR</b>, <b>GLU_UNKNOWN</b>,
+      <b>GLU_CCW</b>, and <b>GLU_CW</b>.</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><b>gluNextContour</b> is used in describing polygons with multiple
+    contours. After the first contour has been described through a series of
+    <b>gluTessVertex</b> calls, a <b>gluNextContour</b> call indicates that the
+    previous contour is complete and that the next contour is about to begin.
+    Another series of <b>gluTessVertex</b> calls is then used to describe the
+    new contour. This process can be repeated until all contours have been
+    described.</p>
+<p class="Pp"><i>type</i> defines what type of contour follows. The legal
+    contour types are as follows:</p>
+<dl class="Bl-tag">
+  <dt id="GLU_EXTERIOR"><a class="permalink" href="#GLU_EXTERIOR"><b>GLU_EXTERIOR</b></a></dt>
+  <dd>An exterior contour defines an exterior boundary of the polygon.</dd>
+  <dt id="GLU_INTERIOR"><a class="permalink" href="#GLU_INTERIOR"><b>GLU_INTERIOR</b></a></dt>
+  <dd>An interior contour defines an interior boundary of the polygon (such as a
+      hole).</dd>
+  <dt id="GLU_UNKNOWN"><a class="permalink" href="#GLU_UNKNOWN"><b>GLU_UNKNOWN</b></a></dt>
+  <dd>An unknown contour is analyzed by the library to determine if it is
+      interior or exterior.</dd>
+  <dt id="GLU_CCW"><a class="permalink" href="#GLU_CCW"><b>GLU_CCW</b>,</a></dt>
+  <dd></dd>
+  <dt id="GLU_CW"><a class="permalink" href="#GLU_CW"><b>GLU_CW</b></a></dt>
+  <dd>The first <b>GLU_CCW</b> or <b>GLU_CW</b> contour defined is considered to
+      be exterior. All other contours are considered to be exterior if they are
+      oriented in the same direction (clockwise or counterclockwise) as the
+      first contour, and interior if they are not.</dd>
+</dl>
+<p class="Pp">If one contour is of type <b>GLU_CCW</b> or <b>GLU_CW</b>, then
+    all contours must be of the same type (if they are not, then all
+    <b>GLU_CCW</b> and <b>GLU_CW</b> contours will be changed to
+    <b>GLU_UNKNOWN</b>).</p>
+<p class="Pp">Note that there is no real difference between the <b>GLU_CCW</b>
+    and <b>GLU_CW</b> contour types.</p>
+<p class="Pp">Before the first contour is described, <b>gluNextContour</b> can
+    be called to define the type of the first contour. If <b>gluNextContour</b>
+    is not called before the first contour, then the first contour is marked
+    <b>GLU_EXTERIOR</b>.</p>
+<p class="Pp">This command is obsolete and is provided for backward
+    compatibility only. Calls to <b>gluNextContour</b> are mapped to
+    <b>gluTessEndContour</b> followed by <b>gluTessBeginContour</b>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<p class="Pp">A quadrilateral with a triangular hole in it can be described as
+    follows:</p>
+<p class="Pp">gluBeginPolygon(tobj);
+  <br/>
+   gluTessVertex(tobj, v1, v1);
+  <br/>
+   gluTessVertex(tobj, v2, v2);
+  <br/>
+   gluTessVertex(tobj, v3, v3);
+  <br/>
+   gluTessVertex(tobj, v4, v4); gluNextContour(tobj, GLU_INTERIOR);
+  <br/>
+   gluTessVertex(tobj, v5, v5);
+  <br/>
+   gluTessVertex(tobj, v6, v6);
+  <br/>
+   gluTessVertex(tobj, v7, v7); gluEndPolygon(tobj);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>gluBeginPolygon</b>, <b>gluNewTess</b>, <b>gluTessCallback</b>,
+    <b>gluTessVertex</b>, <b>gluTessBeginContour</b></p>
+<p class="Pp"></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date"></td>
+    <td class="foot-os"></td>
+  </tr>
+</table>
+</body>
+</html>

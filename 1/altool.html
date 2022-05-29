@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>altool(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">altool(1)</td>
+    <td class="head-vol">General Commands Manual</td>
+    <td class="head-rtitle">altool(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><b>xcrun altool</b> -- Validate and Upload apps for the App Store,
+    or Notarize apps for distribution outside of the Mac App Store.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><b>xcrun altool --upload-package </b> <i>file_path</i><b> --type
+    </b> {macos | ios | appletvos}<b> --asc-public-id </b> <i>id</i><b>
+    --apple-id </b><i>id</i><b> --bundle-version </b><i>version</i><b>
+    --bundle-short-version-string </b><i>string</i><b> --bundle-id </b><i>id</i>
+    {<b>-u </b> <i>username</i> [<b>-p </b> <i>password</i>] | <b>--apiKey
+    </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}</p>
+<p class="Pp"><b>xcrun altool --validate-app -f </b> <i>file_path</i><b> --type
+    </b> &quot;{macos | ios | appletvos}&quot; {<b>-u </b> <i>username</i>
+    [<b>-p </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer
+    </b> <i>issuer_id</i>}</p>
+<p class="Pp"><b>xcrun altool --upload-app -f</b> <i>file_path</i><b> --type
+    </b> &quot;{macos | ios | appletvos}&quot; {<b>-u </b> <i>username</i>
+    [<b>-p </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer
+    </b> <i>issuer_id</i>} <b>[DEPRECATED</b> use <b>--upload-package</b>]</p>
+<p class="Pp"><b>xcrun altool --upload-hosted-content </b><i>file_path</i><b>
+    --sku </b><i>sku</i><b> --type </b> &quot;{macos | ios | appletvos}&quot;
+    <b> --product-id </b><i>id</i><b> --asc-provider </b><i>id</i></p>
+<p class="Pp"><b>xcrun altool --notarize-app -f </b><i>file_path</i><b>
+    --primary-bundle-id </b><i>bundle_id</i> {<b>-u </b> <i>username</i> [<b>-p
+    </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b>
+    <i>issuer_id</i>} [<b>--asc-provider </b> <i>name</i> | <b>--team-id </b>
+    <i>id</i> | <b>--asc-public-id</b> <i>id</i>]</p>
+<p class="Pp"><b>xcrun altool --notarization-info </b><i>uuid</i> {<b>-u </b>
+    <i>username</i> [<b>-p </b> <i>password</i>] | <b>--apiKey
+    </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}</p>
+<p class="Pp"><b>xcrun altool --notarization-history </b><i>page</i> {<b>-u </b>
+    <i>username</i> [<b>-p </b> <i>password</i>] | <b>--apiKey
+    </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>} [<b>--asc-provider
+    </b> <i>name</i> | <b>--team-id </b> <i>id</i> | <b>--asc-public-id</b>
+    <i>id</i>]</p>
+<p class="Pp"><b>xcrun altool --list-apps</b> {<b>-u </b> <i>username</i> [<b>-p
+    </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b>
+    <i>issuer_id</i>}</p>
+<p class="Pp"><b>xcrun altool --list-providers</b> {<b>-u </b> <i>username</i>
+    [<b>-p </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer
+    </b> <i>issuer_id</i>}</p>
+<p class="Pp"><b>xcrun altool --store-password-in-keychain-item
+    </b><i>name_for_keychain_item</i><b> -u </b><i>username</i><b> -p
+    </b><i>password</i> [<b>--keychain</b> <i>keychain_filename</i> |
+    <b>--sync</b>]</p>
+<p class="Pp"></p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">To upload or notarize your app binary files, you can use the
+    <b>xcrun altool</b> command-line tool in <b>Xcode 10.0</b> or later.</p>
+<p class="Pp">To run <b>altool</b> from <b>Xcode</b> to upload or notarize your
+    app, specify the following at the command-line:</p>
+<p class="Pp"></p>
+<div class="Bd-indent"><b>xcrun altool </b><i>command</i> [<i>...</i>]</div>
+<p class="Pp"><b>Note:</b> Most functions require authentication, but you can
+    pass in your credentials via Environment Variables or the keychain. See the
+    <b>-p</b> parameter below.</p>
+<p class="Pp"><b>Usage</b></p>
+<div class="Bd-indent"><b>altool</b> supports various usages depending on if you
+  need to deliver an app for distribution via the App Store or to notarize a
+  macOS app for distribution outside of the Mac App Store.
+<p class="Pp">The <b>--validate-app</b> and <b>--upload-package</b> commands are
+    used for App Store distribution.</p>
+<p class="Pp">The <b>--notarize-app</b>, <b>--notarization-info</b> and
+    <b>--notarization-history</b> commands are used when notarizing macOS apps
+    and retrieving information about apps previously notarized.</p>
+</div>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<p class="Pp"><b>Authentication</b></p>
+<div class="Bd-indent">Most commands require authorization, but you can pass in
+  your credentials via Environment Variables or the keychain. See the <b>-p</b>
+  parameter below.
+<p class="Pp">Two methods of authentication are available: username with
+    password, and apiKey with apiIssuer.</p>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="u,"><a class="permalink" href="#u,"><b>-u, --username
+    </b><i>username</i></a></dt>
+  <dd>Username. Required to connect for most commands. You must also specify
+      <b>--password</b>.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="p,"><a class="permalink" href="#p,"><b>-p, --password
+    </b><i>password</i></a></dt>
+  <dd>Password. Required if <b>--username</b> is specified. If this argument is
+      not supplied on the command line, it will be read from stdin.
+      Alternatively to entering <i>password</i> in plaintext, the password may
+      also be specified using a '@keychain:' or '@env:' prefix followed by a
+      keychain password item name or environment variable name.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<div class="Bd-indent"><b>Example:</b>
+<div class="Bd-indent">'<b>-p </b> @keychain:<i>MY_PASS</i>' uses the password
+  stored in the keychain password item named <i>MY_PASS</i>.
+<p class="Pp">You can create and update keychain items with the
+    <b>--store-password-in-keychain-item</b> command. Note also that the
+    <b>--username</b> can be inferred from the keychain item so
+    <b>--username</b> can be omitted when using a '-p @keychain:' option.
+    Optionally, you can specify a custom keychain file that contains the
+    password with the <b>--keychain</b> option.</p>
+</div>
+<p class="Pp"><b>Example: </b>'<b>-p </b> @env:<i>MY_PASS</i>' uses the value in
+    the environment variable named <i>MY_PASS</i>.</p>
+</div>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="apiKey"><a class="permalink" href="#apiKey"><b>--apiKey
+    </b><i>api_key</i></a></dt>
+  <dd>apiKey. Required for JWT authentication (in lieu of username/password).
+      This option will search the following directories in sequence for a
+      private key file with the name of 'AuthKey_&lt;api_key&gt;.p8':
+      './private_keys', '~/private_keys', '~/.private_keys', and
+      '~/.appstoreconnect/private_keys'. Additionally, you can set the
+      environment variable $API_PRIVATE_KEYS_DIR or a user default
+      API_PRIVATE_KEYS_DIR to specify the directory where your AuthKey file is
+      located.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="apiIssuer"><a class="permalink" href="#apiIssuer"><b>--apiIssuer
+    </b><i>issuer_id</i></a></dt>
+  <dd>Issuer ID. Required if <b>--apiKey</b> is specified.</dd>
+</dl>
+</div>
+<p class="Pp"></p>
+<p class="Pp"><b>Keychain Usage</b></p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="store-password-in-keychain-item"><a class="permalink" href="#store-password-in-keychain-item"><b>--store-password-in-keychain-item
+    </b><i>name_for_keychain_item</i><b> -u </b><i>username</i><b> -p
+    </b><i>password</i></a></dt>
+  <dd>Stores the password <i>password</i> in the keychain item named
+      <i>name_for_keychain_item</i> associated with the account <i>username</i>.
+      If an item with that name and account already exists in the keychain, its
+      password will be updated. Otherwise a new item is created with that name.
+      You can use this keychain item with the <b>-p</b> option to mask your
+      password with other commands. Optionally, you can specify a custom
+      keychain file in which to store the password with the <b>--keychain</b>
+      option. You can also use <b>--sync</b> to create a password that will sync
+      with your iCloud account.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<div class="Bd-indent"><b>Example:</b>
+<div class="Bd-indent"><b>xcrun altool --store-password-in-keychain-item
+  </b>&quot;MY_SECRET&quot; <b>-u</b> jappleseed@apple.com <b>-p</b>
+  &quot;MyP@ssw0rd!@78&quot;
+<p class="Pp"><b>xcrun altool --notarize-app -u </b>jappleseed@apple.com
+    <b>-p</b> @keychain:MY_SECRET [...]</p>
+</div>
+</div>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="keychain"><a class="permalink" href="#keychain"><b>--keychain
+    </b><i>path_to_keychain_file</i></a></dt>
+  <dd>Used with <b>--store-password-in-keychain</b> and the <b>@keychain:</b>
+      option for <b>-p</b> lets you specify the path to a keychain file in which
+      to store or from which to read the password. Cannot be used with the
+      <b>--sync</b> option.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="sync"><a class="permalink" href="#sync"><b>--sync</b></a></dt>
+  <dd>Used with <b>--store-password-in-keychain</b> to allow the keychain item
+      to sync with your iCloud account and other devices associated with the
+      account. Cannot by used with the <b>--keychain</b> option.</dd>
+</dl>
+</div>
+<p class="Pp"></p>
+<p class="Pp"><b>General</b></p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="f,"><a class="permalink" href="#f,"><b>-f, --file
+    </b><i>file</i></a></dt>
+  <dd><i>file</i> specifies the path to the file to process.</dd>
+  <dt id="t,"><a class="permalink" href="#t,"><b>-t, --type </b>{macos | ios |
+    appletvos}</a></dt>
+  <dd>Specify the platform of the file.</dd>
+  <dt id="transport"><a class="permalink" href="#transport"><b>--transport</b>
+    {HTTPS | Signiant | Aspera | DAV}</a></dt>
+  <dd>Allows you to specify the protocol used when using
+      <b>--upload-package</b>, <b>--upload-app</b>, or <b>--notarize-app</b>.
+      You should only use this option when instructed by Apple.</dd>
+  <dt id="k,"><a class="permalink" href="#k,"><b>-k, --throttle</b><i>
+    Kbps</i></a></dt>
+  <dd>Allows you to limit the upload speed to <i>Kbps</i> kilobits per second.
+      If not specified, then the default limit is used.</dd>
+  <dt id="apple-id"><a class="permalink" href="#apple-id"><b>--apple-id</b><i>
+    id</i></a></dt>
+  <dd> Specify the Apple ID of the app to be uploaded with
+      <b>--upload-package</b>.</dd>
+  <dt id="bundle-id"><a class="permalink" href="#bundle-id"><b>--bundle-id</b><i>
+    id</i></a></dt>
+  <dd> Specify the CFBundleIdentifier of the app to be uploaded with
+      <b>--upload-package</b>.</dd>
+  <dt id="bundle-short-version-string"><a class="permalink" href="#bundle-short-version-string"><b>--bundle-short-version-string</b><i>
+    string</i></a></dt>
+  <dd> Specify the CFBundleShortVersionString of the app to be uploaded with
+      <b>--upload-package</b>.</dd>
+  <dt id="bundle-version"><a class="permalink" href="#bundle-version"><b>--bundle-version</b><i>
+    id</i></a></dt>
+  <dd> Specify the CFBundleVersion of the app to be uploaded with
+      <b>--upload-package</b>.</dd>
+  <dt id="product-id"><a class="permalink" href="#product-id"><b>--product-id</b><i>
+    id</i></a></dt>
+  <dd>Specify the product ID of the hosted content package to be uploaded with
+      <b>--upload-hosted-content</b>.</dd>
+  <dt id="sku"><a class="permalink" href="#sku"><b>--sku</b><i> sku</i></a></dt>
+  <dd>Specify the SKU of the hosting app associated with the hosted content to
+      be uploaded with <b>--upload-hosted-content</b>.</dd>
+  <dt id="asc-provider"><a class="permalink" href="#asc-provider"><b>--asc-provider
+    </b><i>provider_shortname</i></a></dt>
+  <dd>Required with <b>--notarize-app</b> and <b>--notarization-history</b> when
+      a user account is associated with multiple providers and using
+      username/password authentication. You can use the <b>--list-providers</b>
+      command to retrieve the providers associated with your accounts. You may
+      instead use <b>--asc-public-id</b> or <b>--team-id</b>.</dd>
+  <dt id="asc-public-id"><a class="permalink" href="#asc-public-id"><b>--asc-public-id
+    </b><i>public_id</i></a></dt>
+  <dd>Required with <b>--upload-package</b>, <b>--notarize-app</b>, and
+      <b>--notarization-history</b> when a user account is associated with
+      multiple providers and using username/password authentication. You can use
+      the <b>--list-providers</b> command to retrieve the providers associated
+      with your account. You may instead use <b>--asc-provider</b> or
+      <b>--team-id</b>.</dd>
+  <dt id="team-id"><a class="permalink" href="#team-id"><b>--team-id
+    </b><i>wwdr_team_id</i></a></dt>
+  <dd>Required with <b>--notarize-app</b> and <b>--notarization-history</b> when
+      a user account is associated with multiple providers and using
+      username/password authentication. You can use the <b>--list-providers</b>
+      command to retrieve the providers associated with your accounts. You may
+      instead use <b>--asc-provider</b> or <b>--asc-public-id</b>.</dd>
+  <dt id="list-providers"><a class="permalink" href="#list-providers"><b>--list-providers</b></a></dt>
+  <dd>Displays a list of the providers associated with your account along with
+      short name, team id, and public id. This command is useful to determine
+      what to use with the <b>--asc-provider, --team-id,</b> and
+      <b>--asc-public-id</b> options. Authentication is required.</dd>
+  <dt id="output-format"><a class="permalink" href="#output-format"><b>--output-format
+    </b>{xml | json | normal}</a></dt>
+  <dd>Specifies how the output is formatted. <b>'xml'</b> and <b>'json'</b>
+      display the output in a structured format; <b>'normal'</b> displays in an
+      unstructured format (default).</dd>
+  <dt id="show-progress"><a class="permalink" href="#show-progress"><b>--show-progress</b></a></dt>
+  <dd>Show progress during operation.</dd>
+  <dt id="verbose"><a class="permalink" href="#verbose"><b>--verbose</b></a></dt>
+  <dd>Enable logging output. Show detailed information during operation.</dd>
+  <dt id="h,"><a class="permalink" href="#h,"><b>-h, --help</b></a></dt>
+  <dd>Display the help page.</dd>
+</dl>
+</div>
+<p class="Pp"><b>App Store Apps</b></p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="upload-package"><a class="permalink" href="#upload-package"><b>--upload-package
+    </b><i>file_path</i></a></dt>
+  <dd>Uploads the app archive for App Store submission. <i>file_path</i>,
+      <b>--type</b>, <b>--asc-public-id</b>, <b>--apple-id</b>,
+      <b>--bundle-version</b>, <b>--bundle-short-version-string</b>,
+      <b>--bundle-id</b>, and Authentication are required.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="v,"><a class="permalink" href="#v,"><b>-v, --validate-app</b></a></dt>
+  <dd>Preflights an app archive for App Store submission. Authentication and
+      <b>-f</b> are required. Information about the archive is sent to the App
+      Store for evaluation. This mode is useful for identifying issues which
+      need to be corrected prior to uploading the entire archive. If successful,
+      the app can be submitted with <b>--upload-app</b>. If the archive fails
+      validation, a list of errors is returned which can be addressed prior to
+      upload. Validation is not required prior to uploading.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="upload-app"><a class="permalink" href="#upload-app"><b>--upload-app
+    [DEPRECATED</b> use <b>--upload-package</b> instead<b>]</b></a></dt>
+  <dd>Uploads the given app archive for App Store submission. Authentication and
+      <b>-f</b> are required. The app archive is submitted to the App Store. If
+      successful, the app begins the process for being accepted into the App
+      Store. If the upload is rejected, a list of errors is returned that need
+      to be addressed before uploading again. It may be useful to use
+      <b>--validate-app</b> first to catch common problems without uploading the
+      entire package.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="upload-hosted-content"><a class="permalink" href="#upload-hosted-content"><b>--upload-hosted-content
+    </b><i>file_path</i></a></dt>
+  <dd>Uploads the specified hosted content in-app purchase archive to the App
+      Store. <b>--sku</b>, <b>--type</b>, <b>--product-id</b>,
+      <b>--asc-provider</b>, and Authentication are required.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="list-apps"><a class="permalink" href="#list-apps"><b>--list-apps</b></a></dt>
+  <dd>Returns a list of all app records associated with your account(s).
+      Authentication is required.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</div>
+<p class="Pp"><b>Notarizing Apps</b></p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="notarize-app"><a class="permalink" href="#notarize-app"><b>--notarize-app</b></a></dt>
+  <dd>Uploads the given app package, dmg or zip file for notarization.
+      Authentication, <b>-f</b>, and <b>--primary-bundle-id</b> are required.
+      <b>--asc-provider, --asc-public-id,</b> or <b>--team-id</b> is required
+      for an account associated with multiple providers. If successful, the UUID
+      associated with the upload is returned. You can query the status of the
+      upload with the <b>--notarization-info</b> command and specifying the
+      UUID.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="notarization-info"><a class="permalink" href="#notarization-info"><b>--notarization-info
+    </b><i>uuid</i></a></dt>
+  <dd>Returns the status and log file URL of a package previously uploaded for
+      notarization with the specified <i>uuid</i>. Authentication is required.
+      The log file can be retrieved with 'curl <i>log_file_url</i>'.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="notarization-history"><a class="permalink" href="#notarization-history"><b>--notarization-history
+    </b><i>page</i></a></dt>
+  <dd>Returns a list of all uploads submitted for notarization. <i>page</i>
+      specifies a range of entries where 0 returns the most recent number of
+      entries. A new page value will be returned which can be used as the
+      <i>page</i> value to the next use of <b>--notarization-history</b> and so
+      forth until no more items are returned. Authentication is required.
+      <b>--asc-provider, --asc-public-id,</b> or <b>--team-id</b> is required
+      for an account associated with multiple providers.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="primary-bundle-id"><a class="permalink" href="#primary-bundle-id"><b>--primary-bundle-id
+    </b><i>bundle_id</i></a></dt>
+  <dd>Used with <b>--notarize-app</b> to uniquely identify a package.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</div>
+<p class="Pp"></p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT_CODES"><a class="permalink" href="#EXIT_CODES">EXIT
+  CODES</a></h1>
+<p class="Pp"><b>0</b> success, <b>1</b> failure. (Upon failure, an error code
+    and message are generally also displayed.)</p>
+<p class="Pp"></p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp"><b>xcrun altool --upload-package </b>MyApp.ipa<b> --type
+    </b>ios<b> --asc-public-id </b>69a6de71-xxxx-xxxx-xxxx-xxxxxxxxxxxx<b>
+    --apple-id </b>42xxxx<b> --bundle-version </b>'5'<b>
+    --bundle-short-version-string </b>'1.0'<b> --bundle-id
+    </b>'com.mycompany.myapp'<b> -u </b>user@mycompany.com<b> -p
+  </b>**********</p>
+<div class="Bd-indent">Uploads the package for App Store submission. The result
+  is either success or a list of errors that need to be addressed before the
+  upload is accepted.</div>
+<p class="Pp"><b>xcrun altool --validate-app -f </b><i>file</i><b> -t
+    </b><i>platform</i> {<b>-u </b> <i>username</i> [<b>-p </b> <i>password</i>]
+    | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}</p>
+<div class="Bd-indent">Preflights the app for App Store submission. The result
+  is either success or a list of errors that need to be addressed prior to
+  upload.</div>
+<p class="Pp"></p>
+<p class="Pp"><b>xcrun altool --upload-app -f </b><i>file</i><b> -t
+    </b><i>platform</i> {<b>-u </b> <i>username</i> [<b>-p </b> <i>password</i>]
+    | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}</p>
+<div class="Bd-indent">Uploads the app for App Store submission. The result is
+  either success or a list of errors that need to be addressed before the upload
+  is accepted.</div>
+<p class="Pp"></p>
+<p class="Pp"><b>xcrun altool --list-apps</b> {<b>-u </b> <i>username</i> [<b>-p
+    </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b>
+    <i>issuer_id</i>}</p>
+<div class="Bd-indent">Returns a list of all app records associated with your
+  account.</div>
+<p class="Pp"></p>
+<p class="Pp"><b>xcrun altool --notarize-app -f </b><i>file</i><b>
+    --primary-bundle-id </b><i>bundle_id</i> {<b>-u </b> <i>username</i> [<b>-p
+    </b> <i>password</i>] | <b>--apiKey </b><i>api_key</i><b> --apiIssuer </b>
+    <i>issuer_id</i>} [<b>--asc-provider </b> <i>provider_shortname</i> |
+    <b>--team-id</b> <i>wwdr_team_id</i>]</p>
+<div class="Bd-indent">Uploads the macOS package to be notarized and identified
+  with <i>bundle_id</i>. A successful upload returns a <i>uuid</i> assigned to
+  that upload.</div>
+<p class="Pp"></p>
+<p class="Pp"><b>xcrun altool --notarization-info </b><i>uuid</i> {<b>-u </b>
+    <i>username</i> [<b>-p </b> <i>password</i>] | <b>--apiKey
+    </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}</p>
+<div class="Bd-indent">Returns the status of a package that was previously
+  submitted with <b>--notarize-app</b> which returned <i>uuid</i>.</div>
+<p class="Pp"></p>
+<p class="Pp"><b>xcrun altool --notarization-history </b><i>page</i> {<b>-u </b>
+    <i>username</i> [<b>-p </b> <i>password</i>] | <b>--apiKey
+    </b><i>api_key</i><b> --apiIssuer </b> <i>issuer_id</i>}
+    [<b>--asc-provider</b> <i>provider_shortname</i> | <b>--team-id</b>
+    <i>wwdr_team_id</i>]</p>
+<div class="Bd-indent">Returns a list of packages that were previously submitted
+  with <b>--notarize-app</b> along with a new <i>page</i> value that can be used
+  in a subsequent call to <b>--notarization-history</b> to list additional
+  items.</div>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">xcrun(1)</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">19 MAR 2021</td>
+    <td class="foot-os"></td>
+  </tr>
+</table>
+</body>
+</html>

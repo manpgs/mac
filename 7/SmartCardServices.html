@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2014 Apple Inc.
+   All rights reserved.
+  
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   1. Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   4. Neither the name of Apple Computer nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+  
+   THIS SOFTWARE IS PROVIDED BY APPLE COMPUTER AND CONTRIBUTORS ``AS IS'' AND
+   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGE.
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SmartCardServices(7)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SmartCardServices(7)</td>
+    <td class="head-vol">Miscellaneous Information Manual</td>
+    <td class="head-rtitle">SmartCardServices(7)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">SmartCardServices</code> &#x2014;
+    <span class="Nd">overview of SmartCard support</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp"><code class="Nm">SmartCardServices</code> is a set of components
+    for macOS SmartCard support.</p>
+<p class="Pp">SmartCards which adhere to the PIV standard are supported natively
+    by macOS. Additional smartcard support is provided through the installation
+    of third party drivers. Access to SmartCard content is possible using the
+    keychain interface.</p>
+<p class="Pp" id="list-smartcards">SmartCard certificates are automatically
+    added to a user's keychain when a SmartCard is inserted and authenticated.
+    SmartCard certificates can be listed with the <i class="Em">security</i>
+    command using the
+    <a class="permalink" href="#list-smartcards"><i class="Em">list-smartcards</i></a>
+    or
+    <a class="permalink" href="#export-smartcard"><i class="Em" id="export-smartcard">export-smartcard</i></a>
+    options. Keychain Access GUI cannot be used to manipulate or list these
+    certificates.</p>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="Card"><a class="permalink" href="#Card"><i class="Em">Card
+    Provisioning</i></a></dt>
+  <dd>In order to use smartcards with macOS, identities must be populated into
+      Slot 9a, PIV Authentication, and 9d, Key Managment(KMK, Encryption), and
+      optionally 9c, if signing functions such as mail are to be used.</dd>
+  <dt id="Supported"><a class="permalink" href="#Supported"><i class="Em">Supported
+    Services</i></a></dt>
+  <dd><a class="permalink" href="#Authentication"><i class="Em" id="Authentication">Authentication</i></a>
+      (Loginwindow, ScreenSaver, ssh, sudo, Safari, PAM Authorization, login,
+      su, Finder)
+    <p class="Pp">Authentication is performed using the PIV Authentication
+        Identity. For login, the Key management Key (9d, encryption) is used to
+        unlock the keychain</p>
+    <p class="Pp"><a class="permalink" href="#Encryption"><i class="Em" id="Encryption">Encryption</i></a>
+        (Mail, Keychain)</p>
+    <p class="Pp"><a class="permalink" href="#Signing"><i class="Em" id="Signing">Signing</i></a>
+        (Requires signing certificate- Mail, code signing)</p>
+    <p class="Pp">Mail in macOS will use Digital Signing and Encryption
+        Identities on an attached smartcard. Signing and Encryption buttons will
+        appear in the toolbar when a case-sensitive email address matches the
+        subject or subject alternative name on a smartcard's signing or
+        encryption certificate.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SETUP"><a class="permalink" href="#SETUP">SETUP</a></h1>
+<p class="Pp">macOS smart card support can be configured for either fixed key
+    mapping or attribute based mapping. To configure fixed keymapping, use
+    <a class="Xr" href="../8/sc_auth">sc_auth(8)</a> or use the pairing
+    notification dialog which automatically appears when an unassociated
+    SmartCard is inserted into a reader. This dialog can be globally suppressed
+    by:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard UserPairing -bool NO
+</pre>
+</div>
+<p class="Pp">To configure attribute mapping, use the appropriate
+    <i class="Em">AttributeMapping</i> section in the configuration file as
+    described below. A configuration file is not provided by default. If no
+    <i class="Em">AttributeMapping</i> section exists or the configuration file
+    is missing, attribute matching is not used. If both fixed key mapping and
+    attribute mapping are able to associate the inserted SmartCard with a user,
+    attribute mapping takes precedence.</p>
+<p class="Pp">By default, certificates do not need to be trusted to allow
+    pairing. Certificate trust can be globally modified using the
+    <i class="Em">checkCertificateTrust</i> setting:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard checkCertificateTrust -int &lt;level&gt;
+
+</pre>
+</div>
+Possible trust level values are:
+<dl class="Bl-tag">
+  <dt>0</dt>
+  <dd>certificate trust check is turned off</dd>
+  <dt>1</dt>
+  <dd>certificate trust check is turned on</dd>
+  <dt>2</dt>
+  <dd>certificate trust check is turned on and revocation check is set to the
+      soft level (If the OCSP/CRL server is unreachable, authentication
+      succeeds)</dd>
+  <dt>3</dt>
+  <dd>certificate trust check is turned on and revocation check is set to the
+      hard level (A verified positive response from the OCSP/CRL server is
+      needed to succeed)</dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONFIGURATION_FILE"><a class="permalink" href="#CONFIGURATION_FILE">CONFIGURATION
+  FILE</a></h1>
+<p class="Pp">A configuration file for
+    <a class="permalink" href="#SmartCardServices"><i class="Em" id="SmartCardServices">SmartCardServices</i></a>
+    may be set up using
+    <a class="permalink" href="#/etc/SmartcardLogin.plist"><i class="Em" id="/etc/SmartcardLogin.plist">/etc/SmartcardLogin.plist</i></a>
+    and should use a standard plist format. The file permissions must be world
+    readable (644) and recommended ownership is root or a system
+  administrator.</p>
+<p class="Pp">It may contain the following optional sections:</p>
+<dl class="Bl-tag">
+  <dt id="UserSelectorPath"><a class="permalink" href="#UserSelectorPath"><i class="Em">UserSelectorPath</i></a></dt>
+  <dd>This string value points to the custom UserSelector process which is used
+      for associating users with SmartCards. If this section is not found or the
+      component at that path does not exist, the system UserSelector is
+    used.</dd>
+  <dt id="TrustedAuthorities"><a class="permalink" href="#TrustedAuthorities"><i class="Em">TrustedAuthorities</i></a></dt>
+  <dd>It is possible to specify the Certificate Authorities to be used for the
+      trust evaluation of SmartCard certificates. This trust works in
+      conjunction with Certificate Trust settings (1, 2, or 3 required) and is
+      also referred to as Certificate Pinning. Place SHA-256 fingerprints of
+      Certificate Authorities (as string values, comma delimited, and without
+      spaces) in an array named TrustedAuthorities. When Certificate Pinning is
+      used, only SmartCard certificates issued by a Certificate Authorities in
+      this list will be evaluated as trusted. Please note that
+      TrustedAuthorities will be ignored when the checkCertificateTrust setting
+      is set to 0 (off).</dd>
+  <dt id="AttributeMapping"><a class="permalink" href="#AttributeMapping"><i class="Em">AttributeMapping</i></a></dt>
+  <dd>This section is used to set up an optional attribute mapping for the
+      system UserSelector. For each available user record in OpenDirectory,
+      certificate field values are combined into a format string which is then
+      compared to a predefined attribute string. Specifying multiple
+      OpenDirectory attribute strings or using conditional formatting in the
+      format string is not supported. All items in this section are mandatory.
+    <p class="Pp" id="fields"><a class="permalink" href="#fields"><i class="Em">fields</i></a>
+        contains an array of string values. This is the list of certificate
+        field names that will be used to compare against the attribute string.
+        The following field names are supported:</p>
+    <dl class="Bl-tag">
+      <dt>-</dt>
+      <dd>Common Name</dd>
+      <dt>-</dt>
+      <dd>RFC 822 Name</dd>
+      <dt>-</dt>
+      <dd>NT Principal Name</dd>
+      <dt>-</dt>
+      <dd>Organization</dd>
+      <dt>-</dt>
+      <dd>OrganizationalUnit:1</dd>
+      <dt>-</dt>
+      <dd>OrganizationalUnit:2</dd>
+      <dt>-</dt>
+      <dd>OrganizationalUnit:3</dd>
+      <dt>-</dt>
+      <dd>Country</dd>
+    </dl>
+    <p class="Pp"><i class="Em">formatString</i> contains a string value which
+        specifies how certificate fields will be concatenated. Dollar sign plus
+        number (starting with 1) is replaced with the field value at the
+        appropriate index.</p>
+    <p class="Pp" id="dsAttributeString"><a class="permalink" href="#dsAttributeString"><i class="Em">dsAttributeString</i></a>
+        contains a string value. This defines the target attributes for the
+        desired OpenDirectory user record. It will be compared against the
+        generated format strings.</p>
+  </dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="NotEnforcedGroup"><a class="permalink" href="#NotEnforcedGroup"><i class="Em">NotEnforcedGroup</i></a></dt>
+  <dd><a class="permalink" href="#NotEnforcedGroup~2"><i class="Em" id="NotEnforcedGroup~2">NotEnforcedGroup</i></a>
+      contains a string value. This defines the name of an Open Directory group
+      that will not be included in mandatory smartcard enforcement, when
+      enabled. This is sometimes referred to as User Based Enforcement, and
+      provides per-user granularity to
+      <a class="permalink" href="#SmartcardServices."><i class="Em" id="SmartcardServices.">SmartcardServices.</i></a>
+    <p class="Pp">Please see section
+        <a class="permalink" href="#SMARTCARD"><i class="Em" id="SMARTCARD">SMARTCARD
+        ENFORCEMENT</i></a> for more details.</p>
+    <p class="Pp"></p>
+    <p class="Pp"></p>
+    <p class="Pp">In addition, the system must be configured to allow users who
+        are not paired with SmartCard to login with password:</p>
+    <div class="Bd Pp Bd-indent">
+    <pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1
+    </pre>
+    </div>
+    <p class="Pp"></p>
+    <p class="Pp">Remember to update the FileVault Login settings using the
+        <i class="Em">diskutil apfs updatePreboot</i> command.</p>
+    <p class="Pp"></p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ATTRIBUTE_MAPPING_CONFIG_EXAMPLE"><a class="permalink" href="#ATTRIBUTE_MAPPING_CONFIG_EXAMPLE">ATTRIBUTE
+  MAPPING CONFIG EXAMPLE</a></h1>
+<p class="Pp">Sample configuration (Please note that if copying and pasting the
+    provided example, the second line starting with &lt;!DOCTYPE and third line
+    ending with .dtd&quot;&gt; should be a single line. This example presents it
+    as two lines due to formatting and will need a line break removed to be a
+    properly formatted plist):</p>
+<p class="Pp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+  <br/>
+  &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot;
+    &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+  <br/>
+  &lt;plist version=&quot;1.0&quot;&gt;
+  <br/>
+  &lt;dict&gt;
+  <br/>
+   &lt;key&gt;AttributeMapping&lt;/key&gt;
+  <br/>
+   &lt;dict&gt;
+  <br/>
+   &lt;key&gt;fields&lt;/key&gt;
+  <br/>
+   &lt;array&gt;
+  <br/>
+   &lt;string&gt;Common Name&lt;/string&gt;
+  <br/>
+   &lt;string&gt;RFC 822 Name&lt;/string&gt;
+  <br/>
+   &lt;/array&gt;
+  <br/>
+   &lt;key&gt;formatString&lt;/key&gt;
+  <br/>
+   &lt;string&gt;$2-$1&lt;/string&gt;
+  <br/>
+   &lt;key&gt;dsAttributeString&lt;/key&gt;
+  <br/>
+   &lt;string&gt;dsAttrTypeNative:longName&lt;/string&gt;
+  <br/>
+   &lt;/dict&gt;
+  <br/>
+  &lt;/dict&gt;
+  <br/>
+  &lt;/plist&gt;</p>
+<p class="Pp" id="Common">In this example, assume that a certificate has a
+    <a class="permalink" href="#Common"><i class="Em">Common Name</i></a> with
+    value &quot;John Appleseed&quot; and an
+    <a class="permalink" href="#RFC"><i class="Em" id="RFC">RFC 822 Name</i></a>
+    with value &quot;jappleseed@apple.com&quot;. The
+    <i class="Em">formatString</i> &quot;$1-$2&quot; will join both values and
+    the result will be
+    <a class="permalink" href="#jappleseed@apple.com-John"><i class="Em" id="jappleseed@apple.com-John">jappleseed@apple.com-John
+    Appleseed</i></a>. This result will be compared to a directory attribute -
+    in this case, the
+    <a class="permalink" href="#dsAttrTypeNative:email"><i class="Em" id="dsAttrTypeNative:email">dsAttrTypeNative:email</i></a>
+    field. When a match is found, the corresponding user is considered
+    associated with the SmartCard.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OFFLINE_SMARTCARD_LOGIN_VIA_KERBEROS_CACHING"><a class="permalink" href="#OFFLINE_SMARTCARD_LOGIN_VIA_KERBEROS_CACHING">OFFLINE
+  SMARTCARD LOGIN VIA KERBEROS CACHING</a></h1>
+<p class="Pp">In environments where macOS clients may not always be able to
+    reach Directory Servers, cached SmartCard login support is possible via
+    Kerberos caching. This configuration allows users with network accounts to
+    authenticate via SmartCard when operating outside the enterprise
+    environment. Note: Initial account setup requires machine binding and access
+    to the directory server.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="KERBEROS_ATTRIBUTE_MAPPING_CONFIG_EXAMPLE"><a class="permalink" href="#KERBEROS_ATTRIBUTE_MAPPING_CONFIG_EXAMPLE">KERBEROS
+  ATTRIBUTE MAPPING CONFIG EXAMPLE</a></h1>
+<p class="Pp">Sample configuration (Please note that if copying and pasting the
+    provided example, the second line starting with &lt;!DOCTYPE and third line
+    ending with .dtd&quot;&gt; should be a single line. This example presents it
+    as two lines due to formatting and will need a line break removed to be a
+    properly formatted plist).</p>
+<p class="Pp">The following example SmartcardLogin.plist file matches the
+    Subject Alternative Name type, NT Principal Name, in the identity on the
+    SmartCard against the Directory Server's altSecurityIdentities field
+    (Kerberos), allowing for offline login and authentication:</p>
+<p class="Pp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+  <br/>
+  &lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot;
+    &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;
+  <br/>
+  &lt;plist version=&quot;1.0&quot;&gt;
+  <br/>
+  &lt;dict&gt;
+  <br/>
+   &lt;key&gt;AttributeMapping&lt;/key&gt;
+  <br/>
+   &lt;dict&gt;
+  <br/>
+   &lt;key&gt;fields&lt;/key&gt;
+  <br/>
+   &lt;array&gt;
+  <br/>
+   &lt;string&gt;NT Principal Name&lt;/string&gt;
+  <br/>
+   &lt;/array&gt;
+  <br/>
+   &lt;key&gt;formatString&lt;/key&gt;
+  <br/>
+   &lt;string&gt;Kerberos:$1&lt;/string&gt;
+  <br/>
+   &lt;key&gt;dsAttributeString&lt;/key&gt;
+  <br/>
+   &lt;string&gt;dsAttrTypeStandard:AltSecurityIdentities&lt;/string&gt;
+  <br/>
+   &lt;/dict&gt;
+  <br/>
+  &lt;/dict&gt;
+  <br/>
+  &lt;/plist&gt;</p>
+<section class="Ss">
+<h2 class="Ss" id="Additional_considerations"><a class="permalink" href="#Additional_considerations">Additional
+  considerations</a></h2>
+<p class="Pp">Certificate Checking: <i class="Em">checkCertificateTrust</i>
+    should not be set to 3 (hard revocation check) if certificate revocation or
+    OCSP servers are not always available to the client machines.
+  <br/>
+  User accounts should be created setting the &quot;Create Mobile User on
+    Login&quot; flag in the Directory Utility application, when binding client
+    machines via the command line, or with a Configuration Profile. When used in
+    conjunction with Kerberos Caching, a mobile user account will allow users to
+    authenticate either online and offline.</p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SMARTCARD_ENFORCEMENT"><a class="permalink" href="#SMARTCARD_ENFORCEMENT">SMARTCARD
+  ENFORCEMENT</a></h1>
+<p class="Pp">There may be a requirement to use a SmartCard for user
+    authentication in your environment. Enforcing the use of the SmartCard for
+    the entire system can be done using MDM or a command:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard enforceSmartCard -bool true
+</pre>
+</div>
+<p class="Pp">In addition, the system might be configured to allow users who are
+    not paired with SmartCard to login with password using MDM or the
+  command:</p>
+<p class="Pp"></p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1
+</pre>
+</div>
+<p class="Pp">Remember to update the FileVault Login settings using the
+    <i class="Em">diskutil apfs updatePreboot</i> command.</p>
+<p class="Pp">It is also possible to specify an entire group whose members will
+    be exempted from using the card. See the <i class="Em">NotEnforcedGroup</i>
+    section above for usage. Please note that this option is not compatible with
+    FileVault Unlock.</p>
+<p class="Pp">In addition, it is possible to use the attribute
+    <a class="permalink" href="#kDSNativeAttrTypePrefix:SmartCardEnforcement"><i class="Em" id="kDSNativeAttrTypePrefix:SmartCardEnforcement">kDSNativeAttrTypePrefix:SmartCardEnforcement</i></a>
+    in the OpenDirectory user record. It always refers to that specific user and
+    can take the following values:</p>
+<dl class="Bl-tag">
+  <dt>0</dt>
+  <dd>the system default is respected</dd>
+  <dt>1</dt>
+  <dd>card use is always enforced</dd>
+  <dt>2</dt>
+  <dd>card enforcement is always disabled, the user can use a password</dd>
+</dl>
+<p class="Pp">If ActiveDirectory is used in your environment, the value of the
+    <a class="permalink" href="#userAccountControl"><i class="Em" id="userAccountControl">userAccountControl</i></a>
+    attribute is respected.</p>
+<section class="Ss">
+<h2 class="Ss" id="Temporarily_disabling_card_enforcement"><a class="permalink" href="#Temporarily_disabling_card_enforcement">Temporarily
+  disabling card enforcement</a></h2>
+<p class="Pp">In case the system is configured for SmartCard enforced login and
+    this cannot be used, the following command can be used to enable password
+    login once:</p>
+<p class="Pp"></p>
+<div class="Bd Pp Bd-indent">
+<pre>
+security filevault skip-sc-enforcement
+</pre>
+</div>
+<p class="Pp">For more details please see the man page of the
+    <i class="Em">security</i> command.</p>
+<p class="Pp"></p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Evaluation_order"><a class="permalink" href="#Evaluation_order">Evaluation
+  order</a></h2>
+<p class="Pp">The exceptions for enforcement are processed in the following
+    order:</p>
+<dl class="Bl-tag">
+  <dt>-</dt>
+  <dd>OD kDSNativeAttrTypePrefix:SmartCardEnforcement</dd>
+  <dt>-</dt>
+  <dd>AD userAccountControl</dd>
+  <dt>-</dt>
+  <dd>NotEnforced group (not available in FileVault Unlock)</dd>
+  <dt>-</dt>
+  <dd>AllowUnmappedUsers setting</dd>
+  <dt>-</dt>
+  <dd>System-wide setting using defaults or MDM</dd>
+</dl>
+<p class="Pp"></p>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXTENSIONS"><a class="permalink" href="#EXTENSIONS">EXTENSIONS</a></h1>
+<p class="Pp">Extensions can be created using the Xcode SmartCard Token
+    Extension template. Refer to the developer documentation for further
+    details.
+  <br/>
+  To enable the app extension and make the token available to the system for
+    authentication, launch the sc_auth command line tool with value of
+    '&#x2018;com.apple.ctk.class-id&#x2019; from Info.plist:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo sc_auth enable_for_login -t  com.example.HostApp.TokenExtension
+</pre>
+</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYSTEM_REPORT"><a class="permalink" href="#SYSTEM_REPORT">SYSTEM
+  REPORT</a></h1>
+<p class="Pp">It is possible to show the current status of SmartCardServices by
+    command:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+system_profiler SPSmartCardsDataType
+</pre>
+</div>
+<p class="Pp">Information presented includes reader, reader driver, card, card
+    driver, available smartcards and provisioned certificates.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="USB_SMART_CARD_READER_DRIVERS"><a class="permalink" href="#USB_SMART_CARD_READER_DRIVERS">USB
+  SMART CARD READER DRIVERS</a></h1>
+<p class="Pp">OS X has built-in support for USB CCID class-compliant SmartCard
+    readers. For other readers, install the reader driver in
+    <span class="Pa">/usr/local/libexec/SmartCardServices/drivers</span>. Each
+    driver is a bundle. The bundle contains an XML file Info.plist which
+    contains the device's USB vendor ID and product ID. For detailed description
+    of the plist format and how to write a reader driver, see
+    http://pcsclite.alioth.debian.org/api/group__IFDHandler.html</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SMART_CARD_APDU_LOGGING"><a class="permalink" href="#SMART_CARD_APDU_LOGGING">SMART
+  CARD APDU LOGGING</a></h1>
+<p class="Pp">It is possible to turn on logging for SmartCards by setting the
+    global preference:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard Logging -bool yes
+</pre>
+</div>
+<p class="Pp" id="com.apple.CryptoTokenKit">After a SmartCard reader is
+    connected (or after reboot) all operations including contents of sent and
+    received APDU messages are logged into the system log. Logging uses the
+    subsystem
+    <a class="permalink" href="#com.apple.CryptoTokenKit"><i class="Em">com.apple.CryptoTokenKit</i></a>
+    and category
+    <a class="permalink" href="#APDULog"><i class="Em" id="APDULog">APDULog</i></a>
+    so it is possible to set up logging with a predicate (see
+    <a class="Xr" href="../1/log">log(1)</a> ). Example:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+log show --predicate '(subsystem == &quot;com.apple.CryptoTokenKit&quot;) &amp;&amp; (category == &quot;APDULog&quot;)'
+</pre>
+</div>
+<p class="Pp">To avoid security and privacy risks that could occur if logging is
+    turned on indefinitely, the logging setting is one-shot - it must be turned
+    on by the command above to start logging again with a new reader. This
+    includes unplugging and replugging the same reader. If a USB token is used,
+    it is treated as both a card and a reader. Use ssh from a remote system to
+    log back in and re-enable logging as needed</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DISABLING_SMART_CARD_DRIVERS"><a class="permalink" href="#DISABLING_SMART_CARD_DRIVERS">DISABLING
+  SMART CARD DRIVERS</a></h1>
+<p class="Pp">It is possible to turn off token drivers by setting the global
+    preference:</p>
+<div class="Bd Pp Bd-indent">
+<pre>
+sudo defaults write /Library/Preferences/com.apple.security.smartcard DisabledTokens -array com.apple.CryptoTokenKit.pivtoken
+</pre>
+</div>
+<p class="Pp">This statement disables built-in PIV SmartCard driver, but it can
+    be used to disable any token driver or set of token drivers just by
+    replacing token driver extension identifier.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ENTITLEMENT"><a class="permalink" href="#ENTITLEMENT">ENTITLEMENT</a></h1>
+<p class="Pp">Sandboxed PCSC clients require 'com.apple.security.smartcard=YES'
+    entitlement. Non-sandboxed PCSC clients do not require such entitlement (in
+    order to keep backward compatibility with macOS &lt; 10.10). Users of
+    TKSmartCard* API from CryptoTokenKit.framework always require that
+    entitlement no matter whether they are sandboxed or not.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="../1/defaults">defaults(1)</a>,
+    <a class="Xr" href="../1/log">log(1)</a>,
+    <a class="Xr" href="../1/security">security(1)</a>,
+    <a class="Xr" href="../7/UserSelector">UserSelector(7)</a>,
+    <a class="Xr" href="../8/pam_smartcard">pam_smartcard(8)</a>,
+    <a class="Xr" href="../8/sc_auth">sc_auth(8)</a>,
+    <a class="Xr" href="../8/ssh-keychain">ssh-keychain(8)</a></p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">June 24, 2021</td>
+    <td class="foot-os">Apple Computer, Inc.</td>
+  </tr>
+</table>
+</body>
+</html>
