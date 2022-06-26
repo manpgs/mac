@@ -342,99 +342,59 @@
     labels.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
      1. Load the package into an interpreter
-<br/>
      % package require pool
-<br/>
      0.1
-<br/>
      2. Create a pool object called `CarPool' with a maximum size of 55 items (cars):
-<br/>
      % pool CarPool 55
-<br/>
      CarPool
-<br/>
      4. Add items to the pool:
-<br/>
      % CarPool add Toyota Trabant Chrysler1 Chrysler2 Volkswagen
-<br/>
      5. Somebody crashed the Toyota. Remove it from the pool as follows:
-<br/>
      % CarPool remove Toyota
-<br/>
      6. Acquired a new car for the pool. Add it as follows:
-<br/>
      % CarPool add Nissan
-<br/>
      7. Check whether the pool was adjusted correctly:
-<br/>
      % CarPool info allitems
-<br/>
      Trabant Chrysler1 Chrysler2 Volkswagen Nissan
 </pre>
 <p class="Pp">Suspend the interactive session temporarily, and show the
     programmatic use of the request subcommand:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
      # Mrs. Swift needs a car. She doesn't have a preference for a
-<br/>
      # particular car. We'll issue a request on her behalf as follows:
-<br/>
      if { [CarPool request car -allocID &quot;Mrs. Swift&quot;] }  {
-<br/>
          # request was honoured, process the variable `car'
-<br/>
          puts &quot;$car has been allocated to [CarPool info allocID $car].&quot;
-<br/>
      } else {
-<br/>
          # request was denied
-<br/>
           puts &quot;No car available.&quot;
-<br/>
      }
 </pre>
 <p class="Pp">Note how the <b>if</b> command uses the value returned by the
     <b>request</b> subcommand.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
      # Suppose Mr. Wiggly has a preference for the Trabant:
-<br/>
      if { [CarPool request car -allocID &quot;Mr. Wiggly&quot; -prefer Trabant] }  {
-<br/>
          # request was honoured, process the variable `car'
-<br/>
          puts &quot;$car has been allocated to [CarPool info allocID $car].&quot;
-<br/>
      } else {
-<br/>
          # request was denied
-<br/>
           puts &quot;The Trabant was not available.&quot;
-<br/>
      }
 </pre>
 <p class="Pp">Resume the interactive session:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
      8. When the car is returned then you can render it available by:
-<br/>
      % CarPool release Trabant
-<br/>
      9. When done, you delete the pool.
-<br/>
      % CarPool destroy
-<br/>
      Couldn't destroy `CarPool' because some items are still allocated.
-<br/>
      Oops, forgot that Mrs. Swift still occupies a car.
-<br/>
      10. We force the destruction of the pool as follows:
-<br/>
      % CarPool destroy -force
 </pre>
 <p class="Pp"><i>Example 2</i></p>
@@ -449,43 +409,24 @@
     client request at a time.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
      # Create the pool of connections (pipes)
-<br/>
      set maxpipes 10
-<br/>
      pool Pipes $maxpipes
-<br/>
      for {set i 0} {$i &lt; $maxpipes} {incr i} {
-<br/>
          set fd [open &quot;|backendApplication&quot; w+]
-<br/>
          Pipes add $fd
-<br/>
      }
-<br/>
      # A client request comes in. The request is identified as `clientX'.
-<br/>
      # Dispatch it onto an instance of a back-end application
-<br/>
      if { [Pipes request fd -allocID clientX] } {
-<br/>
          # a connection was allocated
-<br/>
          # communicate to the back-end application via the variable `fd'
-<br/>
          puts $fd &quot;someInstruction&quot;
-<br/>
          # ...... etc.
-<br/>
      } else {
-<br/>
          # all connections are currently occupied
-<br/>
          # store the client request in a queue for later processing,
-<br/>
          # or return a 'Server busy' message to the client.
-<br/>
      }
 </pre>
 </section>

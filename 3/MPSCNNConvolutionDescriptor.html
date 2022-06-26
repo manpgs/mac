@@ -190,57 +190,31 @@
     the layers.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
         w: weights for a corresponding output feature channel
-<br/>
         b: bias for a corresponding output feature channel
-<br/>
         W: batch normalized weights for a corresponding output feature channel
-<br/>
         B: batch normalized bias for a corresponding output feature channel
-<br/>
         I = gamma / sqrt(variance + epsilon), J = beta - ( I * mean )
-<br/>
         W = w * I
-<br/>
         B = b * I + J
-<br/>
         Every convolution has (OutputFeatureChannel * kernelWidth * kernelHeight * InputFeatureChannel) weights
-<br/>
         I, J are calculated, for every output feature channel separately to get the corresponding weights and bias
-<br/>
         Thus, I, J are calculated and then used for every (kernelWidth * kernelHeight * InputFeatureChannel)
-<br/>
         weights, and this is done OutputFeatureChannel number of times for each output channel.
-<br/>
         thus, internally, batch normalized weights are computed as:
-<br/>
         W[no][i][j][ni] = w[no][i][j][ni] * I[no]
-<br/>
         no: index into outputFeatureChannel
-<br/>
         i : index into kernel Height
-<br/>
         j : index into kernel Width
-<br/>
         ni: index into inputFeatureChannel
-<br/>
         One usually doesn't see a bias term and batch normalization together as batch normalization potentially cancels
-<br/>
         out the bias term after training, but in MPS if the user provides it, batch normalization will use the above 
-<br/>
         formula to incorporate it, if user does not have bias terms then put a float array of zeroes in the convolution
-<br/>
         init for bias terms of each output feature channel.
-<br/>
         this comes from:
-<br/>
         https://arxiv.org/pdf/1502.03167v3.pdf
-<br/>
         Note: in certain cases the batch normalization parameters will be cached by the MPSNNGraph
-<br/>
         or the MPSCNNConvolution. If the batch normalization parameters change after either is made,
-<br/>
         behavior is undefined.
 </pre>
 <p class="Pp"><b>Parameters:</b></p>
@@ -270,7 +244,6 @@
 <p class="Pp">If the neuron function is f(v,a,b), it will apply</p>
 <p class="Pp"></p>
 <pre>
-<br/>
    OutputImage(x,y,i) = f( ConvolutionResult(x,y,i), A[i], B[i] ) where i in [0,outputFeatureChannels-1]
 </pre>
 <p class="Pp">See https://arxiv.org/pdf/1502.01852.pdf for details.</p>
@@ -329,7 +302,6 @@
     1. When set to value &gt; 1, original kernel width, kW is dilated to</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   kW_Dilated = (kW-1)*dilationRateX + 1
 </pre>
 <p class="Pp">by inserting d-1 zeros between consecutive entries in each row of
@@ -344,7 +316,6 @@
     1. When set to value &gt; 1, original kernel height, kH is dilated to</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   kH_Dilated = (kH-1)*dilationRateY + 1
 </pre>
 <p class="Pp">by inserting d-1 rows of zeros between consecutive row of the

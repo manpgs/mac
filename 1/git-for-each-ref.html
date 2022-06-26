@@ -32,13 +32,9 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <pre>
 <i>git for-each-ref</i> [--count=&lt;count&gt;] [--shell|--perl|--python|--tcl]
-<br/>
                    [(--sort=&lt;key&gt;)...] [--format=&lt;format&gt;] [&lt;pattern&gt;...]
-<br/>
                    [--points-at=&lt;object&gt;]
-<br/>
                    [--merged[=&lt;object&gt;]] [--no-merged[=&lt;object&gt;]]
-<br/>
                    [--contains[=&lt;object&gt;]] [--no-contains[=&lt;object&gt;]]
 </pre>
 <p class="Pp"></p>
@@ -301,9 +297,7 @@ Ref: %(*refname)
 git for-each-ref --shell --format=&quot;ref=%(refname)&quot; refs/heads | \
 while read entry
 do
-<br/>
         eval &quot;$entry&quot;
-<br/>
         echo `dirname $ref`
 done
 </pre>
@@ -316,76 +310,43 @@ done
 <pre>
 #!/bin/sh
 fmt='
-<br/>
         r=%(refname)
-<br/>
         t=%(*objecttype)
-<br/>
         T=${r#refs/tags/}
-<br/>
         o=%(*objectname)
-<br/>
         n=%(*authorname)
-<br/>
         e=%(*authoremail)
-<br/>
         s=%(*subject)
-<br/>
         d=%(*authordate)
-<br/>
         b=%(*body)
-<br/>
         kind=Tag
-<br/>
         if test &quot;z$t&quot; = z
-<br/>
         then
-<br/>
                 # could be a lightweight tag
-<br/>
                 t=%(objecttype)
-<br/>
                 kind=&quot;Lightweight tag&quot;
-<br/>
                 o=%(objectname)
-<br/>
                 n=%(authorname)
-<br/>
                 e=%(authoremail)
-<br/>
                 s=%(subject)
-<br/>
                 d=%(authordate)
-<br/>
                 b=%(body)
-<br/>
         fi
-<br/>
         echo &quot;$kind $T points at a $t object $o&quot;
-<br/>
         if test &quot;z$t&quot; = zcommit
-<br/>
         then
-<br/>
                 echo &quot;The commit was authored by $n $e
 at $d, and titled
-<br/>
     $s
 Its message reads as:
 &quot;
-<br/>
                 echo &quot;$b&quot; | sed -e &quot;s/^/    /&quot;
-<br/>
                 echo
-<br/>
         fi
 '
 eval=`git for-each-ref --shell --format=&quot;$fmt&quot; \
-<br/>
         --sort='*objecttype' \
-<br/>
         --sort=-taggerdate \
-<br/>
         refs/tags`
 eval &quot;$eval&quot;
 </pre>

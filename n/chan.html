@@ -733,33 +733,19 @@ set f [open somefile.txt r+]
 set offset 0
 <i># Search for string &quot;FOOBAR&quot; in the file</i>
 while {[<b>chan gets</b> $f line] &gt;= 0} {
-<br/>
    set idx [string first FOOBAR $line]
-<br/>
    if {$idx &gt; -1} {
-<br/>
       <i># Found it; rewrite line</i>
-<br/>
       <b>chan seek</b> $f [expr {$offset + $idx}]
-<br/>
       <b>chan puts</b> -nonewline $f BARFOO
-<br/>
       <i># Skip to end of following line, and truncate</i>
-<br/>
       <b>chan gets</b> $f
-<br/>
       <b>chan gets</b> $f
-<br/>
       <b>chan truncate</b> $f
-<br/>
       <i># Stop searching the file now</i>
-<br/>
       break
-<br/>
    }
-<br/>
    <i># Save offset of start of next line for later</i>
-<br/>
    set offset [<b>chan tell</b> $f]
 }
 <b>chan close</b> $f

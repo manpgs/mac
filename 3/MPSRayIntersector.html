@@ -131,7 +131,6 @@ MPSRayIntersector *raytracer = [[MPSRayIntersector alloc] initWithDevice:device]
 <p class="Pp"></p>
 <pre>
 MPSTriangleAccelerationStructure *accelerationStructure = 
-<br/>
     [[MPSTriangleAccelerationStructure alloc] initWithDevice:device];
 accelerationStructure.vertexBuffer = vertexBuffer;
 accelerationStructure.triangleCount = triangleCount;
@@ -167,7 +166,6 @@ id &lt;MTLBuffer&gt; rayBuffer = [device newBufferWithLength:sizeof(Ray) * rayCo
 memcpy(rayBuffer.contents, rays, sizeof(Ray) * rayCount);
 // Create a buffer to hold the intersections
 id &lt;MTLBuffer&gt; intersectionBuffer = [device newBufferWithLength:sizeof(Intersection) * rayCount
-<br/>
                                                         options:0];
 </pre>
 <p class="Pp">It can be useful to prevent certain rays from participating in
@@ -189,19 +187,12 @@ id &lt;MTLBuffer&gt; intersectionBuffer = [device newBufferWithLength:sizeof(Int
 <pre>
 id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
 [raytracer encodeIntersectionToCommandBuffer:commandBuffer
-<br/>
                             intersectionType:MPSIntersectionTypeNearest
-<br/>
                                    rayBuffer:rayBuffer
-<br/>
                              rayBufferOffset:0
-<br/>
                           intersectionBuffer:intersectionBuffer
-<br/>
                     intersectionBufferOffset:0
-<br/>
                                     rayCount:rayCount
-<br/>
                        accelerationStructure:accelerationStructure];
 [commandBuffer commit];
 </pre>
@@ -259,14 +250,10 @@ Intersection *intersections = (Intersection *)intersectionBuffer.contents;
 dispatch_semaphore_t asyncOperationSemaphore = dispatch_semaphore_create(MAX_ASYNC_OPERATIONS);
 // Create a ray and intersection buffer large enough for the maximum number of operations
 id &lt;MTLBuffer&gt; rayBuffer =
-<br/>
     [device newBufferWithLength:sizeof(Ray) * rayCount * MAX_ASYNC_OPERATIONS
-<br/>
                         options:0];
 id &lt;MTLBuffer&gt; intersectionBuffer =
-<br/>
     [device newBufferWithLength:sizeof(Intersection) * rayCount * MAX_ASYNC_OPERATIONS
-<br/>
                         options:0];
 NSUInteger asyncOperationIndex = 0;
 // Encode intersection testing:
@@ -282,31 +269,19 @@ asyncOperationIndex = (asyncOperationIndex + 1) % MAX_ASYNC_OPERATIONS;
 id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
 // Encode actual intersection work
 [raytracer encodeIntersectionToCommandBuffer:commandBuffer
-<br/>
                             intersectionType:MPSIntersectionTypeNearest
-<br/>
                                    rayBuffer:rayBuffer
-<br/>
                              rayBufferOffset:rayBufferOffset
-<br/>
                           intersectionBuffer:intersectionBuffer
-<br/>
                     intersectionBufferOffset:intersectionBufferOffset
-<br/>
                                     rayCount:rayCount
-<br/>
                        accelerationStructure:accelerationStructure];
 // Register a completion handler to run when the GPU finishes executing
 [commandBuffer addCompletedHandler:^(id &lt;MTLCommandBuffer&gt; commandBuffer) {
-<br/>
     Intersection *intersections = (Intersection *)((uint8_t *)intersectionBuffer.contents +
-<br/>
         intersectionBufferOffset);
-<br/>
     // Process intersections
-<br/>
     // Signal that the ray and intersection buffer ranges are now available for reuse
-<br/>
     dispatch_semaphore_signal(asyncOperationSemaphore);
 }];
 // Commit the command buffer to allow the GPU to start executing
@@ -332,14 +307,10 @@ id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
 <p class="Pp"></p>
 <pre>
 id &lt;MTLBuffer&gt; rayBuffer =
-<br/>
     [device newBufferWithLength:sizeof(Ray) * rayCount
-<br/>
                         options:MTLResourceStorageModePrivate];
 id &lt;MTLBuffer&gt; intersectionBuffer =
-<br/>
     [device newBufferWithLength:sizeof(Intersection) * rayCount
-<br/>
                         options:MTLResourceStorageModePrivate];
 id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
 // Generate rays
@@ -348,23 +319,15 @@ id &lt;MTLComputeCommandEncoder&gt; encoder = [commandBuffer computeCommandEncod
 [encoder setBytes:&amp;uniformData length:sizeof(uniformData) atIndex:1];
 [encoder setComputePipelineState:cameraPipeline];
 [encoder dispatchThreads:MTLSizeMake(rayCount, 1, 1)
-<br/>
    threadsPerThreadgroup:MTLSizeMake(64, 1, 1)];
 [encoder endEncoding];
 [raytracer encodeIntersectionToCommandBuffer:commandBuffer
-<br/>
                             intersectionType:MPSIntersectionTypeNearest
-<br/>
                                    rayBuffer:rayBuffer
-<br/>
                              rayBufferOffset:0
-<br/>
                           intersectionBuffer:intersectionBuffer
-<br/>
                     intersectionBufferOffset:0
-<br/>
                                     rayCount:rayCount
-<br/>
                        accelerationStructure:accelerationStructure];
 // Perform shading at intersections and update framebuffer texture
 encoder = [commandBuffer computeCommandEncoder];
@@ -374,7 +337,6 @@ encoder = [commandBuffer computeCommandEncoder];
 [encoder setTexture:framebufferTexture atIndex:0];
 [encoder setComputePipelineState:shadingPipeline];
 [encoder dispatchThreads:MTLSizeMake(rayCount, 1, 1)
-<br/>
    threadsPerThreadgroup:MTLSizeMake(64, 1, 1)];
 [encoder endEncoding];
 [commandBuffer commit];
@@ -398,21 +360,13 @@ encoder = [commandBuffer computeCommandEncoder];
 <p class="Pp"></p>
 <pre>
 [raytracer encodeIntersectionToCommandBuffer:commandBuffer
-<br/>
                             intersectionType:MPSIntersectionTypeNearest
-<br/>
                                    rayBuffer:rayBuffer
-<br/>
                              rayBufferOffset:0
-<br/>
                           intersectionBuffer:intersectionBuffer
-<br/>
                     intersectionBufferOffset:0
-<br/>
                               rayCountBuffer:rayCountBuffer
-<br/>
                         rayCountBufferOffset:0
-<br/>
                        accelerationStructure:accelerationStructure];
 </pre>
 <p class="Pp">Multi-GPU Raytracing: to implement multi-GPU raytracing, create
@@ -433,111 +387,63 @@ encoder = [commandBuffer computeCommandEncoder];
 <p class="Pp"></p>
 <pre>
 - For vertex buffers, ray buffers, intersection buffers, etc., use private or managed
-<br/>
   buffers rather than shared buffers when possible on discrete memory GPU architectures as
-<br/>
   they are much faster than fetching data over the PCIe bus. If the CPU only writes once
-<br/>
   to a ray buffer once and reads once from the intersection buffer, then a shared buffer may
-<br/>
   be acceptable and avoids extra copies to and from the GPU. However, it is generally
-<br/>
   preferable to generate and consume rays and intersections on the GPU instead, in which
-<br/>
   case a private buffer should be used. Vertex data is typically static and reused many
-<br/>
   times so it should be stored in private or managed buffers.
 - If the CPU must generate and consume rays and intersections, use double or triple
-<br/>
   buffering as described above. This avoids the CPU and GPU mutually blocking each other.
 - In general, disable any unused features such as ray masks, backface culling,
-<br/>
   etc. Enabling extra features increases the number of instructions and register usage of
-<br/>
   the ray intersection kernel(s), reducing intersection performance. For example, it may be
-<br/>
   more efficient to compute barycentric coordinates in your intersection consumption
-<br/>
   kernel rather getting them from the raytracer. Use of an index buffer may also reduce
-<br/>
   performance, so consider disabling the index buffer if there is enough memory available.
 - Try to submit rays in large batches. This amortizes the costs involved in dispatching
-<br/>
   work to the GPU and also allows the GPU to perform more effective latency hiding.
-<br/>
   Use the recommendedMinimumRayBatchSizeForRayCount method to get an estimate of the
-<br/>
   minimum recommended ray batch size. For this reason, small images or sample counts
-<br/>
   may not perform as well as large images or sample counts. Note, however, that submitting
-<br/>
   rays in very large batches can reduce the responsiveness of the system because the GPU
-<br/>
   will be busy for long periods. Experiment to find a balance between raytracing throughput
-<br/>
   and system responsiveness.
 - When possible, organize rays within a batch for spatial locality. Rays that originate
-<br/>
   at nearby points or are oriented in similar directions tend to access the same
-<br/>
   locations in memory and can therefore make more effective use of the GPU's caches.
-<br/>
   For example, the camera rays associated with nearby pixels in the output image will likely
-<br/>
   originate at the same point and travel in very similar directions. Therefore, divide the
-<br/>
   output image into small tiles (e.g., 8x8). Rather than laying out all of the rays in the
-<br/>
   ray buffer in scanline order, first lay out the ray in scanline order within each tile,
-<br/>
   then lay out the tiles in scanline order or according to some space filling curve.
 - If CPU encode time is an issue, disable Metal API validation and enable
-<br/>
   MPSKernelOptionsSkipAPIValidation.
 - Choose the minimal ray and intersection data types for your use case. Loading and storing
-<br/>
   extra values such as ray masks or triangle indices can reduce raytracing performance, so
-<br/>
   use a simpler data type if they are not needed. For example, camera rays typically have no
-<br/>
   need for a maximum distance field, while shadow rays do.
 - Use MPSTriangleIntersectionTestTypeAny when possible: this is typically much faster than
-<br/>
   MPSTriangleIntersectionTestTypeNearest and can be used when you only need to check for
-<br/>
   binary visibility between two points such as shadow and ambient occlusion rays. Combine
-<br/>
   this with MPSRayDataTypeDistance to minimize memory bandwidth usage.
 - Try to keep the geometry, textures, ray buffers, etc. within the Metal device's
-<br/>
   recommended working set size. Paging data into GPU memory can significantly reduce
-<br/>
   raytracing performance.
 - Changes to MPSRayIntersector properties can trigger internal pipeline compilations when
-<br/>
   intersection tests are next encoded. If you need to avoid hitches due to pipeline
-<br/>
   compilation, encode a small ray intersection with each raytracer configuration you will
-<br/>
   use at encode-time. This creates and caches the corresponding pipelines.
 - Disable rays which should not participate in intersection testing. This can be done either
-<br/>
   by compacting the ray buffer such that it only contains valid rays, or by setting fields
-<br/>
   of the ray struct to invalid values. For example, setting the maximum distance to a
-<br/>
   negative value, setting the mask to zero, setting the direction to the zero vector, etc.
-<br/>
   In particular, rays should NOT be disabled using schemes such as moving their origin
-<br/>
   outside the scene. These rays will still partially traverse the acceleration structure,
-<br/>
   potentially evicting data from the cache which could have been used by valid rays. Note
-<br/>
   that it is preferable to provide only valid rays so that threads are not left idle if
-<br/>
   their rays are found to be invalid, but it can be convenient to disable rays in place in
-<br/>
   the ray buffer.
 </pre>
 <p class="Pp">See <b>MPSAccelerationStructure</b> and

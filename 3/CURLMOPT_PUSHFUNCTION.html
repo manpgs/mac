@@ -50,16 +50,11 @@
 char *curl_pushheader_bynum(struct curl_pushheaders *h, size_t num);
 char *curl_pushheader_byname(struct curl_pushheaders *h, const char *name);
 int curl_push_callback(CURL *parent,
-<br/>
                        CURL *easy,
-<br/>
                        size_t num_headers,
-<br/>
                        struct curl_pushheaders *headers,
-<br/>
                        void *userp);
 CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHFUNCTION,
-<br/>
                             curl_push_callback func);
 </pre>
 </section>
@@ -144,42 +139,24 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHFUNCTION,
 <pre>
 /* only allow pushes for file names starting with &quot;push-&quot; */
 int push_callback(CURL *parent,
-<br/>
                   CURL *easy,
-<br/>
                   size_t num_headers,
-<br/>
                   struct curl_pushheaders *headers,
-<br/>
                   void *userp)
 {
-<br/>
   char *headp;
-<br/>
   int *transfers = (int *)userp;
-<br/>
   FILE *out;
-<br/>
   headp = curl_pushheader_byname(headers, &quot;:path&quot;);
-<br/>
   if(headp &amp;&amp; !strncmp(headp, &quot;/push-&quot;, 6)) {
-<br/>
     fprintf(stderr, &quot;The PATH is %s\n&quot;, headp);
-<br/>
     /* save the push here */
-<br/>
     out = fopen(&quot;pushed-stream&quot;, &quot;wb&quot;);
-<br/>
     /* write to this file */
-<br/>
     curl_easy_setopt(easy, CURLOPT_WRITEDATA, out);
-<br/>
     (*transfers)++; /* one more */
-<br/>
     return CURL_PUSH_OK;
-<br/>
   }
-<br/>
   return CURL_PUSH_DENY;
 }
 curl_multi_setopt(multi, CURLMOPT_PUSHFUNCTION, push_callback);

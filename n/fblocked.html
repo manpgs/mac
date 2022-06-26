@@ -135,35 +135,22 @@
 <pre>
 # This is called whenever a new client connects to the server
 proc connect {chan host port} {
-<br/>
     set clientName [format &lt;%s:%d&gt; $host $port]
-<br/>
     puts &quot;connection from $clientName&quot;
-<br/>
     fconfigure $chan -blocking 0 -buffering line
-<br/>
     fileevent $chan readable [list echoLine $chan $clientName]
 }
 # This is called whenever either at least one byte of input
 # data is available, or the channel was closed by the client.
 proc echoLine {chan clientName} {
-<br/>
     gets $chan line
-<br/>
     if {[eof $chan]} {
-<br/>
         puts &quot;finishing connection from $clientName&quot;
-<br/>
         close $chan
-<br/>
     } elseif {![<b>fblocked</b> $chan]} {
-<br/>
         # Didn't block waiting for end-of-line
-<br/>
         puts &quot;$clientName - $line&quot;
-<br/>
         puts $chan $line
-<br/>
     }
 }
 # Create the server socket and enter the event-loop to wait

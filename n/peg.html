@@ -172,17 +172,11 @@
     expressions. An example</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     Rules
-<br/>
       (1)  A &lt;- a B c
-<br/>
       (2a) B &lt;- d B
-<br/>
       (2b) B &lt;- e
-<br/>
     Some derivations, using starting expression A.
-<br/>
       A -/1/-&gt; a B c -/2a/-&gt; a d B c -/2b/-&gt; a d e c
 </pre>
 <p class="Pp">A derived expression containing only terminal symbols is a
@@ -290,7 +284,6 @@
     <p class="Pp">This operation is in effect equivalent to</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     <i>pegName</i> <b>deserialize</b> [<i>srcPEG</i> <b>serialize</b>]
     </pre>
   </dd>
@@ -303,7 +296,6 @@
     <p class="Pp">This operation is in effect equivalent to</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     <i>dstPEG</i> <b>deserialize</b> [<i>pegName</i> <b>serialize</b>]
     </pre>
   </dd>
@@ -342,57 +334,33 @@
 <p class="Pp">Assuming the following PEG for simple mathematical expressions</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     Digit      &lt;- '0'/'1'/'2'/'3'/'4'/'5'/'6'/'7'/'8'/'9'
-<br/>
     Sign       &lt;- '+' / '-'
-<br/>
     Number     &lt;- Sign? Digit+
-<br/>
     Expression &lt;- '(' Expression ')' / (Factor (MulOp Factor)*)
-<br/>
     MulOp      &lt;- '*' / '/'
-<br/>
     Factor     &lt;- Term (AddOp Term)*
-<br/>
     AddOp      &lt;- '+'/'-'
-<br/>
     Term       &lt;- Number
 </pre>
 <p class="Pp">a possible serialization is</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     grammar::peg \\
-<br/>
     {Expression {/ {x ( Expression )} {x Factor {* {x MulOp Factor}}}} \\
-<br/>
      Factor     {x Term {* {x AddOp Term}}} \\
-<br/>
      Term       Number \\
-<br/>
      MulOp      {/ * /} \\
-<br/>
      AddOp      {/ + -} \\
-<br/>
      Number     {x {? Sign} {+ Digit}} \\
-<br/>
      Sign       {/ + -} \\
-<br/>
      Digit      {/ 0 1 2 3 4 5 6 7 8 9} \\
-<br/>
     } \\
-<br/>
     {Expression value     Factor     value \\
-<br/>
      Term       value     MulOp      value \\
-<br/>
      AddOp      value     Number     value \\
-<br/>
      Sign       value     Digit      value \\
-<br/>
     }
-<br/>
     Expression
 </pre>
 <p class="Pp">A possible one, because the order of the nonterminals in the

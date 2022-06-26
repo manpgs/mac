@@ -245,7 +245,6 @@ remote.origin.fetch refs/heads/*:refs/remotes/origin/*
 branch.master.remote origin
 branch.master.merge refs/heads/master
 satellite$ git config remote.origin.push \
-<br/>
            +refs/heads/*:refs/remotes/satellite/* <b>(3)</b>
 satellite$ edit/compile/test/commit
 satellite$ git push origin <b>(4)</b>
@@ -351,11 +350,8 @@ $ git cherry-pick master~4 <b>(9)</b>
 $ compile/test
 $ git tag -s -m &quot;GIT 0.99.9x&quot; v0.99.9x <b>(10)</b>
 $ git fetch ko &amp;&amp; for branch in master maint next seen <b>(11)</b>
-<br/>
     do
-<br/>
         git show-branch ko/$branch $branch <b>(12)</b>
-<br/>
     done
 $ git push --follow-tags ko <b>(13)</b>
 </pre>
@@ -403,17 +399,11 @@ $ git push --follow-tags ko <b>(13)</b>
 <pre>
 (in .git/config)
 [remote &quot;ko&quot;]
-<br/>
         url = kernel.org:/pub/scm/git/git.git
-<br/>
         fetch = refs/heads/*:refs/remotes/ko/*
-<br/>
         push = refs/heads/master
-<br/>
         push = refs/heads/next
-<br/>
         push = +refs/heads/seen
-<br/>
         push = refs/heads/maint
 </pre>
 </div>
@@ -466,7 +456,6 @@ git             9418/tcp                # Git Version Control System
 <pre>
 $ grep git /etc/inetd.conf
 git     stream  tcp     nowait  nobody \
-<br/>
   /usr/bin/git-daemon git-daemon --inetd --export-all /pub/scm
 </pre>
 </div>
@@ -482,23 +471,14 @@ $ cat /etc/xinetd.d/git-daemon
 # description: The Git server offers access to Git repositories
 service git
 {
-<br/>
         disable = no
-<br/>
         type            = UNLISTED
-<br/>
         port            = 9418
-<br/>
         socket_type     = stream
-<br/>
         wait            = no
-<br/>
         user            = nobody
-<br/>
         server          = /usr/bin/git-daemon
-<br/>
         server_args     = --inetd --export-all --base-path=/pub/scm
-<br/>
         log_on_failure  += USERID
 }
 </pre>
@@ -539,28 +519,17 @@ $ grep git /etc/group <b>(1)</b>
 git:x:9418:alice,bob,cindy,david
 $ cd /home/devo.git
 $ ls -l <b>(2)</b>
-<br/>
   lrwxrwxrwx   1 david git    17 Dec  4 22:40 HEAD -&gt; refs/heads/master
-<br/>
   drwxrwsr-x   2 david git  4096 Dec  4 22:40 branches
-<br/>
   -rw-rw-r--   1 david git    84 Dec  4 22:40 config
-<br/>
   -rw-rw-r--   1 david git    58 Dec  4 22:40 description
-<br/>
   drwxrwsr-x   2 david git  4096 Dec  4 22:40 hooks
-<br/>
   -rw-rw-r--   1 david git 37504 Dec  4 22:40 index
-<br/>
   drwxrwsr-x   2 david git  4096 Dec  4 22:40 info
-<br/>
   drwxrwsr-x   4 david git  4096 Dec  4 22:40 objects
-<br/>
   drwxrwsr-x   4 david git  4096 Nov  7 14:58 refs
-<br/>
   drwxrwsr-x   2 david git  4096 Dec  4 22:40 remotes
 $ ls -l hooks/update <b>(3)</b>
-<br/>
   -r-xr-xr-x   1 david git  3536 Dec  4 22:40 update
 $ cat info/allowed-users <b>(4)</b>
 refs/heads/master       alice\|cindy

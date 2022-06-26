@@ -97,49 +97,27 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_WRITEFUNCTION, write_callback);
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
-<br/>
  struct memory {
-<br/>
    char *response;
-<br/>
    size_t size;
-<br/>
  };
-<br/>
  static size_t cb(void *data, size_t size, size_t nmemb, void *userp)
-<br/>
  {
-<br/>
    size_t realsize = size * nmemb;
-<br/>
    struct memory *mem = (struct memory *)userp;
-<br/>
    char *ptr = realloc(mem-&gt;response, mem-&gt;size + realsize + 1);
-<br/>
    if(ptr == NULL)
-<br/>
      return 0;  /* out of memory! */
-<br/>
    mem-&gt;response = ptr;
-<br/>
    memcpy(&amp;(mem-&gt;response[mem-&gt;size]), data, realsize);
-<br/>
    mem-&gt;size += realsize;
-<br/>
    mem-&gt;response[mem-&gt;size] = 0;
-<br/>
    return realsize;
-<br/>
  }
-<br/>
  struct memory chunk = {0};
-<br/>
  /* send all data to this function  */
-<br/>
  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, cb);
-<br/>
  /* we pass our 'chunk' struct to the callback function */
-<br/>
  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&amp;chunk);
 </pre>
 </section>

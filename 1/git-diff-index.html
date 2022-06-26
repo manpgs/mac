@@ -898,43 +898,25 @@ index fabadb8,cc95eb0..4866510
 --- a/describe.c
 +++ b/describe.c
 @@@ -98,20 -98,12 +98,20 @@@
-<br/>
         return (a_date &gt; b_date) ? -1 : (a_date == b_date) ? 0 : 1;
-<br/>
   }
 - static void describe(char *arg)
-<br/>
  -static void describe(struct commit *cmit, int last_one)
 ++static void describe(char *arg, int last_one)
-<br/>
   {
-<br/>
  +      unsigned char sha1[20];
-<br/>
  +      struct commit *cmit;
-<br/>
         struct commit_list *list;
-<br/>
         static int initialized = 0;
-<br/>
         struct commit_name *n;
-<br/>
  +      if (get_sha1(arg, sha1) &lt; 0)
-<br/>
  +              usage(describe_usage);
-<br/>
  +      cmit = lookup_commit_reference(sha1);
-<br/>
  +      if (!cmit)
-<br/>
  +              usage(describe_usage);
-<br/>
  +
-<br/>
         if (!initialized) {
-<br/>
                 initialized = 1;
-<br/>
                 for_each_ref(get_name);
 </pre>
 </div>

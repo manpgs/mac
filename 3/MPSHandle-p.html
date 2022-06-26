@@ -69,25 +69,15 @@
 <p class="Pp"></p>
 <pre>
 @interface MyHandle : NSObject &lt;MPSHandle&gt;
-<br/>
     // Add a method for my use to get the image needed based on the handle to it.
-<br/>
     // This isn't part of the MPSHandle protocol, but we need it for MyEncodeGraph
-<br/>
     // below. Since it is my code calling my object, we can add whatever we want like this.
-<br/>
     -(MPSImage*__nonnull) image;    // return the MPSImage corresponding to the handle
-<br/>
     // required by MPSHandle protocol
-<br/>
     -(NSString * __nullable) label;
-<br/>
     // MPSHandle implies NSSecureCoding too
-<br/>
     +(BOOL) supportsSecureCoding;
-<br/>
     - (void)encodeWithCoder:(NSCoder * __nonnull )aCoder;
-<br/>
     - (nullable instancetype)initWithCoder:(NSCoder * __nonnull )aDecoder; // NS_DESIGNATED_INITIALIZER
 @end
 // Encode a graph to cmdBuf using handles for images
@@ -96,27 +86,16 @@
 // to get the appropriate image for that node.
 static void MyEncodeGraph( MPSNNGraph * graph, id &lt;MTLCommandBuffer&gt; cmdBuf )
 {
-<br/>
     @autoreleasepool{
-<br/>
         // prepare an array of source images, using the handles
-<br/>
         NSArray&lt;MyHandle*&gt; * handles = graph.sourceImageHandles;
-<br/>
         unsigned long count = handles.count;
-<br/>
         NSMutableArray&lt;MPSImage*&gt; * __nonnull images = [NSMutableArray arrayWithCapacity: count];
-<br/>
         for( unsigned long i = 0; i &lt; count; i++ )
-<br/>
             images[i] = handles[i].image;
-<br/>
         // encode the graph using the array
-<br/>
         [ graph encodeToCommandBuffer: cmdBuf
-<br/>
                          sourceImages: images ];
-<br/>
     }
 }
 </pre>

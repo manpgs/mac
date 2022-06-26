@@ -141,47 +141,27 @@
     until they are released.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
             Finally, temporary MPSState objects are complicated to use with blit encoders.
-<br/>
             Your application should assume that the temporary MPSState is backed by a MTLHeap,
-<br/>
             and consequently needs a MTLFence to ensure that compute command encoders and other
-<br/>
             encoders do not trip over one another with heap based memory. MPS will almost never
-<br/>
             use a blit encoder for this reason. If you do need one, then you will need to make
-<br/>
             a new compute encoder to block on whatever previous compute encoder last used the
-<br/>
             heap block. (MPS will not tell you who previously used the heap block. That encoder
-<br/>
             is almost certainly long dead anyway.) If concurrent encoders are involved, then a
-<br/>
             barrier might be needed. Within that compute encoder, you will call -updateFence.
-<br/>
             End the compute encoder, make a blit encoder wait for the fence, do the blit, update
-<br/>
             a new fence, then make a new compute encoder, wait for the second fence, then you
-<br/>
             can continue. Possibly the second do-nothing compute encoder needs to be ended so
-<br/>
             MPS can be called. Frankly, we don't bother with blit encoders and just write a compute
-<br/>
             operation for copy / clear as needed, or better yet find a way to eliminate the
-<br/>
             clear / copy pass so we don't have to pay for it. Your application needs to use
-<br/>
             temporary MPSStates and MPSTemporaryImages. Memory costs skyrocket, otherwise.
-<br/>
             It is the blit encoder that is hopefully optional. Note: the most common use of a
-<br/>
             blit encoder, -synchronizeResource: can not encounter this problem because temporary
-<br/>
             images and states live in GPU private memory and can not be read by the CPU..fi
 </pre>
 <pre>
-<br/>
  
 </pre>
 </section>
@@ -209,12 +189,9 @@
 <p class="Pp"></p>
 <pre>
 1) Default padding code runs based on the MPSNNPaddingMethod in
-<br/>
     the MPSCNNKernel.padding. This creates the descriptor and
-<br/>
     picks a starting value for the MPSCNNKernel.offset.
 2) MPSStates are called in order to apply this function and update
-<br/>
     the offset.
 3) The MPSNNPadding custom padding method of the same name is called.
 4)
@@ -224,62 +201,38 @@
 <pre>
 const int centeringPolicy = 0;  // When kernelSize is even: 0 pad bottom right. 1 pad top left.    Centers the kernel for even sized kernels.
 typedef enum Style{
-<br/>
     StyleValidOnly = -1,
-<br/>
     StyleSame = 0,
-<br/>
     StyleFull = 1
 }Style;
 // Typical destination size in one dimension for forward filters (most filters)
 static int DestSize( int sourceSize, int stride, int filterWindowSize, Style style ){
-<br/>
     sourceSize += style * (filterWindowSize - 1);       // adjust how many pixels we are allowed to read
-<br/>
     return (sourceSize + stride - 1) / stride;          // sourceSize / stride, round up
 }
 // Typical destination size in one dimension for reverse filters (e.g. convolution transpose)
 static int DestSizeReverse( int sourceSize, int stride, int filterWindowSize, Style style ){
-<br/>
     return (sourceSize-1) * stride +        // center tap for the last N-1 results. Take stride into account
-<br/>
             1 +                             // center tap for the first result
-<br/>
             style * (filterWindowSize-1);   // add or subtract (or ignore) the filter extent
 }
 // Find the MPSOffset in one dimension
 static int Offset( int sourceSize, int stride, int filterWindowSize, Style style ){
-<br/>
     // The correction needed to adjust from position of left edge to center per MPSOffset definition
-<br/>
     int correction = filterWindowSize / 2;
-<br/>
     // exit if all we want is to start consuming pixels at the left edge of the image.
-<br/>
     if( 0 )
-<br/>
         return correction;
-<br/>
     // Center the area consumed in the source image:
-<br/>
     // Calculate the size of the destination image
-<br/>
     int destSize = DestSize( sourceSize, stride, filterWindowSize, style ); // use DestSizeReverse here instead as appropriate
-<br/>
     // calculate extent of pixels we need to read in source to populate the destination
-<br/>
     int readSize = (destSize-1) * stride + filterWindowSize;
-<br/>
     // calculate number of missing pixels in source
-<br/>
     int extraSize = readSize - sourceSize;
-<br/>
     // number of missing pixels on left side
-<br/>
     int leftExtraPixels = (extraSize + centeringPolicy) / 2;
-<br/>
     // account for the fact that the offset is based on the center pixel, not the left edge
-<br/>
     return correction - leftExtraPixels;
 }
 </pre>

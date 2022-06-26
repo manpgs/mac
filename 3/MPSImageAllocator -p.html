@@ -59,45 +59,29 @@
 //       by the framework under that name.  It is provided here
 //       as sample code for writing your own variant.
 -(MPSImage * __nonnull)  imageForCommandBuffer: (__nonnull id &lt;MTLCommandBuffer&gt;) cmdBuf
-<br/>
                                imageDescriptor: (MPSImageDescriptor * __nonnull) descriptor
-<br/>
                                         kernel: (MPSKernel * __nonnull) kernel
 {
-<br/>
     MPSImage * result = [[MPSImage alloc] initWithDevice: cmdBuf.device
-<br/>
                                          imageDescriptor: descriptor ];
-<br/>
     // make sure the object sticks around at least as lomg as the command buffer
-<br/>
     [result retain];
-<br/>
     [cmdBuf addCompletedHandler: ^(id &lt;MTLCommandBuffer&gt; c){[result release];}];
-<br/>
     // return autoreleased result
-<br/>
     return [result autorelease];
 };
 -(BOOL) supportsSecureCoding{ return YES; }
 -(void)encodeWithCoder:(NSCoder * __nonnull)aCoder
 {
-<br/>
     [super encodeWithCoder: aCoder];
-<br/>
     // encode any data owned by the class at this level
 }
 -(nullable instancetype) initWithCoder: (NSCoder*__nonnull) aDecoder
 {
-<br/>
     self =  [super initWithCoder: aDecoder ];
-<br/>
     if( nil == self )
-<br/>
         return self;
-<br/>
     // use coder to load any extra data kept by this object here
-<br/>
     return self;
 }
 </pre>

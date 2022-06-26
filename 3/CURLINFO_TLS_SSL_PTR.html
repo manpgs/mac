@@ -48,13 +48,10 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SSL_PTR,
-<br/>
                            struct curl_tlssessioninfo **session);
 /* if you need compatibility with libcurl &lt; 7.48.0 use
-<br/>
    CURLINFO_TLS_SESSION instead: */
 CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SESSION,
-<br/>
                            struct curl_tlssessioninfo **session);
 </pre>
 </section>
@@ -71,9 +68,7 @@ CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_TLS_SESSION,
 <p class="Pp"></p>
 <pre>
 struct curl_tlssessioninfo {
-<br/>
   curl_sslbackend backend;
-<br/>
   void *internals;
 };
 </pre>
@@ -167,42 +162,25 @@ Since 7.48.0 the <i>internals</i> member can point to these other SSL backends
 CURL *curl;
 static size_t wf(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-<br/>
   const struct curl_tlssessioninfo *info = NULL;
-<br/>
   CURLcode res = curl_easy_getinfo(curl, CURLINFO_TLS_SSL_PTR, &amp;info);
-<br/>
   if(info &amp;&amp; !res) {
-<br/>
     if(CURLSSLBACKEND_OPENSSL == info-&gt;backend) {
-<br/>
        printf(&quot;OpenSSL ver. %s\n&quot;, SSL_get_version((SSL*)info-&gt;internals));
-<br/>
     }
-<br/>
   }
-<br/>
   return size * nmemb;
 }
 int main(int argc, char** argv)
 {
-<br/>
   CURLcode res;
-<br/>
   curl = curl_easy_init();
-<br/>
   if(curl) {
-<br/>
     curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
-<br/>
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wf);
-<br/>
     res = curl_easy_perform(curl);
-<br/>
     curl_easy_cleanup(curl);
-<br/>
   }
-<br/>
   return res;
 }
 </pre>

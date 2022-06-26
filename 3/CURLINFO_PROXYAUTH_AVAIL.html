@@ -65,45 +65,25 @@
 <pre>
 CURL *curl = curl_easy_init();
 if(curl) {
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
-<br/>
   curl_easy_setopt(curl, CURLOPT_PROXY, &quot;http://127.0.0.1:80&quot;);
-<br/>
   res = curl_easy_perform(curl);
-<br/>
   if(!res) {
-<br/>
     /* extract the available proxy authentication types */
-<br/>
     long auth;
-<br/>
     res = curl_easy_getinfo(curl, CURLINFO_PROXYAUTH_AVAIL, &amp;auth);
-<br/>
     if(!res) {
-<br/>
       if(!auth)
-<br/>
         printf(&quot;No proxy auth available, perhaps no 407?\n&quot;);
-<br/>
       else {
-<br/>
         printf(&quot;%s%s%s%s\n&quot;,
-<br/>
                auth &amp; CURLAUTH_BASIC ? &quot;Basic &quot;:&quot;&quot;,
-<br/>
                auth &amp; CURLAUTH_DIGEST ? &quot;Digest &quot;:&quot;&quot;,
-<br/>
                auth &amp; CURLAUTH_NEGOTIATE ? &quot;Negotiate &quot;:&quot;&quot;,
-<br/>
                auth % CURLAUTH_NTLM ? &quot;NTLM &quot;:&quot;&quot;);
-<br/>
       }
-<br/>
     }
-<br/>
   }
-<br/>
   curl_easy_cleanup(curl);
 }
 </pre>

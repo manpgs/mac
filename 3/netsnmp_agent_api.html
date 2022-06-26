@@ -28,53 +28,29 @@
 int
 main (int argc, char *argv[])
 {
-<br/>
   int agentx_subagent = 1;  /* Change this if you're a master agent.  */
-<br/>
   snmp_enable_stderrlog();
-<br/>
   /*  If we're an AgentX subagent...  */
-<br/>
   if (agentx_subagent) {
-<br/>
       /* ...make us an AgentX client.  */
-<br/>
       netsnmp_ds_set_boolean(NETSNMP_DS_APPLICATION_ID,
-<br/>
                              NETSNMP_DS_AGENT_ROLE, 1);
-<br/>
   }
-<br/>
   init_agent(&quot;yourappname&quot;);
-<br/>
   /*  Initialize your MIB code here.  */
-<br/>
   init_my_mib_code();
-<br/>
   /*  `yourappname' will be used to read yourappname.conf files.  */
-<br/>
   init_snmp(&quot;yourappname&quot;);
-<br/>
   /*  If we're going to be a SNMP master agent...  */
-<br/>
   if (!agentx_subagent)
-<br/>
       init_master_agent();  /*  Listen on default port (161).  */
-<br/>
   /*  Your main loop here...  */
-<br/>
   while (whatever) {
-<br/>
       /* if you use select(), see snmp_api(3) */
-<br/>
       /*     --- OR ---  */
-<br/>
       agent_check_and_process(0); /* 0 == don't block */
-<br/>
   }
-<br/>
   /*  At shutdown time:  */
-<br/>
   snmp_shutdown(&quot;yourappname&quot;);
 }
 Then:

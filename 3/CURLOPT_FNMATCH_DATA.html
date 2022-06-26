@@ -47,7 +47,6 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_FNMATCH_DATA,
-<br/>
                           void *pointer);
 </pre>
 </section>
@@ -68,30 +67,19 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_FNMATCH_DATA,
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
 static int my_fnmatch(void *clientp,
-<br/>
                       const char *pattern, const char *string)
 {
-<br/>
   struct local_stuff *data = (struct local_stuff *)clientp;
-<br/>
   if(string_match(pattern, string))
-<br/>
     return CURL_FNMATCHFUNC_MATCH;
-<br/>
   else
-<br/>
     return CURL_FNMATCHFUNC_NOMATCH;
 }
 {
-<br/>
   struct local_stuff local_data;
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;ftp://ftp.example.com/file*&quot;);
-<br/>
   curl_easy_setopt(curl, CURLOPT_WILDCARDMATCH, 1L);
-<br/>
   curl_easy_setopt(curl, CURLOPT_FNMATCH_FUNCTION, my_fnmatch);
-<br/>
   curl_easy_setopt(curl, CURLOPT_FNMATCH_DATA, &amp;local_data);
 }
 </pre>

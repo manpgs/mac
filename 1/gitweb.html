@@ -239,19 +239,12 @@ our $export_ok = &quot;git-daemon-export-ok&quot;;
 <div class="Bd-indent">
 <pre>
 $export_auth_hook = sub {
-<br/>
         use Apache2::SubRequest ();
-<br/>
         use Apache2::Const -compile =&gt; qw(HTTP_OK);
-<br/>
         my $path = &quot;$_[0]/HEAD&quot;;
-<br/>
         my $r    = Apache2::RequestUtil-&gt;request;
-<br/>
         my $sub  = $r-&gt;lookup_file($path);
-<br/>
         return $sub-&gt;filename eq $path
-<br/>
             &amp;&amp; $sub-&gt;status == Apache2::Const::HTTP_OK;
 };
 </pre>
@@ -464,13 +457,9 @@ $feature{'blame'}{'default'} = [1];
 <pre>
 ScriptAlias /cgi-bin/ &quot;/var/www/cgi-bin/&quot;
 &lt;Directory &quot;/var/www/cgi-bin&quot;&gt;
-<br/>
     Options Indexes FollowSymlinks ExecCGI
-<br/>
     AllowOverride None
-<br/>
     Order allow,deny
-<br/>
     Allow from all
 &lt;/Directory&gt;
 </pre>
@@ -498,19 +487,12 @@ http://server/cgi-bin/gitweb.cgi
 <pre>
 Alias /perl &quot;/var/www/perl&quot;
 &lt;Directory &quot;/var/www/perl&quot;&gt;
-<br/>
     SetHandler perl-script
-<br/>
     PerlResponseHandler ModPerl::Registry
-<br/>
     PerlOptions +ParseHeaders
-<br/>
     Options Indexes FollowSymlinks +ExecCGI
-<br/>
     AllowOverride None
-<br/>
     Order allow,deny
-<br/>
     Allow from all
 &lt;/Directory&gt;
 </pre>
@@ -539,7 +521,6 @@ FastCgiServer /usr/share/gitweb/gitweb.cgi
 ScriptAlias /gitweb /usr/share/gitweb/gitweb.cgi
 Alias /gitweb/static /usr/share/gitweb/static
 &lt;Directory /usr/share/gitweb/static&gt;
-<br/>
     SetHandler default-handler
 &lt;/Directory&gt;
 </pre>
@@ -570,25 +551,15 @@ http://server/gitweb
 <div class="Bd-indent">
 <pre>
 &lt;VirtualHost *:80&gt;
-<br/>
     ServerName    git.example.org
-<br/>
     DocumentRoot  /pub/git
-<br/>
     SetEnv        GITWEB_CONFIG   /etc/gitweb.conf
-<br/>
     # turning on mod rewrite
-<br/>
     RewriteEngine on
-<br/>
     # make the front page an internal rewrite to the gitweb script
-<br/>
     RewriteRule ^/$  /cgi-bin/gitweb.cgi
-<br/>
     # make access for &quot;dumb clients&quot; work
-<br/>
     RewriteRule ^/(.*\.git/(?!/?(HEAD|info|objects|refs)).*)?$ \
-<br/>
                 /cgi-bin/gitweb.cgi%{REQUEST_URI}  [L,PT]
 &lt;/VirtualHost&gt;
 </pre>
@@ -635,55 +606,30 @@ $per_request_config = 1;
 <div class="Bd-indent">
 <pre>
 &lt;VirtualHost *:80&gt;
-<br/>
     ServerName    git.example.org
-<br/>
     DocumentRoot  /pub/git
-<br/>
     SetEnv        GITWEB_CONFIG  /etc/gitweb.conf
-<br/>
     # turning on mod rewrite
-<br/>
     RewriteEngine on
-<br/>
     # make the front page an internal rewrite to the gitweb script
-<br/>
     RewriteRule ^/$  /cgi-bin/gitweb.cgi  [QSA,L,PT]
-<br/>
     # look for a public_git folder in unix users' home
-<br/>
     # http://git.example.org/~&lt;user&gt;/
-<br/>
     RewriteRule ^/\~([^\/]+)(/|/gitweb.cgi)?$   /cgi-bin/gitweb.cgi \
-<br/>
                 [QSA,E=GITWEB_PROJECTROOT:/home/$1/public_git/,L,PT]
-<br/>
     # http://git.example.org/+&lt;user&gt;/
-<br/>
     #RewriteRule ^/\+([^\/]+)(/|/gitweb.cgi)?$  /cgi-bin/gitweb.cgi \
-<br/>
                  [QSA,E=GITWEB_PROJECTROOT:/home/$1/public_git/,L,PT]
-<br/>
     # http://git.example.org/user/&lt;user&gt;/
-<br/>
     #RewriteRule ^/user/([^\/]+)/(gitweb.cgi)?$ /cgi-bin/gitweb.cgi \
-<br/>
                  [QSA,E=GITWEB_PROJECTROOT:/home/$1/public_git/,L,PT]
-<br/>
     # defined list of project roots
-<br/>
     RewriteRule ^/scm(/|/gitweb.cgi)?$ /cgi-bin/gitweb.cgi \
-<br/>
                 [QSA,E=GITWEB_PROJECTROOT:/pub/scm/,L,PT]
-<br/>
     RewriteRule ^/var(/|/gitweb.cgi)?$ /cgi-bin/gitweb.cgi \
-<br/>
                 [QSA,E=GITWEB_PROJECTROOT:/var/git/,L,PT]
-<br/>
     # make access for &quot;dumb clients&quot; work
-<br/>
     RewriteRule ^/(.*\.git/(?!/?(HEAD|info|objects|refs)).*)?$ \
-<br/>
                 /cgi-bin/gitweb.cgi%{REQUEST_URI}  [L,PT]
 &lt;/VirtualHost&gt;
 </pre>
@@ -751,27 +697,16 @@ http://git.example.com/project.git/shortlog/sometag
 <div class="Bd-indent">
 <pre>
 &lt;VirtualHost *:80&gt;
-<br/>
         ServerAlias git.example.com
-<br/>
         DocumentRoot /var/www/gitweb
-<br/>
         &lt;Directory /var/www/gitweb&gt;
-<br/>
                 Options ExecCGI
-<br/>
                 AddHandler cgi-script cgi
-<br/>
                 DirectoryIndex gitweb.cgi
-<br/>
                 RewriteEngine On
-<br/>
                 RewriteCond %{REQUEST_FILENAME} !-f
-<br/>
                 RewriteCond %{REQUEST_FILENAME} !-d
-<br/>
                 RewriteRule ^.* /gitweb.cgi/$0 [L,PT]
-<br/>
         &lt;/Directory&gt;
 &lt;/VirtualHost&gt;
 </pre>
@@ -792,29 +727,17 @@ http://git.example.com/project.git/shortlog/sometag
 <div class="Bd-indent">
 <pre>
 &lt;VirtualHost *:80&gt;
-<br/>
         ServerAlias git.example.com
-<br/>
         DocumentRoot /var/www/gitweb
-<br/>
         AliasMatch ^(/.*?)(\.git)(/.*)?$ /pub/git$1$3
-<br/>
         &lt;Directory /var/www/gitweb&gt;
-<br/>
                 Options ExecCGI
-<br/>
                 AddHandler cgi-script cgi
-<br/>
                 DirectoryIndex gitweb.cgi
-<br/>
                 RewriteEngine On
-<br/>
                 RewriteCond %{REQUEST_FILENAME} !-f
-<br/>
                 RewriteCond %{REQUEST_FILENAME} !-d
-<br/>
                 RewriteRule ^.* /gitweb.cgi/$0 [L,PT]
-<br/>
         &lt;/Directory&gt;
 &lt;/VirtualHost&gt;
 </pre>

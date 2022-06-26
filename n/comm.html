@@ -137,9 +137,7 @@
     :</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     ::comm::comm send ?-async? id cmd ?arg arg ...?
-<br/>
     ::comm::comm interps
 </pre>
 <p class="Pp">This is all that is really needed to know in order to use
@@ -200,13 +198,9 @@
     equivalent <b>send</b> command also produces the same error.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % ::comm::comm send id llength {a b c}
-<br/>
     wrong # args: should be &quot;llength list&quot;
-<br/>
     % send name llength {a b c}
-<br/>
     wrong # args: should be &quot;llength list&quot;
 </pre>
 <p class="Pp">The <b>eval</b> hook (described below) can be used to change from
@@ -231,13 +225,11 @@
 <p class="Pp">The default configuration parameters for a new channel are:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     &quot;-port 0 -local 1 -listen 0 -silent 0&quot;
 </pre>
 <p class="Pp">The default channel <b>::comm::comm</b> is created with:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     &quot;::comm::comm new ::comm::comm -port 0 -local 1 -listen 1 -silent 0&quot;
 </pre>
 </section>
@@ -383,7 +375,6 @@
       channel. This sequence reinitializes the default channel:
     <p class="Pp"></p>
     <pre>
-<br/>
     &quot;::comm::comm destroy; ::comm::comm new ::comm::comm&quot;
     </pre>
   </dd>
@@ -429,21 +420,13 @@
         connection attempt with the error. Example:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm hook connecting {
-<br/>
         if {[string match {*[02468]} $id]} {
-<br/>
             error &quot;Can't connect to even ids&quot;
-<br/>
         }
-<br/>
     }
-<br/>
     % ::comm::comm send 10000 puts ok
-<br/>
     Connect to remote failed: Can't connect to even ids
-<br/>
     %
     </pre>
   </dd>
@@ -467,15 +450,10 @@
         remote <i>id</i> is still unknown. Example:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     ::comm::comm hook incoming {
-<br/>
         if {[string match 127.0.0.1 $addr]} {
-<br/>
             error &quot;I don't talk to myself&quot;
-<br/>
         }
-<br/>
     }
     </pre>
   </dd>
@@ -505,17 +483,11 @@
   <dd>augmenting a command
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm send [::comm::comm self] pid
-<br/>
     5013
-<br/>
     % ::comm::comm hook eval {puts &quot;going to execute $buffer&quot;}
-<br/>
     % ::comm::comm send [::comm::comm self] pid
-<br/>
     going to execute pid
-<br/>
     5013
     </pre>
   </dd>
@@ -523,13 +495,9 @@
   <dd>short circuiting a command
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm hook eval {puts &quot;would have executed $buffer&quot;; return 0}
-<br/>
     % ::comm::comm send [::comm::comm self] pid
-<br/>
     would have executed pid
-<br/>
     0
     </pre>
   </dd>
@@ -537,17 +505,11 @@
   <dd>Replacing double eval semantics
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm send [::comm::comm self] llength {a b c}
-<br/>
     wrong # args: should be &quot;llength list&quot;
-<br/>
     % ::comm::comm hook eval {return [uplevel #0 $buffer]}
-<br/>
     return [uplevel #0 $buffer]
-<br/>
     % ::comm::comm send [::comm::comm self] llength {a b c}
-<br/>
     3
     </pre>
   </dd>
@@ -555,21 +517,13 @@
   <dd>Using a slave interpreter
     <p class="Pp"></p>
     <pre>
-<br/>
     % interp create foo
-<br/>
     % ::comm::comm hook eval {return [foo eval $buffer]}
-<br/>
     % ::comm::comm send [::comm::comm self] set myvar 123
-<br/>
     123
-<br/>
     % set myvar
-<br/>
     can't read &quot;myvar&quot;: no such variable
-<br/>
     % foo eval set myvar
-<br/>
     123
     </pre>
   </dd>
@@ -577,7 +531,6 @@
   <dd>Using a slave interpreter (double eval)
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm hook eval {return [eval foo eval $buffer]}
     </pre>
   </dd>
@@ -585,27 +538,16 @@
   <dd>Subverting the script to execute
     <p class="Pp"></p>
     <pre>
-<br/>
     % ::comm::comm hook eval {
-<br/>
         switch -- $buffer {
-<br/>
             a {return A-OK}
-<br/>
             b {return B-OK}
-<br/>
             default {error &quot;$buffer is a no-no&quot;}
-<br/>
         }
-<br/>
     }
-<br/>
     % ::comm::comm send [::comm::comm self] pid
-<br/>
     pid is a no-no
-<br/>
     % ::comm::comm send [::comm::comm self] a
-<br/>
     A-OK
     </pre>
   </dd>
@@ -653,19 +595,12 @@
         explanatory string indicating why the connection was lost. Example:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     ::comm::comm hook lost {
-<br/>
         global myvar
-<br/>
         if {$myvar(id) == $id} {
-<br/>
             myfunc
-<br/>
             return
-<br/>
         }
-<br/>
     }
     </pre>
   </dd>
@@ -686,25 +621,15 @@
       interps</b> commands with these equivalents that use <b>::comm::comm</b>.
     <p class="Pp"></p>
     <pre>
-<br/>
     proc send {args} {
-<br/>
         eval ::comm::comm send $args
-<br/>
     }
-<br/>
     rename winfo tk_winfo
-<br/>
     proc winfo {cmd args} {
-<br/>
         if {![string match in* $cmd]} {
-<br/>
             return [eval [list tk_winfo $cmd] $args]
-<br/>
         }
-<br/>
         return [::comm::comm interps]
-<br/>
     }
     </pre>
   </dd>
@@ -812,31 +737,18 @@
     <pre>
 # Procedure invoked by remote clients to run database operations.
 proc select {sql} {
-<br/>
     # Signal the async generation of the result
-<br/>
     set future [::comm::comm return_async]
-<br/>
     # Generate an async db operation and tell it where to deliver the result.
-<br/>
     set query [db query -command [list $future return] $sql]
-<br/>
     # Tell the database system which query to cancel if the connection
-<br/>
     # goes away while it is running.
-<br/>
     $future configure -command [list db cancel $query]
-<br/>
     # Note: The above will work without problem only if the async
-<br/>
     # query will nover run its completion callback immediately, but
-<br/>
     # only from the eventloop. Because otherwise the future we wish to
-<br/>
     # configure may already be gone. If that is possible use 'catch'
-<br/>
     # to prevent the error from propagating.
-<br/>
     return
 }
     </pre>
@@ -871,7 +783,6 @@ proc select {sql} {
     <b>comm</b> this command is usually used:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     package require comm 3
 </pre>
 <p class="Pp">Note that requiring no version (or a specific version) can also be
@@ -981,11 +892,8 @@ proc select {sql} {
       <b>send</b>:
     <p class="Pp"></p>
     <pre>
-<br/>
     comm send id break
-<br/>
     catch {comm send id break}
-<br/>
     comm send id expr 1 / 0
     </pre>
     <p class="Pp">Added a new hook for reply messages. Reworked method
@@ -1081,7 +989,6 @@ proc select {sql} {
     a command such as this:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     &quot;comm send $other exit&quot;
 </pre>
 <p class="Pp">Always make sure the channel is quiescent before closing/exiting

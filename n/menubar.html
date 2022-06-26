@@ -647,150 +647,82 @@ package require menubar
 set tout [text .t -width 25 -height 12]
 pack ${tout} -expand 1 -fill both
 set mbar [menubar new \
-<br/>
     -borderwidth 4 \
-<br/>
     -relief groove  \
-<br/>
     -foreground black \
-<br/>
     -background tan \
-<br/>
     ]
 ${mbar} define {
-<br/>
     File M:file {
-<br/>
         Exit                 C      exit
-<br/>
     }
-<br/>
     Edit M:items+ {
-<br/>
     #   Label               Type    Tag Name(s)
-<br/>
     #   -----------------   ----    ---------
-<br/>
         &quot;Cut&quot;               C       cut
-<br/>
         &quot;Copy&quot;              C       copy
-<br/>
         &quot;Paste&quot;             C       paste
-<br/>
         --                  S       s2
-<br/>
         &quot;Options&quot; M:opts {
-<br/>
             &quot;CheckList&quot; M:chx+ {
-<br/>
                 Coffee      X       coffee+
-<br/>
                 Donut       X       donut
-<br/>
                 Eggs        X       eggs
-<br/>
                 }
-<br/>
             &quot;RadioButtons&quot; M:btn+ {
-<br/>
                 &quot;Red&quot;       R       color
-<br/>
                 &quot;Green&quot;     R       color+
-<br/>
                 &quot;Blue&quot;      R       color
-<br/>
                 }
-<br/>
         }
-<br/>
     }
-<br/>
     Help M:help {
-<br/>
         About               C       about
-<br/>
     }
 }
 ${mbar} install . {
-<br/>
     ${mbar} tag.add tout ${tout}
-<br/>
     ${mbar} menu.configure -command {
-<br/>
         # file menu
-<br/>
         exit            {Exit}
-<br/>
         # Item menu
-<br/>
         cut             {CB Edit cut}
-<br/>
         copy            {CB Edit copy}
-<br/>
         paste           {CB Edit paste}
-<br/>
         # boolean menu
-<br/>
         coffee          {CB CheckButton}
-<br/>
         donut           {CB CheckButton}
-<br/>
         eggs            {CB CheckButton}
-<br/>
         # radio menu
-<br/>
         color           {CB RadioButton}
-<br/>
         # Help menu
-<br/>
         about           {CB About}
-<br/>
     } -bind {
-<br/>
         exit        {1 Cntl+Q  Control-Key-q}
-<br/>
         cut         {2 Cntl+X  Control-Key-x}
-<br/>
         copy        {0 Cntl+C  Control-Key-c}
-<br/>
         paste       {0 Cntl+V  Control-Key-v}
-<br/>
         coffee      {0 Cntl+A  Control-Key-a}
-<br/>
         donut       {0 Cntl+B  Control-Key-b}
-<br/>
         eggs        {0 Cntl+C  Control-Key-c}
-<br/>
         about       0
-<br/>
     } -background {
-<br/>
         exit red
-<br/>
     } -foreground {
-<br/>
         exit white
-<br/>
     }
 }
 proc pout { txt } {
-<br/>
     global mbar
-<br/>
     set tout [${mbar} tag.cget . tout]
-<br/>
     ${tout} insert end &quot;${txt}\n&quot;
 }
 proc Exit { args } {
-<br/>
     puts &quot;Goodbye&quot;
-<br/>
     exit
 }
 proc CB { args } {
-<br/>
     set alist [lassign ${args} cmd]
-<br/>
     pout &quot;${cmd}: [join ${alist} {, }]&quot;
 }
 wm minsize . 300 300

@@ -87,64 +87,36 @@
 <p class="Pp"></p>
 <pre>
 Training graph (partial):
-<br/>
     ---&gt; input image ---------&gt; MPSCNNKernel ------&gt;  resultImage ------&gt;--&gt;--&gt;--&gt;.
-<br/>
                    &#x00A0;                 |                                           |
-<br/>
                     '------.    MPSNNGradientState                         loss estimation
-<br/>
                             &#x00A0;        |                                           |
-<br/>
                              V        V                                           V
-<br/>
     &lt;--- result gradient &lt;- MPSCNNGradientKernel &lt;---  input gradient &lt;--&lt;--&lt;--&lt;---'
-<br/>
     In general operation, starting with the input image, the sequence of events is:
-<br/>
     1a)  Invoke padding policy to find result size for MPSCNNKernel.  This
-<br/>
          also configures some MPSCNNKernel parameters such as offset.
-<br/>
     1b)  Use the MPSImageDescriptor from 1a to make resultImage.
-<br/>
     1c)  Call MPSCNNKernel -encode...
-<br/>
     2) stages 1a-c are repeated for other forward passes in the inference portion of the graph
-<br/>
     3) We estimate the loss resulting from the whole inference computation so far (see MPSCNNLoss.h&gt;
-<br/>
     4) stages 5a-c are repeated for corresponding backward gradient passes in the graph
-<br/>
     5a) Invoke padding policy on the MPSCNNGradientKernel shown above. This sets the
-<br/>
         MPSCNNGradientKernel parameters to correspond with those in the forward pass
-<br/>
     5b) The result gradient for the MPSCNNGradientKernel is created from the MPSImageDescriptor from 5a
-<br/>
     5c) Call MPSCNNGradientKernel -encode with the input image, input gradient, result gradient and MPSNNGradientState
-<br/>
     6) pass the result gradient on to leftward gradient passes.
 </pre>
 <p class="Pp"></p>
 <pre>
-<br/>
           For MPSCNNKernels that are trained, there may be other accompanying training kernels that
-<br/>
           need to be called in addition to the gradient kernel to update convolution weights or batch
-<br/>
           normalization parameters, for example. Steps 1a-c and 5a-c can be combined in a single -encode
-<br/>
           call. These return the result image or gradient out the left hand side.
-<br/>
           For purposes of inheritance the gradient image is the MPSCNNBinaryKernel primary image
-<br/>
           and the source image is the MPSCNNBinaryKernel secondary image. Various secondary properties
-<br/>
           such as kernel size are copies of the forward inference pass parameters of similar name
-<br/>
           are set automatically when -[MPSCNNGradientKernel destinationImageDescriptorForSourceImages:sourceStates:]
-<br/>
           is called.
 </pre>
 </section>

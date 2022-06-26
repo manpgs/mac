@@ -367,97 +367,51 @@
 <h2 class="Ss" id="ENTRY_EXAMPLE"><a class="permalink" href="#ENTRY_EXAMPLE">ENTRY
   EXAMPLE</a></h2>
 <pre>
-<br/>
     package require ldapx
-<br/>
     #
-<br/>
     # Create an entry and fill it as a standard entry with
-<br/>
     # attributes and values
-<br/>
     #
-<br/>
     ::ldapx::entry create e
-<br/>
     e dn &quot;uid=joe,ou=people,o=mycomp&quot;
-<br/>
     e set1 &quot;uid&quot;             &quot;joe&quot;
-<br/>
     e set  &quot;objectClass&quot;     {person anotherObjectClass}
-<br/>
     e set1 &quot;givenName&quot;       &quot;Joe&quot;
-<br/>
     e set1 &quot;sn&quot;              &quot;User&quot;
-<br/>
     e set  &quot;telephoneNumber&quot; {+31415926535 +2182818}
-<br/>
     e set1 &quot;anotherAttr&quot;     &quot;This is a beautiful day, isn't it?&quot;
-<br/>
     puts stdout &quot;e\n[e print]&quot;
-<br/>
     #
-<br/>
     # Create a second entry as a backup of the first, and
-<br/>
     # make some changes on it.
-<br/>
     # Entry is named automatically by snit.
-<br/>
     #
-<br/>
     set b [::ldapx::entry create %AUTO%]
-<br/>
     e backup $b
-<br/>
     puts stdout &quot;$b\n[$b print]&quot;
-<br/>
     $b del  &quot;anotherAttr&quot;
-<br/>
     $b del1 &quot;objectClass&quot; &quot;anotherObjectClass&quot;
-<br/>
     #
-<br/>
     # Create a change entry, a compute differences between first
-<br/>
     # and second entry.
-<br/>
     #
-<br/>
     ::ldapx::entry create c
-<br/>
     c diff e $b
-<br/>
     puts stdout &quot;$c\n[$c print]&quot;
-<br/>
     #
-<br/>
     # Apply changes to first entry. It should be the same as the
-<br/>
     # second entry, now.
-<br/>
     #
-<br/>
     e apply c
-<br/>
     ::ldapx::entry create nc
-<br/>
     nc diff e $b
-<br/>
     puts stdout &quot;nc\n[nc print]&quot;
-<br/>
     #
-<br/>
     # Clean-up
-<br/>
     #
-<br/>
     e destroy
-<br/>
     $b destroy
-<br/>
     c destroy
-<br/>
     nc destroy
 </pre>
 </section>
@@ -600,61 +554,36 @@
 <h2 class="Ss" id="LDAP_EXAMPLE"><a class="permalink" href="#LDAP_EXAMPLE">LDAP
   EXAMPLE</a></h2>
 <pre>
-<br/>
     package require ldapx
-<br/>
     #
-<br/>
     # Connects to the LDAP directory
-<br/>
     #
-<br/>
     ::ldapx::ldap create l
-<br/>
     set url &quot;ldap://server.mycomp.com&quot;
-<br/>
     if {! [l connect $url &quot;cn=admin,o=mycomp&quot; &quot;mypasswd&quot;]} then {
 	puts stderr &quot;error: [l error]&quot;
 	exit 1
-<br/>
     }
-<br/>
     #
-<br/>
     # Search all entries matching some criterion
-<br/>
     #
-<br/>
     l configure -scope one
-<br/>
     ::ldapx::ldap create e
-<br/>
     set n 0
-<br/>
     l traverse &quot;ou=people,o=mycomp&quot; &quot;(sn=Joe*)&quot; {sn givenName} e {
 	puts &quot;dn: [e dn]&quot;
 	puts &quot;  sn:        [e get1 sn]&quot;
 	puts &quot;  givenName: [e get1 givenName]&quot;
 	incr n
-<br/>
     }
-<br/>
     puts &quot;$n entries found&quot;
-<br/>
     e destroy
-<br/>
     #
-<br/>
     # Add a telephone number to some entries
-<br/>
     # Note this modification cannot be done in the &quot;traverse&quot; operation.
-<br/>
     #
-<br/>
     set lent [l search &quot;ou=people,o=mycomp&quot; &quot;(sn=Joe*)&quot; {}]
-<br/>
     ::ldapx::ldap create c
-<br/>
     foreach e $lent {
 	$e backup
 	$e add1 &quot;telephoneNumber&quot; &quot;+31415926535&quot;
@@ -664,11 +593,8 @@
 	    exit 1
 	}
 	$e destroy
-<br/>
     }
-<br/>
     l disconnect
-<br/>
     l destroy
 </pre>
 </section>
@@ -756,43 +682,25 @@
 <h2 class="Ss" id="LDIF_EXAMPLE"><a class="permalink" href="#LDIF_EXAMPLE">LDIF
   EXAMPLE</a></h2>
 <pre>
-<br/>
     package require ldapx
-<br/>
     # This examples reads a LDIF file containing entries,
-<br/>
     # compare them to a LDAP directory, and writes on standard
-<br/>
     # output an LDIF file containing changes to apply to the
-<br/>
     # LDAP directory to match exactly the LDIF file.
-<br/>
     ::ldapx::ldif create liin
-<br/>
     liin channel stdin
-<br/>
     ::ldapx::ldif create liout
-<br/>
     liout channel stdout
-<br/>
     ::ldapx::ldap create la
-<br/>
     if {! [la connect &quot;ldap://server.mycomp.com&quot;]} then {
 	puts stderr &quot;error: [la error]&quot;
 	exit 1
-<br/>
     }
-<br/>
     la configure -scope one
-<br/>
     # Reads LDIF file
-<br/>
     ::ldapx::entry create e1
-<br/>
     ::ldapx::entry create e2
-<br/>
     ::ldapx::entry create c
-<br/>
     while {[liin read e1] != 0} {
 	set base [e1 superior]
 	set id [e1 rdn]
@@ -803,21 +711,13 @@
 	if {[llength [c change]] != 0} then {
 	    liout write c
 	}
-<br/>
     }
-<br/>
     la disconnect
-<br/>
     la destroy
-<br/>
     e1 destroy
-<br/>
     e2 destroy
-<br/>
     c destroy
-<br/>
     liout destroy
-<br/>
     liin destroy
 </pre>
 </section>

@@ -187,7 +187,6 @@
 <div class="Bd-indent">
 <pre>
 if {[catch {<b>clipboard get</b>} contents]} {
-<br/>
     # There were no clipboard contents at all
 }
 </pre>
@@ -208,27 +207,16 @@ if {[catch {<b>clipboard get</b>} contents]} {
 # This is a very simple canvas serializer;
 # it produces a script that recreates the item(s) when executed
 proc getItemConfig {canvas tag} {
-<br/>
    set script {}
-<br/>
    foreach item [$canvas find withtag $tag] {
-<br/>
       append script {$canvas create } [$canvas type $item]
-<br/>
       append script { } [$canvas coords $item] { }
-<br/>
       foreach config [$canvas itemconf $item] {
-<br/>
          lassign $config name - - - value
-<br/>
          append script [list $name $value] { }
-<br/>
       }
-<br/>
       append script \n
-<br/>
    }
-<br/>
    return [string trim $script]
 }
 # Set up a binding on a canvas to cut and paste an item
@@ -236,25 +224,16 @@ set c [canvas .c]
 pack $c
 $c create text 150 30 -text &quot;cut and paste me&quot;
 bind $c &lt;&lt;Cut&gt;&gt; {
-<br/>
    <b>clipboard clear</b>
-<br/>
    <b>clipboard append -type</b> TkCanvasItem \
-<br/>
          [getItemConfig %W current]
-<br/>
    # Delete because this is cut, not copy.
-<br/>
    %W delete current
 }
 bind $c &lt;&lt;Paste&gt;&gt; {
-<br/>
    catch {
-<br/>
       set canvas %W
-<br/>
       eval [<b>clipboard get -type</b> TkCanvasItem]
-<br/>
    }
 }
 </pre>

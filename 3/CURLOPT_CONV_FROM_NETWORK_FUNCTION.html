@@ -49,7 +49,6 @@
 #include &lt;curl/curl.h&gt;
 CURLcode conv_callback(char *ptr, size_t length);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CONV_FROM_NETWORK_FUNCTION,
-<br/>
                           conv_callback);
 </pre>
 </section>
@@ -102,32 +101,20 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CONV_FROM_NETWORK_FUNCTION,
 <pre>
 static CURLcode my_conv_from_ascii_to_ebcdic(char *buffer, size_t length)
 {
-<br/>
   char *tempptrin, *tempptrout;
-<br/>
   size_t bytes = length;
-<br/>
   int rc;
-<br/>
   tempptrin = tempptrout = buffer;
-<br/>
   rc = platform_a2e(&amp;tempptrin, &amp;bytes, &amp;tempptrout, &amp;bytes);
-<br/>
   if(rc == PLATFORM_CONV_OK) {
-<br/>
     return CURLE_OK;
-<br/>
   }
-<br/>
   else {
-<br/>
     return CURLE_CONV_FAILED;
-<br/>
   }
 }
 /* use platform-specific functions for codeset conversions */
 curl_easy_setopt(curl, CURLOPT_CONV_FROM_NETWORK_FUNCTION,
-<br/>
                  my_conv_from_ascii_to_ebcdic);
 </pre>
 </section>

@@ -47,13 +47,9 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 CURLMcode curl_multi_wait(CURLM *multi_handle,
-<br/>
                           struct curl_waitfd extra_fds[],
-<br/>
                           unsigned int extra_nfds,
-<br/>
                           int timeout_ms,
-<br/>
                           int *numfds);
 </pre>
 </section>
@@ -84,11 +80,8 @@ CURLMcode curl_multi_wait(CURLM *multi_handle,
 <h1 class="Sh" id="curl_waitfd"><a class="permalink" href="#curl_waitfd">curl_waitfd</a></h1>
 <pre>
 struct curl_waitfd {
-<br/>
   curl_socket_t fd;
-<br/>
   short events;
-<br/>
   short revents;
 };
 </pre>
@@ -112,51 +105,28 @@ CURLM *multi_handle;
 /* add the individual easy handle */
 curl_multi_add_handle(multi_handle, easy_handle);
 do {
-<br/>
   CURLMcode mc;
-<br/>
   int numfds;
-<br/>
   mc = curl_multi_perform(multi_handle, &amp;still_running);
-<br/>
   if(mc == CURLM_OK ) {
-<br/>
     /* wait for activity, timeout or &quot;nothing&quot; */
-<br/>
     mc = curl_multi_wait(multi_handle, NULL, 0, 1000, &amp;numfds);
-<br/>
   }
-<br/>
   if(mc != CURLM_OK) {
-<br/>
     fprintf(stderr, &quot;curl_multi failed, code %d.\n&quot;, mc);
-<br/>
     break;
-<br/>
   }
-<br/>
   /* 'numfds' being zero means either a timeout or no file descriptors to
-<br/>
      wait for. Try timeout on first occurrence, then assume no file
-<br/>
      descriptors and no file descriptors to wait for means wait for 100
-<br/>
      milliseconds. */
-<br/>
   if(!numfds) {
-<br/>
     repeats++; /* count number of repeated zero numfds */
-<br/>
     if(repeats &gt; 1) {
-<br/>
       WAITMS(100); /* sleep 100 milliseconds */
-<br/>
     }
-<br/>
   }
-<br/>
   else
-<br/>
     repeats = 0;
 } while(still_running);
 curl_multi_remove_handle(multi_handle, easy_handle);

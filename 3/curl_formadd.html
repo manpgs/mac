@@ -220,135 +220,70 @@
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
-<br/>
  struct curl_httppost* post = NULL;
-<br/>
  struct curl_httppost* last = NULL;
-<br/>
  char namebuffer[] = &quot;name buffer&quot;;
-<br/>
  long namelength = strlen(namebuffer);
-<br/>
  char buffer[] = &quot;test buffer&quot;;
-<br/>
  char htmlbuffer[] = &quot;&lt;HTML&gt;test buffer&lt;/HTML&gt;&quot;;
-<br/>
  long htmlbufferlength = strlen(htmlbuffer);
-<br/>
  struct curl_forms forms[3];
-<br/>
  char file1[] = &quot;my-face.jpg&quot;;
-<br/>
  char file2[] = &quot;your-face.jpg&quot;;
-<br/>
  /* add null character into htmlbuffer, to demonstrate that
-<br/>
     transfers of buffers containing null characters actually work
-<br/>
  */
-<br/>
  htmlbuffer[8] = '\0';
-<br/>
  /* Add simple name/content section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;name&quot;,
-<br/>
               CURLFORM_COPYCONTENTS, &quot;content&quot;, CURLFORM_END);
-<br/>
  /* Add simple name/content/contenttype section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;htmlcode&quot;,
-<br/>
               CURLFORM_COPYCONTENTS, &quot;&lt;HTML&gt;&lt;/HTML&gt;&quot;,
-<br/>
               CURLFORM_CONTENTTYPE, &quot;text/html&quot;, CURLFORM_END);
-<br/>
  /* Add name/ptrcontent section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;name_for_ptrcontent&quot;,
-<br/>
               CURLFORM_PTRCONTENTS, buffer, CURLFORM_END);
-<br/>
  /* Add ptrname/ptrcontent section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_PTRNAME, namebuffer,
-<br/>
               CURLFORM_PTRCONTENTS, buffer, CURLFORM_NAMELENGTH,
-<br/>
               namelength, CURLFORM_END);
-<br/>
  /* Add name/ptrcontent/contenttype section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;html_code_with_hole&quot;,
-<br/>
               CURLFORM_PTRCONTENTS, htmlbuffer,
-<br/>
               CURLFORM_CONTENTSLENGTH, htmlbufferlength,
-<br/>
               CURLFORM_CONTENTTYPE, &quot;text/html&quot;, CURLFORM_END);
-<br/>
  /* Add simple file section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;picture&quot;,
-<br/>
               CURLFORM_FILE, &quot;my-face.jpg&quot;, CURLFORM_END);
-<br/>
  /* Add file/contenttype section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;picture&quot;,
-<br/>
               CURLFORM_FILE, &quot;my-face.jpg&quot;,
-<br/>
               CURLFORM_CONTENTTYPE, &quot;image/jpeg&quot;, CURLFORM_END);
-<br/>
  /* Add two file section */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;pictures&quot;,
-<br/>
               CURLFORM_FILE, &quot;my-face.jpg&quot;,
-<br/>
               CURLFORM_FILE, &quot;your-face.jpg&quot;, CURLFORM_END);
-<br/>
  /* Add two file section using CURLFORM_ARRAY */
-<br/>
  forms[0].option = CURLFORM_FILE;
-<br/>
  forms[0].value  = file1;
-<br/>
  forms[1].option = CURLFORM_FILE;
-<br/>
  forms[1].value  = file2;
-<br/>
  forms[2].option  = CURLFORM_END;
-<br/>
  /* Add a buffer to upload */
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;name&quot;,
-<br/>
               CURLFORM_BUFFER, &quot;data&quot;,
-<br/>
               CURLFORM_BUFFERPTR, record,
-<br/>
               CURLFORM_BUFFERLENGTH, record_length,
-<br/>
               CURLFORM_END);
-<br/>
  /* no option needed for the end marker */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;pictures&quot;,
-<br/>
               CURLFORM_ARRAY, forms, CURLFORM_END);
-<br/>
  /* Add the content of a file as a normal post text value */
-<br/>
  curl_formadd(&amp;post, &amp;last, CURLFORM_COPYNAME, &quot;filecontent&quot;,
-<br/>
               CURLFORM_FILECONTENT, &quot;.bashrc&quot;, CURLFORM_END);
-<br/>
  /* Set the form info */
-<br/>
  curl_easy_setopt(curl, CURLOPT_HTTPPOST, post);
 </pre>
 </section>

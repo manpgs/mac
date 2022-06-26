@@ -49,7 +49,6 @@
 #include &lt;curl/curl.h&gt;
 long chunk_end_callback(void *ptr);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CHUNK_END_FUNCTION,
-<br/>
                           chunk_end_callback);
 </pre>
 </section>
@@ -76,26 +75,17 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CHUNK_END_FUNCTION,
 <pre>
 static long file_is_downloaded(struct callback_data *data)
 {
-<br/>
   if(data-&gt;output) {
-<br/>
     fclose(data-&gt;output);
-<br/>
     data-&gt;output = 0x0;
-<br/>
   }
-<br/>
   return CURL_CHUNK_END_FUNC_OK;
 }
 int main()
 {
-<br/>
   /* data for callback */
-<br/>
   struct callback_data callback_info;
-<br/>
   curl_easy_setopt(curl, CURLOPT_CHUNK_END_FUNCTION, file_is_downloaded);
-<br/>
   curl_easy_setopt(curl, CURLOPT_CHUNK_DATA, &amp;callback_info);
 }
 </pre>

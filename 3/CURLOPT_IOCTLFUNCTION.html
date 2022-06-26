@@ -47,21 +47,14 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 typedef enum {
-<br/>
   CURLIOE_OK,            /* I/O operation successful */
-<br/>
   CURLIOE_UNKNOWNCMD,    /* command was unknown to callback */
-<br/>
   CURLIOE_FAILRESTART,   /* failed to restart the read */
-<br/>
   CURLIOE_LAST           /* never use */
 } curlioerr;
 typedef enum  {
-<br/>
   CURLIOCMD_NOP,         /* no operation */
-<br/>
   CURLIOCMD_RESTARTREAD, /* restart the read stream from start */
-<br/>
   CURLIOCMD_LAST         /* never use */
 } curliocmd;
 curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp);
@@ -99,27 +92,17 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_IOCTLFUNCTION, ioctl_callback);
 <pre>
 static curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp)
 {
-<br/>
   struct data *io = (struct data *)clientp;
-<br/>
   if(cmd == CURLIOCMD_RESTARTREAD) {
-<br/>
     lseek(fd, 0, SEEK_SET);
-<br/>
     current_offset = 0;
-<br/>
     return CURLIOE_OK;
-<br/>
   }
-<br/>
   return CURLIOE_UNKNOWNCMD;
 }
 {
-<br/>
   struct data ioctl_data;
-<br/>
   curl_easy_setopt(curl, CURLOPT_IOCTLFUNCTION, ioctl_callback);
-<br/>
   curl_easy_setopt(curl, CURLOPT_IOCTLDATA, &amp;ioctl_data);
 }
 </pre>

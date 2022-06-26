@@ -68,45 +68,25 @@
 <pre>
 CURL *curl = curl_easy_init();
 if(curl) {
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
-<br/>
   /* enable the cookie engine */
-<br/>
   curl_easy_setopt(curl, CURLOPT_COOKIEFILE, &quot;&quot;);
-<br/>
   res = curl_easy_perform(curl);
-<br/>
   if(!res) {
-<br/>
     /* extract all known cookies */
-<br/>
     struct curl_slist *cookies = NULL;
-<br/>
     res = curl_easy_getinfo(curl, CURLINFO_COOKIELIST, &amp;cookies);
-<br/>
     if(!res &amp;&amp; cookies) {
-<br/>
       /* a linked list of cookies in cookie file format */
-<br/>
       struct curl_slist *each = cookies;
-<br/>
       while(each) {
-<br/>
         printf(&quot;%s\n&quot;, each-&gt;data);
-<br/>
         each = each-&gt;next;
-<br/>
       }
-<br/>
       /* we must free these cookies when we're done */
-<br/>
       curl_slist_free_all(cookies);
-<br/>
     }
-<br/>
   }
-<br/>
   curl_easy_cleanup(curl);
 }
 </pre>

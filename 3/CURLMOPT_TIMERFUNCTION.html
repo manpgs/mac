@@ -47,9 +47,7 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 int timer_callback(CURLM *multi,    /* multi handle */
-<br/>
                    long timeout_ms, /* timeout in number of ms */
-<br/>
                    void *userp);    /* private callback pointer */
 CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERFUNCTION, timer_callback);
 </pre>
@@ -92,52 +90,30 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERFUNCTION, timer_callbac
 <pre>
 static gboolean timeout_cb(gpointer user_data)
 {
-<br/>
   int running;
-<br/>
   if(user_data) {
-<br/>
     g_free(user_data);
-<br/>
     curl_multi_setopt(curl_handle, CURLMOPT_TIMERDATA, NULL);
-<br/>
   }
-<br/>
   curl_multi_socket_action(multi, CURL_SOCKET_TIMEOUT, 0, &amp;running);
-<br/>
   return G_SOURCE_REMOVE;
 }
 static int timerfunc(CURLM *multi, long timeout_ms, void *userp)
 {
-<br/>
   guint *id = userp;
-<br/>
   if(id)
-<br/>
     g_source_remove(*id);
-<br/>
   /* -1 means we should just delete our timer. */
-<br/>
   if(timeout_ms == -1) {
-<br/>
     g_free(id);
-<br/>
     id = NULL;
-<br/>
   }
-<br/>
   else {
-<br/>
     if(!id)
-<br/>
       id = g_new(guint, 1);
-<br/>
     *id = g_timeout_add(timeout_ms, timeout_cb, id);
-<br/>
   }
-<br/>
   curl_multi_setopt(multi, CURLMOPT_TIMERDATA, id);
-<br/>
   return 0;
 }
 curl_multi_setopt(multi, CURLMOPT_TIMERFUNCTION, timerfunc);

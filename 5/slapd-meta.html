@@ -476,21 +476,13 @@ uri    &quot;ldap://l1.foo.com/<b>dc=foo,dc=com</b>&quot; &quot;ldap://l2.foo.co
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
-<br/>
     |  match  | exclude |
-<br/>
     +---------+---------+-------------------+
-<br/>
     |    T    |    T    | not candidate     |
-<br/>
     |    F    |    T    | continue checking |
-<br/>
     +---------+---------+-------------------+
-<br/>
     |    T    |    F    | candidate         |
-<br/>
     |    F    |    F    | not candidate     |
-<br/>
     +---------+---------+-------------------+
 </pre>
 <p class="Pp"></p>
@@ -660,9 +652,7 @@ suffixmassage &quot;<b>dc=foo,dc=com</b>&quot; &quot;o=Foo,c=US&quot;
 <div class="Bd-indent">
 <pre>
 access to dn=&quot;&lt;dn&gt;&quot; attrs=&lt;attr&gt;
-<br/>
        by dnattr=&lt;dnattr&gt; read
-<br/>
        by * none
 </pre>
 </div>
@@ -833,7 +823,6 @@ access to dn=&quot;&lt;dn&gt;&quot; attrs=&lt;attr&gt;
 <div class="Bd-indent">
 <pre>
 (default)            if defined and no specific context 
-<br/>
                      is available
 bindDN               bind
 searchBase           search
@@ -856,9 +845,7 @@ exopPasswdDN         password modify extended operation DN if proxy
 <div class="Bd-indent">
 <pre>
 searchResult         search (only if defined; no default;
-<br/>
                      acts on DN and DN-syntax attributes 
-<br/>
                      of search results)
 searchAttrDN         search AVA
 matchedDN            all ops (only if applicable)
@@ -934,12 +921,10 @@ rewriteContext matchedDN alias searchResult
 # This rule changes the naming context of anything sent
 # to `dc=home,dc=net' to `dc=OpenLDAP, dc=org'
 rewriteRule &quot;(.*)dc=home,[ ]?dc=net&quot;
-<br/>
             &quot;%1dc=OpenLDAP, dc=org&quot;  &quot;:&quot;
 # since a pretty/normalized DN does not include spaces
 # after rdn separators, e.g. `,', this rule suffices:
 rewriteRule &quot;(.*)dc=home,dc=net&quot;
-<br/>
             &quot;%1dc=OpenLDAP,dc=org&quot;  &quot;:&quot;
 # Start a new context (ends input of the previous one).
 # This rule adds blanks between DN parts if not present.
@@ -959,7 +944,6 @@ rewriteContext  searchBase alias default
 # `dc=home,dc=net' naming context, with spaces eaten.
 rewriteContext  searchResult
 rewriteRule     &quot;(.*[^ ]?)[ ]?dc=OpenLDAP,[ ]?dc=org&quot;
-<br/>
                 &quot;%{&gt;eatBlanks(%1)}dc=home,dc=net&quot;    &quot;:&quot;
 # Bind with email instead of full DN: we first need
 # an ldap map that turns attributes into a DN (the
@@ -998,12 +982,9 @@ rewriteRule     &quot;.+&quot; &quot;%{&amp;&amp;binddn(%0)}%0&quot; &quot;:&quo
 # `cn=Web auth,ou=admin,dc=home,dc=net' user.
 rewriteContext searchFilter
 rewriteRule &quot;(.*\\()uid=([a-z0-9_]+)(\\).*)&quot;
-<br/>
   &quot;%{**binddn}&lt;&gt;%{&amp;prefix(%1)}%{&amp;arg(%2)}%{&amp;suffix(%3)}&quot;
-<br/>
   &quot;:I&quot;
 rewriteRule &quot;[^,]+,ou=admin,dc=home,dc=net&quot;
-<br/>
   &quot;%{*prefix}|(uid=%{*arg})(cn=%{*arg})%{*suffix}&quot; &quot;:@I&quot;
 rewriteRule &quot;.*&lt;&gt;&quot; &quot;%{*prefix}uid=%{*arg}%{*suffix}&quot; &quot;:&quot;
 # This example shows how to strip unwanted DN-valued
@@ -1025,20 +1006,15 @@ rewriteRule &quot;.*&quot; &quot;&quot; &quot;#&quot;
     to the local server. E.g.:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   rewriteRule '^cn=root,.*' '%0'                     'G{3}'
-<br/>
   rewriteRule '^cn=[a-l].*' 'ldap://ldap1.my.org/%0' ':@'
-<br/>
   rewriteRule '^cn=[m-z].*' 'ldap://ldap2.my.org/%0' ':@'
-<br/>
   rewriteRule '.*'          'ldap://ldap3.my.org/%0' ':@'
 </pre>
 <p class="Pp">(Rule 1 is simply there to illustrate the `G{n}' action; it could
     have been written:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   rewriteRule '^cn=root,.*' 'ldap://ldap3.my.org/%0' ':@'
 </pre>
 <p class="Pp">with the advantage of saving one rewrite pass ...)</p>

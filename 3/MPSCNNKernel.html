@@ -139,79 +139,42 @@
     and produces one <b>MPSImage</b>.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
         The region overwritten in the destination MPSImage is described
-<br/>
         by the clipRect.  The top left corner of the region consumed (ignoring
-<br/>
         adjustments for filter size -- e.g. convolution filter size) is given
-<br/>
         by the offset. The size of the region consumed is a function of the
-<br/>
         clipRect size and any subsampling caused by pixel strides at work,
-<br/>
         e.g. MPSCNNPooling.strideInPixelsX/Y.  Where the offset + clipRect
-<br/>
         would cause a {x,y} pixel address not in the image to be read, the
-<br/>
         edgeMode is used to determine what value to read there.
-<br/>
         The Z/depth component of the offset, clipRect.origin and clipRect.size
-<br/>
         indexes which images to use. If the MPSImage contains only a single image
-<br/>
         then these should be offset.z = 0, clipRect.origin.z = 0
-<br/>
         and clipRect.size.depth = 1. If the MPSImage contains multiple images,
-<br/>
         clipRect.size.depth refers to number of images to process. Both source
-<br/>
         and destination MPSImages must have at least this many images. offset.z
-<br/>
         refers to starting source image index. Thus offset.z + clipRect.size.depth must
-<br/>
         be &lt;= source.numberOfImages. Similarly, clipRect.origin.z refers to starting
-<br/>
         image index in destination. So clipRect.origin.z + clipRect.size.depth must be
-<br/>
         &lt;= destination.numberOfImage.
-<br/>
         destinationFeatureChannelOffset property can be used to control where the MPSKernel will
-<br/>
         start writing in feature channel dimension. For example, if the destination image has
-<br/>
         64 channels, and MPSKernel outputs 32 channels, by default channels 0-31 of destination
-<br/>
         will be populated by MPSKernel. But if we want this MPSKernel to populate channel 32-63
-<br/>
         of the destination, we can set destinationFeatureChannelOffset = 32.
-<br/>
         A good example of this is concat (concatenation) operation in Tensor Flow. Suppose
-<br/>
         we have a src = w x h x Ni which goes through CNNConvolution_0 which produces
-<br/>
         output O0 = w x h x N0 and CNNConvolution_1 which produces output O1 = w x h x N1 followed
-<br/>
         by concatenation which produces O = w x h x (N0 + N1). We can achieve this by creating
-<br/>
         an MPSImage with dimensions O = w x h x (N0 + N1) and using this as destination of
-<br/>
         both convolutions as follows
-<br/>
             CNNConvolution0: destinationFeatureChannelOffset = 0, this will output N0 channels starting at
-<br/>
                              channel 0 of destination thus populating [0,N0-1] channels.
-<br/>
             CNNConvolution1: destinationFeatureChannelOffset = N0, this will output N1 channels starting at
-<br/>
                              channel N0 of destination thus populating [N0,N0+N1-1] channels.
-<br/>
         A MPSCNNKernel can be saved to disk / network using NSCoders such as NSKeyedArchiver. 
-<br/>
         When decoding, the system default MTLDevice will be chosen unless the NSCoder adopts 
-<br/>
         the &lt;MPSDeviceProvider&gt; protocol.  To accomplish this you will likely need to subclass your
-<br/>
         unarchiver to add this method.
 </pre>
 </section>
@@ -416,9 +379,7 @@
 <pre>
 MPSStateBatch * outStates = nil;    // autoreleased
 MPSImageBatch * result = [k encodeBatchToCommandBuffer: cmdBuf
-<br/>
                                           sourceImages: sourceImages
-<br/>
                                      destinationStates: &amp;outStates ];
 </pre>
 <p class="Pp"><b>Parameters:</b></p>
@@ -660,25 +621,18 @@ kernel.edgeMode = MPSImageEdgeModeZero;
 kernel.destinationFeatureChannelOffset = 128; // concatenation without the copy
 // ALERT: will change MPSCNNKernel properties
 MPSImageDescriptor * d = [kernel destinationImageDescriptorForSourceImage: source
-<br/>
                                                              sourceStates: states];
 MPSTemporaryImage * dest = [MPSTemporaryImage temporaryImageWithCommandBuffer: cmdBuf
-<br/>
                                                               imageDescriptor: d];
 // Now that all properties are configured properly, we can make the result state
 // and call encode.
 MPSState * __nullable destState = [kernel resultStateForSourceImage: source
-<br/>
                                                        sourceStates: states
-<br/>
                                                    destinationImage: dest];
 // This form of -encode will be declared by the MPSCNNKernel subclass
 [kernel encodeToCommandBuffer: cmdBuf
-<br/>
                   sourceImage: source
-<br/>
              destinationState: destState
-<br/>
              destinationImage: dest ];
 </pre>
 <p class="Pp">Default: returns nil</p>
@@ -747,25 +701,18 @@ kernel.edgeMode = MPSImageEdgeModeZero;
 kernel.destinationFeatureChannelOffset = 128; // concatenation without the copy
 // ALERT: will change MPSCNNKernel properties
 MPSImageDescriptor * d = [kernel destinationImageDescriptorForSourceImage: source
-<br/>
                                                              sourceStates: states];
 MPSTemporaryImage * dest = [MPSTemporaryImage temporaryImageWithCommandBuffer: cmdBuf
-<br/>
                                                               imageDescriptor: d];
 // Now that all properties are configured properly, we can make the result state
 // and call encode.
 MPSState * __nullable destState = [kernel temporaryResultStateForCommandBuffer: cmdBuf
-<br/>
                                                                    sourceImage: source
-<br/>
                                                                   sourceStates: states];
 // This form of -encode will be declared by the MPSCNNKernel subclass
 [kernel encodeToCommandBuffer: cmdBuf
-<br/>
                   sourceImage: source
-<br/>
              destinationState: destState
-<br/>
              destinationImage: dest ];
 </pre>
 <p class="Pp">Default: returns nil</p>
@@ -955,11 +902,8 @@ MPSState * __nullable destState = [kernel temporaryResultStateForCommandBuffer: 
     returned.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
         Warning: This property was lowered to this class in ios/tvos 11
-<br/>
                  The property may not be available on iOS/tvOS 10 for
-<br/>
                  all subclasses of MPSCNNKernel
 </pre>
 </section>
@@ -971,11 +915,8 @@ MPSState * __nullable destState = [kernel temporaryResultStateForCommandBuffer: 
     returned.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
         Warning: This property was lowered to this class in ios/tvos 11
-<br/>
                  The property may not be available on iOS/tvOS 10 for
-<br/>
                  all subclasses of MPSCNNKernel
 </pre>
 <p class="Pp"></p>

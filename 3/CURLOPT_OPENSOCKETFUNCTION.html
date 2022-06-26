@@ -47,25 +47,17 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 typedef enum  {
-<br/>
   CURLSOCKTYPE_IPCXN,  /* socket created for a specific IP connection */
 } curlsocktype;
 struct curl_sockaddr {
-<br/>
   int family;
-<br/>
   int socktype;
-<br/>
   int protocol;
-<br/>
   unsigned int addrlen;
-<br/>
   struct sockaddr addr;
 };
 curl_socket_t opensocket_callback(void *clientp,
-<br/>
                                   curlsocktype purpose,
-<br/>
                                   struct curl_sockaddr *address);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_OPENSOCKETFUNCTION, opensocket_callback);
 </pre>
@@ -100,7 +92,6 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_OPENSOCKETFUNCTION, opensocket_c
 <h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
 <p class="Pp">The default behavior is the equivalent of this:</p>
 <pre>
-<br/>
    return socket(addr-&gt;family, addr-&gt;socktype, addr-&gt;protocol);
 </pre>
 </section>
@@ -113,52 +104,32 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_OPENSOCKETFUNCTION, opensocket_c
 <pre>
 /* make libcurl use the already established socket 'sockfd' */
 static curl_socket_t opensocket(void *clientp,
-<br/>
                                 curlsocktype purpose,
-<br/>
                                 struct curl_sockaddr *address)
 {
-<br/>
   curl_socket_t sockfd;
-<br/>
   sockfd = *(curl_socket_t *)clientp;
-<br/>
   /* the actual externally set socket is passed in via the OPENSOCKETDATA
-<br/>
      option */
-<br/>
   return sockfd;
 }
 static int sockopt_callback(void *clientp, curl_socket_t curlfd,
-<br/>
                             curlsocktype purpose)
 {
-<br/>
   /* This return code was added in libcurl 7.21.5 */
-<br/>
   return CURL_SOCKOPT_ALREADY_CONNECTED;
 }
 curl = curl_easy_init();
 if(curl) {
-<br/>
   /* libcurl will internally think that you connect to the host
-<br/>
    * and port that you specify in the URL option. */
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;http://99.99.99.99:9999&quot;);
-<br/>
   /* call this function to get a socket */
-<br/>
   curl_easy_setopt(curl, CURLOPT_OPENSOCKETFUNCTION, opensocket);
-<br/>
   curl_easy_setopt(curl, CURLOPT_OPENSOCKETDATA, &amp;sockfd);
-<br/>
   /* call this function to set options for the socket */
-<br/>
   curl_easy_setopt(curl, CURLOPT_SOCKOPTFUNCTION, sockopt_callback);
-<br/>
   res = curl_easy_perform(curl);
-<br/>
   curl_easy_cleanup(curl);
 }
 </pre>

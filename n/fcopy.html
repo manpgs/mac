@@ -189,18 +189,12 @@ fconfigure $out -translation binary
 <div class="Bd-indent">
 <pre>
 proc Cleanup {in out bytes {error {}}} {
-<br/>
     global total
-<br/>
     set total $bytes
-<br/>
     close $in
-<br/>
     close $out
-<br/>
     if {[string length $error] != 0} {
 	# error occurred during the copy
-<br/>
     }
 }
 set in [open $file1]
@@ -214,21 +208,15 @@ vwait total
 <div class="Bd-indent">
 <pre>
 proc CopyMore {in out chunk bytes {error {}}} {
-<br/>
     global total done
-<br/>
     incr total $bytes
-<br/>
     if {([string length $error] != 0) || [eof $in]} {
 	set done $total
 	close $in
 	close $out
-<br/>
     } else {
 	<b>fcopy</b> $in $out -size $chunk \
-<br/>
                 -command [list CopyMore $in $out $chunk]
-<br/>
     }
 }
 set in [open $file1]
@@ -236,7 +224,6 @@ set out [socket $server $port]
 set chunk 1024
 set total 0
 <b>fcopy</b> $in $out -size $chunk \
-<br/>
         -command [list CopyMore $in $out $chunk]
 vwait done
 </pre>

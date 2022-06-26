@@ -48,54 +48,31 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 struct curl_fileinfo {
-<br/>
   char *filename;
-<br/>
   curlfiletype filetype;
-<br/>
   time_t time;   /* always zero! */
-<br/>
   unsigned int perm;
-<br/>
   int uid;
-<br/>
   int gid;
-<br/>
   curl_off_t size;
-<br/>
   long int hardlinks;
-<br/>
   struct {
-<br/>
     /* If some of these fields is not NULL, it is a pointer to b_data. */
-<br/>
     char *time;
-<br/>
     char *perm;
-<br/>
     char *user;
-<br/>
     char *group;
-<br/>
     char *target; /* pointer to the target filename of a symlink */
-<br/>
   } strings;
-<br/>
   unsigned int flags;
-<br/>
   /* used internally */
-<br/>
   char *b_data;
-<br/>
   size_t b_size;
-<br/>
   size_t b_used;
 };
 long chunk_bgn_callback(const void *transfer_info, void *ptr,
-<br/>
                         int remains);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CHUNK_BGN_FUNCTION,
-<br/>
                           chunk_bgn_callback);
 </pre>
 </section>
@@ -133,73 +110,41 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_CHUNK_BGN_FUNCTION,
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
 static long file_is_coming(struct curl_fileinfo *finfo,
-<br/>
                            struct callback_data *data,
-<br/>
                            int remains)
 {
-<br/>
   printf(&quot;%3d %40s %10luB &quot;, remains, finfo-&gt;filename,
-<br/>
          (unsigned long)finfo-&gt;size);
-<br/>
   switch(finfo-&gt;filetype) {
-<br/>
   case CURLFILETYPE_DIRECTORY:
-<br/>
     printf(&quot; DIR\n&quot;);
-<br/>
     break;
-<br/>
   case CURLFILETYPE_FILE:
-<br/>
     printf(&quot;FILE &quot;);
-<br/>
     break;
-<br/>
   default:
-<br/>
     printf(&quot;OTHER\n&quot;);
-<br/>
     break;
-<br/>
   }
-<br/>
   if(finfo-&gt;filetype == CURLFILETYPE_FILE) {
-<br/>
     /* do not transfer files &gt;= 50B */
-<br/>
     if(finfo-&gt;size &gt; 50) {
-<br/>
       printf(&quot;SKIPPED\n&quot;);
-<br/>
       return CURL_CHUNK_BGN_FUNC_SKIP;
-<br/>
     }
-<br/>
     data-&gt;output = fopen(finfo-&gt;filename, &quot;wb&quot;);
-<br/>
     if(!data-&gt;output) {
-<br/>
       return CURL_CHUNK_BGN_FUNC_FAIL;
-<br/>
     }
-<br/>
   }
-<br/>
   return CURL_CHUNK_BGN_FUNC_OK;
 }
 int main()
 {
-<br/>
   /* data for callback */
-<br/>
   struct callback_data callback_info;
-<br/>
   /* callback is called before download of concrete file started */
-<br/>
   curl_easy_setopt(curl, CURLOPT_CHUNK_BGN_FUNCTION, file_is_coming);
-<br/>
   curl_easy_setopt(curl, CURLOPT_CHUNK_DATA, &amp;callback_info);
 }
 </pre>

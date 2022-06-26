@@ -96,78 +96,60 @@
 <pre>
 So in case of sride == 2 (this behaves same in both dimensions)
 Source image:
-<br/>
  _______________
 |   |   |   |   |
 | 1 | 2 | 3 | 4 |
 |   |   |   |   |
-<br/>
  ---------------
 Intermediate Image:
-<br/>
  ___________________________
 |   |   |   |   |   |   |   |
 | 1 | 0 | 2 | 0 | 3 | 0 | 4 |
 |   |   |   |   |   |   |   |
-<br/>
  ---------------------------
 NOTE on Offset:
 There are 2 types of offsets defined:
 1) The Offset defined in MPSCNNKernel from which MPSCNNConvolutionTranspose inherits. This offset is applied to from where
-<br/>
    the kernel will be applied on the source.
 2) The kernelOffsetX and kernelOffsetY which is the offset applied to the kernel when it is finally applied on the intermediate
-<br/>
    image.
 So totalOffset = Offset * stride + kernelOffset
 The offset defined by user refers to the coordinate frame of the expanded image
 (we are showing only 1 dimension X it can be extended to Y dimension as well) :
 X indicates where the convolution transpose begins:
 Intermediate Image:  Offset = 0, kernelOffset = 0
-<br/>
  ___________________________
 |   |   |   |   |   |   |   |
 | 1 | 0 | 2 | 0 | 3 | 0 | 4 |
 | X |   |   |   |   |   |   |
-<br/>
  ---------------------------
 X indicates where the convolution transpose begins:
 Intermediate Image:  Offset = 0, kernelOffset = 1
-<br/>
  ___________________________
 |   |   |   |   |   |   |   |
 | 1 | 0 | 2 | 0 | 3 | 0 | 4 |
 |   | X |   |   |   |   |   |
-<br/>
  ---------------------------
 X indicates where the convolution transpose begins:
 Intermediate Image:  Offset = 0, kernelOffset = -1
-<br/>
    ___________________________
-<br/>
   |   |   |   |   |   |   |   |
 X | 1 | 0 | 2 | 0 | 3 | 0 | 4 |
-<br/>
   |   |   |   |   |   |   |   |
-<br/>
    ---------------------------
 So if the user wanted to apply an offset of 2 on the source image of convolution transpose:
 Source image:
-<br/>
  _______________
 |   |   |   |   |
 | 1 | 2 | 3 | 4 |
 |   |   | X |   |
-<br/>
  ---------------
 offset = 2, kernelOffset = 0
 Intermediate Image:
-<br/>
  ___________________________
 |   |   |   |   |   |   |   |
 | 1 | 0 | 2 | 0 | 3 | 0 | 4 |
 |   |   |   |   | X |   |   |
-<br/>
  ---------------------------
 </pre>
 </section>

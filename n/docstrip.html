@@ -170,40 +170,24 @@
     character) and <i>comment lines</i> (which begin with a percent character
     and are not copied).</p>
 <pre>
-<br/>
    docstrip::extract [join {
-<br/>
      {% comment}
-<br/>
      {% more comment !&quot;#$%&amp;/(}
-<br/>
      {some command}
-<br/>
      { % blah $blah &quot;Not a comment.&quot;}
-<br/>
      {% abc; this is comment}
-<br/>
      {# def; this is code}
-<br/>
      {ghi}
-<br/>
      {% jkl}
-<br/>
    } \n] {}
 </pre>
 <p class="Pp">returns the same sequence of lines as</p>
 <pre>
-<br/>
    join {
-<br/>
      {some command}
-<br/>
      { % blah $blah &quot;Not a comment.&quot;}
-<br/>
      {# def; this is code}
-<br/>
      {ghi} &quot;&quot;
-<br/>
    } \n
 </pre>
 <p class="Pp">It does not matter to <b>docstrip</b> what format is used for the
@@ -224,26 +208,17 @@
     lines will only be included if the expression evaluates to true. The syntax
     of an ordinary guard line is one of</p>
 <pre>
-<br/>
     '%' '&lt;' STARSLASH EXPRESSION '&gt;'
-<br/>
     '%' '&lt;' PLUSMINUS EXPRESSION '&gt;' CODE
 </pre>
 where
 <pre>
-<br/>
     STARSLASH  ::=  '*' | '/'
-<br/>
     PLUSMINUS  ::=  '+' | '-' |
-<br/>
     EXPRESSION ::= SECONDARY | SECONDARY ',' EXPRESSION
-<br/>
                  | SECONDARY '|' EXPRESSION
-<br/>
     SECONDARY  ::= PRIMARY | PRIMARY '&amp;' SECONDARY
-<br/>
     PRIMARY    ::= TERMINAL | '!' PRIMARY | '(' EXPRESSION ')'
-<br/>
     CODE       ::= { any character except end-of-line }
 </pre>
 Comma and vertical bar both denote 'or'. Ampersand denotes 'and'. Exclamation
@@ -260,88 +235,48 @@ Comma and vertical bar both denote 'or'. Ampersand denotes 'and'. Exclamation
     with the same <i>EXPRESSION</i> (compared as strings). The blocks of code
     delimited by such '*' and '/' guard lines must be properly nested.</p>
 <pre>
-<br/>
    set text [join {
-<br/>
       {begin}
-<br/>
       {%&lt;*foo&gt;}
-<br/>
       {1}
-<br/>
       {%&lt;*bar&gt;}
-<br/>
       {2}
-<br/>
       {%&lt;/bar&gt;}
-<br/>
       {%&lt;*!bar&gt;}
-<br/>
       {3}
-<br/>
       {%&lt;/!bar&gt;}
-<br/>
       {4}
-<br/>
       {%&lt;/foo&gt;}
-<br/>
       {5}
-<br/>
       {%&lt;*bar&gt;}
-<br/>
       {6}
-<br/>
       {%&lt;/bar&gt;}
-<br/>
       {end}
-<br/>
    } \n]
-<br/>
    set res [docstrip::extract $text foo]
-<br/>
    append res [docstrip::extract $text {foo bar}]
-<br/>
    append res [docstrip::extract $text bar]
 </pre>
 sets $res to the result of
 <pre>
-<br/>
    join {
-<br/>
       {begin}
-<br/>
       {1}
-<br/>
       {3}
-<br/>
       {4}
-<br/>
       {5}
-<br/>
       {end}
-<br/>
       {begin}
-<br/>
       {1}
-<br/>
       {2}
-<br/>
       {4}
-<br/>
       {5}
-<br/>
       {6}
-<br/>
       {end}
-<br/>
       {begin}
-<br/>
       {5}
-<br/>
       {6}
-<br/>
       {end} &quot;&quot;
-<br/>
    } \n
 </pre>
 In guard lines without a '*', '/', '+', or '-' modifier after the
@@ -357,64 +292,36 @@ In guard lines without a '*', '/', '+', or '-' modifier after the
     customarily set to some &quot;comment until end of line&quot; character (or
     character sequence) of the language of the code being extracted.</p>
 <pre>
-<br/>
    set text [join {
-<br/>
       {begin}
-<br/>
       {%&lt;foo&gt; foo}
-<br/>
       {%&lt;+foo&gt;plusfoo}
-<br/>
       {%&lt;-foo&gt;minusfoo}
-<br/>
       {middle}
-<br/>
       {%% some metacomment}
-<br/>
       {%&lt;*foo&gt;}
-<br/>
       {%%another metacomment}
-<br/>
       {%&lt;/foo&gt;}
-<br/>
       {end}
-<br/>
    } \n]
-<br/>
    set res [docstrip::extract $text foo -metaprefix {# }]
-<br/>
    append res [docstrip::extract $text bar -metaprefix {#}]
 </pre>
 sets $res to the result of
 <pre>
-<br/>
    join {
-<br/>
       {begin}
-<br/>
       { foo}
-<br/>
       {plusfoo}
-<br/>
       {middle}
-<br/>
       {#  some metacomment}
-<br/>
       {# another metacomment}
-<br/>
       {end}
-<br/>
       {begin}
-<br/>
       {minusfoo}
-<br/>
       {middle}
-<br/>
       {# some metacomment}
-<br/>
       {end} &quot;&quot;
-<br/>
    } \n
 </pre>
 Verbatim guards can be used to force code line interpretation of a block of
@@ -423,64 +330,36 @@ Verbatim guards can be used to force code line interpretation of a block of
   verbatim block is terminated by the first line that is exactly
   '%<i>END-TAG</i>'.
 <pre>
-<br/>
    set text [join {
-<br/>
       {begin}
-<br/>
       {%&lt;*myblock&gt;}
-<br/>
       {some stupid()}
-<br/>
       {   #computer&lt;program&gt;}
-<br/>
       {%&lt;&lt;QQQ-98765}
-<br/>
       {% These three lines are copied verbatim (including percents}
-<br/>
       {%% even if -metaprefix is something different than %%).}
-<br/>
       {%&lt;/myblock&gt;}
-<br/>
       {%QQQ-98765}
-<br/>
       {   using*strange@programming&lt;language&gt;}
-<br/>
       {%&lt;/myblock&gt;}
-<br/>
       {end}
-<br/>
    } \n]
-<br/>
    set res [docstrip::extract $text myblock -metaprefix {# }]
-<br/>
    append res [docstrip::extract $text {}]
 </pre>
 sets $res to the result of
 <pre>
-<br/>
    join {
-<br/>
       {begin}
-<br/>
       {some stupid()}
-<br/>
       {   #computer&lt;program&gt;}
-<br/>
       {% These three lines are copied verbatim (including percents}
-<br/>
       {%% even if -metaprefix is something different than %%).}
-<br/>
       {%&lt;/myblock&gt;}
-<br/>
       {   using*strange@programming&lt;language&gt;}
-<br/>
       {end}
-<br/>
       {begin}
-<br/>
       {end} &quot;&quot;
-<br/>
    } \n
 </pre>
 The processing of verbatim guards takes place also inside blocks of lines which
@@ -576,21 +455,13 @@ It should be remarked that the <i>terminals</i> are often called
     any support from other files. This is achieved by beginning the file with
     the lines</p>
 <pre>
-<br/>
    % \iffalse
-<br/>
    %&lt;*driver&gt;
-<br/>
    \documentclass{tclldoc}
-<br/>
    \begin{document}
-<br/>
    \DocInput{<i>filename.dtx</i>}
-<br/>
    \end{document}
-<br/>
    %&lt;/driver&gt;
-<br/>
    % \fi
 </pre>
 or some variation thereof. The trick is that the file gets read twice. With

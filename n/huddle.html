@@ -147,25 +147,17 @@
   format.</p>
 <pre>
 huddle-format: &gt;
-<br/>
   {HUDDLE {huddle-node}}
 huddle-node: &gt;
-<br/>
   {tag content}
 each content of tag means:
-<br/>
   s: (content is a) string
-<br/>
   L: list, each sub node is a huddle-node
-<br/>
   D: dict, each sub node is a huddle-node
 confirmed:
-<br/>
   - JSON
-<br/>
   - YAML(generally, but cannot discribe YAML-tags)
 limitation:
-<br/>
   - cannot discribe aliases from a node to other node.
 </pre>
 <p class="Pp">The <b>huddle</b> package returns data as a Tcl <b>dict</b>.
@@ -293,31 +285,18 @@ string
 # normal output has some indents. some strings are escaped.
 % huddle jsondump {HUDDLE {L {{L {{s i} {s baa} {s \\k} {L {{s 1.0} {s true} {s /g} {s h}}} {L {{s g}}}}} {s t}}}}
 [
-<br/>
   [
-<br/>
     &quot;i&quot;,
-<br/>
     &quot;baa&quot;,
-<br/>
     &quot;\\k&quot;,
-<br/>
     [
-<br/>
       1.0,
-<br/>
       true,
-<br/>
       &quot;\/g&quot;,
-<br/>
       &quot;h&quot;
-<br/>
     ],
-<br/>
     [&quot;g&quot;]
-<br/>
   ],
-<br/>
   &quot;t&quot;
 ]
 # stripped output
@@ -477,204 +456,107 @@ HUDDLE {s str}
 <pre>
 # callback sample for my-dict
 proc my_dict_setting {command args} {
-<br/>
     switch -- $command {
-<br/>
         setting { ; # type definition
-<br/>
             return {
-<br/>
                 type dict
-<br/>
                 method {create keys}
-<br/>
                 tag {d child D parent}
-<br/>
                 constructor create
-<br/>
                 str s
-<br/>
             }
-<br/>
             # type:   the type-name
-<br/>
             # method: add methods to huddle's subcommand.
-<br/>
             #          &quot;get_sub/strip/set/remove/equal/append&quot; called by huddle module.
-<br/>
             #          &quot;strip&quot; must be defined at all types.
-<br/>
             #          &quot;get_sub&quot; must be defined at container types.
-<br/>
             #          &quot;set/remove/equal/append&quot; shuould be defined, if you call them.
-<br/>
             # tag:    tag definition(&quot;child/parent&quot; word is maybe obsoleted)
-<br/>
         }
-<br/>
         get_sub { ; # get a sub-node specified by &quot;key&quot; from the tagged-content
-<br/>
             foreach {src key} $args break
-<br/>
             return [dict get $src $key]
-<br/>
         }
-<br/>
         strip { ; # strip from the tagged-content
-<br/>
             foreach {src nop} $args break
-<br/>
             foreach {key val} $src {
-<br/>
                 lappend result $key [huddle strip $val]
-<br/>
             }
-<br/>
             return $result
-<br/>
         }
-<br/>
         set { ; # set a sub-node from the tagged-content
-<br/>
             foreach {src key value} $args break
-<br/>
             dict set src $key $value
-<br/>
             return $src
-<br/>
         }
-<br/>
         remove { ; # remove a sub-node from the tagged-content
-<br/>
             foreach {src key value} $args break
-<br/>
             return [dict remove $src $key]
-<br/>
         }
-<br/>
         equal { ; # check equal for each node
-<br/>
             foreach {src1 src2} $args break
-<br/>
             if {[llength $src1] != [llength $src2]} {return 0}
-<br/>
             foreach {key1 val1} $src1 {
-<br/>
                 if {![dict exists $src2 $key1]} {return 0}
-<br/>
                 if {![huddle _equal_subs $val1 [dict get $src2 $key1]]} {return 0}
-<br/>
             }
-<br/>
             return 1
-<br/>
         }
-<br/>
         append { ; # append nodes
-<br/>
             foreach {str src list} $args break
-<br/>
             if {[llength $list] % 2} {error {wrong # args: should be &quot;huddle append objvar ?key value ...?&quot;}}
-<br/>
             set resultL $src
-<br/>
             foreach {key value} $list {
-<br/>
                 if {$str ne &quot;&quot;} {
-<br/>
                     lappend resultL $key [huddle to_node $value $str]
-<br/>
                 } else {
-<br/>
                     lappend resultL $key $value
-<br/>
                 }
-<br/>
             }
-<br/>
             return [eval dict create $resultL]
-<br/>
         }
-<br/>
         create { ; # $args: all arguments after &quot;huddle create&quot;
-<br/>
             if {[llength $args] % 2} {error {wrong # args: should be &quot;huddle create ?key value ...?&quot;}}
-<br/>
             set resultL {}
-<br/>
             foreach {key value} $args {
-<br/>
                 lappend resultL $key [huddle to_node $value]
-<br/>
             }
-<br/>
             return [huddle wrap D $resultL]
-<br/>
         }
-<br/>
         keys {
-<br/>
             foreach {src nop} $args break
-<br/>
             return [dict keys [lindex [lindex $src 1] 1]]
-<br/>
         }
-<br/>
         default {
-<br/>
             error &quot;$command is not callback for dict&quot;
-<br/>
         }
-<br/>
     }
 }
 </pre>
 <pre>
 # inheritance sample from default dict-callback
 proc ::yaml::_huddle_mapping {command args} {
-<br/>
     switch -- $command {
-<br/>
         setting { ; # type definition
-<br/>
             return {
-<br/>
                 type dict
-<br/>
                 method {mapping}
-<br/>
                 tag {!!map parent}
-<br/>
                 constructor mapping
-<br/>
                 str !!str
-<br/>
             }
-<br/>
         }
-<br/>
         mapping { ; # $args: all arguments after &quot;huddle mapping&quot;
-<br/>
             if {[llength $args] % 2} {error {wrong # args: should be &quot;huddle mapping ?key value ...?&quot;}}
-<br/>
             set resultL {}
-<br/>
             foreach {key value} $args {
-<br/>
                 lappend resultL $key [huddle to_node $value !!str]
-<br/>
             }
-<br/>
             return [huddle wrap !!map $resultL]
-<br/>
         }
-<br/>
         default { ; # devolving to default dict-callback
-<br/>
             return [huddle call D $command $args]
-<br/>
         }
-<br/>
     }
 }
 </pre>
@@ -724,41 +606,23 @@ HUDDLE {L {{D {bb {D {a {s b} c {s kkk}}} cc {L {{s e} {s f} {s g} {s h}}}}} {s 
 # dump as a JSON stream
 % huddle jsondump $folding
 [
-<br/>
   {
-<br/>
     &quot;bb&quot;: {
-<br/>
       &quot;a&quot;: &quot;b&quot;,
-<br/>
       &quot;c&quot;: &quot;kkk&quot;
-<br/>
     },
-<br/>
     &quot;cc&quot;: [
-<br/>
       &quot;e&quot;,
-<br/>
       &quot;f&quot;,
-<br/>
       &quot;g&quot;,
-<br/>
       &quot;h&quot;
-<br/>
     ]
-<br/>
   },
-<br/>
   &quot;p&quot;,
-<br/>
   [
-<br/>
     &quot;q&quot;,
-<br/>
     &quot;r&quot;
-<br/>
   ],
-<br/>
   &quot;s&quot;
 ]
 </pre>

@@ -184,17 +184,11 @@
         exit. This is considered to be a bad practice and should be avoided if
         possible. This is best illustrated by the example below:</p>
     <pre>
-<br/>
     # You should never do ...
-<br/>
     set tid [thread::create {
-<br/>
         package require Http
-<br/>
         thread::wait
-<br/>
         vwait forever ; # &lt;-- this!
-<br/>
     }]
     </pre>
     The thread created in the above example will never be able to exit. After it
@@ -264,7 +258,6 @@
       <i>procname</i> is called in the interpreter that invoked the
       <b>thread::errorproc</b> command. The <i>procname</i> is called like this:
     <pre>
-<br/>
     myerrorproc thread_id errorInfo
     </pre>
   </dd>
@@ -320,19 +313,12 @@
         the command returns immediately and caller can later <b>vwait</b> on
         ?varname? to get the result of the passed <i>script</i></p>
     <pre>
-<br/>
     set t1 [thread::create]
-<br/>
     set t2 [thread::create]
-<br/>
     thread::send -async $t1 &quot;set a 1&quot; result
-<br/>
     thread::send -async $t2 &quot;set b 2&quot; result
-<br/>
     for {set i 0} {$i &lt; 2} {incr i} {
-<br/>
         vwait result
-<br/>
     }
     </pre>
     In the above example, two threads were fed work and both of them were
@@ -360,17 +346,11 @@
       continue executing the script lines pass the <b>thread::wait</b> which is
       usually not what you want and/or expect.
     <pre>
-<br/>
     set t1 [thread::create {
-<br/>
         #
-<br/>
         # Do some initialization work here
-<br/>
         #
-<br/>
         thread::wait ; # Enter the event loop
-<br/>
     }]
     </pre>
   </dd>
@@ -424,21 +404,13 @@
         measures when transferring socket channels created by accepting the
         connection out of the <b>socket</b> commands callback procedures:</p>
     <pre>
-<br/>
     socket -server _Accept 2200
-<br/>
     proc _Accept {s ipaddr port} {
-<br/>
         after idle [list Accept $s $ipaddr $port]
-<br/>
     }
-<br/>
     proc Accept {s ipaddr port} {
-<br/>
         set tid [thread::create]
-<br/>
         thread::transfer $tid $s
-<br/>
     }
     </pre>
   </dd>
@@ -594,21 +566,13 @@
         under the mutex protection and waiting on the condition variable until
         the condition evaluates to true:</p>
     <pre>
-<br/>
     set mutex [thread::mutex create]
-<br/>
     set cond  [thread::cond  create]
-<br/>
     thread::mutex lock $mutex
-<br/>
     while {&lt;some_condition_is_true&gt;} {
-<br/>
         thread::cond wait $cond $mutex
-<br/>
     }
-<br/>
     # Do some work under mutex protection
-<br/>
     thread::mutex unlock $mutex
     </pre>
     Repeated testing of the condition is needed since the condition variable may

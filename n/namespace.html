@@ -377,17 +377,11 @@
 <div class="Bd-indent">
 <pre>
 <b>namespace eval</b> Counter {
-<br/>
    <b>namespace export</b> bump
-<br/>
    variable num 0
-<br/>
    proc bump {} {
-<br/>
       variable num
-<br/>
       incr num
-<br/>
    }
 }
 </pre>
@@ -408,27 +402,18 @@ creates a new namespace containing the variable <b>num</b> and the procedure
 <div class="Bd-indent">
 <pre>
 <b>namespace eval</b> Counter {
-<br/>
    variable num 0
-<br/>
    proc bump {} {
-<br/>
       variable num
-<br/>
       return [incr num]
-<br/>
    }
 }
 <b>namespace eval</b> Counter {
-<br/>
    proc test {args} {
-<br/>
       return $args
-<br/>
    }
 }
 <b>namespace eval</b> Counter {
-<br/>
     rename test &quot;&quot;
 }
 </pre>
@@ -524,7 +509,6 @@ rename Foo::Test Bar::Test
 <pre>
 set traceLevel 0
 <b>namespace eval</b> Debug {
-<br/>
    printTrace $traceLevel
 }
 </pre>
@@ -538,13 +522,9 @@ Tcl looks for <b>traceLevel</b> in the namespace <b>Debug</b> and then in the
 <pre>
 set traceLevel 0
 <b>namespace eval</b> Foo {
-<br/>
    variable traceLevel 3
-<br/>
    <b>namespace eval</b> Debug {
-<br/>
       printTrace $traceLevel
-<br/>
    }
 }
 </pre>
@@ -665,45 +645,25 @@ the command is automatically removed from all namespaces that import it.
 <div class="Bd-indent">
 <pre>
 <b>namespace eval</b> Counter {
-<br/>
    <b>namespace export</b> bump reset
-<br/>
    variable Num 0
-<br/>
    variable Max 100
-<br/>
    proc bump {{by 1}} {
-<br/>
       variable Num
-<br/>
       incr Num $by
-<br/>
       Check
-<br/>
       return $Num
-<br/>
    }
-<br/>
    proc reset {} {
-<br/>
       variable Num
-<br/>
       set Num 0
-<br/>
    }
-<br/>
    proc Check {} {
-<br/>
       variable Num
-<br/>
       variable Max
-<br/>
       if {$Num &gt; $Max} {
-<br/>
          error &quot;too high!&quot;
-<br/>
       }
-<br/>
    }
 }
 </pre>
@@ -736,19 +696,12 @@ However, the <b>Check</b> procedure is not exported, so it is ignored by the
 <div class="Bd-indent">
 <pre>
 <b>namespace eval</b> a {
-<br/>
    variable b
-<br/>
    proc theTraceCallback { n1 n2 op } {
-<br/>
       upvar 1 $n1 var
-<br/>
       puts &quot;the value of $n1 has changed to $var&quot;
-<br/>
       return
-<br/>
    }
-<br/>
    trace add variable b write [<b>namespace code</b> theTraceCallback]
 }
 set a::b c
@@ -918,17 +871,11 @@ the value of a::b has changed to c
 <div class="Bd-indent">
 <pre>
 <b>namespace eval</b> foo {
-<br/>
    variable bar 0
-<br/>
    proc grill {} {
-<br/>
       variable bar
-<br/>
       puts &quot;called [incr bar] times&quot;
-<br/>
    }
-<br/>
    <b>namespace export</b> grill
 }
 </pre>
@@ -941,9 +888,7 @@ the value of a::b has changed to c
 ::foo::grill
 # Use the command resolution path to find the name
 <b>namespace eval</b> boo {
-<br/>
    <b>namespace path</b> ::foo
-<br/>
    grill
 }
 # Import into current namespace, then call local alias
@@ -952,9 +897,7 @@ grill
 # Create two ensembles, one with the default name and one with a
 # specified name.  Then call through the ensembles.
 <b>namespace eval</b> foo {
-<br/>
    <b>namespace ensemble</b> create
-<br/>
    <b>namespace ensemble</b> create -command ::foobar
 }
 foo grill

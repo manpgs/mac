@@ -290,7 +290,6 @@
 <div class="Bd-indent">
 <pre>
 (default)            if defined and no specific context 
-<br/>
                      is available
 bindDN               bind
 searchDN             search
@@ -303,7 +302,6 @@ addAttrDN            add AVA (DN portion of &quot;ref&quot; excluded)
 modifyDN             modify
 modifyAttrDN         modify AVA (DN portion of &quot;ref&quot; excluded)
 referralAttrDN       add/modify DN portion of referrals
-<br/>
                      (default to none)
 renameDN             modrdn (the old DN)
 newSuperiorDN        modrdn (the new parent DN, if any)
@@ -317,18 +315,13 @@ exopPasswdDN         password modify extended operation DN
 <div class="Bd-indent">
 <pre>
 searchEntryDN        search (only if defined; no default;
-<br/>
                      acts on DN of search entries)
 searchAttrDN         search AVA (only if defined; defaults
-<br/>
                      to searchEntryDN; acts on DN-syntax
-<br/>
                      attributes of search results)
 matchedDN            all ops (only if applicable; defaults
-<br/>
                      to searchEntryDN)
 referralDN           all ops (only if applicable; defaults
-<br/>
                      to none)
 </pre>
 </div>
@@ -451,12 +444,10 @@ rwm-rewriteContext referralDN
 # This rule changes the naming context of anything sent
 # to `dc=home,dc=net' to `dc=OpenLDAP, dc=org'
 rwm-rewriteRule &quot;(.+,)?dc=home,[ ]?dc=net$&quot;
-<br/>
             &quot;$1dc=OpenLDAP, dc=org&quot;  &quot;:&quot;
 # since a pretty/normalized DN does not include spaces
 # after rdn separators, e.g. `,', this rule suffices:
 rwm-rewriteRule &quot;(.+,)?dc=home,dc=net$&quot;
-<br/>
             &quot;$1dc=OpenLDAP,dc=org&quot;  &quot;:&quot;
 # Start a new context (ends input of the previous one).
 # This rule adds blanks between DN parts if not present.
@@ -476,7 +467,6 @@ rwm-rewriteContext  searchDN alias default
 # `dc=home,dc=net' naming context, with spaces eaten.
 rwm-rewriteContext  searchEntryDN
 rwm-rewriteRule     &quot;(.*[^ ],)?[ ]?dc=OpenLDAP,[ ]?dc=org$&quot;
-<br/>
                 &quot;${&gt;eatBlanks($1)}dc=home,dc=net&quot;    &quot;:&quot;
 # Bind with email instead of full DN: we first need
 # an ldap map that turns attributes into a DN (the
@@ -515,12 +505,9 @@ rwm-rewriteRule     &quot;.+&quot; &quot;${&amp;&amp;binddn($0)}$0&quot; &quot;:
 # `cn=Web auth,ou=admin,dc=home,dc=net' user.
 rwm-rewriteContext searchFilter
 rwm-rewriteRule &quot;(.*\\()uid=([a-z0-9_]+)(\\).*)&quot;
-<br/>
   &quot;${**binddn}&lt;&gt;${&amp;prefix($1)}${&amp;arg($2)}${&amp;suffix($3)}&quot;
-<br/>
   &quot;:I&quot;
 rwm-rewriteRule &quot;^[^,]+,ou=admin,dc=home,dc=net$&quot;
-<br/>
   &quot;${*prefix}|(uid=${*arg})(cn=${*arg})${*suffix}&quot; &quot;:@I&quot;
 rwm-rewriteRule &quot;.*&lt;&gt;$&quot; &quot;${*prefix}uid=${*arg}${*suffix}&quot; &quot;:&quot;
 # This example shows how to strip unwanted DN-valued

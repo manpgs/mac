@@ -187,35 +187,22 @@ sha1-old SP sha1-new SP refname LF
 # mail out commit update information.
 while read oval nval ref
 do
-<br/>
         if expr &quot;$oval&quot; : '0*$' &gt;/dev/null
-<br/>
         then
-<br/>
                 echo &quot;Created a new ref, with the following commits:&quot;
-<br/>
                 git rev-list --pretty &quot;$nval&quot;
-<br/>
         else
-<br/>
                 echo &quot;New commits:&quot;
-<br/>
                 git rev-list --pretty &quot;$nval&quot; &quot;^$oval&quot;
-<br/>
         fi |
-<br/>
         mail -s &quot;Changes to ref $ref&quot; commit-list@mydomain
 done
 # log signed push certificate, if any
 if test -n &quot;${GIT_PUSH_CERT-}&quot; &amp;&amp; test ${GIT_PUSH_CERT_STATUS} = G
 then
-<br/>
         (
-<br/>
                 echo expected nonce is ${GIT_PUSH_NONCE}
-<br/>
                 git cat-file blob ${GIT_PUSH_CERT}
-<br/>
         ) | mail -s &quot;push certificate from $GIT_PUSH_CERT_SIGNER&quot; push-log@mydomain
 fi
 exit 0

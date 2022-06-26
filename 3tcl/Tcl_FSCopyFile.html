@@ -167,7 +167,6 @@ int
 
 int
 <b>Tcl_FSLoadFile</b>(<i>interp, pathPtr, sym1, sym2, proc1Ptr, proc2Ptr,</i>
-<br/>
 <i>               handlePtr, unloadProcPtr</i>)
 
 int
@@ -766,67 +765,36 @@ is wrong, and may cause memory errors. The <i>path</i> must have its reference
 <div class="Bd-indent">
 <pre>
 typedef struct Tcl_Filesystem {
-<br/>
     const char *<i>typeName</i>;
-<br/>
     int <i>structureLength</i>;
-<br/>
     Tcl_FSVersion <i>version</i>;
-<br/>
     Tcl_FSPathInFilesystemProc *<i>pathInFilesystemProc</i>;
-<br/>
     Tcl_FSDupInternalRepProc *<i>dupInternalRepProc</i>;
-<br/>
     Tcl_FSFreeInternalRepProc *<i>freeInternalRepProc</i>;
-<br/>
     Tcl_FSInternalToNormalizedProc *<i>internalToNormalizedProc</i>;
-<br/>
     Tcl_FSCreateInternalRepProc *<i>createInternalRepProc</i>;
-<br/>
     Tcl_FSNormalizePathProc *<i>normalizePathProc</i>;
-<br/>
     Tcl_FSFilesystemPathTypeProc *<i>filesystemPathTypeProc</i>;
-<br/>
     Tcl_FSFilesystemSeparatorProc *<i>filesystemSeparatorProc</i>;
-<br/>
     Tcl_FSStatProc *<i>statProc</i>;
-<br/>
     Tcl_FSAccessProc *<i>accessProc</i>;
-<br/>
     Tcl_FSOpenFileChannelProc *<i>openFileChannelProc</i>;
-<br/>
     Tcl_FSMatchInDirectoryProc *<i>matchInDirectoryProc</i>;
-<br/>
     Tcl_FSUtimeProc *<i>utimeProc</i>;
-<br/>
     Tcl_FSLinkProc *<i>linkProc</i>;
-<br/>
     Tcl_FSListVolumesProc *<i>listVolumesProc</i>;
-<br/>
     Tcl_FSFileAttrStringsProc *<i>fileAttrStringsProc</i>;
-<br/>
     Tcl_FSFileAttrsGetProc *<i>fileAttrsGetProc</i>;
-<br/>
     Tcl_FSFileAttrsSetProc *<i>fileAttrsSetProc</i>;
-<br/>
     Tcl_FSCreateDirectoryProc *<i>createDirectoryProc</i>;
-<br/>
     Tcl_FSRemoveDirectoryProc *<i>removeDirectoryProc</i>;
-<br/>
     Tcl_FSDeleteFileProc *<i>deleteFileProc</i>;
-<br/>
     Tcl_FSCopyFileProc *<i>copyFileProc</i>;
-<br/>
     Tcl_FSRenameFileProc *<i>renameFileProc</i>;
-<br/>
     Tcl_FSCopyDirectoryProc *<i>copyDirectoryProc</i>;
-<br/>
     Tcl_FSLstatProc *<i>lstatProc</i>;
-<br/>
     Tcl_FSLoadFileProc *<i>loadFileProc</i>;
-<br/>
     Tcl_FSGetCwdProc *<i>getCwdProc</i>;
-<br/>
     Tcl_FSChdirProc *<i>chdirProc</i>;
 } Tcl_Filesystem;
 </pre>
@@ -867,99 +835,52 @@ typedef struct Tcl_Filesystem {
 <div class="Bd-indent">
 <pre>
 static Tcl_Filesystem vfsFilesystem = {
-<br/>
     &quot;tclvfs&quot;,
-<br/>
     sizeof(Tcl_Filesystem),
-<br/>
     TCL_FILESYSTEM_VERSION_1,
-<br/>
     &amp;VfsPathInFilesystem,
-<br/>
     &amp;VfsDupInternalRep,
-<br/>
     &amp;VfsFreeInternalRep,
-<br/>
     /* No internal to normalized, since we don't create
-<br/>
      * any pure 'internal' Tcl_Obj path representations */
-<br/>
     NULL,
-<br/>
     /* No create native rep function, since we don't use
-<br/>
      * it and don't choose to support uses of
-<br/>
      * Tcl_FSNewNativePath */
-<br/>
     NULL,
-<br/>
     /* Normalize path isn't needed - we assume paths only
-<br/>
      * have one representation */
-<br/>
     NULL,
-<br/>
     &amp;VfsFilesystemPathType,
-<br/>
     &amp;VfsFilesystemSeparator,
-<br/>
     &amp;VfsStat,
-<br/>
     &amp;VfsAccess,
-<br/>
     &amp;VfsOpenFileChannel,
-<br/>
     &amp;VfsMatchInDirectory,
-<br/>
     &amp;VfsUtime,
-<br/>
     /* We choose not to support symbolic links inside our
-<br/>
      * VFS's */
-<br/>
     NULL,
-<br/>
     &amp;VfsListVolumes,
-<br/>
     &amp;VfsFileAttrStrings,
-<br/>
     &amp;VfsFileAttrsGet,
-<br/>
     &amp;VfsFileAttrsSet,
-<br/>
     &amp;VfsCreateDirectory,
-<br/>
     &amp;VfsRemoveDirectory,
-<br/>
     &amp;VfsDeleteFile,
-<br/>
     /* No copy file; use the core fallback mechanism */
-<br/>
     NULL,
-<br/>
     /* No rename file; use the core fallback mechanism */
-<br/>
     NULL,
-<br/>
     /* No copy directory; use the core fallback mechanism */
-<br/>
     NULL,
-<br/>
     /* Core will use stat for lstat */
-<br/>
     NULL,
-<br/>
     /* No load; use the core fallback mechanism */
-<br/>
     NULL,
-<br/>
     /* We don't need a getcwd or chdir; the core's own
-<br/>
      * internal value is suitable */
-<br/>
     NULL,
-<br/>
     NULL
 };
 </pre>
@@ -1012,9 +933,7 @@ static Tcl_Filesystem vfsFilesystem = {
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSPathInFilesystemProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         ClientData *<i>clientDataPtr</i>);
 </pre>
 </div>
@@ -1029,7 +948,6 @@ typedef int Tcl_FSPathInFilesystemProc(
 <div class="Bd-indent">
 <pre>
 typedef ClientData Tcl_FSDupInternalRepProc(
-<br/>
         ClientData <i>clientData</i>);
 </pre>
 </div>
@@ -1043,7 +961,6 @@ typedef ClientData Tcl_FSDupInternalRepProc(
 <div class="Bd-indent">
 <pre>
 typedef void Tcl_FSFreeInternalRepProc(
-<br/>
         ClientData <i>clientData</i>);
 </pre>
 </div>
@@ -1058,7 +975,6 @@ typedef void Tcl_FSFreeInternalRepProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Obj* Tcl_FSInternalToNormalizedProc(
-<br/>
         ClientData <i>clientData</i>);
 </pre>
 </div>
@@ -1074,7 +990,6 @@ typedef Tcl_Obj* Tcl_FSInternalToNormalizedProc(
 <div class="Bd-indent">
 <pre>
 typedef ClientData Tcl_FSCreateInternalRepProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>
@@ -1104,11 +1019,8 @@ typedef ClientData Tcl_FSCreateInternalRepProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSNormalizePathProc(
-<br/>
         Tcl_Interp *<i>interp</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         int <i>nextCheckpoint</i>);
 </pre>
 </div>
@@ -1141,7 +1053,6 @@ typedef int Tcl_FSNormalizePathProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Obj* Tcl_FSFilesystemPathTypeProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>
@@ -1157,7 +1068,6 @@ typedef Tcl_Obj* Tcl_FSFilesystemPathTypeProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Obj* Tcl_FSFilesystemSeparatorProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>
@@ -1172,9 +1082,7 @@ typedef Tcl_Obj* Tcl_FSFilesystemSeparatorProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSStatProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_StatBuf *<i>statPtr</i>);
 </pre>
 </div>
@@ -1200,9 +1108,7 @@ typedef int Tcl_FSStatProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSAccessProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         int <i>mode</i>);
 </pre>
 </div>
@@ -1225,13 +1131,9 @@ typedef int Tcl_FSAccessProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Channel Tcl_FSOpenFileChannelProc(
-<br/>
         Tcl_Interp *<i>interp</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         int <i>mode</i>,
-<br/>
         int <i>permissions</i>);
 </pre>
 </div>
@@ -1262,15 +1164,10 @@ typedef Tcl_Channel Tcl_FSOpenFileChannelProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSMatchInDirectoryProc(
-<br/>
         Tcl_Interp* <i>interp</i>,
-<br/>
         Tcl_Obj *<i>resultPtr</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         const char *<i>pattern</i>,
-<br/>
         Tcl_GlobTypeData *<i>types</i>);
 </pre>
 </div>
@@ -1300,21 +1197,13 @@ typedef int Tcl_FSMatchInDirectoryProc(
 <div class="Bd-indent">
 <pre>
 typedef struct Tcl_GlobTypeData {
-<br/>
         /* Corresponds to bcdpfls as in 'find -t' */
-<br/>
         int <i>type</i>;
-<br/>
         /* Corresponds to file permissions */
-<br/>
         int <i>perm</i>;
-<br/>
         /* Acceptable mac type */
-<br/>
         Tcl_Obj *<i>macType</i>;
-<br/>
         /* Acceptable mac creator */
-<br/>
         Tcl_Obj *<i>macCreator</i>;
 } Tcl_GlobTypeData;
 </pre>
@@ -1342,9 +1231,7 @@ typedef struct Tcl_GlobTypeData {
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSUtimeProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         struct utimbuf *<i>tval</i>);
 </pre>
 </div>
@@ -1363,11 +1250,8 @@ typedef int Tcl_FSUtimeProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Obj* Tcl_FSLinkProc(
-<br/>
         Tcl_Obj *<i>linkNamePtr</i>,
-<br/>
         Tcl_Obj *<i>toPtr</i>,
-<br/>
         int <i>linkAction</i>);
 </pre>
 </div>
@@ -1418,9 +1302,7 @@ typedef Tcl_Obj* Tcl_FSListVolumesProc(void);
 <div class="Bd-indent">
 <pre>
 typedef const char** Tcl_FSFileAttrStringsProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_Obj** <i>objPtrRef</i>);
 </pre>
 </div>
@@ -1441,13 +1323,9 @@ typedef const char** Tcl_FSFileAttrStringsProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSFileAttrsGetProc(
-<br/>
         Tcl_Interp *<i>interp</i>,
-<br/>
         int <i>index</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_Obj **<i>objPtrRef</i>);
 </pre>
 </div>
@@ -1467,13 +1345,9 @@ typedef int Tcl_FSFileAttrsGetProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSFileAttrsSetProc(
-<br/>
         Tcl_Interp *<i>interp</i>,
-<br/>
         int <i>index</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_Obj *<i>objPtr</i>);
 </pre>
 </div>
@@ -1489,7 +1363,6 @@ typedef int Tcl_FSFileAttrsSetProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSCreateDirectoryProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>
@@ -1506,11 +1379,8 @@ typedef int Tcl_FSCreateDirectoryProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSRemoveDirectoryProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         int <i>recursive</i>,
-<br/>
         Tcl_Obj **<i>errorPtr</i>);
 </pre>
 </div>
@@ -1531,7 +1401,6 @@ typedef int Tcl_FSRemoveDirectoryProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSDeleteFileProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>
@@ -1560,9 +1429,7 @@ typedef int Tcl_FSDeleteFileProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSLstatProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_StatBuf *<i>statPtr</i>);
 </pre>
 </div>
@@ -1581,9 +1448,7 @@ typedef int Tcl_FSLstatProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSCopyFileProc(
-<br/>
         Tcl_Obj *<i>srcPathPtr</i>,
-<br/>
         Tcl_Obj *<i>destPathPtr</i>);
 </pre>
 </div>
@@ -1609,9 +1474,7 @@ typedef int Tcl_FSCopyFileProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSRenameFileProc(
-<br/>
         Tcl_Obj *<i>srcPathPtr</i>,
-<br/>
         Tcl_Obj *<i>destPathPtr</i>);
 </pre>
 </div>
@@ -1631,11 +1494,8 @@ typedef int Tcl_FSRenameFileProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSCopyDirectoryProc(
-<br/>
         Tcl_Obj *<i>srcPathPtr</i>,
-<br/>
         Tcl_Obj *<i>destPathPtr</i>,
-<br/>
         Tcl_Obj **<i>errorPtr</i>);
 </pre>
 </div>
@@ -1663,13 +1523,9 @@ typedef int Tcl_FSCopyDirectoryProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSLoadFileProc(
-<br/>
         Tcl_Interp *<i>interp</i>,
-<br/>
         Tcl_Obj *<i>pathPtr</i>,
-<br/>
         Tcl_LoadHandle *<i>handlePtr</i>,
-<br/>
         Tcl_FSUnloadFileProc *<i>unloadProcPtr</i>);
 </pre>
 </div>
@@ -1697,7 +1553,6 @@ typedef int Tcl_FSLoadFileProc(
 <div class="Bd-indent">
 <pre>
 typedef void Tcl_FSUnloadFileProc(
-<br/>
         Tcl_LoadHandle <i>loadHandle</i>);
 </pre>
 </div>
@@ -1711,7 +1566,6 @@ typedef void Tcl_FSUnloadFileProc(
 <div class="Bd-indent">
 <pre>
 typedef Tcl_Obj* Tcl_FSGetCwdProc(
-<br/>
         Tcl_Interp *<i>interp</i>);
 </pre>
 </div>
@@ -1736,7 +1590,6 @@ typedef Tcl_Obj* Tcl_FSGetCwdProc(
 <div class="Bd-indent">
 <pre>
 typedef int Tcl_FSChdirProc(
-<br/>
         Tcl_Obj *<i>pathPtr</i>);
 </pre>
 </div>

@@ -72,21 +72,13 @@
     subsequent regular <i>curl_easy_getinfo(3)</i> calls (or similar):</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  struct CURLMsg {
-<br/>
    CURLMSG msg;       /* what this message means */
-<br/>
    CURL *easy_handle; /* the handle it concerns */
-<br/>
    union {
-<br/>
      void *whatever;    /* message-specific data */
-<br/>
      CURLcode result;   /* return code for transfer */
-<br/>
    } data;
-<br/>
  };
 </pre>
 When <b>msg</b> is <i>CURLMSG_DONE</i>, the message identifies a transfer that
@@ -99,24 +91,15 @@ When <b>msg</b> is <i>CURLMSG_DONE</i>, the message identifies a transfer that
 <pre>
 struct CURLMsg *m;
 /* call curl_multi_perform or curl_multi_socket_action first, then loop
-<br/>
    through and check if there are any transfers that have completed */
 do {
-<br/>
   int msgq = 0;
-<br/>
   m = curl_multi_info_read(multi_handle, &amp;msgq);
-<br/>
   if(m &amp;&amp; (m-&gt;msg == CURLMSG_DONE)) {
-<br/>
     CURL *e = m-&gt;easy_handle;
-<br/>
     transfers--;
-<br/>
     curl_multi_remove_handle(multi_handle, e);
-<br/>
     curl_easy_cleanup(e);
-<br/>
   }
 } while(m);
 </pre>

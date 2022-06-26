@@ -88,7 +88,6 @@ int maxfd = -1;
 long curl_timeo;
 curl_multi_timeout(multi_handle, &amp;curl_timeo);
 if(curl_timeo &lt; 0)
-<br/>
   curl_timeo = 1000;
 timeout.tv_sec = curl_timeo / 1000;
 timeout.tv_usec = (curl_timeo % 1000) * 1000;
@@ -98,27 +97,19 @@ FD_ZERO(&amp;fdexcep);
 /* get file descriptors from the transfers */
 mc = curl_multi_fdset(multi_handle, &amp;fdread, &amp;fdwrite, &amp;fdexcep, &amp;maxfd);
 if(maxfd == -1) {
-<br/>
   SHORT_SLEEP;
-<br/>
   rc = 0;
 }
 else
-<br/>
   rc = select(maxfd+1, &amp;fdread, &amp;fdwrite, &amp;fdexcep, &amp;timeout);
 switch(rc) {
 case -1:
-<br/>
   /* select error */
-<br/>
   break;
 case 0:
 default:
-<br/>
   /* timeout or readable/writable sockets */
-<br/>
   curl_multi_perform(multi_handle, &amp;still_running);
-<br/>
   break;
 }
 /* if there are still transfers, loop! */

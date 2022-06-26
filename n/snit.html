@@ -283,13 +283,11 @@
     <p class="Pp">If the <i>name</i> consists of two or more tokens, Snit
         handles it specially:</p>
     <pre>
-<br/>
     typemethod {a b} {arg} { puts &quot;Got $arg&quot; }
     </pre>
     This statement implicitly defines a type method called <b>a</b> which has a
       subcommand <b>b</b>. <b>b</b> is called like this:
     <pre>
-<br/>
     $type a b &quot;Hello, world!&quot;
     </pre>
     <b>a</b> may have any number of subcommands. This makes it possible to
@@ -304,9 +302,7 @@
     <p class="Pp"><i>Snit 1.x Incompatibility:</i> In Snit 1.x, the following
         following two calls to this type method are equivalent:</p>
     <pre>
-<br/>
     $type a b &quot;Hello, world!&quot;
-<br/>
     $type {a b} &quot;Hello, world!&quot;
     </pre>
     In Snit 2.2, the second form is invalid.</dd>
@@ -355,22 +351,18 @@
     <p class="Pp">If the <i>name</i> consists of two or more tokens, Snit
         handles it specially:</p>
     <pre>
-<br/>
     method {a b} {} { ... }
     </pre>
     This statement implicitly defines a method called <b>a</b> which has a
       subcommand <b>b</b>. <b>b</b> is called like this:
     <pre>
-<br/>
     $self a b &quot;Hello, world!&quot;
     </pre>
     <b>a</b> may have any number of subcommands. This makes it possible to
       define a hierarchical command structure:
     <pre>
 % snit::type dog {
-<br/>
     method {tail wag}   {} {return &quot;Wag, wag&quot;}
-<br/>
     method {tail droop} {} {return &quot;Droop, droop&quot;}
 }
 ::dog
@@ -394,9 +386,7 @@ Droop, droop
     <p class="Pp"><i>Snit 1.x Incompatibility:</i> In Snit 1.x, the following
         following two calls to this method are equivalent:</p>
     <pre>
-<br/>
     $self a b &quot;Hello, world!&quot;
-<br/>
     $self {a b} &quot;Hello, world!&quot;
     </pre>
     In Snit 2.2, the second form is invalid.</dd>
@@ -413,7 +403,6 @@ Droop, droop
     <p class="Pp">The <i>namespec</i> is a list defining the option's name,
         resource name, and class name, e.g.:</p>
     <pre>
-<br/>
     option {-font font Font} {Courier 12}
     </pre>
     The option name must begin with a hyphen, and must not contain any upper
@@ -423,7 +412,6 @@ Droop, droop
       letter capitalized. Thus, the following statement is equivalent to the
       previous example:
     <pre>
-<br/>
     option -font {Courier 12}
     </pre>
     See <b>The Tk Option Database</b> for more information about resource and
@@ -433,7 +421,6 @@ Droop, droop
         (method bodies, etc.), option values are available through the
         <b>options</b> array:</p>
     <pre>
-<br/>
     set myfont $options(-font)
     </pre>
     If the type defines any option handlers (e.g., <b>-configuremethod</b>),
@@ -463,13 +450,11 @@ Droop, droop
     <p class="Pp">For example, an option may declare that its value must be an
         integer by specifying <b>snit::integer</b> as its validation type:</p>
     <pre>
-<br/>
     option -number -type snit::integer
     </pre>
     It may also declare that its value is an integer between 1 and 10 by
       specifying a validation subtype:
     <pre>
-<br/>
     option -number -type {snit::integer -min 1 -max 10}
     </pre>
     If a validation type or subtype is defined for an option, then it will be
@@ -492,13 +477,9 @@ Droop, droop
         example, this code is equivalent to (though slower than) Snit's default
         handling of <b>cget</b>:</p>
     <pre>
-<br/>
     option -font -cgetmethod GetOption
-<br/>
     method GetOption {option} {
-<br/>
         return $options($option)
-<br/>
     }
     </pre>
     Note that it's possible for any number of options to share a
@@ -514,13 +495,9 @@ Droop, droop
         its new value. For example, this code is equivalent to (though slower
         than) Snit's default handling of <b>configure</b>:</p>
     <pre>
-<br/>
     option -font -configuremethod SetOption
-<br/>
     method SetOption {option value} {
-<br/>
         set options($option) $value
-<br/>
     }
     </pre>
     Note that it's possible for any number of options to share a single
@@ -536,17 +513,11 @@ Droop, droop
         its new value. For example, this code verifies that <b>-flag</b>'s value
         is a valid Boolean value:</p>
     <pre>
-<br/>
     option -font -validatemethod CheckBoolean
-<br/>
     method CheckBoolean {option value} {
-<br/>
         if {![string is boolean -strict $value]} {
-<br/>
             error &quot;option $option must have a boolean value.&quot;
-<br/>
         }
-<br/>
     }
     </pre>
     Note that it's possible for any number of options to share a single
@@ -568,11 +539,8 @@ Droop, droop
         one option (whether locally or by delegation), the default constructor
         will be defined as follows:</p>
     <pre>
-<br/>
     constructor {args} {
-<br/>
         $self configurelist $args
-<br/>
     }
     </pre>
     For standard Tk widget behavior, the argument list should be the single name
@@ -580,7 +548,6 @@ Droop, droop
     <p class="Pp">If the <i>definition</i> defines neither a constructor nor any
         options, the default constructor is defined as follows:</p>
     <pre>
-<br/>
     constructor {} {}
     </pre>
     As with methods, the constructor can call commands from the namespace in
@@ -630,16 +597,12 @@ Droop, droop
       its arguments will be passed to the named component's command instead.
       That is, the following statement
     <pre>
-<br/>
     delegate method wag to tail
     </pre>
     is roughly equivalent to this explicitly defined method:
     <pre>
-<br/>
     method wag {args} {
-<br/>
         uplevel $tail wag $args
-<br/>
     }
     </pre>
     As with methods, the <i>name</i> may have multiple tokens; in this case, the
@@ -648,7 +611,6 @@ Droop, droop
     <p class="Pp">The optional <b>as</b> clause allows you to specify the
         delegated method name and possibly add some arguments:</p>
     <pre>
-<br/>
     delegate method wagtail to tail as &quot;wag briskly&quot;
     </pre>
     <p class="Pp">A method cannot be both locally defined and delegated.</p>
@@ -668,9 +630,7 @@ Droop, droop
         substituted with the described value to build the delegated command
         prefix. Note that the following two statements are equivalent:</p>
     <pre>
-<br/>
     delegate method wag to tail
-<br/>
     delegate method wag to tail using &quot;%c %m&quot;
     </pre>
     Each element of the list becomes a single element of the delegated
@@ -720,7 +680,6 @@ Droop, droop
     <p class="Pp">In fact, the &quot;*&quot; can be a list of two or more tokens
         whose last element is &quot;*&quot;, as in the following example:</p>
     <pre>
-<br/>
     delegate method {tail *} to tail
     </pre>
     This implicitly defines the method <b>tail</b> whose subcommands will be
@@ -745,17 +704,11 @@ Droop, droop
       applied to the component as though the option was defined with the
       following <b>-configuremethod</b> and <b>-cgetmethod</b>:
     <pre>
-<br/>
     method ConfigureMethod {option value} {
-<br/>
         $comp configure $option $value
-<br/>
     }
-<br/>
     method CgetMethod {option} {
-<br/>
         return [$comp cget $option]
-<br/>
     }
     </pre>
     Note that delegated options never appear in the <b>options</b> array.
@@ -780,9 +733,7 @@ Droop, droop
         to the component e.g., specifying <b>-public mycomp</b> is equivalent to
         the following:</p>
     <pre>
-<br/>
     component mycomp
-<br/>
     delegate method {mymethod *} to mycomp
     </pre>
     If the <b>-inherit</b> option is specified, then <i>flag</i> must be a
@@ -791,11 +742,8 @@ Droop, droop
       instances of this new type inherit, in a sense, the methods and options of
       the component. That is, <b>-inherit yes</b> is equivalent to:
     <pre>
-<br/>
     component mycomp
-<br/>
     delegate option * to mycomp
-<br/>
     delegate method * to mycomp
     </pre>
   </dd>
@@ -807,16 +755,12 @@ Droop, droop
       its arguments will be passed to the named type component's command
       instead. That is, the following statement
     <pre>
-<br/>
     delegate typemethod lostdogs to pound
     </pre>
     is roughly equivalent to this explicitly defined method:
     <pre>
-<br/>
     typemethod lostdogs {args} {
-<br/>
         uplevel $pound lostdogs $args
-<br/>
     }
     </pre>
     As with type methods, the <i>name</i> may have multiple tokens; in this
@@ -825,7 +769,6 @@ Droop, droop
     <p class="Pp">The optional <b>as</b> clause allows you to specify the
         delegated method name and possibly add some arguments:</p>
     <pre>
-<br/>
     delegate typemethod lostdogs to pound as &quot;get lostdogs&quot;
     </pre>
     <p class="Pp">A type method cannot be both locally defined and
@@ -844,9 +787,7 @@ Droop, droop
         substituted with the described value to build the delegated command
         prefix. Note that the following two statements are equivalent:</p>
     <pre>
-<br/>
     delegate typemethod lostdogs to pound
-<br/>
     delegate typemethod lostdogs to pound using &quot;%c %m&quot;
     </pre>
     Each element of the list becomes a single element of the delegated
@@ -895,7 +836,6 @@ Droop, droop
     <p class="Pp">The &quot;*&quot; can be a list of two or more tokens whose
         last element is &quot;*&quot;, as in the following example:</p>
     <pre>
-<br/>
     delegate typemethod {tail *} to tail
     </pre>
     This implicitly defines the type method <b>tail</b> whose subcommands will
@@ -912,9 +852,7 @@ Droop, droop
         subcommands are delegated to the type component, e.g., specifying
         <b>-public mytypemethod</b> is equivalent to the following:</p>
     <pre>
-<br/>
     typecomponent mycomp
-<br/>
     delegate typemethod {mytypemethod *} to mycomp
     </pre>
     If the <b>-inherit</b> option is specified, then <i>flag</i> must be a
@@ -924,9 +862,7 @@ Droop, droop
       type inherits, in a sense, the behavior of the type component. That is,
       <b>-inherit yes</b> is equivalent to:
     <pre>
-<br/>
     typecomponent mycomp
-<br/>
     delegate typemethod * to mycomp
     </pre>
   </dd>
@@ -1018,24 +954,16 @@ Droop, droop
       instead.
     <p class="Pp">As of version 0.95, the following definitions,</p>
     <pre>
-<br/>
     option -myoption
-<br/>
     onconfigure -myoption {value} {
-<br/>
         # Code to save the option's value
-<br/>
     }
     </pre>
     are implemented as follows:
     <pre>
-<br/>
     option -myoption -configuremethod _configure-myoption
-<br/>
     method _configure-myoption {_option value} {
-<br/>
         # Code to save the option's value
-<br/>
     }
     </pre>
   </dd>
@@ -1045,24 +973,16 @@ Droop, droop
       instead.
     <p class="Pp">As of version 0.95, the following definitions,</p>
     <pre>
-<br/>
     option -myoption
-<br/>
     oncget -myoption {
-<br/>
         # Code to return the option's value
-<br/>
     }
     </pre>
     are implemented as follows:
     <pre>
-<br/>
     option -myoption -cgetmethod _cget-myoption
-<br/>
     method _cget-myoption {_option} {
-<br/>
         # Code to return the option's value
-<br/>
     }
     </pre>
   </dd>
@@ -1423,9 +1343,7 @@ set mydog [dog]
       commands will cause the object's <b>dosomething</b> method to be called
       when the <b>$button</b> is pressed:
     <pre>
-<br/>
     $button configure -command [list $self dosomething myargument]
-<br/>
     $button configure -command [mymethod dosomething myargument]
     </pre>
     The chief distinction between the two is that the latter form will not break
@@ -1439,9 +1357,7 @@ set mydog [dog]
       following commands will cause the object's <b>dosomething</b> type method
       to be called when <b>$button</b> is pressed:
     <pre>
-<br/>
     $button configure -command [list $type dosomething myargument]
-<br/>
     $button configure -command [mytypemethod dosomething myargument]
     </pre>
     Type commands cannot be renamed, so in practice there's little difference
@@ -1456,9 +1372,7 @@ set mydog [dog]
       commands will cause the object's <b>dosomething</b> proc to be called when
       <b>$button</b> is pressed:
     <pre>
-<br/>
     $button configure -command [list ${type}::dosomething myargument]
-<br/>
     $button configure -command [myproc dosomething myargument]
     </pre>
   </dd>
@@ -1494,9 +1408,7 @@ set mydog [dog]
       the name to the <i>objType</i> command. If this is a <b>snit::type</b>,
       then the following two commands are equivalent:
     <pre>
-<br/>
     install myComp using myObjType $self.myComp args...
-<br/>
     set myComp [myObjType $self.myComp args...]
     </pre>
     Note that whichever method is used, <i>compName</i> must still be declared
@@ -1594,35 +1506,20 @@ set mydog [dog]
     <b>dog</b> object has a <b>tail</b> object:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::type dog {
-<br/>
         component mytail
-<br/>
         constructor {args} {
-<br/>
             set mytail [tail %AUTO% -partof $self]
-<br/>
             $self configurelist $args
-<br/>
         }
-<br/>
         method wag {} {
-<br/>
             $mytail wag
-<br/>
         }
-<br/>
     }
-<br/>
     snit::type tail {
-<br/>
         option -length 5
-<br/>
         option -partof
-<br/>
         method wag {} { return &quot;Wag, wag, wag.&quot;}
-<br/>
     }
 </pre>
 <p class="Pp">Because the <b>tail</b> object's name is stored in an instance
@@ -1631,25 +1528,15 @@ set mydog [dog]
     install the component:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::type dog {
-<br/>
         component mytail
-<br/>
         constructor {args} {
-<br/>
             install mytail using tail %AUTO% -partof $self
-<br/>
             $self configurelist $args
-<br/>
         }
-<br/>
         method wag {} {
-<br/>
             $mytail wag
-<br/>
         }
-<br/>
     }
 </pre>
 <p class="Pp">For <b>snit::type</b>s, the two methods are equivalent; for
@@ -1661,19 +1548,12 @@ set mydog [dog]
     this is called delegation. Snit provides an easier way to do this:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::type dog {
-<br/>
         delegate method wag to mytail
-<br/>
         constructor {args} {
-<br/>
             install mytail using tail %AUTO% -partof $self
-<br/>
             $self configurelist $args
-<br/>
         }
-<br/>
     }
 </pre>
 <p class="Pp">The <b>delegate</b> statement in the type definition implicitly
@@ -1685,7 +1565,6 @@ set mydog [dog]
     specific component:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::type dog {
 	delegate method * to mytail
 	constructor {args} {
@@ -1693,7 +1572,6 @@ set mydog [dog]
 	    $self configurelist $args
 	}
 	method bark { return &quot;Bark, bark, bark!&quot; }
-<br/>
     }
 </pre>
 <p class="Pp">In this case, a <b>dog</b> object will handle its own <b>bark</b>
@@ -1754,7 +1632,6 @@ set mydog [dog]
     the widget class of</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget ::mylibrary::scrolledText { ... }
 </pre>
 <p class="Pp">is &quot;ScrolledText&quot;. The widget class can also be set
@@ -1781,13 +1658,9 @@ set mydog [dog]
     class names for several <b>text</b> widget options:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     -background         background         Background
-<br/>
     -borderwidth        borderWidth        BorderWidth
-<br/>
     -insertborderwidth  insertBorderWidth  BorderWidth
-<br/>
     -padx               padX               Pad
 </pre>
 <p class="Pp">As is easily seen, sometimes the resource and class names can be
@@ -1799,16 +1672,11 @@ set mydog [dog]
     explicitly delegated options:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget mywidget {
-<br/>
         option -background
-<br/>
         delegate option -borderwidth to hull
-<br/>
         delegate option * to text
 	# ...
-<br/>
     }
 </pre>
 <p class="Pp">In this case, the widget class name is &quot;Mywidget&quot;. The
@@ -1820,11 +1688,8 @@ set mydog [dog]
     as follows:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     -background  background  Background
-<br/>
     -borderwidth borderwidth Borderwidth
-<br/>
     -padx        padX        Pad
 </pre>
 <p class="Pp">Note that the locally defined option, <b>-background</b>, happens
@@ -1836,13 +1701,11 @@ set mydog [dog]
     capitalized. For consistency, it should be; this is done as follows:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget mywidget {
 	option -background
 	delegate option {-borderwidth borderWidth} to hull
 	delegate option * to text
 	# ...
-<br/>
     }
 </pre>
 <p class="Pp">The class name will default to &quot;BorderWidth&quot;, as
@@ -1852,7 +1715,6 @@ set mydog [dog]
     class name must be specified explicitly:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget mywidget {
 	option -background
 	delegate option {-borderwidth borderWidth} to hull
@@ -1860,7 +1722,6 @@ set mydog [dog]
 	delegate option {-pady padY Pad} to hull
 	delegate option * to text
 	# ...
-<br/>
     }
 </pre>
 <p class="Pp"><b>Querying the option database:</b> If you set your widgetclass
@@ -1876,15 +1737,11 @@ set mydog [dog]
     either case, the default can be overridden by the caller. For example,</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     option add *Mywidget.texture pebbled
-<br/>
     snit::widget mywidget {
 	option -texture smooth
 	# ...
-<br/>
     }
-<br/>
     mywidget .mywidget -texture greasy
 </pre>
 <p class="Pp">Here, <b>-texture</b> would normally default to
@@ -1899,31 +1756,20 @@ set mydog [dog]
     Consider the following code:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     option add *Mywidget.borderWidth 5
-<br/>
     option add *Mywidget.relief sunken
-<br/>
     option add *Mywidget.hullbackground red
-<br/>
     option add *Mywidget.background green
-<br/>
     snit::widget mywidget {
 	delegate option -borderwidth to hull
 	delegate option -hullbackground to hull as -background
 	delegate option * to hull
 	# ...
-<br/>
     }
-<br/>
     mywidget .mywidget
-<br/>
     set A [.mywidget cget -relief]
-<br/>
     set B [.mywidget cget -hullbackground]
-<br/>
     set C [.mywidget cget -background]
-<br/>
     set D [.mywidget cget -borderwidth]
 </pre>
 <p class="Pp">The question is, what are the values of variables A, B, C and
@@ -1957,7 +1803,6 @@ set mydog [dog]
     follows:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widgetadaptor mywidget {
 	# ...
 	constructor {args} {
@@ -1966,14 +1811,12 @@ set mydog [dog]
 	    #
 	}
 	#...
-<br/>
     }
 </pre>
 <p class="Pp">In this case, the <b>installhull</b> command will create the hull
     using a command like this:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     set hull [text $win -foreground white]
 </pre>
 <p class="Pp">The hull is a <b>text</b> widget, so its widget class is
@@ -1993,13 +1836,11 @@ set mydog [dog]
     command name to the component variable:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget mywidget {
 	delegate option -background to myComp
 	constructor {args} {
 	    set myComp [text $win.text -foreground black]
 	}
-<br/>
     }
 </pre>
 <p class="Pp">The drawback of this method is that Snit has no opportunity to
@@ -2007,13 +1848,11 @@ set mydog [dog]
     used:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     snit::widget mywidget {
 	delegate option -background to myComp
 	constructor {args} {
 	    install myComp using text $win.text -foreground black
 	}
-<br/>
     }
 </pre>
 <p class="Pp">The <b>install</b> command does the following:</p>
@@ -2049,37 +1888,23 @@ set mydog [dog]
     properties: instance variables that have set/get methods. Your code might
     look like this:</p>
 <pre>
-<br/>
     snit::type dog {
-<br/>
         variable mood happy
-<br/>
         method getmood {} {
-<br/>
             return $mood
-<br/>
         }
-<br/>
         method setmood {newmood} {
-<br/>
             set mood $newmood
-<br/>
         }
-<br/>
     }
 </pre>
 <p class="Pp">That's nine lines of text per property. Or, you could define the
     following <b>snit::macro</b>:</p>
 <pre>
-<br/>
     snit::macro property {name initValue} {
-<br/>
         variable $name $initValue
-<br/>
         method get$name {} &quot;return $name&quot;
-<br/>
         method set$name {value} &quot;set $name \$value&quot;
-<br/>
     }
 </pre>
 <p class="Pp">Note that a <b>snit::macro</b> is just a normal Tcl proc defined
@@ -2089,11 +1914,8 @@ set mydog [dog]
 <p class="Pp">Given this new macro, you can define a property in one line of
     code:</p>
 <pre>
-<br/>
     snit::type dog {
-<br/>
         property mood happy
-<br/>
     }
 </pre>
 Within a macro, the commands <b>variable</b> and <b>proc</b> refer to the Snit
@@ -2104,13 +1926,9 @@ Within a macro, the commands <b>variable</b> and <b>proc</b> refer to the Snit
     collisions. If you're writing a reuseable package using Snit, and you use
     some <b>snit::macro</b>s, define them in your package namespace:</p>
 <pre>
-<br/>
     snit::macro mypkg::property {name initValue} { ... }
-<br/>
     snit::type dog {
-<br/>
         mypkg::property mood happy
-<br/>
     }
 </pre>
 This leaves the global namespace open for application authors.
@@ -2126,9 +1944,7 @@ This leaves the global namespace open for application authors.
     be validated; further, it must do nothing if the value is valid, but throw
     an error if the value is invalid:</p>
 <pre>
-<br/>
     snit::integer validate 5     ;# Does nothing
-<br/>
     snit::integer validate 5.0   ;# Throws an error (not an integer!)
 </pre>
 <p class="Pp">The <b>validate</b> method will always return the validated value
@@ -2138,39 +1954,27 @@ This leaves the global namespace open for application authors.
     their instances serve as parameterized subtypes. For example, a probability
     is a number between 0.0 and 1.0 inclusive:</p>
 <pre>
-<br/>
     snit::double probability -min 0.0 -max 1.0
 </pre>
 The example above creates an instance of <b>snit::double</b>--a validation
   subtype--called <b>probability</b>, which can be used to validate probability
   values:
 <pre>
-<br/>
     probability validate 0.5   ;# Does nothing
-<br/>
     probability validate 7.9   ;# Throws an error
 </pre>
 Validation subtypes can be defined explicitly, as in the above example; when a
   locally-defined option's <b>-type</b> is specified, they may also be created
   on the fly:
 <pre>
-<br/>
     snit::enum ::dog::breed -values {mutt retriever sheepdog}
-<br/>
     snit::type dog {
-<br/>
         # Define subtypes on the fly...
-<br/>
         option -breed -type {
-<br/>
             snit::enum -values {mutt retriever sheepdog}
-<br/>
         }
-<br/>
         # Or use predefined subtypes...
-<br/>
         option -breed -type ::dog::breed
-<br/>
     }
 </pre>
 <p class="Pp">Any object that has a <b>validate</b> method with the semantics
@@ -2293,28 +2097,20 @@ Validation subtypes can be defined explicitly, as in the above example; when a
       validation type or subtype. In the following example, the value of
       <b>-numbers</b> must be a list of integers.
     <pre>
-<br/>
     option -numbers -type {snit::listtype -type snit::integer}
     </pre>
     Note that this option doesn't support defining new validation subtypes on
       the fly; that is, the following code will not work (yet, anyway):
     <pre>
-<br/>
     option -numbers -type {
-<br/>
         snit::listtype -type {snit::integer -min 5}
-<br/>
     }
     </pre>
     Instead, define the subtype explicitly:
     <pre>
-<br/>
     snit::integer gt4 -min 5
-<br/>
     snit::type mytype {
-<br/>
         option -numbers -type {snit::listtype -type gt4}
-<br/>
     }
     </pre>
   </dd>
@@ -2407,19 +2203,12 @@ Validation subtypes can be defined explicitly, as in the above example; when a
     simple <b>proc</b>. For example, the <b>snit::boolean</b> validate type
     could have been implemented like this:</p>
 <pre>
-<br/>
     proc ::snit::boolean {&quot;validate&quot; value} {
-<br/>
         if {![string is boolean -strict $value]} {
-<br/>
             return -code error -errorcode INVALID \
-<br/>
                 &quot;invalid boolean \&quot;$value\&quot;, should be one of: 1, 0, ...&quot;
-<br/>
         }
-<br/>
         return $value
-<br/>
     }
 </pre>
 A validation type defined in this way cannot be subtyped, of course; but for
@@ -2427,97 +2216,51 @@ A validation type defined in this way cannot be subtyped, of course; but for
 <p class="Pp">Finally, one can define a full-fledged, subtype-able validation
     type as a <b>snit::type</b>. Here's a skeleton to get you started:</p>
 <pre>
-<br/>
     snit::type myinteger {
-<br/>
         # First, define any options you'd like to use to define
-<br/>
         # subtypes.  Give them defaults such that they won't take
-<br/>
         # effect if they aren't used, and marked them &quot;read-only&quot;.
-<br/>
         # After all, you shouldn't be changing their values after
-<br/>
         # a subtype is defined.
-<br/>
         #
-<br/>
         # For example:
-<br/>
         option -min -default &quot;&quot; -readonly 1
-<br/>
         option -max -default &quot;&quot; -readonly 1
-<br/>
         # Next, define a &quot;validate&quot; type method which should do the
-<br/>
         # validation in the basic case.  This will allow the
-<br/>
         # type command to be used as a validation type.
-<br/>
         typemethod validate {value} {
-<br/>
             if {![string is integer -strict $value]} {
-<br/>
                 return -code error -errorcode INVALID \
-<br/>
                     &quot;invalid value \&quot;$value\&quot;, expected integer&quot;
-<br/>
             }
-<br/>
             return $value
-<br/>
         }
-<br/>
         # Next, the constructor should validate the subtype options,
-<br/>
         # if any.  Since they are all readonly, we don't need to worry
-<br/>
         # about validating the options on change.
-<br/>
         constructor {args} {
-<br/>
             # FIRST, get the options
-<br/>
             $self configurelist $args
-<br/>
             # NEXT, validate them.
-<br/>
             # I'll leave this to your imagination.
-<br/>
         }
-<br/>
         # Next, define a &quot;validate&quot; instance method; its job is to
-<br/>
         # validate values for subtypes.
-<br/>
         method validate {value} {
-<br/>
             # First, call the type method to do the basic validation.
-<br/>
             $type validate $value
-<br/>
             # Now we know it's a valid integer.
-<br/>
             if {(&quot;&quot; != $options(-min) &amp;&amp; $value &lt; $options(-min))  ||
-<br/>
                 (&quot;&quot; != $options(-max) &amp;&amp; $value &gt; $options(-max))} {
-<br/>
                 # It's out of range; format a detailed message about
-<br/>
                 # the error, and throw it.
-<br/>
                 set msg &quot;....&quot;
-<br/>
                 return -code error -errorcode INVALID $msg
-<br/>
             }
-<br/>
             # Otherwise, if it's valid just return it.
-<br/>
             return $valid
-<br/>
         }
-<br/>
     }
 </pre>
 And now you have a type that can be subtyped.

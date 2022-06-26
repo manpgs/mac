@@ -135,43 +135,25 @@
 # Determine the mean and median of a set of points and compare them
 #
 ::simulation::montecarlo::singleExperiment -init {
-<br/>
     package require math::statistics
-<br/>
     set prng [::simulation::random::prng_Normal 0.0 1.0]
 } -loop {
-<br/>
     set numbers {}
-<br/>
     for { set i 0 } { $i &lt; [getOption samples] } { incr i } {
-<br/>
         lappend numbers [$prng]
-<br/>
     }
-<br/>
     set mean   [::math::statistics::mean $numbers]
-<br/>
     set median [::math::statistics::median $numbers] ;# ? Exists?
-<br/>
     setTrialResult [list $mean $median]
 } -final {
-<br/>
     set result [getTrialResults]
-<br/>
     set means   {}
-<br/>
     set medians {}
-<br/>
     foreach r $result {
-<br/>
         foreach {m M} $r break
-<br/>
         lappend means   $m
-<br/>
         lappend medians $M
-<br/>
     }
-<br/>
     puts [getOption reportfile] &quot;Correlation: [::math::statistics::corr $means $medians]&quot;
 } -trials 100 -samples 10 -verbose 1 -columns {Mean Median}
 </pre>

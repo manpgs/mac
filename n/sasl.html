@@ -301,41 +301,24 @@
     appropriate action.</p>
 <pre>
 proc ClientCallback {context command args} {
-<br/>
     switch -exact -- $command {
-<br/>
         login    { return &quot;&quot; }
-<br/>
         username { return $::tcl_platform(user) }
-<br/>
         password { return &quot;SecRet&quot; }
-<br/>
         realm    { return &quot;&quot; }
-<br/>
         hostname { return [info host] }
-<br/>
         default  { return -code error unxpected }
-<br/>
     }
 }
 proc Demo {{mech PLAIN}} {
-<br/>
     set ctx [SASL::new -mechanism $mech -callback ClientCallback]
-<br/>
     set challenge &quot;&quot;
-<br/>
     while {1} {
-<br/>
         set more_steps [SASL::step $ctx challenge]
-<br/>
         puts &quot;Send '[SASL::response $ctx]'&quot;
-<br/>
         puts &quot;Read server response into challenge var&quot;
-<br/>
         if {!$more_steps} {break}
-<br/>
     }
-<br/>
     SASL::cleanup $ctx
 }
 </pre>

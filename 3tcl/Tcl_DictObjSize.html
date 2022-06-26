@@ -128,7 +128,6 @@ int
 
 int
 <b>Tcl_DictObjFirst</b>(<i>interp, dictPtr, searchPtr,</i>
-<br/>
 <i>                 keyPtrPtr, valuePtrPtr, donePtr</i>)
 
 void
@@ -297,48 +296,28 @@ Tcl_DictSearch search;
 Tcl_Obj *key, *value;
 int done;
 /*
-<br/>
  * Assume interp and objPtr are parameters.  This is the
-<br/>
  * idiomatic way to start an iteration over the dictionary; it
-<br/>
  * sets a lock on the internal representation that ensures that
-<br/>
  * there are no concurrent modification issues when normal
-<br/>
  * reference count management is also used.  The lock is
-<br/>
  * released automatically when the loop is finished, but must
-<br/>
  * be released manually when an exceptional exit from the loop
-<br/>
  * is performed. However it is safe to try to release the lock
-<br/>
  * even if we've finished iterating over the loop.
-<br/>
  */
 if (<b>Tcl_DictObjFirst</b>(interp, objPtr, &amp;search,
-<br/>
         &amp;key, &amp;value, &amp;done) != TCL_OK) {
-<br/>
     return TCL_ERROR;
 }
 for (; !done ; <b>Tcl_DictObjNext</b>(&amp;search, &amp;key, &amp;value, &amp;done)) {
-<br/>
     /*
-<br/>
      * Note that strcmp() is not a good way of comparing
-<br/>
      * objects and is just used here for demonstration
-<br/>
      * purposes.
-<br/>
      */
-<br/>
     if (!strcmp(Tcl_GetString(key), Tcl_GetString(value))) {
-<br/>
         break;
-<br/>
     }
 }
 <b>Tcl_DictObjDone</b>(&amp;search);

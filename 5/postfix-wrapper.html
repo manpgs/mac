@@ -100,9 +100,7 @@
   <dd>
     <pre>
 /etc/postfix/main.cf:
-<br/>
     multi_instance_wrapper = $daemon_directory/postfix-wrapper
-<br/>
     multi_instance_directories = /etc/postfix-test
     </pre>
   </dd>
@@ -129,34 +127,21 @@
 POSTCONF=$command_directory/postconf
 POSTFIX=$command_directory/postfix
 instance_dirs=`$POSTCONF -h multi_instance_directories |
-<br/>
                 sed 's/,/ /'` || exit 1
 err=0
 for dir in $config_directory $instance_dirs
 do
-<br/>
     case &quot;$1&quot; in
-<br/>
     stop|abort|flush|reload|drain)
-<br/>
         test &quot;`$POSTCONF -c $dir -h multi_instance_enable`&quot; \
-<br/>
             = yes || continue;;
-<br/>
     start)
-<br/>
         test &quot;`$POSTCONF -c $dir -h multi_instance_enable`&quot; \
-<br/>
             = yes || {
-<br/>
             $POSTFIX -c $dir check || err=$?
-<br/>
             continue
-<br/>
         };;
-<br/>
     esac
-<br/>
     $POSTFIX -c $dir &quot;$@&quot; || err=$?
 done
 exit $err

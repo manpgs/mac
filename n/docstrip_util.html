@@ -148,61 +148,33 @@
     markup in master source files, so experience of what works well is not
     available. A source file could however look as follows</p>
 <pre>
-<br/>
    % [manpage_begin gcd n 1.0]
-<br/>
    % [moddesc {Greatest Common Divisor}]
-<br/>
    % [require gcd [opt 1.0]]
-<br/>
    % [description]
-<br/>
    %
-<br/>
    % [list_begin definitions]
-<br/>
    % [call [cmd gcd] [arg a] [arg b]]
-<br/>
    %   The [cmd gcd] procedure takes two arguments [arg a] and [arg b] which
-<br/>
    %   must be integers and returns their greatest common divisor.
-<br/>
    proc gcd {a b} {
-<br/>
    %   The first step is to take the absolute values of the arguments.
-<br/>
    %   This relieves us of having to worry about how signs will be treated
-<br/>
    %   by the remainder operation.
-<br/>
       set a [expr {abs($a)}]
-<br/>
       set b [expr {abs($b)}]
-<br/>
    %   The next line does all of Euclid's algorithm! We can make do
-<br/>
    %   without a temporary variable, since $a is substituted before the
-<br/>
    %   [lb]set a $b[rb] and thus continues to hold a reference to the
-<br/>
    %   &quot;old&quot; value of [var a].
-<br/>
       while {$b&gt;0} { set b [expr { $a % [set a $b] }] }
-<br/>
    %   In Tcl 8.3 we might want to use [cmd set] instead of [cmd return]
-<br/>
    %   to get the slight advantage of byte-compilation.
-<br/>
    %&lt;tcl83&gt;  set a
-<br/>
    %&lt;!tcl83&gt;   return $a
-<br/>
    }
-<br/>
    % [list_end]
-<br/>
    %
-<br/>
    % [manpage_end]
 </pre>
 <p class="Pp">If the above text is (suitably unindented and) fed through

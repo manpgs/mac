@@ -220,7 +220,6 @@
     manner similar to:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_easy_setopt(handle, CURLOPT_URL, &quot;http://domain.com/&quot;);
 </pre>
 <p class="Pp">Let's assume for a while that you want to receive data as the URL
@@ -366,9 +365,7 @@
     sizes like this[1]:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  /* in this example, file_size must be an curl_off_t variable */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_INFILESIZE_LARGE, file_size);
 </pre>
 <p class="Pp">When you call <i>curl_easy_perform(3)</i> this time, it'll perform
@@ -428,11 +425,8 @@
   like:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  machine myhost.mydomain.com
-<br/>
  login userlogin
-<br/>
  password secretword
 </pre>
 <p class="Pp">All these examples have been cases where the password has been
@@ -495,13 +489,9 @@
     to the data and tell libcurl to post it all to the remote site:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     char *data=&quot;name=daniel&amp;project=curl&quot;;
-<br/>
     curl_easy_setopt(easyhandle, CURLOPT_POSTFIELDS, data);
-<br/>
     curl_easy_setopt(easyhandle, CURLOPT_URL, &quot;http://posthere.com/&quot;);
-<br/>
     curl_easy_perform(easyhandle); /* post away! */
 </pre>
 <p class="Pp">Simple enough, huh? Since you set the POST options with the
@@ -515,25 +505,15 @@
     headers and then passing that list to libcurl.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  struct curl_slist *headers=NULL;
-<br/>
  headers = curl_slist_append(headers, &quot;Content-Type: text/xml&quot;);
-<br/>
  /* post binary data */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_POSTFIELDS, binaryptr);
-<br/>
  /* set the size of the postfields data */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_POSTFIELDSIZE, 23L);
-<br/>
  /* pass our list of custom made headers */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_HTTPHEADER, headers);
-<br/>
  curl_easy_perform(easyhandle); /* post away! */
-<br/>
  curl_slist_free_all(headers); /* free the header list */
 </pre>
 <p class="Pp">While the simple examples above cover the majority of all cases
@@ -562,35 +542,20 @@
     thing.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_mime *multipart = curl_mime_init(easyhandle);
-<br/>
  curl_mimepart *part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;name&quot;);
-<br/>
  curl_mime_data(part, &quot;daniel&quot;, CURL_ZERO_TERMINATED);
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;project&quot;);
-<br/>
  curl_mime_data(part, &quot;curl&quot;, CURL_ZERO_TERMINATED);
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;logotype-image&quot;);
-<br/>
  curl_mime_filedata(part, &quot;curl.png&quot;);
-<br/>
  /* Set the form info */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_MIMEPOST, multipart);
-<br/>
  curl_easy_perform(easyhandle); /* post away! */
-<br/>
  /* free the post data again */
-<br/>
  curl_mime_free(multipart);
 </pre>
 <p class="Pp">To post multiple files for a single form field, you must supply
@@ -601,9 +566,7 @@
   use:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_mime_data_cb(part, filesize, (curl_read_callback) fread,
-<br/>
                    (curl_seek_callback) fseek, NULL, filepointer);
 </pre>
 <p class="Pp">A deprecated <i>curl_formadd(3)</i> function is still supported in
@@ -616,37 +579,21 @@
     function:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  struct curl_httppost *post=NULL;
-<br/>
  struct curl_httppost *last=NULL;
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;name&quot;,
-<br/>
               CURLFORM_COPYCONTENTS, &quot;daniel&quot;, CURLFORM_END);
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;project&quot;,
-<br/>
               CURLFORM_COPYCONTENTS, &quot;curl&quot;, CURLFORM_END);
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;logotype-image&quot;,
-<br/>
               CURLFORM_FILECONTENT, &quot;curl.png&quot;, CURLFORM_END);
-<br/>
  /* Set the form info */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_HTTPPOST, post);
-<br/>
  curl_easy_perform(easyhandle); /* post away! */
-<br/>
  /* free the post data again */
-<br/>
  curl_formfree(post);
 </pre>
 <p class="Pp">Multipart formposts are chains of parts using MIME-style
@@ -659,25 +606,15 @@
     when you add that to the post handle:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  struct curl_slist *headers=NULL;
-<br/>
  headers = curl_slist_append(headers, &quot;Content-Type: text/xml&quot;);
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;logotype-image&quot;,
-<br/>
               CURLFORM_FILECONTENT, &quot;curl.xml&quot;,
-<br/>
               CURLFORM_CONTENTHEADER, headers,
-<br/>
               CURLFORM_END);
-<br/>
  curl_easy_perform(easyhandle); /* post away! */
-<br/>
  curl_formfree(post); /* free post */
-<br/>
  curl_slist_free_all(headers); /* free custom header list */
 </pre>
 <p class="Pp">Since all options on an easyhandle are &quot;sticky&quot;, they
@@ -711,26 +648,17 @@
     sequences:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;id&quot;,
-<br/>
               CURLFORM_COPYCONTENTS, &quot;daniel&quot;, CURLFORM_END);
-<br/>
               CURLFORM_CONTENTHEADER, headers,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;id&quot;);
-<br/>
  curl_mime_data(part, &quot;daniel&quot;, CURL_ZERO_TERMINATED);
-<br/>
  curl_mime_headers(part, headers, FALSE);
 </pre>
 <p class="Pp">Setting the last <i>curl_mime_headers</i> argument to TRUE would
@@ -739,22 +667,15 @@ becomes:
   <i>curl_slist_free_all(3)</i>.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_PTRNAME, &quot;logotype-image&quot;,
-<br/>
               CURLFORM_FILECONTENT, &quot;-&quot;,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;logotype-image&quot;);
-<br/>
  curl_mime_data_cb(part, (curl_off_t) -1, fread, fseek, NULL, stdin);
 </pre>
 <p class="Pp"><i>curl_mime_name</i> always copies the field name. The special
@@ -763,118 +684,75 @@ becomes:
     chunked since the data size is unknown.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;datafile[]&quot;,
-<br/>
               CURLFORM_FILE, &quot;file1&quot;,
-<br/>
               CURLFORM_FILE, &quot;file2&quot;,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;datafile[]&quot;);
-<br/>
  curl_mime_filedata(part, &quot;file1&quot;);
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;datafile[]&quot;);
-<br/>
  curl_mime_filedata(part, &quot;file2&quot;);
 </pre>
 <p class="Pp">The deprecated multipart/mixed implementation of multiple files
     field is translated to two distinct parts with the same name.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_READFUNCTION, myreadfunc);
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;stream&quot;,
-<br/>
               CURLFORM_STREAM, arg,
-<br/>
               CURLFORM_CONTENTLEN, (curl_off_t) datasize,
-<br/>
               CURLFORM_FILENAME, &quot;archive.zip&quot;,
-<br/>
               CURLFORM_CONTENTTYPE, &quot;application/zip&quot;,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;stream&quot;);
-<br/>
  curl_mime_data_cb(part, (curl_off_t) datasize,
-<br/>
                    myreadfunc, NULL, NULL, arg);
-<br/>
  curl_mime_filename(part, &quot;archive.zip&quot;);
-<br/>
  curl_mime_type(part, &quot;application/zip&quot;);
 </pre>
 <p class="Pp"><i>CURLOPT_READFUNCTION</i> callback is not used: it is replace by
     directly setting the part source data from the callback read function.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;memfile&quot;,
-<br/>
               CURLFORM_BUFFER, &quot;memfile.bin&quot;,
-<br/>
               CURLFORM_BUFFERPTR, databuffer,
-<br/>
               CURLFORM_BUFFERLENGTH, (long) sizeof databuffer,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;memfile&quot;);
-<br/>
  curl_mime_data(part, databuffer, (curl_off_t) sizeof databuffer);
-<br/>
  curl_mime_filename(part, &quot;memfile.bin&quot;);
 </pre>
 <p class="Pp"><i>curl_mime_data</i> always copies the initial data: data buffer
     is thus free for immediate reuse.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_formadd(&amp;post, &amp;last,
-<br/>
               CURLFORM_COPYNAME, &quot;message&quot;,
-<br/>
               CURLFORM_FILECONTENT, &quot;msg.txt&quot;,
-<br/>
               CURLFORM_END);
 </pre>
 becomes:
 <pre>
-<br/>
  part = curl_mime_addpart(multipart);
-<br/>
  curl_mime_name(part, &quot;message&quot;);
-<br/>
  curl_mime_filedata(part, &quot;msg.txt&quot;);
-<br/>
  curl_mime_filename(part, NULL);
 </pre>
 <p class="Pp">Use of <i>curl_mime_filedata</i> sets the remote file name as a
@@ -900,15 +778,10 @@ becomes:
     matches this prototype:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  int progress_callback(void *clientp,
-<br/>
                        double dltotal,
-<br/>
                        double dlnow,
-<br/>
                        double ultotal,
-<br/>
                        double ulnow);
 </pre>
 <p class="Pp">If any of the input arguments is unknown, a 0 will be passed. The
@@ -926,17 +799,11 @@ becomes:
 <p class="Pp"></p>
 <pre>
 class AClass {
-<br/>
     static size_t write_data(void *ptr, size_t size, size_t nmemb,
-<br/>
                              void *ourpointer)
-<br/>
     {
-<br/>
       /* do what you want with the data */
-<br/>
     }
-<br/>
  }
 </pre>
 <p class="Pp"></p>
@@ -1184,19 +1051,12 @@ class AClass {
       think fit. Adding headers is this easy:
     <p class="Pp"></p>
     <pre>
-<br/>
  struct curl_slist *headers=NULL; /* init to NULL is important */
-<br/>
  headers = curl_slist_append(headers, &quot;Hey-server-hey: how are you?&quot;);
-<br/>
  headers = curl_slist_append(headers, &quot;X-silly-content: yes&quot;);
-<br/>
  /* pass our list of custom made headers */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_HTTPHEADER, headers);
-<br/>
  curl_easy_perform(easyhandle); /* transfer http */
-<br/>
  curl_slist_free_all(headers); /* free the header list */
     </pre>
     <p class="Pp">... and if you think some of the internally generated headers,
@@ -1204,9 +1064,7 @@ class AClass {
         contain, you can replace them by simply setting them too:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
  headers = curl_slist_append(headers, &quot;Accept: Agent-007&quot;);
-<br/>
  headers = curl_slist_append(headers, &quot;Host: munged.host.line&quot;);
     </pre>
     <p class="Pp"></p>
@@ -1267,15 +1125,10 @@ class AClass {
         operation:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
  headers = curl_slist_append(headers, &quot;DELE file-to-remove&quot;);
-<br/>
  /* pass the list of custom commands to the handle */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_QUOTE, headers);
-<br/>
  curl_easy_perform(easyhandle); /* transfer ftp data! */
-<br/>
  curl_slist_free_all(headers); /* free the header list */
     </pre>
     <p class="Pp">If you would instead want this operation (or chain of
@@ -1421,65 +1274,35 @@ class AClass {
     plain/html text alternative and a file attachment encoded in base64:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
  curl_mime *message = curl_mime_init(easyhandle);
-<br/>
  /* The inline part is an alternative proposing the html and the text
-<br/>
     versions of the e-mail. */
-<br/>
  curl_mime *alt = curl_mime_init(easyhandle);
-<br/>
  /* HTML message. */
-<br/>
  curl_mimepart *part = curl_mime_addpart(alt);
-<br/>
  curl_mime_data(part, &quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;This is HTML&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;,
-<br/>
                       CURL_ZERO_TERMINATED);
-<br/>
  curl_mime_type(part, &quot;text/html&quot;);
-<br/>
  /* Text message. */
-<br/>
  part = curl_mime_addpart(alt);
-<br/>
  curl_mime_data(part, &quot;This is plain text message&quot;,
-<br/>
                       CURL_ZERO_TERMINATED);
-<br/>
  /* Create the inline part. */
-<br/>
  part = curl_mime_addpart(message);
-<br/>
  curl_mime_subparts(part, alt);
-<br/>
  curl_mime_type(part, &quot;multipart/alternative&quot;);
-<br/>
  struct curl_slist *headers = curl_slist_append(NULL,
-<br/>
                    &quot;Content-Disposition: inline&quot;);
-<br/>
  curl_mime_headers(part, headers, TRUE);
-<br/>
  /* Add the attachment. */
-<br/>
  part = curl_mime_addpart(message);
-<br/>
  curl_mime_filedata(part, &quot;manual.pdf&quot;);
-<br/>
  curl_mime_encoder(part, &quot;base64&quot;);
-<br/>
  /* Build the mail headers. */
-<br/>
  headers = curl_slist_append(NULL, &quot;From: me@example.com&quot;);
-<br/>
  headers = curl_slist_append(headers, &quot;To: you@example.com&quot;);
-<br/>
  /* Set these into the easy handle. */
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_HTTPHEADER, headers);
-<br/>
  curl_easy_setopt(easyhandle, CURLOPT_MIMEPOST, mime);
 </pre>
 <p class="Pp">It should be noted that appending a message to an IMAP directory

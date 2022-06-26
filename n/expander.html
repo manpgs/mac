@@ -129,17 +129,11 @@
     returning the new string:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % set greeting &quot;Howdy&quot;
-<br/>
     Howdy
-<br/>
     % proc place {} {return &quot;World&quot;}
-<br/>
     % subst {$greeting, [place]!}
-<br/>
     Howdy, World!
-<br/>
     %
 </pre>
 <p class="Pp">By defining a suitable set of Tcl commands, <b>subst</b> can be
@@ -313,15 +307,10 @@
 <p class="Pp">To begin, create an expander object:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % package require expander
-<br/>
     1.2
-<br/>
     % ::expander::expander myexp
-<br/>
     ::myexp
-<br/>
     %
 </pre>
 <p class="Pp">The created <b>::myexp</b> object can be used to expand text
@@ -331,17 +320,11 @@
     commands:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % set greeting &quot;Howdy&quot;
-<br/>
     Howdy
-<br/>
     % proc place {} {return &quot;World&quot;}
-<br/>
     % ::myexp expand {[set greeting], [place]!}
-<br/>
     Howdy, World!
-<br/>
     %
 </pre>
 </section>
@@ -353,34 +336,20 @@
     with its result string. For example,</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % set greetings {Howdy Hi &quot;What's up&quot;}
-<br/>
     Howdy Hi &quot;What's up&quot;
-<br/>
     % ::myexp expand {There are many ways to say &quot;Hello, World!&quot;:
-<br/>
     [set result {}
-<br/>
     foreach greeting $greetings {
 	append result &quot;$greeting, World!\\n&quot;
-<br/>
     }
-<br/>
     set result]
-<br/>
     And that's just a small sample!}
-<br/>
     There are many ways to say &quot;Hello, World!&quot;:
-<br/>
     Howdy, World!
-<br/>
     Hi, World!
-<br/>
     What's up, World!
-<br/>
     And that's just a small sample!
-<br/>
     %
 </pre>
 </section>
@@ -394,15 +363,10 @@
   format:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % proc bold {} {return &quot;&lt;b&gt;&quot;}
-<br/>
     % proc /bold {} {return &quot;&lt;/b&gt;&quot;}
-<br/>
     % ::myexp expand {Some of this text is in [bold]boldface[/bold]}
-<br/>
     Some of this text is in &lt;b&gt;boldface&lt;/b&gt;
-<br/>
     %
 </pre>
 <p class="Pp">The above definitions of <b>bold</b> and <b>/bold</b> returns
@@ -422,24 +386,17 @@
     <b>&gt;</b>:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % ::myexp setbrackets &lt; &gt;
-<br/>
     % ::myexp expand {&lt;bold&gt;This is boldface&lt;/bold&gt;}
-<br/>
     &lt;b&gt;This is boldface&lt;/b&gt;
 </pre>
 <p class="Pp">Alternatively, you can change the expansion brackets temporarily
     by passing the desired brackets to the <b>expand</b> command:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     % ::myexp setbrackets &quot;\\[&quot; &quot;\\]&quot;
-<br/>
     % ::myexp expand {&lt;bold&gt;This is boldface&lt;/bold&gt;} {&lt; &gt;}
-<br/>
     &lt;b&gt;This is boldface&lt;/b&gt;
-<br/>
     %
 </pre>
 </section>
@@ -457,9 +414,7 @@
     by returning the macro text itself.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     proc identity {macro} {return $macro}
-<br/>
     ::myexp evalcmd identity
 </pre>
 </section>
@@ -471,9 +426,7 @@
     footnotes to a web page: one could have implement something like this:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     Dr. Pangloss, however, thinks that this is the best of all
-<br/>
     possible worlds.[footnote &quot;See Candide, by Voltaire&quot;]
 </pre>
 <p class="Pp">The <b>footnote</b> macro would, presumably, assign a number to
@@ -482,11 +435,8 @@
     markup. Consider the following instead:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     Dr. Pangloss, however, thinks that this is the best of all
-<br/>
     possible worlds.[footnote]See [bookTitle &quot;Candide&quot;], by
-<br/>
     [authorsName &quot;Voltaire&quot;], for more information.[/footnote]
 </pre>
 <p class="Pp">Here the footnote text is contained between <b>footnote</b> and
@@ -501,21 +451,13 @@
     macros:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     proc footnote {} {
-<br/>
         ::myexp cpush footnote
-<br/>
     }
-<br/>
     proc /footnote {} {
-<br/>
         set footnoteText [::myexp cpop footnote]
-<br/>
         # Save the footnote text, and return an appropriate footnote
-<br/>
         # number and link.
-<br/>
     }
 </pre>
 <p class="Pp">The <b>cpush</b> command pushes a new context onto the stack; the
@@ -531,27 +473,16 @@
     suppose the document must specify the footnote number explicitly:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     proc footnote {footnoteNumber} {
-<br/>
         ::myexp cpush footnote
-<br/>
         ::myexp csave num $footnoteNumber
-<br/>
         # Return an appropriate link
-<br/>
     }
-<br/>
     proc /footnote {} {
-<br/>
         set footnoteNumber [::myexp cget num]
-<br/>
         set footnoteText [::myexp cpop footnote]
-<br/>
         # Save the footnote text and its footnoteNumber for future
-<br/>
         # output.
-<br/>
     }
 </pre>
 <p class="Pp">At times, it might be desirable to define macros that are valid

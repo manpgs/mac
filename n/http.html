@@ -245,9 +245,7 @@
 <div class="Bd-indent">
 <pre>
 proc httpCallback {token} {
-<br/>
     upvar #0 $token state
-<br/>
     # Access state as a Tcl array
 }
 </pre>
@@ -268,21 +266,13 @@ proc httpCallback {token} {
 <div class="Bd-indent">
 <pre>
 proc httpHandlerCallback {socket token} {
-<br/>
     upvar #0 $token state
-<br/>
     # Access socket, and state as a Tcl array
-<br/>
     # For example...
-<br/>
     ...
-<br/>
     set data [read $socket 1000]
-<br/>
     set nbytes [string length $data]
-<br/>
     ...
-<br/>
     return $nbytes
 }
 </pre>
@@ -331,7 +321,6 @@ Pragma: no-cache
 <div class="Bd-indent">
 <pre>
 proc httpProgress {token total current} {
-<br/>
     upvar #0 $token state
 }
 </pre>
@@ -612,57 +601,32 @@ Some of the meta-data keys are listed below, but the HTTP standard defines more,
 <pre>
 # Copy a URL to a file and print meta-data
 proc httpcopy { url file {chunk 4096} } {
-<br/>
    set out [open $file w]
-<br/>
    set token [<b>::http::geturl</b> $url -channel $out \
-<br/>
           -progress httpCopyProgress -blocksize $chunk]
-<br/>
    close $out
-<br/>
    # This ends the line started by httpCopyProgress
-<br/>
    puts stderr &quot;&quot;
-<br/>
    upvar #0 $token state
-<br/>
    set max 0
-<br/>
    foreach {name value} $state(meta) {
-<br/>
       if {[string length $name] &gt; $max} {
-<br/>
          set max [string length $name]
-<br/>
       }
-<br/>
       if {[regexp -nocase ^location$ $name]} {
-<br/>
          # Handle URL redirects
-<br/>
          puts stderr &quot;Location:$value&quot;
-<br/>
          return [httpcopy [string trim $value] $file $chunk]
-<br/>
       }
-<br/>
    }
-<br/>
    incr max
-<br/>
    foreach {name value} $state(meta) {
-<br/>
       puts [format &quot;%-*s %s&quot; $max $name: $value]
-<br/>
    }
-<br/>
    return $token
 }
 proc httpCopyProgress {args} {
-<br/>
    puts -nonewline stderr .
-<br/>
    flush stderr
 }
 </pre>

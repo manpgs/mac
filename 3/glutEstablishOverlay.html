@@ -52,41 +52,23 @@ void glutEstablishOverlay(void);
 <p class="Pp">Establishing an overlay is a bit involved, but easy once you get
     the hang of it. Here is an example:</p>
 <pre>
-<br/>
   int overlaySupport;
-<br/>
   int transparent, red, white;
-<br/>
   glutInitDisplayMode(GLUT_SINGLE | GLUT_INDEX);
-<br/>
   overlaySupport = glutLayerGet(GLUT_OVERLAY_POSSIBLE);
-<br/>
   if (overlaySupport) {
-<br/>
     glutEstablishOverlay();
-<br/>
     glutHideOverlay();
-<br/>
     transparent = glutLayerGet(GLUT_TRANSPARENT_INDEX);
-<br/>
     glClearIndex(transparent);
-<br/>
     red = (transparent + 1) % glutGet(GLUT_WINDOW_COLORMAP_SIZE);
-<br/>
     white = (transparent + 2) % glutGet(GLUT_WINDOW_COLORMAP_SIZE);
-<br/>
     glutSetColor(red, 1.0, 0.0, 0.0);  /* Red. */
-<br/>
     glutSetColor(white, 1.0, 1.0, 1.0);  /* White. */
-<br/>
     glutOverlayDisplayFunc(redrawOverlay);
-<br/>
     glutReshapeFunc(reshape);
-<br/>
   } else {
-<br/>
     printf(&quot;Sorry, no nifty overlay (try an SGI workstation)!0);
-<br/>
   }
 </pre>
 <p class="Pp">If you setup an overlay and you install a reshape callback, you
@@ -94,39 +76,22 @@ void glutEstablishOverlay(void);
     normal plane and the overlay. For example, your reshape callback might look
     like this:</p>
 <pre>
-<br/>
   void
-<br/>
   reshape(int w, int h)
-<br/>
   {
-<br/>
     if (overlaySupport) {
-<br/>
       glutUseLayer(GLUT_OVERLAY);
-<br/>
       /* Setup overlay to have X style coordinate system. */
-<br/>
       glViewport(0, 0, w, h);
-<br/>
       glMatrixMode(GL_PROJECTION);
-<br/>
       glLoadIdentity();
-<br/>
       gluOrtho2D(0, w, 0, h);
-<br/>
       glScalef(1, -1, 1);
-<br/>
       glTranslatef(0, -h, 0);
-<br/>
       glMatrixMode(GL_MODELVIEW);
-<br/>
       glutUseLayer(GLUT_NORMAL);
-<br/>
     }
-<br/>
     glViewport(0, 0, w, h);
-<br/>
   }
 </pre>
 <p class="Pp">See the glutOverlayDisplayFunc man page for an example showing one

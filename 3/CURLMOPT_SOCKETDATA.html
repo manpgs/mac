@@ -70,44 +70,26 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETDATA, void *pointer);
 <pre>
 static int sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
-<br/>
   GlobalInfo *g = (GlobalInfo*) cbp;
-<br/>
   SockInfo *fdp = (SockInfo*) sockp;
-<br/>
   if(what == CURL_POLL_REMOVE) {
-<br/>
     remsock(fdp);
-<br/>
   }
-<br/>
   else {
-<br/>
     if(!fdp) {
-<br/>
       addsock(s, e, what, g);
-<br/>
     }
-<br/>
     else {
-<br/>
       setsock(fdp, s, e, what, g);
-<br/>
     }
-<br/>
   }
-<br/>
   return 0;
 }
 main()
 {
-<br/>
   GlobalInfo setup;
-<br/>
   /* ... use socket callback and custom pointer */
-<br/>
   curl_multi_setopt(multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
-<br/>
   curl_multi_setopt(multi, CURLMOPT_SOCKETDATA, &amp;setup);
 }
 </pre>

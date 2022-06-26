@@ -206,7 +206,6 @@
     <p class="Pp">An example of a search expression is</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     set filterString &quot;|(cn=Linus*)(sn=Torvalds*)&quot;
     </pre>
     <p class="Pp">The return value of the command is a list of nested
@@ -214,7 +213,6 @@
         levels keys are attribute names. In other words, it is in the form</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     {dn1 {attr1 {val11 val12 ...} attr2 {val21...} ...}} {dn2 {a1 {v11 ...} ...}} ...
     </pre>
     <p class="Pp"></p>
@@ -239,7 +237,6 @@
       used in the search, and has the following format:
     <p class="Pp"></p>
     <pre>
-<br/>
     {-option1 value1 -option2 value2 ... }
     </pre>
     <p class="Pp">Following options are available:</p>
@@ -292,7 +289,6 @@
       under the format:
     <p class="Pp"></p>
     <pre>
-<br/>
     dn {attr1 {val11 val12 ...} attr2 {val21...} ...}
     </pre>
     <p class="Pp">The <b>::ldap::searchNext</b> command returns an empty list at
@@ -348,7 +344,6 @@
       are lists with the format:
     <p class="Pp"></p>
     <pre>
-<br/>
     attr1 {val11 val12 ...} attr2 {val21...} ...
     </pre>
     <p class="Pp">where each value list may be empty for deleting all
@@ -444,21 +439,13 @@
     this code.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     package require ldap
-<br/>
     # Connect, bind, add a new object, modify it in various ways
-<br/>
     set handle [ldap::connect localhost 9009]
-<br/>
     set dn &quot;cn=Manager, o=University of Michigan, c=US&quot;
-<br/>
     set pw secret
-<br/>
     ldap::bind $handle $dn $pw
-<br/>
     set dn &quot;cn=Test User,ou=People,o=University of Michigan,c=US&quot;
-<br/>
     ldap::add $handle $dn {
 	objectClass     OpenLDAPperson
 	cn              {Test User}
@@ -467,11 +454,8 @@
 	sn              User
 	telephoneNumber +31415926535
 	telephoneNumber +27182818285
-<br/>
     }
-<br/>
     set dn &quot;cn=Another User,ou=People,o=University of Michigan,c=US&quot;
-<br/>
     ldap::addMulti $handle $dn {
 	objectClass     {OpenLDAPperson}
 	cn              {{Anotther User}}
@@ -479,48 +463,29 @@
 	uid             {testuid}
 	sn              {User}
 	telephoneNumber {+31415926535 +27182818285}
-<br/>
     }
-<br/>
     # Replace all attributes
-<br/>
     ldap::modify $handle $dn [list drink icetea uid JOLO]
-<br/>
     # Add some more
-<br/>
     ldap::modify $handle $dn {} {} [list drink water  drink orangeJuice pager &quot;+1 313 555 7671&quot;]
-<br/>
     # Delete
-<br/>
     ldap::modify $handle $dn {} [list drink water  pager &quot;&quot;]
-<br/>
     # Move
-<br/>
     ldap::modifyDN $handle $dn &quot;cn=Tester&quot;
-<br/>
     # Kill the test object, and shut the connection down.
-<br/>
     set dn &quot;cn=Tester,ou=People,o=University of Michigan,c=US&quot;
-<br/>
     ldap::delete $handle $dn
-<br/>
     ldap::unbind     $handle
-<br/>
     ldap::disconnect $handle
 </pre>
 <p class="Pp">And a another example, a simple query, and processing the
   results.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     package require ldap
-<br/>
     set handle [ldap::connect ldap.acme.com 389]
-<br/>
     ldap::bind $handle
-<br/>
     set results [ldap::search $handle &quot;o=acme,dc=com&quot; &quot;(uid=jdoe)&quot; {}]
-<br/>
     foreach result $results {
 	foreach {object attributes} $result break
 	# The processing here is similar to what 'parray' does.
@@ -544,11 +509,8 @@
 	    }
 	}
 	puts &quot;&quot;
-<br/>
     }
-<br/>
     ldap::unbind $handle
-<br/>
     ldap::disconnect $handle
 </pre>
 </section>

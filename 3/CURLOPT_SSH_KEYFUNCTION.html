@@ -48,54 +48,33 @@
 <pre>
 #include &lt;curl/curl.h&gt;
 enum curl_khstat {
-<br/>
   CURLKHSTAT_FINE_ADD_TO_FILE,
-<br/>
   CURLKHSTAT_FINE,
-<br/>
   CURLKHSTAT_REJECT, /* reject the connection, return an error */
-<br/>
   CURLKHSTAT_DEFER,  /* do not accept it, but we can't answer right
-<br/>
                         now so this causes a CURLE_DEFER error but
-<br/>
                         otherwise the connection will be left intact
-<br/>
                         etc */
-<br/>
   CURLKHSTAT_FINE_REPLACE
 };
 enum curl_khmatch {
-<br/>
   CURLKHMATCH_OK,       /* match */
-<br/>
   CURLKHMATCH_MISMATCH, /* host found, key mismatch! */
-<br/>
   CURLKHMATCH_MISSING,  /* no matching host/key found */
 };
 struct curl_khkey {
-<br/>
   const char *key; /* points to a null-terminated string encoded with
-<br/>
                       base64 if len is zero, otherwise to the &quot;raw&quot;
-<br/>
                       data */
-<br/>
   size_t len;
-<br/>
   enum curl_khtype keytype;
 };
 int ssh_keycallback(CURL *easy,
-<br/>
                     const struct curl_khkey *knownkey,
-<br/>
                     const struct curl_khkey *foundkey,
-<br/>
                     enum curl_khmatch,
-<br/>
                     void *clientp);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_SSH_KEYFUNCTION,
-<br/>
                           ssh_keycallback);
 </pre>
 </section>
@@ -153,32 +132,20 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_SSH_KEYFUNCTION,
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
 static int keycb(CURL *easy,
-<br/>
                  const struct curl_khkey *knownkey,
-<br/>
                  const struct curl_khkey *foundkey,
-<br/>
                  enum curl_khmatch,
-<br/>
                  void *clientp)
 {
-<br/>
   /* 'clientp' points to the callback_data struct */
-<br/>
   /* investigate the situation and return the correct value */
-<br/>
   return CURLKHSTAT_FINE_ADD_TO_FILE;
 }
 {
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;sftp://example.com/thisfile.txt&quot;);
-<br/>
   curl_easy_setopt(curl, CURLOPT_SSH_KEYFUNCTION, keycb);
-<br/>
   curl_easy_setopt(curl, CURLOPT_SSH_KEYDATA, &amp;callback_data);
-<br/>
   curl_easy_setopt(curl, CURLOPT_SSH_KNOWNHOSTS, &quot;/home/user/known_hosts&quot;);
-<br/>
   curl_easy_perform(curl);
 }
 </pre>

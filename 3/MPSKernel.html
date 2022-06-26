@@ -111,9 +111,7 @@ sobel.offset = ...;
 sobel.clipRect = ...;
 sobel.options = ...;
 [sobel encodeToCommandBuffer: commandBuffer
-<br/>
                sourceTexture: inputImage
-<br/>
           destinationTexture: resultImage ];
 </pre>
 <p class="Pp">
@@ -357,90 +355,48 @@ object at a time.
 <pre>
 // A MPSCopyAllocator to handle cases where in-place operation fails.
 MPSCopyAllocator myAllocator = ^id &lt;MTLTexture&gt;( MPSKernel * __nonnull filter,
-<br/>
                                                 __nonnull id &lt;MTLCommandBuffer&gt; cmdBuf,
-<br/>
                                                 __nonnull id &lt;MTLTexture&gt; sourceTexture)
 {
-<br/>
     MTLPixelFormat format = sourceTexture.pixelFormat;  // FIXME: is this format writable?
-<br/>
     MTLTextureDescriptor *d = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat: format
-<br/>
                                  width: sourceTexture.width
-<br/>
                                 height: sourceTexture.height
-<br/>
                              mipmapped: NO];
-<br/>
     d.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
-<br/>
     //FIXME: Allocating a new texture each time is slow. They take up to 1 ms each.
-<br/>
     //       There are not too many milliseconds in a video frame! You can recycle
-<br/>
     //       old textures (or MTLBuffers and make textures from them) and reuse
-<br/>
     //       the memory here.
-<br/>
     id &lt;MTLTexture&gt; result = [cmdBuf.device newTextureWithDescriptor: d];
-<br/>
     // FIXME: If there is any metadata associated with sourceTexture such as colorspace
-<br/>
     //        information, MTLResource.label, MTLResource.cpuCacheMode mode,
-<br/>
     //        MTLResource.MTLPurgeableState, etc., it may need to be similarly associated
-<br/>
     //        with the new texture to avoid losing your metadata.
-<br/>
     // FIXME: If filter.clipRect doesn't cover the entire image, you may need to copy
-<br/>
     //        pixels from sourceTexture to the new texture or regions of the new texture
-<br/>
     //        will be uninitialized. You can make a MTLCommandEncoder to encode work on
-<br/>
     //        the MTLCommandBuffer here to do that work, if necessary. It will be
-<br/>
     //        scheduled to run immediately before the MPSKernel work. Do not call
-<br/>
     //        [MTLCommandBuffer enqueue/commit/waitUntilCompleted/waitUntilScheduled]
-<br/>
     //        in the MPSCopyAllocator block. Make sure to call -endEncoding on the
-<br/>
     //        MTLCommandEncoder so that the MTLCommandBuffer has no active encoder
-<br/>
     //        before returning.
-<br/>
     // CAUTION: The next command placed on the MTLCommandBuffer after the MPSCopyAllocator
-<br/>
     //          returns is almost assuredly going to be encoded with a MTLComputeCommandEncoder.
-<br/>
     //          Creating any other type of encoder in the MPSCopyAllocator will probably cost
-<br/>
     //          an additional 0.5 ms of both CPU _AND_ GPU time (or more!) due to a double
-<br/>
     //          mode switch penalty.
-<br/>
     // CAUTION: If other objects (in addition to the caller of -encodeToCommandBuffer:inPlaceTexture:...)
-<br/>
     //          own a reference to sourceTexture, they may need to be notified that
-<br/>
     //          sourceTexture has been replaced so that they can release that resource
-<br/>
     //          and adopt the new texture.
-<br/>
     //          The reference to sourceTexture owned by the caller of
-<br/>
     //          -encodeToCommandBuffer:inPlaceTexture... will be released by
-<br/>
     //          -encodeToCommandBuffer:inPlaceTexture:... after the kernel is encoded if
-<br/>
     //          and only if the MPSCopyAllocator is called, and the operation is successfully
-<br/>
     //          encoded out of place.
-<br/>
     return result;
-<br/>
     // d is autoreleased
 };
 </pre>

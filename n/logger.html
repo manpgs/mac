@@ -148,17 +148,11 @@
 <p class="Pp">To begin using the logger package, we do the following:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     package require logger
-<br/>
     set log [logger::init myservice]
-<br/>
     ${log}::notice &quot;Initialized myservice logging&quot;
-<br/>
     ... code ...
-<br/>
     ${log}::notice &quot;Ending myservice logging&quot;
-<br/>
     ${log}::delete
 </pre>
 <p class="Pp">In the above code, after the package is loaded, the following
@@ -264,13 +258,9 @@
       child loggers are affected, their callbacks are called before their
       parents callback.
     <pre>
-<br/>
  	proc lvlcallback {old new} {
-<br/>
  	    puts &quot;Loglevel changed from $old to $new&quot;
-<br/>
  	}
-<br/>
  	${log}::lvlchangeproc lvlcallback
     </pre>
   </dd>
@@ -291,15 +281,10 @@
       let you send your logs over the network, to a database, or anything else.
       For example:
     <pre>
-<br/>
     proc logtoserver {txt} {
-<br/>
         variable socket
-<br/>
         puts $socket &quot;Notice: $txt&quot;
-<br/>
     }
-<br/>
     ${log}::logproc notice logtoserver
     </pre>
     Trace logs are slightly different: instead of a plain text argument, the
@@ -342,7 +327,6 @@
       called without a command it returns the currently registered command. For
       example:
     <pre>
-<br/>
     ${log}::delproc [list closesock $logsock]
     </pre>
   </dd>
@@ -357,39 +341,22 @@
       performance impact to a library when tracing is disabled, just as with
       other log level commands.
     <pre>
-<br/>
   proc tracecmd { dict } {
-<br/>
       puts $dict
-<br/>
   }
-<br/>
   set log [::logger::init example]
-<br/>
   ${log}::logproc trace tracecmd
-<br/>
   proc foo { args } {
-<br/>
       puts &quot;In foo&quot;
-<br/>
       bar 1
-<br/>
       return &quot;foo_result&quot;
-<br/>
   }
-<br/>
   proc bar { x } {
-<br/>
       puts &quot;In bar&quot;
-<br/>
       return &quot;bar_result&quot;
-<br/>
   }
-<br/>
   ${log}::trace add foo bar
-<br/>
   ${log}::trace on
-<br/>
   foo
 # Output:
 enter {proc ::foo level 1 script {} caller {} procargs {args {}}}
@@ -467,45 +434,25 @@ leave {proc ::foo level 1 script {} caller {} status ok result foo_result}
     using uplevel or linking to local variables by using upvar. This may fire
     traces with all usual side effects.</p>
 <pre>
-<br/>
      # Print caller and current vars in the calling proc
-<br/>
      proc log_local_var {txt} {
-<br/>
           set caller [info level -1]
-<br/>
           set vars [uplevel 1 info vars]
-<br/>
           foreach var [lsort $vars] {
-<br/>
              if {[uplevel 1 [list array exists $var]] == 1} {
-<br/>
              	lappend val $var &lt;Array&gt;
-<br/>
              } else {
-<br/>
              	lappend val $var [uplevel 1 [list set $var]]
-<br/>
              }
-<br/>
           }
-<br/>
           puts &quot;$txt&quot;
-<br/>
           puts &quot;Caller: $caller&quot;
-<br/>
           puts &quot;Variables in callers scope:&quot;
-<br/>
           foreach {var value} $val {
-<br/>
           	puts &quot;$var = $value&quot;
-<br/>
           }
-<br/>
      }
-<br/>
      # install as logproc
-<br/>
      ${log}::logproc debug log_local_var
 </pre>
 </section>

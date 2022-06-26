@@ -113,19 +113,12 @@ RewriteCond %{QUERY_STRING} service=git-receive-pack [OR]
 RewriteCond %{REQUEST_URI} /git-receive-pack$
 RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
 &lt;LocationMatch &quot;^/git/&quot;&gt;
-<br/>
         Order Deny,Allow
-<br/>
         Deny from env=AUTHREQUIRED
-<br/>
         AuthType Basic
-<br/>
         AuthName &quot;Git Access&quot;
-<br/>
         Require group committers
-<br/>
         Satisfy Any
-<br/>
         ...
 &lt;/LocationMatch&gt;
 </pre>
@@ -137,13 +130,9 @@ RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
 <div class="Bd-indent">
 <pre>
 &lt;LocationMatch &quot;^/git/.*/git-receive-pack$&quot;&gt;
-<br/>
         AuthType Basic
-<br/>
         AuthName &quot;Git Access&quot;
-<br/>
         Require group committers
-<br/>
         ...
 &lt;/LocationMatch&gt;
 </pre>
@@ -163,13 +152,9 @@ RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
 <div class="Bd-indent">
 <pre>
 &lt;Location /git/private&gt;
-<br/>
         AuthType Basic
-<br/>
         AuthName &quot;Private Git Access&quot;
-<br/>
         Require group committers
-<br/>
         ...
 &lt;/Location&gt;
 </pre>
@@ -181,19 +166,12 @@ RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
 <div class="Bd-indent">
 <pre>
 ScriptAliasMatch \
-<br/>
         &quot;(?x)^/git/(.*/(HEAD | \
-<br/>
                         info/refs | \
-<br/>
                         objects/(info/[^/]+ | \
-<br/>
                                  [0-9a-f]{2}/[0-9a-f]{38} | \
-<br/>
                                  pack/pack-[0-9a-f]{40}\.(pack|idx)) | \
-<br/>
                         git-(upload|receive)-pack))$&quot; \
-<br/>
         /usr/libexec/git-core/git-http-backend/$1
 ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
 </pre>
@@ -231,15 +209,10 @@ SetEnv GIT_PROJECT_ROOT /var/www/git
 AliasMatch ^/git/(.*/objects/[0-9a-f]{2}/[0-9a-f]{38})$          /var/www/git/$1
 AliasMatch ^/git/(.*/objects/pack/pack-[0-9a-f]{40}.(pack|idx))$ /var/www/git/$1
 ScriptAliasMatch \
-<br/>
         &quot;(?x)^/git/(.*/(HEAD | \
-<br/>
                         info/refs | \
-<br/>
                         objects/info/[^/]+ | \
-<br/>
                         git-(upload|receive)-pack))$&quot; \
-<br/>
         /usr/libexec/git-core/git-http-backend/$1
 ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
 </pre>
@@ -255,15 +228,10 @@ ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
 <pre>
 alias.url += ( &quot;/git&quot; =&gt; &quot;/usr/lib/git-core/git-http-backend&quot; )
 $HTTP[&quot;url&quot;] =~ &quot;^/git&quot; {
-<br/>
         cgi.assign = (&quot;&quot; =&gt; &quot;&quot;)
-<br/>
         setenv.add-environment = (
-<br/>
                 &quot;GIT_PROJECT_ROOT&quot; =&gt; &quot;/var/www/git&quot;,
-<br/>
                 &quot;GIT_HTTP_EXPORT_ALL&quot; =&gt; &quot;&quot;
-<br/>
         )
 }
 </pre>
@@ -274,11 +242,9 @@ $HTTP[&quot;url&quot;] =~ &quot;^/git&quot; {
 <div class="Bd-indent">
 <pre>
 $HTTP[&quot;querystring&quot;] =~ &quot;service=git-receive-pack&quot; {
-<br/>
         include &quot;git-auth.conf&quot;
 }
 $HTTP[&quot;url&quot;] =~ &quot;^/git/.*/git-receive-pack$&quot; {
-<br/>
         include &quot;git-auth.conf&quot;
 }
 </pre>
@@ -288,15 +254,10 @@ $HTTP[&quot;url&quot;] =~ &quot;^/git/.*/git-receive-pack$&quot; {
 <div class="Bd-indent">
 <pre>
 auth.require = (
-<br/>
         &quot;/&quot; =&gt; (
-<br/>
                 &quot;method&quot; =&gt; &quot;basic&quot;,
-<br/>
                 &quot;realm&quot; =&gt; &quot;Git Access&quot;,
-<br/>
                 &quot;require&quot; =&gt; &quot;valid-user&quot;
-<br/>
                )
 )
 # ...and set up auth.backend here
@@ -307,7 +268,6 @@ auth.require = (
 <div class="Bd-indent">
 <pre>
 $HTTP[&quot;url&quot;] =~ &quot;^/git/private&quot; {
-<br/>
         include &quot;git-auth.conf&quot;
 }
 </pre>

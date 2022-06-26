@@ -71,35 +71,23 @@
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
 <pre>
 struct my_info {
-<br/>
   int shoesize;
-<br/>
   char *secret;
 };
 static size_t header_callback(char *buffer, size_t size,
-<br/>
                               size_t nitems, void *userdata)
 {
-<br/>
   struct my_info *i = (struct my_info *)userdata;
-<br/>
   /* now this callback can access the my_info struct */
-<br/>
   return nitems * size;
 }
 CURL *curl = curl_easy_init();
 if(curl) {
-<br/>
   struct my_info my = { 10, &quot;the cookies are in the cupboard&quot; };
-<br/>
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
-<br/>
   curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_callback);
-<br/>
   /* pass in custom data to the callback */
-<br/>
   curl_easy_setopt(curl, CURLOPT_HEADERDATA, &amp;my);
-<br/>
   curl_easy_perform(curl);
 }
 </pre>

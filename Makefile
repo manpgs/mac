@@ -35,7 +35,8 @@ $(dirs):
 
 MANDOC=mandoc
 FLAGS=-Oman=../%S/%N,style=../style.css
-BUILD=$(MANDOC) $(FLAGS) -Thtml "$<" > "$@"
+CMD=$(MANDOC) $(FLAGS) -Thtml "$<" | sed '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}'
+BUILD=$(CMD) > "$@"
 
 template = <!doctype html>\n<html lang="en">\n\
 \40<head>\n\
@@ -189,7 +190,7 @@ index.html: $(addsuffix /index.htm,$(dirs))
 
 # files have colons in them
 3pm/%.html: $(MANDIR)/man3/%.3*
-	$(MANDOC) $(FLAGS) -Thtml "$<" > $@
+	$(CMD) > $@
 
 3tcl/%.html: $(MANDIR)/man3/%.3tcl
 	$(BUILD)
@@ -217,4 +218,4 @@ index.html: $(addsuffix /index.htm,$(dirs))
 
 # some files have colons in them
 n/%.html: $(MANDIR)/mann/%.n*
-	$(MANDOC) $(FLAGS) -Thtml "$<" > $@
+	$(CMD) > $@

@@ -371,19 +371,12 @@
     working in our organization in two tables:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   PERSONS              PHONES
-<br/>
   ----------           -------------
-<br/>
   id integer           id integer
-<br/>
   first_name varchar   pers_id integer references persons(id)
-<br/>
   last_name varchar    phone
-<br/>
   middle_name varchar
-<br/>
   ...
 </pre>
 <p class="Pp">(PHONES contains telephone numbers associated with persons). A
@@ -393,45 +386,32 @@
     this:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   person
-<br/>
   -------
-<br/>
   MUST cn
-<br/>
   MAY telephoneNumber $ firstName $ lastName
-<br/>
   ...
 </pre>
 <p class="Pp">To fetch all values for cn attribute given person ID, we construct
     the query:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   SELECT CONCAT(persons.first_name,' ',persons.last_name)
-<br/>
       AS cn FROM persons WHERE persons.id=?
 </pre>
 <p class="Pp">for telephoneNumber we can use:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   SELECT phones.phone AS telephoneNumber FROM persons,phones
-<br/>
       WHERE persons.id=phones.pers_id AND persons.id=?
 </pre>
 <p class="Pp">If we wanted to service LDAP requests with filters like
     (telephoneNumber=123*), we would construct something like:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   SELECT ... FROM persons,phones
-<br/>
       WHERE persons.id=phones.pers_id
-<br/>
           AND persons.id=?
-<br/>
           AND phones.phone like '%1%2%3%'
 </pre>
 <p class="Pp">(note how the telephoneNumber match is expanded in multiple
@@ -445,17 +425,11 @@
     and fill it with data (see samples):</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   ldap_oc_mappings (some columns are not listed for clarity)
-<br/>
   ---------------
-<br/>
   id=1
-<br/>
   name=&quot;person&quot;
-<br/>
   keytbl=&quot;persons&quot;
-<br/>
   keycol=&quot;id&quot;
 </pre>
 <p class="Pp">This table defines a mapping between objectclass (its name held in
@@ -468,35 +442,20 @@
     the column).</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   ldap_attr_mappings (some columns are not listed for clarity)
-<br/>
   -----------
-<br/>
   id=1
-<br/>
   oc_map_id=1
-<br/>
   name=&quot;cn&quot;
-<br/>
   sel_expr=&quot;CONCAT(persons.first_name,' ',persons.last_name)&quot;
-<br/>
   from_tbls=&quot;persons&quot;
-<br/>
   join_where=NULL
-<br/>
   ************
-<br/>
   id=&lt;n&gt;
-<br/>
   oc_map_id=1
-<br/>
   name=&quot;telephoneNumber&quot;
-<br/>
   sel_expr=&quot;phones.phone&quot;
-<br/>
   from_tbls=&quot;persons,phones&quot;
-<br/>
   join_where=&quot;phones.pers_id=persons.id&quot;
 </pre>
 <p class="Pp">This table defines mappings between LDAP attributes and SQL
@@ -523,19 +482,12 @@
     it). See below for examples.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   ldap_entries
-<br/>
   ------------
-<br/>
   id=1
-<br/>
   dn=&lt;dn you choose&gt;
-<br/>
   oc_map_id=...
-<br/>
   parent=&lt;parent record id&gt;
-<br/>
   keyval=&lt;value of primary key&gt;
 </pre>
 <p class="Pp">This table defines mappings between DNs of entries in your LDAP
@@ -557,29 +509,17 @@
     Robin Elfrink):</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   CREATE VIEW ldap_entries (id, dn, oc_map_id, parent, keyval)
-<br/>
       AS
-<br/>
           SELECT 0, UPPER('o=MyCompany,c=NL'),
-<br/>
               3, 0, 'baseObject' FROM unixusers WHERE userid='root'
-<br/>
       UNION
-<br/>
           SELECT (1000000000+userid),
-<br/>
               UPPER(CONCAT(CONCAT('cn=',gecos),',o=MyCompany,c=NL')),
-<br/>
               1, 0, userid FROM unixusers
-<br/>
       UNION
-<br/>
           SELECT (2000000000+groupnummer),
-<br/>
               UPPER(CONCAT(CONCAT('cn=',groupnaam),',o=MyCompany,c=NL')),
-<br/>
               2, 0, groupnummer FROM groups;
 </pre>
 <p class="Pp"></p>
@@ -600,21 +540,13 @@
     get the following query generated (which loads candidate IDs)</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   SELECT ldap_entries.id,persons.id, 'person' AS objectClass,
-<br/>
          ldap_entries.dn AS dn
-<br/>
     FROM ldap_entries,persons,phones
-<br/>
    WHERE persons.id=ldap_entries.keyval
-<br/>
      AND ldap_entries.objclass=?
-<br/>
      AND ldap_entries.parent=?
-<br/>
      AND phones.pers_id=persons.id
-<br/>
      AND (phones.phone LIKE '%1%2%3%')
 </pre>
 <p class="Pp">(for ONELEVEL search) or &quot;... AND dn=?&quot; (for BASE
@@ -623,11 +555,8 @@
     per-attribute queries like</p>
 <p class="Pp"></p>
 <pre>
-<br/>
   SELECT phones.phone AS telephoneNumber
-<br/>
     FROM persons,phones
-<br/>
    WHERE persons.id=? AND phones.pers_id=persons.id
 </pre>
 <p class="Pp">Then, we use test_filter() from the frontend API to test the entry

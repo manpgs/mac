@@ -176,21 +176,13 @@ The options supported by each of these formats are documented with their
     &quot;<i>calculator.peg</i>&quot; is</p>
 <pre>
 PEG calculator (Expression)
-<br/>
     Digit      &lt;- '0'/'1'/'2'/'3'/'4'/'5'/'6'/'7'/'8'/'9'	;
-<br/>
     Sign       &lt;- '-' / '+'					;
-<br/>
     Number     &lt;- Sign? Digit+					;
-<br/>
     Expression &lt;- '(' Expression ')' / (Factor (MulOp Factor)*)	;
-<br/>
     MulOp      &lt;- '*' / '/'					;
-<br/>
     Factor     &lt;- Term (AddOp Term)*				;
-<br/>
     AddOp      &lt;- '+'/'-'					;
-<br/>
     Term       &lt;- Number					;
 END;
 </pre>
@@ -202,14 +194,12 @@ package require pt::pgen
 lassign $argv name
 set grammar [fileutil::cat $name.peg]
 set plass [pt::pgen
-<br/>
               peg $gr  snit  -class $name      -file  $name.peg  -name  $name]
 fileutil::writeFile $name.tcl $pclass
 exit 0
 </pre>
 calling it like
 <pre>
-<br/>
  tclsh8.5 gen calculator
 </pre>
 which leaves us with the parser package and class written to the file
@@ -217,62 +207,38 @@ which leaves us with the parser package and class written to the file
   installed in a place where Tcl can find it we can now use this class via a
   script like
 <pre>
-<br/>
     package require calculator
-<br/>
     lassign $argv input
-<br/>
     set channel [open $input r]
-<br/>
     set parser [calculator]
-<br/>
     set ast [$parser parse $channel]
-<br/>
     $parser destroy
-<br/>
     close $channel
-<br/>
     ... now process the returned abstract syntax tree ...
 </pre>
 where the abstract syntax tree stored in the variable will look like
 <p class="Pp"></p>
 <pre>
 set ast {Expression 0 4
-<br/>
     {Factor 0 4
-<br/>
         {Term 0 2
-<br/>
             {Number 0 2
-<br/>
                 {Digit 0 0}
-<br/>
                 {Digit 1 1}
-<br/>
                 {Digit 2 2}
-<br/>
             }
-<br/>
         }
-<br/>
         {AddOp 3 3}
-<br/>
         {Term 4 4
-<br/>
             {Number 4 4
-<br/>
                 {Digit 4 4}
-<br/>
             }
-<br/>
         }
-<br/>
     }
 }
 </pre>
 <p class="Pp">assuming that the input file and channel contained the text</p>
 <pre>
-<br/>
  120+5
 </pre>
 A more graphical representation of the tree would be

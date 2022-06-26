@@ -339,11 +339,8 @@
     <b>f</b> and the parameter u, and computes this new integrand.</p>
 <pre>
 proc g { f u } {
-<br/>
     set x [expr { sin($u) }]
-<br/>
     set cmd $f; lappend cmd $x; set y [eval $cmd]
-<br/>
     return [expr { $y / cos($u) }]
 }
 </pre>
@@ -353,11 +350,8 @@ Now integrating <b>f</b> from <i>a</i> to <i>b</i> is the same as integrating
   does it.
 <pre>
 proc romberg_sine { f a b args } {
-<br/>
     set f [lreplace $f 0 0 [uplevel 1 [list namespace which [lindex $f 0]]]]
-<br/>
     set f [list g $f]
-<br/>
     return [eval [linsert $args 0 romberg $f [expr { asin($a) }] [expr { asin($b) }]]]
 }
 </pre>
@@ -365,7 +359,6 @@ This <b>romberg_sine</b> procedure will do any function with sqrt(1-x*x) in the
   denominator. Our sample function is f(x)=exp(x)/sqrt(1-x*x):
 <pre>
 proc f { x } {
-<br/>
     expr { exp($x) / sqrt( 1. - $x*$x ) }
 }
 </pre>

@@ -315,27 +315,16 @@ set s [socket some.where.com 12345]
 <b>fconfigure</b> $s -blocking 0
 fileevent $s readable &quot;readMe $s&quot;
 proc readMe chan {
-<br/>
    if {[gets $chan line] &lt; 0} {
-<br/>
       if {[eof $chan]} {
-<br/>
          close $chan
-<br/>
          return
-<br/>
       }
-<br/>
       # Could not read a complete line this time; Tcl's
-<br/>
       # internal buffering will hold the partial line for us
-<br/>
       # until some more data is available over the socket.
-<br/>
    } else {
-<br/>
       puts stdout $line
-<br/>
    }
 }
 </pre>
@@ -348,18 +337,14 @@ set f [open teapot.ppm]
 <b>fconfigure</b> $f -encoding ascii -translation lf
 # Get the header
 if {[gets $f] ne &quot;P6&quot;} {
-<br/>
    error &quot;not a raw-bits PPM&quot;
 }
 # Read lines until we have got non-comment lines
 # that supply us with three decimal values.
 set words {}
 while {[llength $words] &lt; 3} {
-<br/>
    gets $f line
-<br/>
    if {[string match &quot;#*&quot; $line]} continue
-<br/>
    lappend words {*}[join [scan $line %d%d%d]]
 }
 # Those words supply the size of the image and its

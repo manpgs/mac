@@ -36,7 +36,6 @@
     In order to use MySQL lookups, define a MySQL source as a lookup table in
     main.cf, for example:</p>
 <pre>
-<br/>
     alias_maps = mysql:/etc/mysql-aliases.cf
 </pre>
 <p class="Pp">The file /etc/postfix/mysql-aliases.cf has the same format as the
@@ -69,9 +68,7 @@
       <i>unix:</i> for UNIX domain sockets, <i>inet:</i> for TCP connections
       (default). Example:
     <pre>
-<br/>
     hosts = host1.some.domain host2.some.domain:port
-<br/>
     hosts = unix:/file/name
     </pre>
     <p class="Pp">The hosts are tried in random order, with all connections over
@@ -84,7 +81,6 @@
         domain socket. In order to instruct MySQL to connect to localhost over
         TCP you have to specify</p>
     <pre>
-<br/>
     hosts = 127.0.0.1
     </pre>
   </dd>
@@ -92,16 +88,13 @@
     password</b></a></dt>
   <dd>The user name and password to log into the mysql server. Example:
     <pre>
-<br/>
     user = someone
-<br/>
     password = some_password
     </pre>
   </dd>
   <dt id="dbname"><a class="permalink" href="#dbname"><b>dbname</b></a></dt>
   <dd>The database name on the servers. Example:
     <pre>
-<br/>
     dbname = customer_database
     </pre>
   </dd>
@@ -109,7 +102,6 @@
   <dd>The SQL query template used to search the database, where <b>%s</b> is a
       substitute for the address Postfix is trying to resolve, e.g.
     <pre>
-<br/>
     query = SELECT replacement FROM aliases WHERE mailbox = '%s'
     </pre>
     <p class="Pp">By default, every query must return a result set (instead of
@@ -162,13 +154,9 @@
         equivalent query is:</p>
     <p class="Pp"></p>
     <pre>
-<br/>
     SELECT [<b>select_field</b>]
-<br/>
     FROM [<b>table</b>]
-<br/>
     WHERE [<b>where_field</b>] = '%s'
-<br/>
           [<b>additional_conditions</b>]
     </pre>
     <p class="Pp">The '%s' in the <b>WHERE</b> clause expands to the escaped
@@ -226,7 +214,6 @@
       lookups and &quot;@domain&quot; lookups are not performed. This can
       significantly reduce the query load on the MySQL server.
     <pre>
-<br/>
     domain = postfix.org, hash:/etc/postfix/searchdomains
     </pre>
     <p class="Pp">It is best not to use SQL to store the domains eligible for
@@ -302,7 +289,6 @@
     of using a SELECT statement in the query, e.g.</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     <b>query</b> = CALL lookup('%s')
 </pre>
 <p class="Pp">The previously described '%' expansions can be used in the
@@ -321,15 +307,10 @@
 <pre>
 CREATE [DEFINER=`user`@`host`] PROCEDURE
 `lookup`(IN `param` VARCHAR(255))
-<br/>
     READS SQL DATA
-<br/>
     SQL SECURITY INVOKER
-<br/>
     BEGIN
-<br/>
         select goto from alias where address=param;
-<br/>
     END
 </pre>
 </section>
@@ -364,13 +345,9 @@ CREATE [DEFINER=`user`@`host`] PROCEDURE
     statement of the form:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     SELECT [<b>select_field</b>]
-<br/>
     FROM [<b>table</b>]
-<br/>
     WHERE [<b>where_field</b>] = '%s'
-<br/>
           [<b>additional_conditions</b>]
 </pre>
 <p class="Pp">The specifier %s is replaced by the search string, and is escaped
@@ -380,28 +357,24 @@ CREATE [DEFINER=`user`@`host`] PROCEDURE
   <dt id="select_field"><a class="permalink" href="#select_field"><b>select_field</b></a></dt>
   <dd>The SQL &quot;select&quot; parameter. Example:
     <pre>
-<br/>
     <b>select_field</b> = forw_addr
     </pre>
   </dd>
   <dt id="table"><a class="permalink" href="#table"><b>table</b></a></dt>
   <dd>The SQL &quot;select .. from&quot; table name. Example:
     <pre>
-<br/>
     <b>table</b> = mxaliases
     </pre>
   </dd>
   <dt id="where_field"><a class="permalink" href="#where_field"><b>where_field</b></a></dt>
   <dd>The SQL &quot;select .. where&quot; parameter. Example:
     <pre>
-<br/>
     <b>where_field</b> = alias
     </pre>
   </dd>
   <dt id="additional_conditions"><a class="permalink" href="#additional_conditions"><b>additional_conditions</b></a></dt>
   <dd>Additional conditions to the SQL query. Example:
     <pre>
-<br/>
     <b>additional_conditions</b> = AND status = 'paid'
     </pre>
   </dd>

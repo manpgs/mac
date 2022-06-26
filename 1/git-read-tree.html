@@ -32,11 +32,8 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <pre>
 <i>git read-tree</i> [[-m [--trivial] [--aggressive] | --reset | --prefix=&lt;prefix&gt;]
-<br/>
                 [-u [--exclude-per-directory=&lt;gitignore&gt;] | -i]]
-<br/>
                 [--index-output=&lt;file&gt;] [--no-sparse-checkout]
-<br/>
                 (--empty | &lt;tree-ish1&gt; [&lt;tree-ish2&gt; [&lt;tree-ish3&gt;]])
 </pre>
 <p class="Pp"></p>
@@ -182,71 +179,38 @@
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
-<br/>
         I                   H        M        Result
-<br/>
        -------------------------------------------------------
-<br/>
      0  nothing             nothing  nothing  (does not happen)
-<br/>
      1  nothing             nothing  exists   use M
-<br/>
      2  nothing             exists   nothing  remove path from index
-<br/>
      3  nothing             exists   exists,  use M if &quot;initial checkout&quot;,
-<br/>
                                      H == M   keep index otherwise
-<br/>
                                      exists,  fail
-<br/>
                                      H != M
-<br/>
         clean I==H  I==M
-<br/>
        ------------------
-<br/>
      4  yes   N/A   N/A     nothing  nothing  keep index
-<br/>
      5  no    N/A   N/A     nothing  nothing  keep index
-<br/>
      6  yes   N/A   yes     nothing  exists   keep index
-<br/>
      7  no    N/A   yes     nothing  exists   keep index
-<br/>
      8  yes   N/A   no      nothing  exists   fail
-<br/>
      9  no    N/A   no      nothing  exists   fail
-<br/>
      10 yes   yes   N/A     exists   nothing  remove path from index
-<br/>
      11 no    yes   N/A     exists   nothing  fail
-<br/>
      12 yes   no    N/A     exists   nothing  fail
-<br/>
      13 no    no    N/A     exists   nothing  fail
-<br/>
         clean (H==M)
-<br/>
        ------
-<br/>
      14 yes                 exists   exists   keep index
-<br/>
      15 no                  exists   exists   keep index
-<br/>
         clean I==H  I==M (H!=M)
-<br/>
        ------------------
-<br/>
      16 yes   no    no      exists   exists   fail
-<br/>
      17 no    no    no      exists   exists   fail
-<br/>
      18 yes   no    yes     exists   exists   keep index
-<br/>
      19 no    no    yes     exists   exists   keep index
-<br/>
      20 yes   yes   no      exists   exists   use M
-<br/>
      21 no    yes   no      exists   exists   fail
 </pre>
 </div>
@@ -389,7 +353,6 @@ $ LT=`git rev-parse FETCH_HEAD`
 $ git read-tree -m -u `git merge-base $JC $LT` $JC $LT
 $ git merge-index git-merge-one-file -a
 $ echo &quot;Merge with Linus&quot; | \
-<br/>
   git commit-tree `git write-tree` -p $JC -p $LT
 </pre>
 </div>

@@ -142,20 +142,13 @@
 <pre>
 int
 Tcl_AppInit(interp)
-<br/>
     Tcl_Interp *interp;     /* Interpreter for application. */
 {
-<br/>
     if (Itcl_Init(interp) == TCL_ERROR) {
-<br/>
         return TCL_ERROR;
-<br/>
     }
-<br/>
     if (Itcl_RegisterC(interp, &quot;foo&quot;, My_FooCmd) != TCL_OK) {
-<br/>
         return TCL_ERROR;
-<br/>
     }
 }
 </pre>
@@ -172,55 +165,34 @@ Tcl_AppInit(interp)
 <div class="Bd-indent">
 <pre>
 itcl::class File {
-<br/>
     private variable fid &quot;&quot;
-<br/>
     public variable name &quot;&quot;
-<br/>
     public variable access &quot;r&quot;
-<br/>
     constructor {args} {
-<br/>
         eval configure $args
-<br/>
     }
-<br/>
     destructor {
-<br/>
         if {$fid != &quot;&quot;} {
-<br/>
             close $fid
-<br/>
         }
-<br/>
     }
-<br/>
     method get {}
-<br/>
     method put {line}
-<br/>
     method eof {}
 }
 itcl::body File::get {} {
-<br/>
     return [gets $fid]
 }
 itcl::body File::put {line} {
-<br/>
     puts $fid $line
 }
 itcl::body File::eof {} {
-<br/>
     return [::eof $fid]
 }
 itcl::configbody File::name {
-<br/>
     if {$fid != &quot;&quot;} {
-<br/>
         close $fid
-<br/>
     }
-<br/>
     set fid [open $name $access]
 }
 #
@@ -229,7 +201,6 @@ itcl::configbody File::name {
 File x
 x configure -name /etc/passwd
 while {![x eof]} {
-<br/>
     puts &quot;=&gt; [x get]&quot;
 }
 itcl::delete object x

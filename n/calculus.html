@@ -282,31 +282,22 @@
       two sides. The equation has to be of the form (the
       &quot;conservative&quot; form):
     <pre>
-<br/>
          d      dy     d
-<br/>
          -- A(x)--  +  -- B(x)y + C(x)y  =  D(x)
-<br/>
          dx     dx     dx
     </pre>
     Ordinarily, such an equation would be written as:
     <pre>
-<br/>
              d2y        dy
-<br/>
          a(x)---  + b(x)-- + c(x) y  =  D(x)
-<br/>
              dx2        dx
     </pre>
     The first form is easier to discretise (by integrating over a finite volume)
       than the second form. The relation between the two forms is fairly
       straightforward:
     <pre>
-<br/>
          A(x)  =  a(x)
-<br/>
          B(x)  =  b(x) - a'(x)
-<br/>
          C(x)  =  c(x) - B'(x)  =  c(x) - b'(x) + a''(x)
     </pre>
     Because of the differentiation, however, it is much easier to ask the user
@@ -356,7 +347,6 @@
     <i>initval</i></dt>
   <dd>Determine the root of an equation given by
     <pre>
-<br/>
     func(x) = 0
     </pre>
     using the method of Newton-Raphson. The procedure takes the following
@@ -424,47 +414,26 @@
     the named procedure must be visible in the calling procedure. For
   instance:</p>
 <pre>
-<br/>
     namespace eval ::mySpace {
-<br/>
        namespace export calcfunc
-<br/>
        proc calcfunc { x } { return $x }
-<br/>
     }
-<br/>
     #
-<br/>
     # Use a fully-qualified name
-<br/>
     #
-<br/>
     namespace eval ::myCalc {
-<br/>
        proc detIntegral { begin end } {
-<br/>
           return [integral $begin $end 100 ::mySpace::calcfunc]
-<br/>
        }
-<br/>
     }
-<br/>
     #
-<br/>
     # Import the name
-<br/>
     #
-<br/>
     namespace eval ::myCalc {
-<br/>
        namespace import ::mySpace::calcfunc
-<br/>
        proc detIntegral { begin end } {
-<br/>
           return [integral $begin $end 100 calcfunc]
-<br/>
        }
-<br/>
     }
 </pre>
 <p class="Pp">Enhancements for the second-order boundary value problem:</p>
@@ -502,35 +471,25 @@ y' = -ry - wx
 <p class="Pp"></p>
 <pre>
 proc dampened_oscillator { t xvec } {
-<br/>
    set x  [lindex $xvec 0]
-<br/>
    set x1 [lindex $xvec 1]
-<br/>
    return [list $x1 [expr {-$x1-$x}]]
 }
 set xvec   { 1.0 0.0 }
 set t      0.0
 set tstep  0.1
 for { set i 0 } { $i &lt; 20 } { incr i } {
-<br/>
    set result [::math::calculus::eulerStep $t $tstep $xvec dampened_oscillator]
-<br/>
    puts &quot;Result ($t): $result&quot;
-<br/>
    set t      [expr {$t+$tstep}]
-<br/>
    set xvec   $result
 }
 </pre>
 <p class="Pp">Suppose we have the boundary value problem:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
     Dy'' + ky = 0
-<br/>
     x = 0: y = 1
-<br/>
     x = L: y = 0
 </pre>
 <p class="Pp">This boundary value problem could originate from the diffusion of
@@ -538,19 +497,12 @@ for { set i 0 } { $i &lt; 20 } { incr i } {
 <p class="Pp">It can be solved with the following fragment:</p>
 <p class="Pp"></p>
 <pre>
-<br/>
    proc coeffs { x } { return [list $::Diff 0.0 $::decay] }
-<br/>
    proc force  { x } { return 0.0 }
-<br/>
    set Diff   1.0e-2
-<br/>
    set decay  0.0001
-<br/>
    set length 100.0
-<br/>
    set y [::math::calculus::boundaryValueSecondOrder \
-<br/>
       coeffs force {0.0 1.0} [list $length 0.0] 100]
 </pre>
 </section>
