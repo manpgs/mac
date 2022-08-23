@@ -1,5 +1,6 @@
 # MANDIR=/usr/share/man
 MANDIR = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man
+BASE_URL = https://manp.gs/mac/
 
 html = $(shell cd "$(MANDIR)" && find * ! -type d ! -name pcap_compile.3pcap.in | \
 	sed -E '\
@@ -18,6 +19,7 @@ MANDIRS=$(shell cat mandirs || :)
 
 all: mandirs $(dirs) index.html
 	for dir in $(MANDIRS); do $(MAKE) MANDIR=$$dir html; done
+	$(MAKE) sitemap.xml
 
 mandirs:
 	-find /Applications/Xcode.app -path '*/share/man' >mandirs
@@ -28,7 +30,7 @@ whatis: mandirs
 	/usr/libexec/makewhatis -o "$@" $(MANDIRS)
 
 clean:
-	$(RM) -r $(dirs) index.html whatis mandirs
+	$(RM) -r $(dirs) index.html sitemap.xml whatis mandirs
 
 $(dirs):
 	mkdir -p "$@"
@@ -49,6 +51,8 @@ template = <!doctype html>\n<html lang="en">\n\
 \40\40\40\40\40<h1>%s</h1>\n%s\n\
 \40\40\40</main>\n\
 \40</body>\n</html>\n
+
+sitemap = <?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s\n</urlset>\n
 
 desc = desc() { \
 case $$1 in \
@@ -79,6 +83,19 @@ index.html: $(addsuffix /index.htm,$(dirs))
 			printf '      <h2><a href="%s">%s &mdash; %s</a></h2>\n' \
 				"$$s" "$$s" "$$(desc "$$s")"; \
 		done; \
+	)" > "$@"
+
+sitemap.xml:
+	printf '$(sitemap)' "$$(\
+		(echo "" && printf '%s/\n' $(dirs)) | while read dir; do \
+			printf "  <url><loc>%s%s</loc></url>\n" "$(BASE_URL)" "$$dir"; \
+		done; \
+		find $(dirs) -type f ! -name index.htm | sort | awk '{ \
+			sub(/\.[^.]+$$/, ""); \
+			gsub(/ /, "%20"); \
+			gsub(/\[/, "%5B"); \
+			printf "  <url><loc>%s%s</loc></url>\n", "$(BASE_URL)", $$0; \
+		}'; \
 	)" > "$@"
 
 %/index.htm: whatis
