@@ -5,9 +5,9 @@
        Title: git-blame
       Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
    Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-        Date: 06/06/2021
+        Date: 06/27/2022
       Manual: Git Manual
-      Source: Git 2.32.0
+      Source: Git 2.37.0
     Language: English
    -->
 <head>
@@ -35,8 +35,8 @@
 <i>git blame</i> [-c] [-b] [-l] [--root] [-t] [-f] [-n] [-s] [-e] [-p] [-w] [--incremental]
             [-L &lt;range&gt;] [-S &lt;revs-file&gt;] [-M] [-C] [-C] [-C] [--since=&lt;date&gt;]
             [--ignore-rev &lt;rev&gt;] [--ignore-revs-file &lt;file&gt;]
-            [--progress] [--abbrev=&lt;n&gt;] [&lt;rev&gt; | --contents &lt;file&gt; | --reverse &lt;rev&gt;..&lt;rev&gt;]
-            [--] &lt;file&gt;
+            [--color-lines] [--color-by-age] [--progress] [--abbrev=&lt;n&gt;]
+            [&lt;rev&gt; | --contents &lt;file&gt; | --reverse &lt;rev&gt;..&lt;rev&gt;] [--] &lt;file&gt;
 </pre>
 <p class="Pp"></p>
 </section>
@@ -217,6 +217,16 @@ ea4c7f9bf69e781dd0cd88d2bccb2bf5cc15c9a7 git-blame: Make the output
   <b>blame.ignoreRevsFile</b> config option. An empty file name,
   <b>&quot;&quot;</b>, will clear the list of revs from previously processed
   files.</div>
+<p class="Pp">--color-lines</p>
+<div class="Bd-indent">Color line annotations in the default format differently
+  if they come from the same commit as the preceding line. This makes it easier
+  to distinguish code blocks introduced by different commits. The color defaults
+  to cyan and can be adjusted using the <b>color.blame.repeatedLines</b> config
+  option.</div>
+<p class="Pp">--color-by-age</p>
+<div class="Bd-indent">Color line annotations depending on the age of the line
+  in the default format. The <b>color.blame.highlightRecent</b> config option
+  controls what color is used for each range of age.</div>
 <p class="Pp">-h</p>
 <div class="Bd-indent">Show help message.</div>
 <p class="Pp">-c</p>
@@ -251,6 +261,21 @@ ea4c7f9bf69e781dd0cd88d2bccb2bf5cc15c9a7 git-blame: Make the output
   the abbreviated object name, use &lt;m&gt;+1 digits, where &lt;m&gt; is at
   least &lt;n&gt; but ensures the commit object names are unique. Note that 1
   column is used for a caret to mark the boundary commit.</div>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="THE_DEFAULT_FORMAT"><a class="permalink" href="#THE_DEFAULT_FORMAT">THE
+  DEFAULT FORMAT</a></h1>
+<p class="Pp">When neither <b>--porcelain</b> nor <b>--incremental</b> option is
+    specified, <b>git blame</b> will output annotation for each line with:</p>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;abbreviated object name for the commit the line
+  came from;</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;author ident (by default author name and date,
+  unless <b>-s</b> or <b>-e</b> is specified); and</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;line number</div>
+<p class="Pp">before the line contents.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="THE_PORCELAIN_FORMAT"><a class="permalink" href="#THE_PORCELAIN_FORMAT">THE
@@ -429,8 +454,8 @@ For people who do parsing: to make it more robust, just ignore any lines between
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">06/06/2021</td>
-    <td class="foot-os">Git 2.32.0</td>
+    <td class="foot-date">06/27/2022</td>
+    <td class="foot-os">Git 2.37.0</td>
   </tr>
 </table>
 </body>

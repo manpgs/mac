@@ -5,9 +5,9 @@
        Title: git-diff-index
       Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
    Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-        Date: 06/06/2021
+        Date: 06/27/2022
       Manual: Git Manual
-      Source: Git 2.32.0
+      Source: Git 2.37.0
     Language: English
    -->
 <head>
@@ -31,7 +31,7 @@
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <pre>
-<i>git diff-index</i> [-m] [--cached] [--merge-base] [&lt;common diff options&gt;] &lt;tree-ish&gt; [&lt;path&gt;...]
+<i>git diff-index</i> [-m] [--cached] [--merge-base] [&lt;common-diff-options&gt;] &lt;tree-ish&gt; [&lt;path&gt;...]
 </pre>
 <p class="Pp"></p>
 </section>
@@ -420,10 +420,16 @@
     deletion part of a delete/create pair.</p>
 </div>
 <p class="Pp">-l&lt;num&gt;</p>
-<div class="Bd-indent">The <b>-M</b> and <b>-C</b> options require O(n^2)
-  processing time where n is the number of potential rename/copy targets. This
-  option prevents rename/copy detection from running if the number of
-  rename/copy targets exceeds the specified number.</div>
+<div class="Bd-indent">The <b>-M</b> and <b>-C</b> options involve some
+  preliminary steps that can detect subsets of renames/copies cheaply, followed
+  by an exhaustive fallback portion that compares all remaining unpaired
+  destinations to all relevant sources. (For renames, only remaining unpaired
+  sources are relevant; for copies, all original sources are relevant.) For N
+  sources and destinations, this exhaustive check is O(N^2). This option
+  prevents the exhaustive portion of rename/copy detection from running if the
+  number of source/destination files involved exceeds the specified number.
+  Defaults to diff.renameLimit. Note that a value of 0 is treated as
+  unlimited.</div>
 <p class="Pp">--diff-filter=[(A|C|D|M|R|T|U|X|B)...[*]]</p>
 <div class="Bd-indent">Select only files that are Added (<b>A</b>), Copied
   (<b>C</b>), Deleted (<b>D</b>), Modified (<b>M</b>), Renamed (<b>R</b>), have
@@ -436,11 +442,9 @@
   selected.
 <p class="Pp">Also, these upper-case letters can be downcased to exclude. E.g.
     <b>--diff-filter=ad</b> excludes added and deleted paths.</p>
-<p class="Pp">Note that not all diffs can feature all types. For instance, diffs
-    from the index to the working tree can never have Added entries (because the
-    set of paths included in the diff is limited by what is in the index).
-    Similarly, copied and renamed entries cannot appear if detection for those
-    types is disabled.</p>
+<p class="Pp">Note that not all diffs can feature all types. For instance,
+    copied and renamed entries cannot appear if detection for those types is
+    disabled.</p>
 </div>
 <p class="Pp">-S&lt;string&gt;</p>
 <div class="Bd-indent">Look for differences that change the number of
@@ -720,7 +724,8 @@ unmerged       :000000 000000 0000000 0000000 U file6
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;R: renaming of a file</div>
 <p class="Pp"></p>
-<div class="Bd-indent">&#x2022;T: change in the type of the file</div>
+<div class="Bd-indent">&#x2022;T: change in the type of the file (regular file,
+  symbolic link or submodule)</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;U: file is unmerged (you must complete the merge
   before it can be committed)</div>
@@ -1219,8 +1224,8 @@ torvalds@ppc970:~/v2.6/linux&gt; git diff-index --abbrev HEAD
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">06/06/2021</td>
-    <td class="foot-os">Git 2.32.0</td>
+    <td class="foot-date">06/27/2022</td>
+    <td class="foot-os">Git 2.37.0</td>
   </tr>
 </table>
 </body>
