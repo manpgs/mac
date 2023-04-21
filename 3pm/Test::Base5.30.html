@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Base(3)</title>
 </head>
@@ -30,36 +31,26 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">A new test module:</p>
 <p class="Pp"></p>
-<pre>
-    # lib/MyProject/Test.pm
+<pre>    # lib/MyProject/Test.pm
     package MyProject::Test;
     use Test::Base -Base;
-
     use MyProject;
-
     package MyProject::Test::Filter;
     use Test::Base::Filter -base;
-
     sub my_filter {
         return MyProject-&gt;do_something(shift);
     }
 </pre>
 <p class="Pp">A sample test:</p>
 <p class="Pp"></p>
-<pre>
-    # t/sample.t
+<pre>    # t/sample.t
     use MyProject::Test;
-
     plan tests =&gt; 1 * blocks;
-
     run_is input =&gt; 'expected';
-
     sub local_filter {
         s/my/your/;
     }
-
     __END__
-
     === Test one (the name of the test)
     --- input my_filter local_filter
     my
@@ -68,7 +59,6 @@
     --- expected
     expected
     output
-
     === Test two
     This is an optional description
     of this particular test.
@@ -92,8 +82,7 @@
 <p class="Pp">Test::Base gives you a way to write your own test framework base
     class that <i>is</i> trivial. In fact it is as simple as two lines:</p>
 <p class="Pp"></p>
-<pre>
-    package MyTestFramework;
+<pre>    package MyTestFramework;
     use Test::Base -Base;
 </pre>
 <p class="Pp">A module called
@@ -114,8 +103,7 @@
     some clean ways for you to express your input and expected output data, so
     you can spend your</p>
 <p class="Pp"></p>
-<pre>
-      time focusing on that rather than your code scaffolding.
+<pre>      time focusing on that rather than your code scaffolding.
 </pre>
 </section>
 <section class="Sh">
@@ -160,17 +148,14 @@
         blocks that contain a particular named data section. Otherwise
         <span class="Li">&quot;blocks&quot;</span> returns all blocks.</p>
     <p class="Pp"></p>
-    <pre>
-    my @all_of_my_blocks = blocks;
-
+    <pre>    my @all_of_my_blocks = blocks;
     my @just_the_foo_blocks = blocks('foo');
     </pre>
   </dd>
   <dt>&quot;next_block()&quot;</dt>
   <dd>You can use the next_block function to iterate over all the blocks.
     <p class="Pp"></p>
-    <pre>
-    while (my $block = next_block) {
+    <pre>    while (my $block = next_block) {
         ...
     }
     </pre>
@@ -191,8 +176,7 @@
         the specification. It passes the current block object to the
       subroutine.</p>
     <p class="Pp"></p>
-    <pre>
-    run {
+    <pre>    run {
         my $block = shift;
         is(process($block-&gt;foo), $block-&gt;bar, $block-&gt;name);
     };
@@ -205,8 +189,7 @@
       pass the names of any two data sections that exist in every block, and it
       will loop over every block comparing the two sections.
     <p class="Pp"></p>
-    <pre>
-    run_is 'foo', 'bar';
+    <pre>    run_is 'foo', 'bar';
     </pre>
     <p class="Pp">If no data sections are given
         <span class="Li">&quot;run_is&quot;</span> will try to detect them
@@ -238,8 +221,7 @@
       <span class="Li">&quot;qr{}&quot;</span> object or a data section that has
       been filtered into a regular expression.
     <p class="Pp"></p>
-    <pre>
-    run_like 'foo', qr{&lt;html.*};
+    <pre>    run_like 'foo', qr{&lt;html.*};
     run_like 'foo', 'match';
     </pre>
   </dd>
@@ -247,8 +229,7 @@
   <dd>The <span class="Li">&quot;run_unlike&quot;</span> function is similar to
       <span class="Li">&quot;run_like&quot;</span>, except the opposite.
     <p class="Pp"></p>
-    <pre>
-    run_unlike 'foo', qr{&lt;html.*};
+    <pre>    run_unlike 'foo', qr{&lt;html.*};
     run_unlike 'foo', 'no_match';
     </pre>
   </dd>
@@ -281,8 +262,7 @@
     <p class="Pp">You can also specify a hash ref that maps data section names
         to an array ref of filters for that data type.</p>
     <p class="Pp"></p>
-    <pre>
-    filters {
+    <pre>    filters {
         xxx =&gt; [qw(chomp lines)],
         yyy =&gt; ['yaml'],
         zzz =&gt; 'eval',
@@ -297,8 +277,7 @@
       the filtering. Calling this function with no arguments or a true value,
       causes the filtering to be delayed.
     <p class="Pp"></p>
-    <pre>
-    use Test::Base;
+    <pre>    use Test::Base;
     filters_delay;
     plan tests =&gt; 1 * blocks;
     for my $block (blocks) {
@@ -317,13 +296,11 @@
   <dt>&quot;filter_arguments()&quot;</dt>
   <dd>Return the arguments after the equals sign on a filter.
     <p class="Pp"></p>
-    <pre>
-    sub my_filter {
+    <pre>    sub my_filter {
         my $args = filter_arguments;
         # is($args, 'whazzup');
         ...
     }
-
     __DATA__
     === A test
     --- data my_filter=whazzup
@@ -332,8 +309,7 @@
   <dt>&quot;tie_output()&quot;</dt>
   <dd>You can capture STDOUT and STDERR for operations with this function:
     <p class="Pp"></p>
-    <pre>
-    my $out = '';
+    <pre>    my $out = '';
     tie_output(*STDOUT, $out);
     print &quot;Hey!\n&quot;;
     print &quot;Che!\n&quot;;
@@ -370,8 +346,7 @@
     after the block delimiter but before the first data section.</p>
 <p class="Pp">Here is the basic layout of a specification:</p>
 <p class="Pp"></p>
-<pre>
-    === &lt;block name 1&gt;
+<pre>    === &lt;block name 1&gt;
     &lt;optional block description lines&gt;
     --- &lt;data section name 1&gt; &lt;filter-1&gt; &lt;filter-2&gt; &lt;filter-n&gt;
     &lt;test data lines&gt;
@@ -379,7 +354,6 @@
     &lt;test data lines&gt;
     --- &lt;data section name n&gt; &lt;filter-1&gt; &lt;filter-2&gt; &lt;filter-n&gt;
     &lt;test data lines&gt;
-
     === &lt;block name 2&gt;
     &lt;optional block description lines&gt;
     --- &lt;data section name 1&gt; &lt;filter-1&gt; &lt;filter-2&gt; &lt;filter-n&gt;
@@ -391,36 +365,26 @@
 </pre>
 <p class="Pp">Here is a code example:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Base;
-
+<pre>    use Test::Base;
     delimiters qw(### :::);
-
     # test code here
-
     __END__
-
     ### Test One
     We want to see if foo and bar
     are really the same...
     ::: foo
     a foo line
     another foo line
-
     ::: bar
     a bar line
     another bar line
-
     ### Test Two
-
     ::: foo
     some foo line
     some other foo line
-
     ::: bar
     some bar line
     some other bar line
-
     ::: baz
     some baz line
     some other baz line
@@ -435,8 +399,7 @@
 <p class="Pp">There are some special data section names used for control
     purposes:</p>
 <p class="Pp"></p>
-<pre>
-    --- SKIP
+<pre>    --- SKIP
     --- ONLY
     --- LAST
 </pre>
@@ -473,23 +436,16 @@
     name on a data section delimiter line.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Base;
-
+<pre>    use Test::Base;
     filters qw(foo bar);
     filters { perl =&gt; 'strict' };
-
     sub upper { uc(shift) }
-
     __END__
-
     === Test one
     --- foo trim chomp upper
     ...
-
     --- bar -norm
     ...
-
     --- perl eval dumper
     my @foo = map {
         - $_;
@@ -507,8 +463,7 @@
     kind of output.</p>
 <p class="Pp">For example, consider the following filter list:</p>
 <p class="Pp"></p>
-<pre>
-    norm trim lines chomp array dumper eval
+<pre>    norm trim lines chomp array dumper eval
 </pre>
 <p class="Pp">The data always starts out as a single scalar string.
     <span class="Li">&quot;norm&quot;</span> takes a scalar and returns a
@@ -546,15 +501,11 @@
     in and you return whatever you want the new value to be.</p>
 <p class="Pp">Here is a self explanatory example:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Base;
-
+<pre>    use Test::Base;
     filters 'foo', 'bar=xyz';
-
     sub foo {
         transform(shift);
     }
-
     sub Test::Base::Filter::bar {
         my $self = shift;       # The Test::Base::Filter object
         my $data = shift;
@@ -572,8 +523,7 @@
 <p class="Pp">Note that filters defined in the
     <span class="Li">&quot;main&quot;</span> namespace can look like:</p>
 <p class="Pp"></p>
-<pre>
-    sub filter9 {
+<pre>    sub filter9 {
         s/foo/bar/;
     }
 </pre>
@@ -594,16 +544,12 @@
     oriented stuff too. Just create new Test::Base objects and use the functions
     as methods.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Base;
+<pre>    use Test::Base;
     my $blocks1 = Test::Base-&gt;new;
     my $blocks2 = Test::Base-&gt;new;
-
     $blocks1-&gt;delimiters(qw(!!! @@@))-&gt;spec_file('test1.txt');
     $blocks2-&gt;delimiters(qw(### $$$))-&gt;spec_string($test_data);
-
     plan tests =&gt; $blocks1-&gt;blocks + $blocks2-&gt;blocks;
-
     # ... etc
 </pre>
 </section>
@@ -644,27 +590,20 @@
     pieces of your test framework.</p>
 <p class="Pp">Here is an example of a subclass:</p>
 <p class="Pp"></p>
-<pre>
-    package MyTestStuff;
+<pre>    package MyTestStuff;
     use Test::Base -Base;
-
     our @EXPORT = qw(some_func);
-
     sub some_func {
         (my ($self), @_) = find_my_self(@_);
         ...
     }
-
     package MyTestStuff::Block;
     use base 'Test::Base::Block';
-
     sub desc {
         $self-&gt;description(@_);
     }
-
     package MyTestStuff::Filter;
     use base 'Test::Base::Filter';
-
     sub upper {
         $self-&gt;assert_scalar(@_);
         uc(shift);
@@ -684,14 +623,10 @@
     Module::Install::TestBase takes care of that.</p>
 <p class="Pp">Just write a Makefile.PL that looks something like this:</p>
 <p class="Pp"></p>
-<pre>
-    use inc::Module::Install;
-
+<pre>    use inc::Module::Install;
     name            'Foo';
     all_from        'lib/Foo.pm';
-
     use_test_base;
-
     WriteAll;
 </pre>
 <p class="Pp">The line with <span class="Li">&quot;use_test_base&quot;</span>
@@ -703,8 +638,7 @@
   COOL FEATURES</a></h1>
 <p class="Pp">Test::Base automatically adds:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
 </pre>
 <p class="Pp">to all of your test scripts and Test::Base subclasses. A Spiffy

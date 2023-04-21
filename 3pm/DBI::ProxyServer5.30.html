@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::ProxyServer(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use DBI::ProxyServer;
+<pre>    use DBI::ProxyServer;
     DBI::ProxyServer::main(@ARGV);
 </pre>
 </section>
@@ -72,8 +72,7 @@
       sockets, if your drivers are using them. For example, with MySQL, a config
       file might contain the following lines:
     <p class="Pp"></p>
-    <pre>
-    my $rootdir = '/var/dbiproxy';
+    <pre>    my $rootdir = '/var/dbiproxy';
     my $unixsockdir = '/tmp';
     my $unixsockfile = 'mysql.sock';
     foreach $dir ($rootdir, &quot;$rootdir$unixsockdir&quot;) {
@@ -82,7 +81,6 @@
     link(&quot;$unixsockdir/$unixsockfile&quot;,
          &quot;$rootdir$unixsockdir/$unixsockfile&quot;);
     require DBD::mysql;
-
     {
         'chroot' =&gt; $rootdir,
         ...
@@ -207,8 +205,7 @@
 <p class="Pp">Additionally the server offers you query restrictions. Suggest the
     following client list:</p>
 <p class="Pp"></p>
-<pre>
-    'clients' =&gt; [
+<pre>    'clients' =&gt; [
         { 'mask' =&gt; '^admin\.company\.com$',
           'accept' =&gt; 1,
           'users' =&gt; [ 'root', 'wwwrun' ],
@@ -227,13 +224,11 @@
     admin.company.com, executing arbitrary queries, but only wwwrun may connect
     from other hosts and is restricted to</p>
 <p class="Pp"></p>
-<pre>
-    $sth-&gt;prepare(&quot;select&quot;);
+<pre>    $sth-&gt;prepare(&quot;select&quot;);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    $sth-&gt;prepare(&quot;insert&quot;);
+<pre>    $sth-&gt;prepare(&quot;insert&quot;);
 </pre>
 <p class="Pp">which in fact are &quot;SELECT * FROM foo&quot; or &quot;INSERT
     INTO foo VALUES (?, ?, ?)&quot;.</p>
@@ -252,8 +247,7 @@
 <p class="Pp">Create a configuration file &quot;proxy_oracle.cfg&quot; at the
     dbproxy-server:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         # This shall run in a shell or a DOS-window 
         # facility =&gt; 'daemon',
         pidfile =&gt; 'your_dbiproxy.pid',
@@ -261,7 +255,6 @@
         debug =&gt; 0,
         mode =&gt; 'single',
         localport =&gt; '12400',
-
         # Access control, the first match in this list wins!
         # So the order is important
         clients =&gt; [
@@ -269,7 +262,6 @@
                 # the most specialized rules for single machines/users are 1st
                 # then the denying rules
                 # then the rules about whole networks
-
                 # rule: internal_webserver
                 # desc: to get statistical information
                 {
@@ -287,13 +279,11 @@
                                 statistic_area =&gt; 'select count(*) from e01admin.e01e203 where geb_bezei like ?',
                         }
                 },
-
                 # rule: internal_bad_guy_1
                 {
                         mask =&gt; '^10\.95\.81\.1$',
                         accept =&gt; 0,
                 },
-
                 # rule: employee_workplace
                 # desc: get detailed information
                 {
@@ -310,7 +300,6 @@
                                 search_area =&gt; 'select gebiettyp, geb_bezei from e01admin.e01e203 where geb_bezei like ? or geb_bezei like ?',
                         }
                 },
-
                 # rule: internal_bad_guy_2 
                 # This does NOT work, because rule &quot;employee_workplace&quot; hits
                 # with its ip-address-mask of the whole network
@@ -324,8 +313,7 @@
 </pre>
 <p class="Pp">Start the proxyserver like this:</p>
 <p class="Pp"></p>
-<pre>
-        rem well-set Oracle_home needed for Oracle
+<pre>        rem well-set Oracle_home needed for Oracle
         set ORACLE_HOME=d:\oracle\ora81
         dbiproxy --configfile proxy_oracle.cfg
 </pre>
@@ -335,17 +323,13 @@
 <p class="Pp">Call a program &quot;dbish&quot; from your commandline. I take the
     machine from rule &quot;internal_webserver&quot;</p>
 <p class="Pp"></p>
-<pre>
-        dbish &quot;dbi:Proxy:hostname=oracle.zdf;port=12400;dsn=dbi:Oracle:e01&quot; informationdesk xxx
+<pre>        dbish &quot;dbi:Proxy:hostname=oracle.zdf;port=12400;dsn=dbi:Oracle:e01&quot; informationdesk xxx
 </pre>
 <p class="Pp">There will be a shell-prompt:</p>
 <p class="Pp"></p>
-<pre>
-        informationdesk@dbi...&gt; alive
-
+<pre>        informationdesk@dbi...&gt; alive
         Current statement buffer (enter '/'...):
         alive
-
         informationdesk@dbi...&gt; /
         COUNT(*)
         '1'
@@ -357,13 +341,10 @@
   the connection with a perl-script</a></h2>
 <p class="Pp">Create a perl-script like this:</p>
 <p class="Pp"></p>
-<pre>
-        # file: oratest.pl
+<pre>        # file: oratest.pl
         # call me like this: perl oratest.pl user password
-
         use strict;
         use DBI;
-
         my $user = shift || die &quot;Usage: $0 user password&quot;;
         my $pass = shift || die &quot;Usage: $0 user password&quot;;
         my $config = {
@@ -373,40 +354,32 @@
         my $dsn = sprintf &quot;dbi:Proxy:%s;dsn=%s&quot;,
                 $config-&gt;{proxy},
                 $config-&gt;{dsn_at_proxy};
-
         my $dbh = DBI-&gt;connect( $dsn, $user, $pass )
                 || die &quot;connect did not work: $DBI::errstr&quot;;
-
         my $sql = &quot;search_city&quot;;
         printf &quot;%s\n%s\n%s\n&quot;, &quot;=&quot;x40, $sql, &quot;=&quot;x40;
         my $cur = $dbh-&gt;prepare($sql);
         $cur-&gt;bind_param(1,'905%');
         &amp;show_result ($cur);
-
         my $sql = &quot;search_area&quot;;
         printf &quot;%s\n%s\n%s\n&quot;, &quot;=&quot;x40, $sql, &quot;=&quot;x40;
         my $cur = $dbh-&gt;prepare($sql);
         $cur-&gt;bind_param(1,'Pfarr%');
         $cur-&gt;bind_param(2,'Bronnamberg%');
         &amp;show_result ($cur);
-
         my $sql = &quot;statistic_area&quot;;
         printf &quot;%s\n%s\n%s\n&quot;, &quot;=&quot;x40, $sql, &quot;=&quot;x40;
         my $cur = $dbh-&gt;prepare($sql);
         $cur-&gt;bind_param(1,'Pfarr%');
         &amp;show_result ($cur);
-
         $dbh-&gt;disconnect;
         exit;
-
-
         sub show_result {
                 my $cur = shift;
                 unless ($cur-&gt;execute()) {
                         print &quot;Could not execute\n&quot;; 
                         return; 
                 }
-
                 my $rownum = 0;
                 while (my @row = $cur-&gt;fetchrow_array()) {
                         printf &quot;Row is: %s\n&quot;, join(&quot;, &quot;,@row);
@@ -420,8 +393,7 @@
 </pre>
 <p class="Pp">The result</p>
 <p class="Pp"></p>
-<pre>
-        C:\&gt;perl oratest.pl informationdesk xxx
+<pre>        C:\&gt;perl oratest.pl informationdesk xxx
         ========================================
         search_city
         ========================================
@@ -470,8 +442,7 @@
     connection so that only allowed queries are possible.</p>
 <p class="Pp">If you include an sql-section in your config-file like this:</p>
 <p class="Pp"></p>
-<pre>
-        sql =&gt; {
+<pre>        sql =&gt; {
                 alive =&gt; 'select count(*) from dual',
                 statistic_area =&gt; 'select count(*) from e01admin.e01e203 where geb_bezei like ?',
         }
@@ -482,8 +453,7 @@
     replaced by the real query. So you can run a query for
   &quot;alive&quot;:</p>
 <p class="Pp"></p>
-<pre>
-        my $sql = &quot;alive&quot;;
+<pre>        my $sql = &quot;alive&quot;;
         my $cur = $dbh-&gt;prepare($sql);
         ...
 </pre>
@@ -492,8 +462,7 @@
     where-part of the query through a question mark and bind it as a parameter
     to the query.</p>
 <p class="Pp"></p>
-<pre>
-        my $sql = &quot;statistic_area&quot;;
+<pre>        my $sql = &quot;statistic_area&quot;;
         my $cur = $dbh-&gt;prepare($sql);
         $cur-&gt;bind_param(1,'905%');
         # A second parameter would be called like this:
@@ -501,14 +470,12 @@
 </pre>
 <p class="Pp">The result is this query:</p>
 <p class="Pp"></p>
-<pre>
-        select count(*) from e01admin.e01e203 
+<pre>        select count(*) from e01admin.e01e203 
         where geb_bezei like '905%'
 </pre>
 <p class="Pp">Don't try to put parameters into the sql-query like this:</p>
 <p class="Pp"></p>
-<pre>
-        # Does not work like you think.
+<pre>        # Does not work like you think.
         # Only the first word of the query is parsed,
         # so it's changed to &quot;statistic_area&quot;, the rest is omitted.
         # You _have_ to work with $cur-&gt;bind_param.
@@ -534,12 +501,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
-<pre>
-    Copyright (c) 1997    Jochen Wiedmann
+<pre>    Copyright (c) 1997    Jochen Wiedmann
                           Am Eisteich 9
                           72555 Metzingen
                           Germany
-
                           Email: joe@ispsoft.de
                           Phone: +49 7123 14881
 </pre>

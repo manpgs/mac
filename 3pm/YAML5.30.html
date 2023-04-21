@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>YAML(3)</title>
 </head>
@@ -46,9 +47,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use YAML;
-
+<pre>    use YAML;
     # Load a YAML stream of 3 YAML documents into Perl data structures.
     my ($hashref, $arrayref, $string) = Load(&lt;&lt;'...');
     ---
@@ -69,17 +68,13 @@
     ain't! YAML is really a data serialization language. But if you want
     to think of it as a markup, that's OK with me. A lot of people try
     to use XML as a serialization format.
-
     &quot;YAML&quot; is catchy and fun to say. Try it. &quot;YAML, YAML, YAML!!!&quot;
     ...
-
     # Dump the Perl data structures back into YAML.
     print Dump($string, $arrayref, $hashref);
-
     # YAML::Dump is used the same way you'd use Data::Dumper::Dumper
     use Data::Dumper;
     print Dumper($string, $arrayref, $hashref);
-
     Since version 1.25 YAML.pm supports trailing comments.
 </pre>
 </section>
@@ -205,8 +200,7 @@
     you don't want functions to be imported, just use YAML with an empty import
     list:</p>
 <p class="Pp"></p>
-<pre>
-    use YAML ();
+<pre>    use YAML ();
 </pre>
 <dl class="Bl-tag">
   <dt id="Dump(list"><a class="permalink" href="#Dump(list">Dump(list-of-Perl-data-structures)</a></dt>
@@ -227,8 +221,7 @@
 <p class="Pp">These functions are not exported by default but you can request
     them in an import list like this:</p>
 <p class="Pp"></p>
-<pre>
-    use YAML qw'freeze thaw Bless';
+<pre>    use YAML qw'freeze thaw Bless';
 </pre>
 <dl class="Bl-tag">
   <dt id="freeze()"><a class="permalink" href="#freeze()"><b>freeze()</b> and
@@ -256,8 +249,7 @@
         Furthermore the keys must be dumped in a certain order. Here's how you
         do that:</p>
     <p class="Pp"></p>
-    <pre>
-    use YAML qw(Dump Bless);
+    <pre>    use YAML qw(Dump Bless);
     $hash = {apple =&gt; 'good', banana =&gt; 'bad', cauliflower =&gt; 'ugly'};
     print Dump $hash;
     Bless($hash)-&gt;keys(['banana', 'apple']);
@@ -265,8 +257,7 @@
     </pre>
     <p class="Pp">produces:</p>
     <p class="Pp"></p>
-    <pre>
-    ---
+    <pre>    ---
     apple: good
     banana: bad
     cauliflower: ugly
@@ -279,8 +270,7 @@
         <b>YAML::Node::ynode()</b> returns. So another way to do the above
         example is:</p>
     <p class="Pp"></p>
-    <pre>
-    use YAML qw(Dump Bless);
+    <pre>    use YAML qw(Dump Bless);
     use YAML::Node;
     $hash = {apple =&gt; 'good', banana =&gt; 'bad', cauliflower =&gt; 'ugly'};
     print Dump $hash;
@@ -307,8 +297,7 @@
 <p class="Pp">For example, to change the indentation width, do something
   like:</p>
 <p class="Pp"></p>
-<pre>
-    local $YAML::Indent = 3;
+<pre>    local $YAML::Indent = 3;
 </pre>
 <p class="Pp">The current options are:</p>
 <dl class="Bl-tag">
@@ -321,8 +310,7 @@
     <p class="Pp">When set to true, YAML nodes with special tags will be
         automatocally blessed into objects:</p>
     <p class="Pp"></p>
-    <pre>
-    - !perl/hash:Foo::Bar
+    <pre>    - !perl/hash:Foo::Bar
         foo: 42
     </pre>
     <p class="Pp">When loading untrusted YAML, you should disable this option by
@@ -375,8 +363,7 @@
     <p class="Pp">Tells YAML.pm whether to include the YAML version on the
         separator/header.</p>
     <p class="Pp"></p>
-    <pre>
-    --- %YAML:1.0
+    <pre>    --- %YAML:1.0
     </pre>
   </dd>
   <dt id="AnchorPrefix"><a class="permalink" href="#AnchorPrefix">AnchorPrefix</a></dt>
@@ -444,16 +431,14 @@
   <dd>Default is 1.
     <p class="Pp">Compresses the formatting of arrays of hashes:</p>
     <p class="Pp"></p>
-    <pre>
-    -
+    <pre>    -
       foo: bar
     -
       bar: foo
     </pre>
     <p class="Pp">becomes:</p>
     <p class="Pp"></p>
-    <pre>
-    - foo: bar
+    <pre>    - foo: bar
     - bar: foo
     </pre>
     <p class="Pp">Since this output is usually more desirable, this option is
@@ -485,11 +470,9 @@
 <dl class="Bl-tag">
   <dt id="stream"><a class="permalink" href="#stream">stream</a></dt>
   <dd>
-    <pre>
-    A YAML stream is the full sequence of Unicode characters that a YAML
+    <pre>    A YAML stream is the full sequence of Unicode characters that a YAML
     parser would read or a YAML emitter would write. A stream may contain
     one or more YAML documents separated by YAML headers.
-
     ---
     a: mapping
     foo: bar
@@ -504,8 +487,7 @@
       with a YAML header line. Actually the header is optional on the first
       document.
     <p class="Pp"></p>
-    <pre>
-    ---
+    <pre>    ---
     This: top level mapping
     is:
         - a
@@ -518,8 +500,7 @@
       dashes, possibly followed by more info. Another purpose of the header line
       is that it serves as a place to put top level tag and anchor information.
     <p class="Pp"></p>
-    <pre>
-    --- !recursive-sequence &amp;001
+    <pre>    --- !recursive-sequence &amp;001
     - * 001
     - * 001
     </pre>
@@ -534,8 +515,7 @@
       serialization should be transferred into or out of memory. For instance a
       Foo::Bar object would use the tag 'perl/Foo::Bar':
     <p class="Pp"></p>
-    <pre>
-    - !perl/Foo::Bar
+    <pre>    - !perl/Foo::Bar
         foo: 42
         bar: stool
     </pre>
@@ -548,8 +528,7 @@
   <dd>A mapping is a YAML collection defined by unordered key/value pairs with
       unique keys. By default YAML mappings are loaded into Perl hashes.
     <p class="Pp"></p>
-    <pre>
-    a mapping:
+    <pre>    a mapping:
         foo: bar
         two: times two is 4
     </pre>
@@ -558,8 +537,7 @@
   <dd>A sequence is a YAML collection defined by an ordered list of elements. By
       default YAML sequences are loaded into Perl arrays.
     <p class="Pp"></p>
-    <pre>
-    a sequence:
+    <pre>    a sequence:
         - one bourbon
         - one scotch
         - one beer
@@ -569,8 +547,7 @@
   <dd>A scalar is a YAML node that is a single value. By default YAML scalars
       are loaded into Perl scalars.
     <p class="Pp"></p>
-    <pre>
-    a scalar key: a scalar value
+    <pre>    a scalar key: a scalar value
     </pre>
     <p class="Pp">YAML has many styles for representing scalars. This is
         important because varying data will have varying formatting requirements
@@ -582,8 +559,7 @@
       automatically by examination. The typical uses for this are plain alpha
       strings, integers, real numbers, dates, times and currency.
     <p class="Pp"></p>
-    <pre>
-    - a plain string
+    <pre>    - a plain string
     - -42
     - 3.1415
     - 12:34
@@ -596,8 +572,7 @@
       except for single quotes which are escaped by using two adjacent single
       quotes.
     <p class="Pp"></p>
-    <pre>
-    - 'When I say ''\n'' I mean &quot;backslash en&quot;'
+    <pre>    - 'When I say ''\n'' I mean &quot;backslash en&quot;'
     </pre>
   </dd>
   <dt id="double"><a class="permalink" href="#double">double quoted
@@ -605,8 +580,7 @@
   <dd>This is similar to Perl's use of double quotes. Character escaping can be
       used.
     <p class="Pp"></p>
-    <pre>
-    - &quot;This scalar\nhas two lines, and a bell --&gt;\a&quot;
+    <pre>    - &quot;This scalar\nhas two lines, and a bell --&gt;\a&quot;
     </pre>
   </dd>
   <dt id="folded"><a class="permalink" href="#folded">folded scalar</a></dt>
@@ -614,8 +588,7 @@
       by a single right angle bracket. It is unescaped like the single quoted
       scalar. Line folding is also performed.
     <p class="Pp"></p>
-    <pre>
-    - &gt;
+    <pre>    - &gt;
      This is a multiline scalar which begins on
      the next line. It is indicated by a single
      carat. It is unescaped like the single
@@ -628,8 +601,7 @@
       in all YAML data) scope is indicated by indentation. Therefore, no ending
       marker is required. The data is verbatim. No line folding.
     <p class="Pp"></p>
-    <pre>
-    - |
+    <pre>    - |
         QTY  DESC          PRICE  TOTAL
         ---  ----          -----  -----
           1  Foo Fighters  $19.95 $19.95
@@ -670,8 +642,7 @@
 <p class="Pp">To run ysh, (assuming you installed it along with YAML.pm) simply
     type:</p>
 <p class="Pp"></p>
-<pre>
-    ysh [options]
+<pre>    ysh [options]
 </pre>
 <p class="Pp">Please read the <span class="Li">&quot;ysh&quot;</span>
     documentation for the full details. There are lots of options.</p>

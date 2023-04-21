@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sub::Exporter::ForMethods(3)</title>
 </head>
@@ -35,16 +36,12 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">In an exporting library:</p>
 <p class="Pp"></p>
-<pre>
-  package Method::Builder;
-
+<pre>  package Method::Builder;
   use Sub::Exporter::ForMethods qw(method_installer);
-
   use Sub::Exporter -setup =&gt; {
     exports   =&gt; [ method =&gt; \'_method_generator' ],
     installer =&gt; method_installer,
   };
-
   sub _method_generator {
     my ($self, $name, $arg, $col) = @_;
     return sub { ... };
@@ -52,8 +49,7 @@
 </pre>
 <p class="Pp">In an importing library:</p>
 <p class="Pp"></p>
-<pre>
-  package Vehicle::Autobot;
+<pre>  package Vehicle::Autobot;
   use Method::Builder method =&gt; { -as =&gt; 'transform' };
 </pre>
 </section>
@@ -70,19 +66,13 @@
 <p class="Pp">More importantly (for the author, anyway), they will not be
     removed by namespace::autoclean. This makes the following code work:</p>
 <p class="Pp"></p>
-<pre>
-  package MyLibrary;
-
+<pre>  package MyLibrary;
   use Math::Trig qw(tan);         # uses Exporter.pm
   use String::Truncate qw(trunc); # uses Sub::Exporter's defaults
-
   use Sub::Exporter::ForMethods qw(method_installer);
   use Mixin::Linewise { installer =&gt; method_installer }, qw(read_file);
-
   use namespace::autoclean;
-
   ...
-
   1;
 </pre>
 <p class="Pp">After MyLibrary is compiled,
@@ -99,8 +89,7 @@
     it may also be called by its full package name:</p>
 <section class="Ss">
 <h2 class="Ss" id="method_installer"><a class="permalink" href="#method_installer">method_installer</a></h2>
-<pre>
-  my $installer = method_installer(\%arg);
+<pre>  my $installer = method_installer(\%arg);
 </pre>
 <p class="Pp">This routine returns an installer suitable for use as the
     <span class="Li">&quot;installer&quot;</span> argument to Sub::Exporter. It

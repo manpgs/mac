@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>dispatch_async(3)</title>
 </head>
@@ -70,27 +71,23 @@
     execute concurrently until a shared critical section is entered. In the
     <a class="Xr" href="../3/pthread">pthread(3)</a> family of procedures,
     temporal synchronization is accomplished like so:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-int r = pthread_mutex_lock(&amp;my_lock);
+<div class="Bd Pp Bd-indent Li">
+<pre>int r = pthread_mutex_lock(&amp;my_lock);
 assert(r == 0);
 
 // critical section
 
 r = pthread_mutex_unlock(&amp;my_lock);
-assert(r == 0);
-</pre>
+assert(r == 0);</pre>
 </div>
 <p class="Pp" id="dispatch_sync">The
     <a class="permalink" href="#dispatch_sync"><code class="Fn">dispatch_sync</code></a>()
     function may be used with a serial queue to accomplish the same style of
     synchronization. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-dispatch_sync(my_queue, ^{
+<div class="Bd Pp Bd-indent Li">
+<pre>dispatch_sync(my_queue, ^{
 	// critical section
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp">In addition to providing a more concise expression of
     synchronization, this approach is less error prone as the critical section
@@ -102,12 +99,10 @@ dispatch_sync(my_queue, ^{
     of the block is not needed locally. Deferred critical sections have the same
     synchronization properties as the above code, but are non-blocking and
     therefore more efficient to perform. For example:</p>
-<div class="Bd Pp">
-<pre>
-dispatch_async(my_queue, ^{
+<div class="Bd Pp Li">
+<pre>dispatch_async(my_queue, ^{
 	// critical section
-});
-</pre>
+});</pre>
 </div>
 </section>
 <section class="Sh">
@@ -116,12 +111,10 @@ dispatch_async(my_queue, ^{
 <p class="Pp">The <code class="Fn">dispatch_async</code>() function may be used
     to execute trivial background tasks on a global concurrent queue. For
     example:</p>
-<div class="Bd Pp">
-<pre>
-dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+<div class="Bd Pp Li">
+<pre>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
 	// background operation
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp">This approach is an efficient replacement for
     <a class="Xr" href="../3/pthread_create">pthread_create(3)</a>.</p>
@@ -136,9 +129,8 @@ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
     that queue at the end of the completion callback to ensure the destination
     queue is not deallocated while the completion callback is pending. For
     example:</p>
-<div class="Bd Pp">
-<pre>
-void
+<div class="Bd Pp Li">
+<pre>void
 async_read(object_t obj,
 	void *where, size_t bytes,
 	dispatch_queue_t destination_queue,
@@ -158,8 +150,7 @@ async_read(object_t obj,
 		});
 		dispatch_release(destination_queue);
 	});
-}
-</pre>
+}</pre>
 </div>
 </section>
 <section class="Sh">
@@ -183,9 +174,8 @@ async_read(object_t obj,
 <p class="Pp">Nevertheless, if it is absolutely necessary, what follows is an
     imperfect way of implementing recursive locks using the dispatch
   framework:</p>
-<div class="Bd Pp">
-<pre>
-void
+<div class="Bd Pp Li">
+<pre>void
 sloppy_lock(object_t object, void (^block)(void))
 {
 	if (object-&gt;owner == pthread_self()) {
@@ -196,8 +186,7 @@ sloppy_lock(object_t object, void (^block)(void))
 		block();
 		object-&gt;owner = NULL;
 	});
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp" id="dispatch_sync~2">The above example does not solve the case
     where queue A runs on thread X which calls
@@ -218,16 +207,14 @@ sloppy_lock(object_t object, void (^block)(void))
     synchronous function, and therefore cannot modify the reference count of the
     target queue until after the synchronous function has returned). For
     example:</p>
-<div class="Bd Pp">
-<pre>
-queue = dispatch_queue_create(&quot;com.example.queue&quot;, NULL);
+<div class="Bd Pp Li">
+<pre>queue = dispatch_queue_create(&quot;com.example.queue&quot;, NULL);
 assert(queue);
 dispatch_sync(queue, ^{
 	do_something();
 	//dispatch_release(queue); // NOT SAFE -- dispatch_sync() is still using 'queue'
 });
-dispatch_release(queue); // SAFELY balanced outside of the block provided to dispatch_sync()
-</pre>
+dispatch_release(queue); // SAFELY balanced outside of the block provided to dispatch_sync()</pre>
 </div>
 <p class="Pp">This is in contrast to asynchronous functions which must retain
     both the block and target queue for the duration of the asynchronous

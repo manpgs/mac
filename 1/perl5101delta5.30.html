@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERL5101DELTA(1)</title>
 </head>
@@ -61,8 +62,7 @@
         <span class="Li">&quot;when()&quot;</span>, notably for implementing
         bistable conditions, like in:</p>
     <p class="Pp"></p>
-    <pre>
-    when (/^=begin/ .. /^=end/) {
+    <pre>    when (/^=begin/ .. /^=end/) {
       # do something
     }
     </pre>
@@ -180,8 +180,7 @@
         <span class="Li">&quot;qr&quot;</span> resulted in a change of behaviour
         between 5.8.x and 5.10.0:</p>
     <p class="Pp"></p>
-    <pre>
-    # matches in 5.8.x, doesn't match in 5.10.0
+    <pre>    # matches in 5.8.x, doesn't match in 5.10.0
     $re = qr/^bar/; &quot;foo\nbar&quot; =~ /$re/m;
     </pre>
   </li>
@@ -224,8 +223,7 @@
     <span class="Li">&quot;make test_harness&quot;</span>. On a Bourne-like
     shell, this can be done as</p>
 <p class="Pp"></p>
-<pre>
-    TEST_JOBS=3 make test_harness  # Run 3 tests in parallel
+<pre>    TEST_JOBS=3 make test_harness  # Run 3 tests in parallel
 </pre>
 <p class="Pp">An environment variable is used, rather than parallel make itself,
     because TAP::Harness needs to be able to schedule individual non-conflicting
@@ -872,8 +870,7 @@
   <li>Patterns including alternation might be sensitive to the internal UTF-8
       representation, e.g.
     <p class="Pp"></p>
-    <pre>
-    my $byte = chr(192);
+    <pre>    my $byte = chr(192);
     my $utf8 = chr(192); utf8::upgrade($utf8);
     $utf8 =~ /$byte|X}/i;       # failed in 5.10.0
     </pre>
@@ -903,8 +900,7 @@
       <span class="Li">&quot;{0,32767}&quot;</span> [RT #60034, #60464]. For
       example, this match would fail:
     <p class="Pp"></p>
-    <pre>
-    (&quot;ab&quot; x 32768) =~ /^(ab)*$/
+    <pre>    (&quot;ab&quot; x 32768) =~ /^(ab)*$/
     </pre>
   </li>
   <li><span class="Li">&quot;shmget&quot;</span> was limited to a 32 bit segment
@@ -914,8 +910,7 @@
       <span class="Li">&quot;given&quot;</span> block no longer produces a
       spurious warning like the following:
     <p class="Pp"></p>
-    <pre>
-    Exiting given via last at foo.pl line 123
+    <pre>    Exiting given via last at foo.pl line 123
     </pre>
   </li>
   <li>On Windows, <span class="Li">'.\foo'</span> and
@@ -925,14 +920,13 @@
       <span class="Li">&quot;require&quot;</span> [RT #63492].</li>
   <li>Assigning a format to a glob could corrupt the format; e.g.:
     <p class="Pp"></p>
-    <pre>
-     *bar=*foo{FORMAT}; # foo format now bad
+    <pre>     *bar=*foo{FORMAT}; # foo format now bad
     </pre>
   </li>
   <li>Attempting to coerce a typeglob to a string or number could cause an
       assertion failure. The correct error message is now generated,
       <span class="Li">&quot;Can't coerce GLOB to
-      </span><i>$type</i><span class="Li">&quot;</span>.</li>
+      </span><span class="Li"><i>$type</i></span><span class="Li">&quot;</span>.</li>
   <li>Under <span class="Li">&quot;use filetest 'access'&quot;</span>,
       <span class="Li">&quot;-x&quot;</span> was using the wrong access mode.
       This has been fixed [RT #49003].</li>
@@ -1007,8 +1001,7 @@
   <li>In 5.10.0, certain types of re-entrant regular expression could crash, or
       cause the following assertion failure [RT #60508]:
     <p class="Pp"></p>
-    <pre>
-    Assertion rx-&gt;sublen &gt;= (s - rx-&gt;subbeg) + i failed
+    <pre>    Assertion rx-&gt;sublen &gt;= (s - rx-&gt;subbeg) + i failed
     </pre>
   </li>
 </ul>
@@ -1226,15 +1219,13 @@
     <p class="Pp">A similar issue may occur in other modules that provide
         functions which take a block as their first argument, like</p>
     <p class="Pp"></p>
-    <pre>
-    foo { ... $_ ...} list
+    <pre>    foo { ... $_ ...} list
     </pre>
   </li>
   <li>The <span class="Li">&quot;charnames&quot;</span> pragma may generate a
       run-time error when a regex is interpolated [RT #56444]:
     <p class="Pp"></p>
-    <pre>
-    use charnames ':full';
+    <pre>    use charnames ':full';
     my $r1 = qr/\N{THAI CHARACTER SARA I}/;
     &quot;foo&quot; =~ $r1;    # okay
     &quot;foo&quot; =~ /$r1+/; # runtime error
@@ -1242,8 +1233,7 @@
     <p class="Pp">A workaround is to generate the character outside of the
         regex:</p>
     <p class="Pp"></p>
-    <pre>
-    my $a = &quot;\N{THAI CHARACTER SARA I}&quot;;
+    <pre>    my $a = &quot;\N{THAI CHARACTER SARA I}&quot;;
     my $r1 = qr/$a/;
     </pre>
   </li>

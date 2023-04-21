@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>KLD(3)</title>
 </head>
@@ -23,69 +24,45 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-#include &lt;kld.h&gt;
-</pre>
-<pre>
-#ifdef __DYNAMIC__
+<pre>#include &lt;kld.h&gt;</pre>
+<pre>#ifdef __DYNAMIC__
 __private_extern__ long kld_load_basefile(
-	const char *base_filename);
-</pre>
-<pre>
-__private_extern__ long kld_load(
+	const char *base_filename);</pre>
+<pre>__private_extern__ long kld_load(
 	struct mach_header **header_addr,
 	const char *object_filename,
-	const char *output_filename);
-</pre>
-<pre>
-__private_extern__ long kld_load_from_memory(
+	const char *output_filename);</pre>
+<pre>__private_extern__ long kld_load_from_memory(
 	struct mach_header **header_addr,
 	const char *object_name,
 	char *object_addr,
 	long object_size,
 	const char *output_filename);
-#endif /* __DYNAMIC__ */
-</pre>
-<pre>
-#ifdef __STATIC__
+#endif /* __DYNAMIC__ */</pre>
+<pre>#ifdef __STATIC__
 __private_extern__ long kld_load_from_memory(
 	struct mach_header **header_addr,
 	const char *object_name,
 	char *object_addr,
 	long *object_size);
-#endif /* __STATIC__ */
-</pre>
-<pre>
-__private_extern__ long kld_load_basefile_from_memory(
+#endif /* __STATIC__ */</pre>
+<pre>__private_extern__ long kld_load_basefile_from_memory(
 	const char *base_filename,
 	char *base_addr,
-	long base_size);
-</pre>
-<pre>
-__private_extern__ long kld_lookup(
+	long base_size);</pre>
+<pre>__private_extern__ long kld_lookup(
 	const char *symbol_name,
-	unsigned long *value);
-</pre>
-<pre>
-__private_extern__ long kld_forget_symbol(
-	const char *symbol_name);
-</pre>
-<pre>
-__private_extern__ long kld_unload_all(
-	long deallocate_sets);
-</pre>
-<pre>
-__private_extern__ void kld_address_func(
-	unsigned long (*func)(unsigned long size, unsigned long headers_size));
-</pre>
-<pre>
-#define KLD_STRIP_ALL	0x00000000
-#define KLD_STRIP_NONE	0x00000001
-</pre>
-<pre>
-__private_extern__ void kld_set_link_options(
-    unsigned long link_options);
-</pre>
+	unsigned long *value);</pre>
+<pre>__private_extern__ long kld_forget_symbol(
+	const char *symbol_name);</pre>
+<pre>__private_extern__ long kld_unload_all(
+	long deallocate_sets);</pre>
+<pre>__private_extern__ void kld_address_func(
+	unsigned long (*func)(unsigned long size, unsigned long headers_size));</pre>
+<pre>#define KLD_STRIP_ALL	0x00000000
+#define KLD_STRIP_NONE	0x00000001</pre>
+<pre>__private_extern__ void kld_set_link_options(
+    unsigned long link_options);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -100,9 +77,7 @@ __private_extern__ void kld_set_link_options(
     <i>kld_load_from_memory</i> APIs are provided in the library libkld.a
     compiled with the <b>-static</b> compiler flag. Using this library one must
     define the following variable:</p>
-<pre>
-	extern char *kld_basefile_name;
-</pre>
+<pre>	extern char *kld_basefile_name;</pre>
 which is the the name of the base file used for error messages.
 <p class="Pp"></p>
 <p class="Pp">For kextload the <i>kld_load_basefile,</i>
@@ -142,9 +117,7 @@ which is the the name of the base file used for error messages.
     no link edit errors (undefined symbols, etc.). If an error occurs, the
     object file is unloaded automatically. If errors occur the user supplied
     routine will be called:</p>
-<pre>
-	extern void kld_error_vprintf(const char *format, va_list ap);
-</pre>
+<pre>	extern void kld_error_vprintf(const char *format, va_list ap);</pre>
 <p class="Pp">If the link editing and loading is successful, the address of the
     header of what was loaded is returned through the pointer <i>header_addr</i>
     (if it isn't NULL). If <i>kld_load</i> is successful and the parameter

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Memoize::Expire(3pm)</title>
 </head>
@@ -29,13 +30,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Memoize;
+<pre>  use Memoize;
   use Memoize::Expire;
   tie my %cache =&gt; 'Memoize::Expire',
                      LIFETIME =&gt; $lifetime,    # In seconds
                      NUM_USES =&gt; $n_uses;
-
   memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt; \%cache ];
 </pre>
 </section>
@@ -71,28 +70,23 @@
     you do this, you get a persistent disk cache whose entries expire
     automatically. For example:</p>
 <p class="Pp"></p>
-<pre>
-  #   Memoize
+<pre>  #   Memoize
   #      |
   #   Memoize::Expire  enforces data expiration policy
   #      |
   #   DB_File  implements persistence of data in a disk file
   #      |
   #   Disk file
-
   use Memoize;
   use Memoize::Expire;
   use DB_File;
-
   # Set up persistence
   tie my %disk_cache =&gt; 'DB_File', $filename, O_CREAT|O_RDWR, 0666];
-
   # Set up expiration policy, supplying persistent hash as a target
   tie my %cache =&gt; 'Memoize::Expire', 
                      LIFETIME =&gt; $lifetime,    # In seconds
                      NUM_USES =&gt; $n_uses,
                      HASH =&gt; \%disk_cache; 
-
   # Set up memoization, supplying expiring persistent hash for cache
   memoize 'function', SCALAR_CACHE =&gt; [ HASH =&gt; \%cache ];
 </pre>
@@ -124,8 +118,7 @@
 <p class="Pp">The user who wants the memoization cache to be expired according
     to your policy will say so by writing</p>
 <p class="Pp"></p>
-<pre>
-  tie my %cache =&gt; 'MyExpirePolicy', args...;
+<pre>  tie my %cache =&gt; 'MyExpirePolicy', args...;
   memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt; \%cache];
 </pre>
 <p class="Pp">This will invoke
@@ -154,15 +147,12 @@
 <p class="Pp">Here is a very brief example of a policy module that expires each
     cache item after ten seconds.</p>
 <p class="Pp"></p>
-<pre>
-        package Memoize::TenSecondExpire;
-
+<pre>        package Memoize::TenSecondExpire;
         sub TIEHASH {
           my ($package, %args) = @_;
           my $cache = $args{HASH} || {};
           bless $cache =&gt; $package;
         }
-
         sub EXISTS {
           my ($cache, $key) = @_;
           if (exists $cache-&gt;{$key} &amp;&amp; 
@@ -172,12 +162,10 @@
             return 0;  # Do NOT return `undef' here.
           }
         }
-
         sub FETCH {
           my ($cache, $key) = @_;
           return $cache-&gt;{$key}{VALUE};
         }
-
         sub STORE {
           my ($cache, $key, $newvalue) = @_;
           $cache-&gt;{$key}{VALUE} = $newvalue;
@@ -186,8 +174,7 @@
 </pre>
 <p class="Pp">To use this expiration policy, the user would say</p>
 <p class="Pp"></p>
-<pre>
-        use Memoize;
+<pre>        use Memoize;
         tie my %cache10sec =&gt; 'Memoize::TenSecondExpire';
         memoize 'function', SCALAR_CACHE =&gt; [HASH =&gt; \%cache10sec];
 </pre>

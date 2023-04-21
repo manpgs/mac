@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MPSKernel(3)</title>
 </head>
@@ -98,16 +99,14 @@
       perform:</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-MPSImageSobel *sobel = [[MPSImageSobel alloc] initWithDevice: mtlDevice];
+<pre>MPSImageSobel *sobel = [[MPSImageSobel alloc] initWithDevice: mtlDevice];
 </pre>
 <dl class="Bl-tag">
   <dt>2.</dt>
   <dd>Encode the filter into a command buffer:</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-sobel.offset = ...;
+<pre>sobel.offset = ...;
 sobel.clipRect = ...;
 sobel.options = ...;
 [sobel encodeToCommandBuffer: commandBuffer
@@ -132,8 +131,7 @@ sobel.options = ...;
     write to in the event that a filter can not operate in place.</p>
 <p class="Pp">(Repeat steps 2 for more filters, as desired.)</p>
 <p class="Pp"></p>
-<pre>
-It should be self evident that step 2 may not be thread safe. That is, you can not have
+<pre>It should be self evident that step 2 may not be thread safe. That is, you can not have
 multiple threads manipulating the same properties on the same MPSKernel object at the
 same time and achieve coherent output. In common usage, the MPSKernel properties don't
 often need to be changed from their default values, but if you need to apply the same
@@ -148,8 +146,7 @@ object at a time.
       encoders, submit the MTLCommandBuffer to your MTLCommandQueue, using:</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-[mtlCommandBuffer commit];
+<pre>[mtlCommandBuffer commit];
 </pre>
 <p class="Pp"><b>A</b> <b>MPSKernel</b> can be saved to disk / network using
     NSCoders such as NSKeyedArchiver. When decoding, the system default
@@ -352,8 +349,7 @@ object at a time.
     MPSCopyAllocator will be returned instead of the sourceTexture from the
     <b>MPSKernel</b> method on return.</p>
 <p class="Pp"></p>
-<pre>
-// A MPSCopyAllocator to handle cases where in-place operation fails.
+<pre>// A MPSCopyAllocator to handle cases where in-place operation fails.
 MPSCopyAllocator myAllocator = ^id &lt;MTLTexture&gt;( MPSKernel * __nonnull filter,
                                                 __nonnull id &lt;MTLCommandBuffer&gt; cmdBuf,
                                                 __nonnull id &lt;MTLTexture&gt; sourceTexture)

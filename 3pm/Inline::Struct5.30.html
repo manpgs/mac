@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline::Struct(3)</title>
 </head>
@@ -28,15 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Inline C =&gt; 'DATA', structs =&gt; ['Foo'];
-
+<pre>  use Inline C =&gt; 'DATA', structs =&gt; ['Foo'];
   my $obj = Inline::Struct::Foo-&gt;new;
   $obj-&gt;num(10);
   $obj-&gt;str(&quot;Hello&quot;);
-
   print myfunc($obj), &quot;\n&quot;;
-
   __END__
   __C__
   struct Foo {
@@ -44,15 +41,13 @@
     char *str;
   };
   typedef struct Foo Foo;
-
   SV *myfunc(Foo *f) {
     return newSVpvf(&quot;myfunc: num=%i, str='%s'&quot;, f-&gt;num, f-&gt;str);
   }
 </pre>
 <p class="Pp">This complete program prints:</p>
 <p class="Pp"></p>
-<pre>
-  myfunc: num=10, str='Hello'
+<pre>  myfunc: num=10, str='Hello'
 </pre>
 </section>
 <section class="Sh">
@@ -78,14 +73,12 @@
     Perl programmer.</p>
 <p class="Pp">Example 1:</p>
 <p class="Pp"></p>
-<pre>
-  use Inline C =&gt; &lt;&lt;'END', enable =&gt; 'structs';
+<pre>  use Inline C =&gt; &lt;&lt;'END', enable =&gt; 'structs';
   struct Fraction {
     long numer;
     long denom;
   };
   END
-
   my $o = Inline::Struct::Fraction-&gt;new(4, 3);
   print $o-&gt;numer, $o-&gt;denom, &quot;\n&quot;;
   $o-&gt;numer(4)-&gt;denom(7);
@@ -93,8 +86,7 @@
 <p class="Pp">After the code above has been compiled, Perl's namespace looks a
     lot like the following:</p>
 <p class="Pp"></p>
-<pre>
-  package Inline::Struct::Fraction;
+<pre>  package Inline::Struct::Fraction;
   sub new { }
   sub DESTROY { }
   sub _KEYS { }
@@ -155,8 +147,7 @@
     provided, the field is set to the first argument, and the modified structure
     is returned. This makes setting multiple fields easy:</p>
 <p class="Pp"></p>
-<pre>
-   $o-&gt;field1(something)-&gt;field2(somethingelse);
+<pre>   $o-&gt;field1(something)-&gt;field2(somethingelse);
 </pre>
 </section>
 </section>
@@ -170,36 +161,30 @@
 <p class="Pp">Specifies that structs are to be bound to Perl. There are several
     meanings to this option, so I'll explain with an example:</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; structs =&gt; 'Foo';
+<pre>   use Inline C =&gt; config =&gt; structs =&gt; 'Foo';
 </pre>
 <p class="Pp">Adds 'Foo' to the list of structs to bind to Perl.</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; structs =&gt; ['Foo', 'Bar'];
+<pre>   use Inline C =&gt; config =&gt; structs =&gt; ['Foo', 'Bar'];
 </pre>
 <p class="Pp">Adds 'Foo' and 'Bar' to the list of structs to bind to Perl.</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; structs =&gt; undef;
+<pre>   use Inline C =&gt; config =&gt; structs =&gt; undef;
 </pre>
 <p class="Pp">Clears the list of structs to bind to Perl.</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; enable =&gt; 'structs';
+<pre>   use Inline C =&gt; config =&gt; enable =&gt; 'structs';
 or
    use Inline C =&gt; config =&gt; structs =&gt; 1;
 </pre>
 <p class="Pp">Enable binding structs to Perl, without specifying any structs to
     search for. As shown, this would bind all structs to Perl.</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; disable =&gt; 'structs';
+<pre>   use Inline C =&gt; config =&gt; disable =&gt; 'structs';
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-   use Inline C =&gt; config =&gt; structs =&gt; 0;
+<pre>   use Inline C =&gt; config =&gt; structs =&gt; 0;
 </pre>
 <p class="Pp">Disable binding structs to Perl.</p>
 </section>
@@ -214,8 +199,7 @@ or
     structure, is supplied. It should be run a couple of times to get everything
     cached. A typical results run is as follows:</p>
 <p class="Pp"></p>
-<pre>
-  Faster type          % faster
+<pre>  Faster type          % faster
   ISF dnum read        24%
   PP dnum write        247%
   ISF inum read        39%
@@ -235,8 +219,7 @@ or
 <p class="Pp">The same script also compares memory usage. A typical results
   run:</p>
 <p class="Pp"></p>
-<pre>
-  Memory usage
+<pre>  Memory usage
   10000 x bless [ 7, &quot;string&quot; ], &quot;main&quot;: 34592
   10000 x Inline::Struct::Foo-&gt;new: 45648
   100000 x bless [ 7, &quot;string&quot; ], &quot;main&quot;: 139344

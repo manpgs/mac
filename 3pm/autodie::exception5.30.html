@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>autodie::exception(3pm)</title>
 </head>
@@ -28,15 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    eval {
+<pre>    eval {
         use autodie;
-
         open(my $fh, '&lt;', 'some_file.txt');
-
         ...
     };
-
     if (my $E = $@) {
         say &quot;Ooops!  &quot;,$E-&gt;caller,&quot; had problems: $@&quot;;
     }
@@ -60,8 +57,7 @@
 <p class="Pp">The following assume that the error has been copied into a
     separate scalar:</p>
 <p class="Pp"></p>
-<pre>
-    if ($E = $@) {
+<pre>    if ($E = $@) {
         ...
     }
 </pre>
@@ -69,48 +65,41 @@
     called which may reset or alter <span class="Li">$@</span>.</p>
 <p class="Pp"><i>args</i></p>
 <p class="Pp"></p>
-<pre>
-    my $array_ref = $E-&gt;args;
+<pre>    my $array_ref = $E-&gt;args;
 </pre>
 <p class="Pp">Provides a reference to the arguments passed to the subroutine
     that died.</p>
 <p class="Pp"><i>function</i></p>
 <p class="Pp"></p>
-<pre>
-    my $sub = $E-&gt;function;
+<pre>    my $sub = $E-&gt;function;
 </pre>
 <p class="Pp">The subroutine (including package) that threw the exception.</p>
 <p class="Pp"><i>file</i></p>
 <p class="Pp"></p>
-<pre>
-    my $file = $E-&gt;file;
+<pre>    my $file = $E-&gt;file;
 </pre>
 <p class="Pp">The file in which the error occurred (eg,
     <span class="Li">&quot;myscript.pl&quot;</span> or
     <span class="Li">&quot;MyTest.pm&quot;</span>).</p>
 <p class="Pp"><i>package</i></p>
 <p class="Pp"></p>
-<pre>
-    my $package = $E-&gt;package;
+<pre>    my $package = $E-&gt;package;
 </pre>
 <p class="Pp">The package from which the exceptional subroutine was called.</p>
 <p class="Pp"><i>caller</i></p>
 <p class="Pp"></p>
-<pre>
-    my $caller = $E-&gt;caller;
+<pre>    my $caller = $E-&gt;caller;
 </pre>
 <p class="Pp">The subroutine that <i>called</i> the exceptional code.</p>
 <p class="Pp"><i>line</i></p>
 <p class="Pp"></p>
-<pre>
-    my $line = $E-&gt;line;
+<pre>    my $line = $E-&gt;line;
 </pre>
 <p class="Pp">The line in <span class="Li">&quot;$E-&gt;file&quot;</span> where
     the exceptional code was called.</p>
 <p class="Pp"><i>context</i></p>
 <p class="Pp"></p>
-<pre>
-    my $context = $E-&gt;context;
+<pre>    my $context = $E-&gt;context;
 </pre>
 <p class="Pp">The context in which the subroutine was called by autodie; usually
     the same as the context in which you called the autodying subroutine. This
@@ -122,8 +111,7 @@
     this may be 'scalar', even if you used a list context.</p>
 <p class="Pp"><i>return</i></p>
 <p class="Pp"></p>
-<pre>
-    my $return_value = $E-&gt;return;
+<pre>    my $return_value = $E-&gt;return;
 </pre>
 <p class="Pp">The value(s) returned by the failed subroutine. When the
     subroutine was called in a list context, this will always be a reference to
@@ -131,8 +119,7 @@
     context, this will be the actual scalar returned.</p>
 <p class="Pp"><i>errno</i></p>
 <p class="Pp"></p>
-<pre>
-    my $errno = $E-&gt;errno;
+<pre>    my $errno = $E-&gt;errno;
 </pre>
 <p class="Pp">The value of <span class="Li">$!</span> at the time when the
     exception occurred.</p>
@@ -143,8 +130,7 @@
     <span class="Li">$!</span> would reasonably have been set on failure.</p>
 <p class="Pp"><i>eval_error</i></p>
 <p class="Pp"></p>
-<pre>
-    my $old_eval_error = $E-&gt;eval_error;
+<pre>    my $old_eval_error = $E-&gt;eval_error;
 </pre>
 <p class="Pp">The contents of <span class="Li">$@</span> immediately after
     autodie triggered an exception. This may be useful when dealing with modules
@@ -152,9 +138,7 @@
     <span class="Li">$@</span> on error.</p>
 <p class="Pp"><i>matches</i></p>
 <p class="Pp"></p>
-<pre>
-    if ( $e-&gt;matches('open') ) { ... }
-
+<pre>    if ( $e-&gt;matches('open') ) { ... }
     if ( 'open' ~~ $e ) { ... }
 </pre>
 <p class="Pp"><span class="Li">&quot;matches&quot;</span> is used to determine
@@ -201,8 +185,7 @@
     <span class="Li">&quot;autodie::exception&quot;</span> model.</p>
 <p class="Pp"><i>register</i></p>
 <p class="Pp"></p>
-<pre>
-    autodie::exception-&gt;register( 'CORE::open' =&gt; \&amp;mysub );
+<pre>    autodie::exception-&gt;register( 'CORE::open' =&gt; \&amp;mysub );
 </pre>
 <p class="Pp">The <span class="Li">&quot;register&quot;</span> method allows for
     the registration of a message handler for a given subroutine. The full
@@ -212,8 +195,7 @@
     parameter.</p>
 <p class="Pp"><i>add_file_and_line</i></p>
 <p class="Pp"></p>
-<pre>
-    say &quot;Problem occurred&quot;,$@-&gt;add_file_and_line;
+<pre>    say &quot;Problem occurred&quot;,$@-&gt;add_file_and_line;
 </pre>
 <p class="Pp">Returns the string <span class="Li">&quot; at %s line
     %d&quot;</span>, where <span class="Li">%s</span> is replaced with the
@@ -222,8 +204,7 @@
 <p class="Pp">Primarily intended for use by format handlers.</p>
 <p class="Pp"><i>stringify</i></p>
 <p class="Pp"></p>
-<pre>
-    say &quot;The error was: &quot;,$@-&gt;stringify;
+<pre>    say &quot;The error was: &quot;,$@-&gt;stringify;
 </pre>
 <p class="Pp">Formats the error as a human readable string. Usually there's no
     reason to call this directly, as it is used automatically if an
@@ -233,8 +214,7 @@
     stringified.</p>
 <p class="Pp"><i>format_default</i></p>
 <p class="Pp"></p>
-<pre>
-    my $error_string = $E-&gt;format_default;
+<pre>    my $error_string = $E-&gt;format_default;
 </pre>
 <p class="Pp">This produces the default error string for the given exception,
     <i>without using any registered message handlers</i>. It is primarily
@@ -244,8 +224,7 @@
     messages are formatted.</p>
 <p class="Pp"><i>new</i></p>
 <p class="Pp"></p>
-<pre>
-    my $error = autodie::exception-&gt;new(
+<pre>    my $error = autodie::exception-&gt;new(
         args =&gt; \@_,
         function =&gt; &quot;CORE::open&quot;,
         errno =&gt; $!,

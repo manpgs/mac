@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLOPENTUT(1)</title>
 </head>
@@ -44,13 +45,10 @@
     can use them right away without having to go to the trouble of opening them
     yourself:</p>
 <p class="Pp"></p>
-<pre>
-    print STDERR &quot;This is a debugging message.\n&quot;;
-
+<pre>    print STDERR &quot;This is a debugging message.\n&quot;;
     print STDOUT &quot;Please enter something: &quot;;
     $response = &lt;STDIN&gt; // die &quot;how come no input?&quot;;
     print STDOUT &quot;Thank you!\n&quot;;
-
     while (&lt;ARGV&gt;) { ... }
 </pre>
 <p class="Pp">As you see from those examples,
@@ -64,10 +62,11 @@
 <p class="Pp">You will need to open every other filehandle on your own. Although
     there are many variants, the most common way to call Perl's <b>open()</b>
     function is with three arguments and one return value:</p>
-<p class="Pp"><span class="Li">&quot; </span><i>OK</i><span class="Li"> =
-    open(</span><i>HANDLE</i><span class="Li">,
-    </span><i>MODE</i><span class="Li">,
-    </span><i>PATHNAME</i><span class="Li">)&quot;</span></p>
+<p class="Pp"><span class="Li">&quot;
+    </span><span class="Li"><i>OK</i></span><span class="Li"> =
+    open(</span><span class="Li"><i>HANDLE</i></span><span class="Li">,
+    </span><span class="Li"><i>MODE</i></span><span class="Li">,
+    </span><span class="Li"><i>PATHNAME</i></span><span class="Li">)&quot;</span></p>
 <p class="Pp">Where:</p>
 <dl class="Bl-tag">
   <dt id="OK"><a class="permalink" href="#OK"><i>OK</i></a></dt>
@@ -97,11 +96,9 @@
 <p class="Pp">If you want to read from a text file, first open it in read-only
     mode like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $filename = &quot;/some/path/to/a/textfile/goes/here&quot;;
+<pre>    my $filename = &quot;/some/path/to/a/textfile/goes/here&quot;;
     my $encoding = &quot;:encoding(UTF-8)&quot;;
     my $handle   = undef;     # this will be filled in on success
-
     open($handle, &quot;&lt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename for reading: $!&quot;;
 </pre>
@@ -117,16 +114,14 @@
     <span class="Li">&quot;sysread&quot;</span> on that handle. Probably the
     most common input function is the one that looks like an operator:</p>
 <p class="Pp"></p>
-<pre>
-    $line = readline($handle);
+<pre>    $line = readline($handle);
     $line = &lt;$handle&gt;;          # same thing
 </pre>
 <p class="Pp">Because the <span class="Li">&quot;readline&quot;</span> function
     returns <span class="Li">&quot;undef&quot;</span> at end of file or upon
     error, you will sometimes see it used this way:</p>
 <p class="Pp"></p>
-<pre>
-    $line = &lt;$handle&gt;;
+<pre>    $line = &lt;$handle&gt;;
     if (defined $line) {
         # do something with $line
     }
@@ -137,16 +132,14 @@
 <p class="Pp">You can also just quickly <span class="Li">&quot;die&quot;</span>
     on an undefined value this way:</p>
 <p class="Pp"></p>
-<pre>
-    $line = &lt;$handle&gt; // die &quot;no input found&quot;;
+<pre>    $line = &lt;$handle&gt; // die &quot;no input found&quot;;
 </pre>
 <p class="Pp">However, if hitting EOF is an expected and normal event, you do
     not want to exit simply because you have run out of input. Instead, you
     probably just want to exit an input loop. You can then test to see if an
     actual error has caused the loop to terminate, and act accordingly:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;$handle&gt;) {
+<pre>    while (&lt;$handle&gt;) {
         # do something with data in $_
     }
     if ($!) {
@@ -159,14 +152,12 @@
     each time, you can use the <span class="Li">&quot;open&quot;</span>
   pragma:</p>
 <p class="Pp"></p>
-<pre>
-    use open qw&lt; :encoding(UTF-8) &gt;;
+<pre>    use open qw&lt; :encoding(UTF-8) &gt;;
 </pre>
 <p class="Pp">Once you've done that, you can safely omit the encoding part of
     the open mode:</p>
 <p class="Pp"></p>
-<pre>
-    open($handle, &quot;&lt;&quot;, $filename)
+<pre>    open($handle, &quot;&lt;&quot;, $filename)
         || die &quot;$0: can't open $filename for reading: $!&quot;;
 </pre>
 <p class="Pp">But never use the bare <span class="Li">&quot;&lt;&quot;</span>
@@ -194,11 +185,9 @@
     append mode. <span class="Li">&quot;&gt;&gt;&quot;</span> creates the file
     if it does not already exist.</p>
 <p class="Pp"></p>
-<pre>
-    my $handle   = undef;
+<pre>    my $handle   = undef;
     my $filename = &quot;/some/path/to/a/textfile/goes/here&quot;;
     my $encoding = &quot;:encoding(UTF-8)&quot;;
-
     open($handle, &quot;&gt;&gt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename for appending: $!&quot;;
 </pre>
@@ -216,11 +205,9 @@
     already be there. To empty out a file before you start writing to it, you
     can open it in write-only mode:</p>
 <p class="Pp"></p>
-<pre>
-    my $handle   = undef;
+<pre>    my $handle   = undef;
     my $filename = &quot;/some/path/to/a/textfile/goes/here&quot;;
     my $encoding = &quot;:encoding(UTF-8)&quot;;
-
     open($handle, &quot;&gt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename in write-open mode: $!&quot;;
 </pre>
@@ -246,8 +233,7 @@
     <span class="Li">&quot;open&quot;</span> is a little different. Instead of
     specifying the encoding, you tell Perl that your data are in raw bytes.</p>
 <p class="Pp"></p>
-<pre>
-    my $filename = &quot;/some/path/to/a/binary/file/goes/here&quot;;
+<pre>    my $filename = &quot;/some/path/to/a/binary/file/goes/here&quot;;
     my $encoding = &quot;:raw :bytes&quot;
     my $handle   = undef;     # this will be filled in on success
 </pre>
@@ -256,27 +242,22 @@
     <span class="Li">&quot;&gt;&gt;&quot;</span>, or
     <span class="Li">&quot;&gt;&quot;</span> as needed:</p>
 <p class="Pp"></p>
-<pre>
-    open($handle, &quot;&lt; $encoding&quot;, $filename)
+<pre>    open($handle, &quot;&lt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename for reading: $!&quot;;
-
     open($handle, &quot;&gt;&gt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename for appending: $!&quot;;
-
     open($handle, &quot;&gt; $encoding&quot;, $filename)
         || die &quot;$0: can't open $filename in write-open mode: $!&quot;;
 </pre>
 <p class="Pp">Alternately, you can change to binary mode on an existing handle
     this way:</p>
 <p class="Pp"></p>
-<pre>
-    binmode($handle)    || die &quot;cannot binmode handle&quot;;
+<pre>    binmode($handle)    || die &quot;cannot binmode handle&quot;;
 </pre>
 <p class="Pp">This is especially handy for the handles that Perl has already
     opened for you.</p>
 <p class="Pp"></p>
-<pre>
-    binmode(STDIN)      || die &quot;cannot binmode STDIN&quot;;
+<pre>    binmode(STDIN)      || die &quot;cannot binmode STDIN&quot;;
     binmode(STDOUT)     || die &quot;cannot binmode STDOUT&quot;;
 </pre>
 <p class="Pp">You can also pass <span class="Li">&quot;binmode&quot;</span> an
@@ -284,8 +265,7 @@
     &quot;binary&quot; mode, but we still use
     <span class="Li">&quot;binmode&quot;</span> to do it:</p>
 <p class="Pp"></p>
-<pre>
-  binmode(STDIN,  &quot;:encoding(MacRoman)&quot;) || die &quot;cannot binmode STDIN&quot;;
+<pre>  binmode(STDIN,  &quot;:encoding(MacRoman)&quot;) || die &quot;cannot binmode STDIN&quot;;
   binmode(STDOUT, &quot;:encoding(UTF-8)&quot;)    || die &quot;cannot binmode STDOUT&quot;;
 </pre>
 <p class="Pp">Once you have your binary file properly opened in the right mode,
@@ -295,28 +275,22 @@
     <span class="Li">&quot;readline&quot;</span> for your input.</p>
 <p class="Pp">Here's an example of how to copy a binary file:</p>
 <p class="Pp"></p>
-<pre>
-    my $BUFSIZ   = 64 * (2 ** 10);
+<pre>    my $BUFSIZ   = 64 * (2 ** 10);
     my $name_in  = &quot;/some/input/file&quot;;
     my $name_out = &quot;/some/output/flie&quot;;
-
     my($in_fh, $out_fh, $buffer);
-
     open($in_fh,  &quot;&lt;&quot;, $name_in)
         || die &quot;$0: cannot open $name_in for reading: $!&quot;;
     open($out_fh, &quot;&gt;&quot;, $name_out)
         || die &quot;$0: cannot open $name_out for writing: $!&quot;;
-
     for my $fh ($in_fh, $out_fh)  {
         binmode($fh)               || die &quot;binmode failed&quot;;
     }
-
     while (read($in_fh, $buffer, $BUFSIZ)) {
         unless (print $out_fh $buffer) {
             die &quot;couldn't write to $name_out: $!&quot;;
         }
     }
-
     close($in_fh)       || die &quot;couldn't close $name_in: $!&quot;;
     close($out_fh)      || die &quot;couldn't close $name_out: $!&quot;;
 </pre>

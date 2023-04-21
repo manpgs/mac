@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pod::Usage(3pm)</title>
 </head>
@@ -29,31 +30,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Pod::Usage
-
+<pre>  use Pod::Usage
   my $message_text  = &quot;This text precedes the usage message.&quot;;
   my $exit_status   = 2;          ## The exit status to use
   my $verbose_level = 0;          ## The verbose level to use
   my $filehandle    = \*STDERR;   ## The filehandle to write to
-
   pod2usage($message_text);
-
   pod2usage($exit_status);
-
   pod2usage( { -message =&gt; $message_text ,
                -exitval =&gt; $exit_status  ,  
                -verbose =&gt; $verbose_level,  
                -output  =&gt; $filehandle } );
-
   pod2usage(   -msg     =&gt; $message_text ,
                -exitval =&gt; $exit_status  ,  
                -verbose =&gt; $verbose_level,  
                -output  =&gt; $filehandle );
-
   pod2usage(   -verbose =&gt; 2,
                -noperldoc =&gt; 1  );
-
   pod2usage(   -verbose =&gt; 2,
                -perlcmd =&gt; $path_to_perl,
                -perldoc =&gt; $path_to_perldoc,
@@ -106,16 +99,14 @@
       representing a selection regexp for sections to be printed when -verbose
       is set to 99, e.g.
     <p class="Pp"></p>
-    <pre>
-  &quot;NAME|SYNOPSIS|DESCRIPTION|VERSION&quot;
+    <pre>  &quot;NAME|SYNOPSIS|DESCRIPTION|VERSION&quot;
     </pre>
     <p class="Pp">With the above regexp all content following (and including)
         any of the given <span class="Li">&quot;=head1&quot;</span> headings
         will be shown. It is possible to restrict the output to particular
         subsections only, e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;DESCRIPTION/Algorithm&quot;
+    <pre>  &quot;DESCRIPTION/Algorithm&quot;
     </pre>
     <p class="Pp">This will output only the <span class="Li">&quot;=head2
         Algorithm&quot;</span> heading and content within the
@@ -123,8 +114,7 @@
         regexp binding is stronger than the section separator, such that
       e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;DESCRIPTION|OPTIONS|ENVIORNMENT/Caveats&quot;
+    <pre>  &quot;DESCRIPTION|OPTIONS|ENVIORNMENT/Caveats&quot;
     </pre>
     <p class="Pp">will print any <span class="Li">&quot;=head2
         Caveats&quot;</span> section (only) within any of the three
@@ -132,8 +122,7 @@
     <p class="Pp">Alternatively, an array reference of section specifications
         can be used:</p>
     <p class="Pp"></p>
-    <pre>
-  pod2usage(-verbose =&gt; 99, -sections =&gt; [
+    <pre>  pod2usage(-verbose =&gt; 99, -sections =&gt; [
     qw(DESCRIPTION DESCRIPTION/Introduction) ] );
     </pre>
     <p class="Pp">This will print only the content of
@@ -156,8 +145,7 @@
     <p class="Pp">If you are calling <b></b><b>pod2usage()</b><b></b> from a
         module and want to display that module's POD, you can use this:</p>
     <p class="Pp"></p>
-    <pre>
-  use Pod::Find qw(pod_where);
+    <pre>  use Pod::Find qw(pod_where);
   pod2usage( -input =&gt; pod_where({-inc =&gt; 1}, __PACKAGE__) );
     </pre>
   </dd>
@@ -198,8 +186,7 @@
     <span class="Li">$Pod::Usage::Formatter</span> <i>before</i> loading
     Pod::Usage, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { $Pod::Usage::Formatter = 'Pod::Text::Termcap'; }
+<pre>    BEGIN { $Pod::Usage::Formatter = 'Pod::Text::Termcap'; }
     use Pod::Usage qw(pod2usage);
 </pre>
 <p class="Pp">Pod::Usage uses Pod::Simple's <b>_handle_element_end()</b> method
@@ -214,8 +201,7 @@
 <p class="Pp">The following options are passed through to the underlying text
     formatter. See the manual pages of these modules for more information.</p>
 <p class="Pp"></p>
-<pre>
-  alt code indent loose margin quotes sentence stderr utf8 width
+<pre>  alt code indent loose margin quotes sentence stderr utf8 width
 </pre>
 </section>
 </section>
@@ -277,17 +263,14 @@
     a string makes it convenient to use as an innocent looking error message
     handling function:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use Pod::Usage;
     use Getopt::Long;
-
     ## Parse options
     my %opt;
     GetOptions(\%opt, &quot;help|?&quot;, &quot;man&quot;, &quot;flag1&quot;)  ||  pod2usage(2);
     pod2usage(1)  if ($opt{help});
     pod2usage(-exitval =&gt; 0, -verbose =&gt; 2)  if ($opt{man});
-
     ## Check for too many filenames
     pod2usage(&quot;$0: Too many files given.\n&quot;)  if (@ARGV &gt; 1);
 </pre>
@@ -295,19 +278,15 @@
     expression&quot; is not particularly readable nor consistent and may instead
     choose to do something more like the following:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use Pod::Usage qw(pod2usage);
     use Getopt::Long qw(GetOptions);
-
     ## Parse options
     my %opt;
     GetOptions(\%opt, &quot;help|?&quot;, &quot;man&quot;, &quot;flag1&quot;)  ||
       pod2usage(-verbose =&gt; 0);
-
     pod2usage(-verbose =&gt; 1)  if ($opt{help});
     pod2usage(-verbose =&gt; 2)  if ($opt{man});
-
     ## Check for too many filenames
     pod2usage(-verbose =&gt; 2, -message =&gt; &quot;$0: Too many files given.\n&quot;)
       if (@ARGV &gt; 1);
@@ -331,21 +310,13 @@
     &quot;SYNOPSIS&quot; section to <span class="Li">&quot;STDERR&quot;</span>
     and will exit with a status of 2:</p>
 <p class="Pp"></p>
-<pre>
-    pod2usage();
-
+<pre>    pod2usage();
     pod2usage(2);
-
     pod2usage(-verbose =&gt; 0);
-
     pod2usage(-exitval =&gt; 2);
-
     pod2usage({-exitval =&gt; 2, -output =&gt; \*STDERR});
-
     pod2usage({-verbose =&gt; 0, -output  =&gt; \*STDERR});
-
     pod2usage(-exitval =&gt; 2, -verbose =&gt; 0);
-
     pod2usage(-exitval =&gt; 2, -verbose =&gt; 0, -output =&gt; \*STDERR);
 </pre>
 <p class="Pp">Each of the following invocations of
@@ -356,19 +327,12 @@
     <span class="Li">&quot;STDERR&quot;</span>) and will exit with a status of
     2:</p>
 <p class="Pp"></p>
-<pre>
-    pod2usage(&quot;Syntax error.&quot;);
-
+<pre>    pod2usage(&quot;Syntax error.&quot;);
     pod2usage(-message =&gt; &quot;Syntax error.&quot;, -verbose =&gt; 0);
-
     pod2usage(-msg  =&gt; &quot;Syntax error.&quot;, -exitval =&gt; 2);
-
     pod2usage({-msg =&gt; &quot;Syntax error.&quot;, -exitval =&gt; 2, -output =&gt; \*STDERR});
-
     pod2usage({-msg =&gt; &quot;Syntax error.&quot;, -verbose =&gt; 0, -output =&gt; \*STDERR});
-
     pod2usage(-msg  =&gt; &quot;Syntax error.&quot;, -exitval =&gt; 2, -verbose =&gt; 0);
-
     pod2usage(-message =&gt; &quot;Syntax error.&quot;,
               -exitval =&gt; 2,
               -verbose =&gt; 0,
@@ -380,19 +344,12 @@
     &quot;ARGUMENTS&quot; sections to <span class="Li">&quot;STDOUT&quot;</span>
     and will exit with a status of 1:</p>
 <p class="Pp"></p>
-<pre>
-    pod2usage(1);
-
+<pre>    pod2usage(1);
     pod2usage(-verbose =&gt; 1);
-
     pod2usage(-exitval =&gt; 1);
-
     pod2usage({-exitval =&gt; 1, -output =&gt; \*STDOUT});
-
     pod2usage({-verbose =&gt; 1, -output =&gt; \*STDOUT});
-
     pod2usage(-exitval =&gt; 1, -verbose =&gt; 1);
-
     pod2usage(-exitval =&gt; 1, -verbose =&gt; 1, -output =&gt; \*STDOUT});
 </pre>
 <p class="Pp">Each of the following invocations of
@@ -400,13 +357,9 @@
     page to <span class="Li">&quot;STDOUT&quot;</span> and will exit with a
     status of 1:</p>
 <p class="Pp"></p>
-<pre>
-    pod2usage(-verbose  =&gt; 2);
-
+<pre>    pod2usage(-verbose  =&gt; 2);
     pod2usage({-verbose =&gt; 2, -output =&gt; \*STDOUT});
-
     pod2usage(-exitval  =&gt; 1, -verbose =&gt; 2);
-
     pod2usage({-exitval =&gt; 1, -verbose =&gt; 2, -output =&gt; \*STDOUT});
 </pre>
 <section class="Ss">
@@ -424,11 +377,9 @@
     following complete example uses <b>Pod::Usage</b> in combination with
     <b>Getopt::Long</b> to do all of these things:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use Getopt::Long qw(GetOptions);
     use Pod::Usage qw(pod2usage);
-
     my $man = 0;
     my $help = 0;
     ## Parse options and print usage if there is a syntax error,
@@ -436,44 +387,27 @@
     GetOptions('help|?' =&gt; \$help, man =&gt; \$man) or pod2usage(2);
     pod2usage(1) if $help;
     pod2usage(-verbose =&gt; 2) if $man;
-
     ## If no arguments were given, then allow STDIN to be used only
     ## if it's not connected to a terminal (otherwise print usage)
     pod2usage(&quot;$0: No files given.&quot;)  if ((@ARGV == 0) &amp;&amp; (-t STDIN));
-
     __END__
-
     =head1 NAME
-
     sample - Using GetOpt::Long and Pod::Usage
-
     =head1 SYNOPSIS
-
     sample [options] [file ...]
-
      Options:
        -help            brief help message
        -man             full documentation
-
     =head1 OPTIONS
-
     =over 4
-
     =item B&lt;-help&gt;
-
     Print a brief help message and exits.
-
     =item B&lt;-man&gt;
-
     Prints the manual page and exits.
-
     =back
-
     =head1 DESCRIPTION
-
     B&lt;This program&gt; will read the given input file(s) and do something
     useful with the contents thereof.
-
     =cut
 </pre>
 </section>
@@ -490,8 +424,7 @@
     for your system, you may need to explicitly specify the path to the pod docs
     for the invoking script using something similar to the following:</p>
 <p class="Pp"></p>
-<pre>
-    pod2usage(-exitval =&gt; 2, -input =&gt; &quot;/path/to/your/pod/docs&quot;);
+<pre>    pod2usage(-exitval =&gt; 2, -input =&gt; &quot;/path/to/your/pod/docs&quot;);
 </pre>
 <p class="Pp">In the pathological case that a script is called via a relative
     path <i>and</i> the script itself changes the current working directory (see
@@ -499,8 +432,7 @@
     will fail even on robust platforms. Don't do that. Or use FindBin to locate
     the script:</p>
 <p class="Pp"></p>
-<pre>
-    use FindBin;
+<pre>    use FindBin;
     pod2usage(-input =&gt; $FindBin::Bin . &quot;/&quot; . $FindBin::Script);
 </pre>
 </section>

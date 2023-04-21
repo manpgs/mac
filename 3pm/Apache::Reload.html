@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::Reload(3)</title>
 </head>
@@ -30,15 +31,12 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">In httpd.conf:</p>
 <p class="Pp"></p>
-<pre>
-  PerlInitHandler Apache::Reload
+<pre>  PerlInitHandler Apache::Reload
   PerlSetVar ReloadAll Off
 </pre>
 <p class="Pp">Then your module:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Apache::Module;
-
+<pre>  package My::Apache::Module;
   use Apache::Reload;
   
   sub handler { ... }
@@ -66,8 +64,7 @@
 <p class="Pp">To use as a StatINC replacement, simply add the following
     configuration to your httpd.conf:</p>
 <p class="Pp"></p>
-<pre>
-  PerlInitHandler Apache::Reload
+<pre>  PerlInitHandler Apache::Reload
 </pre>
 </section>
 <section class="Ss">
@@ -76,15 +73,13 @@
 <p class="Pp">To only reload modules that have registered with Apache::Reload,
     add the following to the httpd.conf:</p>
 <p class="Pp"></p>
-<pre>
-  PerlInitHandler Apache::Reload
+<pre>  PerlInitHandler Apache::Reload
   PerlSetVar ReloadAll Off
   # ReloadAll defaults to On
 </pre>
 <p class="Pp">Then any modules with the line:</p>
 <p class="Pp"></p>
-<pre>
-  use Apache::Reload;
+<pre>  use Apache::Reload;
 </pre>
 <p class="Pp">Will be reloaded when they change.</p>
 </section>
@@ -94,8 +89,7 @@
 <p class="Pp">You can also register modules explicitly in your httpd.conf file
     that you want to be reloaded on change:</p>
 <p class="Pp"></p>
-<pre>
-  PerlInitHandler Apache::Reload
+<pre>  PerlInitHandler Apache::Reload
   PerlSetVar ReloadAll Off
   PerlSetVar ReloadModules &quot;My::Foo My::Bar Foo::Bar::Test&quot;
 </pre>
@@ -109,8 +103,7 @@
 <p class="Pp">If ReloadAll is set to On, then you can explicity force a module
     not to be reloaded with</p>
 <p class="Pp"></p>
-<pre>
-  no Apache::Reload;
+<pre>  no Apache::Reload;
 </pre>
 <p class="Pp">A warning will appear in the error log that the file has changed,
     but will not be reloaded</p>
@@ -123,14 +116,12 @@
     file, the reloads don't happen. This can be a great boon in a live
     environment:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetVar ReloadTouchFile /tmp/reload_modules
+<pre>  PerlSetVar ReloadTouchFile /tmp/reload_modules
 </pre>
 <p class="Pp">Now when you're happy with your changes, simply go to the command
     line and type:</p>
 <p class="Pp"></p>
-<pre>
-  touch /tmp/reload_modules
+<pre>  touch /tmp/reload_modules
 </pre>
 <p class="Pp">And your modules will be magically reloaded on the next request.
     This option works in both StatINC emulation mode and the registered modules

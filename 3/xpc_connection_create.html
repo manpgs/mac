@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>xpc_connection_create(3)</title>
 </head>
@@ -299,12 +300,10 @@
     before the connection's memory is being deallocated. For simple context
     structures allocated through <a class="Xr" href="../3/malloc">malloc(3)</a>,
     this provides a convenient shortcut. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct my_context_s *ctx = malloc(sizeof(*ctx));
+<div class="Bd Pp Bd-indent Li">
+<pre>struct my_context_s *ctx = malloc(sizeof(*ctx));
 xpc_connection_set_context(connection, ctx);
-xpc_connection_set_finalizer_f(connection, free);
-</pre>
+xpc_connection_set_finalizer_f(connection, free);</pre>
 </div>
 <p class="Pp"><i class="Em">Important</i>: The connection object itself should
     <i class="Em">not</i> be referenced or modified in any way within the
@@ -332,9 +331,8 @@ xpc_connection_set_finalizer_f(connection, free);
     target queue and therefore has no guaranteed execution order with respect to
     other blocks scheduled on that queue. The following code illustrates this
     anti-pattern:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-xpc_connection_set_target_queue(connection, queue);
+<div class="Bd Pp Bd-indent Li">
+<pre>xpc_connection_set_target_queue(connection, queue);
 
 static bool aboolean = false;
 xpc_connection_send_barrier(connection, ^{
@@ -344,17 +342,15 @@ xpc_connection_send_barrier(connection, ^{
 dispatch_async(queue, ^{
 	// Assertion will fail.
 	assert(aboolean == true);
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp">To achieve the desired effect of deferring the second block's
     execution until after the barrier has completed, the caller can use a
     dispatch group
     <a class="Xr" href="../3)/(dispatch_group_create">(dispatch_group_create(3))</a>
     as follows:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-xpc_connection_set_target_queue(connection, queue);
+<div class="Bd Pp Bd-indent Li">
+<pre>xpc_connection_set_target_queue(connection, queue);
 
 static bool aboolean = false;
 
@@ -368,8 +364,7 @@ xpc_connection_send_barrier(connection, ^{
 
 dispatch_group_notify(group, queue, ^{
 	assert(aboolean == true);
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp">Alternatively, the caller can also
     <a class="Xr" href="../3/dispatch_async">dispatch_async(3)</a> the second
@@ -405,23 +400,20 @@ dispatch_group_notify(group, queue, ^{
     delivered.</p>
 <p class="Pp" id="CLIENT"><a class="permalink" href="#CLIENT"><i class="Em">CLIENT
     SIDE</i></a></p>
-<div class="Bd Pp Bd-indent">
-<pre>
-xpc_connection_send_message_with_reply(connection, message, replyq, ^(xpc_object_t reply) {
+<div class="Bd Pp Bd-indent Li">
+<pre>xpc_connection_send_message_with_reply(connection, message, replyq, ^(xpc_object_t reply) {
 	if (xpc_get_type(reply) == XPC_TYPE_DICTIONARY) {
 		// Process reply message that is specific to the message sent.
 	} else {
 		// There was an error, indicating that the caller will never receive
 		// a reply to this message. Tear down any associated data structures.
 	}
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp" id="SERVICE"><a class="permalink" href="#SERVICE"><i class="Em">SERVICE
     SIDE</i></a></p>
-<div class="Bd Pp Bd-indent">
-<pre>
-void
+<div class="Bd Pp Bd-indent Li">
+<pre>void
 handle_message(xpc_object_t message)
 {
 	if (xpc_dictionary_get_bool(message, &quot;ExpectsReply&quot;)) {
@@ -437,8 +429,7 @@ handle_message(xpc_object_t message)
 	} else {
 		// The sender does not expect any kind of special reply.
 	}
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp"><i class="Em">Important</i>: The invocations of reply handlers are
     independent of the connection's normal incoming message stream. Therefore,
@@ -462,9 +453,8 @@ handle_message(xpc_object_t message)
     to retrieve a value, we strongly encourage you to have the API return the
     value asynchronously using a queue/block pair rather than blocking the
     caller until the service returns the requested value:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-void
+<div class="Bd Pp Bd-indent Li">
+<pre>void
 retrieve_uint64(dispatch_queue_t q, void (^handler)(uint64_t value))
 {
 	xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
@@ -482,8 +472,7 @@ retrieve_uint64(dispatch_queue_t q, void (^handler)(uint64_t value))
 		}
 		xpc_release(message);
 	});
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">However, such a scheme may introduce unwanted complexity in the
     API. The trade- off for making the example implementation above synchronous
@@ -626,9 +615,8 @@ retrieve_uint64(dispatch_queue_t q, void (^handler)(uint64_t value))
     the handler given to <a class="Xr" href="../3/xpc_main">xpc_main(3)</a>.
     Note connections received through listener connection's event handler do not
     inherit the target queue of the listener.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-int
+<div class="Bd Pp Bd-indent Li">
+<pre>int
 main(void)
 {
 	xpc_connection_t listener = xpc_connection_create_mach_service(&quot;com.apple.myservice&quot;, NULL, XPC_CONNECTION_MACH_SERVICE_LISTENER);
@@ -644,8 +632,7 @@ main(void)
 
 	dispatch_main();
 	exit(EXIT_FAILURE);
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp" id="xpc_connection_create_mach_service~3"><i class="Em">Important</i>:
     New service names may <i class="Em">NOT</i> be dynamically registered using

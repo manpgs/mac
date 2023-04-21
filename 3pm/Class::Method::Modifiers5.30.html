@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::Method::Modifiers(3)</title>
 </head>
@@ -33,29 +34,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Child;
+<pre>    package Child;
     use parent 'MyParent';
     use Class::Method::Modifiers;
-
     sub new_method { }
-
     before 'old_method' =&gt; sub {
         carp &quot;old_method is deprecated, use new_method&quot;;
     };
-
     around 'other_method' =&gt; sub {
         my $orig = shift;
         my $ret = $orig-&gt;(@_);
         return $ret =~ /\d/ ? $ret : lc $ret;
     };
-
     after 'private', 'protected' =&gt; sub {
         debug &quot;finished calling a dangerous method&quot;;
     };
-
     use Class::Method::Modifiers qw(fresh);
-
     fresh 'not_in_hierarchy' =&gt; sub {
         warn &quot;freshly added method\n&quot;;
     };
@@ -110,8 +104,7 @@
     The names of multiple methods can be provided as a list or as an
     array-reference. Examples:</p>
 <p class="Pp"></p>
-<pre>
- before 'method' =&gt; sub { ... };
+<pre> before 'method' =&gt; sub { ... };
  before 'method1', 'method2' =&gt; sub { ... };
  before [ 'method1', 'method2' ] =&gt; sub { ... };
 </pre>
@@ -152,8 +145,7 @@
   <dt id="Pass"><a class="permalink" href="#Pass">Pass $orig a different
     @_</a></dt>
   <dd>
-    <pre>
-    around 'method' =&gt; sub {
+    <pre>    around 'method' =&gt; sub {
         my $orig = shift;
         my $self = shift;
         $orig-&gt;($self, reverse @_);
@@ -163,8 +155,7 @@
   <dt id="Munge"><a class="permalink" href="#Munge">Munge the return value of
     $orig</a></dt>
   <dd>
-    <pre>
-    around 'method' =&gt; sub {
+    <pre>    around 'method' =&gt; sub {
         my $orig = shift;
         ucfirst $orig-&gt;(@_);
     };
@@ -173,8 +164,7 @@
   <dt id="Avoid"><a class="permalink" href="#Avoid">Avoid calling $orig --
     conditionally</a></dt>
   <dd>
-    <pre>
-    around 'method' =&gt; sub {
+    <pre>    around 'method' =&gt; sub {
         my $orig = shift;
         return $orig-&gt;(@_) if time() % 2;
         return &quot;no dice, captain&quot;;
@@ -195,10 +185,8 @@
     subclassing. Suppose you're writing a subclass of a class Some::Base, and
     adding a new method:</p>
 <p class="Pp"></p>
-<pre>
-    package My::Subclass;
+<pre>    package My::Subclass;
     use base 'Some::Base';
-
     sub foo { ... }
 </pre>
 <p class="Pp">If a later version of Some::Base also adds a new method named
@@ -206,12 +194,9 @@
     method. Alternatively, you can use <span class="Li">&quot;fresh&quot;</span>
     to install the additional method into your subclass:</p>
 <p class="Pp"></p>
-<pre>
-    package My::Subclass;
+<pre>    package My::Subclass;
     use base 'Some::Base';
-
     use Class::Method::Modifiers 'fresh';
-
     fresh 'foo' =&gt; sub { ... };
 </pre>
 <p class="Pp">Now upgrading Some::Base to a version with a conflicting

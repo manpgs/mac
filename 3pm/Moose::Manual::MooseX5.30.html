@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::MooseX(3)</title>
 </head>
@@ -55,9 +56,7 @@
     provides methods on both arrays/hashes/etc. but also references to them,
     using Moose roles, allowing you do to things like:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose::Autobox;
-
+<pre>  use Moose::Autobox;
   $somebody_elses_object-&gt;orders-&gt;push($order);
 </pre>
 <p class="Pp">Lexically scoped and not to everybody's taste, but very handy for
@@ -69,15 +68,11 @@
     constructor. If you load MooseX::StrictConstructor, your class will throw an
     error if it sees something it doesn't recognize;</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use Moose;
   use MooseX::StrictConstructor;
-
   has 'name';
   has 'email';
-
   User-&gt;new( name =&gt; 'Bob', emali =&gt; 'bob@example.com' );
 </pre>
 <p class="Pp">With MooseX::StrictConstructor, that typo (&quot;emali&quot;) will
@@ -94,17 +89,13 @@
     more clunky (but also faster and simpler) MooseX::Params::Validate. This
     module lets you apply Moose types and coercions to any method arguments.</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use Moose;
   use MooseX::Params::Validate;
-
   sub login {
       my $self = shift;
       my ($password)
           = validated_list( \@_, password =&gt; { isa =&gt; 'Str', required =&gt; 1 } );
-
       ...
   }
 </pre>
@@ -118,37 +109,29 @@
 <p class="Pp">This makes writing a command-line application as a module
     trivially simple:</p>
 <p class="Pp"></p>
-<pre>
-  package App::Foo;
-
+<pre>  package App::Foo;
   use Moose;
   with 'MooseX::Getopt';
-
   has 'input' =&gt; (
       is       =&gt; 'ro',
       isa      =&gt; 'Str',
       required =&gt; 1
   );
-
   has 'output' =&gt; (
       is       =&gt; 'ro',
       isa      =&gt; 'Str',
       required =&gt; 1
   );
-
   sub run { ... }
 </pre>
 <p class="Pp">Then in the script that gets run we have:</p>
 <p class="Pp"></p>
-<pre>
-  use App::Foo;
-
+<pre>  use App::Foo;
   App::Foo-&gt;new_with_options-&gt;run;
 </pre>
 <p class="Pp">From the command line, someone can execute the script:</p>
 <p class="Pp"></p>
-<pre>
-  foo@example&gt; foo --input /path/to/input --output /path/to/output
+<pre>  foo@example&gt; foo --input /path/to/input --output /path/to/output
 </pre>
 </section>
 <section class="Sh">
@@ -160,11 +143,8 @@
     have an existing class that <i>isn't</i> a singleton but should be, using
     MooseX::Singleton is the easiest way to convert it.</p>
 <p class="Pp"></p>
-<pre>
-  package Config;
-
+<pre>  package Config;
   use MooseX::Singleton; # instead of Moose
-
   has 'cache_dir' =&gt; ( ... );
 </pre>
 <p class="Pp">It's that simple.</p>
@@ -194,10 +174,8 @@
     application. It also lets you predeclare type names and use them as
     barewords.</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::Types -declare =&gt; ['PositiveInt'];
+<pre>  use MooseX::Types -declare =&gt; ['PositiveInt'];
   use MooseX::Types::Moose 'Int';
-
   subtype PositiveInt,
       as Int,
       where { $_ &gt; 0 },
@@ -212,14 +190,11 @@
 <p class="Pp">This extension builds on top of MooseX::Types to let you declare
     complex data structure types.</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::Types -declare =&gt; [ qw( Name Color ) ];
+<pre>  use MooseX::Types -declare =&gt; [ qw( Name Color ) ];
   use MooseX::Types::Moose qw(Str Int);
   use MooseX::Types::Structured qw(Dict Tuple Optional);
-
   subtype Name
       =&gt; as Dict[ first =&gt; Str, middle =&gt; Optional[Str], last =&gt; Str ];
-
   subtype Color
       =&gt; as Tuple[ Int, Int, Int, Optional[Int] ];
 </pre>
@@ -232,21 +207,16 @@
     declared class attributes are introspectable just like regular Moose
     attributes.</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use Moose;
   use MooseX::ClassAttribute;
-
   has 'name' =&gt; ( ... );
-
   class_has 'Cache' =&gt; ( ... );
 </pre>
 <p class="Pp">Note however that this class attribute does <i>not</i> inherit
     like a Class::Data::Inheritable or similar attribute - calling</p>
 <p class="Pp"></p>
-<pre>
-  $subclass-&gt;Cache($cache);
+<pre>  $subclass-&gt;Cache($cache);
 </pre>
 <p class="Pp">will set it for the superclass as well. Additionally, class data
     is usually The Wrong Thing To Do in a strongly OO program since it makes

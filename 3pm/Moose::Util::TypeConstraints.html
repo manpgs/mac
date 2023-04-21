@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Util::TypeConstraints(3)</title>
 </head>
@@ -33,30 +34,21 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Moose::Util::TypeConstraints;
-
+<pre>  use Moose::Util::TypeConstraints;
   subtype 'Natural',
       as 'Int',
       where { $_ &gt; 0 };
-
   subtype 'NaturalLessThanTen',
       as 'Natural',
       where { $_ &lt; 10 },
       message { &quot;This number ($_) is not less than ten!&quot; };
-
   coerce 'Num',
       from 'Str',
       via { 0+$_ };
-
   class_type 'DateTimeClass', { class =&gt; 'DateTime' };
-
   role_type 'Barks', { role =&gt; 'Some::Library::Role::Barks' };
-
   enum 'RGBColors', [qw(red green blue)];
-
   union 'StringOrArray', [qw( String ArrayRef )];
-
   no Moose::Util::TypeConstraints;
 </pre>
 </section>
@@ -84,21 +76,18 @@
     as a valid class.</p>
 <p class="Pp">For instance:</p>
 <p class="Pp"></p>
-<pre>
-  subtype DateTime =&gt; as Object =&gt; where { $_-&gt;isa('DateTime') };
+<pre>  subtype DateTime =&gt; as Object =&gt; where { $_-&gt;isa('DateTime') };
 </pre>
 <p class="Pp">will <i>just work</i>, while this:</p>
 <p class="Pp"></p>
-<pre>
-  use DateTime;
+<pre>  use DateTime;
   subtype DateTime =&gt; as Object =&gt; where { $_-&gt;isa('DateTime') };
 </pre>
 <p class="Pp">will fail silently and cause many headaches. The simple way to
     solve this, as well as future proof your subtypes from classes which have
     yet to have been created, is to quote the type name:</p>
 <p class="Pp"></p>
-<pre>
-  use DateTime;
+<pre>  use DateTime;
   subtype 'DateTime', as 'Object', where { $_-&gt;isa('DateTime') };
 </pre>
 </section>
@@ -108,8 +97,7 @@
 <p class="Pp">This module also provides a simple hierarchy for Perl 5 types,
     here is that hierarchy represented visually.</p>
 <p class="Pp"></p>
-<pre>
-  Any
+<pre>  Any
       Item
           Bool
           Maybe[`a]
@@ -135,8 +123,7 @@
     <span class="Li">&quot;[`a]&quot;</span> can be parameterized, this means
     you can say:</p>
 <p class="Pp"></p>
-<pre>
-  ArrayRef[Int]    # an array of integers
+<pre>  ArrayRef[Int]    # an array of integers
   HashRef[CodeRef] # a hash of str to CODE ref mappings
   ScalarRef[Int]   # a reference to an integer
   Maybe[Str]       # value may be a string, may be undefined
@@ -181,8 +168,7 @@
 <p class="Pp">For instance, this is how you could use it with
     Declare::Constraints::Simple to declare a completely new type.</p>
 <p class="Pp"></p>
-<pre>
-  type 'HashOfArrayOfObjects',
+<pre>  type 'HashOfArrayOfObjects',
       where {
           IsHashRef(
               -keys   =&gt; HasLength,
@@ -195,8 +181,7 @@
 <p class="Pp">Here is an example of using Test::Deep and its non-test related
     <span class="Li">&quot;eq_deeply&quot;</span> function.</p>
 <p class="Pp"></p>
-<pre>
-  type 'ArrayOfHashOfBarsAndRandomNumbers',
+<pre>  type 'ArrayOfHashOfBarsAndRandomNumbers',
       where {
           eq_deeply($_,
               array_each(subhashof({
@@ -215,8 +200,7 @@
     they fail to validate. This is provided as just another coderef, which
     receives the invalid value in <span class="Li">$_</span>, as in:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'PositiveInt',
+<pre>  subtype 'PositiveInt',
        as 'Int',
        where { $_ &gt; 0 },
        message { &quot;$_ is not a positive integer!&quot; };
@@ -247,8 +231,7 @@
     <span class="Li">&quot;message&quot;</span>, etc), or with a name and a
     hashref of parameters:</p>
 <p class="Pp"></p>
-<pre>
- subtype( 'Foo', { where =&gt; ..., message =&gt; ... } );
+<pre> subtype( 'Foo', { where =&gt; ..., message =&gt; ... } );
 </pre>
 <p class="Pp">The valid hashref keys are <span class="Li">&quot;as&quot;</span>
     (the parent), <span class="Li">&quot;where&quot;</span>,
@@ -264,8 +247,7 @@
     <span class="Li">&quot;message&quot;</span>, etc), or with just a hashref of
     parameters:</p>
 <p class="Pp"></p>
-<pre>
- subtype( { where =&gt; ..., message =&gt; ... } );
+<pre> subtype( { where =&gt; ..., message =&gt; ... } );
 </pre>
 <p class="Pp"><i>class_type ($class, ?$options)</i></p>
 <p class="Pp">Creates a new subtype of
@@ -273,15 +255,13 @@
     <span class="Li">$class</span> and the metaclass
     Moose::Meta::TypeConstraint::Class.</p>
 <p class="Pp"></p>
-<pre>
-  # Create a type called 'Box' which tests for objects which -&gt;isa('Box')
+<pre>  # Create a type called 'Box' which tests for objects which -&gt;isa('Box')
   class_type 'Box';
 </pre>
 <p class="Pp">By default, the name of the type and the name of the class are the
     same, but you can specify both separately.</p>
 <p class="Pp"></p>
-<pre>
-  # Create a type called 'Box' which tests for objects which -&gt;isa('ObjectLibrary::Box');
+<pre>  # Create a type called 'Box' which tests for objects which -&gt;isa('ObjectLibrary::Box');
   class_type 'Box', { class =&gt; 'ObjectLibrary::Box' };
 </pre>
 <p class="Pp"><i>role_type ($role, ?$options)</i></p>
@@ -289,15 +269,13 @@
     with the name <span class="Li">$role</span> and the metaclass
     Moose::Meta::TypeConstraint::Role.</p>
 <p class="Pp"></p>
-<pre>
-  # Create a type called 'Walks' which tests for objects which -&gt;does('Walks')
+<pre>  # Create a type called 'Walks' which tests for objects which -&gt;does('Walks')
   role_type 'Walks';
 </pre>
 <p class="Pp">By default, the name of the type and the name of the role are the
     same, but you can specify both separately.</p>
 <p class="Pp"></p>
-<pre>
-  # Create a type called 'Walks' which tests for objects which -&gt;does('MooseX::Role::Walks');
+<pre>  # Create a type called 'Walks' which tests for objects which -&gt;does('MooseX::Role::Walks');
   role_type 'Walks', { role =&gt; 'MooseX::Role::Walks' };
 </pre>
 <p class="Pp"><i>maybe_type ($type)</i></p>
@@ -318,8 +296,7 @@
     pair, this will create an unnamed duck type. This can be used in an
     attribute definition like so:</p>
 <p class="Pp"></p>
-<pre>
-  has 'cache' =&gt; (
+<pre>  has 'cache' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; duck_type( [qw( get_set )] ),
   );
@@ -338,8 +315,7 @@
     pair, this will create an unnamed enum. This can then be used in an
     attribute definition like so:</p>
 <p class="Pp"></p>
-<pre>
-  has 'sort_order' =&gt; (
+<pre>  has 'sort_order' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; enum([qw[ ascending descending ]]),
   );
@@ -353,22 +329,19 @@
     <span class="Li">&quot;\@constraints&quot;</span> pair, this will create an
     unnamed union. This can then be used in an attribute definition like so:</p>
 <p class="Pp"></p>
-<pre>
-  has 'items' =&gt; (
+<pre>  has 'items' =&gt; (
       is =&gt; 'ro',
       isa =&gt; union([qw[ Str ArrayRef ]]),
   );
 </pre>
 <p class="Pp">This is similar to the existing string union:</p>
 <p class="Pp"></p>
-<pre>
-  isa =&gt; 'Str|ArrayRef'
+<pre>  isa =&gt; 'Str|ArrayRef'
 </pre>
 <p class="Pp">except that it supports anonymous elements as child
   constraints:</p>
 <p class="Pp"></p>
-<pre>
-  has 'color' =&gt; (
+<pre>  has 'color' =&gt; (
     isa =&gt; 'ro',
     isa =&gt; union([ 'Int',  enum([qw[ red green blue ]]) ]),
   );
@@ -409,8 +382,7 @@
     code for the <span class="Li">&quot;Value&quot;</span> type, which is a
     subtype of <span class="Li">&quot;Defined&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    sub {
+<pre>    sub {
         $_[0]-&gt;parent()-&gt;_inline_check($_[1])
         . ' &amp;&amp; !ref(' . $_[1] . ')'
     }
@@ -423,8 +395,7 @@
     <span class="Li">&quot;message&quot;</span>, etc), or with a name and a
     hashref of parameters:</p>
 <p class="Pp"></p>
-<pre>
-  type( 'Foo', { where =&gt; ..., message =&gt; ... } );
+<pre>  type( 'Foo', { where =&gt; ..., message =&gt; ... } );
 </pre>
 <p class="Pp">The valid hashref keys are
     <span class="Li">&quot;where&quot;</span>,
@@ -434,16 +405,16 @@
 <section class="Ss">
 <h2 class="Ss" id="Type_Constraint_Utilities"><a class="permalink" href="#Type_Constraint_Utilities">Type
   Constraint Utilities</a></h2>
-<p class="Pp"><i>match_on_type </i><i>$value</i><i> =&gt; ( </i><i>$type</i><i>
-    =&gt; \&amp;action, ... ?\&amp;default )</i></p>
+<p class="Pp"><i>match_on_type </i><span class="Li"><i>$value</i></span><i>
+    =&gt; ( </i><span class="Li"><i>$type</i></span><i> =&gt; \&amp;action, ...
+    ?\&amp;default )</i></p>
 <p class="Pp">This is a utility function for doing simple type based dispatching
     similar to match/case in OCaml and case/of in Haskell. It is not as
     featureful as those languages, nor does not it support any kind of automatic
     destructuring bind. Here is a simple Perl pretty printer dispatching over
     the core Moose types.</p>
 <p class="Pp"></p>
-<pre>
-  sub ppprint {
+<pre>  sub ppprint {
       my $x = shift;
       match_on_type $x =&gt; (
           HashRef =&gt; sub {
@@ -472,8 +443,7 @@
 </pre>
 <p class="Pp">Or a simple JSON serializer:</p>
 <p class="Pp"></p>
-<pre>
-  sub to_json {
+<pre>  sub to_json {
       my $x = shift;
       match_on_type $x =&gt; (
           HashRef =&gt; sub {
@@ -525,8 +495,7 @@
 <p class="Pp">To define multiple coercions, supply more sets of from/via
   pairs:</p>
 <p class="Pp"></p>
-<pre>
-  coerce 'Name',
+<pre>  coerce 'Name',
     from 'OtherName', via { ... },
     from 'ThirdName', via { ... };
 </pre>
@@ -558,10 +527,10 @@
 <p class="Pp">This method takes a type constraint name and returns the
     normalized form. This removes any whitespace in the string.</p>
 <p class="Pp"><i>create_type_constraint_union($pipe_separated_types |
-    </i><i>@type_constraint_names</i><i>)</i></p>
+    </i><span class="Li"><i>@type_constraint_names</i></span><i>)</i></p>
 <p class="Pp"><i>create_named_type_constraint_union($name,
-    </i><i>$pipe_separated_types</i><i> |
-    </i><i>@type_constraint_names</i><i>)</i></p>
+    </i><span class="Li"><i>$pipe_separated_types</i></span><i> |
+    </i><span class="Li"><i>@type_constraint_names</i></span><i>)</i></p>
 <p class="Pp">This can take a union type specification like
     <span class="Li">'Int|ArrayRef[Int]'</span>, or a list of names. It returns
     a new Moose::Meta::TypeConstraint::Union object.</p>
@@ -572,25 +541,25 @@
     <span class="Li">&quot;BaseType&quot;</span> must already exist as a
     parameterizable type.</p>
 <p class="Pp"><i>create_class_type_constraint($class,
-    </i><i>$options</i><i>)</i></p>
+    </i><span class="Li"><i>$options</i></span><i>)</i></p>
 <p class="Pp">Given a class name this function will create a new
     Moose::Meta::TypeConstraint::Class object for that class name.</p>
 <p class="Pp">The <span class="Li">$options</span> is a hash reference that will
     be passed to the Moose::Meta::TypeConstraint::Class constructor (as a
   hash).</p>
 <p class="Pp"><i>create_role_type_constraint($role,
-  </i><i>$options</i><i>)</i></p>
+    </i><span class="Li"><i>$options</i></span><i>)</i></p>
 <p class="Pp">Given a role name this function will create a new
     Moose::Meta::TypeConstraint::Role object for that role name.</p>
 <p class="Pp">The <span class="Li">$options</span> is a hash reference that will
     be passed to the Moose::Meta::TypeConstraint::Role constructor (as a
   hash).</p>
 <p class="Pp"><i>create_enum_type_constraint($name,
-  </i><i>$values</i><i>)</i></p>
+    </i><span class="Li"><i>$values</i></span><i>)</i></p>
 <p class="Pp">Given a enum name this function will create a new
     Moose::Meta::TypeConstraint::Enum object for that enum name.</p>
 <p class="Pp"><i>create_duck_type_constraint($name,
-  </i><i>$methods</i><i>)</i></p>
+    </i><span class="Li"><i>$methods</i></span><i>)</i></p>
 <p class="Pp">Given a duck type name this function will create a new
     Moose::Meta::TypeConstraint::DuckType object for that enum name.</p>
 <p class="Pp"><i>find_or_parse_type_constraint($type_name)</i></p>

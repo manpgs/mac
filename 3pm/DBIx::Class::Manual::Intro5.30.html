@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::Intro(3)</title>
 </head>
@@ -47,8 +48,7 @@
     Relationships it has to other tables. (And oh, so much more besides) The
     important thing to understand:</p>
 <p class="Pp"></p>
-<pre>
-  A Result class == Table
+<pre>  A Result class == Table
 </pre>
 <p class="Pp">(most of the time, but just bear with my simplification)</p>
 </section>
@@ -64,22 +64,19 @@
     DBIx::Class::ResultSet from its ResultSource. For example, the results
   of:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT albumid, artist, title FROM album;
+<pre>  SELECT albumid, artist, title FROM album;
 </pre>
 <p class="Pp">Would be retrieved by creating a ResultSet object from the album
     table's ResultSource, likely by using the &quot;search&quot; method.</p>
 <p class="Pp">DBIx::Class doesn't limit you to creating only simple ResultSets
     -- if you wanted to do something like:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT title FROM album GROUP BY title;
+<pre>  SELECT title FROM album GROUP BY title;
 </pre>
 <p class="Pp">You could easily achieve it.</p>
 <p class="Pp">The important thing to understand:</p>
 <p class="Pp"></p>
-<pre>
-  Any time you would reach for a SQL query in DBI, you are
+<pre>  Any time you would reach for a SQL query in DBI, you are
   creating a DBIx::Class::ResultSet.
 </pre>
 </section>
@@ -92,8 +89,7 @@
     &quot;next&quot;, or &quot;first&quot;)</p>
 <p class="Pp">The important thing to understand:</p>
 <p class="Pp"></p>
-<pre>
-  Setting up a ResultSet does not execute the query; retrieving
+<pre>  Setting up a ResultSet does not execute the query; retrieving
   the data does.
 </pre>
 </section>
@@ -118,16 +114,14 @@
 <p class="Pp">First, you should create your base schema class, which inherits
     from DBIx::Class::Schema:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Schema;
+<pre>  package My::Schema;
   use base qw/DBIx::Class::Schema/;
 </pre>
 <p class="Pp">In this class you load your result_source (&quot;table&quot;,
     &quot;model&quot;) classes, which we will define later, using the
     <b>load_namespaces()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  # load My::Schema::Result::* and their resultset classes
+<pre>  # load My::Schema::Result::* and their resultset classes
   __PACKAGE__-&gt;load_namespaces();
 </pre>
 <p class="Pp">By default this loads all the Result (Row) classes in the
@@ -142,16 +136,14 @@
 <p class="Pp">Next, create each of the classes you want to load as specified
     above:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Schema::Result::Album;
+<pre>  package My::Schema::Result::Album;
   use base qw/DBIx::Class::Core/;
 </pre>
 <p class="Pp">Load any additional components you may need with the
     <b>load_components()</b> method, and provide component configuration if
     required. For example, if you want automatic row ordering:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;load_components(qw/ Ordered /);
+<pre>  __PACKAGE__-&gt;load_components(qw/ Ordered /);
   __PACKAGE__-&gt;position_column('rank');
 </pre>
 <p class="Pp">Ordered will refer to a field called 'position' unless otherwise
@@ -160,20 +152,17 @@
     not defined a position column or have a 'position' field in your row.)</p>
 <p class="Pp">Set the table for your class:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;table('album');
+<pre>  __PACKAGE__-&gt;table('album');
 </pre>
 <p class="Pp">Add columns to your class:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_columns(qw/ albumid artist title rank /);
+<pre>  __PACKAGE__-&gt;add_columns(qw/ albumid artist title rank /);
 </pre>
 <p class="Pp">Each column can also be set up with its own accessor, data_type
     and other pieces of information that it may be useful to have -- just pass
     <span class="Li">&quot;add_columns&quot;</span> a hash:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_columns(albumid =&gt;
+<pre>  __PACKAGE__-&gt;add_columns(albumid =&gt;
                             { accessor  =&gt; 'album',
                               data_type =&gt; 'integer',
                               size      =&gt; 16,
@@ -210,14 +199,12 @@
     when using the accessor), <b>artist()</b> and <b>title()</b> methods.</p>
 <p class="Pp">Define a primary key for your class:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;set_primary_key('albumid');
+<pre>  __PACKAGE__-&gt;set_primary_key('albumid');
 </pre>
 <p class="Pp">If you have a multi-column primary key, just pass a list
   instead:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;set_primary_key( qw/ albumid artistid / );
+<pre>  __PACKAGE__-&gt;set_primary_key( qw/ albumid artistid / );
 </pre>
 <p class="Pp">Define this class' relationships with other classes using either
     <span class="Li">&quot;belongs_to&quot;</span> to describe a column which
@@ -225,8 +212,7 @@
     <span class="Li">&quot;has_many&quot;</span> to make a predefined accessor
     for fetching objects that contain this Table's foreign key:</p>
 <p class="Pp"></p>
-<pre>
-  # in My::Schema::Result::Artist
+<pre>  # in My::Schema::Result::Artist
   __PACKAGE__-&gt;has_many('albums', 'My::Schema::Result::Album', 'artist');
 </pre>
 <p class="Pp">See DBIx::Class::Relationship for more information about the
@@ -242,24 +228,21 @@
 <p class="Pp">The simplest way to use it is via the dbicdump script from the
     DBIx::Class::Schema::Loader distribution. For example:</p>
 <p class="Pp"></p>
-<pre>
-    $ dbicdump -o dump_directory=./lib \
+<pre>    $ dbicdump -o dump_directory=./lib \
         -o components='[&quot;InflateColumn::DateTime&quot;]' \
         MyApp::Schema dbi:mysql:mydb user pass
 </pre>
 <p class="Pp">If you have a mixed-case database, use the
     <span class="Li">&quot;preserve_case&quot;</span> option, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    $ dbicdump -o dump_directory=./lib -o preserve_case=1 \
+<pre>    $ dbicdump -o dump_directory=./lib -o preserve_case=1 \
         -o components='[&quot;InflateColumn::DateTime&quot;]' \
         MyApp::Schema dbi:mysql:mydb user pass
 </pre>
 <p class="Pp">If you are using Catalyst, then you can use the helper that comes
     with Catalyst::Model::DBIC::Schema:</p>
 <p class="Pp"></p>
-<pre>
-    $ script/myapp_create.pl model MyModel DBIC::Schema MyApp::Schema \
+<pre>    $ script/myapp_create.pl model MyModel DBIC::Schema MyApp::Schema \
         create=static moniker_map='{ foo =&gt; &quot;FOO&quot; }' dbi:SQLite:./myapp.db \
         on_connect_do='PRAGMA foreign_keys=ON' quote_char='&quot;'
 </pre>
@@ -276,22 +259,19 @@
 <p class="Pp"><i>Via connection details</i></p>
 <p class="Pp">The arguments are the same as for &quot;connect&quot; in DBI:</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = My::Schema-&gt;connect('dbi:SQLite:/home/me/myapp/my.db');
+<pre>  my $schema = My::Schema-&gt;connect('dbi:SQLite:/home/me/myapp/my.db');
 </pre>
 <p class="Pp">You can create as many different schema instances as you need. So
     if you have a second database you want to access:</p>
 <p class="Pp"></p>
-<pre>
-  my $other_schema = My::Schema-&gt;connect( $dsn, $user, $password, $attrs );
+<pre>  my $other_schema = My::Schema-&gt;connect( $dsn, $user, $password, $attrs );
 </pre>
 <p class="Pp">Note that DBIx::Class::Schema does not cache connections for you.
     If you use multiple connections, you need to do this manually.</p>
 <p class="Pp">To execute some SQL statements on every connect you can add them
     as an option in a special fifth argument to connect:</p>
 <p class="Pp"></p>
-<pre>
-  my $another_schema = My::Schema-&gt;connect(
+<pre>  my $another_schema = My::Schema-&gt;connect(
       $dsn,
       $user,
       $password,
@@ -306,8 +286,7 @@
 <p class="Pp">The supplied coderef is expected to return a single connected
     database handle (e.g. a DBI <span class="Li">$dbh</span>)</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = My::Schema-&gt;connect (
+<pre>  my $schema = My::Schema-&gt;connect (
     sub { Some::DBH::Factory-&gt;connect },
     \%extra_attrs,
   );
@@ -325,8 +304,7 @@
     the <span class="Li">&quot;resultset&quot;</span> method.</p>
 <p class="Pp">The simplest way to get a record is by primary key:</p>
 <p class="Pp"></p>
-<pre>
-  my $album = $schema-&gt;resultset('Album')-&gt;find(14);
+<pre>  my $album = $schema-&gt;resultset('Album')-&gt;find(14);
 </pre>
 <p class="Pp">This will run a <span class="Li">&quot;SELECT&quot;</span> with
     <span class="Li">&quot;albumid = 14&quot;</span> in the
@@ -335,16 +313,14 @@
     represents this row. Once you have that row, you can access and update
     columns:</p>
 <p class="Pp"></p>
-<pre>
-  $album-&gt;title('Physical Graffiti');
+<pre>  $album-&gt;title('Physical Graffiti');
   my $title = $album-&gt;title; # $title holds 'Physical Graffiti'
 </pre>
 <p class="Pp">If you prefer, you can use the
     <span class="Li">&quot;set_column&quot;</span> and
     <span class="Li">&quot;get_column&quot;</span> accessors instead:</p>
 <p class="Pp"></p>
-<pre>
-  $album-&gt;set_column('title', 'Presence');
+<pre>  $album-&gt;set_column('title', 'Presence');
   $title = $album-&gt;get_column('title');
 </pre>
 <p class="Pp">Just like with Class::DBI, you call
@@ -352,13 +328,11 @@
     database (by executing the actual <span class="Li">&quot;UPDATE&quot;</span>
     statement):</p>
 <p class="Pp"></p>
-<pre>
-  $album-&gt;update;
+<pre>  $album-&gt;update;
 </pre>
 <p class="Pp">If needed, you can throw away your local changes:</p>
 <p class="Pp"></p>
-<pre>
-  $album-&gt;discard_changes if $album-&gt;is_changed;
+<pre>  $album-&gt;discard_changes if $album-&gt;is_changed;
 </pre>
 <p class="Pp">As you can see, <span class="Li">&quot;is_changed&quot;</span>
     allows you to check if there are local changes to your object.</p>
@@ -371,29 +345,25 @@
     <span class="Li">&quot;My::Schema::Result::Album&quot;</span> that can be
     used to access the data in the new record:</p>
 <p class="Pp"></p>
-<pre>
-  my $new_album = $schema-&gt;resultset('Album')-&gt;create({
+<pre>  my $new_album = $schema-&gt;resultset('Album')-&gt;create({
     title  =&gt; 'Wish You Were Here',
     artist =&gt; 'Pink Floyd'
   });
 </pre>
 <p class="Pp">Now you can add data to the new record:</p>
 <p class="Pp"></p>
-<pre>
-  $new_album-&gt;label('Capitol');
+<pre>  $new_album-&gt;label('Capitol');
   $new_album-&gt;year('1975');
   $new_album-&gt;update;
 </pre>
 <p class="Pp">Likewise, you can remove it from the database:</p>
 <p class="Pp"></p>
-<pre>
-  $new_album-&gt;delete;
+<pre>  $new_album-&gt;delete;
 </pre>
 <p class="Pp">You can also remove records without retrieving them first, by
     calling delete directly on a ResultSet object.</p>
 <p class="Pp"></p>
-<pre>
-  # Delete all of Falco's albums
+<pre>  # Delete all of Falco's albums
   $schema-&gt;resultset('Album')-&gt;search({ artist =&gt; 'Falco' })-&gt;delete;
 </pre>
 </section>
@@ -403,8 +373,7 @@
 <p class="Pp">DBIx::Class provides a few different ways to retrieve data from
     your database. Here's one example:</p>
 <p class="Pp"></p>
-<pre>
-  # Find all of Santana's albums
+<pre>  # Find all of Santana's albums
   my $rs = $schema-&gt;resultset('Album')-&gt;search({ artist =&gt; 'Santana' });
 </pre>
 <p class="Pp">In scalar context, as above,
@@ -412,14 +381,12 @@
     object. It can be used to peek at the first album returned by the
   database:</p>
 <p class="Pp"></p>
-<pre>
-  my $album = $rs-&gt;first;
+<pre>  my $album = $rs-&gt;first;
   print $album-&gt;title;
 </pre>
 <p class="Pp">You can loop over the albums and update each one:</p>
 <p class="Pp"></p>
-<pre>
-  while (my $album = $rs-&gt;next) {
+<pre>  while (my $album = $rs-&gt;next) {
     print $album-&gt;artist . ' - ' . $album-&gt;title;
     $album-&gt;year(2001);
     $album-&gt;update;
@@ -427,14 +394,12 @@
 </pre>
 <p class="Pp">Or, you can update them all at once:</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;update({ year =&gt; 2001 });
+<pre>  $rs-&gt;update({ year =&gt; 2001 });
 </pre>
 <p class="Pp">In list context, the <span class="Li">&quot;search&quot;</span>
     method returns all of the matching rows:</p>
 <p class="Pp"></p>
-<pre>
-  # Fetch immediately all of Carlos Santana's albums
+<pre>  # Fetch immediately all of Carlos Santana's albums
   my @albums = $schema-&gt;resultset('Album')-&gt;search(
     { artist =&gt; 'Carlos Santana' }
   );
@@ -445,15 +410,13 @@
 <p class="Pp">We also provide a handy shortcut for doing a
     <span class="Li">&quot;LIKE&quot;</span> search:</p>
 <p class="Pp"></p>
-<pre>
-  # Find albums whose artist starts with 'Jimi'
+<pre>  # Find albums whose artist starts with 'Jimi'
   my $rs = $schema-&gt;resultset('Album')-&gt;search_like({ artist =&gt; 'Jimi%' });
 </pre>
 <p class="Pp">Or you can provide your own
     <span class="Li">&quot;WHERE&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
-  # Find Peter Frampton albums from the year 1986
+<pre>  # Find Peter Frampton albums from the year 1986
   my $where = 'artist = ? AND year = ?';
   my @bind  = ( 'Peter Frampton', 1986 );
   my $rs    = $schema-&gt;resultset('Album')-&gt;search_literal( $where, @bind );
@@ -461,8 +424,7 @@
 <p class="Pp">The preferred way to generate complex queries is to provide a
     SQL::Abstract construct to <span class="Li">&quot;search&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Album')-&gt;search({
+<pre>  my $rs = $schema-&gt;resultset('Album')-&gt;search({
     artist  =&gt; { '!=', 'Janis Joplin' },
     year    =&gt; { '&lt;' =&gt; 1980 },
     albumid =&gt; { '-in' =&gt; [ 1, 14, 15, 65, 43 ] }
@@ -471,8 +433,7 @@
 <p class="Pp">This results in something like the following
     <span class="Li">&quot;WHERE&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
-  WHERE artist != 'Janis Joplin'
+<pre>  WHERE artist != 'Janis Joplin'
     AND year &lt; 1980
     AND albumid IN (1, 14, 15, 65, 43)
 </pre>
@@ -481,8 +442,7 @@
 <p class="Pp">The search can also be modified by passing another hash with
     attributes:</p>
 <p class="Pp"></p>
-<pre>
-  my @albums = My::Schema-&gt;resultset('Album')-&gt;search(
+<pre>  my @albums = My::Schema-&gt;resultset('Album')-&gt;search(
     { artist =&gt; 'Bob Marley' },
     { rows =&gt; 2, order_by =&gt; { -desc =&gt; 'year' } }
   );
@@ -513,8 +473,7 @@
     RDBMS does not have one</b>. In a pinch one can always declare each row
     identifiable by all its columns:</p>
 <p class="Pp"></p>
-<pre>
- __PACKAGE__-&gt;set_primary_key(__PACKAGE__-&gt;columns);
+<pre> __PACKAGE__-&gt;set_primary_key(__PACKAGE__-&gt;columns);
 </pre>
 <p class="Pp">Note that DBIx::Class is smart enough to store a copy of the PK
     values before any row-object changes take place, so even if you change the
@@ -529,8 +488,7 @@
 <p class="Pp">For example, the following would not work (assuming
     <span class="Li">&quot;People&quot;</span> does not have a declared PK):</p>
 <p class="Pp"></p>
-<pre>
- my $result = $schema-&gt;resultset('People')
+<pre> my $result = $schema-&gt;resultset('People')
                    -&gt;search({ last_name =&gt; 'Dantes' })
                     -&gt;next;
  $result-&gt;update({ children =&gt; 2 }); # &lt;-- exception thrown because $result isn't
@@ -538,8 +496,7 @@
 </pre>
 <p class="Pp">So instead the following should be done:</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;resultset('People')
+<pre> $schema-&gt;resultset('People')
          -&gt;search({ last_name =&gt; 'Dantes' })
           -&gt;update({ children =&gt; 2 }); # &lt;-- update's ALL Dantes to have children of 2
 </pre>

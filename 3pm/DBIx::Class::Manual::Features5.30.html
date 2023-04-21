@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::Features(3)</title>
 </head>
@@ -83,20 +84,17 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">SQL: Create</h2>
-<pre>
- my $sth = $dbh-&gt;prepare('
+<pre> my $sth = $dbh-&gt;prepare('
     INSERT INTO books
     (title, author_id)
     values (?,?)
  ');
-
  $sth-&gt;execute( 'A book title', $author_id );
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">DBIC: Create</h2>
-<pre>
- my $book = $book_rs-&gt;create({
+<pre> my $book = $book_rs-&gt;create({
     title     =&gt; 'A book title',
     author_id =&gt; $author_id,
  });
@@ -116,14 +114,12 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">SQL: Read</h2>
-<pre>
- my $sth = $dbh-&gt;prepare('
+<pre> my $sth = $dbh-&gt;prepare('
     SELECT title,
     authors.name as author_name
     FROM books, authors
     WHERE books.author = authors.id
  ');
-
  while ( my $book = $sth-&gt;fetchrow_hashref ) {
    say &quot;Author of $book-&gt;{title} is $book-&gt;{author_name}&quot;;
  }
@@ -131,23 +127,19 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">DBIC: Read</h2>
-<pre>
- my $book = $book_rs-&gt;find($book_id);
+<pre> my $book = $book_rs-&gt;find($book_id);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
- my $book = $book_rs-&gt;search({ title =&gt; 'A book title' }, { rows =&gt; 1 })-&gt;next;
+<pre> my $book = $book_rs-&gt;search({ title =&gt; 'A book title' }, { rows =&gt; 1 })-&gt;next;
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
- my @books = $book_rs-&gt;search({ author =&gt; $author_id })-&gt;all;
+<pre> my @books = $book_rs-&gt;search({ author =&gt; $author_id })-&gt;all;
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
- while( my $book = $books_rs-&gt;next ) {
+<pre> while( my $book = $books_rs-&gt;next ) {
    printf &quot;Author of %s is %s\n&quot;, $book-&gt;title, $book-&gt;author-&gt;name;
  }
 </pre>
@@ -158,43 +150,36 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">SQL: Update</h2>
-<pre>
- my $update = $dbh-&gt;prepare('
+<pre> my $update = $dbh-&gt;prepare('
     UPDATE books
     SET title = ?
     WHERE id = ?
  ');
-
  $update-&gt;execute( 'New title', $book_id );
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">DBIC: Update</h2>
-<pre>
- $book-&gt;update({ title =&gt; 'New title' });
+<pre> $book-&gt;update({ title =&gt; 'New title' });
 </pre>
 <p class="Pp">See &quot;update&quot; in DBIx::Class::Row</p>
 <p class="Pp">Will not update unless value changes</p>
 </section>
 <section class="Ss">
 <h2 class="Ss">SQL: Delete</h2>
-<pre>
- my $delete = $dbh-&gt;prepare('DELETE FROM books WHERE id = ?');
-
+<pre> my $delete = $dbh-&gt;prepare('DELETE FROM books WHERE id = ?');
  $delete-&gt;execute($book_id);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">DBIC: Delete</h2>
-<pre>
- $book-&gt;delete
+<pre> $book-&gt;delete
 </pre>
 <p class="Pp">See &quot;delete&quot; in DBIx::Class::Row</p>
 </section>
 <section class="Ss">
 <h2 class="Ss">SQL: Search</h2>
-<pre>
- my $sth = $dbh-&gt;prepare('
+<pre> my $sth = $dbh-&gt;prepare('
    SELECT title,
    authors.name as author_name
    FROM books
@@ -205,8 +190,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">DBIC: Search</h2>
-<pre>
- my $book = $book_rs-&gt;search({
+<pre> my $book = $book_rs-&gt;search({
     'me.name'  =&gt; { -like =&gt; '%monte cristo%' },
     'me.topic' =&gt; 'jailbreak',
  })-&gt;next;
@@ -280,9 +264,7 @@
 <h2 class="Ss" id="_deploy"><a class="permalink" href="#_deploy">-&gt;deploy</a></h2>
 <p class="Pp">Create a database from your DBIx::Class schema.</p>
 <p class="Pp"></p>
-<pre>
- my $schema = Frew::Schema-&gt;connect( $dsn, $user, $pass );
-
+<pre> my $schema = Frew::Schema-&gt;connect( $dsn, $user, $pass );
  $schema-&gt;deploy
 </pre>
 <p class="Pp">See &quot;deploy&quot; in DBIx::Class::Schema.</p>
@@ -292,23 +274,16 @@
 <h2 class="Ss" id="Schema::Loader"><a class="permalink" href="#Schema::Loader">Schema::Loader</a></h2>
 <p class="Pp">Create a DBIx::Class schema from your database.</p>
 <p class="Pp"></p>
-<pre>
- package Frew::Schema;
-
+<pre> package Frew::Schema;
  use strict;
  use warnings;
-
  use base 'DBIx::Class::Schema::Loader';
-
  __PACKAGE__-&gt;loader_options({
     naming =&gt; 'v7',
     debug  =&gt; $ENV{DBIC_TRACE},
  });
-
  1;
-
  # elsewhere...
-
  my $schema = Frew::Schema-&gt;connect( $dsn, $user, $pass );
 </pre>
 <p class="Pp">See DBIx::Class::Schema::Loader and &quot;CONSTRUCTOR
@@ -318,8 +293,7 @@
 <h2 class="Ss" id="Populate"><a class="permalink" href="#Populate">Populate</a></h2>
 <p class="Pp">Made for inserting lots of rows very quickly into database</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;populate([ Users =&gt;
+<pre> $schema-&gt;populate([ Users =&gt;
     [qw( username password )],
     [qw( frew     &gt;=4char$ )],
     [qw(      ...          )],
@@ -335,8 +309,7 @@
 <h2 class="Ss" id="Multicreate"><a class="permalink" href="#Multicreate">Multicreate</a></h2>
 <p class="Pp">Create an object and its related objects all at once</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;resultset('Author')-&gt;create({
+<pre> $schema-&gt;resultset('Author')-&gt;create({
     name =&gt; 'Stephen King',
     books =&gt; [{ title =&gt; 'The Dark Tower' }],
     address =&gt; {
@@ -452,30 +425,23 @@
 <section class="Ss">
 <h2 class="Ss" id="ResultSet_methods"><a class="permalink" href="#ResultSet_methods">ResultSet
   methods</a></h2>
-<pre>
- package MyApp::Schema::ResultSet::Book;
-
+<pre> package MyApp::Schema::ResultSet::Book;
  use strict;
  use warnings;
-
  use base 'DBIx::Class::ResultSet';
-
  sub good {
     my $self = shift;
     $self-&gt;search({
        $self-&gt;current_source_alias . '.rating' =&gt; { '&gt;=' =&gt; 4 }
     })
  };
-
  sub cheap {
     my $self = shift;
     $self-&gt;search({
        $self-&gt;current_source_alias . '.price' =&gt; { '&lt;=' =&gt; 5}
     })
  };
-
  # ...
-
  1;
 </pre>
 <p class="Pp">See &quot;Predefined searches&quot; in
@@ -495,15 +461,13 @@
 <section class="Ss">
 <h2 class="Ss" id="ResultSet_method_in_Action"><a class="permalink" href="#ResultSet_method_in_Action">ResultSet
   method in Action</a></h2>
-<pre>
- $schema-&gt;resultset('Book')-&gt;good
+<pre> $schema-&gt;resultset('Book')-&gt;good
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ResultSet_Chaining"><a class="permalink" href="#ResultSet_Chaining">ResultSet
   Chaining</a></h2>
-<pre>
- $schema-&gt;resultset('Book')
+<pre> $schema-&gt;resultset('Book')
     -&gt;good
     -&gt;cheap
     -&gt;recent
@@ -511,8 +475,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="search_related"><a class="permalink" href="#search_related">search_related</a></h2>
-<pre>
- my $score = $schema-&gt;resultset('User')
+<pre> my $score = $schema-&gt;resultset('User')
     -&gt;search({'me.userid' =&gt; 'frew'})
     -&gt;related_resultset('access')
     -&gt;related_resultset('mgmt')
@@ -531,8 +494,7 @@
 <p class="Pp">The SQL that this produces (with placeholders filled in for
     clarity's sake) on our system (Microsoft SQL) is:</p>
 <p class="Pp"></p>
-<pre>
- SELECT raw_scores
+<pre> SELECT raw_scores
    FROM (
      SELECT raw_scores, ROW_NUMBER() OVER (
          ORDER BY (
@@ -570,13 +532,11 @@
 <section class="Ss">
 <h2 class="Ss" id="bonus_rel_methods"><a class="permalink" href="#bonus_rel_methods">bonus
   rel methods</a></h2>
-<pre>
- my $book = $author-&gt;create_related(
+<pre> my $book = $author-&gt;create_related(
     books =&gt; {
        title =&gt; 'Another Discworld book',
     }
  );
-
  my $book2 = $pratchett-&gt;add_to_books({
     title =&gt; 'MOAR Discworld book',
  });
@@ -588,11 +548,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Excellent_Transaction_Support"><a class="permalink" href="#Excellent_Transaction_Support">Excellent
   Transaction Support</a></h2>
-<pre>
- $schema-&gt;txn_do(sub {
+<pre> $schema-&gt;txn_do(sub {
     ...
  });
-
  $schema-&gt;txn_begin; # &lt;-- low level
  # ...
  $schema-&gt;txn_commit;
@@ -603,20 +561,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="InflateColumn"><a class="permalink" href="#InflateColumn">InflateColumn</a></h2>
-<pre>
- package Frew::Schema::Result::Book;
-
+<pre> package Frew::Schema::Result::Book;
  use strict;
  use warnings;
-
  use base 'DBIx::Class::Core';
-
  use DateTime::Format::MySQL;
-
  # Result code here
-
  __PACKAGE__-&gt;load_components('InflateColumn');
-
  __PACKAGE__-&gt;inflate_column(
     date_published =&gt; {
        inflate =&gt; sub { DateTime::Format::MySQL-&gt;parse_date( shift ) },
@@ -630,39 +581,30 @@
 <section class="Ss">
 <h2 class="Ss" id="InflateColumn:_deflation"><a class="permalink" href="#InflateColumn:_deflation">InflateColumn:
   deflation</a></h2>
-<pre>
- $book-&gt;date_published(DateTime-&gt;now);
+<pre> $book-&gt;date_published(DateTime-&gt;now);
  $book-&gt;update;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="InflateColumn:_inflation"><a class="permalink" href="#InflateColumn:_inflation">InflateColumn:
   inflation</a></h2>
-<pre>
- say $book-&gt;date_published-&gt;month_abbr; # Nov
+<pre> say $book-&gt;date_published-&gt;month_abbr; # Nov
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="FilterColumn"><a class="permalink" href="#FilterColumn">FilterColumn</a></h2>
-<pre>
- package Frew::Schema::Result::Book;
-
+<pre> package Frew::Schema::Result::Book;
  use strict;
  use warnings;
-
  use base 'DBIx::Class::Core';
-
  # Result code here
-
  __PACKAGE__-&gt;load_components('FilterColumn');
-
  __PACKAGE__-&gt;filter_column(
     length =&gt; {
        to_storage   =&gt; 'to_metric',
        from_storage =&gt; 'to_imperial',
     },
  );
-
  sub to_metric   { $_[1] * .305 }
  sub to_imperial { $_[1] * 3.28 }
 </pre>
@@ -671,8 +613,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ResultSetColumn"><a class="permalink" href="#ResultSetColumn">ResultSetColumn</a></h2>
-<pre>
- my $rsc = $schema-&gt;resultset('Book')-&gt;get_column('price');
+<pre> my $rsc = $schema-&gt;resultset('Book')-&gt;get_column('price');
  $rsc-&gt;first;
  $rsc-&gt;all;
  $rsc-&gt;min;
@@ -683,8 +624,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Aggregates"><a class="permalink" href="#Aggregates">Aggregates</a></h2>
-<pre>
- my @res = $rs-&gt;search(undef, {
+<pre> my @res = $rs-&gt;search(undef, {
     select   =&gt; [
        'price',
        'genre',
@@ -722,8 +662,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">HRI</h2>
-<pre>
- $rs-&gt;search(undef, {
+<pre> $rs-&gt;search(undef, {
    result_class =&gt; 'DBIx::Class::ResultClass::HashRefInflator',
  });
 </pre>
@@ -745,12 +684,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Subquery_Support"><a class="permalink" href="#Subquery_Support">Subquery
   Support</a></h2>
-<pre>
- my $inner_query = $schema-&gt;resultset('Artist')
+<pre> my $inner_query = $schema-&gt;resultset('Artist')
     -&gt;search({
      name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
  })-&gt;get_column('id')-&gt;as_query;
-
  my $rs = $schema-&gt;resultset('CD')-&gt;search({
      artist_id =&gt; { -in =&gt; $inner_query },
  });
@@ -760,16 +697,14 @@
 <section class="Ss">
 <h2 class="Ss" id="Bare_"><a class="permalink" href="#Bare_">Bare SQL w/
   Placeholders</a></h2>
-<pre>
- $rs-&gt;update({
+<pre> $rs-&gt;update({
     # !!! SQL INJECTION VECTOR
     price =&gt; \&quot;price + $inc&quot;, # DON'T DO THIS
  });
 </pre>
 <p class="Pp">Better:</p>
 <p class="Pp"></p>
-<pre>
- $rs-&gt;update({
+<pre> $rs-&gt;update({
     price =&gt; \['price + ?', [inc =&gt; $inc]],
  });
 </pre>

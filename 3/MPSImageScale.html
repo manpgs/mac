@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MPSImageScale(3)</title>
 </head>
@@ -129,28 +130,22 @@
     image to the entire destination image size (clipRect = MPSRectNoClip) would
     be:</p>
 <p class="Pp"></p>
-<pre>
-scaleTransform.scaleX = (double) dest.width / source.width;
+<pre>scaleTransform.scaleX = (double) dest.width / source.width;
 scaleTransform.scaleY = (double) dest.height / source.height;
-scaleTransform.translateX = scaleTransform.translateY = 0.0;
-</pre>
+scaleTransform.translateX = scaleTransform.translateY = 0.0;</pre>
 <p class="Pp">The translation parameters allow you to adjust the region of the
     source image used to create the destination image. They are in destination
     coordinates. To place the top left corner of the destination clipRect to
     represent the position {x,y} in source coordinates, we solve for the
     translation based on the standard scale matrix operation for each axis:</p>
 <p class="Pp"></p>
-<pre>
-dest_position = source_position * scale + translation;
-translation = dest_position - source_position * scale;
-</pre>
+<pre>dest_position = source_position * scale + translation;
+translation = dest_position - source_position * scale;</pre>
 <p class="Pp">For the top left corner of the clipRect, the dest_position is
     considered to be {0,0}. This gives us a translation of:</p>
 <p class="Pp"></p>
-<pre>
-scaleTransform.translateX = -source_origin.x * scaleTransform.scaleX;
-scaleTransform.translateY = -source_origin.y * scaleTransform.scaleY;
-</pre>
+<pre>scaleTransform.translateX = -source_origin.x * scaleTransform.scaleX;
+scaleTransform.translateY = -source_origin.y * scaleTransform.scaleY;</pre>
 <p class="Pp">One would typically use non-zero translations to do tiling, or
     provide a resized view into a internal segment of an image.</p>
 <p class="Pp">Changing the Lanczos scale factor may trigger recalculation of

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   * SPDX-License-Identifier: curl
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CURLOPT_MIME_OPTIONS(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">CURLOPT_MIME_OPTIONS(3)</td>
+    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-rtitle">CURLOPT_MIME_OPTIONS(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">CURLOPT_MIME_OPTIONS - set MIME option flags</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MIME_OPTIONS, long options);</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Pass a long that holds a bitmask of CURLMIMEOPT_* defines. Each
+    bit is a Boolean flag used while encoding a MIME tree or multipart form
+    data.</p>
+<p class="Pp">Available bits are:</p>
+<dl class="Bl-tag">
+  <dt id="CURLMIMEOPT_FORMESCAPE"><a class="permalink" href="#CURLMIMEOPT_FORMESCAPE">CURLMIMEOPT_FORMESCAPE</a></dt>
+  <dd>Tells libcurl to escape multipart form field and file names using the
+      backslash-escaping algorithm rather than percent-encoding (HTTP only).
+    <p class="Pp">Backslash-escaping consists in preceding backslashes and
+        double quotes with a backslash. Percent encoding maps all occurrences of
+        double quote, carriage return and line feed to %22, %0D and %0A
+        respectively.</p>
+    <p class="Pp">Before version 7.81.0, percent-encoding was never applied.</p>
+    <p class="Pp">HTTP browsers used to do backslash-escaping in the past but
+        have over time transitioned to use percent-encoding. This option allows
+        to address server-side applications that have not yet have been
+        converted.</p>
+    <p class="Pp">As an example, consider field or file name
+        <i>strange\name&quot;kind</i>. When the containing multipart form is
+        sent, this is normally transmitted as <i>strange\name%22kind</i>. When
+        this option is set, it is sent as <i>strange\\name\&quot;kind</i>.</p>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DEFAULT"><a class="permalink" href="#DEFAULT">DEFAULT</a></h1>
+<p class="Pp">0, meaning disabled.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
+<p class="Pp">HTTP, IMAP, SMTP</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>CURL *curl = curl_easy_init();
+curl_mime *form = NULL;
+if(curl) {
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
+  curl_easy_setopt(curl, CURLOPT_MIME_OPTIONS, CURLMIMEOPT_FORMESCAPE);
+  form = curl_mime_init(curl);
+  if(form) {
+    curl_mimepart *part = curl_mime_addpart(form);
+    if(part) {
+      curl_mime_filedata(part, &quot;strange\\file\\name&quot;);
+      curl_mime_name(part, &quot;strange\&quot;field\&quot;name&quot;);
+      curl_easy_setopt(curl, CURLOPT_MIMEPOST, form);
+      /* Perform the request */
+      curl_easy_perform(curl);
+    }
+  }
+  curl_easy_cleanup(curl);
+  curl_mime_free(mime);
+}</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Option added in 7.81.0.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns CURLE_OK</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>CURLOPT_MIMEPOST</b>(3), <b>CURLOPT_HTTPPOST</b>(3)</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
+  </tr>
+</table>
+</body>
+</html>

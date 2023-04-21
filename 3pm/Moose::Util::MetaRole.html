@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Util::MetaRole(3)</title>
 </head>
@@ -33,25 +34,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Moose;
-
+<pre>  package MyApp::Moose;
   use Moose ();
   use Moose::Exporter;
   use Moose::Util::MetaRole;
-
   use MyApp::Role::Meta::Class;
   use MyApp::Role::Meta::Method::Constructor;
   use MyApp::Role::Object;
-
   Moose::Exporter-&gt;setup_import_methods( also =&gt; 'Moose' );
-
   sub init_meta {
       shift;
       my %args = @_;
-
       Moose-&gt;init_meta(%args);
-
       Moose::Util::MetaRole::apply_metaroles(
           for             =&gt; $args{for_class},
           class_metaroles =&gt; {
@@ -59,12 +53,10 @@
               constructor =&gt; ['MyApp::Role::Meta::Method::Constructor'],
           },
       );
-
       Moose::Util::MetaRole::apply_base_class_roles(
           for   =&gt; $args{for_class},
           roles =&gt; ['MyApp::Role::Object'],
       );
-
       return $args{for_class}-&gt;meta();
   }
 </pre>

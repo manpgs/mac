@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFILTER(1)</title>
 </head>
@@ -56,8 +57,7 @@
     of source from a Perl script file on the left into the Perl parser on the
     right. This is how Perl normally operates.</p>
 <p class="Pp"></p>
-<pre>
-    file -------&gt; parser
+<pre>    file -------&gt; parser
 </pre>
 <p class="Pp">There are two important points to remember:</p>
 <dl class="Bl-tag">
@@ -71,28 +71,24 @@
     and modifies a source stream before it reaches the parser. A source filter
     changes our diagram like this:</p>
 <p class="Pp"></p>
-<pre>
-    file ----&gt; filter ----&gt; parser
+<pre>    file ----&gt; filter ----&gt; parser
 </pre>
 <p class="Pp">If that doesn't make much sense, consider the analogy of a command
     pipeline. Say you have a shell script stored in the compressed file
     <i>trial.gz</i>. The simple pipeline command below runs the script without
     needing to create a temporary file to hold the uncompressed file.</p>
 <p class="Pp"></p>
-<pre>
-    gunzip -c trial.gz | sh
+<pre>    gunzip -c trial.gz | sh
 </pre>
 <p class="Pp">In this case, the data flow from the pipeline can be represented
     as follows:</p>
 <p class="Pp"></p>
-<pre>
-    trial.gz ----&gt; gunzip ----&gt; sh
+<pre>    trial.gz ----&gt; gunzip ----&gt; sh
 </pre>
 <p class="Pp">With source filters, you can store the text of your script
     compressed and use a source filter to uncompress it for Perl's parser:</p>
 <p class="Pp"></p>
-<pre>
-     compressed           gunzip
+<pre>     compressed           gunzip
     Perl program ---&gt; source filter ---&gt; parser
 </pre>
 </section>
@@ -110,8 +106,7 @@
     filter. Line numbers have been added to allow specific lines to be
     referenced easily.</p>
 <p class="Pp"></p>
-<pre>
-    1: use Filter::cpp;
+<pre>    1: use Filter::cpp;
     2: #define TRUE 1
     3: $a = TRUE;
     4: print &quot;a = $a\n&quot;;
@@ -120,8 +115,7 @@
     file. Before the parser processes any of the lines from the file, the source
     stream looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    cpp_test ---------&gt; parser
+<pre>    cpp_test ---------&gt; parser
 </pre>
 <p class="Pp">Line 1, <span class="Li">&quot;use Filter::cpp&quot;</span>,
     includes and installs the <span class="Li">&quot;cpp&quot;</span> filter
@@ -130,8 +124,7 @@
     attaches the cpp filter to the source stream behind the scenes. Now the data
     flow looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    cpp_test ----&gt; cpp filter ----&gt; parser
+<pre>    cpp_test ----&gt; cpp filter ----&gt; parser
 </pre>
 <p class="Pp">As the parser reads the second and subsequent lines from the
     source stream, it feeds those lines through the
@@ -140,8 +133,7 @@
     line through the real C preprocessor. The output from the C preprocessor is
     then inserted back into the source stream by the filter.</p>
 <p class="Pp"></p>
-<pre>
-                  .-&gt; cpp --.
+<pre>                  .-&gt; cpp --.
                   |         |
                   |         |
                   |       &lt;-'
@@ -149,16 +141,14 @@
 </pre>
 <p class="Pp">The parser then sees the following code:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::cpp;
+<pre>    use Filter::cpp;
     $a = 1;
     print &quot;a = $a\n&quot;;
 </pre>
 <p class="Pp">Let's consider what happens when the filtered code includes
     another module with use:</p>
 <p class="Pp"></p>
-<pre>
-    1: use Filter::cpp;
+<pre>    1: use Filter::cpp;
     2: #define TRUE 1
     3: use Fred;
     4: $a = TRUE;
@@ -171,9 +161,7 @@
     (<span class="Li">&quot;Fred&quot;</span>) will not. The source streams look
     like this after line 3 has been parsed and before line 4 is parsed:</p>
 <p class="Pp"></p>
-<pre>
-    cpp_test ---&gt; cpp filter ---&gt; parser (INACTIVE)
-
+<pre>    cpp_test ---&gt; cpp filter ---&gt; parser (INACTIVE)
     Fred.pm ----&gt; parser
 </pre>
 <p class="Pp">As you can see, a new stream has been created for reading the
@@ -192,8 +180,7 @@
     it is possible to stack a uudecode filter and an uncompression filter like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::uudecode; use Filter::uncompress;
+<pre>    use Filter::uudecode; use Filter::uncompress;
     M'XL(&quot;.H&lt;US4''V9I;F%L')Q;&gt;7/;1I;_&gt;_I3=&amp;E=%:F*I&quot;T?22Q/
     M6]9*&lt;IQCO*XFT&quot;0[PL%%'Y+IG?WN^ZYN-$'J.[.JE$,20/?K=_[&gt;
     ...
@@ -201,8 +188,7 @@
 <p class="Pp">Once the first line has been processed, the flow will look like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    file ---&gt; uudecode ---&gt; uncompress ---&gt; parser
+<pre>    file ---&gt; uudecode ---&gt; uncompress ---&gt; parser
                filter         filter
 </pre>
 <p class="Pp">Data flows through filters in the same order they appear in the
@@ -280,15 +266,13 @@
 <p class="Pp">Here is an example script that uses
     <span class="Li">&quot;Filter::sh&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::sh 'tr XYZ PQR';
+<pre>    use Filter::sh 'tr XYZ PQR';
     $a = 1;
     print &quot;XYZ a = $a\n&quot;;
 </pre>
 <p class="Pp">The output you'll get when the script is executed:</p>
 <p class="Pp"></p>
-<pre>
-    PQR a = 1
+<pre>    PQR a = 1
 </pre>
 <p class="Pp">Writing a source filter as a separate executable works fine, but a
     small performance penalty is incurred. For example, if you execute the small
@@ -310,26 +294,20 @@
     to hide the contents of offensive posts. It moves every letter forward
     thirteen places, so that A becomes N, B becomes O, and Z becomes M.)</p>
 <p class="Pp"></p>
-<pre>
-   package Rot13;
-
+<pre>   package Rot13;
    use Filter::Util::Call;
-
    sub import {
       my ($type) = @_;
       my ($ref) = [];
       filter_add(bless $ref);
    }
-
    sub filter {
       my ($self) = @_;
       my ($status);
-
       tr/n-za-mN-ZA-M/a-zA-Z/
          if ($status = filter_read()) &gt; 0;
       $status;
    }
-
    1;
 </pre>
 <p class="Pp">All Perl source filters are implemented as Perl classes and have
@@ -377,19 +355,16 @@
     encoding the source file in rot13 format. The script below,
     <span class="Li">&quot;mkrot13&quot;</span>, does just that.</p>
 <p class="Pp"></p>
-<pre>
-    die &quot;usage mkrot13 filename\n&quot; unless @ARGV;
+<pre>    die &quot;usage mkrot13 filename\n&quot; unless @ARGV;
     my $in = $ARGV[0];
     my $out = &quot;$in.tmp&quot;;
     open(IN, &quot;&lt;$in&quot;) or die &quot;Cannot open file $in: $!\n&quot;;
     open(OUT, &quot;&gt;$out&quot;) or die &quot;Cannot open file $out: $!\n&quot;;
-
     print OUT &quot;use Rot13;\n&quot;;
     while (&lt;IN&gt;) {
        tr/a-zA-Z/n-za-mN-ZA-M/;
        print OUT;
     }
-
     close IN;
     close OUT;
     unlink $in;
@@ -398,19 +373,16 @@
 <p class="Pp">If we encrypt this with
     <span class="Li">&quot;mkrot13&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    print &quot; hello fred \n&quot;;
+<pre>    print &quot; hello fred \n&quot;;
 </pre>
 <p class="Pp">the result will be this:</p>
 <p class="Pp"></p>
-<pre>
-    use Rot13;
+<pre>    use Rot13;
     cevag &quot;uryyb serq\a&quot;;
 </pre>
 <p class="Pp">Running it produces this output:</p>
 <p class="Pp"></p>
-<pre>
-    hello fred
+<pre>    hello fred
 </pre>
 </section>
 <section class="Sh">
@@ -427,8 +399,7 @@
 <p class="Pp">Two special marker lines will bracket debugging code, like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    ## DEBUG_BEGIN
+<pre>    ## DEBUG_BEGIN
     if ($year &gt; 1999) {
        warn &quot;Debug: millennium bug in year $year\n&quot;;
     }
@@ -445,8 +416,7 @@
     disable the debug code. A simple way to achieve that is to convert the lines
     between the two markers into comments:</p>
 <p class="Pp"></p>
-<pre>
-    ## DEBUG_BEGIN
+<pre>    ## DEBUG_BEGIN
     #if ($year &gt; 1999) {
     #     warn &quot;Debug: millennium bug in year $year\n&quot;;
     #}
@@ -454,16 +424,12 @@
 </pre>
 <p class="Pp">Here is the complete Debug filter:</p>
 <p class="Pp"></p>
-<pre>
-    package Debug;
-
+<pre>    package Debug;
     use strict;
     use warnings;
     use Filter::Util::Call;
-
     use constant TRUE =&gt; 1;
     use constant FALSE =&gt; 0;
-
     sub import {
        my ($type) = @_;
        my (%context) = (
@@ -475,34 +441,29 @@
        );
        filter_add(bless \%context);
     }
-
     sub Die {
        my ($self) = shift;
        my ($message) = shift;
        my ($line_no) = shift || $self-&gt;{LastBegin};
        die &quot;$message at $self-&gt;{Filename} line $line_no.\n&quot;
     }
-
     sub filter {
        my ($self) = @_;
        my ($status);
        $status = filter_read();
        ++ $self-&gt;{LineNo};
-
        # deal with EOF/error first
        if ($status &lt;= 0) {
            $self-&gt;Die(&quot;DEBUG_BEGIN has no DEBUG_END&quot;)
                if $self-&gt;{InTraceBlock};
            return $status;
        }
-
        if ($self-&gt;{InTraceBlock}) {
           if (/^\s*##\s*DEBUG_BEGIN/ ) {
               $self-&gt;Die(&quot;Nested DEBUG_BEGIN&quot;, $self-&gt;{LineNo})
           } elsif (/^\s*##\s*DEBUG_END/) {
               $self-&gt;{InTraceBlock} = FALSE;
           }
-
           # comment out the debug lines when the filter is disabled
           s/^/#/ if ! $self-&gt;{Enabled};
        } elsif ( /^\s*##\s*DEBUG_BEGIN/ ) {
@@ -513,7 +474,6 @@
        }
        return $status;
     }
-
     1;
 </pre>
 <p class="Pp">The big difference between this filter and the previous example is
@@ -529,19 +489,16 @@
 <p class="Pp">If you ignore all the error checking that most of the code does,
     the essence of the filter is as follows:</p>
 <p class="Pp"></p>
-<pre>
-    sub filter {
+<pre>    sub filter {
        my ($self) = @_;
        my ($status);
        $status = filter_read();
-
        # deal with EOF/error first
        return $status if $status &lt;= 0;
        if ($self-&gt;{InTraceBlock}) {
           if (/^\s*##\s*DEBUG_END/) {
              $self-&gt;{InTraceBlock} = FALSE
           }
-
           # comment out debug lines when the filter is disabled
           s/^/#/ if ! $self-&gt;{Enabled};
        } elsif ( /^\s*##\s*DEBUG_BEGIN/ ) {
@@ -553,8 +510,7 @@
 <p class="Pp">Be warned: just as the C-preprocessor doesn't know C, the Debug
     filter doesn't know Perl. It can be fooled quite easily:</p>
 <p class="Pp"></p>
-<pre>
-    print &lt;&lt;EOM;
+<pre>    print &lt;&lt;EOM;
     ##DEBUG_BEGIN
     EOM
 </pre>
@@ -582,13 +538,11 @@
     yourself. Write a source filter that allows you to have a named parameter
     list. Such a filter would turn this:</p>
 <p class="Pp"></p>
-<pre>
-    sub MySub ($first, $second, @rest) { ... }
+<pre>    sub MySub ($first, $second, @rest) { ... }
 </pre>
 <p class="Pp">into this:</p>
 <p class="Pp"></p>
-<pre>
-    sub MySub($$@) {
+<pre>    sub MySub($$@) {
        my ($first) = shift;
        my ($second) = shift;
        my (@rest) = @_;
@@ -644,8 +598,7 @@
 <h1 class="Sh" id="REQUIREMENTS"><a class="permalink" href="#REQUIREMENTS">REQUIREMENTS</a></h1>
 <p class="Pp">The Source Filters distribution is available on CPAN, in</p>
 <p class="Pp"></p>
-<pre>
-    CPAN/modules/by-module/Filter
+<pre>    CPAN/modules/by-module/Filter
 </pre>
 <p class="Pp">Starting from Perl 5.8 Filter::Util::Call (the core part of the
     Source Filters distribution) is part of the standard Perl distribution. Also

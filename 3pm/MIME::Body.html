@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Body(3)</title>
 </head>
@@ -35,13 +36,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Obtaining_bodies"><a class="permalink" href="#Obtaining_bodies">Obtaining
   bodies</a></h2>
-<pre>
-   ### Get the bodyhandle of a MIME::Entity object:
+<pre>   ### Get the bodyhandle of a MIME::Entity object:
    $body = $entity-&gt;bodyhandle;
-
    ### Create a body which stores data in a disk file:
    $body = new MIME::Body::File &quot;/path/to/file&quot;;
-
    ### Create a body which stores data in an in-core array:
    $body = new MIME::Body::InCore \@strings;
 </pre>
@@ -49,12 +47,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Opening,_closing,_and_using_"><a class="permalink" href="#Opening,_closing,_and_using_">Opening,
   closing, and using IO handles</a></h2>
-<pre>
-   ### Write data to the body:
+<pre>   ### Write data to the body:
    $IO = $body-&gt;open(&quot;w&quot;)      || die &quot;open body: $!&quot;;
    $IO-&gt;print($message);
    $IO-&gt;close                  || die &quot;close I/O handle: $!&quot;;
-
    ### Read data from the body (in this case, line by line):
    $IO = $body-&gt;open(&quot;r&quot;)      || die &quot;open body: $!&quot;;
    while (defined($_ = $IO-&gt;getline)) {
@@ -66,13 +62,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Other_I/O"><a class="permalink" href="#Other_I/O">Other
   I/O</a></h2>
-<pre>
-   ### Dump the ENCODED body data to a filehandle:
+<pre>   ### Dump the ENCODED body data to a filehandle:
    $body-&gt;print(\*STDOUT);
-
    ### Slurp all the UNENCODED data in, and put it in a scalar:
    $string = $body-&gt;as_string;
-
    ### Slurp all the UNENCODED data in, and put it in an array of lines:
    @lines = $body-&gt;as_lines;
 </pre>
@@ -80,15 +73,13 @@
 <section class="Ss">
 <h2 class="Ss" id="Working_directly_with_paths_to_underlying_files"><a class="permalink" href="#Working_directly_with_paths_to_underlying_files">Working
   directly with paths to underlying files</a></h2>
-<pre>
-   ### Where's the data?
+<pre>   ### Where's the data?
    if (defined($body-&gt;path)) {   ### data is on disk:
        print &quot;data is stored externally, in &quot;, $body-&gt;path;
    }
    else {                        ### data is in core:
        print &quot;data is already in core, and is...\n&quot;, $body-&gt;as_string;
    }
-
    ### Get rid of anything on disk:
    $body-&gt;purge;
 </pre>
@@ -215,8 +206,7 @@
 <h1 class="Sh" id="SUBCLASSES"><a class="permalink" href="#SUBCLASSES">SUBCLASSES</a></h1>
 <p class="Pp">The following built-in classes are provided:</p>
 <p class="Pp"></p>
-<pre>
-   Body                 Stores body     When open()ed,
+<pre>   Body                 Stores body     When open()ed,
    class:               data in:        returns:
    --------------------------------------------------------
    MIME::Body::File     disk file       IO::Handle
@@ -228,14 +218,12 @@
 <p class="Pp">A body class that stores the data in a disk file. Invoke the
     constructor as:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::File &quot;/path/to/file&quot;;
+<pre>    $body = new MIME::Body::File &quot;/path/to/file&quot;;
 </pre>
 <p class="Pp">In this case, the <span class="Li">&quot;path()&quot;</span>
     method would return the given path, so you <i>could</i> say:</p>
 <p class="Pp"></p>
-<pre>
-    if (defined($body-&gt;path)) {
+<pre>    if (defined($body-&gt;path)) {
         open BODY, $body-&gt;path or die &quot;open: $!&quot;;
         while (&lt;BODY&gt;) {
             ### do stuff
@@ -250,21 +238,18 @@
 <p class="Pp">A body class that stores the data in-core, in a simple scalar.
     Invoke the constructor as:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::Scalar \$string;
+<pre>    $body = new MIME::Body::Scalar \$string;
 </pre>
 <p class="Pp">A single scalar argument sets the body to that value, exactly as
     though you'd opened for the body for writing, written the value, and closed
     the body again:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::Scalar &quot;Line 1\nLine 2\nLine 3&quot;;
+<pre>    $body = new MIME::Body::Scalar &quot;Line 1\nLine 2\nLine 3&quot;;
 </pre>
 <p class="Pp">A single array reference sets the body to the result of joining
     all the elements of that array together:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::Scalar [&quot;Line 1\n&quot;,
+<pre>    $body = new MIME::Body::Scalar [&quot;Line 1\n&quot;,
                                     &quot;Line 2\n&quot;,
                                     &quot;Line 3&quot;];
 </pre>
@@ -274,8 +259,7 @@
 <p class="Pp">A body class that stores the data in-core. Invoke the constructor
     as:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::InCore \$string;
+<pre>    $body = new MIME::Body::InCore \$string;
     $body = new MIME::Body::InCore  $string;
     $body = new MIME::Body::InCore \@stringarray
 </pre>
@@ -283,14 +267,12 @@
     though you'd opened for the body for writing, written the value, and closed
     the body again:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::InCore &quot;Line 1\nLine 2\nLine 3&quot;;
+<pre>    $body = new MIME::Body::InCore &quot;Line 1\nLine 2\nLine 3&quot;;
 </pre>
 <p class="Pp">A single array reference sets the body to the concatenation of all
     scalars that it holds:</p>
 <p class="Pp"></p>
-<pre>
-    $body = new MIME::Body::InCore [&quot;Line 1\n&quot;,
+<pre>    $body = new MIME::Body::InCore [&quot;Line 1\n&quot;,
                                     &quot;Line 2\n&quot;,
                                     &quot;Line 3&quot;];
 </pre>
@@ -309,16 +291,14 @@
 <p class="Pp">The default inherited method <i>should suffice</i> for all
   these:</p>
 <p class="Pp"></p>
-<pre>
-    new
+<pre>    new
     binmode [ONOFF]
     path
 </pre>
 <p class="Pp">The default inherited method <i>may suffice</i> for these, but
     perhaps there's a better implementation for your subclass.</p>
 <p class="Pp"></p>
-<pre>
-    init ARGS...
+<pre>    init ARGS...
     as_lines
     as_string
     dup
@@ -328,8 +308,7 @@
 <p class="Pp">The default inherited method <i>will probably not suffice</i> for
     these:</p>
 <p class="Pp"></p>
-<pre>
-    open
+<pre>    open
 </pre>
 </section>
 </section>
@@ -340,8 +319,7 @@
     encapsulated program-persistent storage; that is, I wanted users to be able
     to write code like this...</p>
 <p class="Pp"></p>
-<pre>
-   ### Get body handle from this MIME message, and read its data:
+<pre>   ### Get body handle from this MIME message, and read its data:
    $body = $entity-&gt;bodyhandle;
    $IO = $body-&gt;open(&quot;r&quot;);
    while (defined($_ = $IO-&gt;getline)) {

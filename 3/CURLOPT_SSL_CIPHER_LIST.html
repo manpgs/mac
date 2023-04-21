@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_SSL_CIPHER_LIST(3)</title>
 </head>
@@ -44,9 +47,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_SSL_CIPHER_LIST,
-    char *list);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_SSL_CIPHER_LIST, char *list);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -56,18 +58,25 @@
     by colons. Commas or spaces are also acceptable separators but colons are
     normally used, !, - and + can be used as operators.</p>
 <p class="Pp">For OpenSSL and GnuTLS valid examples of cipher lists include
-    'RC4-SHA', &#x00B4;SHA1+DES&#x00B4;, 'TLSv1' and 'DEFAULT'. The default list
-    is normally set when you compile OpenSSL.</p>
-<p class="Pp">You'll find more details about cipher lists on this URL:</p>
+    <b>RC4-SHA</b>, <b>SHA1+DES</b>, <b>TLSv1</b> and <b>DEFAULT</b>. The
+    default list is normally set when you compile OpenSSL.</p>
+<p class="Pp">For NSS, valid examples of cipher lists include
+    <b>rsa_rc4_128_md5</b>, <b>rsa_aes_128_sha</b>, etc. With NSS you do not
+    add/remove ciphers. If one uses this option then all known ciphers are
+    disabled and only those passed in are enabled.</p>
+<p class="Pp">For WolfSSL, valid examples of cipher lists include
+    <b>ECDHE-RSA-RC4-SHA</b>, <b>AES256-SHA:AES256-SHA256</b>, etc.</p>
+<p class="Pp">For BearSSL, valid examples of cipher lists include
+    <b>ECDHE-RSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-GCM-SHA256</b>, or when
+    using IANA names
+    <b>TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256:TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</b>,
+    etc. With BearSSL you do not add/remove ciphers. If one uses this option
+    then all known ciphers are disabled and only those passed in are
+  enabled.</p>
+<p class="Pp">you will find more details about cipher lists on this URL:</p>
 <p class="Pp">
   <br/>
    https://curl.se/docs/ssl-ciphers.html</p>
-<p class="Pp">For NSS, valid examples of cipher lists include 'rsa_rc4_128_md5',
-    &#x00B4;rsa_aes_128_sha&#x00B4;, etc. With NSS you don't add/remove ciphers.
-    If one uses this option then all known ciphers are disabled and only those
-    passed in are enabled.</p>
-<p class="Pp">For WolfSSL, valid examples of cipher lists include
-    &#x00B4;ECDHE-RSA-RC4-SHA&#x00B4;, 'AES256-SHA:AES256-SHA256', etc.</p>
 <p class="Pp">The application does not have to keep the string around after
     setting this option.</p>
 </section>
@@ -81,18 +90,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 if(curl) {
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com/&quot;);
   curl_easy_setopt(curl, CURLOPT_SSL_CIPHER_LIST, &quot;TLSv1&quot;);
   ret = curl_easy_perform(curl);
   curl_easy_cleanup(curl);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.9, in 7.83.0 for BearSSL</p>
 <p class="Pp">If built TLS enabled.</p>
 </section>
 <section class="Sh">
@@ -111,8 +119,8 @@ if(curl) {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 8, 2021</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

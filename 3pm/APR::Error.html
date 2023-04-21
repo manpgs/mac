@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>install::TempContent::Objects::mod_perl-2.0.9::docs::api::APR::Error(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h1>
-<pre>
-  eval { $obj-&gt;mp_method() };
+<pre>  eval { $obj-&gt;mp_method() };
   if ($@ &amp;&amp; $ref $@ eq 'APR::Error' &amp;&amp; $@ == $some_code) {
       # handle the exception
   }
@@ -77,8 +77,7 @@
     a an <span class="Li">&quot;APR::Error&quot;</span> object. Therefore most
     of the time this is enough:</p>
 <p class="Pp"></p>
-<pre>
-  eval { $obj-&gt;mp_method() };
+<pre>  eval { $obj-&gt;mp_method() };
   if ($@ &amp;&amp; $ref $@ &amp;&amp; $@ == $some_code)
       warn &quot;handled exception: $@&quot;;
   }
@@ -86,16 +85,14 @@
 <p class="Pp">But with other, non-mod_perl, exception objects you need to
   do:</p>
 <p class="Pp"></p>
-<pre>
-  eval { $obj-&gt;mp_method() };
+<pre>  eval { $obj-&gt;mp_method() };
   if ($@ &amp;&amp; $ref $@ eq 'APR::Error' &amp;&amp; $@ == $some_code)
       warn &quot;handled exception: $@&quot;;
   }
 </pre>
 <p class="Pp">In theory you could even do:</p>
 <p class="Pp"></p>
-<pre>
-  eval { $obj-&gt;mp_method() };
+<pre>  eval { $obj-&gt;mp_method() };
   if ($@ &amp;&amp; $@ == $some_code)
       warn &quot;handled exception: $@&quot;;
   }
@@ -106,8 +103,7 @@
     exception objects only when Apache and APR fail, and in a few other special
     cases of its own (like <span class="Li">&quot;exit&quot;</span>).</p>
 <p class="Pp"></p>
-<pre>
-  warn &quot;handled exception: $@&quot; if $@ &amp;&amp; $ref $@;
+<pre>  warn &quot;handled exception: $@&quot; if $@ &amp;&amp; $ref $@;
 </pre>
 <p class="Pp">There are two ways to figure out whether an error fits your case.
     In most cases you just compare <span class="Li">$@</span> with an the error
@@ -115,13 +111,11 @@
     within the timeout limit a
     <span class="Li">&quot;APR::Const::TIMEUP&quot;</span>)</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Const -compile =&gt; qw(TIMEUP);
+<pre>  use APR::Const -compile =&gt; qw(TIMEUP);
   $sock-&gt;timeout_set(1_000_000); # 1 sec
   my $buff;
   eval { $sock-&gt;recv($buff, BUFF_LEN) };
   if ($@ &amp;&amp; ref $@ &amp;&amp; $@ == APR::Const::TIMEUP) {
-
   }
 </pre>
 <p class="Pp">However there are situations, where on different Operating Systems
@@ -136,8 +130,7 @@
 <p class="Pp">Let's look at a complete example. Here is a code that performs a
     socket read:</p>
 <p class="Pp"></p>
-<pre>
-  my $rlen = $sock-&gt;recv(my $buff, 1024);
+<pre>  my $rlen = $sock-&gt;recv(my $buff, 1024);
   warn &quot;read $rlen bytes\n&quot;;
 </pre>
 <p class="Pp">and in certain cases it times out. The code will die and log the
@@ -146,8 +139,7 @@
     sleep time between attempts, which can be achieved with
     <span class="Li">&quot;select&quot;</span>. Which gives us:</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Status ();
+<pre>  use APR::Status ();
   # ....
   my $tries = 0;
   my $buffer;
@@ -191,8 +183,7 @@
 <h2 class="Ss" id="_strerror_"><a class="permalink" href="#_strerror_">&quot;strerror&quot;</a></h2>
 <p class="Pp">Convert APR error code to its string representation.</p>
 <p class="Pp"></p>
-<pre>
-  $error_str = APR::Error::strerror($rc);
+<pre>  $error_str = APR::Error::strerror($rc);
 </pre>
 <dl class="Bl-tag">
   <dt id="ret:"><a class="permalink" href="#ret:">ret: $rc ( &quot;APR::Const
@@ -212,8 +203,7 @@
     but give the user the human-readable version of the error and not just the
     code.</p>
 <p class="Pp"></p>
-<pre>
-  my $rc = $c-&gt;input_filters-&gt;get_brigade($bb_in,
+<pre>  my $rc = $c-&gt;input_filters-&gt;get_brigade($bb_in,
                                           Apache2::Const::MODE_GETLINE);
   if ($rc != APR::Const::SUCCESS &amp;&amp; $rc != APR::Const::EOF) {
       my $error = APR::Error::strerror($rc);

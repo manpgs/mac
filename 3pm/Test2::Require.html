@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Require(3)</title>
 </head>
@@ -39,19 +40,14 @@
   DO I WRITE A 'REQUIRE' MODULE?</a></h1>
 <section class="Ss">
 <h2 class="Ss">AS A SUBCLASS</h2>
-<pre>
-    package Test2::Require::Widget;
+<pre>    package Test2::Require::Widget;
     use strict;
     use warnings;
-
     use base 'Test2::Require';
-
     sub HAVE_WIDGETS { ... };
-
     sub skip {
         my $class = shift;
         my @import_args = @_;
-
         if (HAVE_WIDGETS()) {
             # We have widgets, do not skip
             return undef;
@@ -61,7 +57,6 @@
             return &quot;Skipped because there are no widgets&quot; unless HAVE_WIDGETS();
         }
     }
-
     1;
 </pre>
 <p class="Pp">A subclass of Test2::Require simply needs to implement a
@@ -75,27 +70,20 @@
 <p class="Pp">If you do not wish to subclass Test2::Require then you should
     write an <span class="Li">&quot;import()&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::Require::Widget;
+<pre>    package Test2::Require::Widget;
     use strict;
     use warnings;
-
     use Test2::API qw/context/;
-
     sub HAVE_WIDGETS { ... };
-
     sub import {
         my $class = shift;
-
         # Have widgets, should run.
         return if HAVE_WIDGETS();
-
         # Use the context object to create the event
         my $ctx = context();
         $ctx-&gt;plan(0, SKIP =&gt; &quot;Skipped because there are no widgets&quot;);
         $ctx-&gt;release;
     }
-
     1;
 </pre>
 </section>

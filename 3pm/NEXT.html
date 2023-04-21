@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>NEXT(3pm)</title>
 </head>
@@ -29,36 +30,27 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use NEXT;
-
+<pre>    use NEXT;
     package P;
     sub P::method   { print &quot;$_[0]: P method\n&quot;;   $_[0]-&gt;NEXT::method() }
     sub P::DESTROY  { print &quot;$_[0]: P dtor\n&quot;;     $_[0]-&gt;NEXT::DESTROY() }
-
     package Q;
     use base qw( P );
     sub Q::AUTOLOAD { print &quot;$_[0]: Q AUTOLOAD\n&quot;; $_[0]-&gt;NEXT::AUTOLOAD() }
     sub Q::DESTROY  { print &quot;$_[0]: Q dtor\n&quot;;     $_[0]-&gt;NEXT::DESTROY() }
-
     package R;
     sub R::method   { print &quot;$_[0]: R method\n&quot;;   $_[0]-&gt;NEXT::method() }
     sub R::AUTOLOAD { print &quot;$_[0]: R AUTOLOAD\n&quot;; $_[0]-&gt;NEXT::AUTOLOAD() }
     sub R::DESTROY  { print &quot;$_[0]: R dtor\n&quot;;     $_[0]-&gt;NEXT::DESTROY() }
-
     package S;
     use base qw( Q R );
     sub S::method   { print &quot;$_[0]: S method\n&quot;;   $_[0]-&gt;NEXT::method() }
     sub S::AUTOLOAD { print &quot;$_[0]: S AUTOLOAD\n&quot;; $_[0]-&gt;NEXT::AUTOLOAD() }
     sub S::DESTROY  { print &quot;$_[0]: S dtor\n&quot;;     $_[0]-&gt;NEXT::DESTROY() }
-
     package main;
-
     my $obj = bless {}, &quot;S&quot;;
-
     $obj-&gt;method();             # Calls S::method, P::method, R::method
     $obj-&gt;missing_method(); # Calls S::AUTOLOAD, Q::AUTOLOAD, R::AUTOLOAD
-
     # Clean-up calls S::DESTROY, Q::DESTROY, P::DESTROY, R::DESTROY
 </pre>
 </section>
@@ -108,8 +100,7 @@
     <span class="Li">&quot;AUTOLOAD&quot;</span>) to attempt to redispatch any
     method that does not have the same name. For example:</p>
 <p class="Pp"></p>
-<pre>
-        sub S::oops { print &quot;oops!\n&quot;; $_[0]-&gt;NEXT::other_method() }
+<pre>        sub S::oops { print &quot;oops!\n&quot;; $_[0]-&gt;NEXT::other_method() }
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="Enforcing_redispatch"><a class="permalink" href="#Enforcing_redispatch">Enforcing
@@ -120,13 +111,11 @@
     throws an exception if it cannot find a &quot;next&quot; method to call.</p>
 <p class="Pp">To do this, simple invoke the redispatch as:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::ACTUAL::method();
+<pre>        $self-&gt;NEXT::ACTUAL::method();
 </pre>
 <p class="Pp">rather than:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::method();
+<pre>        $self-&gt;NEXT::method();
 </pre>
 <p class="Pp">The <span class="Li">&quot;ACTUAL&quot;</span> tells
     <span class="Li">&quot;NEXT&quot;</span> that there must actually be a next
@@ -136,8 +125,7 @@
     decline an <span class="Li">&quot;AUTOLOAD&quot;</span> request, but
     preserve the normal exception-on-failure semantics:</p>
 <p class="Pp"></p>
-<pre>
-        sub AUTOLOAD {
+<pre>        sub AUTOLOAD {
                 if ($AUTOLOAD =~ /foo|bar/) {
                         # handle here
                 }
@@ -157,30 +145,22 @@
 <p class="Pp">If <span class="Li">&quot;NEXT&quot;</span> redispatching is used
     in the methods of a &quot;diamond&quot; class hierarchy:</p>
 <p class="Pp"></p>
-<pre>
-        #     A   B
+<pre>        #     A   B
         #    / \ /
         #   C   D
         #    \ /
         #     E
-
         use NEXT;
-
         package A;                 
         sub foo { print &quot;called A::foo\n&quot;; shift-&gt;NEXT::foo() }
-
         package B;                 
         sub foo { print &quot;called B::foo\n&quot;; shift-&gt;NEXT::foo() }
-
         package C; @ISA = qw( A );
         sub foo { print &quot;called C::foo\n&quot;; shift-&gt;NEXT::foo() }
-
         package D; @ISA = qw(A B);
         sub foo { print &quot;called D::foo\n&quot;; shift-&gt;NEXT::foo() }
-
         package E; @ISA = qw(C D);
         sub foo { print &quot;called E::foo\n&quot;; shift-&gt;NEXT::foo() }
-
         E-&gt;foo();
 </pre>
 <p class="Pp">then derived classes may (re-)inherit base-class methods through
@@ -193,8 +173,7 @@
     multiply inherited method as many times as it is inherited. For example, the
     above code prints:</p>
 <p class="Pp"></p>
-<pre>
-        called E::foo
+<pre>        called E::foo
         called C::foo
         called A::foo
         called D::foo
@@ -209,41 +188,32 @@
   redispatches.</p>
 <p class="Pp">To cover such cases, you can redispatch methods via:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::DISTINCT::method();
+<pre>        $self-&gt;NEXT::DISTINCT::method();
 </pre>
 <p class="Pp">rather than:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::method();
+<pre>        $self-&gt;NEXT::method();
 </pre>
 <p class="Pp">This causes the redispatcher to only visit each distinct
     <span class="Li">&quot;method&quot;</span> method once. That is, to skip any
     classes in the hierarchy that it has already visited during redispatch. So,
     for example, if the previous example were rewritten:</p>
 <p class="Pp"></p>
-<pre>
-        package A;                 
+<pre>        package A;                 
         sub foo { print &quot;called A::foo\n&quot;; shift-&gt;NEXT::DISTINCT::foo() }
-
         package B;                 
         sub foo { print &quot;called B::foo\n&quot;; shift-&gt;NEXT::DISTINCT::foo() }
-
         package C; @ISA = qw( A );
         sub foo { print &quot;called C::foo\n&quot;; shift-&gt;NEXT::DISTINCT::foo() }
-
         package D; @ISA = qw(A B);
         sub foo { print &quot;called D::foo\n&quot;; shift-&gt;NEXT::DISTINCT::foo() }
-
         package E; @ISA = qw(C D);
         sub foo { print &quot;called E::foo\n&quot;; shift-&gt;NEXT::DISTINCT::foo() }
-
         E-&gt;foo();
 </pre>
 <p class="Pp">then it would print:</p>
 <p class="Pp"></p>
-<pre>
-        called E::foo
+<pre>        called E::foo
         called C::foo
         called A::foo
         called D::foo
@@ -254,13 +224,11 @@
     from the first call to <span class="Li">&quot;A::foo&quot;</span>).</p>
 <p class="Pp">Note that you can also use:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::DISTINCT::ACTUAL::method();
+<pre>        $self-&gt;NEXT::DISTINCT::ACTUAL::method();
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-        $self-&gt;NEXT::ACTUAL::DISTINCT::method();
+<pre>        $self-&gt;NEXT::ACTUAL::DISTINCT::method();
 </pre>
 <p class="Pp">to get both unique invocation <i>and</i> exception-on-failure.</p>
 <p class="Pp">Note that, for historical compatibility, you can also use
@@ -276,30 +244,22 @@
     simpler than that of the <span class="Li">&quot;NEXT&quot;</span> family. A
     call to:</p>
 <p class="Pp"></p>
-<pre>
-        $obj-&gt;EVERY::foo();
+<pre>        $obj-&gt;EVERY::foo();
 </pre>
 <p class="Pp">calls <i>every</i> method named
     <span class="Li">&quot;foo&quot;</span> that the object in
     <span class="Li">$obj</span> has inherited. That is:</p>
 <p class="Pp"></p>
-<pre>
-        use NEXT;
-
+<pre>        use NEXT;
         package A; @ISA = qw(B D X);
         sub foo { print &quot;A::foo &quot; }
-
         package B; @ISA = qw(D X);
         sub foo { print &quot;B::foo &quot; }
-
         package X; @ISA = qw(D);
         sub foo { print &quot;X::foo &quot; }
-
         package D;
         sub foo { print &quot;D::foo &quot; }
-
         package main;
-
         my $obj = bless {}, 'A';
         $obj-&gt;EVERY::foo();        # prints&quot; A::foo B::foo X::foo D::foo
 </pre>
@@ -328,14 +288,12 @@
     the behaviour of their &quot;ancestors&quot;). In that case, instead of
     using the <span class="Li">&quot;EVERY&quot;</span> pseudo-class:</p>
 <p class="Pp"></p>
-<pre>
-        $obj-&gt;EVERY::foo();        # prints&quot; A::foo B::foo X::foo D::foo
+<pre>        $obj-&gt;EVERY::foo();        # prints&quot; A::foo B::foo X::foo D::foo
 </pre>
 <p class="Pp">you can use the <span class="Li">&quot;EVERY::LAST&quot;</span>
     pseudo-class:</p>
 <p class="Pp"></p>
-<pre>
-        $obj-&gt;EVERY::LAST::foo();  # prints&quot; D::foo X::foo B::foo A::foo
+<pre>        $obj-&gt;EVERY::LAST::foo();  # prints&quot; D::foo X::foo B::foo A::foo
 </pre>
 <p class="Pp">which reverses the order of method call.</p>
 <p class="Pp">Whichever version is used, the actual methods are called in the
@@ -360,14 +318,11 @@
     destructor an object inherits is actually called (as opposed to just the
     left-most-depth-first-est one):</p>
 <p class="Pp"></p>
-<pre>
-        package Base;
+<pre>        package Base;
         sub DESTROY { $_[0]-&gt;EVERY::Destroy }
-
         package Derived1; 
         use base 'Base';
         sub Destroy {...}
-
         package Derived2; 
         use base 'Base', 'Derived1';
         sub Destroy {...}
@@ -380,21 +335,18 @@
 <p class="Pp">Likewise, to create a class hierarchy in which every initializer
     inherited by a new object is invoked:</p>
 <p class="Pp"></p>
-<pre>
-        package Base;
+<pre>        package Base;
         sub new {
                 my ($class, %args) = @_;
                 my $obj = bless {}, $class;
                 $obj-&gt;EVERY::LAST::Init(\%args);
         }
-
         package Derived1; 
         use base 'Base';
         sub Init {
                 my ($argsref) = @_;
                 ...
         }
-
         package Derived2; 
         use base 'Base', 'Derived1';
         sub Init {
@@ -433,8 +385,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<pre>
- Copyright (c) 2000-2001, Damian Conway. All Rights Reserved.
+<pre> Copyright (c) 2000-2001, Damian Conway. All Rights Reserved.
  This module is free software. It may be used, redistributed
     and/or modified under the same terms as Perl itself.
 </pre>

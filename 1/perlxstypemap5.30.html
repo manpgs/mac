@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLXSTYPEMAP(1)</title>
 </head>
@@ -84,8 +85,7 @@
     better which comes with perl 5.16, typemaps can also be embedded directly
     into XS code using a HERE-doc like syntax:</p>
 <p class="Pp"></p>
-<pre>
-  TYPEMAP: &lt;&lt;HERE
+<pre>  TYPEMAP: &lt;&lt;HERE
   ...
   HERE
 </pre>
@@ -96,8 +96,7 @@
     contain one pair of C type and XS type per line as follows. An example from
     the core typemap file:</p>
 <p class="Pp"></p>
-<pre>
-  TYPEMAP
+<pre>  TYPEMAP
   # all variants of char* is handled by the T_PV typemap
   char *          T_PV
   const char *    T_PV
@@ -111,8 +110,7 @@
     line by itself, followed by the code that implements it indented on the
     following lines. Example:</p>
 <p class="Pp"></p>
-<pre>
-  INPUT
+<pre>  INPUT
   T_PV
     $var = ($type)SvPV_nolen($arg)
   T_PTR
@@ -124,14 +122,11 @@
     strings of the <span class="Li">&quot;char *&quot;</span> type to Perl
     scalars/strings:</p>
 <p class="Pp"></p>
-<pre>
-  TYPEMAP
+<pre>  TYPEMAP
   char *  T_PV
-
   INPUT
   T_PV
     $var = ($type)SvPV_nolen($arg)
-
   OUTPUT
   T_PV
     sv_setpv((SV*)$arg, $var);
@@ -141,18 +136,15 @@
     class <span class="Li">&quot;Net::Config&quot;</span>. One way to do this is
     to use underscores (_) to separate package names, as follows:</p>
 <p class="Pp"></p>
-<pre>
-  typedef struct netconfig * Net_Config;
+<pre>  typedef struct netconfig * Net_Config;
 </pre>
 <p class="Pp">And then provide a typemap entry
     <span class="Li">&quot;T_PTROBJ_SPECIAL&quot;</span> that maps underscores
     to double-colons (::), and declare
     <span class="Li">&quot;Net_Config&quot;</span> to be of that type:</p>
 <p class="Pp"></p>
-<pre>
-  TYPEMAP
+<pre>  TYPEMAP
   Net_Config      T_PTROBJ_SPECIAL
-
   INPUT
   T_PTROBJ_SPECIAL
     if (sv_derived_from($arg, \&quot;${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\&quot;)){
@@ -161,7 +153,6 @@
     }
     else
       croak(\&quot;$var is not of type ${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\&quot;)
-
   OUTPUT
   T_PTROBJ_SPECIAL
     sv_setref_pv($arg, \&quot;${(my $ntt=$ntype)=~s/_/::/g;\$ntt}\&quot;,
@@ -222,8 +213,7 @@
   <li>Include the following line in the XS section of your XS file: (don't break
       the line)
     <p class="Pp"></p>
-    <pre>
-  INCLUDE_COMMAND: $^X -MExtUtils::Typemaps::Cmd
+    <pre>  INCLUDE_COMMAND: $^X -MExtUtils::Typemaps::Cmd
                    -e &quot;print embeddable_typemap(q{Basic})&quot;
     </pre>
   </li>
@@ -241,38 +231,42 @@
     error messages that refer to the true function name even when using the
     ALIAS XS feature:</p>
 <p class="Pp"></p>
-<pre>
-  ${ $ALIAS ? \q[GvNAME(CvGV(cv))] : \qq[\&quot;$pname\&quot;] }
+<pre>  ${ $ALIAS ? \q[GvNAME(CvGV(cv))] : \qq[\&quot;$pname\&quot;] }
 </pre>
 <p class="Pp">For many typemap examples, refer to the core typemap file that can
     be found in the perl source tree at <i>lib/ExtUtils/typemap</i>.</p>
 <p class="Pp">The Perl variables that are available for interpolation into
     typemaps are the following:</p>
 <ul class="Bl-bullet">
-  <li><i></i><i>$var</i><i></i> - the name of the input or output variable, eg.
-      RETVAL for return values.</li>
-  <li><i></i><i>$type</i><i></i> - the raw C type of the parameter, any
-      <span class="Li">&quot;:&quot;</span> replaced with
+  <li><i></i><span class="Li"><i>$var</i></span><i></i> - the name of the input
+      or output variable, eg. RETVAL for return values.</li>
+  <li><i></i><span class="Li"><i>$type</i></span><i></i> - the raw C type of the
+      parameter, any <span class="Li">&quot;:&quot;</span> replaced with
       <span class="Li">&quot;_&quot;</span>. e.g. for a type of
-      <span class="Li">&quot;Foo::Bar&quot;</span>, <i></i><i>$type</i><i></i>
-      is <span class="Li">&quot;Foo__Bar&quot;</span></li>
-  <li><i></i><i>$ntype</i><i></i> - the supplied type with
-      <span class="Li">&quot;*&quot;</span> replaced with
+      <span class="Li">&quot;Foo::Bar&quot;</span>,
+      <i></i><span class="Li"><i>$type</i></span><i></i> is
+      <span class="Li">&quot;Foo__Bar&quot;</span></li>
+  <li><i></i><span class="Li"><i>$ntype</i></span><i></i> - the supplied type
+      with <span class="Li">&quot;*&quot;</span> replaced with
       <span class="Li">&quot;Ptr&quot;</span>. e.g. for a type of
-      <span class="Li">&quot;Foo*&quot;</span>, <i></i><i>$ntype</i><i></i> is
+      <span class="Li">&quot;Foo*&quot;</span>,
+      <i></i><span class="Li"><i>$ntype</i></span><i></i> is
       <span class="Li">&quot;FooPtr&quot;</span></li>
-  <li><i></i><i>$arg</i><i></i> - the stack entry, that the parameter is input
-      from or output to, e.g. <span class="Li">ST(0)</span></li>
-  <li><i></i><i>$argoff</i><i></i> - the argument stack offset of the argument.
-      ie. 0 for the first argument, etc.</li>
-  <li><i></i><i>$pname</i><i></i> - the full name of the XSUB, with including
-      the <span class="Li">&quot;PACKAGE&quot;</span> name, with any
-      <span class="Li">&quot;PREFIX&quot;</span> stripped. This is the non-ALIAS
-      name.</li>
-  <li><i></i><i>$Package</i><i></i> - the package specified by the most recent
-      <span class="Li">&quot;PACKAGE&quot;</span> keyword.</li>
-  <li><i></i><i>$ALIAS</i><i></i> - non-zero if the current XSUB has any aliases
-      declared with <span class="Li">&quot;ALIAS&quot;</span>.</li>
+  <li><i></i><span class="Li"><i>$arg</i></span><i></i> - the stack entry, that
+      the parameter is input from or output to, e.g.
+      <span class="Li">ST(0)</span></li>
+  <li><i></i><span class="Li"><i>$argoff</i></span><i></i> - the argument stack
+      offset of the argument. ie. 0 for the first argument, etc.</li>
+  <li><i></i><span class="Li"><i>$pname</i></span><i></i> - the full name of the
+      XSUB, with including the <span class="Li">&quot;PACKAGE&quot;</span> name,
+      with any <span class="Li">&quot;PREFIX&quot;</span> stripped. This is the
+      non-ALIAS name.</li>
+  <li><i></i><span class="Li"><i>$Package</i></span><i></i> - the package
+      specified by the most recent <span class="Li">&quot;PACKAGE&quot;</span>
+      keyword.</li>
+  <li><i></i><span class="Li"><i>$ALIAS</i></span><i></i> - non-zero if the
+      current XSUB has any aliases declared with
+      <span class="Li">&quot;ALIAS&quot;</span>.</li>
 </ul>
 </section>
 <section class="Ss">
@@ -502,8 +496,7 @@
   <dd>xsubpp supports a special syntax for returning packed C arrays to perl. If
       the XS return type is given as
     <p class="Pp"></p>
-    <pre>
-  array(type, nelem)
+    <pre>  array(type, nelem)
     </pre>
     <p class="Pp">xsubpp will copy the contents of <span class="Li">&quot;nelem
         * sizeof(type)&quot;</span> bytes from RETVAL to an SV and push it onto
@@ -533,8 +526,7 @@
     <p class="Pp">An example conversion function for a typemapped struct
         <span class="Li">&quot;foo_t *&quot;</span> might be:</p>
     <p class="Pp"></p>
-    <pre>
-  static void
+    <pre>  static void
   XS_pack_foo_tPtr(SV *out, foo_t *in)
   {
     dTHX; /* alas, signature does not include pTHX_ */
@@ -542,7 +534,6 @@
     hv_stores(hash, &quot;int_member&quot;, newSViv(in-&gt;int_member));
     hv_stores(hash, &quot;float_member&quot;, newSVnv(in-&gt;float_member));
     /* ... */
-
     /* mortalize as thy stack is not refcounted */
     sv_setsv(out, sv_2mortal(newRV_noinc((SV*)hash)));
   }
@@ -550,8 +541,7 @@
     <p class="Pp">The conversion from Perl to C is left as an exercise to the
         reader, but the prototype would be:</p>
     <p class="Pp"></p>
-    <pre>
-  static foo_t *
+    <pre>  static foo_t *
   XS_unpack_foo_tPtr(SV *in);
     </pre>
     <p class="Pp">Instead of an actual C function that has to fetch the thread
@@ -574,8 +564,7 @@
       above. The signature of the function would be for the example above and
       <span class="Li">&quot;foo_t **&quot;</span>:
     <p class="Pp"></p>
-    <pre>
-  static void
+    <pre>  static void
   XS_pack_foo_tPtrPtr(SV *out, foo_t *in, UV count_foo_tPtrPtr);
     </pre>
     <p class="Pp">The type of the third parameter is arbitrary as far as the
@@ -602,8 +591,7 @@
       pushing the contents of a C array onto the perl argument stack.
     <p class="Pp">The usual calling signature is</p>
     <p class="Pp"></p>
-    <pre>
-  @out = array_func( @in );
+    <pre>  @out = array_func( @in );
     </pre>
     <p class="Pp">Any number of arguments can occur in the list before the array
         but the input and output arrays must be the last elements in the

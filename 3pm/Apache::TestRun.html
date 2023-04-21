@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::TestRun(3)</title>
 </head>
@@ -56,15 +57,11 @@
     <span class="Li">&quot;t/TEST&quot;</span> directly. Here is an example of a
     custom <span class="Li">&quot;t/TEST&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  My::TestRun-&gt;new-&gt;run(@ARGV);
-
+<pre>  My::TestRun-&gt;new-&gt;run(@ARGV);
   package My::TestRun;
   use base 'Apache::TestRun';
-
   sub bug_report {
       my $self = shift;
-
       print &lt;&lt;EOI;
   +--------------------------------------------------------+
   | Please file a bug report: http://perl.apache.org/bugs/ |
@@ -85,17 +82,14 @@
     can sub-class <span class="Li">&quot;Apache::TestRun&quot;</span> and
     override this method in <i>t/TEST.PL</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package My::TestRun;
+<pre>  package My::TestRun;
   use base 'Apache::TestRun';
   use Apache::TestConfig;
   __PACKAGE__-&gt;new-&gt;run(@ARGV);
-
   sub pre_configure {
       my $self = shift;
       # Don't load an installed mod_apreq
       Apache::TestConfig::autoconfig_skip_module_add('mod_apreq.c');
-
       $self-&gt;SUPER::pre_configure();
   }
 </pre>

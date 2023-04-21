@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLUNITUT(1)</title>
 </head>
@@ -78,8 +79,7 @@
     is just that: the character.</p>
 <p class="Pp">On a text string, you would do things like:</p>
 <p class="Pp"></p>
-<pre>
-    $text =~ s/foo/bar/;
+<pre>    $text =~ s/foo/bar/;
     if ($string =~ /^\d+$/) { ... }
     $text = ucfirst $text;
     my $character_count = length $text;
@@ -94,8 +94,7 @@
     binary.</p>
 <p class="Pp">On a binary string, you would do things like:</p>
 <p class="Pp"></p>
-<pre>
-    my (@length_content) = unpack &quot;(V/a)*&quot;, $binary;
+<pre>    my (@length_content) = unpack &quot;(V/a)*&quot;, $binary;
     $binary =~ s/\x00\x0F/\xFF\xF0/;  # for the brave :)
     print {$fh} $binary;
     my $byte_count = length $binary;
@@ -126,13 +125,11 @@
   new toolkit</a></h2>
 <p class="Pp">Add to your standard heading the following line:</p>
 <p class="Pp"></p>
-<pre>
-    use Encode qw(encode decode);
+<pre>    use Encode qw(encode decode);
 </pre>
 <p class="Pp">Or, if you're lazy, just:</p>
 <p class="Pp"></p>
-<pre>
-    use Encode;
+<pre>    use Encode;
 </pre>
 </section>
 <section class="Ss">
@@ -140,8 +137,7 @@
   flow (the actual 5 minute tutorial)</a></h2>
 <p class="Pp">The typical input/output flow of a program is:</p>
 <p class="Pp"></p>
-<pre>
-    1. Receive and decode
+<pre>    1. Receive and decode
     2. Process
     3. Encode and output
 </pre>
@@ -151,8 +147,7 @@
 <p class="Pp">Decoding can't happen reliably if you don't know how the data was
     encoded. If you get to choose, it's a good idea to standardize on UTF-8.</p>
 <p class="Pp"></p>
-<pre>
-    my $foo   = decode('UTF-8', get 'http://example.com/');
+<pre>    my $foo   = decode('UTF-8', get 'http://example.com/');
     my $bar   = decode('ISO-8859-1', readline STDIN);
     my $xyzzy = decode('Windows-1251', $cgi-&gt;param('foo'));
 </pre>
@@ -169,8 +164,7 @@
 <p class="Pp">The syntax for encoding text strings to binary strings is as
     simple as decoding:</p>
 <p class="Pp"></p>
-<pre>
-    $body = encode('UTF-8', $body);
+<pre>    $body = encode('UTF-8', $body);
 </pre>
 <p class="Pp">If you needed to know the length of the string in bytes, now's the
     perfect time for that. Because <span class="Li">$body</span> is now a byte
@@ -178,8 +172,7 @@
     bytes, instead of the number of characters. The number of characters is no
     longer known, because characters only exist in text strings.</p>
 <p class="Pp"></p>
-<pre>
-    my $byte_count = length $body;
+<pre>    my $byte_count = length $body;
 </pre>
 <p class="Pp">And if the protocol you're using supports a way of letting the
     recipient know which character encoding you used, please help the receiving
@@ -190,8 +183,7 @@
     <i>bytes</i>, which is always a good idea to supply if the number is
   known.</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Content-Type: text/plain; charset=UTF-8&quot;,
+<pre>    &quot;Content-Type: text/plain; charset=UTF-8&quot;,
     &quot;Content-Length: $byte_count&quot;
 </pre>
 </section>

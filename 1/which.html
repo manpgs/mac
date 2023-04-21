@@ -30,10 +30,11 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $FreeBSD: head/usr.bin/which/which.1 267773 2014-06-23 08:23:05Z bapt $
+   $FreeBSD$
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>WHICH(1)</title>
 </head>
@@ -79,6 +80,42 @@
     <a class="Xr" href="../1/builtin">builtin(1)</a> manual page.</p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<p class="Pp">Locate the <a class="Xr" href="../1/ls">ls(1)</a> and
+    <a class="Xr" href="../1/cp">cp(1)</a> commands:</p>
+<div class="Bd Pp Bd-indent Li">
+<pre>$ /usr/bin/which ls cp
+/bin/ls
+/bin/cp</pre>
+</div>
+<p class="Pp">Same as above with a specific <code class="Ev">PATH</code> and
+    showing all occurrences:</p>
+<div class="Bd Pp Bd-indent Li">
+<pre>$ PATH=/bin:/rescue /usr/bin/which -a ls cp
+/bin/ls
+/rescue/ls
+/bin/cp
+/rescue/cp</pre>
+</div>
+<p class="Pp"><code class="Nm">which</code> will show duplicates if the same
+    executable is found more than once:</p>
+<div class="Bd Pp Bd-indent Li">
+<pre>$ PATH=/bin:/bin /usr/bin/which -a ls
+/bin/ls
+/bin/ls</pre>
+</div>
+<p class="Pp">Do not show output. Just exit with an appropriate return code:</p>
+<div class="Bd Pp Bd-indent Li">
+<pre>$ /usr/bin/which -s ls cp
+$ echo $?
+0
+
+$ /usr/bin/which -s fakecommand
+$ echo $?
+1</pre>
+</div>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp"><a class="Xr" href="../1/builtin">builtin(1)</a>,
@@ -104,8 +141,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 13, 2006</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">September 24, 2020</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

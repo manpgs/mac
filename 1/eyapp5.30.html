@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>EYAPP(1)</title>
 </head>
@@ -28,11 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    eyapp [options] grammar[.eyp]
+<pre>    eyapp [options] grammar[.eyp]
     eyapp -V
     eyapp -h
-
         grammar     The grammar file. If no suffix is given, and the file
                     does not exists, .eyp is added
 </pre>
@@ -95,18 +94,17 @@
       generated parser is directly an executable script, you can specify one
       with the <i>-b</i> option, ie:
     <p class="Pp"></p>
-    <pre>
-    eyapp -b '/usr/local/bin/perl -w' -o myscript.pl myscript.yp
+    <pre>    eyapp -b '/usr/local/bin/perl -w' -o myscript.pl myscript.yp
     </pre>
     <p class="Pp">This will output a file called <i>myscript.pl</i> whose very
         first line is:</p>
     <p class="Pp"></p>
-    <pre>
-    #!/usr/local/bin/perl -w
+    <pre>    #!/usr/local/bin/perl -w
     </pre>
     <p class="Pp">The argument is mandatory, but if you specify an empty string,
-        the value of <i></i><i>$Config</i><i>{perlpath}</i> will be used
-        instead.</p>
+        the value of
+        <i></i><span class="Li"><i>$Config</i></span><i>{perlpath}</i> will be
+        used instead.</p>
   </dd>
   <dt id="B"><a class="permalink" href="#B"><i>-B prompt</i></a></dt>
   <dd>Adds a modulino call '__PACKAGE-&gt;main(&lt;prompt&gt;) unless
@@ -141,21 +139,16 @@
     <span class="Li">&quot;2+3*4&quot;</span> to postfix:
     <span class="Li">&quot;2 3 4 * +&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    %token NUM = /([0-9]+(?:\.[0-9]+)?)/
+<pre>    %token NUM = /([0-9]+(?:\.[0-9]+)?)/
     %token VAR = /([A-Za-z][A-Za-z0-9_]*)/
-
     %right  '='
     %left   '-' '+'
     %left   '*' '/'
     %left   NEG
-
     %defaultaction { &quot;$left $right $op&quot;; }
-
     %%
     line: $exp  { print &quot;$exp\n&quot; }
     ;
-
     exp:        $NUM  { $NUM }            
             |   $VAR  { $VAR }            
             |   VAR.left '='.op exp.right         
@@ -166,30 +159,25 @@
             |   '-' $exp %prec NEG { &quot;$exp NEG&quot; }
             |   '(' $exp ')' { $exp }      
     ;
-
     %%
 </pre>
 <p class="Pp">Notice that there is no need to write lexer and error report
     subroutines. First, we compile the grammar:</p>
 <p class="Pp"></p>
-<pre>
-    pl@nereida:~/LEyapp/examples/eyappintro$ eyapp -o postfix.pl -C Postfix.eyp
+<pre>    pl@nereida:~/LEyapp/examples/eyappintro$ eyapp -o postfix.pl -C Postfix.eyp
 </pre>
 <p class="Pp">If we use the <span class="Li">&quot;-C&quot;</span> option and no
     <span class="Li">&quot;main()&quot;</span> was written one default
     <span class="Li">&quot;main&quot;</span> sub is provided. We can now execute
     the resulting program:</p>
 <p class="Pp"></p>
-<pre>
-    pl@nereida:~/LEyapp/examples/eyappintro$ ./postfix.pl -c 'a = 2*3 +b'
+<pre>    pl@nereida:~/LEyapp/examples/eyappintro$ ./postfix.pl -c 'a = 2*3 +b'
     a 2 3 * b + =
 </pre>
 <p class="Pp">When a non conformant input is given, it produces an accurate
     error message:</p>
 <p class="Pp"></p>
-<pre>
-    pl@nereida:~/LEyapp/examples/eyappintro$ ./postfix.pl -c 'a = 2**3 +b'
-
+<pre>    pl@nereida:~/LEyapp/examples/eyappintro$ ./postfix.pl -c 'a = 2**3 +b'
     Syntax error near '*'. 
     Expected one of these terminals: '-' 'NUM' 'VAR' '('
     There were 1 errors during parsing

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::Server(3)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    #!/usr/bin/perl -w -T
+<pre>    #!/usr/bin/perl -w -T
     package MyPackage;
-
     use base qw(Net::Server);
-
     sub process_request {
         my $self = shift;
         while (&lt;STDIN&gt;) {
@@ -42,13 +40,9 @@
             last if /quit/i;
         }
     }
-
     MyPackage-&gt;run(port =&gt; 160, ipv =&gt; '*');
-
-
     # one liner to get going quickly
     perl -e 'use base qw(Net::Server); main-&gt;run(port =&gt; 20208)'
-
     NOTE: beginning in Net::Server 2.005, the default value for
           ipv is IPv* meaning that if no host is passed, or
           a hostname is past, any available IPv4 and IPv6 sockets will be
@@ -59,8 +53,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FEATURES"><a class="permalink" href="#FEATURES">FEATURES</a></h1>
-<pre>
-    * Full IPv6 support
+<pre>    * Full IPv6 support
     * Working SSL sockets and https (both with and without IO::Socket::SSL)
     * Single Server Mode
     * Inetd Server Mode
@@ -234,25 +227,17 @@
     using <span class="Li">&quot;Net::Server&quot;</span> can, or will, be
     included with this distribution).</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w -T
-
+<pre>    #!/usr/bin/perl -w -T
     package MyPackage;
-
     use strict;
     use base qw(Net::Server::PreFork); # any personality will do
-
     MyPackage-&gt;run;
-
     # over-ride the default echo handler
-
     sub process_request {
         my $self = shift;
         eval {
-
             local $SIG{'ALRM'} = sub { die &quot;Timed Out!\n&quot; };
             my $timeout = 30; # give the user 30 seconds to type some lines
-
             my $previous_alarm = alarm($timeout);
             while (&lt;STDIN&gt;) {
                 s/\r?\n$//;
@@ -260,16 +245,12 @@
                 alarm($timeout);
             }
             alarm($previous_alarm);
-
         };
-
         if ($@ =~ /timed out/i) {
             print STDOUT &quot;Timed Out.\r\n&quot;;
             return;
         }
-
     }
-
     1;
 </pre>
 <p class="Pp">Playing this file from the command line will invoke a Net::Server
@@ -279,24 +260,20 @@
 <p class="Pp">Net::Server comes with a built in echo server by default. You can
     test it out by simply running the following from the commandline:</p>
 <p class="Pp"></p>
-<pre>
-    net-server
+<pre>    net-server
 </pre>
 <p class="Pp">If you wanted to try another flavor you could try</p>
 <p class="Pp"></p>
-<pre>
-    net-server PreFork
+<pre>    net-server PreFork
 </pre>
 <p class="Pp">If you wanted to try out a basic HTTP server you could use</p>
 <p class="Pp"></p>
-<pre>
-    net-server HTTP
+<pre>    net-server HTTP
 </pre>
 <p class="Pp">Or if you wanted to test out a CGI you are writing you could
   use</p>
 <p class="Pp"></p>
-<pre>
-    net-server HTTP --app ../../mycgi.cgi
+<pre>    net-server HTTP --app ../../mycgi.cgi
 </pre>
 </section>
 <section class="Sh">
@@ -326,17 +303,13 @@
     =&quot;</span> 'val1')&gt;&gt;. Passing arguments via a prebuilt object can
     best be shown in the following code:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w -T
-
+<pre>    #!/usr/bin/perl -w -T
     package MyPackage;
     use strict;
     use base qw(Net::Server);
-
     my $server = MyPackage-&gt;new({
         key1 =&gt; 'val1',
     });
-
     $server-&gt;run;
 </pre>
 <p class="Pp">All five methods for passing arguments may be used at the same
@@ -345,8 +318,7 @@
     <span class="Li">&quot;Net::Server&quot;</span> will look for arguments in
     the following order:</p>
 <p class="Pp"></p>
-<pre>
-    1) Arguments passed to the C&lt;new&gt; method.
+<pre>    1) Arguments passed to the C&lt;new&gt; method.
     2) Arguments passed on command line.
     3) Arguments passed to the C&lt;run&gt; method.
     4) Arguments passed via a conf file.
@@ -354,8 +326,7 @@
 </pre>
 <p class="Pp">Additionally the following hooks are available:</p>
 <p class="Pp"></p>
-<pre>
-    1) Arguments set in the configure_hook (occurs after new
+<pre>    1) Arguments set in the configure_hook (occurs after new
        but before any of the other areas are checked).
     2) Arguments set and validated in the post_configure_hook
        (occurs after all of the other areas are checked).
@@ -378,19 +349,15 @@
 <p class="Pp">It is possible to add in your own custom parameters to those
     parsed by Net::Server. The following code shows how this is done:</p>
 <p class="Pp"></p>
-<pre>
-    sub options {
+<pre>    sub options {
         my $self     = shift;
         my $prop     = $self-&gt;{'server'};
         my $template = shift;
-
         # setup options in the parent classes
         $self-&gt;SUPER::options($template);
-
         # add a single value option
         $prop-&gt;{'my_option'} ||= undef;
         $template-&gt;{'my_option'} = \ $prop-&gt;{'my_option'};
-
         # add a multi value option
         $prop-&gt;{'an_arrayref_item'} ||= [];
         $template-&gt;{'an_arrayref_item'} = $prop-&gt;{'an_arrayref_item'};
@@ -415,33 +382,26 @@
     allows you to setup aliases to your names.</p>
 <p class="Pp">For example, a basic structure might look like this:</p>
 <p class="Pp"></p>
-<pre>
-   $prop = $self-&gt;{'server'}
-
+<pre>   $prop = $self-&gt;{'server'}
    $prop-&gt;{'my_custom_option'} ||= undef;
    $prop-&gt;{'my_custom_array'}  ||= [];
-
    $template = {
        my_custom_option =&gt; \ $prop-&gt;{'my_custom_option'},
        mco              =&gt; \ $prop-&gt;{'my_custom_option'}, # alias
        my_custom_array  =&gt; $prop-&gt;{'my_custom_array'},
        mca              =&gt; $prop-&gt;{'my_custom_array'}, # an alias
    };
-
    $template-&gt;{'mco2'} = $template-&gt;{'mco'}; # another way to alias
 </pre>
 <p class="Pp">But you could also have more complex data:</p>
 <p class="Pp"></p>
-<pre>
-   $prop = $self-&gt;{'server'};
-
+<pre>   $prop = $self-&gt;{'server'};
    $prop-&gt;{'one_layer'} = {
        two_layer =&gt; [
            undef,
            undef,
        ],
    };
-
    $template = {
        param1 =&gt; \ $prop-&gt;{'one_layer'}-&gt;{'two_layer'}-&gt;[0],
        param2 =&gt; \ $prop-&gt;{'one_layer'}-&gt;{'two_layer'}-&gt;[1],
@@ -460,33 +420,27 @@
     personalities may use additional parameters and may optionally not use
     parameters from the base class.)</p>
 <p class="Pp"></p>
-<pre>
-    Key               Value                    Default
+<pre>    Key               Value                    Default
     conf_file         &quot;filename&quot;               undef
-
     log_level         0-4                      2
     log_file          (filename|Sys::Syslog
                        |Log::Log4perl)         undef
-
     port              \d+                      20203
     host              &quot;host&quot;                   &quot;*&quot;
     ipv               (4|6|*)                  *
     proto             (tcp|udp|unix)           &quot;tcp&quot;
     listen            \d+                      SOMAXCONN
-
     ## syslog parameters (if log_file eq Sys::Syslog)
     syslog_logsock    (native|unix|inet|udp
                        |tcp|stream|console)    unix (on Sys::Syslog &lt; 0.15)
     syslog_ident      &quot;identity&quot;               &quot;net_server&quot;
     syslog_logopt     (cons|ndelay|nowait|pid) pid
     syslog_facility   \w+                      daemon
-
     reverse_lookups   1                        undef
     allow             /regex/                  none
     deny              /regex/                  none
     cidr_allow        CIDR                     none
     cidr_deny         CIDR                     none
-
     ## daemonization parameters
     pid_file          &quot;filename&quot;               undef
     chroot            &quot;directory&quot;              undef
@@ -494,9 +448,7 @@
     group             (gid|group)              &quot;nobody&quot;
     background        1                        undef
     setsid            1                        undef
-
     no_close_by_child (1|undef)                undef
-
     ## See Net::Server::Proto::(TCP|UDP|UNIX|SSL|SSLeay|etc)
     ## for more sample parameters.
 </pre>
@@ -508,8 +460,7 @@
         a conf_file. The first is to pass the default value to the run method as
         in:</p>
     <p class="Pp"></p>
-    <pre>
-    MyServer-&gt;run({
+    <pre>    MyServer-&gt;run({
        conf_file =&gt; '/etc/my_server.conf',
     });
     </pre>
@@ -518,8 +469,7 @@
     <p class="Pp">The second way to do this was added in the 0.96 version. It
         uses the default_values method as in:</p>
     <p class="Pp"></p>
-    <pre>
-    sub default_values {
+    <pre>    sub default_values {
         return {
             conf_file =&gt; '/etc/my_server.conf',
         }
@@ -531,8 +481,7 @@
         at all, you can pass conf_file to the new method when creating your
         object:</p>
     <p class="Pp"></p>
-    <pre>
-    MyServer-&gt;new({
+    <pre>    MyServer-&gt;new({
        conf_file =&gt; '/etc/my_server.conf',
     })-&gt;run;
     </pre>
@@ -597,8 +546,7 @@
         protocol to be used. See Net::Server::Proto. The following are some
         valid port strings:</p>
     <p class="Pp"></p>
-    <pre>
-    20203                            # port only
+    <pre>    20203                            # port only
     localhost:20203                  # host and port
     localhost:http                   # localhost bound to port 80
     localhost:20203/tcp              # host, port, protocol
@@ -607,21 +555,18 @@
     localhost | 20203 | tcp | IPv*   # same
     localhost:20203/IPv*             # bind any configured interfaces for IPv4 or 6 (default)
     localhost:20203/IPv4/IPv6        # bind localhost on IPv4 and 6 (fails if it cannot do both)
-
     *:20203                          # bind all local interfaces
     </pre>
     <p class="Pp">Additionally, when passed in the code (non-commandline, and
         non-config), the port may be passed as a hashref or array hashrefs of
         information:</p>
     <p class="Pp"></p>
-    <pre>
-    port =&gt; {
+    <pre>    port =&gt; {
         host  =&gt; 'localhost',
         port  =&gt; '20203',
         ipv   =&gt; 6,     # IPv6 only
         proto =&gt; 'udp', # UDP protocol
     }
-
     port =&gt; [{
         host  =&gt; '*',
         port  =&gt; '20203',
@@ -682,28 +627,18 @@
         IPv4) to determine which type of socket to create. Optionally the ipv
         specification can be passed as part of the hostname.</p>
     <p class="Pp"></p>
-    <pre>
-    host =&gt; &quot;127.0.0.1&quot;,  # an IPv4 address
-
+    <pre>    host =&gt; &quot;127.0.0.1&quot;,  # an IPv4 address
     host =&gt; &quot;::1&quot;,        # an IPv6 address
-
     host =&gt; 'localhost',  # addresses matched by localhost (default any IPv4 and/or IPv6)
-
     host =&gt; 'localhost/IPv*',  # same
-
     ipv  =&gt; 6,
     host =&gt; 'localhost',  # addresses matched by localhost (IPv6)
-
     ipv  =&gt; 4,
     host =&gt; 'localhost',  # addresses matched by localhost (IPv4)
-
     ipv  =&gt; 'IPv4 IPv6',
     host =&gt; 'localhost',  # addresses matched by localhost (requires IPv6 and IPv4)
-
     host =&gt; '*',          # any local interfaces (any IPv6 or IPv4)
-
     host =&gt; '*/IPv*',     # same (any IPv6 or IPv4)
-
     ipv  =&gt; 4,
     host =&gt; '*',          # any local IPv4 interfaces interfaces
     </pre>
@@ -731,42 +666,30 @@
         hostname. Trying to pass an IPv4 address when ipv is set to 6 (only 6 -
         not * or 4) will result in an error.</p>
     <p class="Pp"></p>
-    <pre>
-    localhost:20203 # will use IPv6 if there is a corresponding entry for localhost
+    <pre>    localhost:20203 # will use IPv6 if there is a corresponding entry for localhost
                     # it will also use IPv4 if there is a corresponding v4 entry for localhost
-
     localhost:20203:IPv*  # same (default)
-
     localhost:20203:IPv6  # will use IPv6
-
     [::1]:20203           # will use IPv6 (IPv6 style address)
-
     localhost:20203:IPv4  # will use IPv4
-
     127.0.0.1:20203       # will use IPv4 (IPv4 style address
-
     localhost:20203:IPv4:IPv6 # will bind to both v4 and v6 - fails otherwise
-
     # or as a hashref as
     port =&gt; {
         host =&gt; &quot;localhost&quot;,
         ipv  =&gt; 6, # only binds IPv6
     }
-
     port =&gt; {
         host =&gt; &quot;localhost&quot;,
         ipv  =&gt; 4, # only binds IPv4
     }
-
     port =&gt; {
         host =&gt; &quot;::1&quot;,
         ipv  =&gt; &quot;IPv6&quot;, # same as passing &quot;6&quot;
     }
-
     port =&gt; {
         host =&gt; &quot;localhost/IPv*&quot;,       # any IPv4 or IPv6
     }
-
     port =&gt; {
         host =&gt; &quot;localhost IPv4 IPv6&quot;,  # must create both
     }
@@ -780,9 +703,7 @@
     <p class="Pp">On my local box the following command results in the following
         output:</p>
     <p class="Pp"></p>
-    <pre>
-    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;localhost&quot;)'
-
+    <pre>    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;localhost&quot;)'
     Resolved [localhost]:20203 to [::1]:20203, IPv6
     Resolved [localhost]:20203 to [127.0.0.1]:20203, IPv4
     Binding to TCP port 20203 on host ::1 with IPv6
@@ -793,9 +714,7 @@
         explicitly bind ports rather than depending upon ipv =&gt; &quot;*&quot;
         to resolve them for me as in the following:</p>
     <p class="Pp"></p>
-    <pre>
-    perl -e 'use base qw(Net::Server); main-&gt;run(port =&gt; [20203,20203], host =&gt; &quot;localhost&quot;, ipv =&gt; [4,6])'
-
+    <pre>    perl -e 'use base qw(Net::Server); main-&gt;run(port =&gt; [20203,20203], host =&gt; &quot;localhost&quot;, ipv =&gt; [4,6])'
     Binding to TCP port 20203 on host localhost with IPv4
     Binding to TCP port 20203 on host localhost with IPv6
     </pre>
@@ -816,9 +735,7 @@
     <p class="Pp">On my linux box which defaults to net.ipv6.bindv6only=0, the
         following is output.</p>
     <p class="Pp"></p>
-    <pre>
-    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;*&quot;)'
-
+    <pre>    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;*&quot;)'
     Resolved [*]:8080 to [::]:8080, IPv6
     Not including resolved host [0.0.0.0] IPv4 because it will be handled by [::] IPv6
     Binding to TCP port 8080 on host :: with IPv6
@@ -826,9 +743,7 @@
     <p class="Pp">If I issue a <span class="Li">&quot;sudo /sbin/sysctl -w
         net.ipv6.bindv6only=1&quot;</span>, the following is output.</p>
     <p class="Pp"></p>
-    <pre>
-    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;*&quot;)'
-
+    <pre>    perl -e 'use base qw(Net::Server); main-&gt;run(host =&gt; &quot;*&quot;)'
     Resolved [*]:8080 to [0.0.0.0]:8080, IPv4
     Resolved [*]:8080 to [::]:8080, IPv6
     Binding to TCP port 8080 on host 0.0.0.0 with IPv4
@@ -962,8 +877,7 @@
     and other method calls.</p>
 <p class="Pp">The structure of a Net::Server object is shown below:</p>
 <p class="Pp"></p>
-<pre>
-    $self = bless({
+<pre>    $self = bless({
         server =&gt; {
             key1 =&gt; 'val1',
             # more key/vals
@@ -977,16 +891,14 @@
 <p class="Pp">You may get and set properties in two ways. The suggested way is
     to access properties directly via</p>
 <p class="Pp"></p>
-<pre>
-    my $val = $self-&gt;{server}-&gt;{key1};
+<pre>    my $val = $self-&gt;{server}-&gt;{key1};
 </pre>
 <p class="Pp">Accessing the properties directly will speed the server process -
     though some would deem this as bad style. A second way has been provided for
     object oriented types who believe in methods. The second way consists of the
     following methods:</p>
 <p class="Pp"></p>
-<pre>
-    my $val = $self-&gt;get_property( 'key1' );
+<pre>    my $val = $self-&gt;get_property( 'key1' );
     my $self-&gt;set_property( key1 =&gt; 'val1' );
 </pre>
 <p class="Pp">Properties are allowed to be changed at any time with caution
@@ -1001,25 +913,20 @@
     conf file is simple key value pairs. Comments and blank lines are
   ignored.</p>
 <p class="Pp"></p>
-<pre>
-    #-------------- file test.conf --------------
-
+<pre>    #-------------- file test.conf --------------
     ### user and group to become
     user        somebody
     group       everybody
-
     # logging ?
     log_file    /var/log/server.log
     log_level   3
     pid_file    /tmp/server.pid
-
     # optional syslog directive
     # used in place of log_file above
     #log_file       Sys::Syslog
     #syslog_logsock unix
     #syslog_ident   myserver
     #syslog_logopt  pid|cons
-
     # access control
     allow       .+\.(net|com)
     allow       domain\.com
@@ -1027,10 +934,8 @@
     cidr_allow  127.0.0.0/8
     cidr_allow  192.0.2.0/24
     cidr_deny   192.0.2.4/30
-
     # background the process?
     background  1
-
     # ports to bind (this should bind
     # 127.0.0.1:20205 on IPv6 and
     # localhost:20204 on IPv4)
@@ -1039,10 +944,8 @@
     ipv         IPv6
     port        localhost:20204/IPv4
     port        20205
-
     # reverse lookups ?
     # reverse_lookups on
-
   #-------------- file test.conf --------------
 </pre>
 </section>
@@ -1053,34 +956,21 @@
     hook, fashion. The basic flow is shown below. This is the flow of the
     <span class="Li">&quot;$self-&gt;run&quot;</span> method.</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;configure_hook;
-
+<pre>    $self-&gt;configure_hook;
     $self-&gt;configure(@_);
-
     $self-&gt;post_configure;
-
     $self-&gt;post_configure_hook;
-
     $self-&gt;pre_bind;
-
     $self-&gt;bind;
-
     $self-&gt;post_bind_hook;
-
     $self-&gt;post_bind;
-
     $self-&gt;pre_loop_hook;
-
     $self-&gt;loop;
-
     ### routines inside a standard $self-&gt;loop
     # $self-&gt;accept;
     # $self-&gt;run_client_connection;
     # $self-&gt;done;
-
     $self-&gt;pre_server_close_hook;
-
     $self-&gt;server_close;
 </pre>
 <p class="Pp">The server then exits.</p>
@@ -1088,28 +978,17 @@
     (<span class="Li">&quot;$self-&gt;run_client_connection&quot;</span>), the
     following represents the program flow:</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;post_accept;
-
+<pre>    $self-&gt;post_accept;
     $self-&gt;get_client_info;
-
     $self-&gt;post_accept_hook;
-
     if ($self-&gt;allow_deny
         &amp;&amp; $self-&gt;allow_deny_hook) {
-
         $self-&gt;process_request;
-
     } else {
-
         $self-&gt;request_denied_hook;
-
     }
-
     $self-&gt;post_process_request_hook;
-
     $self-&gt;post_process_request;
-
     $self-&gt;post_client_connection_hook;
 </pre>
 <p class="Pp">The process then loops and waits for the next connection. For a
@@ -1118,18 +997,13 @@
     (<span class="Li">&quot;$self-&gt;server_close&quot;</span>), the following
     represents the program flow:</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;close_children;  # if any
-
+<pre>    $self-&gt;close_children;  # if any
     $self-&gt;post_child_cleanup_hook;
-
     if (Restarting server) {
         $self-&gt;restart_close_hook();
         $self-&gt;hup_server;
     }
-
     $self-&gt;shutdown_sockets;
-
     $self-&gt;server_exit;
 </pre>
 </section>
@@ -1141,11 +1015,8 @@
   <dd>This method incorporates the main process flow. This flow is listed above.
     <p class="Pp">The method run may be called in any of the following ways.</p>
     <p class="Pp"></p>
-    <pre>
-     MyPackage-&gt;run(port =&gt; 20201);
-
+    <pre>     MyPackage-&gt;run(port =&gt; 20201);
      MyPackage-&gt;new({port =&gt; 20201})-&gt;run;
-
      my $obj = bless {server=&gt;{port =&gt; 20201}}, 'MyPackage';
      $obj-&gt;run;
     </pre>
@@ -1271,13 +1142,10 @@
     you simply need to override the method in your subclass. For example to add
     your own post_configure_hook you could do something like the following:</p>
 <p class="Pp"></p>
-<pre>
-    package MyServer;
-
+<pre>    package MyServer;
     sub post_configure_hook {
         my $self = shift;
         my $prop = $self-&gt;{'server'};
-
         # do some validation here
     }
 </pre>
@@ -1386,8 +1254,7 @@
         hook is a good location to initialize srand (forked processes maintain
         the same random seed unless changed).</p>
     <p class="Pp"></p>
-    <pre>
-    sub child_init_hook {
+    <pre>    sub child_init_hook {
         # from perldoc -f srand
         srand(time ^ $$ ^ unpack &quot;%L*&quot;, `ps axww | gzip -f`);
     }
@@ -1409,8 +1276,7 @@
       value could be found.
     <p class="Pp">Should return a hashref.</p>
     <p class="Pp"></p>
-    <pre>
-    sub default_values {
+    <pre>    sub default_values {
         return {
             port =&gt; 20201,
         };
@@ -1432,12 +1298,9 @@
         server maintainer should make sure that any string treated as a format
         string is controlled.</p>
     <p class="Pp"></p>
-    <pre>
-    # assuming log_file = 'Sys::Syslog'
-
+    <pre>    # assuming log_file = 'Sys::Syslog'
     $self-&gt;log(1, &quot;My Message with %s in it&quot;);
     # sends &quot;%s&quot;, &quot;My Message with %s in it&quot; to syslog
-
     $self-&gt;log(1, &quot;My Message with %s in it&quot;, &quot;Foo&quot;);
     # sends &quot;My Message with %s in it&quot;, &quot;Foo&quot; to syslog
     </pre>
@@ -1450,14 +1313,12 @@
         but could easily be told to do nothing by using the following code in
         your subclassed server:</p>
     <p class="Pp"></p>
-    <pre>
-    sub handle_syslog_error {}
+    <pre>    sub handle_syslog_error {}
     </pre>
     <p class="Pp">It the log had been closed, you could attempt to reopen it in
         the error handler with the following code:</p>
     <p class="Pp"></p>
-    <pre>
-    sub handle_syslog_error {
+    <pre>    sub handle_syslog_error {
         my $self = shift;
         $self-&gt;open_syslog;
     }
@@ -1468,14 +1329,10 @@
       method takes a class name and an argument hashref as parameters. The
       argument hashref becomes the &quot;server&quot; property of the object.
     <p class="Pp"></p>
-    <pre>
-    package MyPackage;
+    <pre>    package MyPackage;
     use base qw(Net::Server);
-
     my $obj = MyPackage-&gt;new({port =&gt; 20201});
-
     # same as
-
     my $obj = bless {server =&gt; {port =&gt; 20201}}, 'MyPackage';
     </pre>
   </dd>
@@ -1510,18 +1367,14 @@
     individual program must clean up the tainted items before doing a
   restart.</p>
 <p class="Pp"></p>
-<pre>
-    sub configure_hook{
+<pre>    sub configure_hook{
         my $self = shift;
-
         ### see the contents
         my $ref  = $self-&gt;commandline;
         use Data::Dumper;
         print Dumper $ref;
-
         ### arbitrary untainting - VERY dangerous
         my @untainted = map {/(.+)/;$1} @$ref;
-
         $self-&gt;commandline(\@untainted)
     }
 </pre>
@@ -1550,8 +1403,7 @@
 <p class="Pp">The following files are installed as part of this
   distribution.</p>
 <p class="Pp"></p>
-<pre>
-    Net/Server.pm
+<pre>    Net/Server.pm
     Net/Server/Fork.pm
     Net/Server/INET.pm
     Net/Server/MultiType.pm
@@ -1569,8 +1421,7 @@
 <p class="Pp">Download and extract tarball before running these commands in its
     base directory:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL
+<pre>    perl Makefile.PL
     make
     make test
     make install
@@ -1725,10 +1576,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR~2"><a class="permalink" href="#AUTHOR~2">AUTHOR</a></h1>
-<pre>
-    Paul Seamons &lt;paul at seamons.com&gt;
+<pre>    Paul Seamons &lt;paul at seamons.com&gt;
     http://seamons.com/
-
     Rob Brown &lt;bbb at cpan.org&gt;
 </pre>
 </section>
@@ -1736,8 +1585,7 @@
 <h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
 <p class="Pp">This package may be distributed under the terms of either the</p>
 <p class="Pp"></p>
-<pre>
-  GNU General Public License
+<pre>  GNU General Public License
     or the
   Perl Artistic License
 </pre>

@@ -29,6 +29,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>REMOVEFILE(3)</title>
 </head>
@@ -117,7 +118,7 @@
     instead of the current working directory. If the special value AT_FDCWD is
     passed in the <var class="Va">fd</var> argument, the current working
     directory is used and the behavior is identical to a call to
-    <a class="permalink" href="#removefile."><code class="Fn" id="removefile.">removefile.</code></a>()</p>
+    <code class="Fn">removefile</code>().</p>
 <p class="Pp" id="removefile">The
     <a class="permalink" href="#removefile"><code class="Fn">removefile</code></a>()
     function removes files and directories located at the named
@@ -251,6 +252,13 @@
   <dd>The <var class="Va">path</var> location specifies an immutable file that
       cannot be deleted.</dd>
 </dl>
+<p class="Pp"><code class="Fn">removefileat</code>() will fail if:</p>
+<dl class="Bl-tag">
+  <dt id="ENOTDIR">[<a class="permalink" href="#ENOTDIR"><code class="Er">ENOTDIR</code></a>]</dt>
+  <dd>The <var class="Va">path</var> argument is not an absolute path and
+      <var class="Va">fd</var> is neither AT_FDCWD nor a file descriptor
+      associated with a directory.</dd>
+</dl>
 <p class="Pp"><code class="Fn">removefile_cancel</code>() will fail if:</p>
 <dl class="Bl-tag">
   <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
@@ -279,9 +287,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<div class="Bd Bd-indent">
-<pre>
-/* Initialize a state variable */
+<div class="Bd Bd-indent Li">
+<pre>/* Initialize a state variable */
 removefile_state_t s;
 s = removefile_state_alloc();
 /* Recursively remove all files and directories while keeping parent tmp directory. */
@@ -303,8 +310,7 @@ removefile_state_set(s, REMOVEFILE_STATE_CONFIRM_CONTEXT, NULL);
    calling a confirm callback prior to each file deletion. */
 removefile(&quot;/tmp&quot;, s, REMOVEFILE_RECURSIVE | REMOVEFILE_KEEP_PARENT);
 /* Release the state variable. */
-removefile_state_free(s);
-</pre>
+removefile_state_free(s);</pre>
 </div>
 </section>
 <section class="Sh">
@@ -322,8 +328,8 @@ removefile_state_free(s);
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">March 30, 2021</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">November 11, 2021</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

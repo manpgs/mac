@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>LibXSLT(3)</title>
 </head>
@@ -28,19 +29,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use XML::LibXSLT;
+<pre>  use XML::LibXSLT;
   use XML::LibXML;
-
   my $xslt = XML::LibXSLT-&gt;new();
-
   my $source = XML::LibXML-&gt;load_xml(location =&gt; 'foo.xml');
   my $style_doc = XML::LibXML-&gt;load_xml(location=&gt;'bar.xsl', no_cdata=&gt;1);
-
   my $stylesheet = $xslt-&gt;parse_stylesheet($style_doc);
-
   my $results = $stylesheet-&gt;transform($source);
-
   print $stylesheet-&gt;output_as_bytes($results);
 </pre>
 </section>
@@ -61,8 +56,7 @@
 <dl class="Bl-tag">
   <dt id="max_depth"><a class="permalink" href="#max_depth">max_depth</a></dt>
   <dd>
-    <pre>
-  XML::LibXSLT-&gt;max_depth(1000);
+    <pre>  XML::LibXSLT-&gt;max_depth(1000);
     </pre>
     <p class="Pp">This option sets the maximum recursion depth for a stylesheet.
         See the very end of section 5.4 of the XSLT specification for more
@@ -72,8 +66,7 @@
   </dd>
   <dt id="max_vars"><a class="permalink" href="#max_vars">max_vars</a></dt>
   <dd>
-    <pre>
-  XML::LibXSLT-&gt;max_vars(100_000);
+    <pre>  XML::LibXSLT-&gt;max_vars(100_000);
     </pre>
     <p class="Pp">This option sets the maximum number of variables for a
         stylesheet. If your stylesheet or XML file requires many variables, this
@@ -82,23 +75,20 @@
   </dd>
   <dt id="debug_callback"><a class="permalink" href="#debug_callback">debug_callback</a></dt>
   <dd>
-    <pre>
-  XML::LibXSLT-&gt;debug_callback($subref);
+    <pre>  XML::LibXSLT-&gt;debug_callback($subref);
     </pre>
     <p class="Pp">Sets a callback to be used for debug messages. If you don't
         set this, debug messages will be ignored.</p>
   </dd>
   <dt id="register_function"><a class="permalink" href="#register_function">register_function</a></dt>
   <dd>
-    <pre>
-  XML::LibXSLT-&gt;register_function($uri, $name, $subref);
+    <pre>  XML::LibXSLT-&gt;register_function($uri, $name, $subref);
   $stylesheet-&gt;register_function($uri, $name, $subref);
     </pre>
     <p class="Pp">Registers an XSLT extension function mapped to the given URI.
         For example:</p>
     <p class="Pp"></p>
-    <pre>
-  XML::LibXSLT-&gt;register_function(&quot;urn:foo&quot;, &quot;bar&quot;,
+    <pre>  XML::LibXSLT-&gt;register_function(&quot;urn:foo&quot;, &quot;bar&quot;,
     sub { scalar localtime });
     </pre>
     <p class="Pp">Will register a <span class="Li">&quot;bar&quot;</span>
@@ -107,8 +97,7 @@
         <span class="Li">&quot;xmlns:...&quot;</span>) that will return the
         current date and time as a string:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;xsl:stylesheet version=&quot;1.0&quot;
+    <pre>  &lt;xsl:stylesheet version=&quot;1.0&quot;
     xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;
     xmlns:foo=&quot;urn:foo&quot;&gt;
   &lt;xsl:template match=&quot;/&quot;&gt;
@@ -131,14 +120,12 @@
   </dd>
   <dt id="register_element"><a class="permalink" href="#register_element">register_element</a></dt>
   <dd>
-    <pre>
-        $stylesheet-&gt;register_element($uri, $name, $subref)
+    <pre>        $stylesheet-&gt;register_element($uri, $name, $subref)
     </pre>
     <p class="Pp">Registers an XSLT extension element
         <span class="Li">$name</span> mapped to the given URI. For example:</p>
     <p class="Pp"></p>
-    <pre>
-  $stylesheet-&gt;register_element(&quot;urn:foo&quot;, &quot;hello&quot;, sub {
+    <pre>  $stylesheet-&gt;register_element(&quot;urn:foo&quot;, &quot;hello&quot;, sub {
           my $name = $_[2]-&gt;getAttribute( &quot;name&quot; );
           return XML::LibXML::Text-&gt;new( &quot;Hello, $name!&quot; );
   });
@@ -149,8 +136,7 @@
         namespace in your XSLT and include its prefix in the
         <span class="Li">&quot;extension-element-prefixes&quot;</span> list:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;xsl:stylesheet version=&quot;1.0&quot;
+    <pre>  &lt;xsl:stylesheet version=&quot;1.0&quot;
     xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;
     xmlns:foo=&quot;urn:foo&quot;
         extension-element-prefixes=&quot;foo&quot;&gt;
@@ -181,8 +167,7 @@
         contain CDATA sections, otherwise libxslt may misbehave. The best way to
         assure this is to load the stylesheet with no_cdata flag, e.g.</p>
     <p class="Pp"></p>
-    <pre>
-  my $stylesheet_doc = XML::LibXML-&gt;load_xml(location=&gt;&quot;some.xsl&quot;, no_cdata=&gt;1);
+    <pre>  my $stylesheet_doc = XML::LibXML-&gt;load_xml(location=&gt;&quot;some.xsl&quot;, no_cdata=&gt;1);
     </pre>
   </dd>
   <dt id="parse_stylesheet_file($filename)"><a class="permalink" href="#parse_stylesheet_file($filename)">parse_stylesheet_file($filename)</a></dt>
@@ -226,8 +211,7 @@
   <dt id="transform(doc,"><a class="permalink" href="#transform(doc,">transform(doc,
     %params)</a></dt>
   <dd>
-    <pre>
-  my $results = $stylesheet-&gt;transform($doc, foo =&gt; &quot;'bar'&quot;);
+    <pre>  my $results = $stylesheet-&gt;transform($doc, foo =&gt; &quot;'bar'&quot;);
   print $stylesheet-&gt;output_as_bytes($results);
     </pre>
     <p class="Pp">Transforms the passed in XML::LibXML::Document object, and
@@ -238,8 +222,7 @@
   <dt id="transform_file(filename,"><a class="permalink" href="#transform_file(filename,">transform_file(filename,
     %params)</a></dt>
   <dd>
-    <pre>
-  my $results = $stylesheet-&gt;transform_file($filename, bar =&gt; &quot;'baz'&quot;);
+    <pre>  my $results = $stylesheet-&gt;transform_file($filename, bar =&gt; &quot;'baz'&quot;);
     </pre>
     <p class="Pp">Note the string parameter caveat, detailed in the section on
         &quot;Parameters&quot; below.</p>
@@ -312,15 +295,13 @@
     to pass a string to the XSLT engine, you actually have to pass it as a
     quoted string:</p>
 <p class="Pp"></p>
-<pre>
-  $stylesheet-&gt;transform($doc, param =&gt; &quot;'string'&quot;);
+<pre>  $stylesheet-&gt;transform($doc, param =&gt; &quot;'string'&quot;);
 </pre>
 <p class="Pp">Note the quotes within quotes there!</p>
 <p class="Pp">Obviously this isn't much fun, so you can make it easy on
     yourself:</p>
 <p class="Pp"></p>
-<pre>
-  $stylesheet-&gt;transform($doc, XML::LibXSLT::xpath_to_string(
+<pre>  $stylesheet-&gt;transform($doc, XML::LibXSLT::xpath_to_string(
         param =&gt; &quot;string&quot;
         ));
 </pre>
@@ -363,14 +344,12 @@
     security preferences to the XML::LibXSLT or XML::LibXSLT::Stylesheet object
     using <span class="Li">&quot;security_callbacks()&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  my $security = XML::LibXSLT::Security-&gt;new();
+<pre>  my $security = XML::LibXSLT::Security-&gt;new();
   $security-&gt;register_callback( read_file  =&gt; $read_cb );
   $security-&gt;register_callback( write_file =&gt; $write_cb );
   $security-&gt;register_callback( create_dir =&gt; $create_cb );
   $security-&gt;register_callback( read_net   =&gt; $read_net_cb );
   $security-&gt;register_callback( write_net  =&gt; $write_net_cb );
-
   $xslt-&gt;security_callbacks( $security );
    -OR-
   $stylesheet-&gt;security_callbacks( $security );
@@ -385,8 +364,7 @@
       use this to get the current XML::LibXSLT::Stylesheet object by calling
       <span class="Li">&quot;stylesheet()&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-  my $stylesheet = $tctxt-&gt;stylesheet();
+    <pre>  my $stylesheet = $tctxt-&gt;stylesheet();
     </pre>
     <p class="Pp">The stylesheet object can then be used to share contextual
         information between different calls to the security callbacks.</p>
@@ -425,8 +403,7 @@
 <p class="Pp">Put the testcases directory in the directory created by this
     distribution, and then run:</p>
 <p class="Pp"></p>
-<pre>
-  perl benchmark.pl -h
+<pre>  perl benchmark.pl -h
 </pre>
 <p class="Pp">to get a list of options.</p>
 <p class="Pp">The benchmark requires XML::XPath at the moment, but I hope to
@@ -483,8 +460,7 @@
 <h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
 <p class="Pp">Please report bugs via</p>
 <p class="Pp"></p>
-<pre>
-  http://rt.cpan.org/NoAuth/Bugs.html?Dist=XML-LibXSLT
+<pre>  http://rt.cpan.org/NoAuth/Bugs.html?Dist=XML-LibXSLT
 </pre>
 </section>
 <section class="Sh">

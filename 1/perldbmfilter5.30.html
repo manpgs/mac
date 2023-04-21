@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLDBMFILTER(1)</title>
 </head>
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    $db = tie %hash, 'DBM', ...
-
+<pre>    $db = tie %hash, 'DBM', ...
     $old_filter = $db-&gt;filter_store_key  ( sub { ... } );
     $old_filter = $db-&gt;filter_store_value( sub { ... } );
     $old_filter = $db-&gt;filter_fetch_key  ( sub { ... } );
@@ -88,8 +87,7 @@
     itself. When you write to the database you will have to use something like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    $hash{&quot;$key\0&quot;} = &quot;$value\0&quot;;
+<pre>    $hash{&quot;$key\0&quot;} = &quot;$value\0&quot;;
 </pre>
 <p class="Pp">Similarly the NULL needs to be taken into account when you are
     considering the length of existing keys/values.</p>
@@ -100,26 +98,21 @@
     you have already guessed, this is a problem that DBM Filters can fix very
     easily.</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use SDBM_File;
     use Fcntl;
-
     my %hash;
     my $filename = &quot;filt&quot;;
     unlink $filename;
-
     my $db = tie(%hash, 'SDBM_File', $filename, O_RDWR|O_CREAT, 0640)
       or die &quot;Cannot open $filename: $!\n&quot;;
-
     # Install DBM Filters
     $db-&gt;filter_fetch_key  ( sub { s/\0$//    } );
     $db-&gt;filter_store_key  ( sub { $_ .= &quot;\0&quot; } );
     $db-&gt;filter_fetch_value( 
         sub { no warnings 'uninitialized'; s/\0$// } );
     $db-&gt;filter_store_value( sub { $_ .= &quot;\0&quot; } );
-
     $hash{&quot;abc&quot;} = &quot;def&quot;;
     my $a = $hash{&quot;ABC&quot;};
     # ...
@@ -139,8 +132,7 @@
     writes to a DBM database it always writes the key and value as strings. So
     when you use this:</p>
 <p class="Pp"></p>
-<pre>
-    $hash{12345} = &quot;something&quot;;
+<pre>    $hash{12345} = &quot;something&quot;;
 </pre>
 <p class="Pp">the key 12345 will get stored in the DBM database as the 5 byte
     string &quot;12345&quot;. If you actually want the key to be stored in the
@@ -149,18 +141,14 @@
     <span class="Li">&quot;unpack&quot;</span> when reading.</p>
 <p class="Pp">Here is a DBM Filter that does it:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use DB_File;
     my %hash;
     my $filename = &quot;filt&quot;;
     unlink $filename;
-
-
     my $db = tie %hash, 'DB_File', $filename, O_CREAT|O_RDWR, 0666,
         $DB_HASH or die &quot;Cannot open $filename: $!\n&quot;;
-
     $db-&gt;filter_fetch_key  ( sub { $_ = unpack(&quot;i&quot;, $_) } );
     $db-&gt;filter_store_key  ( sub { $_ = pack (&quot;i&quot;, $_) } );
     $hash{123} = &quot;def&quot;;

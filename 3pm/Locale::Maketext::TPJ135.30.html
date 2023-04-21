@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Locale::Maketext::TPJ13(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # This an article, not a module.
+<pre>  # This an article, not a module.
 </pre>
 </section>
 <section class="Sh">
@@ -60,28 +60,23 @@
     software -- and luckily for you, the only output the program emits is two
     messages, like this:</p>
 <p class="Pp"></p>
-<pre>
-  I scanned 12 directories.
-
+<pre>  I scanned 12 directories.
   Your query matched 10 files in 4 directories.
 </pre>
 <p class="Pp">So how hard could that be? You look at the code that produces the
     first item, and it reads:</p>
 <p class="Pp"></p>
-<pre>
-  printf(&quot;I scanned %g directories.&quot;,
+<pre>  printf(&quot;I scanned %g directories.&quot;,
          $directory_count);
 </pre>
 <p class="Pp">You think about that, and realize that it doesn't even work right
     for English, as it can produce this output:</p>
 <p class="Pp"></p>
-<pre>
-  I scanned 1 directories.
+<pre>  I scanned 1 directories.
 </pre>
 <p class="Pp">So you rewrite it to read:</p>
 <p class="Pp"></p>
-<pre>
-  printf(&quot;I scanned %g %s.&quot;,
+<pre>  printf(&quot;I scanned %g %s.&quot;,
          $directory_count,
          $directory_count == 1 ?
            &quot;directory&quot; : &quot;directories&quot;,
@@ -96,8 +91,7 @@
     you've heard are standard for localization tasks.</p>
 <p class="Pp">And you write:</p>
 <p class="Pp"></p>
-<pre>
-  printf(gettext(&quot;I scanned %g %s.&quot;),
+<pre>  printf(gettext(&quot;I scanned %g %s.&quot;),
          $dir_scan_count,
          $dir_scan_count == 1 ?
            gettext(&quot;directory&quot;) : gettext(&quot;directories&quot;),
@@ -115,8 +109,7 @@
   languages.</p>
 <p class="Pp">So, on the advice of the gettext manual, you rewrite:</p>
 <p class="Pp"></p>
-<pre>
-  printf( $dir_scan_count == 1 ?
+<pre>  printf( $dir_scan_count == 1 ?
            gettext(&quot;I scanned %g directory.&quot;) :
            gettext(&quot;I scanned %g directories.&quot;),
          $dir_scan_count );
@@ -151,8 +144,7 @@
     items, <span class="Li">$dir_count</span> and
     <span class="Li">$file_count</span>. So you try this:</p>
 <p class="Pp"></p>
-<pre>
-  printf( $file_count == 1 ?
+<pre>  printf( $file_count == 1 ?
     ( $directory_count == 1 ?
      gettext(&quot;Your query matched %g file in %g directory.&quot;) :
      gettext(&quot;Your query matched %g file in %g directories.&quot;) ) :
@@ -358,16 +350,14 @@
     lexicons of functions instead of lexicons of strings. An entry in a lexicon
     from such a system should <i>not</i> look like this:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;J'ai trouv\xE9 %g fichiers dans %g r\xE9pertoires&quot;
+<pre>  &quot;J'ai trouv\xE9 %g fichiers dans %g r\xE9pertoires&quot;
 </pre>
 <p class="Pp">[\xE9 is e-acute in Latin-1. Some pod renderers would scream if I
     used the actual character here. -- SB]</p>
 <p class="Pp">but instead like this, bearing in mind that this is just a first
     stab:</p>
 <p class="Pp"></p>
-<pre>
-  sub I_found_X1_files_in_X2_directories {
+<pre>  sub I_found_X1_files_in_X2_directories {
     my( $files, $dirs ) = @_[0,1];
     $files = sprintf(&quot;%g %s&quot;, $files,
       $files == 1 ? 'fichier' : 'fichiers');
@@ -391,8 +381,7 @@
     is entirely abstracted inside (and encapsulated within) the Maketext module
     for that interface. When you call:</p>
 <p class="Pp"></p>
-<pre>
-  print $lang-&gt;maketext(&quot;You have [quant,_1,piece] of new mail.&quot;,
+<pre>  print $lang-&gt;maketext(&quot;You have [quant,_1,piece] of new mail.&quot;,
                        scalar(@messages));
 </pre>
 <p class="Pp">you don't know (and in fact can't easily find out) whether this
@@ -414,8 +403,7 @@
     solution-implementing) should look like.</p>
 <p class="Pp">What's wrong the with gettext-using code like this...</p>
 <p class="Pp"></p>
-<pre>
-  printf( $file_count == 1 ?
+<pre>  printf( $file_count == 1 ?
     ( $directory_count == 1 ?
      &quot;Your query matched %g file in %g directory.&quot; :
      &quot;Your query matched %g file in %g directories.&quot; ) :
@@ -493,8 +481,7 @@
 <p class="Pp">Consider our first stab at an entry in our &quot;phrasebook of
     functions&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  sub I_found_X1_files_in_X2_directories {
+<pre>  sub I_found_X1_files_in_X2_directories {
     my( $files, $dirs ) = @_[0,1];
     $files = sprintf(&quot;%g %s&quot;, $files,
       $files == 1 ? 'fichier' : 'fichiers');
@@ -510,8 +497,7 @@
     rewrote this to have quantification (as we call adding a number expression
     to a noun phrase) be a function called like:</p>
 <p class="Pp"></p>
-<pre>
-  sub I_found_X1_files_in_X2_directories {
+<pre>  sub I_found_X1_files_in_X2_directories {
     my( $files, $dirs ) = @_[0,1];
     $files = quant($files, &quot;fichier&quot;);
     $dirs =  quant($dirs,  &quot;r\xE9pertoire&quot;);
@@ -526,8 +512,7 @@
 <p class="Pp">In a first-hack implementation of Maketext, each language-module's
     lexicon looked like this:</p>
 <p class="Pp"></p>
-<pre>
- %Lexicon = (
+<pre> %Lexicon = (
    &quot;I found %g files in %g directories&quot;
    =&gt; sub {
       my( $files, $dirs ) = @_[0,1];
@@ -558,8 +543,7 @@
     an object in order to have it return the text you want.</p>
 <p class="Pp">So, this:</p>
 <p class="Pp"></p>
-<pre>
-  $lang-&gt;maketext(&quot;You have [quant,_1,piece] of new mail.&quot;,
+<pre>  $lang-&gt;maketext(&quot;You have [quant,_1,piece] of new mail.&quot;,
                  scalar(@messages));
 </pre>
 <p class="Pp">basically means this: look in the lexicon for
@@ -577,14 +561,12 @@
     that should be performed. A full explanation is not in order here, but a few
     examples will suffice:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;You have [quant,_1,piece] of new mail.&quot;
+<pre>  &quot;You have [quant,_1,piece] of new mail.&quot;
 </pre>
 <p class="Pp">The above code is shorthand for, and will be interpreted as,
   this:</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     my $handle = $_[0];
     my(@params) = @_;
     return join '',
@@ -598,13 +580,11 @@
     <span class="Li">$params</span>[0].</p>
 <p class="Pp">A string with no brackety calls, like this:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Your search expression was malformed.&quot;
+<pre>  &quot;Your search expression was malformed.&quot;
 </pre>
 <p class="Pp">is somewhat of a degenerate case, and just gets turned into:</p>
 <p class="Pp"></p>
-<pre>
-  sub { return &quot;Your search expression was malformed.&quot; }
+<pre>  sub { return &quot;Your search expression was malformed.&quot; }
 </pre>
 <p class="Pp">However, not everything you can write in Perl code can be written
     in the above shorthand system -- not by a long shot. For example, consider
@@ -614,8 +594,7 @@
     easily or simply) in our shorthand system, and it would have to be written
     out in full, like this:</p>
 <p class="Pp"></p>
-<pre>
-  sub {  # pretend the English strings are in Italian
+<pre>  sub {  # pretend the English strings are in Italian
     my($handle, $files, $dirs) = @_[0,1,2];
     return &quot;I didn't find any files&quot; unless $files;
     return join '',
@@ -634,8 +613,7 @@
     something like this (using English words for Russian, just so you know
     what's going on):</p>
 <p class="Pp"></p>
-<pre>
-  &quot;I [quant,_1,directory,accusative] scanned.&quot;
+<pre>  &quot;I [quant,_1,directory,accusative] scanned.&quot;
 </pre>
 <p class="Pp">This shifts the burden of complexity off to the quant method. That
     method's parameters are: the numeric value it's going to use to quantify
@@ -675,8 +653,7 @@
     applicable) forms be provided in the call to the given language's quant
     method, as in:&quot;</p>
 <p class="Pp"></p>
-<pre>
-  &quot;I found [quant,_1,file,files].&quot;
+<pre>  &quot;I found [quant,_1,file,files].&quot;
 </pre>
 <p class="Pp">That way, quant just has to chose which form it needs, without
     having to look up or generate anything. While possibly not optimal for
@@ -745,8 +722,7 @@
     remove previous barriers to localization for languages dissimilar to
     English.</p>
 <p class="Pp"></p>
-<pre>
- __END__
+<pre> __END__
 </pre>
 <p class="Pp">Sean M. Burke (sburke@cpan.org) has a Master's in linguistics from
     Northwestern University; he specializes in language technology. Jordan

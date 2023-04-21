@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Tiny::Manual::UsingWithMoo(3)</title>
 </head>
@@ -34,8 +35,7 @@
   Constraints</a></h2>
 <p class="Pp">Consider the following basic Moo class:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use namespace::autoclean;
     
@@ -47,8 +47,7 @@
 </pre>
 <p class="Pp">Code like this seems simple enough:</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, gender =&gt; 'm', age =&gt; 16);
+<pre>  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, gender =&gt; 'm', age =&gt; 16);
   push @{ $br-&gt;children },
     Horse-&gt;new(name =&gt; 'Secretariat', gender =&gt; 'm', age =&gt; 0);
 </pre>
@@ -60,14 +59,12 @@
 <p class="Pp">What if the code that created the <span class="Li">$br</span>
     horse had instantiated it like this?</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, children =&gt; 'no');
+<pre>  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, children =&gt; 'no');
 </pre>
 <p class="Pp">It is for this reason that it's useful for the Horse class to
     perform some basic sanity-checking on its own attributes.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef );
     use namespace::autoclean;
@@ -85,8 +82,7 @@
 <p class="Pp">Now, if you instantiate a horse like this, it will throw an
   error:</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, children =&gt; 'no');
+<pre>  my $br = Horse-&gt;new(name =&gt; &quot;Bold Ruler&quot;, children =&gt; 'no');
 </pre>
 <p class="Pp">The first type constraint we used here was <b>Str</b>. This is
     type constraint that requires values to be strings.</p>
@@ -94,8 +90,7 @@
     not a string, the empty string is still a string and you will often want to
     check that a string is non-empty. We could have done this:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Common::String qw( NonEmptyStr );
+<pre>  use Types::Common::String qw( NonEmptyStr );
   has name =&gt; ( is =&gt; 'ro', isa =&gt; NonEmptyStr );
 </pre>
 <p class="Pp">While most of the type constraints we will use in this manual are
@@ -105,14 +100,12 @@
     common, useful type constraint. If we want to make sure it's a whole number,
     we could use:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Int );
+<pre>  use Types::Standard qw( Int );
   has age =&gt; ( is =&gt; 'rw', isa =&gt; Int );
 </pre>
 <p class="Pp">Or because negative numbers make little sense as an age:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Common::Numeric qw( PositiveOrZeroInt );
+<pre>  use Types::Common::Numeric qw( PositiveOrZeroInt );
   has age =&gt; ( is =&gt; 'rw', isa =&gt; PositiveOrZeroInt );
 </pre>
 <p class="Pp">The Types::Common::Numeric library defines many useful subtypes of
@@ -123,8 +116,7 @@
 <p class="Pp">Types::Standard also provides <b>HashRef</b> and <b>CodeRef</b>
     type constraints. An example of using the latter:</p>
 <p class="Pp"></p>
-<pre>
-  package Task {
+<pre>  package Task {
     use Moo;
     use Types::Standard qw( CodeRef Bool );
     has on_success =&gt; ( is =&gt; 'ro', isa =&gt; CodeRef );
@@ -145,8 +137,7 @@
 <p class="Pp">There exists an <b>Object</b> type constraint that accepts any
     blessed object.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Object );
     use namespace::autoclean;
@@ -159,8 +150,7 @@
 <p class="Pp">Finally, another useful type constraint to know about is
     <b>Any</b>:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Any );
+<pre>  use Types::Standard qw( Any );
   has stuff =&gt; ( is =&gt; 'rw', isa =&gt; Any );
 </pre>
 <p class="Pp">This type constraint allows any value; it is essentially the same
@@ -173,8 +163,7 @@
   Types</a></h2>
 <p class="Pp">Let's imagine we want to keep track of our horse's race wins:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef );
     use namespace::autoclean;
@@ -189,8 +178,7 @@
 </pre>
 <p class="Pp">We can create a horse like this:</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(
+<pre>  my $br = Horse-&gt;new(
     name    =&gt; &quot;Bold Ruler&quot;,
     gender  =&gt; 'm',
     age     =&gt; 4,
@@ -202,8 +190,7 @@
     doesn't ensure that everything in the arrayref is a string. To do that, we
     need to parameterize the type constraint:</p>
 <p class="Pp"></p>
-<pre>
-  has wins =&gt; (
+<pre>  has wins =&gt; (
     is      =&gt; 'ro',
     isa     =&gt; ArrayRef[Str],
     default =&gt; sub { return [] },
@@ -214,8 +201,7 @@
     anything non-string.</p>
 <p class="Pp">An alternative way of writing this is:</p>
 <p class="Pp"></p>
-<pre>
-  has wins =&gt; (
+<pre>  has wins =&gt; (
     is      =&gt; 'ro',
     isa     =&gt; ArrayRef-&gt;of(Str),
     default =&gt; sub { return [] },
@@ -225,8 +211,7 @@
 <p class="Pp">Note that although the constructor and any setter/accessor method
     will perform type checks, it is possible to bypass them using:</p>
 <p class="Pp"></p>
-<pre>
-  push @{ $br-&gt;wins }, $not_a_string;
+<pre>  push @{ $br-&gt;wins }, $not_a_string;
 </pre>
 <p class="Pp">The constructor isn't being called here, and although the accessor
     <i>is</i> being called, it's being called as a reader, not a writer, so
@@ -236,15 +221,13 @@
 <p class="Pp">And of course, if you directly poke at the underlying hashref of
     the object, all bets are off:</p>
 <p class="Pp"></p>
-<pre>
-  $br-&gt;{wins} = $not_an_arrayref;
+<pre>  $br-&gt;{wins} = $not_an_arrayref;
 </pre>
 <p class="Pp">So type constraints do have limitations. Careful API design (and
     not circumventing the proper API) can help.</p>
 <p class="Pp">The <b>HashRef</b> type constraint can also be parameterized:</p>
 <p class="Pp"></p>
-<pre>
-  package Design {
+<pre>  package Design {
     use Moo;
     use Types::Standard qw( HashRef Str );
     has colours =&gt; ( is =&gt; 'ro', isa =&gt; HashRef[Str] );
@@ -260,8 +243,7 @@
 <p class="Pp">If you do need to constrain the keys, it is possible to use a
     parameterized <b>Map</b> constraint:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Common::String qw( NonEmptyStr );
+<pre>  use Types::Common::String qw( NonEmptyStr );
   use Types::Standard qw( Map );
   has colours =&gt; ( is =&gt; 'ro', isa =&gt; Map[NonEmptyStr, NonEmptyStr] );
 </pre>
@@ -270,8 +252,7 @@
 <p class="Pp">Another useful type constraint is the <b>Tuple</b> type
     constraint.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Tuple );
+<pre>  use Types::Standard qw( ArrayRef Tuple );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -285,8 +266,7 @@
     that a value is a two-element arrayref where the first element is a positive
     integer and the second element is a non-empty string. For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(
+<pre>  my $br = Horse-&gt;new(
     name    =&gt; &quot;Bold Ruler&quot;,
     wins    =&gt; [
       [ 1956, &quot;Futurity Stakes&quot; ],
@@ -301,8 +281,7 @@
     we may wish to include the jockey name in our race wins when it is
   known.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Tuple Optional );
+<pre>  use Types::Standard qw( ArrayRef Tuple Optional );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -319,8 +298,7 @@
 <p class="Pp">Or we could just allow tuples to contain an arbitrary list of
     strings after the year and race name:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Tuple Str slurpy );
+<pre>  use Types::Standard qw( ArrayRef Tuple Str slurpy );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -337,8 +315,7 @@
     check it against <b>ArrayRef[Str]</b>.</p>
 <p class="Pp">It's even possible to do this:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Tuple Any slurpy );
+<pre>  use Types::Standard qw( ArrayRef Tuple Any slurpy );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -357,8 +334,7 @@
 <p class="Pp"><b>Dict</b> is the equivalent of <b>Tuple</b> for checking values
     of hashrefs.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Dict Optional );
+<pre>  use Types::Standard qw( ArrayRef Dict Optional );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -376,8 +352,7 @@
 </pre>
 <p class="Pp">An example of using it:</p>
 <p class="Pp"></p>
-<pre>
-  my $br = Horse-&gt;new(
+<pre>  my $br = Horse-&gt;new(
     name    =&gt; &quot;Bold Ruler&quot;,
     wins    =&gt; [
       { year =&gt; 1956, race =&gt; &quot;Futurity Stakes&quot;, jockey =&gt; &quot;Eddie&quot; },
@@ -387,8 +362,7 @@
 </pre>
 <p class="Pp">The slurpy indicator does work for <b>Dict</b> too:</p>
 <p class="Pp"></p>
-<pre>
-  Dict[
+<pre>  Dict[
     year    =&gt; PositiveInt,
     race    =&gt; NonEmptyStr,
     jockey  =&gt; Optional[NonEmptyStr],
@@ -398,8 +372,7 @@
 <p class="Pp">And <span class="Li">&quot;slurpy Any&quot;</span> means what you
     probably think it means:</p>
 <p class="Pp"></p>
-<pre>
-  Dict[
+<pre>  Dict[
     year    =&gt; PositiveInt,
     race    =&gt; NonEmptyStr,
     jockey  =&gt; Optional[NonEmptyStr],
@@ -409,8 +382,7 @@
 <p class="Pp">Going back to our first example, there's an opportunity to refine
     our <b>ArrayRef</b> constraint:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef );
     use namespace::autoclean;
@@ -436,8 +408,7 @@
     <span class="Li">&quot;$_-&gt;can($method)&quot;</span> on an object. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  package MyAPI::Client {
+<pre>  package MyAPI::Client {
     use Moo;
     use Types::Standard qw( HasMethods );
     
@@ -449,31 +420,27 @@
 <p class="Pp">The <b>Enum</b> parameterizable type allows you to accept a more
     limited set of string values. For example:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Enum );
+<pre>  use Types::Standard qw( Enum );
   has gender =&gt; ( is =&gt; 'ro', isa =&gt; Enum[&quot;m&quot;,&quot;f&quot;] );
 </pre>
 <p class="Pp">Or if you want a little more flexibility, you can use
     <b>StrMatch</b> which allows you to test strings against a regular
     expression:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( StrMatch );
+<pre>  use Types::Standard qw( StrMatch );
   has gender =&gt; ( is =&gt; 'ro', isa =&gt; StrMatch[qr/^[MF]/i] );
 </pre>
 <p class="Pp">Or <b>StrLength</b> to check the maximum and minimum length of a
     string:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Common::String qw( StrLength );
+<pre>  use Types::Common::String qw( StrLength );
   has name =&gt; ( is =&gt; 'ro', isa =&gt; StrLength[3, 100] );
 </pre>
 <p class="Pp">The maximum can be omitted.</p>
 <p class="Pp">Similarly, the maximum and minimum values for a numeric type can
     be expressed using <b>IntRange</b> and <b>NumRange</b>:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Common::Numeric qw( IntRange );
+<pre>  use Types::Common::Numeric qw( IntRange );
   # values over 200 are probably an input error
   has age =&gt; ( is =&gt; 'ro', isa =&gt; IntRange[0, 200] );
 </pre>
@@ -486,8 +453,7 @@
   Coercions</a></h2>
 <p class="Pp">It is often good practice to be liberal in what you accept.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef Bool );
     use namespace::autoclean;
@@ -504,8 +470,7 @@
     to a bool, you just do <span class="Li">&quot;!! $non_bool&quot;</span>. So
     all of the following will be living horses:</p>
 <p class="Pp"></p>
-<pre>
-  Horse-&gt;new(is_alive =&gt; 42)
+<pre>  Horse-&gt;new(is_alive =&gt; 42)
   Horse-&gt;new(is_alive =&gt; [])
   Horse-&gt;new(is_alive =&gt; &quot;false&quot;) # in Perl, string &quot;false&quot; is true!
 </pre>
@@ -520,8 +485,7 @@
   Both?</p>
 <p class="Pp">But it is pretty simple to add your own coercions!</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef HashRef Str );
+<pre>  use Types::Standard qw( ArrayRef HashRef Str );
   has things =&gt; (
     is     =&gt; 'rw',
     isa    =&gt; ArrayRef-&gt;plus_coercions(
@@ -544,8 +508,7 @@
     <span class="Li">&quot;q{...}&quot;</span> operator, they can look just as
     clean and pretty as coderefs.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef HashRef Str );
+<pre>  use Types::Standard qw( ArrayRef HashRef Str );
   has things =&gt; (
     is     =&gt; 'rw',
     isa    =&gt; ArrayRef-&gt;plus_coercions(
@@ -558,8 +521,7 @@
 <p class="Pp">Coercions are deeply applied automatically, so the following will
     do what you expect.</p>
 <p class="Pp"></p>
-<pre>
-  has inputs =&gt; (
+<pre>  has inputs =&gt; (
     is     =&gt; 'ro',
     isa    =&gt; ArrayRef-&gt;of(Bool),
     coerce =&gt; 1
@@ -567,16 +529,14 @@
 </pre>
 <p class="Pp">I am, of course, assuming you expect something like:</p>
 <p class="Pp"></p>
-<pre>
-  my $coerced = [ map { !!$_ } @$orig ];
+<pre>  my $coerced = [ map { !!$_ } @$orig ];
 </pre>
 <p class="Pp">If you were assuming that, congratulations! We are on the same
     wavelength.</p>
 <p class="Pp">And of course you can still add more coercions to the inherited
     ones...</p>
 <p class="Pp"></p>
-<pre>
-  has inputs =&gt; (
+<pre>  has inputs =&gt; (
     is     =&gt; 'ro',
     isa    =&gt; ArrayRef-&gt;of(Bool)-&gt;plus_coercions(Str, sub {...}),
     coerce =&gt; 1
@@ -592,8 +552,7 @@
 <p class="Pp">Let's remember our attribute for keeping track of a horse's race
     wins:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Tuple Optional );
+<pre>  use Types::Standard qw( ArrayRef Tuple Optional );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -608,8 +567,7 @@
 <p class="Pp">Because we don't trust outside code to push new entries onto this
     array, let's define a method in our class to do it.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     ...;
     
     sub add_win {
@@ -629,8 +587,7 @@
     values of <span class="Li">$year</span>, <span class="Li">$race</span>, and
     <span class="Li">$jockey</span>. Let's use Type::Params for that:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Common::Numeric qw( PositiveInt );
     use Types::Common::String qw( NonEmptyStr );
     use Type::Params qw( compile );
@@ -664,8 +621,7 @@
     =&gt; 1&quot;</span>; it's always automatic) and can even add in
   defaults:</p>
 <p class="Pp"></p>
-<pre>
-  state $check = compile(
+<pre>  state $check = compile(
     PositiveInt,
     NonEmptyStr,
     NonEmptyStr, { default =&gt; sub { &quot;Eddie&quot; } },
@@ -675,16 +631,14 @@
     <span class="Li">&quot;state&quot;</span> variables are not available. A
     workaround is to replace this:</p>
 <p class="Pp"></p>
-<pre>
-  sub foo {
+<pre>  sub foo {
     state $x = bar();
     ...;
   }
 </pre>
 <p class="Pp">With this:</p>
 <p class="Pp"></p>
-<pre>
-  {         # outer braces prevent other subs seeing $x
+<pre>  {         # outer braces prevent other subs seeing $x
     my $x;  # declare $x before sub foo()
     sub foo {
       $x = bar();
@@ -703,8 +657,7 @@
 <p class="Pp">The generalized syntax for
     <span class="Li">&quot;compile&quot;</span> is:</p>
 <p class="Pp"></p>
-<pre>
-  state $check = compile(
+<pre>  state $check = compile(
     \%general_options,
     TypeForFirstParam,  \%options_for_first_param,
     TypeForSecondParam, \%options_for_second_param,
@@ -715,8 +668,7 @@
     }}&quot;</span> option, you can just use <b>Optional</b> like in
     <b>Tuple</b>.</p>
 <p class="Pp"></p>
-<pre>
-  state $check = compile(
+<pre>  state $check = compile(
     PositiveInt,
     NonEmptyStr,
     Optional[NonEmptyStr],
@@ -728,14 +680,12 @@
     integer, the second parameter is required (but doesn't care what value it
     is) and the third parameter is allowed but not required.</p>
 <p class="Pp"></p>
-<pre>
-  state $check = compile(PositiveInt, 1, 0);
+<pre>  state $check = compile(PositiveInt, 1, 0);
 </pre>
 <p class="Pp">It is possible to accept a variable number of values using
     <span class="Li">&quot;slurpy&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Common::Numeric qw( PositiveInt );
     use Types::Common::String qw( NonEmptyStr );
     use Types::Standard qw( ArrayRef slurpy );
@@ -759,8 +709,7 @@
 </pre>
 <p class="Pp">It would be called like this:</p>
 <p class="Pp"></p>
-<pre>
-  $bold_ruler-&gt;add_wins_for_year(
+<pre>  $bold_ruler-&gt;add_wins_for_year(
     1956,
     &quot;Futurity Stakes&quot;,
     &quot;Juvenile Stakes&quot;,
@@ -774,8 +723,7 @@
 <p class="Pp">For methods that accept more than one or two parameters, it is
     often a good idea to provide them as a hash. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $horse-&gt;add_win(
+<pre>  $horse-&gt;add_win(
     year    =&gt; 1956,
     race    =&gt; &quot;Futurity Stakes&quot;,
     jockey  =&gt; &quot;Eddie&quot;,
@@ -786,8 +734,7 @@
     <span class="Li">&quot;compile_named&quot;</span> instead of
     <span class="Li">&quot;compile&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Common::Numeric qw( PositiveInt );
     use Types::Common::String qw( NonEmptyStr );
     use Type::Params qw( compile_named );
@@ -820,8 +767,7 @@
     of a full hash. The following both work, but the
     <span class="Li">$args</span> variable will always be given a hashref.</p>
 <p class="Pp"></p>
-<pre>
-  $horse-&gt;add_win({
+<pre>  $horse-&gt;add_win({
     year    =&gt; 1956,
     race    =&gt; &quot;Juvenile Stakes&quot;,
   });
@@ -835,8 +781,7 @@
     <span class="Li">&quot;compile_named&quot;</span> to accept named parameters
     but return a positional list of parameters:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Common::Numeric qw( PositiveInt );
     use Types::Common::String qw( NonEmptyStr );
     use Type::Params qw( compile_named );
@@ -867,8 +812,7 @@
 <p class="Pp">With named parameters, it can be easy to misspell keys in your
     method definition. For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $win = [
+<pre>  my $win = [
     $args-&gt;{year},
     $args-&gt;{race},
     exists($args-&gt;{jockee}) ? $args-&gt;{jockey} : (),
@@ -878,8 +822,7 @@
     There's a <span class="Li">&quot;compile_named_oo&quot;</span> function
     which may help and can lead to cleaner code.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Common::Numeric qw( PositiveInt );
     use Types::Common::String qw( NonEmptyStr );
     use Type::Params qw( compile_named_oo );
@@ -943,8 +886,7 @@
     or object overloading <span class="Li">&quot;&amp;{}&quot;</span> to coerce.
     Type::Tiny can provide you with an overloaded object.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef Bool );
     use namespace::autoclean;

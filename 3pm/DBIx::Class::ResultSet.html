@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::ResultSet(3)</title>
 </head>
@@ -29,12 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  my $users_rs = $schema-&gt;resultset('User');
+<pre>  my $users_rs = $schema-&gt;resultset('User');
   while( $user = $users_rs-&gt;next) {
     print $user-&gt;username;
   }
-
   my $registered_users_rs = $schema-&gt;resultset('User')-&gt;search({ registered =&gt; 1 });
   my @cds_in_2005 = $schema-&gt;resultset('CD')-&gt;search({ year =&gt; 2005 })-&gt;all();
 </pre>
@@ -50,8 +49,7 @@
     returned by calling <span class="Li">&quot;resultset&quot;</span> on a
     DBIx::Class::Schema and passing in a Source name.</p>
 <p class="Pp"></p>
-<pre>
-  my $users_rs = $schema-&gt;resultset('User');
+<pre>  my $users_rs = $schema-&gt;resultset('User');
 </pre>
 <p class="Pp">A new ResultSet is returned from calling &quot;search&quot; on an
     existing ResultSet. The new one will contain all the conditions of the
@@ -81,26 +79,20 @@
     construct the basic query in one method, but add constraints to it in
     another.</p>
 <p class="Pp"></p>
-<pre>
-  sub get_data {
+<pre>  sub get_data {
     my $self = shift;
     my $request = $self-&gt;get_request; # Get a request object somehow.
     my $schema = $self-&gt;result_source-&gt;schema;
-
     my $cd_rs = $schema-&gt;resultset('CD')-&gt;search({
       title =&gt; $request-&gt;param('title'),
       year =&gt; $request-&gt;param('year'),
     });
-
     $cd_rs = $self-&gt;apply_security_policy( $cd_rs );
-
     return $cd_rs-&gt;all();
   }
-
   sub apply_security_policy {
     my $self = shift;
     my ($rs) = @_;
-
     return $rs-&gt;search({
       subversive =&gt; 0,
     });
@@ -130,13 +122,11 @@
 <p class="Pp">Since a resultset just defines a query, you can do all sorts of
     things with it with the same object.</p>
 <p class="Pp"></p>
-<pre>
-  # Don't hit the DB yet.
+<pre>  # Don't hit the DB yet.
   my $cd_rs = $schema-&gt;resultset('CD')-&gt;search({
     title =&gt; 'something',
     year =&gt; 2009,
   });
-
   # Each of these hits the DB individually.
   my $count = $cd_rs-&gt;count;
   my $most_recent = $cd_rs-&gt;get_column('date_released')-&gt;max();
@@ -144,18 +134,15 @@
 </pre>
 <p class="Pp">And it's not just limited to SELECT statements.</p>
 <p class="Pp"></p>
-<pre>
-  $cd_rs-&gt;delete();
+<pre>  $cd_rs-&gt;delete();
 </pre>
 <p class="Pp">This is even cooler:</p>
 <p class="Pp"></p>
-<pre>
-  $cd_rs-&gt;create({ artist =&gt; 'Fred' });
+<pre>  $cd_rs-&gt;create({ artist =&gt; 'Fred' });
 </pre>
 <p class="Pp">Which is the same as:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;create({
+<pre>  $schema-&gt;resultset('CD')-&gt;create({
     title =&gt; 'something',
     year =&gt; 2009,
     artist =&gt; 'Fred'
@@ -170,24 +157,18 @@
 <p class="Pp">To add methods to your resultsets, you can subclass
     DBIx::Class::ResultSet, similar to:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::ResultSet::User;
-
+<pre>  package MyApp::Schema::ResultSet::User;
   use strict;
   use warnings;
-
   use base 'DBIx::Class::ResultSet';
-
   sub active {
     my $self = shift;
     $self-&gt;search({ $self-&gt;current_source_alias . '.active' =&gt; 1 });
   }
-
   sub unverified {
     my $self = shift;
     $self-&gt;search({ $self-&gt;current_source_alias . '.verified' =&gt; 0 });
   }
-
   sub created_n_days_ago {
     my ($self, $days_ago) = @_;
     $self-&gt;search({
@@ -198,9 +179,7 @@
       )}
     });
   }
-
   sub users_to_warn { shift-&gt;active-&gt;unverified-&gt;created_n_days_ago(7) }
-
   1;
 </pre>
 <p class="Pp">See &quot;load_namespaces&quot; in DBIx::Class::Schema on how DBIC
@@ -218,13 +197,10 @@
   <br/>
    <span class="Li">&quot;-&gt;new($source, \%args)&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  use Moo;
+<pre>  use Moo;
   extends 'DBIx::Class::ResultSet';
   sub BUILDARGS { $_[2] } # ::RS::new() expects my ($class, $rsrc, $args) = @_
-
   ...your code...
-
   1;
 </pre>
 <p class="Pp">If you want to build your custom ResultSet classes with Moose, you
@@ -232,19 +208,13 @@
     interface the inlining of the Moose-provided object constructor, with the
     DBIC one.</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::ResultSet::User;
-
+<pre>  package MyApp::Schema::ResultSet::User;
   use Moose;
   use MooseX::NonMoose;
   extends 'DBIx::Class::ResultSet';
-
   sub BUILDARGS { $_[2] } # ::RS::new() expects my ($class, $rsrc, $args) = @_
-
   ...your code...
-
   __PACKAGE__-&gt;meta-&gt;make_immutable;
-
   1;
 </pre>
 <p class="Pp">The MooseX::NonMoose is necessary so that the Moose constructor
@@ -252,8 +222,7 @@
     automatically). Alternatively, you can skip MooseX::NonMoose and get by with
     just Moose instead by doing:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;meta-&gt;make_immutable(inline_constructor =&gt; 0);
+<pre>  __PACKAGE__-&gt;meta-&gt;make_immutable(inline_constructor =&gt; 0);
 </pre>
 </section>
 </section>
@@ -279,21 +248,18 @@
     <span class="Li">&quot;$another_resultset-&gt;search(...)&quot;</span> (the
     later called in scalar context):</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search({ title =&gt; '100th Window' });
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search({ title =&gt; '100th Window' });
 </pre>
 <dl class="Bl-tag">
   <dt id="WARNING"><a class="permalink" href="#WARNING">WARNING</a></dt>
   <dd>If called on an object, proxies to &quot;new_result&quot; instead, so
     <p class="Pp"></p>
-    <pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;new({ title =&gt; 'Spoon' });
+    <pre>  my $cd = $schema-&gt;resultset('CD')-&gt;new({ title =&gt; 'Spoon' });
     </pre>
     <p class="Pp">will return a CD object, not a ResultSet, and is equivalent
         to:</p>
     <p class="Pp"></p>
-    <pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;new_result({ title =&gt; 'Spoon' });
+    <pre>  my $cd = $schema-&gt;resultset('CD')-&gt;new_result({ title =&gt; 'Spoon' });
     </pre>
     <p class="Pp">Please also keep in mind that many internals call
         &quot;new_result&quot; directly, so overloading this method with the
@@ -313,10 +279,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my @cds    = $cd_rs-&gt;search({ year =&gt; 2001 }); # &quot;... WHERE year = 2001&quot;
+<pre>  my @cds    = $cd_rs-&gt;search({ year =&gt; 2001 }); # &quot;... WHERE year = 2001&quot;
   my $new_rs = $cd_rs-&gt;search({ year =&gt; 2005 });
-
   my $new_rs = $cd_rs-&gt;search([ { year =&gt; 2005 }, { year =&gt; 2004 } ]);
                  # year = 2005 OR year = 2004
 </pre>
@@ -327,8 +291,7 @@
     condition, call it as <span class="Li">&quot;search(undef,
     \%attrs)&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  # &quot;SELECT name, artistid FROM $artist_table&quot;
+<pre>  # &quot;SELECT name, artistid FROM $artist_table&quot;
   my @all_artists = $schema-&gt;resultset('Artist')-&gt;search(undef, {
     columns =&gt; [qw/name artistid/],
   });
@@ -383,8 +346,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my @cds   = $cd_rs-&gt;search_literal('year = ? AND title = ?', qw/2001 Reload/);
+<pre>  my @cds   = $cd_rs-&gt;search_literal('year = ? AND title = ?', qw/2001 Reload/);
   my $newrs = $artist_rs-&gt;search_literal('name = ?', 'Metallica');
 </pre>
 <p class="Pp">Pass a literal chunk of SQL to be added to the conditional part of
@@ -392,8 +354,7 @@
 <p class="Pp">Example of how to use <span class="Li">&quot;search&quot;</span>
     instead of <span class="Li">&quot;search_literal&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  my @cds = $cd_rs-&gt;search_literal('cdid = ? AND (artist = ? OR artist = ?)', (2, 1, 2));
+<pre>  my @cds = $cd_rs-&gt;search_literal('cdid = ? AND (artist = ? OR artist = ?)', (2, 1, 2));
   my @cds = $cd_rs-&gt;search(\[ 'cdid = ? AND (artist = ? OR artist = ?)', [ 'cdid', 2 ], [ 'artist', 1 ], [ 'artist', 2 ] ]);
 </pre>
 </section>
@@ -447,13 +408,11 @@
     if the resultset condition contains literal sql).</p>
 <p class="Pp">For example, to find a row by its primary key:</p>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;find(5);
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;find(5);
 </pre>
 <p class="Pp">You can also find a row by a specific unique constraint:</p>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;find(
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;find(
     {
       artist =&gt; 'Massive Attack',
       title  =&gt; 'Mezzanine',
@@ -475,8 +434,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $new_rs = $cd_rs-&gt;search_related('artist', {
+<pre>  $new_rs = $cd_rs-&gt;search_related('artist', {
     name =&gt; 'Emo-R-Us',
   });
 </pre>
@@ -517,8 +475,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;single({ year =&gt; 2001 });
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;single({ year =&gt; 2001 });
 </pre>
 <p class="Pp">Inflates the first result without creating a cursor if the
     resultset has any records in it; if not returns
@@ -535,8 +492,7 @@
       query returns only one row. If more than one row is returned, you will
       receive a warning:
     <p class="Pp"></p>
-    <pre>
-  Query returned more than one row
+    <pre>  Query returned more than one row
     </pre>
     <p class="Pp">In this case, you should be using &quot;next&quot; or
         &quot;find&quot; instead, or if you really know what you are doing, use
@@ -560,8 +516,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $max_length = $rs-&gt;get_column('length')-&gt;max;
+<pre>  my $max_length = $rs-&gt;get_column('length')-&gt;max;
 </pre>
 <p class="Pp">Returns a DBIx::Class::ResultSetColumn instance for a column of
     the ResultSet.</p>
@@ -577,8 +532,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # WHERE title LIKE '%blue%'
+<pre>  # WHERE title LIKE '%blue%'
   $cd_rs = $rs-&gt;search_like({ title =&gt; '%blue%'});
 </pre>
 <p class="Pp">Performs a search, but uses
@@ -590,11 +544,8 @@
 <p class="Pp">This method is deprecated and will be removed in 0.09. Use
     <b>search()</b> instead. An example conversion is:</p>
 <p class="Pp"></p>
-<pre>
-  -&gt;search_like({ foo =&gt; 'bar' });
-
+<pre>  -&gt;search_like({ foo =&gt; 'bar' });
   # Becomes
-
   -&gt;search({ foo =&gt; { like =&gt; 'bar' } });
 </pre>
 </section>
@@ -612,8 +563,7 @@
     elements from the resultset slice is called on. Indexes are from 0, i.e., to
     get the first three records, call:</p>
 <p class="Pp"></p>
-<pre>
-  my ($one, $two, $three) = $rs-&gt;slice(0, 2);
+<pre>  my ($one, $two, $three) = $rs-&gt;slice(0, 2);
 </pre>
 </section>
 <section class="Ss">
@@ -631,8 +581,7 @@
 <p class="Pp">Can be used to efficiently iterate over records in the
   resultset:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search;
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search;
   while (my $cd = $rs-&gt;next) {
     print $cd-&gt;title;
   }
@@ -703,8 +652,7 @@
     DBIx::Class::ResultSetColumn object. This can be very handy for
   subqueries:</p>
 <p class="Pp"></p>
-<pre>
-  -&gt;search( { amount =&gt; $some_rs-&gt;count_rs-&gt;as_query } )
+<pre>  -&gt;search( { amount =&gt; $some_rs-&gt;count_rs-&gt;as_query } )
 </pre>
 <p class="Pp">As with regular resultsets the SQL query will be executed only
     after the resultset is accessed via &quot;next&quot; or &quot;all&quot;.
@@ -880,8 +828,7 @@
     each subsequent element should be a data value in the earlier specified
     column order. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset(&quot;Artist&quot;)-&gt;populate([
+<pre>  $schema-&gt;resultset(&quot;Artist&quot;)-&gt;populate([
     [ qw( artistid name ) ],
     [ 100, 'A Formally Unknown Singer' ],
     [ 101, 'A singer that jumped the shark two albums ago' ],
@@ -892,8 +839,7 @@
     structure suitable for passing to &quot;create&quot;. Multi-create is also
     permitted with this syntax.</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset(&quot;Artist&quot;)-&gt;populate([
+<pre>  $schema-&gt;resultset(&quot;Artist&quot;)-&gt;populate([
      { artistid =&gt; 4, name =&gt; 'Manufactured Crap', cds =&gt; [
         { title =&gt; 'My First CD', year =&gt; 2006 },
         { title =&gt; 'Yet More Tweeny-Pop crap', year =&gt; 2007 },
@@ -989,10 +935,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $artist = $schema-&gt;resultset('Artist')-&gt;find_or_new(
+<pre>  my $artist = $schema-&gt;resultset('Artist')-&gt;find_or_new(
     { artist =&gt; 'fred' }, { key =&gt; 'artists' });
-
   $cd-&gt;cd_to_producer-&gt;find_or_new({ producer =&gt; $producer },
                                    { key =&gt; 'primary' });
 </pre>
@@ -1052,8 +996,7 @@
     <span class="Li">&quot;-&gt;new_result(\%col_data)-&gt;insert&quot;</span>.</p>
 <p class="Pp">Example of creating a new row.</p>
 <p class="Pp"></p>
-<pre>
-  $person_rs-&gt;create({
+<pre>  $person_rs-&gt;create({
     name=&gt;&quot;Some Person&quot;,
     email=&gt;&quot;somebody@someplace.com&quot;
   });
@@ -1062,8 +1005,7 @@
     <span class="Li">&quot;has_many&quot;</span> or
     <span class="Li">&quot;has_one&quot;</span> resultset. Note Arrayref.</p>
 <p class="Pp"></p>
-<pre>
-  $artist_rs-&gt;create(
+<pre>  $artist_rs-&gt;create(
      { artistid =&gt; 4, name =&gt; 'Manufactured Crap', cds =&gt; [
         { title =&gt; 'My First CD', year =&gt; 2006 },
         { title =&gt; 'Yet More Tweeny-Pop crap', year =&gt; 2007 },
@@ -1074,8 +1016,7 @@
 <p class="Pp">Example of creating a new row and also creating a row in a related
     <span class="Li">&quot;belongs_to&quot;</span> resultset. Note Hashref.</p>
 <p class="Pp"></p>
-<pre>
-  $cd_rs-&gt;create({
+<pre>  $cd_rs-&gt;create({
     title=&gt;&quot;Music for Silly Walks&quot;,
     year=&gt;2000,
     artist =&gt; {
@@ -1106,15 +1047,13 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $cd-&gt;cd_to_producer-&gt;find_or_create({ producer =&gt; $producer },
+<pre>  $cd-&gt;cd_to_producer-&gt;find_or_create({ producer =&gt; $producer },
                                       { key =&gt; 'primary' });
 </pre>
 <p class="Pp">Tries to find a record based on its primary key or unique
     constraints; if none is found, creates one and returns that instead.</p>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_create({
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_create({
     cdid   =&gt; 5,
     artist =&gt; 'Massive Attack',
     title  =&gt; 'Mezzanine',
@@ -1125,8 +1064,7 @@
     attribute, to search by a specific key or unique constraint. For
   example:</p>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_create(
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_create(
     {
       artist =&gt; 'Massive Attack',
       title  =&gt; 'Mezzanine',
@@ -1158,14 +1096,12 @@
     DBIx::Class::Row instead. Don't forget to call &quot;insert&quot; in
     DBIx::Class::Row to save the newly created row to the database!</p>
 <p class="Pp"></p>
-<pre>
-  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_new({
+<pre>  my $cd = $schema-&gt;resultset('CD')-&gt;find_or_new({
     cdid   =&gt; 5,
     artist =&gt; 'Massive Attack',
     title  =&gt; 'Mezzanine',
     year   =&gt; 2005,
   });
-
   if( !$cd-&gt;in_storage ) {
       # do some stuff
       $cd-&gt;insert;
@@ -1183,8 +1119,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $resultset-&gt;update_or_create({ col =&gt; $val, ... });
+<pre>  $resultset-&gt;update_or_create({ col =&gt; $val, ... });
 </pre>
 <p class="Pp">Like &quot;find_or_create&quot;, but if a row is found it is
     immediately updated via <span class="Li">&quot;$found_row-&gt;update
@@ -1192,8 +1127,7 @@
 <p class="Pp">Takes an optional <span class="Li">&quot;key&quot;</span>
     attribute to search on a specific unique constraint. For example:</p>
 <p class="Pp"></p>
-<pre>
-  # In your application
+<pre>  # In your application
   my $cd = $schema-&gt;resultset('CD')-&gt;update_or_create(
     {
       artist =&gt; 'Massive Attack',
@@ -1202,7 +1136,6 @@
     },
     { key =&gt; 'cd_artist_title' }
   );
-
   $cd-&gt;cd_to_producer-&gt;update_or_create({
     producer =&gt; $producer,
     name =&gt; 'harry',
@@ -1240,16 +1173,14 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $resultset-&gt;update_or_new({ col =&gt; $val, ... });
+<pre>  $resultset-&gt;update_or_new({ col =&gt; $val, ... });
 </pre>
 <p class="Pp">Like &quot;find_or_new&quot; but if a row is found it is
     immediately updated via <span class="Li">&quot;$found_row-&gt;update
     (\%col_data)&quot;</span>.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  # In your application
+<pre>  # In your application
   my $cd = $schema-&gt;resultset('CD')-&gt;update_or_new(
     {
       artist =&gt; 'Massive Attack',
@@ -1258,7 +1189,6 @@
     },
     { key =&gt; 'cd_artist_title' }
   );
-
   if ($cd-&gt;in_storage) {
       # the cd was updated
   }
@@ -1360,8 +1290,7 @@
 <p class="Pp">Returns a related resultset for the supplied relationship
   name.</p>
 <p class="Pp"></p>
-<pre>
-  $artist_rs = $schema-&gt;resultset('CD')-&gt;related_resultset('Artist');
+<pre>  $artist_rs = $schema-&gt;resultset('CD')-&gt;related_resultset('Artist');
 </pre>
 </section>
 <section class="Ss">
@@ -1390,13 +1319,10 @@
     DBIx::Class::Manual::Cookbook) when referring to the source alias of the
     current result set:</p>
 <p class="Pp"></p>
-<pre>
-  # in a result set class
+<pre>  # in a result set class
   sub modified_by {
     my ($self, $user) = @_;
-
     my $me = $self-&gt;current_source_alias;
-
     return $self-&gt;search({
       &quot;$me.modified&quot; =&gt; $user-&gt;id,
     });
@@ -1421,32 +1347,24 @@
     -&gt;search on the resultset (as if it were simply where-filtered without
     joins). For example:</p>
 <p class="Pp"></p>
-<pre>
- my $rs = $schema-&gt;resultset('Bar')-&gt;search({'x.name' =&gt; 'abc'},{ join =&gt; 'x' });
-
+<pre> my $rs = $schema-&gt;resultset('Bar')-&gt;search({'x.name' =&gt; 'abc'},{ join =&gt; 'x' });
  # 'x' now pollutes the query namespace
-
  # So the following works as expected
  my $ok_rs = $rs-&gt;search({'x.other' =&gt; 1});
-
  # But this doesn't: instead of finding a 'Bar' related to two x rows (abc and
  # def) we look for one row with contradictory terms and join in another table
  # (aliased 'x_2') which we never use
  my $broken_rs = $rs-&gt;search({'x.name' =&gt; 'def'});
-
  my $rs2 = $rs-&gt;as_subselect_rs;
-
  # doesn't work - 'x' is no longer accessible in $rs2, having been sealed away
  my $not_joined_rs = $rs2-&gt;search({'x.other' =&gt; 1});
-
  # works as expected: finds a 'table' row related to two x rows (abc and def)
  my $correctly_joined_rs = $rs2-&gt;search({'x.name' =&gt; 'def'});
 </pre>
 <p class="Pp">Another example of when one might use this would be to select a
     subset of columns in a group by clause:</p>
 <p class="Pp"></p>
-<pre>
- my $rs = $schema-&gt;resultset('Bar')-&gt;search(undef, {
+<pre> my $rs = $schema-&gt;resultset('Bar')-&gt;search(undef, {
    group_by =&gt; [qw{ id foo_id baz_id }],
  })-&gt;as_subselect_rs-&gt;search(undef, {
    columns =&gt; [qw{ id foo_id }]
@@ -1488,13 +1406,9 @@
     argument is passed through directly to SQL. The hashref syntax allows for
     connection-agnostic specification of ordering direction:</p>
 <p class="Pp"></p>
-<pre>
- For descending order:
-
+<pre> For descending order:
   order_by =&gt; { -desc =&gt; [qw/col1 col2 col3/] }
-
  For explicit ascending order:
-
   order_by =&gt; { -asc =&gt; 'col' }
 </pre>
 <p class="Pp">The old scalarref syntax (i.e. order_by =&gt; \'year DESC') is
@@ -1522,13 +1436,11 @@
 <p class="Pp">Essentially <span class="Li">&quot;columns&quot;</span> does the
     same as &quot;select&quot; and &quot;as&quot;.</p>
 <p class="Pp"></p>
-<pre>
-    columns =&gt; [ 'some_column', { dbic_slot =&gt; 'another_column' } ]
+<pre>    columns =&gt; [ 'some_column', { dbic_slot =&gt; 'another_column' } ]
 </pre>
 <p class="Pp">is the same as</p>
 <p class="Pp"></p>
-<pre>
-    select =&gt; [qw(some_column another_column)],
+<pre>    select =&gt; [qw(some_column another_column)],
     as     =&gt; [qw(some_column dbic_slot)]
 </pre>
 <p class="Pp">If you want to individually retrieve related columns (in essence
@@ -1536,8 +1448,7 @@
     correct inflation slot chain such that it matches existing
   relationships:</p>
 <p class="Pp"></p>
-<pre>
-    my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
+<pre>    my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
         # required to tell DBIC to collapse has_many relationships
         collapse =&gt; 1,
         join     =&gt; { cds =&gt; 'tracks' },
@@ -1553,8 +1464,7 @@
     (see also &quot;Literal SQL and value type operators&quot; in
     SQL::Abstract):</p>
 <p class="Pp"></p>
-<pre>
-    # equivalent SQL: SELECT 1, 'a string', IF(my_column,?,?) ...
+<pre>    # equivalent SQL: SELECT 1, 'a string', IF(my_column,?,?) ...
     # bind values: $true_value, $false_value
     columns =&gt; [
         {
@@ -1583,8 +1493,7 @@
     (You may also use the <span class="Li">&quot;include_columns&quot;</span>
     attribute, as in earlier versions of DBIC, but this is deprecated)</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(undef, {
+<pre>  $schema-&gt;resultset('CD')-&gt;search(undef, {
     '+columns' =&gt; ['artist.name'],
     join =&gt; ['artist']
   });
@@ -1605,15 +1514,13 @@
     can use column names, or in the case of RDBMS back ends, function or stored
     procedure names:</p>
 <p class="Pp"></p>
-<pre>
-  $rs = $schema-&gt;resultset('Employee')-&gt;search(undef, {
+<pre>  $rs = $schema-&gt;resultset('Employee')-&gt;search(undef, {
     select =&gt; [
       'name',
       { count =&gt; 'employeeid' },
       { max =&gt; { length =&gt; 'name' }, -as =&gt; 'longest_name' }
     ]
   });
-
   # Equivalent SQL
   SELECT name, COUNT( employeeid ), MAX( LENGTH( name ) ) AS longest_name FROM employee
 </pre>
@@ -1661,8 +1568,7 @@
     SQL-side identifier aliasing <span class="Li">&quot;AS&quot;</span>. See
     &quot;select&quot; for details.</p>
 <p class="Pp"></p>
-<pre>
-  $rs = $schema-&gt;resultset('Employee')-&gt;search(undef, {
+<pre>  $rs = $schema-&gt;resultset('Employee')-&gt;search(undef, {
     select =&gt; [
       'name',
       { count =&gt; 'employeeid' },
@@ -1680,14 +1586,12 @@
     <span class="Li">&quot;as&quot;</span>, the value can be retrieved using the
     accessor as normal:</p>
 <p class="Pp"></p>
-<pre>
-  my $name = $employee-&gt;name();
+<pre>  my $name = $employee-&gt;name();
 </pre>
 <p class="Pp">If on the other hand an accessor does not exist in the object, you
     need to use <span class="Li">&quot;get_column&quot;</span> instead:</p>
 <p class="Pp"></p>
-<pre>
-  my $employee_count = $employee-&gt;get_column('employee_count');
+<pre>  my $employee_count = $employee-&gt;get_column('employee_count');
 </pre>
 <p class="Pp">You can create your own accessors if required - see
     DBIx::Class::Manual::Cookbook for details.</p>
@@ -1717,8 +1621,7 @@
 <p class="Pp">Contains a list of relationships that should be joined for this
     query. For example:</p>
 <p class="Pp"></p>
-<pre>
-  # Get CDs by Nine Inch Nails
+<pre>  # Get CDs by Nine Inch Nails
   my $rs = $schema-&gt;resultset('CD')-&gt;search(
     { 'artist.name' =&gt; 'Nine Inch Nails' },
     { join =&gt; 'artist' }
@@ -1727,15 +1630,13 @@
 <p class="Pp">Can also contain a hash reference to refer to the other relation's
     relations. For example:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::Track;
+<pre>  package MyApp::Schema::Track;
   use base qw/DBIx::Class/;
   __PACKAGE__-&gt;table('track');
   __PACKAGE__-&gt;add_columns(qw/trackid cd position title/);
   __PACKAGE__-&gt;set_primary_key('trackid');
   __PACKAGE__-&gt;belongs_to(cd =&gt; 'MyApp::Schema::CD');
   1;
-
   # In your application
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     { 'track.title' =&gt; 'Teardrop' },
@@ -1750,8 +1651,7 @@
     as &quot;me&quot;, so you need to use me.column_name in order to avoid
     ambiguity. For example:</p>
 <p class="Pp"></p>
-<pre>
-  # Get CDs from 1984 with a 'Foo' track
+<pre>  # Get CDs from 1984 with a 'Foo' track
   my $rs = $schema-&gt;resultset('CD')-&gt;search(
     {
       'me.year' =&gt; 1984,
@@ -1763,8 +1663,7 @@
 <p class="Pp">If the same join is supplied twice, it will be aliased to
     &lt;rel&gt;_2 (and similarly for a third time). For e.g.</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search({
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search({
     'cds.title'   =&gt; 'Down to Earth',
     'cds_2.title' =&gt; 'Popular',
   }, {
@@ -1776,8 +1675,7 @@
 <p class="Pp">If you want to fetch related objects from other tables as well,
     see &quot;prefetch&quot; below.</p>
 <p class="Pp"></p>
-<pre>
- NOTE: An internal join-chain pruner will discard certain joins while
+<pre> NOTE: An internal join-chain pruner will discard certain joins while
  constructing the actual SQL query, as long as the joins in question do not
  affect the retrieved result. This for example includes 1:1 left joins
  that are not part of the restriction specification (WHERE/HAVING) nor are
@@ -1797,8 +1695,7 @@
     joined has_many relationships are to be aggregated into the corresponding
     &quot;parent&quot; object. For example, the resultset:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search({}, {
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search({}, {
     '+columns' =&gt; [ qw/ tracks.title tracks.position / ],
     join =&gt; 'tracks',
     collapse =&gt; 1,
@@ -1806,8 +1703,7 @@
 </pre>
 <p class="Pp">While executing the following query:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT me.*, tracks.title, tracks.position
+<pre>  SELECT me.*, tracks.title, tracks.position
     FROM cd me
     LEFT JOIN track tracks
       ON tracks.cdid = me.cdid
@@ -1853,15 +1749,13 @@
     attribute.</p>
 <p class="Pp">For example, the following two queries are equivalent:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
     prefetch =&gt; { cds =&gt; ['genre', 'tracks' ] },
   });
 </pre>
 <p class="Pp">and</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search({}, {
     join =&gt; { cds =&gt; ['genre', 'tracks' ] },
     collapse =&gt; 1,
     '+columns' =&gt; [
@@ -1882,8 +1776,7 @@
 </pre>
 <p class="Pp">Both producing the following SQL:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT  me.artistid, me.name, me.rank, me.charfield,
+<pre>  SELECT  me.artistid, me.name, me.rank, me.charfield,
           cds.cdid, cds.artist, cds.title, cds.year, cds.genreid, cds.single_track,
           genre.genreid, genre.name,
           tracks.trackid, tracks.cd, tracks.position, tracks.title, tracks.last_updated_on, tracks.last_updated_at
@@ -1900,8 +1793,7 @@
     mix the two together, as the arguments are properly merged and generally do
     the right thing. For example, you may want to do the following:</p>
 <p class="Pp"></p>
-<pre>
-  my $artists_and_cds_without_genre = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $artists_and_cds_without_genre = $schema-&gt;resultset('Artist')-&gt;search(
     { 'genre.genreid' =&gt; undef },
     {
       join =&gt; { cds =&gt; 'genre' },
@@ -1911,8 +1803,7 @@
 </pre>
 <p class="Pp">Which generates the following SQL:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT  me.artistid, me.name, me.rank, me.charfield,
+<pre>  SELECT  me.artistid, me.name, me.rank, me.charfield,
           cds.cdid, cds.artist, cds.title, cds.year, cds.genreid, cds.single_track
     FROM artist me
     LEFT JOIN cd cds
@@ -1936,22 +1827,19 @@
     (sub-SELECTs) might need specific aliases set to reference inner queries.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-   my $q = $rs
+<pre>   my $q = $rs
       -&gt;related_resultset('CDs')
       -&gt;related_resultset('Tracks')
       -&gt;search({
          'track.id' =&gt; { -ident =&gt; 'none_search.id' },
       })
       -&gt;as_query;
-
    my $ids = $self-&gt;search({
       -not_exists =&gt; $q,
    }, {
       alias    =&gt; 'none_search',
       group_by =&gt; 'none_search.id',
    })-&gt;get_column('id')-&gt;as_query;
-
    $self-&gt;search({ id =&gt; { -in =&gt; $ids } })
 </pre>
 <p class="Pp">This attribute is directly tied to
@@ -2020,8 +1908,7 @@
 <p class="Pp">A arrayref of columns to group by. Can include columns of joined
     tables.</p>
 <p class="Pp"></p>
-<pre>
-  group_by =&gt; [qw/ column1 column2 ... /]
+<pre>  group_by =&gt; [qw/ column1 column2 ... /]
 </pre>
 </section>
 <section class="Ss">
@@ -2039,14 +1926,12 @@
     logical mistake, and a fatal error on most RDBMS engines.</p>
 <p class="Pp">E.g.</p>
 <p class="Pp"></p>
-<pre>
-  having =&gt; { 'count_employee' =&gt; { '&gt;=', 100 } }
+<pre>  having =&gt; { 'count_employee' =&gt; { '&gt;=', 100 } }
 </pre>
 <p class="Pp">or with an in-place function in which case literal SQL is
     required:</p>
 <p class="Pp"></p>
-<pre>
-  having =&gt; \[ 'count(employee) &gt;= ?', 100 ]
+<pre>  having =&gt; \[ 'count(employee) &gt;= ?', 100 ]
 </pre>
 </section>
 <section class="Ss">
@@ -2073,8 +1958,7 @@
 <h2 class="Ss" id="where"><a class="permalink" href="#where">where</a></h2>
 <div class="Bd-indent">Adds to the WHERE clause.
 <p class="Pp"></p>
-<pre>
-  # only return rows WHERE deleted IS NULL for all searches
+<pre>  # only return rows WHERE deleted IS NULL for all searches
   __PACKAGE__-&gt;resultset_attributes({ where =&gt; { deleted =&gt; undef } });
 </pre>
 <p class="Pp">Can be overridden by passing <span class="Li">&quot;{ where =&gt;
@@ -2088,13 +1972,10 @@
 <p class="Pp">Set to 1 to cache search results. This prevents extra SQL queries
     if you revisit rows in your ResultSet:</p>
 <p class="Pp"></p>
-<pre>
-  my $resultset = $schema-&gt;resultset('Artist')-&gt;search( undef, { cache =&gt; 1 } );
-
+<pre>  my $resultset = $schema-&gt;resultset('Artist')-&gt;search( undef, { cache =&gt; 1 } );
   while( my $artist = $resultset-&gt;next ) {
     ... do stuff ...
   }
-
   $rs-&gt;first; # without cache, this would issue a query
 </pre>
 <p class="Pp">By default, searches are not cached.</p>
@@ -2123,18 +2004,12 @@
 <p class="Pp">Here are some more involved examples, based on the following
     relationship map:</p>
 <p class="Pp"></p>
-<pre>
-  # Assuming:
+<pre>  # Assuming:
   My::Schema::CD-&gt;belongs_to( artist      =&gt; 'My::Schema::Artist'     );
   My::Schema::CD-&gt;might_have( liner_note  =&gt; 'My::Schema::LinerNotes' );
   My::Schema::CD-&gt;has_many(   tracks      =&gt; 'My::Schema::Track'      );
-
   My::Schema::Artist-&gt;belongs_to( record_label =&gt; 'My::Schema::RecordLabel' );
-
   My::Schema::Track-&gt;has_many( guests =&gt; 'My::Schema::Guest' );
-
-
-
   my $rs = $schema-&gt;resultset('Tag')-&gt;search(
     undef,
     {
@@ -2146,8 +2021,7 @@
 </pre>
 <p class="Pp">The initial search results in SQL like the following:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT tag.*, cd.*, artist.* FROM tag
+<pre>  SELECT tag.*, cd.*, artist.* FROM tag
   JOIN cd ON tag.cd = cd.cdid
   JOIN artist ON cd.artist = artist.artistid
 </pre>
@@ -2164,8 +2038,7 @@
     present), the cover image, the tracks on that CD, and the guests on those
     tracks.</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search(
     undef,
     {
       prefetch =&gt; [
@@ -2179,8 +2052,7 @@
 </pre>
 <p class="Pp">This will produce SQL like the following:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT cd.*, artist.*, record_label.*, liner_note.*, cover_image.*,
+<pre>  SELECT cd.*, artist.*, record_label.*, liner_note.*, cover_image.*,
          tracks.*, guests.*
     FROM cd me
     JOIN artist artist
@@ -2217,19 +2089,14 @@
       alter</b> what is returned by traversing a relationship. So, if you have
       <span class="Li">&quot;Artist-&gt;has_many(CDs)&quot;</span> and you do
     <p class="Pp"></p>
-    <pre>
-  my $artist_rs = $schema-&gt;resultset('Artist')-&gt;search({
+    <pre>  my $artist_rs = $schema-&gt;resultset('Artist')-&gt;search({
       'cds.year' =&gt; 2008,
   }, {
       join =&gt; 'cds',
   });
-
   my $count = $artist_rs-&gt;first-&gt;cds-&gt;count;
-
   my $artist_rs_prefetch = $artist_rs-&gt;search( {}, { prefetch =&gt; 'cds' } );
-
   my $prefetch_count = $artist_rs_prefetch-&gt;first-&gt;cds-&gt;count;
-
   cmp_ok( $count, '==', $prefetch_count, &quot;Counts should be the same&quot; );
     </pre>
     <p class="Pp">That <b>cmp_ok()</b> may or may not pass depending on the
@@ -2282,8 +2149,7 @@
 <p class="Pp">For backwards compatibility and convenience, the following
     shortcuts are supported:</p>
 <p class="Pp"></p>
-<pre>
-  [ $name =&gt; $val ] === [ { dbic_colname =&gt; $name }, $val ]
+<pre>  [ $name =&gt; $val ] === [ { dbic_colname =&gt; $name }, $val ]
   [ \$dt  =&gt; $val ] === [ { sqlt_datatype =&gt; $dt }, $val ]
   [ undef,   $val ] === [ {}, $val ]
   $val              === [ {}, $val ]

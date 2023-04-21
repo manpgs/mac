@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLHACKTIPS(1)</title>
 </head>
@@ -50,8 +51,7 @@
         Related to this is the difference between &quot;Perl_-less&quot; and
         &quot;Perl_-ly&quot; APIs, for example:</p>
     <p class="Pp"></p>
-    <pre>
-  Perl_sv_setiv(aTHX_ ...);
+    <pre>  Perl_sv_setiv(aTHX_ ...);
   sv_setiv(...);
     </pre>
     <p class="Pp">The first one explicitly passes in the context, which is
@@ -78,14 +78,12 @@
         is, it shouldn't show up in the output of that command.)</p>
     <p class="Pp">If you want to have static strings, make them constant:</p>
     <p class="Pp"></p>
-    <pre>
-  static const char etc[] = &quot;...&quot;;
+    <pre>  static const char etc[] = &quot;...&quot;;
     </pre>
     <p class="Pp">If you want to have arrays of constant strings, note carefully
         the right combination of <span class="Li">&quot;const&quot;</span>s:</p>
     <p class="Pp"></p>
-    <pre>
-    static const char * const yippee[] =
+    <pre>    static const char * const yippee[] =
         {&quot;hi&quot;, &quot;ho&quot;, &quot;silver&quot;};
     </pre>
     <p class="Pp">There is a way to completely hide any modifiable globals (they
@@ -154,15 +152,13 @@
 <ul class="Bl-bullet">
   <li>Casting pointers to integers or casting integers to pointers
     <p class="Pp"></p>
-    <pre>
-    void castaway(U8* p)
+    <pre>    void castaway(U8* p)
     {
       IV i = p;
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    void castaway(U8* p)
+    <pre>    void castaway(U8* p)
     {
       IV i = (IV)p;
     </pre>
@@ -194,8 +190,7 @@
   </li>
   <li>Assuming one can dereference any type of pointer for any type of data
     <p class="Pp"></p>
-    <pre>
-  char *p = ...;
+    <pre>  char *p = ...;
   long pony = *(long *)p;    /* BAD */
     </pre>
     <p class="Pp">Many platforms, quite rightly so, will give you a core dump
@@ -203,8 +198,7 @@
   </li>
   <li>Lvalue casts
     <p class="Pp"></p>
-    <pre>
-  (int)*p = ...;    /* BAD */
+    <pre>  (int)*p = ...;    /* BAD */
     </pre>
     <p class="Pp">Simply not portable. Get your lvalue to be of the right type,
         or maybe use temporary variables, or dirty tricks with unions.</p>
@@ -271,9 +265,9 @@
         <span class="Li">&quot;#define&quot;</span>'s for you, based on the
         current platform.</p>
     <p class="Pp">Note that the
-        <span class="Li">&quot;is</span><i>FOO</i><span class="Li">&quot;</span>
+        <span class="Li">&quot;is</span><span class="Li"><i>FOO</i></span><span class="Li">&quot;</span>
         and
-        <span class="Li">&quot;to</span><i>FOO</i><span class="Li">&quot;</span>
+        <span class="Li">&quot;to</span><span class="Li"><i>FOO</i></span><span class="Li">&quot;</span>
         macros in <i>handy.h</i> work properly on native code points and
         strings.</p>
     <p class="Pp">Also, the range 'A' - 'Z' in ASCII is an unbroken sequence of
@@ -347,8 +341,7 @@
   </li>
   <li>Mixing #define and #ifdef
     <p class="Pp"></p>
-    <pre>
-  #define BURGLE(x) ... \
+    <pre>  #define BURGLE(x) ... \
   #ifdef BURGLE_OLD_STYLE        /* BAD */
   ... do it the old way ... \
   #else
@@ -361,8 +354,7 @@
   </li>
   <li>Adding non-comment stuff after #endif or #else
     <p class="Pp"></p>
-    <pre>
-  #ifdef SNOSH
+    <pre>  #ifdef SNOSH
   ...
   #else !SNOSH    /* BAD */
   ...
@@ -372,8 +364,7 @@
         after them. If you want to document what is going (which is a good idea
         especially if the branches are long), use (C) comments:</p>
     <p class="Pp"></p>
-    <pre>
-  #ifdef SNOSH
+    <pre>  #ifdef SNOSH
   ...
   #else /* !SNOSH */
   ...
@@ -385,8 +376,7 @@
   </li>
   <li>Having a comma after the last element of an enum list
     <p class="Pp"></p>
-    <pre>
-  enum color {
+    <pre>  enum color {
     CERULEAN,
     CHARTREUSE,
     CINNABAR,     /* BAD */
@@ -398,8 +388,7 @@
   </li>
   <li>Using //-comments
     <p class="Pp"></p>
-    <pre>
-  // This function bamfoodles the zorklator.   /* BAD */
+    <pre>  // This function bamfoodles the zorklator.   /* BAD */
     </pre>
     <p class="Pp">That is C99 or C++. Perl is C89. Using the //-comments is
         silently allowed by many C compilers but cranking up the ANSI C89
@@ -407,8 +396,7 @@
   </li>
   <li>Mixing declarations and code
     <p class="Pp"></p>
-    <pre>
-  void zorklator()
+    <pre>  void zorklator()
   {
     int n = 3;
     set_zorkmids(n);    /* BAD */
@@ -422,8 +410,7 @@
   </li>
   <li>Introducing variables inside <b>for()</b>
     <p class="Pp"></p>
-    <pre>
-  for(int i = ...; ...; ...) {    /* BAD */
+    <pre>  for(int i = ...; ...; ...) {    /* BAD */
     </pre>
     <p class="Pp">That is C99 or C++. While it would indeed be awfully nice to
         have that also in C89, to limit the scope of the loop variable, alas, we
@@ -431,8 +418,7 @@
   </li>
   <li>Mixing signed char pointers with unsigned char pointers
     <p class="Pp"></p>
-    <pre>
-  int foo(char *s) { ... }
+    <pre>  int foo(char *s) { ... }
   ...
   unsigned char *t = ...; /* Or U8* t = ... */
   foo(t);   /* BAD */
@@ -449,14 +435,12 @@
   <li>Macros that have string constants and their arguments as substrings of the
       string constants
     <p class="Pp"></p>
-    <pre>
-  #define FOO(n) printf(&quot;number = %d\n&quot;, n)    /* BAD */
+    <pre>  #define FOO(n) printf(&quot;number = %d\n&quot;, n)    /* BAD */
   FOO(10);
     </pre>
     <p class="Pp">Pre-ANSI semantics for that was equivalent to</p>
     <p class="Pp"></p>
-    <pre>
-  printf(&quot;10umber = %d\10&quot;);
+    <pre>  printf(&quot;10umber = %d\10&quot;);
     </pre>
     <p class="Pp">which is probably not what you were expecting. Unfortunately
         at least one reasonably common and modern C compiler does &quot;real
@@ -465,8 +449,7 @@
   </li>
   <li>Using printf formats for non-basic C types
     <p class="Pp"></p>
-    <pre>
-   IV i = ...;
+    <pre>   IV i = ...;
    printf(&quot;i = %d\n&quot;, i);    /* BAD */
     </pre>
     <p class="Pp">While this might by accident work in some platform (where IV
@@ -475,8 +458,7 @@
         more specific types (defined by Perl's configuration step in
         <i>config.h</i>):</p>
     <p class="Pp"></p>
-    <pre>
-   Uid_t who = ...;
+    <pre>   Uid_t who = ...;
    printf(&quot;who = %d\n&quot;, who);    /* BAD */
     </pre>
     <p class="Pp">The problem here is that Uid_t might be not only not
@@ -487,28 +469,22 @@
         <b>printf()</b>'s limited intelligence, but for many types the right
         format is available as with either 'f' or '_f' suffix, for example:</p>
     <p class="Pp"></p>
-    <pre>
-   IVdf /* IV in decimal */
+    <pre>   IVdf /* IV in decimal */
    UVxf /* UV is hexadecimal */
-
    printf(&quot;i = %&quot;IVdf&quot;\n&quot;, i); /* The IVdf is a string constant. */
-
    Uid_t_f /* Uid_t in decimal */
-
    printf(&quot;who = %&quot;Uid_t_f&quot;\n&quot;, who);
     </pre>
     <p class="Pp">Or you can try casting to a &quot;wide enough&quot; type:</p>
     <p class="Pp"></p>
-    <pre>
-   printf(&quot;i = %&quot;IVdf&quot;\n&quot;, (IV)something_very_small_and_signed);
+    <pre>   printf(&quot;i = %&quot;IVdf&quot;\n&quot;, (IV)something_very_small_and_signed);
     </pre>
     <p class="Pp">See &quot;Formatted Printing of Size_t and SSize_t&quot; in
         perlguts for how to print those.</p>
     <p class="Pp">Also remember that the <span class="Li">%p</span> format
         really does require a void pointer:</p>
     <p class="Pp"></p>
-    <pre>
-   U8* p = ...;
+    <pre>   U8* p = ...;
    printf(&quot;p = %p\n&quot;, (void*)p);
     </pre>
     <p class="Pp">The gcc option <span class="Li">&quot;-Wformat&quot;</span>
@@ -526,8 +502,7 @@
   </li>
   <li>Using gcc statement expressions
     <p class="Pp"></p>
-    <pre>
-   val = ({...;...;...});    /* BAD */
+    <pre>   val = ({...;...;...});    /* BAD */
     </pre>
     <p class="Pp">While a nice extension, it's not portable. The Perl code does
         admittedly use them if available to gain some extra speed (essentially
@@ -536,8 +511,7 @@
   <li>Binding together several statements in a macro
     <p class="Pp">Use the macros STMT_START and STMT_END.</p>
     <p class="Pp"></p>
-    <pre>
-   STMT_START {
+    <pre>   STMT_START {
       ...
    } STMT_END
     </pre>
@@ -545,8 +519,7 @@
   <li>Testing for operating systems or versions when should be testing for
       features
     <p class="Pp"></p>
-    <pre>
-  #ifdef __FOONIX__    /* BAD */
+    <pre>  #ifdef __FOONIX__    /* BAD */
   foo = quux();
   #endif
     </pre>
@@ -557,8 +530,7 @@
         very wrong. This is more correct (though still not perfect, because the
         below is a compile-time check):</p>
     <p class="Pp"></p>
-    <pre>
-  #ifdef HAS_QUUX
+    <pre>  #ifdef HAS_QUUX
   foo = quux();
   #endif
     </pre>
@@ -572,13 +544,10 @@
         or if you have a good hunch of where <b>quux()</b> might be available,
         you can temporarily try the following:</p>
     <p class="Pp"></p>
-    <pre>
-  #if (defined(__FOONIX__) || defined(__BARNIX__))
+    <pre>  #if (defined(__FOONIX__) || defined(__BARNIX__))
   # define HAS_QUUX
   #endif
-
   ...
-
   #ifdef HAS_QUUX
   foo = quux();
   #endif
@@ -611,8 +580,7 @@
       you're done to avoid memory leaks. If you don't have control over when it
       gets freed, you'll need to make the copy in a mortal scalar, like so:
     <p class="Pp"></p>
-    <pre>
- if ((s = PerlEnv_getenv(&quot;foo&quot;) == NULL) {
+    <pre> if ((s = PerlEnv_getenv(&quot;foo&quot;) == NULL) {
     ... /* handle NULL case */
  }
  else {
@@ -701,8 +669,7 @@
 <p class="Pp">To really poke around with Perl, you'll probably want to build
     Perl for debugging, like this:</p>
 <p class="Pp"></p>
-<pre>
-    ./Configure -d -DDEBUGGING
+<pre>    ./Configure -d -DDEBUGGING
     make
 </pre>
 <p class="Pp"><span class="Li">&quot;-DDEBUGGING&quot;</span> turns on the C
@@ -717,8 +684,7 @@
     find out about them is to play about with them. The most useful options are
     probably</p>
 <p class="Pp"></p>
-<pre>
-    l  Context (loop) stack processing
+<pre>    l  Context (loop) stack processing
     s  Stack snapshots (with v, displays all stacks)
     t  Trace execution
     o  Method and overloading resolution
@@ -726,8 +692,7 @@
 </pre>
 <p class="Pp">For example</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -Dst -e '$a + 1'
+<pre>    $ perl -Dst -e '$a + 1'
     ....
     (-e:1)      gvsv(main::a)
         =&gt;  UNDEF
@@ -739,8 +704,7 @@
 <p class="Pp">Some of the functionality of the debugging code can be achieved
     with a non-debugging perl by using XS modules:</p>
 <p class="Pp"></p>
-<pre>
-    -Dr =&gt; use re 'debug'
+<pre>    -Dr =&gt; use re 'debug'
     -Dx =&gt; use O 'Debug'
 </pre>
 </section>
@@ -759,20 +723,17 @@
 </dl>
 <p class="Pp">To fire up the debugger, type</p>
 <p class="Pp"></p>
-<pre>
-    gdb ./perl
+<pre>    gdb ./perl
 </pre>
 <p class="Pp">Or if you have a core dump:</p>
 <p class="Pp"></p>
-<pre>
-    gdb ./perl core
+<pre>    gdb ./perl core
 </pre>
 <p class="Pp">You'll want to do that in your Perl source tree so the debugger
     can read the source code. You should see the copyright message, followed by
     the prompt.</p>
 <p class="Pp"></p>
-<pre>
-    (gdb)
+<pre>    (gdb)
 </pre>
 <p class="Pp"><span class="Li">&quot;help&quot;</span> will get you into the
     documentation, but here are the most useful commands:</p>
@@ -807,8 +768,7 @@
   <li>ptype
     <p class="Pp">Prints the C definition of the argument given.</p>
     <p class="Pp"></p>
-    <pre>
-  (gdb) ptype PL_op
+    <pre>  (gdb) ptype PL_op
   type = struct op {
       OP *op_next;
       OP *op_sibparent;
@@ -834,13 +794,11 @@
         code files (see &quot;The .i Targets&quot;) So, for instance, you can't
         say</p>
     <p class="Pp"></p>
-    <pre>
-    print SvPV_nolen(sv)
+    <pre>    print SvPV_nolen(sv)
     </pre>
     <p class="Pp">but you have to say</p>
     <p class="Pp"></p>
-    <pre>
-    print Perl_sv_2pv_nolen(sv)
+    <pre>    print Perl_sv_2pv_nolen(sv)
     </pre>
   </li>
 </ul>
@@ -873,8 +831,7 @@
     function we examined earlier to implement the
     <span class="Li">&quot;+&quot;</span> operator:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) break Perl_pp_add
+<pre>    (gdb) break Perl_pp_add
     Breakpoint 1 at 0x46249f: file pp_hot.c, line 309.
 </pre>
 <p class="Pp">Notice we use <span class="Li">&quot;Perl_pp_add&quot;</span> and
@@ -882,14 +839,12 @@
     Functions&quot; in perlguts. With the breakpoint in place, we can run our
     program:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) run -e '$b = &quot;6XXXX&quot;; $c = 2.3; $a = $b + $c'
+<pre>    (gdb) run -e '$b = &quot;6XXXX&quot;; $c = 2.3; $a = $b + $c'
 </pre>
 <p class="Pp">Lots of junk will go past as gdb reads in the relevant source
     files and libraries, and then:</p>
 <p class="Pp"></p>
-<pre>
-    Breakpoint 1, Perl_pp_add () at pp_hot.c:309
+<pre>    Breakpoint 1, Perl_pp_add () at pp_hot.c:309
     1396    dSP; dATARGET; bool useleft; SV *svl, *svr;
     (gdb) step
     311           dPOPTOPnnrl_ul;
@@ -901,8 +856,7 @@
     <span class="Li">&quot;left&quot;</span> and
     <span class="Li">&quot;right&quot;</span> - let's slightly expand it:</p>
 <p class="Pp"></p>
-<pre>
- #define dPOPTOPnnrl_ul  NV right = POPn; \
+<pre> #define dPOPTOPnnrl_ul  NV right = POPn; \
                          SV *leftsv = TOPs; \
                          NV left = USE_LEFT(leftsv) ? SvNV(leftsv) : 0.0
 </pre>
@@ -921,8 +875,7 @@
     have to use <span class="Li">&quot;sv_2nv&quot;</span> to convert it. If we
     step again, we'll find ourselves there:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) step
+<pre>    (gdb) step
     Perl_sv_2nv (sv=0xa0675d0) at sv.c:1669
     1669        if (!sv)
     (gdb)
@@ -930,8 +883,7 @@
 <p class="Pp">We can now use <span class="Li">&quot;Perl_sv_dump&quot;</span> to
     investigate the SV:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) print Perl_sv_dump(sv)
+<pre>    (gdb) print Perl_sv_dump(sv)
     SV = PV(0xa057cc0) at 0xa0675d0
     REFCNT = 1
     FLAGS = (POK,pPOK)
@@ -943,8 +895,7 @@
 <p class="Pp">We know we're going to get <span class="Li">6</span> from this, so
     let's finish the subroutine:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) finish
+<pre>    (gdb) finish
     Run till exit from #0  Perl_sv_2nv (sv=0xa0675d0) at sv.c:1671
     0x462669 in Perl_pp_add () at pp_hot.c:311
     311           dPOPTOPnnrl_ul;
@@ -954,8 +905,7 @@
     <span class="Li">&quot;Perl_op_dump&quot;</span>. This'll give us similar
     output to CPAN module B::Debug.</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) print Perl_op_dump(PL_op)
+<pre>    (gdb) print Perl_op_dump(PL_op)
     {
     13  TYPE = add  ===&gt; 14
         TARG = 1
@@ -984,19 +934,16 @@
     you're looking for. For example, you could add
     <span class="Li">&quot;study&quot;</span> before your method:</p>
 <p class="Pp"></p>
-<pre>
-    study;
+<pre>    study;
 </pre>
 <p class="Pp">And in gdb do:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) break Perl_pp_study
+<pre>    (gdb) break Perl_pp_study
 </pre>
 <p class="Pp">And then step until you hit what you're looking for. This works
     well in a loop if you want to only break at certain iterations:</p>
 <p class="Pp"></p>
-<pre>
-    for my $c (1..100) {
+<pre>    for my $c (1..100) {
         study if $c == 50;
     }
 </pre>
@@ -1007,22 +954,19 @@
 <p class="Pp">If you want to see what perl is doing when parsing/lexing your
     code, you can use <span class="Li">&quot;BEGIN {}&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    print &quot;Before\n&quot;;
+<pre>    print &quot;Before\n&quot;;
     BEGIN { study; }
     print &quot;After\n&quot;;
 </pre>
 <p class="Pp">And in gdb:</p>
 <p class="Pp"></p>
-<pre>
-    (gdb) break Perl_pp_study
+<pre>    (gdb) break Perl_pp_study
 </pre>
 <p class="Pp">If you want to see what the parser/lexer is doing inside of
     <span class="Li">&quot;if&quot;</span> blocks and the like you need to be a
     little trickier:</p>
 <p class="Pp"></p>
-<pre>
-    if ($a &amp;&amp; $b &amp;&amp; do { BEGIN { study } 1 } &amp;&amp; $c) { ... }
+<pre>    if ($a &amp;&amp; $b &amp;&amp; do { BEGIN { study } 1 } &amp;&amp; $c) { ... }
 </pre>
 </section>
 </section>
@@ -1081,15 +1025,13 @@
 <p class="Pp">Download the pmd-bin-X.Y.zip () from the SourceForge site, extract
     the pmd-X.Y.jar from it, and then run that on source code thusly:</p>
 <p class="Pp"></p>
-<pre>
-  java -cp pmd-X.Y.jar net.sourceforge.pmd.cpd.CPD \
+<pre>  java -cp pmd-X.Y.jar net.sourceforge.pmd.cpd.CPD \
    --minimum-tokens 100 --files /some/where/src --language c &gt; cpd.txt
 </pre>
 <p class="Pp">You may run into memory limits, in which case you should use the
     -Xmx option:</p>
 <p class="Pp"></p>
-<pre>
-  java -Xmx512M ...
+<pre>  java -Xmx512M ...
 </pre>
 </section>
 <section class="Ss">
@@ -1165,8 +1107,7 @@
     the environment variable PERL_DESTRUCT_LEVEL to 2. For example, like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    env PERL_DESTRUCT_LEVEL=2 valgrind ./perl -Ilib ...
+<pre>    env PERL_DESTRUCT_LEVEL=2 valgrind ./perl -Ilib ...
 </pre>
 <p class="Pp"><b>NOTE 3</b>: There are known memory leaks when there are
     compile-time errors within eval or require, seeing
@@ -1186,28 +1127,24 @@
     <i>testfile.valgrind</i> and by default output is displayed inline.</p>
 <p class="Pp">Example usage:</p>
 <p class="Pp"></p>
-<pre>
-    make test.valgrind
+<pre>    make test.valgrind
 </pre>
 <p class="Pp">Since valgrind adds significant overhead, tests will take much
     longer to run. The valgrind tests support being run in parallel to help with
     this:</p>
 <p class="Pp"></p>
-<pre>
-    TEST_JOBS=9 make test.valgrind
+<pre>    TEST_JOBS=9 make test.valgrind
 </pre>
 <p class="Pp">Note that the above two invocations will be very verbose as
     reachable memory and leak-checking is enabled by default. If you want to
     just see pure errors, try:</p>
 <p class="Pp"></p>
-<pre>
-    VG_OPTS='-q --leak-check=no --show-reachable=no' TEST_JOBS=9 \
+<pre>    VG_OPTS='-q --leak-check=no --show-reachable=no' TEST_JOBS=9 \
         make test.valgrind
 </pre>
 <p class="Pp">Valgrind also provides a cachegrind tool, invoked on perl as:</p>
 <p class="Pp"></p>
-<pre>
-    VG_OPTS=--tool=cachegrind make test.valgrind
+<pre>    VG_OPTS=--tool=cachegrind make test.valgrind
 </pre>
 <p class="Pp">As system libraries (most notably glibc) are also triggering
     errors, valgrind allows to suppress such errors using suppression files. The
@@ -1215,8 +1152,7 @@
     them. Some additional suppressions are defined in <i>t/perl.supp</i>.</p>
 <p class="Pp">To get valgrind and for more information see</p>
 <p class="Pp"></p>
-<pre>
-    http://valgrind.org/
+<pre>    http://valgrind.org/
 </pre>
 </section>
 <section class="Ss">
@@ -1230,8 +1166,7 @@
 <p class="Pp">To build perl with AddressSanitizer, your Configure invocation
     should look like:</p>
 <p class="Pp"></p>
-<pre>
-    sh Configure -des -Dcc=clang \
+<pre>    sh Configure -des -Dcc=clang \
        -Accflags=-faddress-sanitizer -Aldflags=-faddress-sanitizer \
        -Alddlflags=-shared\ -faddress-sanitizer
 </pre>
@@ -1297,8 +1232,7 @@
     collected during the execution.</p>
 <p class="Pp">quick hint:</p>
 <p class="Pp"></p>
-<pre>
-    $ sh Configure -des -Dusedevel -Accflags='-pg' \
+<pre>    $ sh Configure -des -Dusedevel -Accflags='-pg' \
         -Aldflags='-pg' -Alddlflags='-pg -shared' \
         &amp;&amp; make perl
     $ ./perl ... # creates gmon.out in current directory
@@ -1346,8 +1280,7 @@
     <i>Configure</i>.</p>
 <p class="Pp">quick hint:</p>
 <p class="Pp"></p>
-<pre>
-    $ sh Configure -des -Dusedevel -Doptimize='-g' \
+<pre>    $ sh Configure -des -Dusedevel -Doptimize='-g' \
         -Accflags='-fprofile-arcs -ftest-coverage' \
         -Aldflags='-fprofile-arcs -ftest-coverage' \
         -Alddlflags='-fprofile-arcs -ftest-coverage -shared' \
@@ -1367,8 +1300,7 @@
     should be installed if you have gcc 3.0 or newer installed). <i>gcov</i> is
     run on source code files, like this</p>
 <p class="Pp"></p>
-<pre>
-    gcov sv.c
+<pre>    gcov sv.c
 </pre>
 <p class="Pp">which will cause <i>sv.c.gcov</i> to be created. The <i>.gcov</i>
     files contain the source code annotated with relative frequencies of
@@ -1376,8 +1308,7 @@
     <i>.gcov</i> files for all profiled object files, you can run something like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    for file in `find . -name \*.gcno`
+<pre>    for file in `find . -name \*.gcno`
     do sh -c &quot;cd `dirname $file` &amp;&amp; gcov `basename $file .gcno`&quot;
     done
 </pre>
@@ -1408,8 +1339,7 @@
     don't want to see the &quot;global leaks&quot;: For example, for running
     under valgrind</p>
 <p class="Pp"></p>
-<pre>
-    env PERL_DESTRUCT_LEVEL=2 valgrind ./perl -Ilib t/foo/bar.t
+<pre>    env PERL_DESTRUCT_LEVEL=2 valgrind ./perl -Ilib t/foo/bar.t
 </pre>
 <p class="Pp">(Note: the mod_perl apache module uses also this environment
     variable for its own purposes and extended its semantics. Refer to the
@@ -1464,8 +1394,7 @@
     <span class="Li">$ENV</span>{PERL_MEM_LOG} to determine whether to log the
     event, and if so how:</p>
 <p class="Pp"></p>
-<pre>
-    $ENV{PERL_MEM_LOG} =~ /m/           Log all memory ops
+<pre>    $ENV{PERL_MEM_LOG} =~ /m/           Log all memory ops
     $ENV{PERL_MEM_LOG} =~ /s/           Log all SV ops
     $ENV{PERL_MEM_LOG} =~ /t/           include timestamp in Log
     $ENV{PERL_MEM_LOG} =~ /^(\d+)/      write to FD given (default is 2)
@@ -1492,8 +1421,7 @@
     you can display an SV's IV value with one click, without doing any typing.
     To do that simply edit ~/.ddd/init file and add after:</p>
 <p class="Pp"></p>
-<pre>
-  ! Display shortcuts.
+<pre>  ! Display shortcuts.
   Ddd*gdbDisplayShortcuts: \
   /t ()   // Convert to Bin\n\
   /d ()   // Convert to Dec\n\
@@ -1502,15 +1430,13 @@
 </pre>
 <p class="Pp">the following two lines:</p>
 <p class="Pp"></p>
-<pre>
-  ((XPV*) (())-&gt;sv_any )-&gt;xpv_pv  // 2pvx\n\
+<pre>  ((XPV*) (())-&gt;sv_any )-&gt;xpv_pv  // 2pvx\n\
   ((XPVIV*) (())-&gt;sv_any )-&gt;xiv_iv // 2ivx
 </pre>
 <p class="Pp">so now you can do ivx and pvx lookups or you can plug there the
     sv_peek &quot;conversion&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  Perl_sv_peek(my_perl, (SV*)()) // sv_peek
+<pre>  Perl_sv_peek(my_perl, (SV*)()) // sv_peek
 </pre>
 <p class="Pp">(The my_perl is for threaded builds.) Just remember that every
     line, but the last one, should end with \n\</p>
@@ -1630,8 +1556,7 @@
     also wish to run <span class="Li">&quot;Configure&quot;</span> with
     something like</p>
 <p class="Pp"></p>
-<pre>
-    -Accflags='-Wconversion -Wno-sign-conversion -Wno-shorten-64-to-32'
+<pre>    -Accflags='-Wconversion -Wno-sign-conversion -Wno-shorten-64-to-32'
 </pre>
 <p class="Pp">or your compiler's equivalent to make it easier to spot any unsafe
     truncations that show up.</p>
@@ -1646,8 +1571,7 @@
   .i Targets</a></h2>
 <p class="Pp">You can expand the macros in a <i>foo.c</i> file by saying</p>
 <p class="Pp"></p>
-<pre>
-    make foo.i
+<pre>    make foo.i
 </pre>
 <p class="Pp">which will expand the macros using cpp. Don't be scared by the
     results.</p>

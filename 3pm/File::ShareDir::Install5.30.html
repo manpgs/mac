@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::ShareDir::Install(3)</title>
 </head>
@@ -32,16 +33,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use ExtUtils::MakeMaker;
+<pre>    use ExtUtils::MakeMaker;
     use File::ShareDir::Install;
-
     install_share 'share';
     install_share dist =&gt; 'dist-share';
     install_share module =&gt; 'My::Module' =&gt; 'other-share';
-
     WriteMakefile( ... );       # As you normally would
-
     package MY;
     use File::ShareDir::Install qw(postamble);
 </pre>
@@ -63,8 +60,7 @@
 <h1 class="Sh" id="EXPORT"><a class="permalink" href="#EXPORT">EXPORT</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="install_share"><a class="permalink" href="#install_share">install_share</a></h2>
-<pre>
-    install_share $dir;
+<pre>    install_share $dir;
     install_share dist =&gt; $dir;
     install_share module =&gt; $module, $dir;
 </pre>
@@ -91,8 +87,7 @@
     that contain the same filenames, the last of these calls takes precedence.
     In other words, if you do:</p>
 <p class="Pp"></p>
-<pre>
-    install_share 'share1';
+<pre>    install_share 'share1';
     install_share 'share2';
 </pre>
 <p class="Pp">And both <span class="Li">&quot;share1&quot;</span> and
@@ -103,8 +98,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="delete_share"><a class="permalink" href="#delete_share">delete_share</a></h2>
-<pre>
-    delete_share $list;
+<pre>    delete_share $list;
     delete_share dist =&gt; $list;
     delete_share module =&gt; $module, $list;
 </pre>
@@ -119,13 +113,11 @@
     you may delete all previously installed files by putting the following at
     the top of your Makefile.PL.</p>
 <p class="Pp"></p>
-<pre>
-    delete_share '.';
+<pre>    delete_share '.';
 </pre>
 <p class="Pp">You can also selectively remove some files from installation.</p>
 <p class="Pp"></p>
-<pre>
-    install_share 'some-dir';
+<pre>    install_share 'some-dir';
     if( ... ) {
         delete_share 'not-this-file.rc';
     }
@@ -136,16 +128,13 @@
 <p class="Pp">This function must be exported into the MY package. You will
     normally do this with the following.</p>
 <p class="Pp"></p>
-<pre>
-    package MY;
+<pre>    package MY;
     use File::ShareDir::Install qw( postamble );
 </pre>
 <p class="Pp">If you need to overload postamble, use the following.</p>
 <p class="Pp"></p>
-<pre>
-    package MY;
+<pre>    package MY;
     use File::ShareDir::Install;
-
     sub postamble {
         my $self = shift;
         my @ret = File::ShareDir::Install::postamble( $self );
@@ -182,8 +171,7 @@
     control the behaviour for each directory.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    $INCLUDE_DOTDIRS = 1;
+<pre>    $INCLUDE_DOTDIRS = 1;
     install_share 'share1';
     $INCLUDE_DOTFILES = 1;
     $INCLUDE_DOTDIRS = 0;

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Tie::Memoize(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  require Tie::Memoize;
+<pre>  require Tie::Memoize;
   tie %hash, 'Tie::Memoize',
       \&amp;fetch,                  # The rest is optional
       $DATA, \&amp;exists,
@@ -66,8 +66,7 @@
 <p class="Pp">The structure of the <b>tied()</b> data is an array reference with
     elements</p>
 <p class="Pp"></p>
-<pre>
-  0:  cache of known values
+<pre>  0:  cache of known values
   1:  cache of known existence of keys
   2:  FETCH  function
   3:  EXISTS function
@@ -78,14 +77,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-  sub slurp {
+<pre>  sub slurp {
     my ($key, $dir) = shift;
     open my $h, '&lt;', &quot;$dir/$key&quot; or return;
     local $/; &lt;$h&gt;                      # slurp it all
   }
   sub exists { my ($key, $dir) = shift; return -f &quot;$dir/$key&quot; }
-
   tie %hash, 'Tie::Memoize', \&amp;slurp, $directory, \&amp;exists,
       { fake_file1 =&gt; $content1, fake_file2 =&gt; $content2 },
       { pretend_does_not_exists =&gt; 0, known_to_exist =&gt; 1 };

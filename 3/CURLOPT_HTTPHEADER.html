@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_HTTPHEADER(3)</title>
 </head>
@@ -40,13 +43,13 @@
 <p class="Pp"></p>
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp">CURLOPT_HTTPHEADER - custom HTTP headers</p>
+<p class="Pp">CURLOPT_HTTPHEADER - set of HTTP headers</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_HTTPHEADER, struct
-    curl_slist *headers);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_HTTPHEADER,
+                          struct curl_slist *headers);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -86,6 +89,24 @@
     the behavior.</p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="SPECIFIC_HEADERS"><a class="permalink" href="#SPECIFIC_HEADERS">SPECIFIC
+  HEADERS</a></h1>
+<p class="Pp">Setting some specific headers will cause libcurl to act
+    differently.</p>
+<dl class="Bl-tag">
+  <dt id="Host:"><a class="permalink" href="#Host:">Host:</a></dt>
+  <dd>The specified host name will be used for cookie matching if the cookie
+      engine is also enabled for this transfer. If the request is done over
+      HTTP/2 or HTTP/3, the custom host name will instead be used in the
+      &quot;:authority&quot; header field and Host: will not be sent at all over
+      the wire.</dd>
+  <dt id="Transfer-Encoding:"><a class="permalink" href="#Transfer-Encoding:">Transfer-Encoding:
+    chunked</a></dt>
+  <dd>Tells libcurl the upload is to be done using this chunked encoding instead
+      of providing the Content-Length: field in the request.</dd>
+</dl>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="SECURITY_CONCERNS"><a class="permalink" href="#SECURITY_CONCERNS">SECURITY
   CONCERNS</a></h1>
 <p class="Pp">By default, this option makes libcurl send the given headers in
@@ -120,8 +141,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 struct curl_slist *list = NULL;
 if(curl) {
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
@@ -129,9 +149,8 @@ if(curl) {
   list = curl_slist_append(list, &quot;Accept:&quot;);
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
   curl_easy_perform(curl);
-  curl_slist_free_all(list); /* free the list again */
-}
-</pre>
+  curl_slist_free_all(list); /* free the list */
+}</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -153,8 +172,8 @@ if(curl) {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 8, 2021</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">June 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

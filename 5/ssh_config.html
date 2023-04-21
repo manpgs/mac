@@ -35,10 +35,11 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $OpenBSD: ssh_config.5,v 1.353 2021/04/04 11:36:56 jmc Exp $
+   $OpenBSD: ssh_config.5,v 1.371 2022/03/31 17:58:44 naddy Exp $
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SSH_CONFIG(5)</title>
 </head>
@@ -225,7 +226,9 @@
     <p class="Pp">If this option is enabled, then the configuration files are
         processed again using the new target name to pick up any new
         configuration in matching <code class="Cm">Host</code> and
-        <code class="Cm">Match</code> stanzas.</p>
+        <code class="Cm">Match</code> stanzas. A value of
+        <code class="Cm">none</code> disables the use of a
+        <code class="Cm">ProxyJump</code> host.</p>
   </dd>
   <dt id="CanonicalizeMaxDots"><a class="permalink" href="#CanonicalizeMaxDots"><code class="Cm">CanonicalizeMaxDots</code></a></dt>
   <dd>Specifies the maximum number of dot characters in a hostname before
@@ -244,17 +247,25 @@
         hostnames matching &quot;*.a.example.com&quot; to be canonicalized to
         names in the &quot;*.b.example.com&quot; or &quot;*.c.example.com&quot;
         domains.</p>
+    <p class="Pp">A single argument of &quot;none&quot; causes no CNAMEs to be
+        considered for canonicalization. This is the default behaviour.</p>
   </dd>
   <dt id="CASignatureAlgorithms"><a class="permalink" href="#CASignatureAlgorithms"><code class="Cm">CASignatureAlgorithms</code></a></dt>
   <dd>Specifies which algorithms are allowed for signing of certificates by
       certificate authorities (CAs). The default is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519,ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
+    <p class="Pp">If the specified list begins with a &#x2018;+&#x2019;
+        character, then the specified algorithms will be appended to the default
+        set instead of replacing them. If the specified list begins with a
+        &#x2018;-&#x2019; character, then the specified algorithms (including
+        wildcards) will be removed from the default set instead of replacing
+        them.</p>
     <p class="Pp"><a class="Xr" href="../1/ssh">ssh(1)</a> will not accept host
         certificates signed using algorithms other than those specified.</p>
   </dd>
@@ -278,12 +289,8 @@ rsa-sha2-512,rsa-sha2-256
         Multiple <code class="Cm">CertificateFile</code> directives will add to
         the list of certificates used for authentication.</p>
   </dd>
-  <dt id="ChallengeResponseAuthentication"><a class="permalink" href="#ChallengeResponseAuthentication"><code class="Cm">ChallengeResponseAuthentication</code></a></dt>
-  <dd>Specifies whether to use challenge-response authentication. The argument
-      to this keyword must be <code class="Cm">yes</code> (the default) or
-      <code class="Cm">no</code>.</dd>
   <dt id="CheckHostIP"><a class="permalink" href="#CheckHostIP"><code class="Cm">CheckHostIP</code></a></dt>
-  <dd>If set to <code class="Cm">yes</code>
+  <dd>If set to <code class="Cm">yes</code>,
       <a class="Xr" href="../1/ssh">ssh(1)</a> will additionally check the host
       IP address in the <span class="Pa">known_hosts</span> file. This allows it
       to detect if a host key changed due to DNS spoofing and will add addresses
@@ -302,9 +309,8 @@ rsa-sha2-512,rsa-sha2-256
       If the specified list begins with a &#x2018;^&#x2019; character, then the
       specified ciphers will be placed at the head of the default set.
     <p class="Pp">The supported ciphers are:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-3des-cbc
+    <div class="Bd Pp Bd-indent Li">
+    <pre>3des-cbc
 aes128-cbc
 aes192-cbc
 aes256-cbc
@@ -313,16 +319,13 @@ aes192-ctr
 aes256-ctr
 aes128-gcm@openssh.com
 aes256-gcm@openssh.com
-chacha20-poly1305@openssh.com
-    </pre>
+chacha20-poly1305@openssh.com</pre>
     </div>
     <p class="Pp">The default is:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-chacha20-poly1305@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>chacha20-poly1305@openssh.com,
 aes128-ctr,aes192-ctr,aes256-ctr,
-aes128-gcm@openssh.com,aes256-gcm@openssh.com
-    </pre>
+aes128-gcm@openssh.com,aes256-gcm@openssh.com</pre>
     </div>
     <p class="Pp">The list of available ciphers may also be obtained using
         &quot;ssh -Q cipher&quot;.</p>
@@ -461,6 +464,26 @@ aes128-gcm@openssh.com,aes256-gcm@openssh.com
   <dd>Specifies the hash algorithm used when displaying key fingerprints. Valid
       options are: <code class="Cm">md5</code> and
       <code class="Cm">sha256</code> (the default).</dd>
+  <dt id="ForkAfterAuthentication"><a class="permalink" href="#ForkAfterAuthentication"><code class="Cm">ForkAfterAuthentication</code></a></dt>
+  <dd>Requests <code class="Nm">ssh</code> to go to background just before
+      command execution. This is useful if <code class="Nm">ssh</code> is going
+      to ask for passwords or passphrases, but the user wants it in the
+      background. This implies the <code class="Cm">StdinNull</code>
+      configuration option being set to &#x201C;yes&#x201D;. The recommended way
+      to start X11 programs at a remote site is with something like
+      <code class="Ic">ssh -f host xterm</code>, which is the same as
+      <code class="Ic">ssh host xterm</code> if the
+      <code class="Cm">ForkAfterAuthentication</code> configuration option is
+      set to &#x201C;yes&#x201D;.
+    <p class="Pp">If the <code class="Cm">ExitOnForwardFailure</code>
+        configuration option is set to &#x201C;yes&#x201D;, then a client
+        started with the <code class="Cm">ForkAfterAuthentication</code>
+        configuration option being set to &#x201C;yes&#x201D; will wait for all
+        remote port forwards to be successfully established before placing
+        itself in the background. The argument to this keyword must be
+        <code class="Cm">yes</code> (same as the <code class="Fl">-f</code>
+        option) or <code class="Cm">no</code> (the default).</p>
+  </dd>
   <dt id="ForwardAgent"><a class="permalink" href="#ForwardAgent"><code class="Cm">ForwardAgent</code></a></dt>
   <dd>Specifies whether the connection to the authentication agent (if any) will
       be forwarded to the remote machine. The argument may be
@@ -549,9 +572,8 @@ aes128-gcm@openssh.com,aes256-gcm@openssh.com
       specified list begins with a &#x2018;^&#x2019; character, then the
       specified signature algorithms will be placed at the head of the default
       set. The default for this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -559,13 +581,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">The <code class="Fl">-Q</code> option of
         <a class="Xr" href="../1/ssh">ssh(1)</a> may be used to list supported
@@ -585,9 +605,8 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       default set instead of replacing them. If the specified list begins with a
       &#x2018;^&#x2019; character, then the specified signature algorithms will
       be placed at the head of the default set. The default for this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -595,13 +614,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ecdsa-sha2-nistp256@openssh.com,
 sk-ssh-ed25519@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">If hostkeys are known for the destination host then this
         default is modified to prefer their algorithms.</p>
@@ -656,12 +673,12 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="IdentityFile"><a class="permalink" href="#IdentityFile"><code class="Cm">IdentityFile</code></a></dt>
   <dd>Specifies a file from which the user's DSA, ECDSA, authenticator-hosted
       ECDSA, Ed25519, authenticator-hosted Ed25519 or RSA authentication
-      identity is read. The default is <span class="Pa">~/.ssh/id_dsa</span>,
+      identity is read. The default is <span class="Pa">~/.ssh/id_rsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa_sk</span>,
       <span class="Pa">~/.ssh/id_ed25519</span>,
       <span class="Pa">~/.ssh/id_ed25519_sk</span> and
-      <span class="Pa">~/.ssh/id_rsa</span>. Additionally, any identities
+      <span class="Pa">~/.ssh/id_dsa</span>. Additionally, any identities
       represented by the authentication agent will be used for authentication
       unless <code class="Cm">IdentitiesOnly</code> is set. If no certificates
       have been explicitly specified by <code class="Cm">CertificateFile</code>,
@@ -730,7 +747,9 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="KbdInteractiveAuthentication"><a class="permalink" href="#KbdInteractiveAuthentication"><code class="Cm">KbdInteractiveAuthentication</code></a></dt>
   <dd>Specifies whether to use keyboard-interactive authentication. The argument
       to this keyword must be <code class="Cm">yes</code> (the default) or
-      <code class="Cm">no</code>.</dd>
+      <code class="Cm">no</code>.
+      <code class="Cm">ChallengeResponseAuthentication</code> is a deprecated
+      alias for this.</dd>
   <dt id="KbdInteractiveDevices"><a class="permalink" href="#KbdInteractiveDevices"><code class="Cm">KbdInteractiveDevices</code></a></dt>
   <dd>Specifies the list of methods to use in keyboard-interactive
       authentication. Multiple method names must be comma-separated. The default
@@ -740,22 +759,21 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="KexAlgorithms"><a class="permalink" href="#KexAlgorithms"><code class="Cm">KexAlgorithms</code></a></dt>
   <dd>Specifies the available KEX (Key Exchange) algorithms. Multiple algorithms
       must be comma-separated. If the specified list begins with a
-      &#x2018;+&#x2019; character, then the specified methods will be appended
-      to the default set instead of replacing them. If the specified list begins
-      with a &#x2018;-&#x2019; character, then the specified methods (including
-      wildcards) will be removed from the default set instead of replacing them.
-      If the specified list begins with a &#x2018;^&#x2019; character, then the
-      specified methods will be placed at the head of the default set. The
-      default is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
+      &#x2018;+&#x2019; character, then the specified algorithms will be
+      appended to the default set instead of replacing them. If the specified
+      list begins with a &#x2018;-&#x2019; character, then the specified
+      algorithms (including wildcards) will be removed from the default set
+      instead of replacing them. If the specified list begins with a
+      &#x2018;^&#x2019; character, then the specified algorithms will be placed
+      at the head of the default set. The default is:
+    <div class="Bd Pp Bd-indent Li">
+    <pre>sntrup761x25519-sha512@openssh.com,
 curve25519-sha256,curve25519-sha256@libssh.org,
 ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,
 diffie-hellman-group-exchange-sha256,
 diffie-hellman-group16-sha512,
 diffie-hellman-group18-sha512,
-diffie-hellman-group14-sha256
-    </pre>
+diffie-hellman-group14-sha256</pre>
     </div>
     <p class="Pp">The list of available key exchange algorithms may also be
         obtained using &quot;ssh -Q kex&quot;.</p>
@@ -822,10 +840,8 @@ diffie-hellman-group14-sha256
   <dd>Specify one or more overrides to LogLevel. An override consists of a
       pattern lists that matches the source file, function and line number to
       force detailed logging for. For example, an override pattern of:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*</pre>
     </div>
     <p class="Pp" id="kex_exchange_identification">would enable detailed logging
         for line 1000 of <span class="Pa">kex.c</span>, everything in the
@@ -849,14 +865,12 @@ kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*
         after encryption (encrypt-then-mac). These are considered safer and
         their use recommended.</p>
     <p class="Pp">The default is:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-umac-64-etm@openssh.com,umac-128-etm@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>umac-64-etm@openssh.com,umac-128-etm@openssh.com,
 hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,
 hmac-sha1-etm@openssh.com,
 umac-64@openssh.com,umac-128@openssh.com,
-hmac-sha2-256,hmac-sha2-512,hmac-sha1
-    </pre>
+hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
     </div>
     <p class="Pp">The list of available MAC algorithms may also be obtained
         using &quot;ssh -Q mac&quot;.</p>
@@ -913,11 +927,9 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1
       This allows a client to prefer one method (e.g.
       <code class="Cm">keyboard-interactive</code>) over another method (e.g.
       <code class="Cm">password</code>). The default is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-gssapi-with-mic,hostbased,publickey,
-keyboard-interactive,password
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>gssapi-with-mic,hostbased,publickey,
+keyboard-interactive,password</pre>
     </div>
   </dd>
   <dt id="ProxyCommand"><a class="permalink" href="#ProxyCommand"><code class="Cm">ProxyCommand</code></a></dt>
@@ -940,10 +952,8 @@ keyboard-interactive,password
         <a class="Xr" href="../1/nc">nc(1)</a> and its proxy support. For
         example, the following directive would connect via an HTTP proxy at
         192.0.2.0:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p</pre>
     </div>
   </dd>
   <dt id="ProxyJump"><a class="permalink" href="#ProxyJump"><code class="Cm">ProxyJump</code></a></dt>
@@ -979,9 +989,8 @@ ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p
       default set instead of replacing them. If the specified list begins with a
       &#x2018;^&#x2019; character, then the specified algorithms will be placed
       at the head of the default set. The default for this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -989,21 +998,23 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">The list of available signature algorithms may also be
         obtained using &quot;ssh -Q PubkeyAcceptedAlgorithms&quot;.</p>
   </dd>
   <dt id="PubkeyAuthentication"><a class="permalink" href="#PubkeyAuthentication"><code class="Cm">PubkeyAuthentication</code></a></dt>
   <dd>Specifies whether to try public key authentication. The argument to this
-      keyword must be <code class="Cm">yes</code> (the default) or
-      <code class="Cm">no</code>.</dd>
+      keyword must be <code class="Cm">yes</code> (the default),
+      <code class="Cm">no</code>, <code class="Cm">unbound</code> or
+      <code class="Cm">host-bound</code>. The final two options enable public
+      key authentication while respectively disabling or enabling the OpenSSH
+      host-bound authentication protocol extension required for restricted
+      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a> forwarding.</dd>
   <dt id="RekeyLimit"><a class="permalink" href="#RekeyLimit"><code class="Cm">RekeyLimit</code></a></dt>
   <dd>Specifies the maximum amount of data that may be transmitted before the
       session key is renegotiated, optionally followed by a maximum amount of
@@ -1037,7 +1048,7 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       <var class="Ar">host</var>:<var class="Ar">hostport</var> or a Unix domain
       socket path, otherwise if no destination argument is specified then the
       remote forwarding will be established as a SOCKS proxy. When acting as a
-      SOCKS proxy the destination of the connection can be restricted by
+      SOCKS proxy, the destination of the connection can be restricted by
       <code class="Cm">PermitRemoteOpen</code>.
     <p class="Pp">IPv6 addresses can be specified by enclosing addresses in
         square brackets. Multiple forwardings may be specified, and additional
@@ -1130,10 +1141,27 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       send a message through the encrypted channel to request a response from
       the server. The default is 0, indicating that these messages will not be
       sent to the server.</dd>
+  <dt id="SessionType"><a class="permalink" href="#SessionType"><code class="Cm">SessionType</code></a></dt>
+  <dd>May be used to either request invocation of a subsystem on the remote
+      system, or to prevent the execution of a remote command at all. The latter
+      is useful for just forwarding ports. The argument to this keyword must be
+      <code class="Cm">none</code> (same as the <code class="Fl">-N</code>
+      option), <code class="Cm">subsystem</code> (same as the
+      <code class="Fl">-s</code> option) or <code class="Cm">default</code>
+      (shell or command execution).</dd>
   <dt id="SetEnv"><a class="permalink" href="#SetEnv"><code class="Cm">SetEnv</code></a></dt>
   <dd>Directly specify one or more environment variables and their contents to
-      be sent to the server. Similarly to <code class="Cm">SendEnv</code>, the
-      server must be prepared to accept the environment variable.</dd>
+      be sent to the server. Similarly to <code class="Cm">SendEnv</code>, with
+      the exception of the <code class="Ev">TERM</code> variable, the server
+      must be prepared to accept the environment variable.</dd>
+  <dt id="StdinNull"><a class="permalink" href="#StdinNull"><code class="Cm">StdinNull</code></a></dt>
+  <dd>Redirects stdin from <span class="Pa">/dev/null</span> (actually, prevents
+      reading from stdin). Either this or the equivalent
+      <code class="Fl">-n</code> option must be used when
+      <code class="Nm">ssh</code> is run in the background. The argument to this
+      keyword must be <code class="Cm">yes</code> (same as the
+      <code class="Fl">-n</code> option) or <code class="Cm">no</code> (the
+      default).</dd>
   <dt id="StreamLocalBindMask"><a class="permalink" href="#StreamLocalBindMask"><code class="Cm">StreamLocalBindMask</code></a></dt>
   <dd>Sets the octal file creation mode mask (umask) used when creating a
       Unix-domain socket file for local or remote port forwarding. This option
@@ -1161,10 +1189,11 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       annoying when the <span class="Pa">/etc/ssh/ssh_known_hosts</span> file is
       poorly maintained or when connections to new hosts are frequently made.
       This option forces the user to manually add all new hosts.
-    <p class="Pp">If this flag is set to &#x201C;accept-new&#x201D; then ssh
-        will automatically add new host keys to the user known hosts files, but
-        will not permit connections to hosts with changed host keys. If this
-        flag is set to &#x201C;no&#x201D; or &#x201C;off&#x201D;, ssh will
+    <p class="Pp">If this flag is set to <code class="Cm">accept-new</code> then
+        ssh will automatically add new host keys to the user's
+        <span class="Pa">known_hosts</span> file, but will not permit
+        connections to hosts with changed host keys. If this flag is set to
+        <code class="Cm">no</code> or <code class="Cm">off</code>, ssh will
         automatically add new host keys to the user known hosts files and allow
         connections to hosts with changed hostkeys to proceed, subject to some
         restrictions. If this flag is set to <code class="Cm">ask</code> (the
@@ -1378,7 +1407,7 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       tunnel forwarding was requested, or &quot;NONE&quot; otherwise.</dd>
   <dt>%t</dt>
   <dd>The type of the server host key, e.g.
-    <code class="Cm">ssh-ed25519</code></dd>
+    <code class="Cm">ssh-ed25519</code>.</dd>
   <dt>%u</dt>
   <dd>The local username.</dd>
 </dl>
@@ -1451,8 +1480,8 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 4, 2021</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">March 31, 2022</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::Control::VLV(3)</title>
 </head>
@@ -29,13 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::LDAP;
+<pre> use Net::LDAP;
  use Net::LDAP::Control::VLV;
  use Net::LDAP::Constant qw( LDAP_CONTROL_VLVRESPONSE );
-
  $ldap = Net::LDAP-&gt;new( &quot;ldap.mydomain.eg&quot; );
-
  # Get the first 20 entries
  $vlv  = Net::LDAP::Control::VLV-&gt;new(
            before  =&gt; 0,        # No entries from before target entry
@@ -44,43 +42,32 @@
            offset  =&gt; 1,        # Target entry is the first
          );
  $sort = Net::LDAP::Control::Sort-&gt;new( order =&gt; 'cn' );
-
  @args = ( base     =&gt; &quot;o=Ace Industry, c=us&quot;,
            scope    =&gt; &quot;subtree&quot;,
            filter   =&gt; &quot;(objectClass=inetOrgPerson)&quot;,
            callback =&gt; \&amp;process_entry, # Call this sub for each entry
            control  =&gt; [ $vlv, $sort ],
  );
-
  $mesg = $ldap-&gt;search( @args );
-
  # Get VLV response control
  ($resp)  = $mesg-&gt;control( LDAP_CONTROL_VLVRESPONSE )  or die;
  $vlv-&gt;response( $resp );
-
  # Set the control to get the last 20 entries
  $vlv-&gt;end;
-
  $mesg = $ldap-&gt;search( @args );
-
  # Get VLV response control
  ($resp)  = $mesg-&gt;control( LDAP_CONTROL_VLVRESPONSE )  or die;
  $vlv-&gt;response( $resp );
-
  # Now get the previous page
  $vlv-&gt;scroll_page( -1 );
-
  $mesg = $ldap-&gt;search( @args );
-
  # Get VLV response control
  ($resp)  = $mesg-&gt;control( LDAP_CONTROL_VLVRESPONSE )  or die;
  $vlv-&gt;response( $resp );
-
  # Now page with first entry starting with &quot;B&quot; in the middle
  $vlv-&gt;before(9);       # Change page to show 9 before
  $vlv-&gt;after(10);       # Change page to show 10 after
  $vlv-&gt;assert(&quot;B&quot;);     # assert &quot;B&quot;
-
  $mesg = $ldap-&gt;search( @args );
 </pre>
 </section>

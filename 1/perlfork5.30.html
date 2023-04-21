@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFORK(1)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    NOTE:  As of the 5.8.0 release, fork() emulation has considerably
+<pre>    NOTE:  As of the 5.8.0 release, fork() emulation has considerably
     matured.  However, there are still a few known bugs and differences
     from real fork() that might affect you.  See the &quot;BUGS&quot; and
     &quot;CAVEATS AND LIMITATIONS&quot; sections below.
@@ -186,8 +186,7 @@
       BEGIN block, but will not continue parsing the source stream after the
       BEGIN block. For example, consider the following code:
     <p class="Pp"></p>
-    <pre>
-    BEGIN {
+    <pre>    BEGIN {
         fork and exit;          # fork child and exit the parent
         print &quot;inner\n&quot;;
     }
@@ -195,13 +194,11 @@
     </pre>
     <p class="Pp">This will print:</p>
     <p class="Pp"></p>
-    <pre>
-    inner
+    <pre>    inner
     </pre>
     <p class="Pp">rather than the expected:</p>
     <p class="Pp"></p>
-    <pre>
-    inner
+    <pre>    inner
     outer
     </pre>
     <p class="Pp">This limitation arises from fundamental technical difficulties
@@ -245,8 +242,7 @@
       new code by creating a pipe explicitly. The following example shows how to
       write to a forked child:
     <p class="Pp"></p>
-    <pre>
-    # simulate open(FOO, &quot;|-&quot;)
+    <pre>    # simulate open(FOO, &quot;|-&quot;)
     sub pipe_to_fork ($) {
         my $parent = shift;
         pipe my $child, $parent or die;
@@ -261,7 +257,6 @@
         }
         $pid;
     }
-
     if (pipe_to_fork('FOO')) {
         # parent
         print FOO &quot;pipe_to_fork\n&quot;;
@@ -275,8 +270,7 @@
     </pre>
     <p class="Pp">And this one reads from the child:</p>
     <p class="Pp"></p>
-    <pre>
-    # simulate open(FOO, &quot;-|&quot;)
+    <pre>    # simulate open(FOO, &quot;-|&quot;)
     sub pipe_from_fork ($) {
         my $parent = shift;
         pipe $parent, my $child or die;
@@ -291,7 +285,6 @@
         }
         $pid;
     }
-
     if (pipe_from_fork('BAR')) {
         # parent
         while (&lt;BAR&gt;) { print; }

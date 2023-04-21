@@ -6,6 +6,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>EXP(3)</title>
 </head>
@@ -104,17 +105,13 @@
     algebraic manipulation may be necessary to take advantage of the
     <code class="Fn">expm1</code>() function. Consider the following example,
     abstracted from a developer's actual production code in a bug report:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-double z = exp(-x/y)*(x*x/y/y + 2*x/y + 2) - 2
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>double z = exp(-x/y)*(x*x/y/y + 2*x/y + 2) - 2</pre>
 </div>
 <p class="Pp">When <var class="Fa">x</var> is small relative to
     <var class="Fa">y</var>, this expression is approximately equal to:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-double z = 2*(exp(-x/y) - 1)
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>double z = 2*(exp(-x/y) - 1)</pre>
 </div>
 <p class="Pp" id="expm1">and all precision of the result is lost in the
     computation due to catastrophic cancellation. The developer was aware that
@@ -123,20 +120,16 @@ double z = 2*(exp(-x/y) - 1)
     advantage of the
     <a class="permalink" href="#expm1"><code class="Fn">expm1</code></a>()
     function:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-  exp(-x/y)*(x*x/y/y + 2*x/y + 2) - 2
-= (2*exp(-x/y) - 2) + exp(-x/y)*((x*x)/(y*y) + 2*x/y)
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>  exp(-x/y)*(x*x/y/y + 2*x/y + 2) - 2
+= (2*exp(-x/y) - 2) + exp(-x/y)*((x*x)/(y*y) + 2*x/y)</pre>
 </div>
 <p class="Pp">This transformation allows the result to be computed to a high
     degree of accuracy as follows:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-const double r = x/y;
+<div class="Bd Pp Bd-indent Li">
+<pre>const double r = x/y;
 const double emrm1 = expm1(-r);
-double z = 2.0*emrm1 + (1.0 + emrm1)*(2.0 + r)*r;
-</pre>
+double z = 2.0*emrm1 + (1.0 + emrm1)*(2.0 + r)*r;</pre>
 </div>
 <p class="Pp" id="exp~4">It is not always easy to spot such opportunities for
     improvement; if an expression involving

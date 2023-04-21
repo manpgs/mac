@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::BestPractices(3)</title>
 </head>
@@ -43,18 +44,12 @@
 <p class="Pp">We recommend that you remove the Moose sugar and end your Moose
     class definitions by making your class immutable.</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Moose;
   use namespace::autoclean;
-
   # extends, roles, attributes, etc.
-
   # methods
-
   __PACKAGE__-&gt;meta-&gt;make_immutable;
-
   1;
 </pre>
 <p class="Pp">The <span class="Li">&quot;use namespace::autoclean&quot;</span>
@@ -154,8 +149,7 @@
 <p class="Pp">In order to declare such attributes, provide a private
     <span class="Li">&quot;writer&quot;</span> parameter:</p>
 <p class="Pp"></p>
-<pre>
-    has pizza =&gt; (
+<pre>    has pizza =&gt; (
         is     =&gt; 'ro',
         isa    =&gt; 'Pizza',
         writer =&gt; '_pizza',
@@ -206,17 +200,14 @@
     <span class="Li">&quot;ArrayRef&quot;</span>, this will affect every
     application in the Perl interpreter that uses this type.</p>
 <p class="Pp"></p>
-<pre>
-    # very naughty!
+<pre>    # very naughty!
     coerce 'ArrayRef'
         =&gt; from Str
         =&gt; via { [ split /,/ ] };
 </pre>
 <p class="Pp">Instead, create a subtype and coerce that:</p>
 <p class="Pp"></p>
-<pre>
-    subtype 'My::ArrayRef' =&gt; as 'ArrayRef';
-
+<pre>    subtype 'My::ArrayRef' =&gt; as 'ArrayRef';
     coerce 'My::ArrayRef'
         =&gt; from 'Str'
         =&gt; via { [ split /,/ ] };
@@ -229,8 +220,7 @@
     entire interpreter. If you add a coercion for that class name, it can have
     magical side effects elsewhere:</p>
 <p class="Pp"></p>
-<pre>
-    # also very naughty!
+<pre>    # also very naughty!
     coerce 'HTTP::Headers'
         =&gt; from 'HashRef'
         =&gt; via { HTTP::Headers-&gt;new( %{$_} ) };
@@ -238,9 +228,7 @@
 <p class="Pp">Instead, we can create an &quot;empty&quot; subtype for the
     coercion:</p>
 <p class="Pp"></p>
-<pre>
-    subtype 'My::HTTP::Headers' =&gt; as class_type('HTTP::Headers');
-
+<pre>    subtype 'My::HTTP::Headers' =&gt; as class_type('HTTP::Headers');
     coerce 'My::HTTP::Headers'
         =&gt; from 'HashRef'
         =&gt; via { HTTP::Headers-&gt;new( %{$_} ) };

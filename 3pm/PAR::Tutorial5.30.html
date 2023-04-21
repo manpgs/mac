@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PAR::Tutorial(3)</title>
 </head>
@@ -38,8 +39,7 @@
 <section class="Ss">
 <h2 class="Ss" id="On_Deploying_Perl_Applications"><a class="permalink" href="#On_Deploying_Perl_Applications">On
   Deploying Perl Applications</a></h2>
-<pre>
- % sshnuke.pl 10.2.2.2 -rootpw=&quot;Z1ON0101&quot;
+<pre> % sshnuke.pl 10.2.2.2 -rootpw=&quot;Z1ON0101&quot;
  Perl v5.6.1 required--this is only v5.6.0, stopped at sshnuke.pl line 1.
  BEGIN failed--compilation aborted at sshnuke.pl line 1.
 </pre>
@@ -110,8 +110,7 @@
   <li>PAR also comes with <span class="Li">&quot;pp&quot;</span>, the Perl
       Packager:
     <p class="Pp"></p>
-    <pre>
- % pp -o sshnuke.exe sshnuke.pl # stand-alone executable!
+    <pre> % pp -o sshnuke.exe sshnuke.pl # stand-alone executable!
     </pre>
   </li>
 </ul>
@@ -125,23 +124,20 @@
   <li>PAR files are just Zip files with modules in it</li>
   <li>Any Zip tools can generate them:
     <p class="Pp"></p>
-    <pre>
- % zip foo.par Hello.pm World.pm        # pack two modules
+    <pre> % zip foo.par Hello.pm World.pm        # pack two modules
  % zip -r bar.par lib/          # grab all modules in lib/
     </pre>
   </li>
   <li>To load modules from PAR files:
     <p class="Pp"></p>
-    <pre>
- use PAR;
+    <pre> use PAR;
  use lib &quot;foo.par&quot;;             # the .par part is optional
  use Hello;
     </pre>
   </li>
   <li>This also works:
     <p class="Pp"></p>
-    <pre>
- use PAR &quot;/home/mylibs/*.par&quot;;  # put all of them into @INC
+    <pre> use PAR &quot;/home/mylibs/*.par&quot;;  # put all of them into @INC
  use Hello;
     </pre>
   </li>
@@ -153,16 +149,14 @@
   <li>Use <span class="Li">&quot;par.pl&quot;</span> to run files inside a PAR
       archive:
     <p class="Pp"></p>
-    <pre>
- % par.pl foo.par               # looks for 'main.pl' by default
+    <pre> % par.pl foo.par               # looks for 'main.pl' by default
  % par.pl foo.par test.pl       # runs script/test.pl in foo.par
     </pre>
   </li>
   <li>Same thing, with the stand-alone <span class="Li">&quot;parl&quot;</span>
       or <span class="Li">&quot;parl.exe&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- % parl foo.par                 # no perl or PAR.pm needed!
+    <pre> % parl foo.par                 # no perl or PAR.pm needed!
  % parl foo.par test.pl         # ditto
     </pre>
   </li>
@@ -173,15 +167,13 @@
   <li><span class="Li">&quot;-b&quot;</span> bundles non-core modules needed by
       <span class="Li">&quot;PAR.pm&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- % par.pl -b -O./foo.pl foo.par # self-contained script
+    <pre> % par.pl -b -O./foo.pl foo.par # self-contained script
     </pre>
   </li>
   <li><span class="Li">&quot;-B&quot;</span> bundles core modules in addition to
       <span class="Li">&quot;-b&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- % parl -B -O./foo.exe foo.par  # self-contained binary
+    <pre> % parl -B -O./foo.exe foo.par  # self-contained binary
     </pre>
   </li>
 </ul>
@@ -195,8 +187,7 @@
   <li>Recursively scan dependencies with
       <span class="Li">&quot;scandeps.pl&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- % scandeps.pl sshnuke.pl
+    <pre> % scandeps.pl sshnuke.pl
  # Legend: [C]ore [X]ternal [S]ubmodule [?]NotOnCPAN
  'Crypt::SSLeay'       =&gt; '0', #  X   #
  'Net::HTTP'           =&gt; '0', #      #
@@ -207,8 +198,7 @@
   </li>
   <li>Scan an one-liner, list all involved files:
     <p class="Pp"></p>
-    <pre>
- % scandeps.pl -V -e &quot;use Dynaloader;&quot;
+    <pre> % scandeps.pl -V -e &quot;use Dynaloader;&quot;
  ...
  # auto/DynaLoader/dl_findfile.al [autoload]
  # auto/DynaLoader/extralibs.ld [autoload]
@@ -225,27 +215,23 @@
 <ul class="Bl-bullet">
   <li>Combines scanning, zipping and loader-embedding:
     <p class="Pp"></p>
-    <pre>
- % pp -o out.exe src.pl         # self-contained .exe
+    <pre> % pp -o out.exe src.pl         # self-contained .exe
  % out.exe                      # runs anywhere on the same OS
     </pre>
   </li>
   <li>Bundle additional modules:
     <p class="Pp"></p>
-    <pre>
- % pp -o out.exe -M CGI src.pl  # pack CGI + its dependencies, too
+    <pre> % pp -o out.exe -M CGI src.pl  # pack CGI + its dependencies, too
     </pre>
   </li>
   <li>Pack one-liners:
     <p class="Pp"></p>
-    <pre>
- % pp -o out.exe -e 'print &quot;Hi!&quot;'   # turns one-liner into executable
+    <pre> % pp -o out.exe -e 'print &quot;Hi!&quot;'   # turns one-liner into executable
     </pre>
   </li>
   <li>Generate PAR files instead of executables:
     <p class="Pp"></p>
-    <pre>
- % pp -p src.pl                 # makes 'source.par'
+    <pre> % pp -p src.pl                 # makes 'source.par'
  % pp -B -p src.pl              # include core modules
     </pre>
   </li>
@@ -264,8 +250,7 @@
   <dt>&#x2022;</dt>
   <dd>Also supports <span class="Li">&quot;gcc&quot;</span>-style long options:
     <p class="Pp"></p>
-    <pre>
- % pp --gui --verbose --output=out.exe src.pl
+    <pre> % pp --gui --verbose --output=out.exe src.pl
     </pre>
   </dd>
 </dl>
@@ -287,24 +272,21 @@
 <ul class="Bl-bullet">
   <li>A common question:
     <p class="Pp"></p>
-    <pre>
- &gt; I have used pp to make several standalone applications which work
+    <pre> &gt; I have used pp to make several standalone applications which work
  &gt; great, the only problem is that for each executable that I make, I am
  &gt; assuming the parl.exe is somehow bundled into the resulting exe.
     </pre>
   </li>
   <li>The obvious workaround:
     <p class="Pp"></p>
-    <pre>
- You can ship parl.exe by itself, along with .par files built
+    <pre> You can ship parl.exe by itself, along with .par files built
  by &quot;pp -p&quot;, and run those PAR files by associating them to parl.exe.
     </pre>
   </li>
   <li>On platforms that have <span class="Li">&quot;ln&quot;</span>, there is a
       better solution:
     <p class="Pp"></p>
-    <pre>
- % pp --output=a.out a.pl b.pl  # two scripts in one!
+    <pre> % pp --output=a.out a.pl b.pl  # two scripts in one!
  % ln a.out b.out               # symlink also works
  % ./a.out                      # runs a.pl
  % ./b.out                      # runs b.pl
@@ -330,16 +312,14 @@
   <li>Suppose we need <span class="Li">&quot;out.par&quot;</span> on both Win32
       and Finix:
     <p class="Pp"></p>
-    <pre>
- C:\&gt; pp --multiarch --output=out.par src.pl
+    <pre> C:\&gt; pp --multiarch --output=out.par src.pl
  ...copy src.pl and out.par to a Finix machine...
  % pp --multiarch --output=out.par src.pl
     </pre>
   </li>
   <li>Now it works on both platforms:
     <p class="Pp"></p>
-    <pre>
- % parl out.par                 # runs src.pl
+    <pre> % parl out.par                 # runs src.pl
  % perl -MPAR=out.par -e '...'  # uses modules inside out.par
     </pre>
   </li>
@@ -351,8 +331,7 @@
 <ul class="Bl-bullet">
   <li>Modules can reside in several directories:
     <p class="Pp"></p>
-    <pre>
- /                      # casual packaging only
+    <pre> /                      # casual packaging only
  /lib/                  # standard location
  /arch/                 # for creating from blib/ 
  /i386-freebsd/         # i.e. $Config{archname}
@@ -362,21 +341,18 @@
   </li>
   <li>Scripts are stored in one of the two locations:
     <p class="Pp"></p>
-    <pre>
- /                      # casual packaging only
+    <pre> /                      # casual packaging only
  /script/               # standard location
     </pre>
   </li>
   <li>Shared libraries may be architecture- or perl-version-specific:
     <p class="Pp"></p>
-    <pre>
- /shlib/(5.8.0/)?(i386-freebsd/)?
+    <pre> /shlib/(5.8.0/)?(i386-freebsd/)?
     </pre>
   </li>
   <li>PAR files may recursively contain other PAR files:
     <p class="Pp"></p>
-    <pre>
- /par/(5.8.0/)?(i386-freebsd/)?
+    <pre> /par/(5.8.0/)?(i386-freebsd/)?
     </pre>
   </li>
 </ul>
@@ -468,8 +444,7 @@
   <li>The URL of <span class="Li">&quot;MANIFEST&quot;</span> inside
       <span class="Li">&quot;/home/autrijus/foo.par&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- jar:file:///home/autrijus/foo.par!/MANIFEST
+    <pre> jar:file:///home/autrijus/foo.par!/MANIFEST
     </pre>
   </li>
   <li>Open it in a Gecko browser (e.g. Netscape 6+) with Javascript
@@ -496,8 +471,7 @@
   <li>A typical <span class="Li">&quot;pp&quot;</span>-generated
       <span class="Li">&quot;META.yml&quot;</span> looks like this:
     <p class="Pp"></p>
-    <pre>
- build_requires: {}
+    <pre> build_requires: {}
  conflicts: {}
  dist_name: out.par
  distribution_type: par
@@ -533,10 +507,8 @@
 <ul class="Bl-bullet">
   <li>A typical <span class="Li">&quot;SIGNATURE&quot;</span> looks like this:
     <p class="Pp"></p>
-    <pre>
- -----BEGIN PGP SIGNED MESSAGE-----
+    <pre> -----BEGIN PGP SIGNED MESSAGE-----
  Hash: SHA1
-
  SHA1 8a014cd6d0f6775552a01d1e6354a69eb6826046 AUTHORS
  ...
  -----BEGIN PGP SIGNATURE-----
@@ -547,8 +519,7 @@
   <li>Use <span class="Li">&quot;pp&quot;</span> and
       <span class="Li">&quot;cpansign&quot;</span> to work with signatures:
     <p class="Pp"></p>
-    <pre>
- % pp -s -o foo.par bar.pl      # make and sign foo.par from bar.pl
+    <pre> % pp -s -o foo.par bar.pl      # make and sign foo.par from bar.pl
  % cpansign -s foo.par  # sign this PAR file
  % cpansign -v foo.par  # verify this PAR file
     </pre>
@@ -586,8 +557,7 @@
   <dt>&#x2022;</dt>
   <dd>One additional special file: <span class="Li">&quot;web.conf&quot;</span>
     <p class="Pp"></p>
-    <pre>
- Alias /myapp/cgi-perl/ ##PARFILE##/
+    <pre> Alias /myapp/cgi-perl/ ##PARFILE##/
  &lt;Location /myapp/cgi-perl&gt;
      Options +ExecCGI
      SetHandler perl-script
@@ -604,8 +574,7 @@
   <li>First, make a <span class="Li">&quot;hondah.par&quot;</span> from an
       one-liner:
     <p class="Pp"></p>
-    <pre>
- # use the &quot;web.conf&quot; from the previous slide
+    <pre> # use the &quot;web.conf&quot; from the previous slide
  % pp -p -o hondah.par -e 'print &quot;Hon Dah!\n&quot;' \
       --add web.conf
  % chmod a+x hondah.par
@@ -614,8 +583,7 @@
   <li>Add this to <span class="Li">&quot;httpd.conf&quot;</span>, then restart
       apache:
     <p class="Pp"></p>
-    <pre>
- &lt;IfDefine MODPERL2&gt;
+    <pre> &lt;IfDefine MODPERL2&gt;
  PerlModule Apache2
  &lt;/IfDefine&gt;
  PerlAddVar PARInclude /home/autrijus/hondah.par
@@ -624,8 +592,7 @@
   </li>
   <li>Test it out:
     <p class="Pp"></p>
-    <pre>
- % GET http://localhost/myapp/cgi-perl/main.pl
+    <pre> % GET http://localhost/myapp/cgi-perl/main.pl
  Hon Dah!
     </pre>
   </li>
@@ -638,8 +605,7 @@
 <ul class="Bl-bullet">
   <li>With LWP installed, your can use remote PAR files:
     <p class="Pp"></p>
-    <pre>
- use PAR;
+    <pre> use PAR;
  use lib 'http://aut.dyndns.org/par/DBI-latest.par';
  use DBI;    # always up to date!
     </pre>
@@ -722,21 +688,18 @@
 <ul class="Bl-bullet">
   <li>To get the host archive from a packed program:
     <p class="Pp"></p>
-    <pre>
- my $zip = PAR::par_handle($0); # an Archive::Zip object
+    <pre> my $zip = PAR::par_handle($0); # an Archive::Zip object
  my $content = $zip-&gt;contents('MANIFEST');
     </pre>
   </li>
   <li>Same thing, but with <span class="Li">&quot;read_file()&quot;</span>:
     <p class="Pp"></p>
-    <pre>
- my $content = PAR::read_file('MANIFEST');
+    <pre> my $content = PAR::read_file('MANIFEST');
     </pre>
   </li>
   <li>Loaded PAR files are stored in <span class="Li">%PAR::LibCache</span>:
     <p class="Pp"></p>
-    <pre>
- use PAR '/home/mylibs/*.par';
+    <pre> use PAR '/home/mylibs/*.par';
  while (my ($filename, $zip) = each %PAR::LibCache) {
      print &quot;[$filename - MANIFEST]\n&quot;;
      print $zip-&gt;contents('MANIFEST');
@@ -751,16 +714,14 @@
 <ul class="Bl-bullet">
   <li>GUI toolkits often need to link with shared libraries:
     <p class="Pp"></p>
-    <pre>
- # search for libncurses under library paths and pack it
+    <pre> # search for libncurses under library paths and pack it
  % pp -l ncurses curses_app.pl  # same for Tk, Wx, Gtk, Qt...
     </pre>
   </li>
   <li>Use <span class="Li">&quot;pp --gui&quot;</span> on Win32 to eliminate the
       console window:
     <p class="Pp"></p>
-    <pre>
- # pack 'src.pl' into a console-less 'out.exe' (Win32 only)
+    <pre> # pack 'src.pl' into a console-less 'out.exe' (Win32 only)
  % pp --gui -o out.exe src.pl
     </pre>
   </li>
@@ -803,8 +764,7 @@
   <li>...but not anymore -- <span class="Li">&quot;Module::Install&quot;</span>
       to the rescue!
     <p class="Pp"></p>
-    <pre>
- # same old Makefile.PL, with a few changes
+    <pre> # same old Makefile.PL, with a few changes
  use inc::Module::Install;      # was &quot;use ExtUtils::MakeMaker;&quot;
  WriteMakefile( ... );          # same as the original
  check_nmake();                 # make sure the user have nmake
@@ -967,8 +927,7 @@
   <li>Coderefs in <span class="Li">@INC</span> may return a fh, or undef to
       'pass':
     <p class="Pp"></p>
-    <pre>
- push @INC, sub {
+    <pre> push @INC, sub {
      my ($coderef, $filename) = @_;  # $coderef is \&amp;my_sub
      open my $fh, &quot;wget ftp://example.com/$filename |&quot;;
      return $fh;        # using remote modules, indeed!
@@ -977,8 +936,7 @@
   </li>
   <li>Perl 5.8 let you open a file handle to a string, so we just use that:
     <p class="Pp"></p>
-    <pre>
-        open my $fh, '&lt;', \($zip-&gt;memberNamed($filename)-&gt;contents);
+    <pre>        open my $fh, '&lt;', \($zip-&gt;memberNamed($filename)-&gt;contents);
         return $fh;
     </pre>
   </li>
@@ -1007,8 +965,7 @@
   <dd>This is how
       <span class="Li">&quot;Acme::use::strict::with::pride&quot;</span> works:
     <p class="Pp"></p>
-    <pre>
- # Force all modules used to use strict and warnings
+    <pre> # Force all modules used to use strict and warnings
  open my $fh, &quot;&lt;&quot;, $filename or return;
  my @lines = (&quot;use strict; use warnings;\n&quot;, &quot;#line 1 \&quot;$full\&quot;\n&quot;);
  return ($fh, sub {
@@ -1027,8 +984,7 @@
   <li>Another undocumented feature saves the day!</li>
   <li>We can actually omit the first return value altogether:
     <p class="Pp"></p>
-    <pre>
- # Return all contents line-by-line from the file inside PAR
+    <pre> # Return all contents line-by-line from the file inside PAR
  my @lines = split(
      /(?&lt;=\n)/,
      $zip-&gt;memberNamed($filename)-&gt;contents

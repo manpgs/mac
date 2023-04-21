@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Roles::Restartable_AdvancedComposition(3)</title>
 </head>
@@ -33,25 +34,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Restartable;
+<pre>  package Restartable;
   use Moose::Role;
-
   has 'is_paused' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'Bool',
       default =&gt; 0,
   );
-
   requires 'save_state', 'load_state';
-
   sub stop { 1 }
-
   sub start { 1 }
-
   package Restartable::ButUnreliable;
   use Moose::Role;
-
   with 'Restartable' =&gt; {
       -alias =&gt; {
           stop  =&gt; '_stop',
@@ -59,37 +53,25 @@
       },
       -excludes =&gt; [ 'stop', 'start' ],
   };
-
   sub stop {
       my $self = shift;
-
       $self-&gt;explode() if rand(1) &gt; .5;
-
       $self-&gt;_stop();
   }
-
   sub start {
       my $self = shift;
-
       $self-&gt;explode() if rand(1) &gt; .5;
-
       $self-&gt;_start();
   }
-
   package Restartable::ButBroken;
   use Moose::Role;
-
   with 'Restartable' =&gt; { -excludes =&gt; [ 'stop', 'start' ] };
-
   sub stop {
       my $self = shift;
-
       $self-&gt;explode();
   }
-
   sub start {
       my $self = shift;
-
       $self-&gt;explode();
   }
 </pre>
@@ -115,8 +97,7 @@
 <p class="Pp">Note that aliasing simply <i>adds</i> a name, so we also need to
     exclude the methods with their original names.</p>
 <p class="Pp"></p>
-<pre>
-  with 'Restartable' =&gt; {
+<pre>  with 'Restartable' =&gt; {
       -alias =&gt; {
           stop  =&gt; '_stop',
           start =&gt; '_start'
@@ -134,8 +115,7 @@
     <span class="Li">&quot;-excludes&quot;</span> parameter also accepts a
     single string as an argument if you just want to exclude one method.</p>
 <p class="Pp"></p>
-<pre>
-  with 'Restartable' =&gt; { -excludes =&gt; [ 'stop', 'start' ] };
+<pre>  with 'Restartable' =&gt; { -excludes =&gt; [ 'stop', 'start' ] };
 </pre>
 </section>
 <section class="Sh">

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Exporter(3)</title>
 </head>
@@ -33,19 +34,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Moose;
-
+<pre>  package MyApp::Moose;
   use Moose ();
   use Moose::Exporter;
   use Some::Random ();
-
   Moose::Exporter-&gt;setup_import_methods(
       with_meta =&gt; [ 'has_rw', 'sugar2' ],
       as_is     =&gt; [ 'sugar3', \&amp;Some::Random::thing, 'Some::Random::other_thing' ],
       also      =&gt; 'Moose',
   );
-
   sub has_rw {
       my ( $meta, $name, %options ) = @_;
       $meta-&gt;add_attribute(
@@ -54,17 +51,13 @@
           %options,
       );
   }
-
   # then later ...
   package MyApp::User;
-
   use MyApp::Moose;
-
   has 'name' =&gt; ( is =&gt; 'ro' );
   has_rw 'size';
   thing;
   other_thing;
-
   no MyApp::Moose;
 </pre>
 </section>
@@ -169,8 +162,7 @@
     <p class="Pp">This function will receive one parameter: the class name into
         which the sugar is being exported. The default implementation is:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { Class::MOP::class_of(shift) }
+    <pre>    sub { Class::MOP::class_of(shift) }
     </pre>
     <p class="Pp">Accordingly, this function is expected to return a
       metaclass.</p>
@@ -222,8 +214,7 @@
     <span class="Li">&quot;Moose-&gt;init_meta&quot;</span> to do the real
   work:</p>
 <p class="Pp"></p>
-<pre>
-  sub init_meta {
+<pre>  sub init_meta {
       shift; # our class name
       return Moose-&gt;init_meta( @_, metaclass =&gt; 'My::Metaclass' );
   }
@@ -238,9 +229,7 @@
     <span class="Li">&quot;-traits&quot;</span> parameter passed as part of the
     import:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose -traits =&gt; 'My::Meta::Trait';
-
+<pre>  use Moose -traits =&gt; 'My::Meta::Trait';
   use Moose -traits =&gt; [ 'My::Meta::Trait', 'My::Other::Trait' ];
 </pre>
 <p class="Pp">These traits will be applied to the caller's metaclass instance.

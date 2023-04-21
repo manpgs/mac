@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::ScalarArray(3)</title>
 </head>
@@ -31,35 +32,28 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Perform I/O on strings, using the basic OO interface...</p>
 <p class="Pp"></p>
-<pre>
-    use IO::ScalarArray;
+<pre>    use IO::ScalarArray;
     @data = (&quot;My mes&quot;, &quot;sage:\n&quot;);
-
     ### Open a handle on an array, and append to it:
     $AH = new IO::ScalarArray \@data;
     $AH-&gt;print(&quot;Hello&quot;);       
     $AH-&gt;print(&quot;, world!\nBye now!\n&quot;);  
     print &quot;The array is now: &quot;, @data, &quot;\n&quot;;
-
     ### Open a handle on an array, read it line-by-line, then close it:
     $AH = new IO::ScalarArray \@data;
     while (defined($_ = $AH-&gt;getline)) { 
         print &quot;Got line: $_&quot;;
     }
     $AH-&gt;close;
-
     ### Open a handle on an array, and slurp in all the lines:
     $AH = new IO::ScalarArray \@data;
     print &quot;All lines:\n&quot;, $AH-&gt;getlines; 
-
     ### Get the current position (either of two ways):
     $pos = $AH-&gt;getpos;         
     $offset = $AH-&gt;tell;  
-
     ### Set the current position (either of two ways):
     $AH-&gt;setpos($pos);        
     $AH-&gt;seek($offset, 0);
-
     ### Open an anonymous temporary array:
     $AH = new IO::ScalarArray;
     $AH-&gt;print(&quot;Hi there!&quot;);
@@ -69,33 +63,26 @@
     invisible <b>tie()</b>, the following now works out of the box, just as it
     does with IO::Handle:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::ScalarArray;
+<pre>    use IO::ScalarArray;
     @data = (&quot;My mes&quot;, &quot;sage:\n&quot;);
-
     ### Open a handle on an array, and append to it:
     $AH = new IO::ScalarArray \@data;
     print $AH &quot;Hello&quot;;    
     print $AH &quot;, world!\nBye now!\n&quot;;
     print &quot;The array is now: &quot;, @data, &quot;\n&quot;;
-
     ### Open a handle on a string, read it line-by-line, then close it:
     $AH = new IO::ScalarArray \@data;
     while (&lt;$AH&gt;) {
         print &quot;Got line: $_&quot;;
     }
     close $AH;
-
     ### Open a handle on a string, and slurp in all the lines:
     $AH = new IO::ScalarArray \@data;
     print &quot;All lines:\n&quot;, &lt;$AH&gt;;
-
     ### Get the current position (WARNING: requires 5.6):
     $offset = tell $AH;
-
     ### Set the current position (WARNING: requires 5.6):
     seek $AH, $offset, 0;
-
     ### Open an anonymous temporary scalar:
     $AH = new IO::ScalarArray;
     print $AH &quot;Hi there!&quot;;
@@ -104,15 +91,12 @@
 <p class="Pp">And for you folks with 1.x code out there: the old <b>tie()</b>
     style still works, though this is <i>unnecessary and deprecated</i>:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::ScalarArray;
-
+<pre>    use IO::ScalarArray;
     ### Writing to a scalar...
     my @a; 
     tie *OUT, 'IO::ScalarArray', \@a;
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
     print &quot;Array is now: &quot;, @a, &quot;\n&quot;
-
     ### Reading and writing an anonymous scalar... 
     tie *OUT, 'IO::ScalarArray';
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
@@ -137,16 +121,14 @@
     statements, this class is likely to be more efficient than IO::Scalar.</p>
 <p class="Pp">Basically, this:</p>
 <p class="Pp"></p>
-<pre>
-    my @a;
+<pre>    my @a;
     $AH = new IO::ScalarArray \@a;
     $AH-&gt;print(&quot;Hel&quot;, &quot;lo, &quot;);         ### OO style
     $AH-&gt;print(&quot;world!\n&quot;);            ### ditto
 </pre>
 <p class="Pp">Or this:</p>
 <p class="Pp"></p>
-<pre>
-    my @a;
+<pre>    my @a;
     $AH = new IO::ScalarArray \@a;
     print $AH &quot;Hel&quot;, &quot;lo, &quot;;           ### non-OO style
     print $AH &quot;world!\n&quot;;              ### ditto
@@ -154,8 +136,7 @@
 <p class="Pp">Causes <span class="Li">@a</span> to be set to the following array
     of 3 strings:</p>
 <p class="Pp"></p>
-<pre>
-    ( &quot;Hel&quot; , 
+<pre>    ( &quot;Hel&quot; , 
       &quot;lo, &quot; , 
       &quot;world!\n&quot; )
 </pre>
@@ -257,15 +238,13 @@
     <span class="Li">$^W</span> or <span class="Li">&quot;perl -w&quot;</span>),
     and you see something like this...</p>
 <p class="Pp"></p>
-<pre>
-    attempt to seek on unopened filehandle
+<pre>    attempt to seek on unopened filehandle
 </pre>
 <p class="Pp">...then you are probably trying to use one of these functions on
     an IO::ScalarArray with an old Perl. The remedy is to simply use the OO
     version; e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    $AH-&gt;seek(0,0);    ### GOOD: will work on any 5.005
+<pre>    $AH-&gt;seek(0,0);    ### GOOD: will work on any 5.005
     seek($AH,0,0);     ### WARNING: will only work on 5.005_57 and beyond
 </pre>
 </section>

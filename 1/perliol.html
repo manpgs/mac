@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLIOL(1)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    /* Defining a layer ... */
+<pre>    /* Defining a layer ... */
     #include &lt;perliol.h&gt;
 </pre>
 </section>
@@ -110,11 +110,9 @@
   Structures</a></h2>
 <p class="Pp">The basic data structure is a PerlIOl:</p>
 <p class="Pp"></p>
-<pre>
-        typedef struct _PerlIO PerlIOl;
+<pre>        typedef struct _PerlIO PerlIOl;
         typedef struct _PerlIO_funcs PerlIO_funcs;
         typedef PerlIOl *PerlIO;
-
         struct _PerlIO
         {
          PerlIOl *      next;       /* Lower layer */
@@ -155,8 +153,7 @@
     are broadly the same as the public
     <span class="Li">&quot;PerlIO_xxxxx&quot;</span> functions:</p>
 <p class="Pp"></p>
-<pre>
- struct _PerlIO_funcs
+<pre> struct _PerlIO_funcs
  {
   Size_t     fsize;
   char *     name;
@@ -233,8 +230,7 @@
 <p class="Pp">The per-instance data are held in memory beyond the basic PerlIOl
     struct, by making a PerlIOl the first member of the layer's struct thus:</p>
 <p class="Pp"></p>
-<pre>
-        typedef struct
+<pre>        typedef struct
         {
          struct _PerlIO base;       /* Base &quot;class&quot; info */
          STDCHAR *      buf;        /* Start of buffer */
@@ -251,8 +247,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Layers_in_action."><a class="permalink" href="#Layers_in_action.">Layers
   in action.</a></h2>
-<pre>
-                table           perlio          unix
+<pre>                table           perlio          unix
             |           |
             +-----------+    +----------+    +--------+
    PerlIO -&gt;|           |---&gt;|  next    |---&gt;|  NULL  |
@@ -369,8 +364,7 @@
 <dl class="Bl-tag">
   <dt id="fsize"><a class="permalink" href="#fsize">fsize</a></dt>
   <dd>
-    <pre>
-        Size_t fsize;
+    <pre>        Size_t fsize;
     </pre>
     <p class="Pp">Size of the function table. This is compared against the value
         PerlIO code &quot;knows&quot; as a compatibility check. Future versions
@@ -379,28 +373,24 @@
   </dd>
   <dt id="name"><a class="permalink" href="#name">name</a></dt>
   <dd>
-    <pre>
-        char * name;
+    <pre>        char * name;
     </pre>
     <p class="Pp">The name of the layer whose <b>open()</b> method Perl should
         invoke on <b>open()</b>. For example if the layer is called APR, you
         will call:</p>
     <p class="Pp"></p>
-    <pre>
-  open $fh, &quot;&gt;:APR&quot;, ...
+    <pre>  open $fh, &quot;&gt;:APR&quot;, ...
     </pre>
     <p class="Pp">and Perl knows that it has to invoke the
         <b>PerlIOAPR_open()</b> method implemented by the APR layer.</p>
   </dd>
   <dt id="size"><a class="permalink" href="#size">size</a></dt>
   <dd>
-    <pre>
-        Size_t size;
+    <pre>        Size_t size;
     </pre>
     <p class="Pp">The size of the per-instance data structure, e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-  sizeof(PerlIOAPR)
+    <pre>  sizeof(PerlIOAPR)
     </pre>
     <p class="Pp">If this field is zero then
         <span class="Li">&quot;PerlIO_pushed&quot;</span> does not malloc
@@ -415,8 +405,7 @@
   </dd>
   <dt id="kind"><a class="permalink" href="#kind">kind</a></dt>
   <dd>
-    <pre>
-        IV kind;
+    <pre>        IV kind;
     </pre>
   </dd>
 </dl>
@@ -449,8 +438,7 @@
 <dl class="Bl-tag">
   <dt id="Pushed"><a class="permalink" href="#Pushed">Pushed</a></dt>
   <dd>
-    <pre>
- IV     (*Pushed)(pTHX_ PerlIO *f,const char *mode, SV *arg);
+    <pre> IV     (*Pushed)(pTHX_ PerlIO *f,const char *mode, SV *arg);
     </pre>
     <p class="Pp">The only absolutely mandatory method. Called when the layer is
         pushed onto the stack. The <span class="Li">&quot;mode&quot;</span>
@@ -471,8 +459,7 @@
   </dd>
   <dt id="Popped"><a class="permalink" href="#Popped">Popped</a></dt>
   <dd>
-    <pre>
-        IV      (*Popped)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Popped)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Called when the layer is popped from the stack. A layer will
         normally be popped after <span class="Li">&quot;Close()&quot;</span> is
@@ -492,8 +479,7 @@
   </dd>
   <dt id="Open"><a class="permalink" href="#Open">Open</a></dt>
   <dd>
-    <pre>
-        PerlIO *        (*Open)(...);
+    <pre>        PerlIO *        (*Open)(...);
     </pre>
     <p class="Pp">The <span class="Li">&quot;Open()&quot;</span> method has lots
         of arguments because it combines the functions of perl's
@@ -504,8 +490,7 @@
         <span class="Li">&quot;PerlIO_reopen&quot;</span>. The full prototype is
         as follows:</p>
     <p class="Pp"></p>
-    <pre>
- PerlIO *       (*Open)(pTHX_ PerlIO_funcs *tab,
+    <pre> PerlIO *       (*Open)(pTHX_ PerlIO_funcs *tab,
                         PerlIO_list_t *layers, IV n,
                         const char *mode,
                         int fd, int imode, int perm,
@@ -584,8 +569,7 @@
   </dd>
   <dt id="Binmode"><a class="permalink" href="#Binmode">Binmode</a></dt>
   <dd>
-    <pre>
-        IV        (*Binmode)(pTHX_ PerlIO *f);
+    <pre>        IV        (*Binmode)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Optional. Used when <span class="Li">&quot;:raw&quot;</span>
         layer is pushed (explicitly or as a result of binmode(FH)). If not
@@ -596,8 +580,7 @@
   </dd>
   <dt id="Getarg"><a class="permalink" href="#Getarg">Getarg</a></dt>
   <dd>
-    <pre>
-        SV *      (*Getarg)(pTHX_ PerlIO *f,
+    <pre>        SV *      (*Getarg)(pTHX_ PerlIO *f,
                             CLONE_PARAMS *param, int flags);
     </pre>
     <p class="Pp">Optional. If present should return an SV * representing the
@@ -614,8 +597,7 @@
   </dd>
   <dt id="Fileno"><a class="permalink" href="#Fileno">Fileno</a></dt>
   <dd>
-    <pre>
-        IV        (*Fileno)(pTHX_ PerlIO *f);
+    <pre>        IV        (*Fileno)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Returns the Unix/Posix numeric file descriptor for the handle.
         Normally <span class="Li">&quot;PerlIOBase_fileno()&quot;</span> (which
@@ -625,8 +607,7 @@
   </dd>
   <dt id="Dup"><a class="permalink" href="#Dup">Dup</a></dt>
   <dd>
-    <pre>
-        PerlIO * (*Dup)(pTHX_ PerlIO *f, PerlIO *o,
+    <pre>        PerlIO * (*Dup)(pTHX_ PerlIO *f, PerlIO *o,
                         CLONE_PARAMS *param, int flags);
     </pre>
     <p class="Pp">XXX: Needs more docs.</p>
@@ -640,8 +621,7 @@
   </dd>
   <dt id="Read"><a class="permalink" href="#Read">Read</a></dt>
   <dd>
-    <pre>
-        SSize_t (*Read)(pTHX_ PerlIO *f, void *vbuf, Size_t count);
+    <pre>        SSize_t (*Read)(pTHX_ PerlIO *f, void *vbuf, Size_t count);
     </pre>
     <p class="Pp">Basic read operation.</p>
     <p class="Pp">Typically will call <span class="Li">&quot;Fill&quot;</span>
@@ -652,8 +632,7 @@
   </dd>
   <dt id="Unread"><a class="permalink" href="#Unread">Unread</a></dt>
   <dd>
-    <pre>
-        SSize_t (*Unread)(pTHX_ PerlIO *f,
+    <pre>        SSize_t (*Unread)(pTHX_ PerlIO *f,
                           const void *vbuf, Size_t count);
     </pre>
     <p class="Pp">A superset of stdio's
@@ -667,16 +646,14 @@
   </dd>
   <dt id="Write"><a class="permalink" href="#Write">Write</a></dt>
   <dd>
-    <pre>
-        SSize_t (*Write)(PerlIO *f, const void *vbuf, Size_t count);
+    <pre>        SSize_t (*Write)(PerlIO *f, const void *vbuf, Size_t count);
     </pre>
     <p class="Pp">Basic write operation.</p>
     <p class="Pp">Returns bytes written or -1 on an error.</p>
   </dd>
   <dt id="Seek"><a class="permalink" href="#Seek">Seek</a></dt>
   <dd>
-    <pre>
-        IV      (*Seek)(pTHX_ PerlIO *f, Off_t offset, int whence);
+    <pre>        IV      (*Seek)(pTHX_ PerlIO *f, Off_t offset, int whence);
     </pre>
     <p class="Pp">Position the file pointer. Should normally call its own
         <span class="Li">&quot;Flush&quot;</span> method and then the
@@ -685,8 +662,7 @@
   </dd>
   <dt id="Tell"><a class="permalink" href="#Tell">Tell</a></dt>
   <dd>
-    <pre>
-        Off_t   (*Tell)(pTHX_ PerlIO *f);
+    <pre>        Off_t   (*Tell)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return the file pointer. May be based on layers cached concept
         of position to avoid overhead.</p>
@@ -694,8 +670,7 @@
   </dd>
   <dt id="Close"><a class="permalink" href="#Close">Close</a></dt>
   <dd>
-    <pre>
-        IV      (*Close)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Close)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Close the stream. Should normally call
         <span class="Li">&quot;PerlIOBase_close()&quot;</span> to flush itself
@@ -706,8 +681,7 @@
   </dd>
   <dt id="Flush"><a class="permalink" href="#Flush">Flush</a></dt>
   <dd>
-    <pre>
-        IV      (*Flush)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Flush)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Should make stream's state consistent with layers below. That
         is, any buffered write data should be written, and file position of
@@ -718,8 +692,7 @@
   </dd>
   <dt id="Fill"><a class="permalink" href="#Fill">Fill</a></dt>
   <dd>
-    <pre>
-        IV      (*Fill)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Fill)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">The buffer for this layer should be filled (for read) from
         layer below. When you &quot;subclass&quot; PerlIOBuf layer, you want to
@@ -729,8 +702,7 @@
   </dd>
   <dt id="Eof"><a class="permalink" href="#Eof">Eof</a></dt>
   <dd>
-    <pre>
-        IV      (*Eof)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Eof)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return end-of-file indicator.
         <span class="Li">&quot;PerlIOBase_eof()&quot;</span> is normally
@@ -740,8 +712,7 @@
   </dd>
   <dt id="Error"><a class="permalink" href="#Error">Error</a></dt>
   <dd>
-    <pre>
-        IV      (*Error)(pTHX_ PerlIO *f);
+    <pre>        IV      (*Error)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return error indicator.
         <span class="Li">&quot;PerlIOBase_error()&quot;</span> is normally
@@ -752,8 +723,7 @@
   </dd>
   <dt id="Clearerr"><a class="permalink" href="#Clearerr">Clearerr</a></dt>
   <dd>
-    <pre>
-        void    (*Clearerr)(pTHX_ PerlIO *f);
+    <pre>        void    (*Clearerr)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Clear end-of-file and error indicators. Should call
         <span class="Li">&quot;PerlIOBase_clearerr()&quot;</span> to set the
@@ -762,8 +732,7 @@
   </dd>
   <dt id="Setlinebuf"><a class="permalink" href="#Setlinebuf">Setlinebuf</a></dt>
   <dd>
-    <pre>
-        void    (*Setlinebuf)(pTHX_ PerlIO *f);
+    <pre>        void    (*Setlinebuf)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Mark the stream as line buffered.
         <span class="Li">&quot;PerlIOBase_setlinebuf()&quot;</span> sets the
@@ -771,40 +740,35 @@
   </dd>
   <dt id="Get_base"><a class="permalink" href="#Get_base">Get_base</a></dt>
   <dd>
-    <pre>
-        STDCHAR *       (*Get_base)(pTHX_ PerlIO *f);
+    <pre>        STDCHAR *       (*Get_base)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Allocate (if not already done so) the read buffer for this
         layer and return pointer to it. Return NULL on failure.</p>
   </dd>
   <dt id="Get_bufsiz"><a class="permalink" href="#Get_bufsiz">Get_bufsiz</a></dt>
   <dd>
-    <pre>
-        Size_t  (*Get_bufsiz)(pTHX_ PerlIO *f);
+    <pre>        Size_t  (*Get_bufsiz)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return the number of bytes that last
         <span class="Li">&quot;Fill()&quot;</span> put in the buffer.</p>
   </dd>
   <dt id="Get_ptr"><a class="permalink" href="#Get_ptr">Get_ptr</a></dt>
   <dd>
-    <pre>
-        STDCHAR *       (*Get_ptr)(pTHX_ PerlIO *f);
+    <pre>        STDCHAR *       (*Get_ptr)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return the current read pointer relative to this layer's
         buffer.</p>
   </dd>
   <dt id="Get_cnt"><a class="permalink" href="#Get_cnt">Get_cnt</a></dt>
   <dd>
-    <pre>
-        SSize_t (*Get_cnt)(pTHX_ PerlIO *f);
+    <pre>        SSize_t (*Get_cnt)(pTHX_ PerlIO *f);
     </pre>
     <p class="Pp">Return the number of bytes left to be read in the current
         buffer.</p>
   </dd>
   <dt id="Set_ptrcnt"><a class="permalink" href="#Set_ptrcnt">Set_ptrcnt</a></dt>
   <dd>
-    <pre>
-        void    (*Set_ptrcnt)(pTHX_ PerlIO *f,
+    <pre>        void    (*Set_ptrcnt)(pTHX_ PerlIO *f,
                               STDCHAR *ptr, SSize_t cnt);
     </pre>
     <p class="Pp">Adjust the read pointer and count of bytes to match
@@ -872,8 +836,7 @@
     other words, implement only the methods that interest you. The other methods
     you can either replace with the &quot;blank&quot; methods</p>
 <p class="Pp"></p>
-<pre>
-    PerlIOBase_noop_ok
+<pre>    PerlIOBase_noop_ok
     PerlIOBase_noop_fail
 </pre>
 <p class="Pp">(which do nothing, and return zero and -1, respectively) or for
@@ -881,9 +844,7 @@
     The Open method looks for help in the 'parent' layer. The following table
     summarizes the behaviour:</p>
 <p class="Pp"></p>
-<pre>
-    method      behaviour with NULL
-
+<pre>    method      behaviour with NULL
     Clearerr    PerlIOBase_clearerr
     Close       PerlIOBase_close
     Dup         PerlIOBase_dup
@@ -908,7 +869,6 @@
     Tell        FAILURE
     Unread      PerlIOBase_unread
     Write       FAILURE
-
  FAILURE        Set errno (to EINVAL in Unixish, to LIB$_INVARG in VMS)
                 and return -1 (for numeric return values) or NULL (for
                 pointers)
@@ -999,14 +959,12 @@
 <p class="Pp">Layers can be made available by extension modules. When an unknown
     layer is encountered the PerlIO code will perform the equivalent of :</p>
 <p class="Pp"></p>
-<pre>
-   use PerlIO 'layer';
+<pre>   use PerlIO 'layer';
 </pre>
 <p class="Pp">Where <i>layer</i> is the unknown layer. <i>PerlIO.pm</i> will
     then attempt to:</p>
 <p class="Pp"></p>
-<pre>
-   require PerlIO::layer;
+<pre>   require PerlIO::layer;
 </pre>
 <p class="Pp">If after that process the layer is still not defined then the
     <span class="Li">&quot;open&quot;</span> will fail.</p>
@@ -1014,40 +972,36 @@
 <dl class="Bl-tag">
   <dt>&quot;:encoding&quot;</dt>
   <dd>
-    <pre>
-   use Encoding;
+    <pre>   use Encoding;
     </pre>
     <p class="Pp">makes this layer available, although <i>PerlIO.pm</i>
         &quot;knows&quot; where to find it. It is an example of a layer which
         takes an argument as it is called thus:</p>
     <p class="Pp"></p>
-    <pre>
-   open( $fh, &quot;&lt;:encoding(iso-8859-7)&quot;, $pathname );
+    <pre>   open( $fh, &quot;&lt;:encoding(iso-8859-7)&quot;, $pathname );
     </pre>
   </dd>
   <dt>&quot;:scalar&quot;</dt>
   <dd>Provides support for reading data from and writing data to a scalar.
     <p class="Pp"></p>
-    <pre>
-   open( $fh, &quot;+&lt;:scalar&quot;, \$scalar );
+    <pre>   open( $fh, &quot;+&lt;:scalar&quot;, \$scalar );
     </pre>
     <p class="Pp">When a handle is so opened, then reads get bytes from the
-        string value of <i></i><i>$scalar</i><i></i>, and writes change the
-        value. In both cases the position in <i></i><i>$scalar</i><i></i> starts
-        as zero but can be altered via <span class="Li">&quot;seek&quot;</span>,
-        and determined via <span class="Li">&quot;tell&quot;</span>.</p>
+        string value of <i></i><span class="Li"><i>$scalar</i></span><i></i>,
+        and writes change the value. In both cases the position in
+        <i></i><span class="Li"><i>$scalar</i></span><i></i> starts as zero but
+        can be altered via <span class="Li">&quot;seek&quot;</span>, and
+        determined via <span class="Li">&quot;tell&quot;</span>.</p>
     <p class="Pp">Please note that this layer is implied when calling
         <b>open()</b> thus:</p>
     <p class="Pp"></p>
-    <pre>
-   open( $fh, &quot;+&lt;&quot;, \$scalar );
+    <pre>   open( $fh, &quot;+&lt;&quot;, \$scalar );
     </pre>
   </dd>
   <dt>&quot;:via&quot;</dt>
   <dd>Provided to allow layers to be implemented as Perl code. For instance:
     <p class="Pp"></p>
-    <pre>
-   use PerlIO::via::StripHTML;
+    <pre>   use PerlIO::via::StripHTML;
    open( my $fh, &quot;&lt;:via(StripHTML)&quot;, &quot;index.html&quot; );
     </pre>
     <p class="Pp">See PerlIO::via for details.</p>
@@ -1066,8 +1020,7 @@
         public?</p>
     <p class="Pp">Currently the example could be something like this:</p>
     <p class="Pp"></p>
-    <pre>
-  PerlIO *foo_to_PerlIO(pTHX_ char *mode, ...)
+    <pre>  PerlIO *foo_to_PerlIO(pTHX_ char *mode, ...)
   {
       char *mode; /* &quot;w&quot;, &quot;r&quot;, etc */
       const char *layers = &quot;:APR&quot;; /* the layer name */
@@ -1075,15 +1028,12 @@
       if (!f) {
           return NULL;
       }
-
       PerlIO_apply_layers(aTHX_ f, mode, layers);
-
       if (f) {
           PerlIOAPR *st = PerlIOSelf(f, PerlIOAPR);
           /* fill in the st struct, as in _open() */
           st-&gt;file = file;
           PerlIOBase(f)-&gt;flags |= PERLIO_F_OPEN;
-
           return f;
       }
       return NULL;

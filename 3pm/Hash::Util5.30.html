@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Hash::Util(3pm)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # Restricted hashes
-
+<pre>  # Restricted hashes
   use Hash::Util qw(
                      fieldhash fieldhashes
-
                      all_keys
                      lock_keys unlock_keys
                      lock_value unlock_value
@@ -42,50 +40,38 @@
                      hash_locked hash_unlocked
                      hashref_locked hashref_unlocked
                      hidden_keys legal_keys
-
                      lock_ref_keys unlock_ref_keys
                      lock_ref_value unlock_ref_value
                      lock_hashref unlock_hashref
                      lock_ref_keys_plus
                      hidden_ref_keys legal_ref_keys
-
                      hash_seed hash_value hv_store
                      bucket_stats bucket_info bucket_array
                      lock_hash_recurse unlock_hash_recurse
                      lock_hashref_recurse unlock_hashref_recurse
-
                      hash_traversal_mask
                    );
-
   %hash = (foo =&gt; 42, bar =&gt; 23);
   # Ways to restrict a hash
   lock_keys(%hash);
   lock_keys(%hash, @keyset);
   lock_keys_plus(%hash, @additional_keys);
-
   # Ways to inspect the properties of a restricted hash
   my @legal = legal_keys(%hash);
   my @hidden = hidden_keys(%hash);
   my $ref = all_keys(%hash,@keys,@hidden);
   my $is_locked = hash_locked(%hash);
-
   # Remove restrictions on the hash
   unlock_keys(%hash);
-
   # Lock individual values in a hash
   lock_value  (%hash, 'foo');
   unlock_value(%hash, 'foo');
-
   # Ways to change the restrictions on both keys and values
   lock_hash  (%hash);
   unlock_hash(%hash);
-
   my $hashes_are_randomised = hash_seed() != 0;
-
   my $int_hash_value = hash_value( 'string' );
-
   my $mask= hash_traversal_mask(%hash);
-
   hash_traversal_mask(%hash,1234);
 </pre>
 </section>
@@ -115,8 +101,7 @@
   <dd></dd>
   <dt id="unlock_keys"><a class="permalink" href="#unlock_keys"><b>unlock_keys</b></a></dt>
   <dd>
-    <pre>
-  lock_keys(%hash);
+    <pre>  lock_keys(%hash);
   lock_keys(%hash, @keys);
     </pre>
     <p class="Pp">Restricts the given <span class="Li">%hash</span>'s set of
@@ -129,8 +114,7 @@
         still <b>bless()</b> the hash before you call <b>lock_keys()</b> so this
         shouldn't be a problem.</p>
     <p class="Pp"></p>
-    <pre>
-  unlock_keys(%hash);
+    <pre>  unlock_keys(%hash);
     </pre>
     <p class="Pp">Removes the restriction on the <span class="Li">%hash</span>'s
         keyset.</p>
@@ -140,16 +124,14 @@
   </dd>
   <dt id="lock_keys_plus"><a class="permalink" href="#lock_keys_plus"><b>lock_keys_plus</b></a></dt>
   <dd>
-    <pre>
-  lock_keys_plus(%hash,@additional_keys)
+    <pre>  lock_keys_plus(%hash,@additional_keys)
     </pre>
     <p class="Pp">Similar to <span class="Li">&quot;lock_keys()&quot;</span>,
         with the difference being that the optional key list specifies keys that
         may or may not be already in the hash. Essentially this is an easier way
         to say</p>
     <p class="Pp"></p>
-    <pre>
-  lock_keys(%hash,@additional_keys,keys %hash);
+    <pre>  lock_keys(%hash,@additional_keys,keys %hash);
     </pre>
     <p class="Pp">Returns a reference to <span class="Li">%hash</span></p>
   </dd>
@@ -157,8 +139,7 @@
   <dd></dd>
   <dt id="unlock_value"><a class="permalink" href="#unlock_value"><b>unlock_value</b></a></dt>
   <dd>
-    <pre>
-  lock_value  (%hash, $key);
+    <pre>  lock_value  (%hash, $key);
   unlock_value(%hash, $key);
     </pre>
     <p class="Pp">Locks and unlocks the value for an individual key of a hash.
@@ -171,15 +152,13 @@
   <dd></dd>
   <dt id="unlock_hash"><a class="permalink" href="#unlock_hash"><b>unlock_hash</b></a></dt>
   <dd>
-    <pre>
-    lock_hash(%hash);
+    <pre>    lock_hash(%hash);
     </pre>
     <p class="Pp"><b>lock_hash()</b> locks an entire hash, making all keys and
         values read-only. No value can be changed, no keys can be added or
         deleted.</p>
     <p class="Pp"></p>
-    <pre>
-    unlock_hash(%hash);
+    <pre>    unlock_hash(%hash);
     </pre>
     <p class="Pp"><b>unlock_hash()</b> does the opposite of <b>lock_hash()</b>.
         All keys and values are made writable. All values can be changed and
@@ -190,8 +169,7 @@
   <dd></dd>
   <dt id="unlock_hash_recurse"><a class="permalink" href="#unlock_hash_recurse"><b>unlock_hash_recurse</b></a></dt>
   <dd>
-    <pre>
-    lock_hash_recurse(%hash);
+    <pre>    lock_hash_recurse(%hash);
     </pre>
     <p class="Pp"><b>lock_hash()</b> locks an entire hash and any hashes it
         references recursively, making all keys and values read-only. No value
@@ -201,8 +179,7 @@
         restricted, but a Hash of Arrays of Hashes (HoAoH) will only have the
         top hash restricted.</p>
     <p class="Pp"></p>
-    <pre>
-    unlock_hash_recurse(%hash);
+    <pre>    unlock_hash_recurse(%hash);
     </pre>
     <p class="Pp"><b>unlock_hash_recurse()</b> does the opposite of
         <b>lock_hash_recurse()</b>. All keys and values are made writable. All
@@ -214,8 +191,7 @@
   <dd></dd>
   <dt id="hash_locked"><a class="permalink" href="#hash_locked"><b>hash_locked</b></a></dt>
   <dd>
-    <pre>
-  hashref_locked(\%hash) and print &quot;Hash is locked!\n&quot;;
+    <pre>  hashref_locked(\%hash) and print &quot;Hash is locked!\n&quot;;
   hash_locked(%hash) and print &quot;Hash is locked!\n&quot;;
     </pre>
     <p class="Pp">Returns true if the hash and its keys are locked.</p>
@@ -224,16 +200,14 @@
   <dd></dd>
   <dt id="hash_unlocked"><a class="permalink" href="#hash_unlocked"><b>hash_unlocked</b></a></dt>
   <dd>
-    <pre>
-  hashref_unlocked(\%hash) and print &quot;Hash is unlocked!\n&quot;;
+    <pre>  hashref_unlocked(\%hash) and print &quot;Hash is unlocked!\n&quot;;
   hash_unlocked(%hash) and print &quot;Hash is unlocked!\n&quot;;
     </pre>
     <p class="Pp">Returns true if the hash and its keys are unlocked.</p>
   </dd>
   <dt id="legal_keys"><a class="permalink" href="#legal_keys"><b>legal_keys</b></a></dt>
   <dd>
-    <pre>
-  my @keys = legal_keys(%hash);
+    <pre>  my @keys = legal_keys(%hash);
     </pre>
     <p class="Pp">Returns the list of the keys that are legal in a restricted
         hash. In the case of an unrestricted hash this is identical to calling
@@ -241,8 +215,7 @@
   </dd>
   <dt id="hidden_keys"><a class="permalink" href="#hidden_keys"><b>hidden_keys</b></a></dt>
   <dd>
-    <pre>
-  my @keys = hidden_keys(%hash);
+    <pre>  my @keys = hidden_keys(%hash);
     </pre>
     <p class="Pp">Returns the list of the keys that are legal in a restricted
         hash but do not have a value associated to them. Thus if 'foo' is a
@@ -258,8 +231,7 @@
   </dd>
   <dt id="all_keys"><a class="permalink" href="#all_keys"><b>all_keys</b></a></dt>
   <dd>
-    <pre>
-  all_keys(%hash,@keys,@hidden);
+    <pre>  all_keys(%hash,@keys,@hidden);
     </pre>
     <p class="Pp">Populates the arrays <span class="Li">@keys</span> with the
         all the keys that would pass an
@@ -270,8 +242,7 @@
     <p class="Pp">In the case of an unrestricted hash this will be equivalent
       to</p>
     <p class="Pp"></p>
-    <pre>
-  $ref = do {
+    <pre>  $ref = do {
       @keys = keys %hash;
       @hidden = ();
       \%hash
@@ -285,8 +256,7 @@
   </dd>
   <dt id="hash_seed"><a class="permalink" href="#hash_seed"><b>hash_seed</b></a></dt>
   <dd>
-    <pre>
-    my $hash_seed = hash_seed();
+    <pre>    my $hash_seed = hash_seed();
     </pre>
     <p class="Pp"><b>hash_seed()</b> returns the seed bytes used to randomise
         hash ordering.</p>
@@ -304,8 +274,7 @@
   </dd>
   <dt id="hash_value"><a class="permalink" href="#hash_value"><b>hash_value</b></a></dt>
   <dd>
-    <pre>
-    my $hash_value = hash_value($string);
+    <pre>    my $hash_value = hash_value($string);
     </pre>
     <p class="Pp"><b>hash_value()</b> returns the current perl's internal hash
         value for a given string.</p>
@@ -324,13 +293,11 @@
   <dt id="bucket_info"><a class="permalink" href="#bucket_info"><b>bucket_info</b></a></dt>
   <dd>Return a set of basic information about a hash.
     <p class="Pp"></p>
-    <pre>
-    my ($keys, $buckets, $used, @length_counts)= bucket_info($hash);
+    <pre>    my ($keys, $buckets, $used, @length_counts)= bucket_info($hash);
     </pre>
     <p class="Pp">Fields are as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    0: Number of keys in the hash
+    <pre>    0: Number of keys in the hash
     1: Number of buckets in the hash
     2: Number of used buckets in the hash
     rest : list of counts, Kth element is the number of buckets
@@ -341,15 +308,13 @@
   <dt id="bucket_stats"><a class="permalink" href="#bucket_stats"><b>bucket_stats</b></a></dt>
   <dd>Returns a list of statistics about a hash.
     <p class="Pp"></p>
-    <pre>
- my ($keys, $buckets, $used, $quality, $utilization_ratio,
+    <pre> my ($keys, $buckets, $used, $quality, $utilization_ratio,
         $collision_pct, $mean, $stddev, @length_counts)
     = bucket_stats($hashref);
     </pre>
     <p class="Pp">Fields are as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    0: Number of keys in the hash
+    <pre>    0: Number of keys in the hash
     1: Number of buckets in the hash
     2: Number of used buckets in the hash
     3: Hash Quality Score
@@ -366,8 +331,7 @@
         significantly above indicate a poor score. In practice it should be
         around 0.95 to 1.05. It is defined as:</p>
     <p class="Pp"></p>
-    <pre>
- $score= sum( $count[$length] * ($length * ($length + 1) / 2) )
+    <pre> $score= sum( $count[$length] * ($length * ($length + 1) / 2) )
             /
             ( ( $keys / 2 * $buckets ) *
               ( $keys + ( 2 * $buckets ) - 1 ) )
@@ -378,8 +342,7 @@
   </dd>
   <dt id="bucket_array"><a class="permalink" href="#bucket_array"><b>bucket_array</b></a></dt>
   <dd>
-    <pre>
-    my $array= bucket_array(\%hash);
+    <pre>    my $array= bucket_array(\%hash);
     </pre>
     <p class="Pp">Returns a packed representation of the bucket array associated
         with a hash. Each element of the array is either an integer K, in which
@@ -398,14 +361,12 @@
   </dd>
   <dt id="bucket_stats_formatted"><a class="permalink" href="#bucket_stats_formatted"><b>bucket_stats_formatted</b></a></dt>
   <dd>
-    <pre>
-  print bucket_stats_formatted($hashref);
+    <pre>  print bucket_stats_formatted($hashref);
     </pre>
     <p class="Pp">Return a formatted report of the information returned by
         <b>bucket_stats()</b>. An example report looks like this:</p>
     <p class="Pp"></p>
-    <pre>
- Keys: 50 Buckets: 33/64 Quality-Score: 1.01 (Good)
+    <pre> Keys: 50 Buckets: 33/64 Quality-Score: 1.01 (Good)
  Utilized Buckets: 51.56% Optimal: 78.12% Keys In Collision: 34.00%
  Chain Length - mean: 1.52 stddev: 0.66
  Buckets 64          [0000000000000000000000000000000111111111111111111122222222222333]
@@ -439,8 +400,7 @@
         you are concerned by hit ratios you are recommended to
         &quot;oversize&quot; your hash by using something like:</p>
     <p class="Pp"></p>
-    <pre>
-   keys(%hash)= keys(%hash) &lt;&lt; $k;
+    <pre>   keys(%hash)= keys(%hash) &lt;&lt; $k;
     </pre>
     <p class="Pp">With <span class="Li">$k</span> chosen carefully, and likely
         to be a small number like 1 or 2. In theory the larger the bucket array
@@ -448,8 +408,7 @@
   </dd>
   <dt id="hv_store"><a class="permalink" href="#hv_store"><b>hv_store</b></a></dt>
   <dd>
-    <pre>
-  my $sv = 0;
+    <pre>  my $sv = 0;
   hv_store(%hash,$key,$sv) or die &quot;Failed to alias!&quot;;
   $hash{$key} = 1;
   print $sv; # prints 1
@@ -477,8 +436,7 @@
       returns a string containing the number of used buckets in the hash,
       followed by a slash, followed by the total number of buckets in the hash.
     <p class="Pp"></p>
-    <pre>
-    my %hash=(&quot;foo&quot;=&gt;1);
+    <pre>    my %hash=(&quot;foo&quot;=&gt;1);
     print Hash::Util::bucket_ratio(%hash); # prints &quot;1/8&quot;
     </pre>
   </dd>
@@ -533,8 +491,7 @@
 <p class="Pp">Note that the trapping of the restricted operations is not atomic:
     for example</p>
 <p class="Pp"></p>
-<pre>
-    eval { %hash = (illegal_key =&gt; 1) }
+<pre>    eval { %hash = (illegal_key =&gt; 1) }
 </pre>
 <p class="Pp">leaves the <span class="Li">%hash</span> empty rather than with
     its original contents.</p>

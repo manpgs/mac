@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::WrapTie(3)</title>
 </head>
@@ -33,21 +34,16 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">First of all, you'll need <b>tie()</b>, so:</p>
 <p class="Pp"></p>
-<pre>
-   require 5.004;
+<pre>   require 5.004;
 </pre>
 <p class="Pp"><i>Function interface (experimental).</i> Use this with any
     existing class...</p>
 <p class="Pp"></p>
-<pre>
-   use IO::WrapTie;
+<pre>   use IO::WrapTie;
    use FooHandle;                  ### implements TIEHANDLE interface
-
    ### Suppose we want a &quot;FooHandle-&gt;new(&amp;FOO_RDWR, 2)&quot;.
    ### We can instead say...
-
    $FH = wraptie('FooHandle', &amp;FOO_RDWR, 2); 
-
    ### Now we can use...    
    print $FH &quot;Hello, &quot;;            ### traditional operator syntax...
    $FH-&gt;print(&quot;world!\n&quot;);         ### ...and OO syntax as well!
@@ -56,18 +52,13 @@
     IO::WrapTie::Slave mixin to get a nifty
     <span class="Li">&quot;new_tie()&quot;</span> constructor...</p>
 <p class="Pp"></p>
-<pre>
-   #------------------------------    
+<pre>   #------------------------------    
    package FooHandle;                        ### a class which can TIEHANDLE
-
    use IO::WrapTie;  
    @ISA = qw(IO::WrapTie::Slave);            ### inherit new_tie()
    ...
-
-
    #------------------------------    
    package main; 
-
    $FH = FooHandle-&gt;new_tie(&amp;FOO_RDWR, 2);   ### $FH is an IO::WrapTie::Master
    print $FH &quot;Hello, &quot;;                      ### traditional operator syntax
    $FH-&gt;print(&quot;world!\n&quot;);                   ### OO syntax
@@ -103,8 +94,7 @@
 </ul>
 <p class="Pp">But now with IO::WrapTie, you can say:</p>
 <p class="Pp"></p>
-<pre>
-    $WT = wraptie('FooHandle', &amp;FOO_RDWR, 2);
+<pre>    $WT = wraptie('FooHandle', &amp;FOO_RDWR, 2);
     $WT-&gt;print(&quot;Hello, world\n&quot;);   ### OO syntax
     print $WT &quot;Yes!\n&quot;;             ### Named operator syntax too!
     $WT-&gt;weird_stuff;               ### Other methods!
@@ -113,8 +103,7 @@
     inherit from <span class="Li">&quot;IO::WrapTie::Slave&quot;</span> and that
     first line becomes even prettier:</p>
 <p class="Pp"></p>
-<pre>
-    $WT = FooHandle-&gt;new_tie(&amp;FOO_RDWR, 2);
+<pre>    $WT = FooHandle-&gt;new_tie(&amp;FOO_RDWR, 2);
 </pre>
 <p class="Pp"><b>The bottom line:</b> now, almost any class can look and work
     exactly like an IO::Handle... and be used both with OO and non-OO filehandle
@@ -129,10 +118,8 @@
 <p class="Pp">Consider this example code, using classes in this
   distribution:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Scalar;
+<pre>    use IO::Scalar;
     use IO::WrapTie;
-
     $WT = wraptie('IO::Scalar',\$s);
     print $WT &quot;Hello, &quot;;
     $WT-&gt;print(&quot;world!\n&quot;);
@@ -140,8 +127,7 @@
 <p class="Pp">In it, the <b>wraptie()</b> function creates a data structure as
     follows:</p>
 <p class="Pp"></p>
-<pre>
-                          * $WT is a blessed reference to a tied filehandle
+<pre>                          * $WT is a blessed reference to a tied filehandle
               $WT           glob; that glob is tied to the &quot;Slave&quot; object.
                |          * You would do all your i/o with $WT directly.
                |       
@@ -208,8 +194,7 @@
   I/O operators work (on the master)</a></h2>
 <p class="Pp">Consider using an i/o operator on the master:</p>
 <p class="Pp"></p>
-<pre>
-    print $WT &quot;Hello, world!\n&quot;;
+<pre>    print $WT &quot;Hello, world!\n&quot;;
 </pre>
 <p class="Pp">Since the master ($WT) is really a [blessed] reference to a glob,
     the normal Perl i/o operators like <span class="Li">&quot;print&quot;</span>
@@ -227,8 +212,7 @@
   methods work (on the master)</a></h2>
 <p class="Pp">Consider using a method on the master:</p>
 <p class="Pp"></p>
-<pre>
-    $WT-&gt;print(&quot;Hello, world!\n&quot;);
+<pre>    $WT-&gt;print(&quot;Hello, world!\n&quot;);
 </pre>
 <p class="Pp">Since the master ($WT) is blessed into the class
     IO::WrapTie::Master, Perl first attempts to find a
@@ -241,8 +225,7 @@
 <p class="Pp">But let's suppose we're dealing with a method which <i>isn't</i>
     part of IO::Handle... for example:</p>
 <p class="Pp"></p>
-<pre>
-    my $sref = $WT-&gt;sref;
+<pre>    my $sref = $WT-&gt;sref;
 </pre>
 <p class="Pp">In this case, the intuitive behavior is to have the master
     delegate the method invocation to the slave (now do you see where the
@@ -265,10 +248,8 @@
     and you may need to pass the object to a subroutine which will attempt to
     use those operators:</p>
 <p class="Pp"></p>
-<pre>
-    $O = FooHandle-&gt;new(&amp;FOO_RDWR, 2);
+<pre>    $O = FooHandle-&gt;new(&amp;FOO_RDWR, 2);
     $O-&gt;print(&quot;Hello, world\n&quot;);  ### OO syntax is okay, BUT....
-
     sub nope { print $_[0] &quot;Nope!\n&quot; }
  X  nope($O);                     ### ERROR!!! (not a glob ref)
 </pre>
@@ -279,12 +260,9 @@
     another subroutine which will attempt to treat it in an OO-way... and that
     will break it:</p>
 <p class="Pp"></p>
-<pre>
-    tie *T, 'FooHandle', &amp;FOO_RDWR, 2; 
+<pre>    tie *T, 'FooHandle', &amp;FOO_RDWR, 2; 
     print T &quot;Hello, world\n&quot;;   ### Operator is okay, BUT... 
-
     tied(*T)-&gt;other_stuff;      ### yuck! AND...
-
     sub nope { shift-&gt;print(&quot;Nope!\n&quot;) }
  X  nope(\*T);                  ### ERROR!!! (method &quot;print&quot; on unblessed ref)
 </pre>
@@ -298,22 +276,19 @@
     will work fine for the OO stuff, and fine with named operators <i>if</i> you
     <b>tie()</b>... but if you just attempt to say:</p>
 <p class="Pp"></p>
-<pre>
-    $IO = FooHandle-&gt;new(&amp;FOO_RDWR, 2);
+<pre>    $IO = FooHandle-&gt;new(&amp;FOO_RDWR, 2);
     print $IO &quot;Hello!\n&quot;;
 </pre>
 <p class="Pp">you get a warning from Perl like:</p>
 <p class="Pp"></p>
-<pre>
-    Filehandle GEN001 never opened
+<pre>    Filehandle GEN001 never opened
 </pre>
 <p class="Pp">because it's trying to do system-level i/o on an (unopened) file
     descriptor. To avoid this, you apparently have to <b>tie()</b> the handle...
     which brings us right back to where we started! At least the IO::WrapTie
     mixin lets us say:</p>
 <p class="Pp"></p>
-<pre>
-    $IO = FooHandle-&gt;new_tie(&amp;FOO_RDWR, 2);
+<pre>    $IO = FooHandle-&gt;new_tie(&amp;FOO_RDWR, 2);
     print $IO &quot;Hello!\n&quot;;
 </pre>
 <p class="Pp">and so is not <i>too</i> bad.

@@ -173,6 +173,9 @@ sitemap.xml:
 8/Script\ Menu.html: $(MANDIR)/man8/Script\ Menu.8
 	$(BUILD)
 
+8/bluetoothuserd.html: $(MANDIR)/man1/bluetoothuserd.8
+	$(BUILD)
+
 8/deleted_helper.html: $(MANDIR)/man1/deleted_helper.8
 	$(BUILD)
 

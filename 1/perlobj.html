@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLOBJ(1)</title>
 </head>
@@ -66,24 +67,18 @@
     within the <i>constructor</i> subroutine of the class.</p>
 <p class="Pp">Here is a simple constructor:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
-
+<pre>  package File;
   sub new {
       my $class = shift;
-
       return bless {}, $class;
   }
 </pre>
 <p class="Pp">The name <span class="Li">&quot;new&quot;</span> isn't special. We
     could name our constructor something else:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
-
+<pre>  package File;
   sub load {
       my $class = shift;
-
       return bless {}, $class;
   }
 </pre>
@@ -101,13 +96,10 @@
 <p class="Pp">We can also use a variable to store a reference to the data
     structure that is being blessed as our object:</p>
 <p class="Pp"></p>
-<pre>
-  sub new {
+<pre>  sub new {
       my $class = shift;
-
       my $self = {};
       bless $self, $class;
-
       return $self;
   }
 </pre>
@@ -116,15 +108,11 @@
     useful if you want to put object initialization in its own separate
   method:</p>
 <p class="Pp"></p>
-<pre>
-  sub new {
+<pre>  sub new {
       my $class = shift;
-
       my $self = {};
       bless $self, $class;
-
       $self-&gt;_initialize();
-
       return $self;
   }
 </pre>
@@ -147,15 +135,11 @@
     (sometimes known as the <i>referent</i>). This is best demonstrated with
     this code:</p>
 <p class="Pp"></p>
-<pre>
-  use Scalar::Util 'blessed';
-
+<pre>  use Scalar::Util 'blessed';
   my $foo = {};
   my $bar = $foo;
-
   bless $foo, 'Class';
   print blessed( $bar ) // 'not blessed';    # prints &quot;Class&quot;
-
   $bar = &quot;some other value&quot;;
   print blessed( $bar ) // 'not blessed';    # prints &quot;not blessed&quot;
 </pre>
@@ -219,10 +203,8 @@
     more detail later.</p>
 <p class="Pp">Most methods you write will expect to operate on objects:</p>
 <p class="Pp"></p>
-<pre>
-  sub save {
+<pre>  sub save {
       my $self = shift;
-
       open my $fh, '&gt;', $self-&gt;path() or die $!;
       print {$fh} $self-&gt;data()       or die $!;
       close $fh                       or die $!;
@@ -237,8 +219,7 @@
 <p class="Pp">The left hand side of the method invocation (or arrow) operator is
     the object (or class name), and the right hand side is the method name.</p>
 <p class="Pp"></p>
-<pre>
-  my $pod = File-&gt;new( 'perlobj.pod', $data );
+<pre>  my $pod = File-&gt;new( 'perlobj.pod', $data );
   $pod-&gt;save();
 </pre>
 <p class="Pp">The <span class="Li">&quot;-&gt;&quot;</span> syntax is also used
@@ -275,10 +256,8 @@
     method on an object that isn't defined in its own class, Perl will also look
     for that method in any parent classes it may have.</p>
 <p class="Pp"></p>
-<pre>
-  package File::MP3;
+<pre>  package File::MP3;
   use parent 'File';    # sets @File::MP3::ISA = ('File');
-
   my $mp3 = File::MP3-&gt;new( 'Andvari.mp3', $data );
   $mp3-&gt;save();
 </pre>
@@ -299,10 +278,8 @@
     we can still call the parent class's method with the
     <span class="Li">&quot;SUPER&quot;</span> pseudo-class.</p>
 <p class="Pp"></p>
-<pre>
-  sub save {
+<pre>  sub save {
       my $self = shift;
-
       say 'Prepare to rock';
       $self-&gt;SUPER::save();
   }
@@ -311,12 +288,9 @@
     <i>only</i> be used for method calls. You can't use it for regular
     subroutine calls or class methods:</p>
 <p class="Pp"></p>
-<pre>
-  SUPER::save($thing);     # FAIL: looks for save() sub in package SUPER
-
+<pre>  SUPER::save($thing);     # FAIL: looks for save() sub in package SUPER
   SUPER-&gt;save($thing);     # FAIL: looks for save() method in class
                            #       SUPER
-
   $thing-&gt;SUPER::save();   # Okay: looks for save() method in parent
                            #       classes
 </pre>
@@ -327,50 +301,34 @@
     different levels within a deep inheritance hierarchy each correctly call
     their respective parent methods.</p>
 <p class="Pp"></p>
-<pre>
-  package A;
-
+<pre>  package A;
   sub new {
       return bless {}, shift;
   }
-
   sub speak {
       my $self = shift;
-
       say 'A';
   }
-
   package B;
-
   use parent -norequire, 'A';
-
   sub speak {
       my $self = shift;
-
       $self-&gt;SUPER::speak();
-
       say 'B';
   }
-
   package C;
-
   use parent -norequire, 'B';
-
   sub speak {
       my $self = shift;
-
       $self-&gt;SUPER::speak();
-
       say 'C';
   }
-
   my $c = C-&gt;new();
   $c-&gt;speak();
 </pre>
 <p class="Pp">In this example, we will get the following output:</p>
 <p class="Pp"></p>
-<pre>
-  A
+<pre>  A
   B
   C
 </pre>
@@ -394,9 +352,7 @@
 <p class="Pp">To declare multiple parents, you simply need to pass multiple
     class names to <span class="Li">&quot;use parent&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package MultiChild;
-
+<pre>  package MultiChild;
   use parent 'Parent1', 'Parent2';
 </pre>
 <p class="Pp"><i>Method Resolution Order</i></p>
@@ -404,8 +360,7 @@
     inheritance. In the case of single inheritance, Perl simply looks up the
     inheritance chain to find a method:</p>
 <p class="Pp"></p>
-<pre>
-  Grandparent
+<pre>  Grandparent
     |
   Parent
     |
@@ -427,8 +382,7 @@
     parent in the original class's <span class="Li">@ISA</span> array and
     searches from there.</p>
 <p class="Pp"></p>
-<pre>
-            SharedGreatGrandParent
+<pre>            SharedGreatGrandParent
             /                    \
   PaternalGrandparent       MaternalGrandparent
             \                    /
@@ -451,9 +405,7 @@
 <p class="Pp">It is possible to ask for a different method resolution order with
     the mro pragma.</p>
 <p class="Pp"></p>
-<pre>
-  package Child;
-
+<pre>  package Child;
   use mro 'c3';
   use parent 'Father', 'Mother';
 </pre>
@@ -492,18 +444,14 @@
     the object. Let's write a real constructor for the
     <span class="Li">&quot;File&quot;</span> class we used earlier:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
-
+<pre>  package File;
   sub new {
       my $class = shift;
       my ( $path, $data ) = @_;
-
       my $self = bless {
           path =&gt; $path,
           data =&gt; $data,
       }, $class;
-
       return $self;
   }
 </pre>
@@ -514,16 +462,12 @@
     can check to make sure that the path we're given ends with
   &quot;.mp3&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  package File::MP3;
-
+<pre>  package File::MP3;
   sub new {
       my $class = shift;
       my ( $path, $data ) = @_;
-
       die &quot;You cannot create a File::MP3 without an mp3 extension\n&quot;
           unless $path =~ /\.mp3\z/;
-
       return $class-&gt;SUPER::new(@_);
   }
 </pre>
@@ -559,24 +503,19 @@
 <p class="Pp">A simple read-only accessor simply gets the value of a single
     attribute:</p>
 <p class="Pp"></p>
-<pre>
-  sub path {
+<pre>  sub path {
       my $self = shift;
-
       return $self-&gt;{path};
   }
 </pre>
 <p class="Pp">A read-write accessor will allow the caller to set the value as
     well as get it:</p>
 <p class="Pp"></p>
-<pre>
-  sub path {
+<pre>  sub path {
       my $self = shift;
-
       if (@_) {
           $self-&gt;{path} = shift;
       }
-
       return $self-&gt;{path};
   }
 </pre>
@@ -602,8 +541,7 @@
 <p class="Pp">Perl allows you to call methods using their fully qualified name
     (the package and method name):</p>
 <p class="Pp"></p>
-<pre>
-  my $mp3 = File::MP3-&gt;new( 'Regin.mp3', $data );
+<pre>  my $mp3 = File::MP3-&gt;new( 'Regin.mp3', $data );
   $mp3-&gt;File::save();
 </pre>
 <p class="Pp">When you call a fully qualified method name like
@@ -618,8 +556,7 @@
     methods inherited from an ancestor class, there is no technical restriction
     that enforces this:</p>
 <p class="Pp"></p>
-<pre>
-  my $obj = Tree-&gt;new();
+<pre>  my $obj = Tree-&gt;new();
   $obj-&gt;Dog::bark();
 </pre>
 <p class="Pp">This calls the <span class="Li">&quot;bark&quot;</span> method
@@ -634,9 +571,7 @@
 <p class="Pp">Perl lets you use a scalar variable containing a string as a
     method name:</p>
 <p class="Pp"></p>
-<pre>
-  my $file = File-&gt;new( $path, $data );
-
+<pre>  my $file = File-&gt;new( $path, $data );
   my $method = 'save';
   $file-&gt;$method();
 </pre>
@@ -648,22 +583,17 @@
 <p class="Pp">Perl also lets you use a scalar containing a string as a class
     name:</p>
 <p class="Pp"></p>
-<pre>
-  my $class = 'File';
-
+<pre>  my $class = 'File';
   my $file = $class-&gt;new( $path, $data );
 </pre>
 <p class="Pp">Again, this allows for very dynamic code.</p>
 <p class="Pp"><i>Subroutine References as Methods</i></p>
 <p class="Pp">You can also use a subroutine reference as a method:</p>
 <p class="Pp"></p>
-<pre>
-  my $sub = sub {
+<pre>  my $sub = sub {
       my $self = shift;
-
       $self-&gt;save();
   };
-
   $file-&gt;$sub();
 </pre>
 <p class="Pp">This is exactly equivalent to writing
@@ -671,8 +601,7 @@
     in the wild combined with a call to
   <span class="Li">&quot;can&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  if ( my $meth = $object-&gt;can('foo') ) {
+<pre>  if ( my $meth = $object-&gt;can('foo') ) {
       $object-&gt;$meth();
   }
 </pre>
@@ -680,8 +609,7 @@
 <p class="Pp">Perl also lets you use a dereferenced scalar reference in a method
     call. That's a mouthful, so let's look at some code:</p>
 <p class="Pp"></p>
-<pre>
-  $file-&gt;${ \'save' };
+<pre>  $file-&gt;${ \'save' };
   $file-&gt;${ returns_scalar_ref() };
   $file-&gt;${ \( returns_scalar() ) };
   $file-&gt;${ returns_ref_to_sub_ref() };
@@ -697,11 +625,9 @@
     <span class="Li">&quot;STDOUT&quot;</span>, and
     <span class="Li">&quot;STDERR&quot;</span> filehandles.</p>
 <p class="Pp"></p>
-<pre>
-  open my $fh, '&gt;', 'path/to/file';
+<pre>  open my $fh, '&gt;', 'path/to/file';
   $fh-&gt;autoflush();
   $fh-&gt;print('content');
-
   STDOUT-&gt;autoflush();
 </pre>
 </section>
@@ -726,20 +652,17 @@
     method call on the class named &quot;Class&quot;) in two ways. First, you
     can append a <span class="Li">&quot;::&quot;</span> to the class name:</p>
 <p class="Pp"></p>
-<pre>
-    Class::-&gt;new()
+<pre>    Class::-&gt;new()
 </pre>
 <p class="Pp">Perl will always interpret this as a method call.</p>
 <p class="Pp">Alternatively, you can quote the class name:</p>
 <p class="Pp"></p>
-<pre>
-    'Class'-&gt;new()
+<pre>    'Class'-&gt;new()
 </pre>
 <p class="Pp">Of course, if the class name is in a scalar Perl will do the right
     thing as well:</p>
 <p class="Pp"></p>
-<pre>
-    my $class = 'Class';
+<pre>    my $class = 'Class';
     $class-&gt;new();
 </pre>
 <p class="Pp"><i>Indirect Object Syntax</i></p>
@@ -752,8 +675,7 @@
     invoked on.</p>
 <p class="Pp">This syntax can be used with any class or object method:</p>
 <p class="Pp"></p>
-<pre>
-    my $file = new File $path, $data;
+<pre>    my $file = new File $path, $data;
     save $file;
 </pre>
 <p class="Pp">We recommend that you avoid this syntax, for several reasons.</p>
@@ -777,8 +699,7 @@
 <p class="Pp">You can force Perl to interpret the bareword as a class name by
     appending &quot;::&quot; to it, like we saw earlier:</p>
 <p class="Pp"></p>
-<pre>
-  my $file = new File:: $path, $data;
+<pre>  my $file = new File:: $path, $data;
 </pre>
 </section>
 <section class="Ss">
@@ -789,8 +710,7 @@
     function. The <span class="Li">&quot;bless&quot;</span> function can take
     either one or two arguments:</p>
 <p class="Pp"></p>
-<pre>
-  my $object = bless {}, $class;
+<pre>  my $object = bless {}, $class;
   my $object = bless {};
 </pre>
 <p class="Pp">In the first form, the anonymous hash is being blessed into the
@@ -803,9 +723,7 @@
     object, you can use the <span class="Li">&quot;blessed&quot;</span> function
     exported by Scalar::Util, which is shipped with the Perl core.</p>
 <p class="Pp"></p>
-<pre>
-  use Scalar::Util 'blessed';
-
+<pre>  use Scalar::Util 'blessed';
   if ( defined blessed($thing) ) { ... }
 </pre>
 <p class="Pp">If <span class="Li">$thing</span> refers to an object, then this
@@ -880,8 +798,7 @@
         <span class="Li">&quot;VERSION&quot;</span> form of
         <span class="Li">&quot;use&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-    use Package 1.2 qw(some imported subs);
+    <pre>    use Package 1.2 qw(some imported subs);
     # implies:
     Package-&gt;VERSION(1.2);
     </pre>
@@ -913,24 +830,19 @@
     prefix under <span class="Li">&quot;strict</span>
     <span class="Li">'vars'&quot;</span>, you need to declare it.</p>
 <p class="Pp"></p>
-<pre>
-  # XXX - this is a terrible way to implement accessors, but it makes
+<pre>  # XXX - this is a terrible way to implement accessors, but it makes
   # for a simple example.
   our $AUTOLOAD;
   sub AUTOLOAD {
       my $self = shift;
-
       # Remove qualifier from original method name...
       my $called =  $AUTOLOAD =~ s/.*:://r;
-
       # Is there an attribute of that name?
       die &quot;No such attribute: $called&quot;
           unless exists $self-&gt;{$called};
-
       # If so, return it...
       return $self-&gt;{$called};
   }
-
   sub DESTROY { } # see below
 </pre>
 <p class="Pp">Without the <span class="Li">&quot;our $AUTOLOAD&quot;</span>
@@ -975,8 +887,7 @@
     are five global status variables, and the safest way is to localize all five
     of them:</p>
 <p class="Pp"></p>
-<pre>
-  sub DESTROY {
+<pre>  sub DESTROY {
       local($., $@, $!, $^E, $?);
       my $self = shift;
       ...;
@@ -996,10 +907,8 @@
     objects contained by your object may already have been destroyed. You should
     check that a contained object is defined before calling a method on it:</p>
 <p class="Pp"></p>
-<pre>
-  sub DESTROY {
+<pre>  sub DESTROY {
       my $self = shift;
-
       $self-&gt;{handle}-&gt;close() if $self-&gt;{handle};
   }
 </pre>
@@ -1007,12 +916,9 @@
     <span class="Li">&quot;${^GLOBAL_PHASE}&quot;</span> variable to detect if
     you are currently in the global destruction phase:</p>
 <p class="Pp"></p>
-<pre>
-  sub DESTROY {
+<pre>  sub DESTROY {
       my $self = shift;
-
       return if ${^GLOBAL_PHASE} eq 'DESTRUCT';
-
       $self-&gt;{handle}-&gt;close();
   }
 </pre>
@@ -1036,24 +942,18 @@
     of thing when looking at code in the wild.</p>
 <p class="Pp">Here's an example of a module as a blessed scalar:</p>
 <p class="Pp"></p>
-<pre>
-  package Time;
-
+<pre>  package Time;
   use strict;
   use warnings;
-
   sub new {
       my $class = shift;
-
       my $time = time;
       return bless \$time, $class;
   }
-
   sub epoch {
       my $self = shift;
       return ${ $self };
   }
-
   my $time = Time-&gt;new();
   print $time-&gt;epoch();
 </pre>
@@ -1076,32 +976,21 @@
     Hash::Util::FieldHash core module. This module was added to the core to
     support inside-out object implementations.</p>
 <p class="Pp"></p>
-<pre>
-  package Time;
-
+<pre>  package Time;
   use strict;
   use warnings;
-
   use Hash::Util::FieldHash 'fieldhash';
-
   fieldhash my %time_for;
-
   sub new {
       my $class = shift;
-
       my $self = bless \( my $object ), $class;
-
       $time_for{$self} = time;
-
       return $self;
   }
-
   sub epoch {
       my $self = shift;
-
       return $time_for{$self};
   }
-
   my $time = Time-&gt;new;
   print $time-&gt;epoch;
 </pre>

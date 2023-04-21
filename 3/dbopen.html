@@ -33,6 +33,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBOPEN(3)</title>
 </head>
@@ -112,9 +113,8 @@
     <var class="Ft">DB</var> structure is defined in the
     <code class="In">&lt;<a class="In">db.h</a>&gt;</code> include file, and
     contains at least the following fields:</p>
-<div class="Bd Pp">
-<pre>
-typedef struct {
+<div class="Bd Pp Li">
+<pre>typedef struct {
 	DBTYPE type;
 	int (*close)(DB *db);
 	int (*del)(const DB *db, const DBT *key, u_int flags);
@@ -124,8 +124,7 @@ typedef struct {
 	     u_int flags);
 	int (*sync)(const DB *db, u_int flags);
 	int (*seq)(const DB *db, DBT *key, DBT *data, u_int flags);
-} DB;
-</pre>
+} DB;</pre>
 </div>
 <p class="Pp" id="dbopen~4">These elements describe a database type and a set of
     functions performing various actions. These functions take a pointer to a
@@ -134,9 +133,9 @@ typedef struct {
     and sometimes one or more pointers to key/data structures and a flag
   value.</p>
 <dl class="Bl-tag">
-  <dt><var class="Va">type</var></dt>
+  <dt id="type"><var class="Va">type</var></dt>
   <dd>The type of the underlying access method (and file format).</dd>
-  <dt><var class="Va">close</var></dt>
+  <dt id="close"><var class="Va">close</var></dt>
   <dd>A pointer to a routine to flush any cached information to disk, free any
       allocated resources, and close the underlying file(s). Since key/data
       pairs may be cached in memory, failing to sync the file with a
@@ -144,7 +143,7 @@ typedef struct {
       result in inconsistent or lost information. <var class="Va">close</var>
       routines return -1 on error (setting <var class="Va">errno</var>) and 0 on
       success.</dd>
-  <dt><var class="Va">del</var></dt>
+  <dt id="del"><var class="Va">del</var></dt>
   <dd>A pointer to a routine to remove key/data pairs from the database.
     <p class="Pp">The <var class="Fa">flags</var> argument may be set to the
         following value:</p>
@@ -157,11 +156,11 @@ typedef struct {
         (setting <var class="Va">errno</var>), 0 on success, and 1 if the
         specified <var class="Fa">key</var> was not in the file.</p>
   </dd>
-  <dt id="dbopen~5"><var class="Va">fd</var></dt>
+  <dt id="fd"><var class="Va">fd</var></dt>
   <dd>A pointer to a routine which returns a file descriptor representative of
       the underlying database. A file descriptor referencing the same file will
       be returned to all processes which call
-      <a class="permalink" href="#dbopen~5"><code class="Fn">dbopen</code></a>()
+      <a class="permalink" href="#dbopen~5"><code class="Fn" id="dbopen~5">dbopen</code></a>()
       with the same <var class="Fa">file</var> name. This file descriptor may be
       safely used as an argument to the
       <a class="Xr" href="../2/fcntl">fcntl(2)</a> and
@@ -170,14 +169,14 @@ typedef struct {
       used by the access method. No file descriptor is available for in memory
       databases. <var class="Va">Fd</var> routines return -1 on error (setting
       <var class="Va">errno</var>), and the file descriptor on success.</dd>
-  <dt><var class="Va">get</var></dt>
+  <dt id="get"><var class="Va">get</var></dt>
   <dd>A pointer to a routine which is the interface for keyed retrieval from the
       database. The address and length of the data associated with the specified
       <var class="Fa">key</var> are returned in the structure referenced by
       <var class="Fa">data</var>. <var class="Va">get</var> routines return -1
       on error (setting <var class="Va">errno</var>), 0 on success, and 1 if the
       <var class="Fa">key</var> was not in the file.</dd>
-  <dt><var class="Va">put</var></dt>
+  <dt id="put"><var class="Va">put</var></dt>
   <dd>A pointer to a routine to store key/data pairs in the database.
     <p class="Pp">The <var class="Fa">flags</var> argument may be set to one of
         the following values:</p>
@@ -223,7 +222,7 @@ typedef struct {
         <code class="Dv">R_NOOVERWRITE</code> flag was set and the key already
         exists in the file.</p>
   </dd>
-  <dt><var class="Va">seq</var></dt>
+  <dt id="seq"><var class="Va">seq</var></dt>
   <dd>A pointer to a routine which is the interface for sequential retrieval
       from the database. The address and length of the key are returned in the
       structure referenced by <var class="Fa">key</var>, and the address and
@@ -281,7 +280,7 @@ typedef struct {
         key/data pairs are currently available, the <var class="Va">seq</var>
         routines return 2.</p>
   </dd>
-  <dt><var class="Va">sync</var></dt>
+  <dt id="sync"><var class="Va">sync</var></dt>
   <dd>A pointer to a routine to flush any cached information to disk. If the
       database is in memory only, the <var class="Va">sync</var> routine has no
       effect and will always succeed.
@@ -306,20 +305,18 @@ typedef struct {
   PAIRS</a></h1>
 <p class="Pp">Access to all file types is based on key/data pairs. Both keys and
     data are represented by the following data structure:</p>
-<div class="Bd Pp">
-<pre>
-typedef struct {
+<div class="Bd Pp Li">
+<pre>typedef struct {
 	void *data;
 	size_t size;
-} DBT;
-</pre>
+} DBT;</pre>
 </div>
 <p class="Pp">The elements of the <var class="Ft">DBT</var> structure are
     defined as follows:</p>
 <dl class="Bl-tag">
-  <dt><var class="Va">data</var></dt>
+  <dt id="data"><var class="Va">data</var></dt>
   <dd>A pointer to a byte string.</dd>
-  <dt><var class="Va">size</var></dt>
+  <dt id="size"><var class="Va">size</var></dt>
   <dd>The length of the byte string.</dd>
 </dl>
 <p class="Pp">Key and data byte strings may reference strings of essentially
@@ -390,7 +387,7 @@ typedef struct {
 <table class="foot">
   <tr>
     <td class="foot-date">January 2, 1994</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

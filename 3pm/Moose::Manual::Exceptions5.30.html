@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Exceptions(3)</title>
 </head>
@@ -68,11 +69,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Catching_with_Try::Tiny"><a class="permalink" href="#Catching_with_Try::Tiny">Catching
   with Try::Tiny</a></h2>
-<pre>
-    use warnings;
+<pre>    use warnings;
     use strict;
     use Try::Tiny;
-
     try {
         package Example::Exception;
         use Moose;
@@ -83,17 +82,14 @@
         # block, but $_ may get clobbered, so we should copy its value to
         # another variable.
         my $e = $_;
-
         # Exception objects are not ubiquitous in Perl, so we must check
         # whether $e is blessed. We also need to ensure that $e is actually
         # the kind of exception we were expecting.
         if ( blessed $e
             &amp;&amp; $e-&gt;isa('Moose::Exception::ExtendsMissingArgs') ) {
-
             my $class_name = $e-&gt;class_name;
             warn &quot;You forgot to specify a superclass for $class_name, silly!&quot;;
         }
-
         # It's either another type of an object or not an object at all.
         else {
             warn &quot;$e\n&quot;;
@@ -104,34 +100,27 @@
 <section class="Ss">
 <h2 class="Ss" id="Example_of_catching_ValidationFailedForTypeConstraint"><a class="permalink" href="#Example_of_catching_ValidationFailedForTypeConstraint">Example
   of catching ValidationFailedForTypeConstraint</a></h2>
-<pre>
-    use warnings;
+<pre>    use warnings;
     use strict;
-
     use Try::Tiny;
-
     {
         package Person;
         use Moose;
         use Moose::Util::TypeConstraints;
-
         subtype 'NameStr',
             as 'Str',
             where { $_ =~ /^[a-zA-Z]+$/; };
-
         has age =&gt; (
             is       =&gt; 'ro',
             isa      =&gt; 'Int',
             required =&gt; 1
         );
-
         has name =&gt; (
             is       =&gt; 'ro',
             isa      =&gt; 'NameStr',
             required =&gt; 1
         );
     }
-
     my $person;
     while ( !$person ) {
         try {
@@ -151,17 +140,14 @@
         }
         catch {
             my $e = $_;
-
             if (
                 blessed $e
                 &amp;&amp; $e-&gt;isa(
                     'Moose::Exception::ValidationFailedForTypeConstraint')
                 ) {
-
                 my $attribute_name = $e-&gt;attribute-&gt;name;
                 my $type_name      = $e-&gt;type-&gt;name;
                 my $value          = $e-&gt;value;
-
                 warn
                     &quot;You entered $value for $attribute_name, which is not a $type_name!&quot;;
             }
@@ -175,22 +161,18 @@
 <section class="Ss">
 <h2 class="Ss" id="Example_of_catching_AttributeIsRequired"><a class="permalink" href="#Example_of_catching_AttributeIsRequired">Example
   of catching AttributeIsRequired</a></h2>
-<pre>
-    use warnings;
+<pre>    use warnings;
     use strict;
     use Try::Tiny;
-
     {
         package Example::RequiredAttribute;
         use Moose;
-
         has required_attribute =&gt; (
             is       =&gt; 'ro',
             isa      =&gt; 'Int',
             required =&gt; 1
         );
     }
-
     try {
         # we're not passing required_attribute, so it'll throw an exception
         my $object = Example::RequiredAttribute-&gt;new();

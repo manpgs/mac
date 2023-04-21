@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Utils(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-   package Types::Mine;
+<pre>   package Types::Mine;
    
    use Type::Library -base;
    use Type::Utils -all;
@@ -68,9 +68,7 @@
       <span class="Li">&quot;where&quot;</span> to specify the parent type (if
       any) and (possibly) refine its definition.
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt, as Int, where { $_ % 2 == 0 };
-
+    <pre>   declare EvenInt, as Int, where { $_ % 2 == 0 };
    my $EvenInt = declare as Int, where { $_ % 2 == 0 };
     </pre>
     <p class="Pp"><i>NOTE:</i> If the caller package inherits from Type::Library
@@ -108,16 +106,14 @@
   <dd>Used with <span class="Li">&quot;declare&quot;</span> to specify a parent
       type constraint:
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt, as Int, where { $_ % 2 == 0 };
+    <pre>   declare EvenInt, as Int, where { $_ % 2 == 0 };
     </pre>
   </dd>
   <dt>&quot;where { BLOCK }&quot;</dt>
   <dd>Used with <span class="Li">&quot;declare&quot;</span> to provide the
       constraint coderef:
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt, as Int, where { $_ % 2 == 0 };
+    <pre>   declare EvenInt, as Int, where { $_ % 2 == 0 };
     </pre>
     <p class="Pp">The coderef operates on <span class="Li">$_</span>, which is
         the value being tested.</p>
@@ -125,8 +121,7 @@
   <dt>&quot;message { BLOCK }&quot;</dt>
   <dd>Generate a custom error message when a value fails validation.
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt,
+    <pre>   declare EvenInt,
       as Int,
       where { $_ % 2 == 0 },
       message {
@@ -143,8 +138,7 @@
       Moo constructor or accessor methods, or used by Type::Params, this can
       lead to significant performance improvements.
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt,
+    <pre>   declare EvenInt,
       as Int,
       where { $_ % 2 == 0 },
       inline_as {
@@ -163,8 +157,7 @@
         which case the undef will be replaced by the inlined parent type
         constraint. (And will throw an exception if there is no parent.)</p>
     <p class="Pp"></p>
-    <pre>
-   declare EvenInt,
+    <pre>   declare EvenInt,
       as Int,
       where { $_ % 2 == 0 },
       inline_as {
@@ -233,8 +226,7 @@
   <dt>&quot;from $source&quot;</dt>
   <dd>Sugar to specify a type constraint in a list of coercions:
     <p class="Pp"></p>
-    <pre>
-   coerce EvenInt, from Int, via { $_ * 2 };  # As a coderef...
+    <pre>   coerce EvenInt, from Int, via { $_ * 2 };  # As a coderef...
    coerce EvenInt, from Int, q { $_ * 2 };    # or as a string!
     </pre>
   </dd>
@@ -246,8 +238,7 @@
   <dd>Declares a coercion that is not explicitly attached to any type in the
       library. For example:
     <p class="Pp"></p>
-    <pre>
-   declare_coercion &quot;ArrayRefFromAny&quot;, from &quot;Any&quot;, via { [$_] };
+    <pre>   declare_coercion &quot;ArrayRefFromAny&quot;, from &quot;Any&quot;, via { [$_] };
     </pre>
     <p class="Pp">This coercion will be exportable from the library as a
         Type::Coercion object, but the ArrayRef type exported by the library
@@ -259,8 +250,7 @@
       the target type constraint for a coercion, but still without explicitly
       attaching the coercion to the type constraint:
     <p class="Pp"></p>
-    <pre>
-   declare_coercion &quot;ArrayRefFromAny&quot;,
+    <pre>   declare_coercion &quot;ArrayRefFromAny&quot;,
       to_type &quot;ArrayRef&quot;,
       from &quot;Any&quot;, via { [$_] };
     </pre>
@@ -302,8 +292,7 @@
       construct. Dispatches along different code paths depending on the type of
       the incoming value. Example blatantly stolen from the Moose documentation:
     <p class="Pp"></p>
-    <pre>
-   sub to_json
+    <pre>   sub to_json
    {
       my $value = shift;
       
@@ -342,8 +331,7 @@
       coderef. The following JSON converter is about two orders of magnitude
       faster than the previous example:
     <p class="Pp"></p>
-    <pre>
-   sub to_json;
+    <pre>   sub to_json;
    *to_json = compile_match_on_type(
       HashRef() =&gt; sub {
          my $hash = shift;
@@ -375,8 +363,7 @@
       type constraint. The coderef, when passed a value, returns a type
       constraint which the value satisfies.
     <p class="Pp"></p>
-    <pre>
-   use feature qw( say );
+    <pre>   use feature qw( say );
    use Type::Utils qw( classifier );
    use Types::Standard qw( Int Num Str Any );
    
@@ -424,8 +411,7 @@
 <p class="Pp">You can alter which should be attempted, and in which order, by
     passing an option to <span class="Li">&quot;dwim_type&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-   my $type = Type::Utils::dwim_type(
+<pre>   my $type = Type::Utils::dwim_type(
       &quot;ArrayRef[Int]&quot;,
       fallback      =&gt; [ &quot;lookup_via_mouse&quot; , &quot;make_role_type&quot; ],
    );
@@ -433,16 +419,14 @@
 <p class="Pp">For historical reasons, by default the fallbacks attempted
   are:</p>
 <p class="Pp"></p>
-<pre>
-   lookup_via_moose, lookup_via_mouse, make_class_type
+<pre>   lookup_via_moose, lookup_via_mouse, make_class_type
 </pre>
 <p class="Pp">You may set <span class="Li">&quot;fallback&quot;</span> to an
     empty arrayref to avoid using any of these fallbacks.</p>
 <p class="Pp">You can specify an alternative for the caller using the
     <span class="Li">&quot;for&quot;</span> option.</p>
 <p class="Pp"></p>
-<pre>
-   my $type = dwim_type(&quot;ArrayRef&quot;, for =&gt; &quot;Moose::Object&quot;);
+<pre>   my $type = dwim_type(&quot;ArrayRef&quot;, for =&gt; &quot;Moose::Object&quot;);
 </pre>
 <p class="Pp">While it's probably better overall to use the proper
     Type::Registry interface for resolving type constraint strings, this
@@ -461,16 +445,14 @@
         even exported by <span class="Li">&quot;use Type::Utils
         -all&quot;</span>. You must request it explicitly.</p>
     <p class="Pp"></p>
-    <pre>
-  use Type::Utils &quot;is&quot;;
+    <pre>  use Type::Utils &quot;is&quot;;
     </pre>
     <p class="Pp">Beware using this in test scripts because it has the same name
         as a function exported by Test::More. Note that you can rename this
         function if <span class="Li">&quot;is&quot;</span> will cause
       conflicts:</p>
     <p class="Pp"></p>
-    <pre>
-   use Type::Utils &quot;is&quot; =&gt; { -as =&gt; &quot;isntnt&quot; };
+    <pre>   use Type::Utils &quot;is&quot; =&gt; { -as =&gt; &quot;isntnt&quot; };
     </pre>
   </dd>
   <dt>&quot;assert($type, $value)&quot;</dt>
@@ -484,8 +466,7 @@
   <dd>Joins the items with commas, placing a conjunction before the final item.
       The conjunction is optional, defaulting to &quot;and&quot;.
     <p class="Pp"></p>
-    <pre>
-   english_list(qw/foo bar baz/);       # &quot;foo, bar, and baz&quot;
+    <pre>   english_list(qw/foo bar baz/);       # &quot;foo, bar, and baz&quot;
    english_list(\&quot;or&quot;, qw/quux quuux/); # &quot;quux or quuux&quot;
     </pre>
     <p class="Pp">This function is not exported by default.</p>

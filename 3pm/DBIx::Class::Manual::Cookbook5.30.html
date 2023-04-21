@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::Cookbook(3)</title>
 </head>
@@ -35,25 +36,21 @@
     for a paged resultset, which will fetch only a defined number of records at
     a time:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     undef,
     {
       page =&gt; 1,  # page to return (defaults to 1)
       rows =&gt; 10, # number of results per page
     },
   );
-
   return $rs-&gt;all(); # all records for page 1
-
   return $rs-&gt;page(2); # records for page 2
 </pre>
 <p class="Pp">You can get a Data::Page object for the resultset (suitable for
     use in e.g. a template) using the <span class="Li">&quot;pager&quot;</span>
     method:</p>
 <p class="Pp"></p>
-<pre>
-  return $rs-&gt;pager();
+<pre>  return $rs-&gt;pager();
 </pre>
 </section>
 <section class="Ss">
@@ -62,8 +59,7 @@
 <p class="Pp">Sometimes you need to formulate a query using specific
   operators:</p>
 <p class="Pp"></p>
-<pre>
-  my @albums = $schema-&gt;resultset('Album')-&gt;search({
+<pre>  my @albums = $schema-&gt;resultset('Album')-&gt;search({
     artist =&gt; { 'like', '%Lamb%' },
     title  =&gt; { 'like', '%Fear of Fours%' },
   });
@@ -71,16 +67,14 @@
 <p class="Pp">This results in something like the following
     <span class="Li">&quot;WHERE&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
-  WHERE artist LIKE ? AND title LIKE ?
+<pre>  WHERE artist LIKE ? AND title LIKE ?
 </pre>
 <p class="Pp">And the following bind values for the placeholders:
     <span class="Li">'%Lamb%'</span>, <span class="Li">'%Fear of</span>
     <span class="Li">Fours%'</span>.</p>
 <p class="Pp">Other queries might require slightly more complex logic:</p>
 <p class="Pp"></p>
-<pre>
-  my @albums = $schema-&gt;resultset('Album')-&gt;search({
+<pre>  my @albums = $schema-&gt;resultset('Album')-&gt;search({
     -or =&gt; [
       -and =&gt; [
         artist =&gt; { 'like', '%Smashing Pumpkins%' },
@@ -93,8 +87,7 @@
 <p class="Pp">This results in the following
     <span class="Li">&quot;WHERE&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
-  WHERE ( artist LIKE '%Smashing Pumpkins%' AND title = 'Siamese Dream' )
+<pre>  WHERE ( artist LIKE '%Smashing Pumpkins%' AND title = 'Siamese Dream' )
     OR artist = 'Starchildren'
 </pre>
 <p class="Pp">For more information on generating complex queries, see
@@ -119,8 +112,7 @@
       does, it does _not_ accept search attributes. However one can always chain
       a <b>single()</b> to a <b>search()</b>:
     <p class="Pp"></p>
-    <pre>
-  my $top_cd = $cd_rs-&gt;search({}, { order_by =&gt; 'rating' })-&gt;single;
+    <pre>  my $top_cd = $cd_rs-&gt;search({}, { order_by =&gt; 'rating' })-&gt;single;
     </pre>
   </li>
   <li>Since <b>single()</b> is the engine behind <b>find()</b>, it is designed
@@ -131,8 +123,7 @@
       you are doing, you can silence the warning by explicitly limiting the
       resultset size:
     <p class="Pp"></p>
-    <pre>
-  my $top_cd = $cd_rs-&gt;search ({}, { order_by =&gt; 'rating', rows =&gt; 1 })-&gt;single;
+    <pre>  my $top_cd = $cd_rs-&gt;search ({}, { order_by =&gt; 'rating', rows =&gt; 1 })-&gt;single;
     </pre>
   </li>
 </ul>
@@ -147,24 +138,18 @@
 <p class="Pp">This is accomplished by defining a ResultSource::View for your
     query, almost like you would define a regular ResultSource.</p>
 <p class="Pp"></p>
-<pre>
-  package My::Schema::Result::UserFriendsComplex;
+<pre>  package My::Schema::Result::UserFriendsComplex;
   use strict;
   use warnings;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;table_class('DBIx::Class::ResultSource::View');
-
   # For the time being this is necessary even for virtual views
   __PACKAGE__-&gt;table($view_name);
-
   #
   # -&gt;add_columns, etc.
   #
-
   # do not attempt to deploy() this view
   __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
-
   __PACKAGE__-&gt;result_source_instance-&gt;view_definition(q[
     SELECT u.* FROM user u
     INNER JOIN user_friends f ON u.id = f.user_id
@@ -178,8 +163,7 @@
 <p class="Pp">Next, you can execute your complex query using bind parameters
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  my $friends = $schema-&gt;resultset( 'UserFriendsComplex' )-&gt;search( {},
+<pre>  my $friends = $schema-&gt;resultset( 'UserFriendsComplex' )-&gt;search( {},
     {
       bind  =&gt; [ 12345, 12345 ]
     }
@@ -203,8 +187,7 @@
         <span class="Li">&quot;deploy&quot;</span> will exclude this
         &quot;table&quot;:</p>
     <p class="Pp"></p>
-    <pre>
-  sub sqlt_deploy_hook { $_[1]-&gt;schema-&gt;drop_table ($_[1]) }
+    <pre>  sub sqlt_deploy_hook { $_[1]-&gt;schema-&gt;drop_table ($_[1]) }
     </pre>
   </dd>
 </dl>
@@ -217,14 +200,12 @@
     This is useful to avoid loading columns with large amounts of data that you
     aren't about to use anyway:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     undef,
     {
       columns =&gt; [qw/ name /]
     }
   );
-
   # Equivalent SQL:
   # SELECT artist.name FROM artist
 </pre>
@@ -245,15 +226,13 @@
     then use <span class="Li">&quot;as&quot;</span> to set the column name you
     will use to access the returned value:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
       select =&gt; [ 'name', { LENGTH =&gt; 'name' } ],
       as     =&gt; [qw/ name name_length /],
     }
   );
-
   # Equivalent SQL:
   # SELECT name name, LENGTH( name )
   # FROM artist
@@ -266,8 +245,7 @@
     via the <span class="Li">&quot;-as&quot;</span> field attribute as
   follows:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
       join =&gt; 'cds',
@@ -277,7 +255,6 @@
       order_by =&gt; { -desc =&gt; 'amount_of_cds' },
     }
   );
-
   # Equivalent SQL
   # SELECT me.artistid, me.name, me.rank, me.charfield, COUNT( cds.cdid ) AS amount_of_cds
   #   FROM artist me LEFT JOIN cd cds ON cds.artist = me.artistid
@@ -290,25 +267,21 @@
     <span class="Li">&quot;name&quot;</span> column, so we just use the
     <span class="Li">&quot;name&quot;</span> accessor:</p>
 <p class="Pp"></p>
-<pre>
-  my $artist = $rs-&gt;first();
+<pre>  my $artist = $rs-&gt;first();
   my $name = $artist-&gt;name();
 </pre>
 <p class="Pp">If on the other hand the alias does not correspond to an existing
     column, you have to fetch the value using the
     <span class="Li">&quot;get_column&quot;</span> accessor:</p>
 <p class="Pp"></p>
-<pre>
-  my $name_length = $artist-&gt;get_column('name_length');
+<pre>  my $name_length = $artist-&gt;get_column('name_length');
 </pre>
 <p class="Pp">If you don't like using
     <span class="Li">&quot;get_column&quot;</span>, you can always create an
     accessor for any of your aliases using either of these:</p>
 <p class="Pp"></p>
-<pre>
-  # Define accessor manually:
+<pre>  # Define accessor manually:
   sub name_length { shift-&gt;get_column('name_length'); }
-
   # Or use DBIx::Class::AccessorGroup:
   __PACKAGE__-&gt;mk_group_accessors('column' =&gt; 'name_length');
 </pre>
@@ -317,15 +290,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">SELECT DISTINCT with multiple columns</h2>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
       columns =&gt; [ qw/artist_id name rank/ ],
       distinct =&gt; 1
     }
   );
-
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
@@ -333,7 +304,6 @@
       group_by =&gt; [ qw/artist_id name rank/ ],
     }
   );
-
   # Equivalent SQL:
   # SELECT me.artist_id, me.name, me.rank
   # FROM artist me
@@ -342,15 +312,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">SELECT COUNT(DISTINCT colname)</h2>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
       columns =&gt; [ qw/name/ ],
       distinct =&gt; 1
     }
   );
-
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
@@ -358,9 +326,7 @@
       group_by =&gt; [ qw/name/ ],
     }
   );
-
   my $count = $rs-&gt;count;
-
   # Equivalent SQL:
   # SELECT COUNT( * ) FROM (SELECT me.name FROM artist me GROUP BY me.name) me:
 </pre>
@@ -371,8 +337,7 @@
 <p class="Pp">DBIx::Class supports <span class="Li">&quot;GROUP BY&quot;</span>
     as follows:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {},
     {
       join     =&gt; [qw/ cds /],
@@ -381,7 +346,6 @@
       group_by =&gt; [qw/ name /]
     }
   );
-
   # Equivalent SQL:
   # SELECT name, COUNT( cd.id ) FROM artist
   # LEFT JOIN cd ON artist.id = cd.artist
@@ -397,11 +361,9 @@
 <h2 class="Ss" id="Subqueries"><a class="permalink" href="#Subqueries">Subqueries</a></h2>
 <p class="Pp">You can write subqueries relatively easily in DBIC.</p>
 <p class="Pp"></p>
-<pre>
-  my $inside_rs = $schema-&gt;resultset('Artist')-&gt;search({
+<pre>  my $inside_rs = $schema-&gt;resultset('Artist')-&gt;search({
     name =&gt; [ 'Billy Joel', 'Brittany Spears' ],
   });
-
   my $rs = $schema-&gt;resultset('CD')-&gt;search({
     artist_id =&gt; { -in =&gt; $inside_rs-&gt;get_column('id')-&gt;as_query },
   });
@@ -411,8 +373,7 @@
 <p class="Pp"><b>NOTE</b>: You have to explicitly use '=' when doing an equality
     comparison. The following will <b>not</b> work:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search({
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search({
     artist_id =&gt; $inside_rs-&gt;get_column('id')-&gt;as_query,  # does NOT work
   });
 </pre>
@@ -421,8 +382,7 @@
     in the from, select, and +select attributes.</p>
 <p class="Pp"><i>Correlated subqueries</i></p>
 <p class="Pp"></p>
-<pre>
-  my $cdrs = $schema-&gt;resultset('CD');
+<pre>  my $cdrs = $schema-&gt;resultset('CD');
   my $rs = $cdrs-&gt;search({
     year =&gt; {
       '=' =&gt; $cdrs-&gt;search(
@@ -434,8 +394,7 @@
 </pre>
 <p class="Pp">That creates the following SQL:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT me.cdid, me.artist, me.title, me.year, me.genreid, me.single_track
+<pre>  SELECT me.cdid, me.artist, me.title, me.year, me.genreid, me.single_track
     FROM cd me
   WHERE year = (
     SELECT MAX(sub_query.year)
@@ -450,21 +409,17 @@
 <p class="Pp">You can define frequently used searches as methods by subclassing
     DBIx::Class::ResultSet:</p>
 <p class="Pp"></p>
-<pre>
-  package My::DBIC::ResultSet::CD;
+<pre>  package My::DBIC::ResultSet::CD;
   use strict;
   use warnings;
   use base 'DBIx::Class::ResultSet';
-
   sub search_cds_ordered {
       my ($self) = @_;
-
       return $self-&gt;search(
           {},
           { order_by =&gt; 'name DESC' },
       );
   }
-
   1;
 </pre>
 <p class="Pp">If you're using &quot;load_namespaces&quot; in
@@ -476,11 +431,9 @@
     DBIx::Class::Schema, first tell DBIx::Class to create an instance of the
     ResultSet class for you, in your My::DBIC::Schema::CD class:</p>
 <p class="Pp"></p>
-<pre>
-  # class definition as normal
+<pre>  # class definition as normal
   use base 'DBIx::Class::Core';
   __PACKAGE__-&gt;table('cd');
-
   # tell DBIC to use the custom ResultSet class
   __PACKAGE__-&gt;resultset_class('My::DBIC::ResultSet::CD');
 </pre>
@@ -490,8 +443,7 @@
     missing methods.</p>
 <p class="Pp">Then call your new method in your code:</p>
 <p class="Pp"></p>
-<pre>
-   my $ordered_cds = $schema-&gt;resultset('CD')-&gt;search_cds_ordered();
+<pre>   my $ordered_cds = $schema-&gt;resultset('CD')-&gt;search_cds_ordered();
 </pre>
 </section>
 <section class="Ss">
@@ -505,23 +457,19 @@
     <span class="Li">&quot;DBIx::Class&quot;</span> when necessary by resorting
     to literal SQL:</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;search(
+<pre>  $rs-&gt;search(
     \[ 'YEAR(date_of_birth) = ?', 1979 ]
   );
-
   # Equivalent SQL:
   # SELECT * FROM employee WHERE YEAR(date_of_birth) = ?
 </pre>
 <p class="Pp">To include the function as part of a larger search, use the '-and'
     keyword to collect the search conditions:</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;search({ -and =&gt; [
+<pre>  $rs-&gt;search({ -and =&gt; [
     name =&gt; 'Bob',
     \[ 'YEAR(date_of_birth) = ?', 1979 ]
   ]});
-
   # Equivalent SQL:
   # SELECT * FROM employee WHERE name = ? AND YEAR(date_of_birth) = ?
 </pre>
@@ -540,8 +488,7 @@
     over records to simulate limits in the Perl layer.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $paged_rs = $rs-&gt;search({}, {
+<pre>  my $paged_rs = $rs-&gt;search({}, {
     rows =&gt; 25,
     page =&gt; 3,
     order_by =&gt; [ 'me.last_name' ],
@@ -551,8 +498,7 @@
 <p class="Pp">You can set it as a default for your schema by placing the
     following in your <span class="Li">&quot;Schema.pm&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;default_resultset_attributes({ software_limit =&gt; 1 });
+<pre>  __PACKAGE__-&gt;default_resultset_attributes({ software_limit =&gt; 1 });
 </pre>
 <p class="Pp"><b>WARNING:</b> If you are dealing with large resultsets and your
     DBI or ODBC/ADO driver does not have proper cursor support (i.e. it loads
@@ -573,14 +519,12 @@
 <p class="Pp">This requires that you have defined the DBIx::Class::Relationship.
     For example :</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::CD-&gt;has_many( artists =&gt; 'My::Schema::Artist', 'artist_id');
+<pre>  My::Schema::CD-&gt;has_many( artists =&gt; 'My::Schema::Artist', 'artist_id');
 </pre>
 <p class="Pp">To return all CDs matching a particular artist name, you specify
     the name of the relationship ('artists'):</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search(
     {
       'artists.name' =&gt; 'Bob Marley'
     },
@@ -588,7 +532,6 @@
       join =&gt; 'artists', # join the artist table
     }
   );
-
   # Equivalent SQL:
   # SELECT cd.* FROM cd
   # JOIN artist ON cd.artist = artist.id
@@ -602,8 +545,7 @@
     attribute, (again using the aliased relation name rather than table name)
   :</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search(
     {
       'artists.name' =&gt; 'Bob Marley'
     },
@@ -612,7 +554,6 @@
       order_by =&gt; [qw/ artists.name /]
     }
   );
-
   # Equivalent SQL:
   # SELECT cd.* FROM cd
   # JOIN artist ON cd.artist = artist.id
@@ -626,8 +567,7 @@
 <p class="Pp">Now let's say you want to display a list of CDs, each with the
     name of the artist. The following will work fine:</p>
 <p class="Pp"></p>
-<pre>
-  while (my $cd = $rs-&gt;next) {
+<pre>  while (my $cd = $rs-&gt;next) {
     print &quot;CD: &quot; . $cd-&gt;title . &quot;, Artist: &quot; . $cd-&gt;artist-&gt;name;
   }
 </pre>
@@ -638,8 +578,7 @@
     table. To get the artist name for any of the CD objects returned,
     DBIx::Class will go back to the database:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT artist.* FROM artist WHERE artist.id = ?
+<pre>  SELECT artist.* FROM artist WHERE artist.id = ?
 </pre>
 <p class="Pp">A statement like the one above will run for each and every CD
     returned by our main query. Five CDs, five extra queries. A hundred CDs, one
@@ -649,8 +588,7 @@
     problem. This allows you to fetch results from related tables in
   advance:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('CD')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('CD')-&gt;search(
     {
       'artists.name' =&gt; 'Bob Marley'
     },
@@ -660,7 +598,6 @@
       prefetch =&gt; 'artists' # return artist data too!
     }
   );
-
   # Equivalent SQL (note SELECT from both &quot;cd&quot; and &quot;artist&quot;):
   # SELECT cd.*, artist.* FROM cd
   # JOIN artist ON cd.artist = artist.id
@@ -669,8 +606,7 @@
 </pre>
 <p class="Pp">The code to print the CD list remains the same:</p>
 <p class="Pp"></p>
-<pre>
-  while (my $cd = $rs-&gt;next) {
+<pre>  while (my $cd = $rs-&gt;next) {
     print &quot;CD: &quot; . $cd-&gt;title . &quot;, Artist: &quot; . $cd-&gt;artist-&gt;name;
   }
 </pre>
@@ -691,8 +627,7 @@
     example, we want to limit the search further, using
     <span class="Li">&quot;LinerNotes&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  # Relationships defined elsewhere:
+<pre>  # Relationships defined elsewhere:
   # CD-&gt;belongs_to('artist' =&gt; 'Artist');
   # CD-&gt;has_one('liner_notes' =&gt; 'LinerNotes', 'cd');
   my $rs = $schema-&gt;resultset('CD')-&gt;search(
@@ -705,7 +640,6 @@
       order_by =&gt; [qw/ artist.name /],
     }
   );
-
   # Equivalent SQL:
   # SELECT cd.*, artist.*, liner_notes.* FROM cd
   # JOIN artist ON cd.artist = artist.id
@@ -723,11 +657,9 @@
     <span class="Li">&quot;LinerNotes&quot;</span> contain a specific
   string:</p>
 <p class="Pp"></p>
-<pre>
-  # Relationships defined elsewhere:
+<pre>  # Relationships defined elsewhere:
   # Artist-&gt;has_many('cds' =&gt; 'CD', 'artist');
   # CD-&gt;has_one('liner_notes' =&gt; 'LinerNotes', 'cd');
-
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {
       'liner_notes.notes' =&gt; { 'like', '%some text%' },
@@ -738,7 +670,6 @@
       }
     }
   );
-
   # Equivalent SQL:
   # SELECT artist.* FROM artist
   # LEFT JOIN cd ON artist.id = cd.artist
@@ -749,10 +680,8 @@
     that we want to reduce the number of Artists returned based on who wrote the
     liner notes:</p>
 <p class="Pp"></p>
-<pre>
-  # Relationship defined elsewhere:
+<pre>  # Relationship defined elsewhere:
   # LinerNotes-&gt;belongs_to('author' =&gt; 'Person');
-
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     {
       'liner_notes.notes' =&gt; { 'like', '%some text%' },
@@ -766,7 +695,6 @@
       }
     }
   );
-
   # Equivalent SQL:
   # SELECT artist.* FROM artist
   # LEFT JOIN cd ON artist.id = cd.artist
@@ -783,10 +711,8 @@
     join tables in any combination you desire. For example, to join Artist to CD
     and Concert, and join CD to LinerNotes:</p>
 <p class="Pp"></p>
-<pre>
-  # Relationships defined elsewhere:
+<pre>  # Relationships defined elsewhere:
   # Artist-&gt;has_many('concerts' =&gt; 'Concert', 'artist');
-
   my $rs = $schema-&gt;resultset('Artist')-&gt;search(
     { },
     {
@@ -798,7 +724,6 @@
       ],
     }
   );
-
   # Equivalent SQL:
   # SELECT artist.* FROM artist
   # LEFT JOIN cd ON artist.id = cd.artist
@@ -812,8 +737,7 @@
 <p class="Pp"><span class="Li">&quot;prefetch&quot;</span> can be nested more
     than one relationship deep using the same syntax as a multi-step join:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Tag')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Tag')-&gt;search(
     {},
     {
       prefetch =&gt; {
@@ -821,7 +745,6 @@
       }
     }
   );
-
   # Equivalent SQL:
   # SELECT tag.*, cd.*, artist.* FROM tag
   # JOIN cd ON tag.cd = cd.id
@@ -831,8 +754,7 @@
     <span class="Li">&quot;artist&quot;</span> relationships does not need
     additional SQL statements:</p>
 <p class="Pp"></p>
-<pre>
-  my $tag = $rs-&gt;first;
+<pre>  my $tag = $rs-&gt;first;
   print $tag-&gt;cd-&gt;artist-&gt;name;
 </pre>
 </section>
@@ -846,8 +768,7 @@
 <p class="Pp">It is possible to get a Schema object from a result object like
     so:</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = $cd-&gt;result_source-&gt;schema;
+<pre>  my $schema = $cd-&gt;result_source-&gt;schema;
   # use the schema as normal:
   my $artist_rs = $schema-&gt;resultset('Artist');
 </pre>
@@ -861,8 +782,7 @@
 <p class="Pp">Thanks to the core component PK::Auto, this is
   straightforward:</p>
 <p class="Pp"></p>
-<pre>
-  my $foo = $rs-&gt;create(\%blah);
+<pre>  my $foo = $rs-&gt;create(\%blah);
   # do more stuff
   my $id = $foo-&gt;id; # foo-&gt;my_primary_key_field will also work.
 </pre>
@@ -878,14 +798,12 @@
     something like this (replace <span class="Li">&quot;name&quot;</span> with
     the column/method of your choice):</p>
 <p class="Pp"></p>
-<pre>
-  use overload '&quot;&quot;' =&gt; sub { shift-&gt;name}, fallback =&gt; 1;
+<pre>  use overload '&quot;&quot;' =&gt; sub { shift-&gt;name}, fallback =&gt; 1;
 </pre>
 <p class="Pp">For more complex stringification, you can use an anonymous
     subroutine:</p>
 <p class="Pp"></p>
-<pre>
-  use overload '&quot;&quot;' =&gt; sub { $_[0]-&gt;name . &quot;, &quot; .
+<pre>  use overload '&quot;&quot;' =&gt; sub { $_[0]-&gt;name . &quot;, &quot; .
                              $_[0]-&gt;address }, fallback =&gt; 1;
 </pre>
 <p class="Pp"><i>Stringification Example</i></p>
@@ -894,8 +812,7 @@
     <span class="Li">&quot;Category&quot;</span>. The table specifications
   are:</p>
 <p class="Pp"></p>
-<pre>
-  Product(id, Description, category)
+<pre>  Product(id, Description, category)
   Category(id, Description)
 </pre>
 <p class="Pp"><span class="Li">&quot;category&quot;</span> is a foreign key into
@@ -903,17 +820,14 @@
 <p class="Pp">If you have a Product object <span class="Li">$obj</span> and
     write something like</p>
 <p class="Pp"></p>
-<pre>
-  print $obj-&gt;category
+<pre>  print $obj-&gt;category
 </pre>
 <p class="Pp">things will not work as expected.</p>
 <p class="Pp">To obtain, for example, the category description, you should add
     this method to the class defining the Category table:</p>
 <p class="Pp"></p>
-<pre>
-  use overload &quot;&quot; =&gt; sub {
+<pre>  use overload &quot;&quot; =&gt; sub {
       my $self = shift;
-
       return $self-&gt;Description;
   }, fallback =&gt; 1;
 </pre>
@@ -924,8 +838,7 @@
 <p class="Pp">Just use <span class="Li">&quot;find_or_new&quot;</span> instead,
     then check <span class="Li">&quot;in_storage&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $obj = $rs-&gt;find_or_new({ blah =&gt; 'blarg' });
+<pre>  my $obj = $rs-&gt;find_or_new({ blah =&gt; 'blarg' });
   unless ($obj-&gt;in_storage) {
     $obj-&gt;insert;
     # do whatever else you wanted if it was a new row
@@ -939,41 +852,31 @@
     specific usage of the (shared) model.</p>
 <p class="Pp"><b>Schema definition</b></p>
 <p class="Pp"></p>
-<pre>
-    package My::App::Schema;
-
+<pre>    package My::App::Schema;
     use base 'DBIx::Class::Schema';
-
     # load subclassed classes from My::App::Schema::Result/ResultSet
     __PACKAGE__-&gt;load_namespaces;
-
     # load classes from shared model
     load_classes({
         'My::Shared::Model::Result' =&gt; [qw/
             Foo
             Bar
         /]});
-
     1;
 </pre>
 <p class="Pp"><b>Result-Subclass definition</b></p>
 <p class="Pp"></p>
-<pre>
-    package My::App::Schema::Result::Baz;
-
+<pre>    package My::App::Schema::Result::Baz;
     use strict;
     use warnings;
     use base 'My::Shared::Model::Result::Baz';
-
     # WARNING: Make sure you call table() again in your subclass,
     # otherwise DBIx::Class::ResultSourceProxy::Table will not be called
     # and the class name is not correctly registered as a source
     __PACKAGE__-&gt;table('baz');
-
     sub additional_method {
         return &quot;I'm an additional method only needed by this app&quot;;
     }
-
     1;
 </pre>
 </section>
@@ -997,35 +900,24 @@
   below:</p>
 <p class="Pp"><b>Schema Definition</b></p>
 <p class="Pp"></p>
-<pre>
-    package My::Schema;
-
+<pre>    package My::Schema;
     use base qw/DBIx::Class::Schema/;
-
     __PACKAGE__-&gt;load_namespaces;
-
     1;
 </pre>
 <p class="Pp"><b>Proxy-Class definitions</b></p>
 <p class="Pp"></p>
-<pre>
-    package My::Schema::Result::User;
-
+<pre>    package My::Schema::Result::User;
     use strict;
     use warnings;
     use base qw/DBIx::Class::Core/;
-
     ### Define what our admin class is, for ensure_class_loaded()
     my $admin_class = __PACKAGE__ . '::Admin';
-
     __PACKAGE__-&gt;table('users');
-
     __PACKAGE__-&gt;add_columns(qw/user_id   email    password
                                 firstname lastname active
                                 admin/);
-
     __PACKAGE__-&gt;set_primary_key('user_id');
-
     sub inflate_result {
         my $self = shift;
         my $ret = $self-&gt;next::method(@_);
@@ -1035,70 +927,52 @@
         }
         return $ret;
     }
-
     sub hello {
         print &quot;I am a regular user.\n&quot;;
         return ;
     }
-
     1;
-
-
     package My::Schema::Result::User::Admin;
-
     use strict;
     use warnings;
     use base qw/My::Schema::Result::User/;
-
     # This line is important
     __PACKAGE__-&gt;table('users');
-
     sub hello
     {
         print &quot;I am an admin.\n&quot;;
         return;
     }
-
     sub do_admin_stuff
     {
         print &quot;I am doing admin stuff\n&quot;;
         return ;
     }
-
     1;
 </pre>
 <p class="Pp"><b>Test File</b> test.pl</p>
 <p class="Pp"></p>
-<pre>
-    use warnings;
+<pre>    use warnings;
     use strict;
     use My::Schema;
-
     my $user_data = { email    =&gt; 'someguy@place.com',
                       password =&gt; 'pass1',
                       admin    =&gt; 0 };
-
     my $admin_data = { email    =&gt; 'someadmin@adminplace.com',
                        password =&gt; 'pass2',
                        admin    =&gt; 1 };
-
     my $schema = My::Schema-&gt;connection('dbi:Pg:dbname=test');
-
     $schema-&gt;resultset('User')-&gt;create( $user_data );
     $schema-&gt;resultset('User')-&gt;create( $admin_data );
-
     ### Now we search for them
     my $user = $schema-&gt;resultset('User')-&gt;single( $user_data );
     my $admin = $schema-&gt;resultset('User')-&gt;single( $admin_data );
-
     print ref $user, &quot;\n&quot;;
     print ref $admin, &quot;\n&quot;;
-
     print $user-&gt;password , &quot;\n&quot;; # pass1
     print $admin-&gt;password , &quot;\n&quot;;# pass2; inherited from User
     print $user-&gt;hello , &quot;\n&quot;;# I am a regular user.
     print $admin-&gt;hello, &quot;\n&quot;;# I am an admin.
-
     ### The statement below will NOT print
     print &quot;I can do admin stuff\n&quot; if $user-&gt;can('do_admin_stuff');
     ### The statement below will print
@@ -1116,11 +990,8 @@
 <p class="Pp">To do this simply use
   DBIx::Class::ResultClass::HashRefInflator.</p>
 <p class="Pp"></p>
-<pre>
- my $rs = $schema-&gt;resultset('CD');
-
+<pre> my $rs = $schema-&gt;resultset('CD');
  $rs-&gt;result_class('DBIx::Class::ResultClass::HashRefInflator');
-
  my $hash_ref = $rs-&gt;find(1);
 </pre>
 <p class="Pp">Wasn't that easy?</p>
@@ -1137,8 +1008,7 @@
     database with none of the convenience methods wrapped round them.</p>
 <p class="Pp">This is used like so:</p>
 <p class="Pp"></p>
-<pre>
-  my $cursor = $rs-&gt;cursor
+<pre>  my $cursor = $rs-&gt;cursor
   while (my @vals = $cursor-&gt;next) {
       # use $val[0..n] here
   }
@@ -1157,8 +1027,7 @@
 <p class="Pp">To get the DBIx::Class::Schema object from a ResultSet, do the
     following:</p>
 <p class="Pp"></p>
-<pre>
- $rs-&gt;result_source-&gt;schema
+<pre> $rs-&gt;result_source-&gt;schema
 </pre>
 </section>
 <section class="Ss">
@@ -1168,8 +1037,7 @@
 <p class="Pp">If you want to find the sum of a particular column there are
     several ways, the obvious one is to use search:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Items')-&gt;search(
+<pre>  my $rs = $schema-&gt;resultset('Items')-&gt;search(
     {},
     {
        select =&gt; [ { sum =&gt; 'Cost' } ],
@@ -1182,23 +1050,19 @@
     returned when you ask the <span class="Li">&quot;ResultSet&quot;</span> for
     a column using <span class="Li">&quot;get_column&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $cost = $schema-&gt;resultset('Items')-&gt;get_column('Cost');
+<pre>  my $cost = $schema-&gt;resultset('Items')-&gt;get_column('Cost');
   my $tc = $cost-&gt;sum;
 </pre>
 <p class="Pp">With this you can also do:</p>
 <p class="Pp"></p>
-<pre>
-  my $minvalue = $cost-&gt;min;
+<pre>  my $minvalue = $cost-&gt;min;
   my $maxvalue = $cost-&gt;max;
 </pre>
 <p class="Pp">Or just iterate through the values of this column only:</p>
 <p class="Pp"></p>
-<pre>
-  while ( my $c = $cost-&gt;next ) {
+<pre>  while ( my $c = $cost-&gt;next ) {
     print $c;
   }
-
   foreach my $c ($cost-&gt;all) {
     print $c;
   }
@@ -1208,13 +1072,11 @@
     then you can use the <span class="Li">&quot;func&quot;</span> method
     instead:</p>
 <p class="Pp"></p>
-<pre>
-  my $avg = $cost-&gt;func('AVERAGE');
+<pre>  my $avg = $cost-&gt;func('AVERAGE');
 </pre>
 <p class="Pp">This will cause the following SQL statement to be run:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT AVERAGE(Cost) FROM Items me
+<pre>  SELECT AVERAGE(Cost) FROM Items me
 </pre>
 <p class="Pp">Which will of course only work if your database supports this
     function. See DBIx::Class::ResultSetColumn for more documentation.</p>
@@ -1226,8 +1088,7 @@
     into a resultset without the need to hit the DB again. You can do that by
     using the set_cache method:</p>
 <p class="Pp"></p>
-<pre>
- my @uploadable_groups;
+<pre> my @uploadable_groups;
  while (my $group = $groups-&gt;next) {
    if ($group-&gt;can_upload($self)) {
      push @uploadable_groups, $group;
@@ -1245,8 +1106,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Create_a_new_row_in_a_related_table"><a class="permalink" href="#Create_a_new_row_in_a_related_table">Create
   a new row in a related table</a></h2>
-<pre>
-  my $author = $book-&gt;create_related('author', { name =&gt; 'Fred'});
+<pre>  my $author = $book-&gt;create_related('author', { name =&gt; 'Fred'});
 </pre>
 </section>
 <section class="Ss">
@@ -1255,8 +1115,7 @@
 <p class="Pp">Only searches for books named 'Titanic' by the author in
     <span class="Li">$author</span>.</p>
 <p class="Pp"></p>
-<pre>
-  my $books_rs = $author-&gt;search_related('books', { name =&gt; 'Titanic' });
+<pre>  my $books_rs = $author-&gt;search_related('books', { name =&gt; 'Titanic' });
 </pre>
 </section>
 <section class="Ss">
@@ -1265,8 +1124,7 @@
 <p class="Pp">Deletes only the book named Titanic by the author in
     <span class="Li">$author</span>.</p>
 <p class="Pp"></p>
-<pre>
-  $author-&gt;delete_related('books', { name =&gt; 'Titanic' });
+<pre>  $author-&gt;delete_related('books', { name =&gt; 'Titanic' });
 </pre>
 </section>
 <section class="Ss">
@@ -1277,8 +1135,7 @@
 <p class="Pp">To order <span class="Li">&quot;$book-&gt;pages&quot;</span> by
     descending page_number, create the relation as follows:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;has_many('pages' =&gt; 'Page', 'book', { order_by =&gt; { -desc =&gt; 'page_number'} } );
+<pre>  __PACKAGE__-&gt;has_many('pages' =&gt; 'Page', 'book', { order_by =&gt; { -desc =&gt; 'page_number'} } );
 </pre>
 </section>
 <section class="Ss">
@@ -1287,8 +1144,7 @@
 <p class="Pp">If you want to get a filtered result set, you can just add to
     <span class="Li">$attr</span> as follows:</p>
 <p class="Pp"></p>
-<pre>
- __PACKAGE__-&gt;has_many('pages' =&gt; 'Page', 'book', { where =&gt; { scrap =&gt; 0 } } );
+<pre> __PACKAGE__-&gt;has_many('pages' =&gt; 'Page', 'book', { where =&gt; { scrap =&gt; 0 } } );
 </pre>
 </section>
 <section class="Ss">
@@ -1296,15 +1152,13 @@
   relationship bridges</a></h2>
 <p class="Pp">This is straightforward using ManyToMany:</p>
 <p class="Pp"></p>
-<pre>
-  package My::User;
+<pre>  package My::User;
   use base 'DBIx::Class::Core';
   __PACKAGE__-&gt;table('user');
   __PACKAGE__-&gt;add_columns(qw/id name/);
   __PACKAGE__-&gt;set_primary_key('id');
   __PACKAGE__-&gt;has_many('user_address' =&gt; 'My::UserAddress', 'user');
   __PACKAGE__-&gt;many_to_many('addresses' =&gt; 'user_address', 'address');
-
   package My::UserAddress;
   use base 'DBIx::Class::Core';
   __PACKAGE__-&gt;table('user_address');
@@ -1312,7 +1166,6 @@
   __PACKAGE__-&gt;set_primary_key(qw/user address/);
   __PACKAGE__-&gt;belongs_to('user' =&gt; 'My::User');
   __PACKAGE__-&gt;belongs_to('address' =&gt; 'My::Address');
-
   package My::Address;
   use base 'DBIx::Class::Core';
   __PACKAGE__-&gt;table('address');
@@ -1320,10 +1173,8 @@
   __PACKAGE__-&gt;set_primary_key('id');
   __PACKAGE__-&gt;has_many('user_address' =&gt; 'My::UserAddress', 'address');
   __PACKAGE__-&gt;many_to_many('users' =&gt; 'user_address', 'user');
-
   $rs = $user-&gt;addresses(); # get all addresses for a user
   $rs = $address-&gt;users(); # get all users for an address
-
   my $address = $user-&gt;add_to_addresses(    # returns a My::Address instance,
                                             # NOT a My::UserAddress instance!
     {
@@ -1345,16 +1196,12 @@
 <p class="Pp">To accomplish this one only needs to specify the DB schema name in
     the table declaration, like so...</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::Result::Artist;
+<pre>  package MyApp::Schema::Result::Artist;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;table('database1.artist'); # will use &quot;database1.artist&quot; in FROM clause
-
   __PACKAGE__-&gt;add_columns(qw/ artist_id name /);
   __PACKAGE__-&gt;set_primary_key('artist_id');
   __PACKAGE__-&gt;has_many('cds' =&gt; 'MyApp::Schema::Result::Cd');
-
   1;
 </pre>
 <p class="Pp">Whatever string you specify there will be used to build the
@@ -1368,42 +1215,31 @@
     schema by overriding the connection method in your Schema class and building
     a renaming facility, like so:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema;
+<pre>  package MyApp::Schema;
   use Moose;
-
   extends 'DBIx::Class::Schema';
-
   around connection =&gt; sub {
     my ( $inner, $self, $dsn, $username, $pass, $attr ) = ( shift, @_ );
-
     my $postfix = delete $attr-&gt;{schema_name_postfix};
-
     $inner-&gt;(@_);
-
     if ( $postfix ) {
         $self-&gt;append_db_name($postfix);
     }
   };
-
   sub append_db_name {
     my ( $self, $postfix ) = @_;
-
     my @sources_with_db
         = grep
             { $_-&gt;name =~ /^\w+\./mx }
             map
                 { $self-&gt;source($_) }
                 $self-&gt;sources;
-
     foreach my $source (@sources_with_db) {
         my $name = $source-&gt;name;
         $name =~ s{^(\w+)\.}{${1}${postfix}\.}mx;
-
         $source-&gt;name($name);
     }
   }
-
   1;
 </pre>
 <p class="Pp">By overriding the connection method and extracting a custom option
@@ -1412,8 +1248,7 @@
 <p class="Pp">To use this facility, simply add or modify the \%attr hashref that
     is passed to connection, as follows:</p>
 <p class="Pp"></p>
-<pre>
-  my $schema
+<pre>  my $schema
     = MyApp::Schema-&gt;connect(
       $dsn,
       $user,
@@ -1436,14 +1271,11 @@
     DBIx::Class::Storage and DBIx::Class::Schema. Here is an example of the
     recommended way to use it:</p>
 <p class="Pp"></p>
-<pre>
-  my $genus = $schema-&gt;resultset('Genus')-&gt;find(12);
-
+<pre>  my $genus = $schema-&gt;resultset('Genus')-&gt;find(12);
   my $coderef2 = sub {
     $genus-&gt;extinct(1);
     $genus-&gt;update;
   };
-
   my $coderef1 = sub {
     $genus-&gt;add_to_species({ name =&gt; 'troglodyte' });
     $genus-&gt;wings(2);
@@ -1451,7 +1283,6 @@
     $schema-&gt;txn_do($coderef2); # Can have a nested transaction. Only the outer will actualy commit
     return $genus-&gt;species;
   };
-
   use Try::Tiny;
   my $rs;
   try {
@@ -1460,7 +1291,6 @@
     # Transaction failed
     die &quot;the sky is falling!&quot;           #
       if ($_ =~ /Rollback failed/);     # Rollback failed
-
     deal_with_failed_transaction();
   };
 </pre>
@@ -1487,9 +1317,7 @@
     depending on the type of failure, we want to abort the whole task, or only
     skip the failed row.</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = MySchema-&gt;connect(&quot;dbi:Pg:dbname=my_db&quot;);
-
+<pre>  my $schema = MySchema-&gt;connect(&quot;dbi:Pg:dbname=my_db&quot;);
   # Start a transaction. Every database change from here on will only be
   # committed into the database if the try block succeeds.
   use Try::Tiny;
@@ -1497,23 +1325,17 @@
   try {
     $schema-&gt;txn_do(sub {
       # SQL: BEGIN WORK;
-
       my $job = $schema-&gt;resultset('Job')-&gt;create({ name=&gt; 'big job' });
       # SQL: INSERT INTO job ( name) VALUES ( 'big job' );
-
       for (1..10) {
-
         # Start a nested transaction, which in fact sets a savepoint.
         try {
           $schema-&gt;txn_do(sub {
             # SQL: SAVEPOINT savepoint_0;
-
             my $thing = $schema-&gt;resultset('Thing')-&gt;create({ job=&gt;$job-&gt;id });
             # SQL: INSERT INTO thing ( job) VALUES ( 1 );
-
             if (rand &gt; 0.8) {
               # This will generate an error, thus setting $@
-
               $thing-&gt;update({force_fail=&gt;'foo'});
               # SQL: UPDATE thing SET force_fail = 'foo'
               #      WHERE ( id = 42 );
@@ -1521,48 +1343,39 @@
           });
         } catch {
           # SQL: ROLLBACK TO SAVEPOINT savepoint_0;
-
           # There was an error while creating a $thing. Depending on the error
           # we want to abort the whole transaction, or only rollback the
           # changes related to the creation of this $thing
-
           # Abort the whole job
           if ($_ =~ /horrible_problem/) {
             print &quot;something horrible happened, aborting job!&quot;;
             die $_;                # rethrow error
           }
-
           # Ignore this $thing, report the error, and continue with the
           # next $thing
           print &quot;Cannot create thing: $_&quot;;
         }
         # There was no error, so save all changes since the last
         # savepoint.
-
         # SQL: RELEASE SAVEPOINT savepoint_0;
       }
     });
   } catch {
     $exception = $_;
   };
-
   if ($exception) {
     # There was an error while handling the $job. Rollback all changes
     # since the transaction started, including the already committed
     # ('released') savepoints. There will be neither a new $job nor any
     # $thing entry in the database.
-
     # SQL: ROLLBACK;
-
     print &quot;ERROR: $exception\n&quot;;
   }
   else {
     # There was no error while handling the $job. Commit all changes.
     # Only now other connections can see the newly created $job and
     # @things.
-
     # SQL: COMMIT;
-
     print &quot;Ok\n&quot;;
   }
 </pre>
@@ -1600,8 +1413,7 @@
     or the Catalyst helper, as described in Manual::Intro.</p>
 <p class="Pp">Alternatively, use the make_schema_at method:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MDBIx::Class::Schema::Loader=make_schema_at,dump_to_dir:./lib \
+<pre>  perl -MDBIx::Class::Schema::Loader=make_schema_at,dump_to_dir:./lib \
     -e 'make_schema_at(&quot;My::Schema&quot;, \
     { db_schema =&gt; 'myschema', components =&gt; [&quot;InflateColumn::DateTime&quot;] }, \
     [ &quot;dbi:Pg:dbname=foo&quot;, &quot;username&quot;, &quot;password&quot; ])'
@@ -1620,8 +1432,7 @@
 <p class="Pp">To create a set of database-specific .sql files for the above
     schema:</p>
 <p class="Pp"></p>
-<pre>
- my $schema = My::Schema-&gt;connect($dsn);
+<pre> my $schema = My::Schema-&gt;connect($dsn);
  $schema-&gt;create_ddl_dir(['MySQL', 'SQLite', 'PostgreSQL'],
                         '0.1',
                         './dbscriptdir/'
@@ -1632,22 +1443,19 @@
     from your Schema.pm.</p>
 <p class="Pp">To create a new database using the schema:</p>
 <p class="Pp"></p>
-<pre>
- my $schema = My::Schema-&gt;connect($dsn);
+<pre> my $schema = My::Schema-&gt;connect($dsn);
  $schema-&gt;deploy({ add_drop_table =&gt; 1});
 </pre>
 <p class="Pp">To import created .sql files using the mysql client:</p>
 <p class="Pp"></p>
-<pre>
-  mysql -h &quot;host&quot; -D &quot;database&quot; -u &quot;user&quot; -p &lt; My_Schema_1.0_MySQL.sql
+<pre>  mysql -h &quot;host&quot; -D &quot;database&quot; -u &quot;user&quot; -p &lt; My_Schema_1.0_MySQL.sql
 </pre>
 <p class="Pp">To create <span class="Li">&quot;ALTER TABLE&quot;</span>
     conversion scripts to update a database to a newer version of your schema at
     a later point, first set a new <span class="Li">$VERSION</span> in your
     Schema file, then:</p>
 <p class="Pp"></p>
-<pre>
- my $schema = My::Schema-&gt;connect($dsn);
+<pre> my $schema = My::Schema-&gt;connect($dsn);
  $schema-&gt;create_ddl_dir(['MySQL', 'SQLite', 'PostgreSQL'],
                          '0.2',
                          '/dbscriptdir/',
@@ -1671,8 +1479,7 @@
     break your database.</p>
 <p class="Pp">Make a table class as you would for any other table</p>
 <p class="Pp"></p>
-<pre>
-  package MyAppDB::Dual;
+<pre>  package MyAppDB::Dual;
   use strict;
   use warnings;
   use base 'DBIx::Class::Core';
@@ -1687,8 +1494,7 @@
     <span class="Li">&quot;as&quot;</span> instead of
     <span class="Li">&quot;columns&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Dual')-&gt;search(undef,
+<pre>  my $rs = $schema-&gt;resultset('Dual')-&gt;search(undef,
     { select =&gt; [ 'sydate' ],
       as     =&gt; [ 'now' ]
     },
@@ -1698,8 +1504,7 @@
     resultset, the below will not work because there is no column called 'now'
     in the Dual table class</p>
 <p class="Pp"></p>
-<pre>
-  while (my $dual = $rs-&gt;next) {
+<pre>  while (my $dual = $rs-&gt;next) {
     print $dual-&gt;now.&quot;\n&quot;;
   }
   # Can't locate object method &quot;now&quot; via package &quot;MyAppDB::Dual&quot; at headshot.pl line 23.
@@ -1710,15 +1515,13 @@
     whatever you wanted to select from dual, but that's just silly, instead use
     <span class="Li">&quot;get_column&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  while (my $dual = $rs-&gt;next) {
+<pre>  while (my $dual = $rs-&gt;next) {
     print $dual-&gt;get_column('now').&quot;\n&quot;;
   }
 </pre>
 <p class="Pp">Or use <span class="Li">&quot;cursor&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  my $cursor = $rs-&gt;cursor;
+<pre>  my $cursor = $rs-&gt;cursor;
   while (my @vals = $cursor-&gt;next) {
     print $vals[0].&quot;\n&quot;;
   }
@@ -1731,8 +1534,7 @@
     To avoid this problem, just tell SQL::Translator to not create table
   dual:</p>
 <p class="Pp"></p>
-<pre>
-    my $sqlt_args = {
+<pre>    my $sqlt_args = {
         add_drop_table =&gt; 1,
         parser_args    =&gt; { sources =&gt; [ grep $_ ne 'Dual', schema-&gt;sources ] },
     };
@@ -1740,8 +1542,7 @@
 </pre>
 <p class="Pp">Or use DBIx::Class::ResultClass::HashRefInflator</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;result_class('DBIx::Class::ResultClass::HashRefInflator');
+<pre>  $rs-&gt;result_class('DBIx::Class::ResultClass::HashRefInflator');
   while ( my $dual = $rs-&gt;next ) {
     print $dual-&gt;{now}.&quot;\n&quot;;
   }
@@ -1751,25 +1552,18 @@
     like <span class="Li">&quot;oracles.heavily(nested(functions_can('take',
     'lots'), OF), 'args')&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  # get a sequence value
+<pre>  # get a sequence value
   select =&gt; [ 'A_SEQ.nextval' ],
-
   # get create table sql
   select =&gt; [ { 'dbms_metadata.get_ddl' =&gt; [ &quot;'TABLE'&quot;, &quot;'ARTIST'&quot; ]} ],
-
   # get a random num between 0 and 100
   select =&gt; [ { &quot;trunc&quot; =&gt; [ { &quot;dbms_random.value&quot; =&gt; [0,100] } ]} ],
-
   # what year is it?
   select =&gt; [ { 'extract' =&gt; [ \'year from sysdate' ] } ],
-
   # do some math
   select =&gt; [ {'round' =&gt; [{'cos' =&gt; [ \'180 * 3.14159265359/180' ]}]}],
-
   # which day of the week were you born on?
   select =&gt; [{'to_char' =&gt; [{'to_date' =&gt; [ &quot;'25-DEC-1980'&quot;, &quot;'dd-mon-yyyy'&quot; ]}, &quot;'day'&quot;]}],
-
   # select 16 rows from dual
   select   =&gt; [ &quot;'hello'&quot; ],
   as       =&gt; [ 'world' ],
@@ -1785,38 +1579,28 @@
     class (refer to the advanced callback system if you wish to share a hook
     between multiple sources):</p>
 <p class="Pp"></p>
-<pre>
- package My::Schema::Result::Artist;
-
+<pre> package My::Schema::Result::Artist;
  __PACKAGE__-&gt;table('artist');
  __PACKAGE__-&gt;add_columns(id =&gt; { ... }, name =&gt; { ... })
-
  sub sqlt_deploy_hook {
    my ($self, $sqlt_table) = @_;
-
    $sqlt_table-&gt;add_index(name =&gt; 'idx_name', fields =&gt; ['name']);
  }
-
  1;
 </pre>
 <p class="Pp">Sometimes you might want to change the index depending on the type
     of the database for which SQL is being generated:</p>
 <p class="Pp"></p>
-<pre>
-  my ($db_type = $sqlt_table-&gt;schema-&gt;translator-&gt;producer_type)
+<pre>  my ($db_type = $sqlt_table-&gt;schema-&gt;translator-&gt;producer_type)
     =~ s/^SQL::Translator::Producer:://;
 </pre>
 <p class="Pp">You can also add hooks to the schema level to stop certain tables
     being created:</p>
 <p class="Pp"></p>
-<pre>
- package My::Schema;
-
+<pre> package My::Schema;
  ...
-
  sub sqlt_deploy_hook {
    my ($self, $sqlt_schema) = @_;
-
    $sqlt_schema-&gt;drop_table('table_name');
  }
 </pre>
@@ -1880,16 +1664,14 @@
 <p class="Pp">If the database contains column names with spaces and/or reserved
     words, they need to be quoted in the SQL queries. This is done using:</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;storage-&gt;sql_maker-&gt;quote_char([ qw/[ ]/] );
+<pre> $schema-&gt;storage-&gt;sql_maker-&gt;quote_char([ qw/[ ]/] );
  $schema-&gt;storage-&gt;sql_maker-&gt;name_sep('.');
 </pre>
 <p class="Pp">The first sets the quote characters. Either a pair of matching
     brackets, or a <span class="Li">&quot;&quot;&quot;</span> or
     <span class="Li">&quot;'&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;storage-&gt;sql_maker-&gt;quote_char('&quot;');
+<pre> $schema-&gt;storage-&gt;sql_maker-&gt;quote_char('&quot;');
 </pre>
 <p class="Pp">Check the documentation of your database for the correct quote
     characters to use. <span class="Li">&quot;name_sep&quot;</span> needs to be
@@ -1898,8 +1680,7 @@
 <p class="Pp">In most cases you should set these as part of the arguments passed
     to &quot;connect&quot; in DBIx::Class::Schema:</p>
 <p class="Pp"></p>
-<pre>
- my $schema = My::Schema-&gt;connect(
+<pre> my $schema = My::Schema-&gt;connect(
   'dbi:mysql:my_db',
   'db_user',
   'db_password',
@@ -1914,8 +1695,7 @@
     <span class="Li">&quot;connection&quot;</span> method for your schema
   class:</p>
 <p class="Pp"></p>
-<pre>
- sub connection {
+<pre> sub connection {
      my $self = shift;
      my $rv = $self-&gt;next::method( @_ );
      $rv-&gt;storage-&gt;sql_maker-&gt;quote_char([ qw/[ ]/ ]);
@@ -1933,11 +1713,9 @@
     &quot;create&quot; in DBIx::Class::ResultSet and &quot;update&quot; in
     DBIx::Class::Row family of methods:</p>
 <p class="Pp"></p>
-<pre>
-  $resultset-&gt;create({
+<pre>  $resultset-&gt;create({
     numbers =&gt; [1, 2, 3]
   });
-
   $result-&gt;update(
     {
       numbers =&gt; [1, 2, 3]
@@ -1953,8 +1731,7 @@
     values to be <span class="Li">&quot;OR&quot;</span>ed), but you can use the
     following syntax to force passing them as bind values:</p>
 <p class="Pp"></p>
-<pre>
-  $resultset-&gt;search(
+<pre>  $resultset-&gt;search(
     {
       numbers =&gt; \[ '= ?', [numbers =&gt; [1, 2, 3]] ]
     }
@@ -1980,8 +1757,7 @@
     to your Schema provides a correct DateTime formatter, so all you have to do
     is:</p>
 <p class="Pp"></p>
-<pre>
-  my $dtf = $schema-&gt;storage-&gt;datetime_parser;
+<pre>  my $dtf = $schema-&gt;storage-&gt;datetime_parser;
   my $rs = $schema-&gt;resultset('users')-&gt;search(
     {
       signup_date =&gt; {
@@ -2025,8 +1801,7 @@
     database if the <span class="Li">&quot;mysql_enable_utf8&quot;</span> is set
     in the connect options.</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = My::Schema-&gt;connection('dbi:mysql:dbname=test',
+<pre>  my $schema = My::Schema-&gt;connection('dbi:mysql:dbname=test',
                                       $user, $pass,
                                       { mysql_enable_utf8 =&gt; 1} );
 </pre>
@@ -2045,8 +1820,7 @@
     <span class="Li">&quot;pg_enable_utf8&quot;</span> should be set to ensure
     unicode data is correctly marked.</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = My::Schema-&gt;connection('dbi:Pg:dbname=test',
+<pre>  my $schema = My::Schema-&gt;connection('dbi:Pg:dbname=test',
                                       $user, $pass,
                                       { pg_enable_utf8 =&gt; 1} );
 </pre>
@@ -2058,8 +1832,7 @@
     connect time (in versions of DBD::SQLite prior to 1.27 this attribute was
     named <span class="Li">&quot;unicode&quot;</span>).</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = My::Schema-&gt;connection('dbi:SQLite:/tmp/test.db',
+<pre>  my $schema = My::Schema-&gt;connection('dbi:SQLite:/tmp/test.db',
                                       '', '',
                                       { sqlite_unicode =&gt; 1} );
 </pre>
@@ -2075,12 +1848,9 @@
     have an established class-based setup with lots of existing classes that you
     don't want to move by hand. Try this nifty script instead:</p>
 <p class="Pp"></p>
-<pre>
-  use MyDB;
+<pre>  use MyDB;
   use SQL::Translator;
-
   my $schema = MyDB-&gt;schema_instance;
-
   my $translator           =  SQL::Translator-&gt;new(
       debug                =&gt; $debug          ||  0,
       trace                =&gt; $trace          ||  0,
@@ -2095,13 +1865,10 @@
           'prefix'         =&gt; 'My::Schema',
                          },
   );
-
   $translator-&gt;parser('SQL::Translator::Parser::DBIx::Class');
   $translator-&gt;producer('SQL::Translator::Producer::DBIx::Class::File');
-
   my $output = $translator-&gt;translate(@args) or die
           &quot;Error: &quot; . $translator-&gt;error;
-
   print $output;
 </pre>
 <p class="Pp">You could use Module::Find to search for all subclasses in the
@@ -2125,14 +1892,10 @@
     <span class="Li">&quot;new&quot;</span> method. Note the use of
     <span class="Li">&quot;next::method&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  sub new {
+<pre>  sub new {
     my ( $class, $attrs ) = @_;
-
     $attrs-&gt;{foo} = 'bar' unless defined $attrs-&gt;{foo};
-
     my $new = $class-&gt;next::method($attrs);
-
     return $new;
   }
 </pre>
@@ -2158,15 +1921,12 @@
     modifier, available through either Class::Method::Modifiers, Moose or
     Moose-like modules):</p>
 <p class="Pp"></p>
-<pre>
-  around number =&gt; sub {
+<pre>  around number =&gt; sub {
     my ($orig, $self) = (shift, shift);
-
     if (@_) {
       my $value = $_[0];
       $self-&gt;squared( $value * $value );
     }
-
     $self-&gt;$orig(@_);
   };
 </pre>
@@ -2187,8 +1947,7 @@
     this by overriding <span class="Li">&quot;insert&quot;</span> on your
     objects:</p>
 <p class="Pp"></p>
-<pre>
-  sub insert {
+<pre>  sub insert {
     my ( $self, @args ) = @_;
     $self-&gt;next::method(@args);
     $self-&gt;create_related ('cds', \%initial_cd_data );
@@ -2199,17 +1958,12 @@
     consistency, an excellent idea), you can use the awesome
     DBIx::Class::Storage::TxnScopeGuard:</p>
 <p class="Pp"></p>
-<pre>
-  sub insert {
+<pre>  sub insert {
     my ( $self, @args ) = @_;
-
     my $guard = $self-&gt;result_source-&gt;schema-&gt;txn_scope_guard;
-
     $self-&gt;next::method(@args);
     $self-&gt;create_related ('cds', \%initial_cd_data );
-
     $guard-&gt;commit;
-
     return $self
   }
 </pre>
@@ -2232,25 +1986,19 @@
 <p class="Pp">First, in your &quot;Camera&quot; schema class, define the
     description field as follows:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_columns(description =&gt; { accessor =&gt; '_description' });
+<pre>  __PACKAGE__-&gt;add_columns(description =&gt; { accessor =&gt; '_description' });
 </pre>
 <p class="Pp">Next, we'll define the accessor-wrapper subroutine:</p>
 <p class="Pp"></p>
-<pre>
-  sub description {
+<pre>  sub description {
       my $self = shift;
-
       # If there is an update to the column, we'll let the original accessor
       # deal with it.
       return $self-&gt;_description(@_) if @_;
-
       # Fetch the column value.
       my $description = $self-&gt;_description;
-
       # If there's something in the description field, then just return that.
       return $description if defined $description &amp;&amp; length $descripton;
-
       # Otherwise, generate a description.
       return $self-&gt;generate_description;
   }
@@ -2267,9 +2015,7 @@
     sometimes it can be hard to find the pertinent data in all the data it can
     generate. Specifically, if one naively tries to use it like so,</p>
 <p class="Pp"></p>
-<pre>
-  use Data::Dumper;
-
+<pre>  use Data::Dumper;
   my $cd = $schema-&gt;resultset('CD')-&gt;find(1);
   print Dumper($cd);
 </pre>
@@ -2280,22 +2026,16 @@
     outputs it. Simply define a hook that Data::Dumper will call on the object
     before dumping it. For example,</p>
 <p class="Pp"></p>
-<pre>
-  package My::DB::CD;
-
+<pre>  package My::DB::CD;
   sub _dumper_hook {
     $_[0] = bless {
       %{ $_[0] },
       result_source =&gt; undef,
     }, ref($_[0]);
   }
-
   [...]
-
   use Data::Dumper;
-
   local $Data::Dumper::Freezer = '_dumper_hook';
-
   my $cd = $schema-&gt;resultset('CD')-&gt;find(1);
   print Dumper($cd);
          # dumps $cd without its ResultSource
@@ -2315,52 +2055,40 @@
     DBIx::Class::Storage::Statistics class and write your own profiling
     mechanism:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Profiler;
+<pre>  package My::Profiler;
   use strict;
-
   use base 'DBIx::Class::Storage::Statistics';
-
   use Time::HiRes qw(time);
-
   my $start;
-
   sub query_start {
     my $self = shift();
     my $sql = shift();
     my @params = @_;
-
     $self-&gt;print(&quot;Executing $sql: &quot;.join(', ', @params).&quot;\n&quot;);
     $start = time();
   }
-
   sub query_end {
     my $self = shift();
     my $sql = shift();
     my @params = @_;
-
     my $elapsed = sprintf(&quot;%0.4f&quot;, time() - $start);
     $self-&gt;print(&quot;Execution took $elapsed seconds.\n&quot;);
     $start = undef;
   }
-
   1;
 </pre>
 <p class="Pp">You can then install that class as the debugging object:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;storage-&gt;debugobj(new My::Profiler());
+<pre>  __PACKAGE__-&gt;storage-&gt;debugobj(new My::Profiler());
   __PACKAGE__-&gt;storage-&gt;debug(1);
 </pre>
 <p class="Pp">A more complicated example might involve storing each execution of
     SQL in an array:</p>
 <p class="Pp"></p>
-<pre>
-  sub query_end {
+<pre>  sub query_end {
     my $self = shift();
     my $sql = shift();
     my @params = @_;
-
     my $elapsed = time() - $start;
     push(@{ $calls{$sql} }, {
         params =&gt; \@params,
@@ -2422,23 +2150,19 @@
   Common Startup into a Base Class</a></h2>
 <p class="Pp">Typically DBIx::Class result classes start off with</p>
 <p class="Pp"></p>
-<pre>
-    use base qw/DBIx::Class::Core/;
+<pre>    use base qw/DBIx::Class::Core/;
     __PACKAGE__-&gt;load_components(qw/InflateColumn::DateTime/);
 </pre>
 <p class="Pp">If this preamble is moved into a common base class:-</p>
 <p class="Pp"></p>
-<pre>
-    package MyDBICbase;
-
+<pre>    package MyDBICbase;
     use base qw/DBIx::Class::Core/;
     __PACKAGE__-&gt;load_components(qw/InflateColumn::DateTime/);
     1;
 </pre>
 <p class="Pp">and each result class then uses this as a base:-</p>
 <p class="Pp"></p>
-<pre>
-    use base qw/MyDBICbase/;
+<pre>    use base qw/MyDBICbase/;
 </pre>
 <p class="Pp">then the load_components is only performed once, which can result
     in a considerable startup speedup for schemas with many classes.</p>
@@ -2448,16 +2172,14 @@
   List Schema Result Classes</a></h2>
 <p class="Pp">The schema class will normally contain</p>
 <p class="Pp"></p>
-<pre>
-    __PACKAGE__-&gt;load_classes();
+<pre>    __PACKAGE__-&gt;load_classes();
 </pre>
 <p class="Pp">to load the result classes. This will use Module::Find to find and
     load the appropriate modules. Explicitly defining the classes you wish to
     load will remove the overhead of Module::Find and the related directory
     operations:</p>
 <p class="Pp"></p>
-<pre>
-    __PACKAGE__-&gt;load_classes(qw/ CD Artist Track /);
+<pre>    __PACKAGE__-&gt;load_classes(qw/ CD Artist Track /);
 </pre>
 <p class="Pp">If you are instead using the load_namespaces syntax to load the
     appropriate classes there is not a direct alternative avoiding
@@ -2476,8 +2198,7 @@
     eventually run out and fail entirely. If you suspect this may be the case,
     you may want to examine DBI's CachedKids hash:</p>
 <p class="Pp"></p>
-<pre>
-    # print all currently cached prepared statements
+<pre>    # print all currently cached prepared statements
     print for keys %{$schema-&gt;storage-&gt;dbh-&gt;{CachedKids}};
     # get a count of currently cached prepared statements
     my $count = scalar keys %{$schema-&gt;storage-&gt;dbh-&gt;{CachedKids}};
@@ -2485,16 +2206,14 @@
 <p class="Pp">If it's appropriate, you can simply clear these statements,
     automatically deallocating them in the database:</p>
 <p class="Pp"></p>
-<pre>
-    my $kids = $schema-&gt;storage-&gt;dbh-&gt;{CachedKids};
+<pre>    my $kids = $schema-&gt;storage-&gt;dbh-&gt;{CachedKids};
     delete @{$kids}{keys %$kids} if scalar keys %$kids &gt; 100;
 </pre>
 <p class="Pp">But what you probably want is to expire unused statements and not
     those that are used frequently. You can accomplish this with Tie::Cache or
     Tie::Cache::LRU:</p>
 <p class="Pp"></p>
-<pre>
-    use Tie::Cache;
+<pre>    use Tie::Cache;
     use DB::Main;
     my $schema = DB::Main-&gt;connect($dbi_dsn, $user, $pass, {
         on_connect_do =&gt; sub { tie %{shift-&gt;_dbh-&gt;{CachedKids}}, 'Tie::Cache', 100 },

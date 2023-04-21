@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Locale::Maketext::Cookbook(3pm)</title>
 </head>
@@ -38,14 +39,12 @@
 <p class="Pp">It may be common (for example at your main lexicon) that the hash
     keys and values coincide. Like that</p>
 <p class="Pp"></p>
-<pre>
-    q{Hello, tell me your name} 
+<pre>    q{Hello, tell me your name} 
       =&gt; q{Hello, tell me your name}
 </pre>
 <p class="Pp">It would be nice to just write:</p>
 <p class="Pp"></p>
-<pre>
-    q{Hello, tell me your name} =&gt; ''
+<pre>    q{Hello, tell me your name} =&gt; ''
 </pre>
 <p class="Pp">and have this magically inflated to the first form. Among the
     advantages of such representation, that would lead to smaller files, less
@@ -56,17 +55,14 @@
     <span class="Li">&quot;init&quot;</span> in your class and working on the
     main lexicon with code like that:</p>
 <p class="Pp"></p>
-<pre>
-    package My::I18N;
+<pre>    package My::I18N;
     ...
-
     sub init {
         my $lh = shift; # a newborn handle
         $lh-&gt;SUPER::init();
         inflate_lexicon(\%My::I18N::en::Lexicon);
         return;
     }
-
     sub inflate_lexicon {
         my $lex = shift;
         while (my ($k, $v) = each %$lex) {
@@ -97,31 +93,24 @@
     <span class="Li">&quot;numf&quot;</span> is to not be able to use a certain
     decimal precision. For example,</p>
 <p class="Pp"></p>
-<pre>
-    $lh-&gt;maketext('pi is [numf,_1]', 355/113);
+<pre>    $lh-&gt;maketext('pi is [numf,_1]', 355/113);
 </pre>
 <p class="Pp">outputs</p>
 <p class="Pp"></p>
-<pre>
-    pi is 3.14159292035398
+<pre>    pi is 3.14159292035398
 </pre>
 <p class="Pp">Since pi X 355/116 is only accurate to 6 decimal places, you would
     want to say:</p>
 <p class="Pp"></p>
-<pre>
-    $lh-&gt;maketext('pi is [numf,_1,6]', 355/113);
+<pre>    $lh-&gt;maketext('pi is [numf,_1,6]', 355/113);
 </pre>
 <p class="Pp">and get &quot;pi is 3.141592&quot;.</p>
 <p class="Pp">One solution for that could use
     <span class="Li">&quot;Number::Format&quot;</span> like that:</p>
 <p class="Pp"></p>
-<pre>
-    package Wuu;
-
+<pre>    package Wuu;
     use base qw(Locale::Maketext);
-
     use Number::Format;
-
     # can be overridden according to language conventions
     sub _numf_params {
         return (
@@ -130,7 +119,6 @@
             -decimal_digits =&gt; 2,
         );
     }
-
     # builds a Number::Format
     sub _numf_formatter {
         my ($lh, $scale) = @_;
@@ -140,7 +128,6 @@
         }
         return Number::Format-&gt;new(@params);
     }
-
     sub numf {
         my ($lh, $n, $scale) = @_;
         # get the (cached) formatter
@@ -148,15 +135,12 @@
         # format the number itself
         return $nf-&gt;format_number($n);
     }
-
     package Wuu::pt;
-
     use base qw(Wuu);
 </pre>
 <p class="Pp">and then</p>
 <p class="Pp"></p>
-<pre>
-    my $lh = Wuu-&gt;get_handle('pt');
+<pre>    my $lh = Wuu-&gt;get_handle('pt');
     $lh-&gt;maketext('A [numf,_1,3] km de distancia', 1550.2222);
 </pre>
 <p class="Pp">would return &quot;A 1.550,222 km de distancia&quot;.</p>

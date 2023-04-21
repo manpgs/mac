@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::DSML(3)</title>
 </head>
@@ -28,52 +29,37 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- For a directory entry;
-
+<pre> For a directory entry;
  use Net::LDAP;
  use Net::LDAP::DSML;
  use IO::File;
-
-
  my $server = &quot;localhost&quot;;
  my $file = &quot;testdsml.xml&quot;;
  my $ldap = Net::LDAP-&gt;new($server);
-
  $ldap-&gt;bind();
-
-
  #
  # For file i/o
  #
  my $file = &quot;testdsml.xml&quot;;
-
  my $io = IO::File-&gt;new($file,&quot;w&quot;)
      or die (&quot;failed to open $file as filehandle.$!\n&quot;);
-
  my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; $io, pretty_print =&gt; 1 )
      or die (&quot;DSML object creation problem using an output file.\n&quot;);
  #      OR
  #
  # For file i/o
  #
-
  open (IO,&quot;&gt;$file&quot;) or die(&quot;failed to open $file.$!&quot;);
-
  my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; *IO, pretty_print =&gt; 1)
      or die (&quot;DSML object creation problem using an output file.\n&quot;);
-
  #      OR
  #
  # For array usage.
  # Pass a reference to an array.
  #
-
  my @data = ();
  $dsml = Net::LDAP::DSML-&gt;new(output =&gt; \@data, pretty_print =&gt; 1)
      or die (&quot;DSML object creation problem using an output array.\n&quot;);
-
-
   my $mesg = $ldap-&gt;search(
                            base     =&gt; 'o=airius.com',
                            scope    =&gt; 'sub',
@@ -84,21 +70,15 @@
                                           if (ref $entry eq 'Net::LDAP::Entry');
                                        }
                             );
-
  die (&quot;search failed with &quot;,$mesg-&gt;code(),&quot;\n&quot;)  if $mesg-&gt;code();
-
  For directory schema;
-
  A file or array can be used for output, in the following example
  only an array will be used.
-
  my $schema = $ldap-&gt;schema();
  my @data = ();
  my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; \@data, pretty_print =&gt; 1 )
       or die (&quot;DSML object creation problem using an output array.\n&quot;);
-
  $dsml-&gt;write_schema($schema);
-
  print &quot;Finished printing DSML\n&quot;;
 </pre>
 </section>
@@ -116,8 +96,7 @@
 <p class="Pp">To determine conformance, it is useful to divide DSML documents
     into four types:</p>
 <p class="Pp"></p>
-<pre>
-  1.Documents containing no directory schema nor any references to
+<pre>  1.Documents containing no directory schema nor any references to
     an external schema.
   2.Documents containing no directory schema but containing at
     least one reference to an external schema.
@@ -151,14 +130,11 @@
         reading of the XML output easier for a human.</p>
     <p class="Pp"><b>Example</b></p>
     <p class="Pp"></p>
-    <pre>
-  my $dsml = Net::LDAP::DSML-&gt;new();
+    <pre>  my $dsml = Net::LDAP::DSML-&gt;new();
   Prints xml data to standard out.
-
   my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; \@array);
   my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; *FILE);
   Prints xml data to a file or array.
-
   my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; \@array, pretty_print =&gt; 1);
   my $dsml = Net::LDAP::DSML-&gt;new(output =&gt; *FILE, pretty_print =&gt; 1);
   Prints xml data to a file or array in pretty print style.
@@ -180,8 +156,7 @@
       data in the Entry object and put it into DSML XML format.
     <p class="Pp"><b>Example</b></p>
     <p class="Pp"></p>
-    <pre>
-  my $entry = $mesg-&gt;entry();
+    <pre>  my $entry = $mesg-&gt;entry();
   $dsml-&gt;write_entry($entry);
     </pre>
   </dd>
@@ -191,8 +166,7 @@
       the LDAP data in the Schema object and put it into DSML XML format.
     <p class="Pp"><b>Example</b></p>
     <p class="Pp"></p>
-    <pre>
-  my $schema = $ldap-&gt;schema();
+    <pre>  my $schema = $ldap-&gt;schema();
   $dsml-&gt;write_schema($schema);
     </pre>
   </dd>

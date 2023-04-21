@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>App::CLI(3)</title>
 </head>
@@ -29,38 +30,28 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package MyApp;
+<pre>    package MyApp;
     use base 'App::CLI';        # the DISPATCHER of your App
                                 # it's not necessary to put the dispatcher
                                 # on the top level of your App
-
     package main;
-
     MyApp-&gt;dispatch;            # call the dispatcher where you want
-
-
     package MyApp::List;
     use base qw(App::CLI::Command); # any (SUB)COMMAND of your App
-
     use constant options =&gt; (
         &quot;h|help&quot;   =&gt; &quot;help&quot;,
         &quot;verbose&quot;  =&gt; &quot;verbose&quot;,
         'n|name=s'  =&gt; 'name',
     );
-
     use constant subcommands =&gt; qw(User Nickname type); # if you want subcommands
                                                         # automatically dispatch to subcommands
                                                         # when invoke $ myapp list [user|nickname|--type]
                                                         # note 'type' is not capitalized
                                                         # it is a deprecated subcommand
-
     sub run {
         my ($self, @args) = @_;
-
         print &quot;verbose&quot; if $self-&gt;{verbose};
         my $name = $self-&gt;{name}; # get arg following long option --name
-
         if ($self-&gt;{help}) {
             # if $ myapp list --help or $ myapp list -h
             # only output PODs
@@ -69,48 +60,35 @@
             # without subcommand and --help
         }
     }
-
-
     package MyApp::List::User;
     use base qw(App::CLI::Command);
     use constant options =&gt; (
         &quot;h|help&quot;  =&gt;  &quot;help&quot;,
     );
-
     sub run {
         my ($self,@args) = @_;
         # code for listing user
     }
-
-
     pakcage MyApp::List::Nickname;
     use base qw(App::CLI::Command);
     use constant options =&gt; (
         &quot;sort=s&quot;  =&gt;  &quot;sort&quot;,
     );
-
     sub run {
         my ($self,@args) = @_;
         # code for listing nickname
     }
-
-
     package MyApp::List::type;   # old genre of subcommand could not cascade infinitely
     use base qw(MyApp::List);    # should inherit its parent's command
-
     sub run {
         my ($self, @args);
         # run to here when invoking $ myapp list --type
     }
-
-
     package MyApp::Help;
     use base 'App::CLI::Command::Help';
-
     use constant options =&gt; (
         'verbose' =&gt; 'verbose',
     );
-
     sub run {
         my ($self, @arg) = @_;
         # do something
@@ -125,7 +103,8 @@
     supports subcommand and per-command options.</p>
 <section class="Ss">
 <h2 class="Ss" id="Methods"><a class="permalink" href="#Methods">Methods</a></h2>
-<p class="Pp"><i>get_opt([@config], </i><i>%opt_map</i><i>)</i></p>
+<p class="Pp"><i>get_opt([@config],
+    </i><span class="Li"><i>%opt_map</i></span><i>)</i></p>
 <p class="Pp">Give options map, processed by Getopt::Long::Parser.</p>
 <p class="Pp"><i>dispatch(@args)</i></p>
 <p class="Pp">Interface of dispatcher</p>
@@ -144,7 +123,8 @@
     appending it to the package name of the app itself.</p>
 <p class="Pp">If both of these fail, and the command does not map to any package
     name, <span class="Li">&quot;undef&quot;</span> is returned instead.</p>
-<p class="Pp"><i>get_cmd($cmd, </i><i>@arg</i><i>)</i></p>
+<p class="Pp"><i>get_cmd($cmd,
+  </i><span class="Li"><i>@arg</i></span><i>)</i></p>
 <p class="Pp">Return subcommand of first level via
     <span class="Li">$ARGV[0]</span>.</p>
 </section>

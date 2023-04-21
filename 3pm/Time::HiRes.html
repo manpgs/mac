@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Time::HiRes(3pm)</title>
 </head>
@@ -29,54 +30,38 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
+<pre>  use Time::HiRes qw( usleep ualarm gettimeofday tv_interval nanosleep
                       clock_gettime clock_getres clock_nanosleep clock
                       stat lstat utime);
-
   usleep ($microseconds);
   nanosleep ($nanoseconds);
-
   ualarm ($microseconds);
   ualarm ($microseconds, $interval_microseconds);
-
   $t0 = [gettimeofday];
   ($seconds, $microseconds) = gettimeofday;
-
   $elapsed = tv_interval ( $t0, [$seconds, $microseconds]);
   $elapsed = tv_interval ( $t0, [gettimeofday]);
   $elapsed = tv_interval ( $t0 );
-
   use Time::HiRes qw ( time alarm sleep );
-
   $now_fractions = time;
   sleep ($floating_seconds);
   alarm ($floating_seconds);
   alarm ($floating_seconds, $floating_interval);
-
   use Time::HiRes qw( setitimer getitimer );
-
   setitimer ($which, $floating_seconds, $floating_interval );
   getitimer ($which);
-
   use Time::HiRes qw( clock_gettime clock_getres clock_nanosleep
                       ITIMER_REAL ITIMER_VIRTUAL ITIMER_PROF
                       ITIMER_REALPROF );
-
   $realtime   = clock_gettime(CLOCK_REALTIME);
   $resolution = clock_getres(CLOCK_REALTIME);
-
   clock_nanosleep(CLOCK_REALTIME, 1.5e9);
   clock_nanosleep(CLOCK_REALTIME, time()*1e9 + 10e9, TIMER_ABSTIME);
-
   my $ticktock = clock();
-
   use Time::HiRes qw( stat lstat );
-
   my @stat = stat(&quot;file&quot;);
   my @stat = stat(FH);
   my @stat = lstat(&quot;file&quot;);
-
   use Time::HiRes qw( utime );
   utime $floating_seconds, $floating_seconds, file...;
 </pre>
@@ -407,8 +392,7 @@
       operating system and the filesystem both support such timestamps. To
       override the standard <b>stat()</b>:
     <p class="Pp"></p>
-    <pre>
-    use Time::HiRes qw(stat);
+    <pre>    use Time::HiRes qw(stat);
     </pre>
     <p class="Pp">Test for the value of &amp;Time::HiRes::d_hires_stat to find
         out whether the operating system supports subsecond file timestamps: a
@@ -427,8 +411,7 @@
         might have different resolutions, and that they need not be
         synchronized, e.g. if the operations are</p>
     <p class="Pp"></p>
-    <pre>
-    write
+    <pre>    write
     stat # t1
     read
     stat # t2
@@ -443,8 +426,7 @@
       support such timestamps.
     <p class="Pp">To override the standard <b>utime()</b>:</p>
     <p class="Pp"></p>
-    <pre>
-    use Time::HiRes qw(utime);
+    <pre>    use Time::HiRes qw(utime);
     </pre>
     <p class="Pp">Test for the value of &amp;Time::HiRes::d_hires_utime to find
         out whether the operating system supports setting subsecond file
@@ -463,20 +445,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<pre>
-  use Time::HiRes qw(usleep ualarm gettimeofday tv_interval);
-
+<pre>  use Time::HiRes qw(usleep ualarm gettimeofday tv_interval);
   $microseconds = 750_000;
   usleep($microseconds);
-
   # signal alarm in 2.5s &amp; every .1s thereafter
   ualarm(2_500_000, 100_000);
   # cancel that ualarm
   ualarm(0);
-
   # get seconds and microseconds since the epoch
   ($s, $usec) = gettimeofday();
-
   # measure elapsed time 
   # (could also do by subtracting 2 gettimeofday return values)
   $t0 = [gettimeofday];
@@ -484,10 +461,8 @@
   $t1 = [gettimeofday];
   # do more stuff here
   $t0_t1 = tv_interval $t0, $t1;
-
   $elapsed = tv_interval ($t0, [gettimeofday]);
   $elapsed = tv_interval ($t0); # equivalent code
-
   #
   # replacements for time, alarm and sleep that know about
   # floating seconds
@@ -496,36 +471,28 @@
   $now_fractions = Time::HiRes::time;
   Time::HiRes::sleep (2.5);
   Time::HiRes::alarm (10.6666666);
-
   use Time::HiRes qw ( time alarm sleep );
   $now_fractions = time;
   sleep (2.5);
   alarm (10.6666666);
-
   # Arm an interval timer to go off first at 10 seconds and
   # after that every 2.5 seconds, in process virtual time
-
   use Time::HiRes qw ( setitimer ITIMER_VIRTUAL time );
-
   $SIG{VTALRM} = sub { print time, &quot;\n&quot; };
   setitimer(ITIMER_VIRTUAL, 10, 2.5);
-
   use Time::HiRes qw( clock_gettime clock_getres CLOCK_REALTIME );
   # Read the POSIX high resolution timer.
   my $high = clock_gettime(CLOCK_REALTIME);
   # But how accurate we can be, really?
   my $reso = clock_getres(CLOCK_REALTIME);
-
   use Time::HiRes qw( clock_nanosleep TIMER_ABSTIME );
   clock_nanosleep(CLOCK_REALTIME, 1e6);
   clock_nanosleep(CLOCK_REALTIME, 2e9, TIMER_ABSTIME);
-
   use Time::HiRes qw( clock );
   my $clock0 = clock();
   ... # Do something.
   my $clock1 = clock();
   my $clockd = $clock1 - $clock0;
-
   use Time::HiRes qw( stat );
   my ($atime, $mtime, $ctime) = (stat(&quot;istics&quot;))[8, 9, 10];
 </pre>
@@ -536,8 +503,7 @@
     for extension writers. The following C functions are available in the
     modglobal hash:</p>
 <p class="Pp"></p>
-<pre>
-  name             C prototype
+<pre>  name             C prototype
   ---------------  ----------------------
   Time::NVtime     NV (*)()
   Time::U2time     void (*)(pTHX_ UV ret[2])
@@ -552,8 +518,7 @@
 <p class="Pp">Here is an example of using
     <span class="Li">&quot;NVtime&quot;</span> from C:</p>
 <p class="Pp"></p>
-<pre>
-  NV (*myNVtime)(); /* Returns -1 on failure. */
+<pre>  NV (*myNVtime)(); /* Returns -1 on failure. */
   SV **svp = hv_fetchs(PL_modglobal, &quot;Time::NVtime&quot;, 0);
   if (!svp)         croak(&quot;Time::HiRes is required&quot;);
   if (!SvIOK(*svp)) croak(&quot;Time::NVtime isn't a function pointer&quot;);

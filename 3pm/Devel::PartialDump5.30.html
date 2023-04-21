@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Devel::PartialDump(3)</title>
 </head>
@@ -33,15 +34,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Devel::PartialDump;
-
+<pre>    use Devel::PartialDump;
     sub foo {
         print &quot;foo called with args: &quot; . Devel::PartialDump-&gt;new-&gt;dump(@_);
     }
-
     use Devel::PartialDump qw(warn);
-
     # warn is overloaded to create a concise dump instead of stringifying $some_bad_data
     warn &quot;this made a boo boo: &quot;, $some_bad_data
 </pre>
@@ -53,8 +50,7 @@
 <p class="Pp">It attempts to truncate overly verbose data, in a way that is
     hopefully more useful for diagnostics warnings than</p>
 <p class="Pp"></p>
-<pre>
-    warn Dumper(@stuff);
+<pre>    warn Dumper(@stuff);
 </pre>
 <p class="Pp">Unlike other data dumping modules there are no attempts at
     correctness or cross referencing, this is only meant to provide a slightly
@@ -67,8 +63,7 @@
     <span class="Li">&quot;croak&quot;</span> etc to get more informative errors
     during development, or even use it as:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { local $@; eval &quot;use Devel::PartialDump qw(...)&quot; }
+<pre>    BEGIN { local $@; eval &quot;use Devel::PartialDump qw(...)&quot; }
 </pre>
 <p class="Pp">to get DWIM formatting only if it's installed, without introducing
     a dependency.</p>
@@ -79,45 +74,38 @@
 <dl class="Bl-tag">
   <dt>&quot;foo&quot;</dt>
   <dd>
-    <pre>
-    &quot;foo&quot;
+    <pre>    &quot;foo&quot;
     </pre>
   </dd>
   <dt>&quot;foo&quot; =&gt; &quot;bar&quot;</dt>
   <dd>
-    <pre>
-    foo: &quot;bar&quot;
+    <pre>    foo: &quot;bar&quot;
     </pre>
   </dd>
   <dt>&quot;foo =&gt; &quot;bar&quot;, gorch =&gt; [ 1, &quot;bah&quot;
     ]&quot;</dt>
   <dd>
-    <pre>
-    foo: &quot;bar&quot;, gorch: [ 1, &quot;bah&quot; ]
+    <pre>    foo: &quot;bar&quot;, gorch: [ 1, &quot;bah&quot; ]
     </pre>
   </dd>
   <dt>&quot;[ { foo =&gt; [&quot;bar&quot;] } ]&quot;</dt>
   <dd>
-    <pre>
-    [ { foo: ARRAY(0x9b265d0) } ]
+    <pre>    [ { foo: ARRAY(0x9b265d0) } ]
     </pre>
   </dd>
   <dt>&quot;[ 1 .. 10 ]&quot;</dt>
   <dd>
-    <pre>
-    [ 1, 2, 3, 4, 5, 6, ... ]
+    <pre>    [ 1, 2, 3, 4, 5, 6, ... ]
     </pre>
   </dd>
   <dt>&quot;foo\nbar&quot;</dt>
   <dd>
-    <pre>
-    &quot;foo\nbar&quot;
+    <pre>    &quot;foo\nbar&quot;
     </pre>
   </dd>
   <dt>&quot;&quot;foo&quot; . chr(1)&quot;</dt>
   <dd>
-    <pre>
-    &quot;foo\x{1}&quot;
+    <pre>    &quot;foo\x{1}&quot;
     </pre>
   </dd>
 </dl>
@@ -181,13 +169,11 @@
     <p class="Pp">Particularly <span class="Li">&quot;warn&quot;</span> can be
         used as a drop in replacement for the built in warn:</p>
     <p class="Pp"></p>
-    <pre>
-    warn &quot;blah blah: &quot;, $some_data;
+    <pre>    warn &quot;blah blah: &quot;, $some_data;
     </pre>
     <p class="Pp">by importing</p>
     <p class="Pp"></p>
-    <pre>
-    use Devel::PartialDump qw(warn);
+    <pre>    use Devel::PartialDump qw(warn);
     </pre>
     <p class="Pp"><span class="Li">$some_data</span> will be have some of it's
         data dumped.</p>
@@ -215,15 +201,13 @@
       arguments, so it can be used in the middle of an expression.
     <p class="Pp">Note that</p>
     <p class="Pp"></p>
-    <pre>
-    my $x = show foo();
+    <pre>    my $x = show foo();
     </pre>
     <p class="Pp">will actually evaluate <span class="Li">&quot;foo&quot;</span>
         in list context, so if you only want to dump a single element and retain
         scalar context use</p>
     <p class="Pp"></p>
-    <pre>
-    my $x = show_scalar foo();
+    <pre>    my $x = show_scalar foo();
     </pre>
     <p class="Pp">which has a prototype of <span class="Li">&quot;$&quot;</span>
         (as opposed to taking a list).</p>

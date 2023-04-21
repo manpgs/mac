@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Compress::FAQ(3pm)</title>
 </head>
@@ -45,8 +46,7 @@
 <p class="Pp">If you have the <span class="Li">&quot;uncompress&quot;</span>
     program available, you can use this to read compressed files</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;uncompress -c $filename |&quot;;
+<pre>    open F, &quot;uncompress -c $filename |&quot;;
     while (&lt;F&gt;)
     {
         ...
@@ -55,8 +55,7 @@
     <span class="Li">&quot;gunzip&quot;</span> program available, you can use
     this to read compressed files</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;gunzip -c $filename |&quot;;
+<pre>    open F, &quot;gunzip -c $filename |&quot;;
     while (&lt;F&gt;)
     {
         ...
@@ -64,8 +63,7 @@
 <p class="Pp">and this to write compress files, if you have the
     <span class="Li">&quot;compress&quot;</span> program available</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;| compress -c $filename &quot;;
+<pre>    open F, &quot;| compress -c $filename &quot;;
     print F &quot;data&quot;;
     ...
     close F ;
@@ -89,22 +87,18 @@
     <span class="Li">&quot;Archive::Tar&quot;</span></p>
 <p class="Pp">Firstly with <span class="Li">&quot;uncompress&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
-
     open F, &quot;uncompress -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
 </pre>
 <p class="Pp">and this with <span class="Li">&quot;gunzip&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
-
     open F, &quot;gunzip -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
@@ -113,12 +107,10 @@
     program is available, you can use this to write a
     <span class="Li">&quot;.tar.Z&quot;</span> file</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
     use IO::File;
-
     my $fh = new IO::File &quot;| compress -c &gt;$filename&quot;;
     my $tar = Archive::Tar-&gt;new();
     ...
@@ -138,16 +130,12 @@
     want to recompress with bzip2. Here is all that is needed to carry out the
     recompression.</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Uncompress::Gunzip ':all';
+<pre>    use IO::Uncompress::Gunzip ':all';
     use IO::Compress::Bzip2 ':all';
-
     my $gzipFile = &quot;somefile.gz&quot;;
     my $bzipFile = &quot;somefile.bz2&quot;;
-
     my $gunzip = new IO::Uncompress::Gunzip $gzipFile
         or die &quot;Cannot gunzip $gzipFile: $GunzipError\n&quot; ;
-
     bzip2 $gunzip =&gt; $bzipFile
         or die &quot;Cannot bzip2 to $bzipFile: $Bzip2Error\n&quot; ;
 </pre>
@@ -199,27 +187,23 @@
     any of the input files is greater than 4Gig, a zip64 complaint zip file will
     be created.</p>
 <p class="Pp"></p>
-<pre>
-    zip &quot;really-large-file&quot; =&gt; &quot;my.zip&quot;;
+<pre>    zip &quot;really-large-file&quot; =&gt; &quot;my.zip&quot;;
 </pre>
 <p class="Pp">Similarly with the one-shot interface, if the input is a buffer
     larger than 4 Gig, a zip64 complaint zip file will be created.</p>
 <p class="Pp"></p>
-<pre>
-    zip \$really_large_buffer =&gt; &quot;my.zip&quot;;
+<pre>    zip \$really_large_buffer =&gt; &quot;my.zip&quot;;
 </pre>
 <p class="Pp">The one-shot interface allows you to force the creation of a zip64
     zip file by including the <span class="Li">&quot;Zip64&quot;</span>
   option.</p>
 <p class="Pp"></p>
-<pre>
-    zip $filehandle =&gt; &quot;my.zip&quot;, Zip64 =&gt; 1;
+<pre>    zip $filehandle =&gt; &quot;my.zip&quot;, Zip64 =&gt; 1;
 </pre>
 <p class="Pp">If you want to create a zip64 zip file with the OO interface you
     must specify the <span class="Li">&quot;Zip64&quot;</span> option.</p>
 <p class="Pp"></p>
-<pre>
-    my $zip = new IO::Compress::Zip &quot;whatever&quot;, Zip64 =&gt; 1;
+<pre>    my $zip = new IO::Compress::Zip &quot;whatever&quot;, Zip64 =&gt; 1;
 </pre>
 <p class="Pp">When uncompressing with
     <span class="Li">&quot;IO-Uncompress-Unzip&quot;</span>, it will
@@ -262,8 +246,7 @@
     files concatenated together it will automatically uncompress them all. The
     example below illustrates this behaviour</p>
 <p class="Pp"></p>
-<pre>
-    $ echo abc | gzip -c &gt;x.gz
+<pre>    $ echo abc | gzip -c &gt;x.gz
     $ echo def | gzip -c &gt;&gt;x.gz
     $ gunzip -c x.gz
     abc
@@ -274,8 +257,7 @@
     behave like the gunzip program. It will only uncompress the first gzip data
     stream in the file, as shown below</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -MIO::Uncompress::Gunzip=:all -e 'gunzip &quot;x.gz&quot; =&gt; \*STDOUT'
+<pre>    $ perl -MIO::Uncompress::Gunzip=:all -e 'gunzip &quot;x.gz&quot; =&gt; \*STDOUT'
     abc
 </pre>
 <p class="Pp">To force
@@ -283,8 +265,7 @@
     the gzip data streams, include the
     <span class="Li">&quot;MultiStream&quot;</span> option, as shown below</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -MIO::Uncompress::Gunzip=:all -e 'gunzip &quot;x.gz&quot; =&gt; \*STDOUT, MultiStream =&gt; 1'
+<pre>    $ perl -MIO::Uncompress::Gunzip=:all -e 'gunzip &quot;x.gz&quot; =&gt; \*STDOUT, MultiStream =&gt; 1'
     abc
     def
 </pre>
@@ -326,8 +307,7 @@
     files concatenated together it will automatically uncompress them all. The
     example below illustrates this behaviour</p>
 <p class="Pp"></p>
-<pre>
-    $ echo abc | bzip2 -c &gt;x.bz2
+<pre>    $ echo abc | bzip2 -c &gt;x.bz2
     $ echo def | bzip2 -c &gt;&gt;x.bz2
     $ bunzip2 -c x.bz2
     abc
@@ -338,8 +318,7 @@
     behave like the bunzip2 program. It will only uncompress the first bunzip2
     data stream in the file, as shown below</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -MIO::Uncompress::Bunzip2=:all -e 'bunzip2 &quot;x.bz2&quot; =&gt; \*STDOUT'
+<pre>    $ perl -MIO::Uncompress::Bunzip2=:all -e 'bunzip2 &quot;x.bz2&quot; =&gt; \*STDOUT'
     abc
 </pre>
 <p class="Pp">To force
@@ -347,8 +326,7 @@
     all the bzip2 data streams, include the
     <span class="Li">&quot;MultiStream&quot;</span> option, as shown below</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -MIO::Uncompress::Bunzip2=:all -e 'bunzip2 &quot;x.bz2&quot; =&gt; \*STDOUT, MultiStream =&gt; 1'
+<pre>    $ perl -MIO::Uncompress::Bunzip2=:all -e 'bunzip2 &quot;x.bz2&quot; =&gt; \*STDOUT, MultiStream =&gt; 1'
     abc
     def
 </pre>
@@ -365,8 +343,7 @@
     complete pbzip2 file you must include the
     <span class="Li">&quot;MultiStream&quot;</span> option, like this.</p>
 <p class="Pp"></p>
-<pre>
-    bunzip2 $input =&gt; \$output, MultiStream =&gt; 1
+<pre>    bunzip2 $input =&gt; \$output, MultiStream =&gt; 1
         or die &quot;bunzip2 failed: $Bunzip2Error\n&quot;;
 </pre>
 </section>
@@ -381,8 +358,7 @@
     <span class="Li">&quot;Apache::GZip&quot;</span>, taken from
     &lt;http://perl.apache.org/docs/tutorials/tips/mod_perl_tricks/mod_perl_tricks.html#On_the_Fly_Compression&gt;</p>
 <p class="Pp"></p>
-<pre>
-  package Apache::GZip;
+<pre>  package Apache::GZip;
   #File: Apache::GZip.pm
   
   use strict vars;
@@ -451,8 +427,7 @@
     it. Once set it will result in everything in the /compressed directory will
     be compressed automagically.</p>
 <p class="Pp"></p>
-<pre>
-  &lt;Location /compressed&gt;
+<pre>  &lt;Location /compressed&gt;
      SetHandler  perl-script
      PerlHandler Apache::GZip
   &lt;/Location&gt;
@@ -482,8 +457,7 @@
     <span class="Li">&quot;Compress::Zlib&quot;</span> the whole tied filehandle
     code can be removed. Here is the rewritten code.</p>
 <p class="Pp"></p>
-<pre>
-  package Apache::GZip;
+<pre>  package Apache::GZip;
   
   use strict vars;
   use Apache::Constants ':common';
@@ -498,10 +472,8 @@
       $r-&gt;header_out('Content-Encoding'=&gt;'gzip');
       $r-&gt;send_http_header;
       return OK if $r-&gt;header_only;
-
       my $gz = new IO::Compress::Gzip '-', Minimal =&gt; 1
           or return DECLINED ;
-
       print $gz $_ while &lt;$fh&gt;;
   
       return OK;
@@ -509,8 +481,7 @@
 </pre>
 <p class="Pp">or even more succinctly, like this, using a one-shot gzip</p>
 <p class="Pp"></p>
-<pre>
-  package Apache::GZip;
+<pre>  package Apache::GZip;
   
   use strict vars;
   use Apache::Constants ':common';
@@ -521,10 +492,8 @@
       $r-&gt;header_out('Content-Encoding'=&gt;'gzip');
       $r-&gt;send_http_header;
       return OK if $r-&gt;header_only;
-
       gzip $r-&gt;filename =&gt; '-', Minimal =&gt; 1
         or return DECLINED ;
-
       return OK;
   }
    
@@ -553,22 +522,17 @@
     <span class="Li">&quot;retr&quot;</span> to uncompressed a file as it is
     read from the FTP Server.</p>
 <p class="Pp"></p>
-<pre>
-    use Net::FTP;
+<pre>    use Net::FTP;
     use IO::Uncompress::Gunzip qw(:all);
-
     my $ftp = new Net::FTP ...
-
     my $retr_fh = $ftp-&gt;retr($compressed_filename);
     gunzip $retr_fh =&gt; $outFilename, AutoClose =&gt; 1
         or die &quot;Cannot uncompress '$compressed_file': $GunzipError\n&quot;;
 </pre>
 <p class="Pp">and this to compress a file as it is written to the FTP Server</p>
 <p class="Pp"></p>
-<pre>
-    use Net::FTP;
+<pre>    use Net::FTP;
     use IO::Compress::Gzip qw(:all);
-
     my $stor_fh = $ftp-&gt;stor($filename);
     gzip &quot;filename&quot; =&gt; $stor_fh, AutoClose =&gt; 1
         or die &quot;Cannot compress '$filename': $GzipError\n&quot;;
@@ -599,34 +563,24 @@
     example uses the zlib-based compression, the technique can be used by the
     other <span class="Li">&quot;IO::Uncompress::*&quot;</span> modules.</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use IO::File;
     use IO::Uncompress::RawInflate qw(:all);
-
     use constant ZIP_LOCAL_HDR_SIG  =&gt; 0x04034b50;
     use constant ZIP_LOCAL_HDR_LENGTH =&gt; 30;
-
     my $file = $ARGV[0] ;
-
     my $fh = new IO::File &quot;&lt;$file&quot;
                 or die &quot;Cannot open '$file': $!\n&quot;;
-
     while (1)
     {
         my $sig;
         my $buffer;
-
         my $x ;
         ($x = $fh-&gt;read($buffer, ZIP_LOCAL_HDR_LENGTH)) == ZIP_LOCAL_HDR_LENGTH
             or die &quot;Truncated file: $!\n&quot;;
-
         my $signature = unpack (&quot;V&quot;, substr($buffer, 0, 4));
-
         last unless $signature == ZIP_LOCAL_HDR_SIG;
-
         # Read Local Header
         my $gpFlag             = unpack (&quot;v&quot;, substr($buffer, 6, 2));
         my $compressedMethod   = unpack (&quot;v&quot;, substr($buffer, 8, 2));
@@ -634,14 +588,11 @@
         my $uncompressedLength = unpack (&quot;V&quot;, substr($buffer, 22, 4));
         my $filename_length    = unpack (&quot;v&quot;, substr($buffer, 26, 2));
         my $extra_length       = unpack (&quot;v&quot;, substr($buffer, 28, 2));
-
         my $filename ;
         $fh-&gt;read($filename, $filename_length) == $filename_length
             or die &quot;Truncated file\n&quot;;
-
         $fh-&gt;read($buffer, $extra_length) == $extra_length
             or die &quot;Truncated file\n&quot;;
-
         if ($compressedMethod != 8 &amp;&amp; $compressedMethod != 0)
         {
             warn &quot;Skipping file '$filename' - not deflated $compressedMethod\n&quot;;
@@ -649,53 +600,41 @@
                 or die &quot;Truncated file\n&quot;;
             next;
         }
-
         if ($compressedMethod == 0 &amp;&amp; $gpFlag &amp; 8 == 8)
         {
             die &quot;Streamed Stored not supported for '$filename'\n&quot;;
         }
-
         next if $compressedLength == 0;
-
         # Done reading the Local Header
-
         my $inf = new IO::Uncompress::RawInflate $fh,
                             Transparent =&gt; 1,
                             InputLength =&gt; $compressedLength
           or die &quot;Cannot uncompress $file [$filename]: $RawInflateError\n&quot;  ;
-
         my $line_count = 0;
-
         while (&lt;$inf&gt;)
         {
             ++ $line_count;
         }
-
         print &quot;$filename: $line_count\n&quot;;
     }
 </pre>
 <p class="Pp">The majority of the code above is concerned with reading the zip
     local header data. The code that I want to focus on is at the bottom.</p>
 <p class="Pp"></p>
-<pre>
-    while (1) {
+<pre>    while (1) {
     
         # read local zip header data
         # get $filename
         # get $compressedLength
-
         my $inf = new IO::Uncompress::RawInflate $fh,
                             Transparent =&gt; 1,
                             InputLength =&gt; $compressedLength
           or die &quot;Cannot uncompress $file [$filename]: $RawInflateError\n&quot;  ;
-
         my $line_count = 0;
-
         while (&lt;$inf&gt;)
         {
             ++ $line_count;
         }
-
         print &quot;$filename: $line_count\n&quot;;
     }
 </pre>
@@ -714,27 +653,21 @@
 <p class="Pp">Now consider what the code looks like without
     <span class="Li">&quot;InputLength&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    while (1) {
+<pre>    while (1) {
     
         # read local zip header data
         # get $filename
         # get $compressedLength
-
         # read all the compressed data into $data
         read($fh, $data, $compressedLength);
-
         my $inf = new IO::Uncompress::RawInflate \$data,
                             Transparent =&gt; 1,
           or die &quot;Cannot uncompress $file [$filename]: $RawInflateError\n&quot;  ;
-
         my $line_count = 0;
-
         while (&lt;$inf&gt;)
         {
             ++ $line_count;
         }
-
         print &quot;$filename: $line_count\n&quot;;
     }
 </pre>

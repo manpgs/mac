@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Role(3)</title>
 </head>
@@ -32,42 +33,30 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Eq;
+<pre>  package Eq;
   use Moose::Role; # automatically turns on strict and warnings
-
   requires 'equal';
-
   sub no_equal {
       my ($self, $other) = @_;
       !$self-&gt;equal($other);
   }
-
   # ... then in your classes
-
   package Currency;
   use Moose; # automatically turns on strict and warnings
-
   with 'Eq';
-
   sub equal {
       my ($self, $other) = @_;
       $self-&gt;as_float == $other-&gt;as_float;
   }
-
   # ... and also
-
   package Comparator;
   use Moose;
-
   has compare_to =&gt; (
       is      =&gt; 'ro',
       does    =&gt; 'Eq',
       handles =&gt; 'Eq',
   );
-
   # ... which allows
-
   my $currency1 = Currency-&gt;new(...);
   my $currency2 = Currency-&gt;new(...);
   Comparator-&gt;new(compare_to =&gt; $currency1)-&gt;equal($currency2);
@@ -115,8 +104,7 @@
 <p class="Pp">When you use Moose::Role, you can specify traits which will be
     applied to your role metaclass:</p>
 <p class="Pp"></p>
-<pre>
-    use Moose::Role -traits =&gt; 'My::Trait';
+<pre>    use Moose::Role -traits =&gt; 'My::Trait';
 </pre>
 <p class="Pp">This is very similar to the attribute traits feature. When you do
     this, your class's <span class="Li">&quot;meta&quot;</span> object will have
@@ -134,8 +122,7 @@
     method, roles may also be applied to an instance of a class using
     Moose::Util 'apply_all_roles' or the role's metaclass:</p>
 <p class="Pp"></p>
-<pre>
-   MyApp::Test::SomeRole-&gt;meta-&gt;apply( $instance );
+<pre>   MyApp::Test::SomeRole-&gt;meta-&gt;apply( $instance );
 </pre>
 <p class="Pp">Doing this creates a new, mutable, anonymous subclass, applies the
     role to that, and reblesses. In a debugger, for example, you will see class

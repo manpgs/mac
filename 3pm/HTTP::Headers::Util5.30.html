@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTTP::Headers::Util(3)</title>
 </head>
@@ -32,8 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use HTTP::Headers::Util qw(split_header_words);
+<pre>  use HTTP::Headers::Util qw(split_header_words);
   @values = split_header_words($h-&gt;header(&quot;Content-Type&quot;));
 </pre>
 </section>
@@ -58,20 +58,16 @@
         fields that follow this syntax (BNF as from the HTTP/1.1 specification,
         but we relax the requirement for tokens).</p>
     <p class="Pp"></p>
-    <pre>
-  headers           = #header
+    <pre>  headers           = #header
   header            = (token | parameter) *( [&quot;;&quot;] (token | parameter))
-
   token             = 1*&lt;any CHAR except CTLs or separators&gt;
   separators        = &quot;(&quot; | &quot;)&quot; | &quot;&lt;&quot; | &quot;&gt;&quot; | &quot;@&quot;
                     | &quot;,&quot; | &quot;;&quot; | &quot;:&quot; | &quot;\&quot; | &lt;&quot;&gt;
                     | &quot;/&quot; | &quot;[&quot; | &quot;]&quot; | &quot;?&quot; | &quot;=&quot;
                     | &quot;{&quot; | &quot;}&quot; | SP | HT
-
   quoted-string     = ( &lt;&quot;&gt; *(qdtext | quoted-pair ) &lt;&quot;&gt; )
   qdtext            = &lt;any TEXT except &lt;&quot;&gt;&gt;
   quoted-pair       = &quot;\&quot; CHAR
-
   parameter         = attribute &quot;=&quot; value
   attribute         = token
   value             = token | quoted-string
@@ -83,15 +79,13 @@
         headers will not necessarily be parsed as you would want.</p>
     <p class="Pp">This is easier to describe with some examples:</p>
     <p class="Pp"></p>
-    <pre>
-   split_header_words('foo=&quot;bar&quot;; port=&quot;80,81&quot;; DISCARD, BAR=baz');
+    <pre>   split_header_words('foo=&quot;bar&quot;; port=&quot;80,81&quot;; DISCARD, BAR=baz');
    split_header_words('text/html; charset=&quot;iso-8859-1&quot;');
    split_header_words('Basic realm=&quot;\\&quot;foo\\\\bar\\&quot;&quot;');
     </pre>
     <p class="Pp">will return</p>
     <p class="Pp"></p>
-    <pre>
-   [foo=&gt;'bar', port=&gt;'80,81', discard=&gt; undef], [bar=&gt;'baz' ]
+    <pre>   [foo=&gt;'bar', port=&gt;'80,81', discard=&gt; undef], [bar=&gt;'baz' ]
    ['text/html' =&gt; undef, charset =&gt; 'iso-8859-1']
    [basic =&gt; undef, realm =&gt; &quot;\&quot;foo\\bar\&quot;&quot;]
     </pre>
@@ -108,14 +102,12 @@
       value. Attribute values are quoted if needed.
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-   join_header_words([&quot;text/plain&quot; =&gt; undef, charset =&gt; &quot;iso-8859/1&quot;]);
+    <pre>   join_header_words([&quot;text/plain&quot; =&gt; undef, charset =&gt; &quot;iso-8859/1&quot;]);
    join_header_words(&quot;text/plain&quot; =&gt; undef, charset =&gt; &quot;iso-8859/1&quot;);
     </pre>
     <p class="Pp">will both return the string:</p>
     <p class="Pp"></p>
-    <pre>
-   text/plain; charset=&quot;iso-8859/1&quot;
+    <pre>   text/plain; charset=&quot;iso-8859/1&quot;
     </pre>
   </dd>
 </dl>

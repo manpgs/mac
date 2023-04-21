@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::BinaryTree_BuilderAndLazyBuild(3)</title>
 </head>
@@ -33,19 +34,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package BinaryTree;
+<pre>  package BinaryTree;
   use Moose;
-
   has 'node' =&gt; (is =&gt; 'rw', isa =&gt; 'Any');
-
   has 'parent' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
       predicate =&gt; 'has_parent',
       weak_ref  =&gt; 1,
   );
-
   has 'left' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
@@ -53,7 +50,6 @@
       lazy      =&gt; 1,
       builder   =&gt; '_build_child_tree',
   );
-
   has 'right' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
@@ -61,15 +57,12 @@
       lazy      =&gt; 1,
       builder   =&gt; '_build_child_tree',
   );
-
   before 'right', 'left' =&gt; sub {
       my ($self, $tree) = @_;
       $tree-&gt;parent($self) if defined $tree;
   };
-
   sub _build_child_tree {
       my $self = shift;
-
       return BinaryTree-&gt;new( parent =&gt; $self );
   }
 </pre>
@@ -90,9 +83,7 @@
 <p class="Pp">Note that Moose calls the builder method <i>on the object which
     has the</i> <i>attribute</i>. Here's an example:</p>
 <p class="Pp"></p>
-<pre>
-  my $tree = BinaryTree-&gt;new();
-
+<pre>  my $tree = BinaryTree-&gt;new();
   my $left = $tree-&gt;left();
 </pre>
 <p class="Pp">When <span class="Li">&quot;$tree-&gt;left()&quot;</span> is
@@ -113,8 +104,7 @@
     option can be used as sugar to specify a whole set of attribute options at
     once:</p>
 <p class="Pp"></p>
-<pre>
-  has 'animal' =&gt; (
+<pre>  has 'animal' =&gt; (
       is         =&gt; 'ro',
       isa        =&gt; 'Animal',
       lazy_build =&gt; 1,
@@ -122,8 +112,7 @@
 </pre>
 <p class="Pp">This is a shorthand for:</p>
 <p class="Pp"></p>
-<pre>
-  has 'animal' =&gt; (
+<pre>  has 'animal' =&gt; (
       is        =&gt; 'ro',
       isa       =&gt; 'Animal',
       required  =&gt; 1,

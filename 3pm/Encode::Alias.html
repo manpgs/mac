@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Encode::Alias(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Encode;
+<pre>  use Encode;
   use Encode::Alias;
   define_alias( &quot;newName&quot; =&gt; ENCODING);
   define_alias( qr/.../ =&gt; ENCODING);
@@ -49,8 +49,7 @@
   <dt id="As~2"><a class="permalink" href="#As~2">As a qr// compiled regular
     expression, e.g.:</a></dt>
   <dd>
-    <pre>
-  define_alias( qr/^iso8859-(\d+)$/i =&gt; '&quot;iso-8859-$1&quot;' );
+    <pre>  define_alias( qr/^iso8859-(\d+)$/i =&gt; '&quot;iso-8859-$1&quot;' );
     </pre>
     <p class="Pp">In this case, if <i>ENCODING</i> is not a reference, it is
         <span class="Li">&quot;eval&quot;</span>-ed in order to allow
@@ -66,8 +65,7 @@
   <dt id="As~3"><a class="permalink" href="#As~3">As a code reference,
     e.g.:</a></dt>
   <dd>
-    <pre>
-  define_alias( sub {shift =~ /^iso8859-(\d+)$/i ? &quot;iso-8859-$1&quot; : undef } );
+    <pre>  define_alias( sub {shift =~ /^iso8859-(\d+)$/i ? &quot;iso-8859-$1&quot; : undef } );
     </pre>
     <p class="Pp">The same effect as the example above in a different way. The
         coderef takes the alias name as an argument and returns a canonical name
@@ -78,16 +76,14 @@
 <p class="Pp"><i>Changes in code reference aliasing</i></p>
 <p class="Pp">As of Encode 1.87, the older form</p>
 <p class="Pp"></p>
-<pre>
-  define_alias( sub { return  /^iso8859-(\d+)$/i ? &quot;iso-8859-$1&quot; : undef } );
+<pre>  define_alias( sub { return  /^iso8859-(\d+)$/i ? &quot;iso-8859-$1&quot; : undef } );
 </pre>
 <p class="Pp">no longer works.</p>
 <p class="Pp">Encode up to 1.86 internally used &quot;local
     <span class="Li">$_</span>&quot; to implement this older form. But consider
     the code below;</p>
 <p class="Pp"></p>
-<pre>
-  use Encode;
+<pre>  use Encode;
   $_ = &quot;eeeee&quot; ;
   while (/(e)/g) {
     my $utf = decode('aliased-encoding-name', $1);
@@ -104,22 +100,18 @@
     necessary, <b>define_alias()</b> flushes the internal cache to make the new
     definition available.</p>
 <p class="Pp"></p>
-<pre>
-  # redirect SHIFT_JIS to MS/IBM Code Page 932, which is a
+<pre>  # redirect SHIFT_JIS to MS/IBM Code Page 932, which is a
   # superset of SHIFT_JIS
-
   define_alias( qr/shift.*jis$/i  =&gt; '&quot;cp932&quot;' );
   define_alias( qr/sjis$/i        =&gt; '&quot;cp932&quot;' );
 </pre>
 <p class="Pp">If you want to zap all predefined aliases, you can use</p>
 <p class="Pp"></p>
-<pre>
-  Encode::Alias-&gt;undef_aliases;
+<pre>  Encode::Alias-&gt;undef_aliases;
 </pre>
 <p class="Pp">to do so. And</p>
 <p class="Pp"></p>
-<pre>
-  Encode::Alias-&gt;init_aliases;
+<pre>  Encode::Alias-&gt;init_aliases;
 </pre>
 <p class="Pp">gets the factory settings back.</p>
 <p class="Pp">Note that <b>define_alias()</b> will not be able to override the

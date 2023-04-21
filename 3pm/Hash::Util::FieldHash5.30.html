@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Hash::Util::FieldHash(3pm)</title>
 </head>
@@ -28,18 +29,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  ### Create fieldhashes
+<pre>  ### Create fieldhashes
   use Hash::Util qw(fieldhash fieldhashes);
-
   # Create a single field hash
   fieldhash my %foo;
-
   # Create three at once...
   fieldhashes \ my(%foo, %bar, %baz);
   # ...or any number
   fieldhashes @hashrefs;
-
   ### Create an idhash and register it for garbage collection
   use Hash::Util::FieldHash qw(idhash register);
   idhash my %name;
@@ -48,7 +45,6 @@
   register($object, \ %name);
   # the following entry will be deleted when $object goes out of scope
   $name{$object} = 'John Doe';
-
   ### Register an ordinary hash for garbage collection
   use Hash::Util::FieldHash qw(id register);
   my %name;
@@ -67,8 +63,7 @@
 <dl class="Bl-tag">
   <dt id="id"><a class="permalink" href="#id">id</a></dt>
   <dd>
-    <pre>
-    id($obj)
+    <pre>    id($obj)
     </pre>
     <p class="Pp">Returns the reference address of a reference
         <span class="Li">$obj</span>. If <span class="Li">$obj</span> is not a
@@ -86,8 +81,7 @@
   </dd>
   <dt id="id_2obj"><a class="permalink" href="#id_2obj">id_2obj</a></dt>
   <dd>
-    <pre>
-    $obj = id_2obj($id)
+    <pre>    $obj = id_2obj($id)
     </pre>
     <p class="Pp">If <span class="Li">$id</span> is the id of a registered
         object (see &quot;register&quot;), returns the object, otherwise an
@@ -96,8 +90,7 @@
   </dd>
   <dt id="register"><a class="permalink" href="#register">register</a></dt>
   <dd>
-    <pre>
-    register($obj)
+    <pre>    register($obj)
     register($obj, @hashrefs)
     </pre>
     <p class="Pp">In the first form, registers an object to work with for the
@@ -121,8 +114,7 @@
   </dd>
   <dt id="idhash"><a class="permalink" href="#idhash">idhash</a></dt>
   <dd>
-    <pre>
-    idhash my %hash
+    <pre>    idhash my %hash
     </pre>
     <p class="Pp">Makes an idhash from the argument, which must be a hash.</p>
     <p class="Pp">An <i>idhash</i> works like a normal hash, except that it
@@ -133,8 +125,7 @@
   </dd>
   <dt id="idhashes"><a class="permalink" href="#idhashes">idhashes</a></dt>
   <dd>
-    <pre>
-    idhashes \ my(%hash, %gnash, %trash)
+    <pre>    idhashes \ my(%hash, %gnash, %trash)
     idhashes \ @hashrefs
     </pre>
     <p class="Pp">Creates many idhashes from its hashref arguments. Returns
@@ -143,8 +134,7 @@
   </dd>
   <dt id="fieldhash"><a class="permalink" href="#fieldhash">fieldhash</a></dt>
   <dd>
-    <pre>
-    fieldhash %hash;
+    <pre>    fieldhash %hash;
     </pre>
     <p class="Pp">Creates a single fieldhash. The argument must be a hash.
         Returns a reference to the given hash if successful, otherwise
@@ -157,8 +147,7 @@
   </dd>
   <dt id="fieldhashes"><a class="permalink" href="#fieldhashes">fieldhashes</a></dt>
   <dd>
-    <pre>
-    fieldhashes @hashrefs;
+    <pre>    fieldhashes @hashrefs;
     </pre>
     <p class="Pp">Creates any number of field hashes. Arguments must be hash
         references. Returns the converted hashrefs in list context, their number
@@ -357,8 +346,7 @@
 <p class="Pp">To make the field hashes kick in, it is easiest to redefine
     <span class="Li">&quot;refaddr&quot;</span> as</p>
 <p class="Pp"></p>
-<pre>
-    sub refaddr { shift }
+<pre>    sub refaddr { shift }
 </pre>
 <p class="Pp">instead of importing it from
     <span class="Li">&quot;Scalar::Util&quot;</span>. It should now be possible
@@ -373,28 +361,24 @@
 <p class="Pp">If there are only a few field hashes to declare, it is simplest
   to</p>
 <p class="Pp"></p>
-<pre>
-    use Hash::Util::FieldHash;
+<pre>    use Hash::Util::FieldHash;
 </pre>
 <p class="Pp">early and call the functions qualified:</p>
 <p class="Pp"></p>
-<pre>
-    Hash::Util::FieldHash::fieldhash my %foo;
+<pre>    Hash::Util::FieldHash::fieldhash my %foo;
 </pre>
 <p class="Pp">Otherwise, import the functions into a convenient package like
     <span class="Li">&quot;HUF&quot;</span> or, more general,
     <span class="Li">&quot;Aux&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Aux;
         use Hash::Util::FieldHash ':all';
     }
 </pre>
 <p class="Pp">and call</p>
 <p class="Pp"></p>
-<pre>
-    Aux::fieldhash my %foo;
+<pre>    Aux::fieldhash my %foo;
 </pre>
 <p class="Pp">as needed.</p>
 </section>
@@ -493,9 +477,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Example_1"><a class="permalink" href="#Example_1">Example
   1</a></h2>
-<pre>
-    use strict; use warnings;
-
+<pre>    use strict; use warnings;
     {
         package Name_hash;  # standard implementation: the
                             # object is a hash
@@ -508,23 +490,17 @@
             $obj-&gt;{ last} = $last;
             $obj;
         }
-
         sub first { shift()-&gt;{ first} }
         sub last { shift()-&gt;{ last} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
-
     }
-
     {
         package Name_id;
         use Hash::Util::FieldHash qw(id);
-
         my (%first, %last);
-
         sub init {
             my $obj = shift;
             my ($first, $last) = @_;
@@ -534,29 +510,22 @@
             $last{ id $obj} = $last;
             $obj;
         }
-
         sub first { $first{ id shift()} }
         sub last { $last{ id shift()} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
-
         sub DESTROY {
             my $id = id shift;
             delete $first{ $id};
             delete $last{ $id};
         }
-
     }
-
     {
         package Name_idhash;
         use Hash::Util::FieldHash;
-
         Hash::Util::FieldHash::idhashes( \ my (%first, %last) );
-
         sub init {
             my $obj = shift;
             my ($first, $last) = @_;
@@ -566,29 +535,22 @@
             $last{ $obj} = $last;
             $obj;
         }
-
         sub first { $first{ shift()} }
         sub last { $last{ shift()} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
-
         sub DESTROY {
             my $n = shift;
             delete $first{ $n};
             delete $last{ $n};
         }
-
     }
-
     {
         package Name_id_reg;
         use Hash::Util::FieldHash qw(id register);
-
         my (%first, %last);
-
         sub init {
             my $obj = shift;
             my ($first, $last) = @_;
@@ -599,22 +561,17 @@
             $last{ id $obj} = $last;
             $obj;
         }
-
         sub first { $first{ id shift()} }
         sub last { $last{ id shift()} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
     }
-
     {
         package Name_idhash_reg;
         use Hash::Util::FieldHash qw(register);
-
         Hash::Util::FieldHash::idhashes \ my (%first, %last);
-
         sub init {
             my $obj = shift;
             my ($first, $last) = @_;
@@ -625,22 +582,17 @@
             $last{ $obj} = $last;
             $obj;
         }
-
         sub first { $first{ shift()} }
         sub last { $last{ shift()} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
     }
-
     {
         package Name_fieldhash;
         use Hash::Util::FieldHash;
-
         Hash::Util::FieldHash::fieldhashes \ my (%first, %last);
-
         sub init {
             my $obj = shift;
             my ($first, $last) = @_;
@@ -650,16 +602,13 @@
             $last{ $obj} = $last;
             $obj;
         }
-
         sub first { $first{ shift()} }
         sub last { $last{ shift()} }
-
         sub name {
             my $n = shift;
             join ' ' =&gt; $n-&gt;first, $n-&gt;last;
         }
     }
-
     1;
 </pre>
 <p class="Pp">To exercise the various implementations the script below can be
@@ -689,22 +638,16 @@
 <section class="Ss">
 <h2 class="Ss" id="Example_2"><a class="permalink" href="#Example_2">Example
   2</a></h2>
-<pre>
-    use strict; use warnings; $| = 1;
-
+<pre>    use strict; use warnings; $| = 1;
     use Example;
-
     {
         package Name;
         use parent 'Name_id';  # define here which implementation to run
     }
-
-
     # Verify that the base package works
     my $n = Name-&gt;init(qw(Albert Einstein));
     print $n-&gt;name, &quot;\n&quot;;
     print &quot;\n&quot;;
-
     # Create a named file handle (See definition below)
     my $nf = NamedFile-&gt;init(qw(/tmp/x Filomena File));
     # use as a file handle...
@@ -715,13 +658,10 @@
     # ...and as a Name object
     print &quot;...brought to you by &quot;, $nf-&gt;name, &quot;\n&quot;;
     exit;
-
-
     # Definition of NamedFile
     package NamedFile;
     use parent 'Name';
     use parent 'IO::File';
-
     sub init {
         my $obj = shift;
         my ($file, $first, $last) = @_;
@@ -768,8 +708,7 @@
     <span class="Li">&quot;uf_set&quot;</span> and
     <span class="Li">&quot;uf_index&quot;</span> fields are irrelevant.</p>
 <p class="Pp"></p>
-<pre>
-    IV watch_key(pTHX_ IV action, SV* field) {
+<pre>    IV watch_key(pTHX_ IV action, SV* field) {
         MAGIC* mg = mg_find(field, PERL_MAGIC_uvar);
         SV* keysv = mg-&gt;mg_obj;
         /* Do whatever you need to.  If you decide to
@@ -821,10 +760,8 @@
 <section class="Ss">
 <h2 class="Ss" id="Internal_function_Hash::Util::FieldHash::_fieldhash"><a class="permalink" href="#Internal_function_Hash::Util::FieldHash::_fieldhash">Internal
   function Hash::Util::FieldHash::_fieldhash</a></h2>
-<pre>
-    # test if %hash is a field hash
+<pre>    # test if %hash is a field hash
     my $result = _fieldhash \ %hash, 0;
-
     # make %hash a field hash
     my $result = _fieldhash \ %hash, 1;
 </pre>

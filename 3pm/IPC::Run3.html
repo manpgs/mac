@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IPC::Run3(3)</title>
 </head>
@@ -32,9 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use IPC::Run3;    # Exports run3() by default
-
+<pre>    use IPC::Run3;    # Exports run3() by default
     run3 \@cmd, \$in, \$out, \$err;
 </pre>
 </section>
@@ -76,23 +75,22 @@
     <span class="Li">$?</span>.</p>
 <p class="Pp">See &quot;%options&quot; for an option to handle the case of
     <span class="Li">&quot;system&quot;</span> returning -1 yourself.</p>
-<p class="Pp"><i></i><i>$cmd</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$cmd</i></span><i></i></p>
 <p class="Pp">Usually <span class="Li">$cmd</span> will be an ARRAY reference
     and the child is invoked via</p>
 <p class="Pp"></p>
-<pre>
-  system @$cmd;
+<pre>  system @$cmd;
 </pre>
 <p class="Pp">But <span class="Li">$cmd</span> may also be a string in which
     case the child is invoked via</p>
 <p class="Pp"></p>
-<pre>
-  system $cmd;
+<pre>  system $cmd;
 </pre>
 <p class="Pp">(cf. &quot;system&quot; in perlfunc for the difference and the
     pitfalls of using the latter form).</p>
-<p class="Pp"><i></i><i>$stdin</i><i>, </i><i>$stdout</i><i>,
-    </i><i>$stderr</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$stdin</i></span><i>,
+    </i><span class="Li"><i>$stdout</i></span><i>,
+    </i><span class="Li"><i>$stderr</i></span><i></i></p>
 <p class="Pp">The parameters <span class="Li">$stdin</span>,
     <span class="Li">$stdout</span> and <span class="Li">$stderr</span> can take
     one of the following forms:</p>
@@ -100,8 +98,7 @@
   <dt>&quot;undef&quot; (or not specified at all)</dt>
   <dd>The child inherits the corresponding filehandle from the parent.
     <p class="Pp"></p>
-    <pre>
-  run3 \@cmd, $stdin;                   # child writes to same STDOUT and STDERR as parent
+    <pre>  run3 \@cmd, $stdin;                   # child writes to same STDOUT and STDERR as parent
   run3 \@cmd, undef, $stdout, $stderr;  # child reads from same STDIN as parent
     </pre>
   </dd>
@@ -110,31 +107,27 @@
       <span class="Li">&quot;/dev/null&quot;</span> (as returned by
       <span class="Li">&quot;File::Spec-&gt;devnull()&quot;</span>).
     <p class="Pp"></p>
-    <pre>
-  run3 \@cmd, \undef, $stdout, $stderr; # child reads from /dev/null
+    <pre>  run3 \@cmd, \undef, $stdout, $stderr; # child reads from /dev/null
     </pre>
   </dd>
   <dt id="a"><a class="permalink" href="#a">a simple scalar</a></dt>
   <dd>The parameter is taken to be the name of a file to read from or write to.
       In the latter case, the file will be opened via
     <p class="Pp"></p>
-    <pre>
-  open FH, &quot;&gt;&quot;, ...
+    <pre>  open FH, &quot;&gt;&quot;, ...
     </pre>
     <p class="Pp">i.e. it is created if it doesn't exist and truncated
         otherwise. Note that the file is opened by the parent which will croak
         in case of failure.</p>
     <p class="Pp"></p>
-    <pre>
-  run3 \@cmd, \undef, &quot;out.txt&quot;;        # child writes to file &quot;out.txt&quot;
+    <pre>  run3 \@cmd, \undef, &quot;out.txt&quot;;        # child writes to file &quot;out.txt&quot;
     </pre>
   </dd>
   <dt id="a~2"><a class="permalink" href="#a~2">a filehandle (either a reference
     to a GLOB or an &quot;IO::Handle&quot;)</a></dt>
   <dd>The filehandle is inherited by the child.
     <p class="Pp"></p>
-    <pre>
-  open my $fh, &quot;&gt;&quot;, &quot;out.txt&quot;;
+    <pre>  open my $fh, &quot;&gt;&quot;, &quot;out.txt&quot;;
   print $fh &quot;prologue\n&quot;;
   ...
   run3 \@cmd, \undef, $fh;              # child writes to $fh
@@ -147,8 +140,7 @@
   <dd>The referenced scalar is treated as a string to be read from or written
       to. In the latter case, the previous content of the string is overwritten.
     <p class="Pp"></p>
-    <pre>
-  my $out;
+    <pre>  my $out;
   run3 \@cmd, \undef, \$out;           # child writes into string
   run3 \@cmd, \&lt;&lt;EOF;                  # child reads from string (can use &quot;here&quot; notation)
   Input
@@ -167,8 +159,7 @@
         <span class="Li">@$stderr</span>, resp. The previous content of the
         array is overwritten.</p>
     <p class="Pp"></p>
-    <pre>
-  my @lines;
+    <pre>  my @lines;
   run3 \@cmd, \undef, \@lines;         # child writes into array
     </pre>
   </dd>
@@ -184,12 +175,10 @@
         <span class="Li">&amp;$stderr</span>, resp., is called with the contents
         of the line. Note that there's no end-of-file indication.</p>
     <p class="Pp"></p>
-    <pre>
-  my $i = 0;
+    <pre>  my $i = 0;
   sub producer {
     return $i &lt; 10 ? &quot;line&quot;.$i++.&quot;\n&quot; : undef;
   }
-
   run3 \@cmd, \&amp;producer;              # child reads 10 lines
     </pre>
     <p class="Pp">Note that this form of redirecting the child's I/O doesn't
@@ -204,15 +193,14 @@
     <span class="Li">&quot;STDERR&quot;</span> to the same filehandle. In
     general, this means that</p>
 <p class="Pp"></p>
-<pre>
-    run3 \@cmd, \undef, &quot;foo.txt&quot;, &quot;foo.txt&quot;;
+<pre>    run3 \@cmd, \undef, &quot;foo.txt&quot;, &quot;foo.txt&quot;;
     run3 \@cmd, \undef, \$both, \$both;
 </pre>
 <p class="Pp">will DWIM and pass a single file handle to the child for both
     <span class="Li">&quot;STDOUT&quot;</span> and
     <span class="Li">&quot;STDERR&quot;</span>, collecting all into file
     &quot;foo.txt&quot; or <span class="Li">$both</span>.</p>
-<p class="Pp"><i></i><i>&quot;\%options&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;\%options&quot;</i></span><i></i></p>
 <p class="Pp">The last parameter, <span class="Li">&quot;\%options&quot;</span>,
     must be a hash reference if present.</p>
 <p class="Pp">Currently the following keys are supported:</p>
@@ -329,8 +317,7 @@
 <p class="Pp">To enable debugging use the IPCRUN3DEBUG environment variable to a
     non-zero integer value:</p>
 <p class="Pp"></p>
-<pre>
-  $ IPCRUN3DEBUG=1 myapp
+<pre>  $ IPCRUN3DEBUG=1 myapp
 </pre>
 </section>
 <section class="Sh">
@@ -356,8 +343,7 @@
       subroutines</li>
   <li>better: allows 1 word invocations to avoid the shell easily:
     <p class="Pp"></p>
-    <pre>
- run3 [&quot;foo&quot;];  # does not invoke shell
+    <pre> run3 [&quot;foo&quot;];  # does not invoke shell
     </pre>
   </li>
   <li>worse: does not return the exit code, leaves it in $?</li>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Digest::SHA(3pm)</title>
 </head>
@@ -30,57 +31,40 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">In programs:</p>
 <p class="Pp"></p>
-<pre>
-                # Functional interface
-
+<pre>                # Functional interface
         use Digest::SHA qw(sha1 sha1_hex sha1_base64 ...);
-
         $digest = sha1($data);
         $digest = sha1_hex($data);
         $digest = sha1_base64($data);
-
         $digest = sha256($data);
         $digest = sha384_hex($data);
         $digest = sha512_base64($data);
-
                 # Object-oriented
-
         use Digest::SHA;
-
         $sha = Digest::SHA-&gt;new($alg);
-
         $sha-&gt;add($data);               # feed data into stream
-
         $sha-&gt;addfile(*F);
         $sha-&gt;addfile($filename);
-
         $sha-&gt;add_bits($bits);
         $sha-&gt;add_bits($data, $nbits);
-
         $sha_copy = $sha-&gt;clone;        # make copy of digest object
         $state = $sha-&gt;getstate;        # save current state to string
         $sha-&gt;putstate($state);         # restore previous $state
-
         $digest = $sha-&gt;digest;         # compute digest
         $digest = $sha-&gt;hexdigest;
         $digest = $sha-&gt;b64digest;
 </pre>
 <p class="Pp">From the command line:</p>
 <p class="Pp"></p>
-<pre>
-        $ shasum files
-
+<pre>        $ shasum files
         $ shasum --help
 </pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS_(HMAC-SHA)"><a class="permalink" href="#SYNOPSIS_(HMAC-SHA)">SYNOPSIS
   (HMAC-SHA)</a></h1>
-<pre>
-                # Functional interface only
-
+<pre>                # Functional interface only
         use Digest::SHA qw(hmac_sha1 hmac_sha1_hex ...);
-
         $digest = hmac_sha1($data, $key);
         $digest = hmac_sha224_hex($data, $key);
         $digest = hmac_sha256_base64($data, $key);
@@ -107,20 +91,15 @@
     or in stages. To illustrate, the following short program computes the
     SHA-256 digest of &quot;hello world&quot; using each approach:</p>
 <p class="Pp"></p>
-<pre>
-        use Digest::SHA qw(sha256_hex);
-
+<pre>        use Digest::SHA qw(sha256_hex);
         $data = &quot;hello world&quot;;
         @frags = split(//, $data);
-
         # all-at-once (Functional style)
         $digest1 = sha256_hex($data);
-
         # in-stages (OOP style)
         $state = Digest::SHA-&gt;new(256);
         for (@frags) { $state-&gt;add($_) }
         $digest2 = $state-&gt;hexdigest;
-
         print $digest1 eq $digest2 ?
                 &quot;whew!\n&quot; : &quot;oops!\n&quot;;
 </pre>
@@ -130,16 +109,16 @@
     &quot;110&quot; repeated 148 times, followed by &quot;11&quot;. Here's how
     to display its SHA-1 digest:</p>
 <p class="Pp"></p>
-<pre>
-        use Digest::SHA;
+<pre>        use Digest::SHA;
         $bits = &quot;110&quot; x 148 . &quot;11&quot;;
         $sha = Digest::SHA-&gt;new(1)-&gt;add_bits($bits);
         print $sha-&gt;hexdigest, &quot;\n&quot;;
 </pre>
 <p class="Pp">Note that for larger bit-strings, it's more efficient to use the
-    two-argument version <i>add_bits($data, </i><i>$nbits</i><i>)</i>, where
-    <i></i><i>$data</i><i></i> is in the customary packed binary format used for
-    Perl strings.</p>
+    two-argument version <i>add_bits($data,
+    </i><span class="Li"><i>$nbits</i></span><i>)</i>, where
+    <i></i><span class="Li"><i>$data</i></span><i></i> is in the customary
+    packed binary format used for Perl strings.</p>
 <p class="Pp">The module also lets you save intermediate SHA states to a string.
     The <i></i><b><i>getstate()</i></b><i></i> method generates portable,
     human-readable text describing the current state of computation. You can
@@ -148,8 +127,7 @@
 <p class="Pp">To see what a state description looks like, just run the
     following:</p>
 <p class="Pp"></p>
-<pre>
-        use Digest::SHA;
+<pre>        use Digest::SHA;
         print Digest::SHA-&gt;new-&gt;add(&quot;Shaw&quot; x 1962)-&gt;getstate;
 </pre>
 <p class="Pp">As an added convenience, the Digest::SHA module offers routines to
@@ -159,9 +137,7 @@
     <i></i><b><i>sha_hex()</i></b><i></i>, and
     <i></i><b><i>sha_base64()</i></b><i></i> functions.</p>
 <p class="Pp"></p>
-<pre>
-        # Test vector from draft-ietf-ipsec-ciph-sha-256-01.txt
-
+<pre>        # Test vector from draft-ietf-ipsec-ciph-sha-256-01.txt
         use Digest::SHA qw(hmac_sha256_hex);
         print hmac_sha256_hex(&quot;Hi There&quot;, chr(0x0b) x 32), &quot;\n&quot;;
 </pre>
@@ -184,10 +160,8 @@
     no wide characters, the module accepts it quite happily. The following code
     illustrates the two cases:</p>
 <p class="Pp"></p>
-<pre>
-        $str1 = pack('U*', (0..255));
+<pre>        $str1 = pack('U*', (0..255));
         print sha1_hex($str1);          # ok
-
         $str2 = pack('U*', (0..256));
         print sha1_hex($str2);          # croaks
 </pre>
@@ -218,21 +192,18 @@
     Base64-encoded digest isn't a multiple of 4, simply append &quot;=&quot;
     characters to the end of the digest until it is:</p>
 <p class="Pp"></p>
-<pre>
-        while (length($b64_digest) % 4) {
+<pre>        while (length($b64_digest) % 4) {
                 $b64_digest .= '=';
         }
 </pre>
 <p class="Pp">To illustrate, <i>sha256_base64(&quot;abc&quot;)</i> is computed
     to be</p>
 <p class="Pp"></p>
-<pre>
-        ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0
+<pre>        ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0
 </pre>
 <p class="Pp">which has a length of 43. So, the properly padded version is</p>
 <p class="Pp"></p>
-<pre>
-        ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=
+<pre>        ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=
 </pre>
 </section>
 <section class="Sh">
@@ -326,14 +297,16 @@
 <dl class="Bl-tag">
   <dt id="new($alg)"><a class="permalink" href="#new($alg)"><b>new($alg)</b></a></dt>
   <dd>Returns a new Digest::SHA object. Allowed values for
-      <i></i><i>$alg</i><i></i> are 1, 224, 256, 384, 512, 512224, or 512256.
-      It's also possible to use common string representations of the algorithm
-      (e.g. &quot;sha256&quot;, &quot;SHA-384&quot;). If the argument is
-      missing, SHA-1 will be used by default.
+      <i></i><span class="Li"><i>$alg</i></span><i></i> are 1, 224, 256, 384,
+      512, 512224, or 512256. It's also possible to use common string
+      representations of the algorithm (e.g. &quot;sha256&quot;,
+      &quot;SHA-384&quot;). If the argument is missing, SHA-1 will be used by
+      default.
     <p class="Pp">Invoking <i>new</i> as an instance method will reset the
-        object to the initial state associated with <i></i><i>$alg</i><i></i>.
-        If the argument is missing, the object will continue using the same
-        algorithm that was selected at creation.</p>
+        object to the initial state associated with
+        <i></i><span class="Li"><i>$alg</i></span><i></i>. If the argument is
+        missing, the object will continue using the same algorithm that was
+        selected at creation.</p>
   </dd>
   <dt id="reset($alg)"><a class="permalink" href="#reset($alg)"><b>reset($alg)</b></a></dt>
   <dd>This method has exactly the same effect as <i>new($alg)</i>. In fact,
@@ -354,8 +327,7 @@
       the current digest state. In other words, the following statements have
       the same effect:
     <p class="Pp"></p>
-    <pre>
-        $sha-&gt;add(&quot;a&quot;); $sha-&gt;add(&quot;b&quot;); $sha-&gt;add(&quot;c&quot;);
+    <pre>        $sha-&gt;add(&quot;a&quot;); $sha-&gt;add(&quot;b&quot;); $sha-&gt;add(&quot;c&quot;);
         $sha-&gt;add(&quot;a&quot;)-&gt;add(&quot;b&quot;)-&gt;add(&quot;c&quot;);
         $sha-&gt;add(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
         $sha-&gt;add(&quot;abc&quot;);
@@ -363,56 +335,52 @@
     <p class="Pp">The return value is the updated object itself.</p>
   </dd>
   <dt id="add_bits($data,"><a class="permalink" href="#add_bits($data,"><b>add_bits($data,
-    </b><b>$nbits</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$nbits</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="add_bits($bits)"><a class="permalink" href="#add_bits($bits)"><b>add_bits($bits)</b></a></dt>
   <dd>Updates the current digest state by appending bits to it. The return value
       is the updated object itself.
     <p class="Pp">The first form causes the most-significant
-        <i></i><i>$nbits</i><i></i> of <i></i><i>$data</i><i></i> to be appended
-        to the stream. The <i></i><i>$data</i><i></i> argument is in the
-        customary binary format used for Perl strings.</p>
+        <i></i><span class="Li"><i>$nbits</i></span><i></i> of
+        <i></i><span class="Li"><i>$data</i></span><i></i> to be appended to the
+        stream. The <i></i><span class="Li"><i>$data</i></span><i></i> argument
+        is in the customary binary format used for Perl strings.</p>
     <p class="Pp">The second form takes an ASCII string of &quot;0&quot; and
         &quot;1&quot; characters as its argument. It's equivalent to</p>
     <p class="Pp"></p>
-    <pre>
-        $sha-&gt;add_bits(pack(&quot;B*&quot;, $bits), length($bits));
+    <pre>        $sha-&gt;add_bits(pack(&quot;B*&quot;, $bits), length($bits));
     </pre>
     <p class="Pp">So, the following two statements do the same thing:</p>
     <p class="Pp"></p>
-    <pre>
-        $sha-&gt;add_bits(&quot;111100001010&quot;);
+    <pre>        $sha-&gt;add_bits(&quot;111100001010&quot;);
         $sha-&gt;add_bits(&quot;\xF0\xA0&quot;, 12);
     </pre>
     <p class="Pp">Note that SHA-1 and SHA-2 use <i>most-significant-bit
         ordering</i> for their internal state. This means that</p>
     <p class="Pp"></p>
-    <pre>
-        $sha3-&gt;add_bits(&quot;110&quot;);
+    <pre>        $sha3-&gt;add_bits(&quot;110&quot;);
     </pre>
     <p class="Pp">is equivalent to</p>
     <p class="Pp"></p>
-    <pre>
-        $sha3-&gt;add_bits(&quot;1&quot;)-&gt;add_bits(&quot;1&quot;)-&gt;add_bits(&quot;0&quot;);
+    <pre>        $sha3-&gt;add_bits(&quot;1&quot;)-&gt;add_bits(&quot;1&quot;)-&gt;add_bits(&quot;0&quot;);
     </pre>
   </dd>
   <dt id="addfile(*FILE)"><a class="permalink" href="#addfile(*FILE)"><b>addfile(*FILE)</b></a></dt>
   <dd>Reads from <i>FILE</i> until EOF, and appends that data to the current
       state. The return value is the updated object itself.</dd>
   <dt id="addfile($filename"><a class="permalink" href="#addfile($filename"><b>addfile($filename
-    [, </b><b>$mode</b><b>])</b></a></dt>
-  <dd>Reads the contents of <i></i><i>$filename</i><i></i>, and appends that
+    [, </b><span class="Li"><b>$mode</b></span><b>])</b></a></dt>
+  <dd>Reads the contents of
+      <i></i><span class="Li"><i>$filename</i></span><i></i>, and appends that
       data to the current state. The return value is the updated object itself.
-    <p class="Pp">By default, <i></i><i>$filename</i><i></i> is simply opened
+    <p class="Pp">By default,
+        <i></i><span class="Li"><i>$filename</i></span><i></i> is simply opened
         and read; no special modes or I/O disciplines are used. To change this,
-        set the optional <i></i><i>$mode</i><i></i> argument to one of the
-        following values:</p>
+        set the optional <i></i><span class="Li"><i>$mode</i></span><i></i>
+        argument to one of the following values:</p>
     <p class="Pp"></p>
-    <pre>
-        &quot;b&quot;     read file in binary mode
-
+    <pre>        &quot;b&quot;     read file in binary mode
         &quot;U&quot;     use universal newlines
-
         &quot;0&quot;     use BITS mode
     </pre>
     <p class="Pp">The &quot;U&quot; mode is modeled on Python's &quot;Universal
@@ -423,51 +391,53 @@
         files</b>, namely those passing Perl's <i>-T</i> test; binary files are
         processed with no translation whatsoever.</p>
     <p class="Pp">The BITS mode (&quot;0&quot;) interprets the contents of
-        <i></i><i>$filename</i><i></i> as a logical stream of bits, where each
-        ASCII '0' or '1' character represents a 0 or 1 bit, respectively. All
-        other characters are ignored. This provides a convenient way to
-        calculate the digest values of partial-byte data by using files, rather
-        than having to write separate programs employing the <i>add_bits</i>
-        method.</p>
+        <i></i><span class="Li"><i>$filename</i></span><i></i> as a logical
+        stream of bits, where each ASCII '0' or '1' character represents a 0 or
+        1 bit, respectively. All other characters are ignored. This provides a
+        convenient way to calculate the digest values of partial-byte data by
+        using files, rather than having to write separate programs employing the
+        <i>add_bits</i> method.</p>
   </dd>
   <dt id="getstate"><a class="permalink" href="#getstate"><b>getstate</b></a></dt>
   <dd>Returns a string containing a portable, human-readable representation of
       the current SHA state.</dd>
   <dt id="putstate($str)"><a class="permalink" href="#putstate($str)"><b>putstate($str)</b></a></dt>
   <dd>Returns a Digest::SHA object representing the SHA state contained in
-      <i></i><i>$str</i><i></i>. The format of <i></i><i>$str</i><i></i> matches
-      the format of the output produced by method <i>getstate</i>. If called as
-      a class method, a new object is created; if called as an instance method,
-      the object is reset to the state contained in
-    <i></i><i>$str</i><i></i>.</dd>
+      <i></i><span class="Li"><i>$str</i></span><i></i>. The format of
+      <i></i><span class="Li"><i>$str</i></span><i></i> matches the format of
+      the output produced by method <i>getstate</i>. If called as a class
+      method, a new object is created; if called as an instance method, the
+      object is reset to the state contained in
+      <i></i><span class="Li"><i>$str</i></span><i></i>.</dd>
   <dt id="dump($filename)"><a class="permalink" href="#dump($filename)"><b>dump($filename)</b></a></dt>
-  <dd>Writes the output of <i>getstate</i> to <i></i><i>$filename</i><i></i>. If
-      the argument is missing, or equal to the empty string, the state
-      information will be written to STDOUT.</dd>
+  <dd>Writes the output of <i>getstate</i> to
+      <i></i><span class="Li"><i>$filename</i></span><i></i>. If the argument is
+      missing, or equal to the empty string, the state information will be
+      written to STDOUT.</dd>
   <dt id="load($filename)"><a class="permalink" href="#load($filename)"><b>load($filename)</b></a></dt>
   <dd>Returns a Digest::SHA object that results from calling <i>putstate</i> on
-      the contents of <i></i><i>$filename</i><i></i>. If the argument is
-      missing, or equal to the empty string, the state information will be read
-      from STDIN.</dd>
+      the contents of <i></i><span class="Li"><i>$filename</i></span><i></i>. If
+      the argument is missing, or equal to the empty string, the state
+      information will be read from STDIN.</dd>
   <dt id="digest"><a class="permalink" href="#digest"><b>digest</b></a></dt>
   <dd>Returns the digest encoded as a binary string.
     <p class="Pp">Note that the <i>digest</i> method is a read-once operation.
         Once it has been performed, the Digest::SHA object is automatically
         reset in preparation for calculating another digest value. Call
-        <i></i><i>$sha</i><i>-&gt;clone-&gt;digest</i> if it's necessary to
-        preserve the original digest state.</p>
+        <i></i><span class="Li"><i>$sha</i></span><i>-&gt;clone-&gt;digest</i>
+        if it's necessary to preserve the original digest state.</p>
   </dd>
   <dt id="hexdigest"><a class="permalink" href="#hexdigest"><b>hexdigest</b></a></dt>
   <dd>Returns the digest encoded as a hexadecimal string.
     <p class="Pp">Like <i>digest</i>, this method is a read-once operation. Call
-        <i></i><i>$sha</i><i>-&gt;clone-&gt;hexdigest</i> if it's necessary to
-        preserve the original digest state.</p>
+        <i></i><span class="Li"><i>$sha</i></span><i>-&gt;clone-&gt;hexdigest</i>
+        if it's necessary to preserve the original digest state.</p>
   </dd>
   <dt id="b64digest"><a class="permalink" href="#b64digest"><b>b64digest</b></a></dt>
   <dd>Returns the digest encoded as a Base64 string.
     <p class="Pp">Like <i>digest</i>, this method is a read-once operation. Call
-        <i></i><i>$sha</i><i>-&gt;clone-&gt;b64digest</i> if it's necessary to
-        preserve the original digest state.</p>
+        <i></i><span class="Li"><i>$sha</i></span><i>-&gt;clone-&gt;b64digest</i>
+        if it's necessary to preserve the original digest state.</p>
     <p class="Pp">It's important to note that the resulting string does
         <b>not</b> contain the padding characters typical of Base64 encodings.
         This omission is deliberate, and is done to maintain compatibility with
@@ -478,80 +448,83 @@
 <p class="Pp"><i>HMAC-SHA-1/224/256/384/512</i></p>
 <dl class="Bl-tag">
   <dt id="hmac_sha1($data,"><a class="permalink" href="#hmac_sha1($data,"><b>hmac_sha1($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha224($data,"><a class="permalink" href="#hmac_sha224($data,"><b>hmac_sha224($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha256($data,"><a class="permalink" href="#hmac_sha256($data,"><b>hmac_sha256($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha384($data,"><a class="permalink" href="#hmac_sha384($data,"><b>hmac_sha384($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512($data,"><a class="permalink" href="#hmac_sha512($data,"><b>hmac_sha512($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512224($data,"><a class="permalink" href="#hmac_sha512224($data,"><b>hmac_sha512224($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512256($data,"><a class="permalink" href="#hmac_sha512256($data,"><b>hmac_sha512256($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd>Returns the HMAC-SHA-1/224/256/384/512 digest of
-      <i></i><i>$data</i><i></i>/<i></i><i>$key</i><i></i>, with the result
-      encoded as a binary string. Multiple <i></i><i>$data</i><i></i> arguments
-      are allowed, provided that <i></i><i>$key</i><i></i> is the last argument
-      in the list.</dd>
+      <i></i><span class="Li"><i>$data</i></span><i></i>/<i></i><span class="Li"><i>$key</i></span><i></i>,
+      with the result encoded as a binary string. Multiple
+      <i></i><span class="Li"><i>$data</i></span><i></i> arguments are allowed,
+      provided that <i></i><span class="Li"><i>$key</i></span><i></i> is the
+      last argument in the list.</dd>
   <dt id="hmac_sha1_hex($data,"><a class="permalink" href="#hmac_sha1_hex($data,"><b>hmac_sha1_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha224_hex($data,"><a class="permalink" href="#hmac_sha224_hex($data,"><b>hmac_sha224_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha256_hex($data,"><a class="permalink" href="#hmac_sha256_hex($data,"><b>hmac_sha256_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha384_hex($data,"><a class="permalink" href="#hmac_sha384_hex($data,"><b>hmac_sha384_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512_hex($data,"><a class="permalink" href="#hmac_sha512_hex($data,"><b>hmac_sha512_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512224_hex($data,"><a class="permalink" href="#hmac_sha512224_hex($data,"><b>hmac_sha512224_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512256_hex($data,"><a class="permalink" href="#hmac_sha512256_hex($data,"><b>hmac_sha512256_hex($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd>Returns the HMAC-SHA-1/224/256/384/512 digest of
-      <i></i><i>$data</i><i></i>/<i></i><i>$key</i><i></i>, with the result
-      encoded as a hexadecimal string. Multiple <i></i><i>$data</i><i></i>
-      arguments are allowed, provided that <i></i><i>$key</i><i></i> is the last
-      argument in the list.</dd>
+      <i></i><span class="Li"><i>$data</i></span><i></i>/<i></i><span class="Li"><i>$key</i></span><i></i>,
+      with the result encoded as a hexadecimal string. Multiple
+      <i></i><span class="Li"><i>$data</i></span><i></i> arguments are allowed,
+      provided that <i></i><span class="Li"><i>$key</i></span><i></i> is the
+      last argument in the list.</dd>
   <dt id="hmac_sha1_base64($data,"><a class="permalink" href="#hmac_sha1_base64($data,"><b>hmac_sha1_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha224_base64($data,"><a class="permalink" href="#hmac_sha224_base64($data,"><b>hmac_sha224_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha256_base64($data,"><a class="permalink" href="#hmac_sha256_base64($data,"><b>hmac_sha256_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha384_base64($data,"><a class="permalink" href="#hmac_sha384_base64($data,"><b>hmac_sha384_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512_base64($data,"><a class="permalink" href="#hmac_sha512_base64($data,"><b>hmac_sha512_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512224_base64($data,"><a class="permalink" href="#hmac_sha512224_base64($data,"><b>hmac_sha512224_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="hmac_sha512256_base64($data,"><a class="permalink" href="#hmac_sha512256_base64($data,"><b>hmac_sha512256_base64($data,
-    </b><b>$key</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$key</b></span><b>)</b></a></dt>
   <dd>Returns the HMAC-SHA-1/224/256/384/512 digest of
-      <i></i><i>$data</i><i></i>/<i></i><i>$key</i><i></i>, with the result
-      encoded as a Base64 string. Multiple <i></i><i>$data</i><i></i> arguments
-      are allowed, provided that <i></i><i>$key</i><i></i> is the last argument
-      in the list.
+      <i></i><span class="Li"><i>$data</i></span><i></i>/<i></i><span class="Li"><i>$key</i></span><i></i>,
+      with the result encoded as a Base64 string. Multiple
+      <i></i><span class="Li"><i>$data</i></span><i></i> arguments are allowed,
+      provided that <i></i><span class="Li"><i>$key</i></span><i></i> is the
+      last argument in the list.
     <p class="Pp">It's important to note that the resulting string does
         <b>not</b> contain the padding characters typical of Base64 encodings.
         This omission is deliberate, and is done to maintain compatibility with
@@ -572,16 +545,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
-<pre>
-        Mark Shelor     &lt;mshelor@cpan.org&gt;
+<pre>        Mark Shelor     &lt;mshelor@cpan.org&gt;
 </pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ACKNOWLEDGMENTS"><a class="permalink" href="#ACKNOWLEDGMENTS">ACKNOWLEDGMENTS</a></h1>
 <p class="Pp">The author is particularly grateful to</p>
 <p class="Pp"></p>
-<pre>
-        Gisle Aas
+<pre>        Gisle Aas
         H. Merijn Brand
         Sean Burke
         Chris Carey

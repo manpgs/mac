@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Entity(3)</title>
 </head>
@@ -33,21 +34,17 @@
     Go on, do it now. I'll wait.</p>
 <p class="Pp">Ready? Ok...</p>
 <p class="Pp"></p>
-<pre>
-    ### Create an entity:
+<pre>    ### Create an entity:
     $top = MIME::Entity-&gt;build(From    =&gt; 'me@myhost.com',
                                To      =&gt; 'you@yourhost.com',
                                Subject =&gt; &quot;Hello, nurse!&quot;,
                                Data    =&gt; \@my_message);
-
     ### Attach stuff to it:
     $top-&gt;attach(Path     =&gt; $gif_path,
                  Type     =&gt; &quot;image/gif&quot;,
                  Encoding =&gt; &quot;base64&quot;);
-
     ### Sign it:
     $top-&gt;sign;
-
     ### Output it:
     $top-&gt;print(\*STDOUT);
 </pre>
@@ -66,14 +63,12 @@
 <p class="Pp">Create a document for an ordinary 7-bit ASCII text file (lots of
     stuff is defaulted for us):</p>
 <p class="Pp"></p>
-<pre>
-    $ent = MIME::Entity-&gt;build(Path=&gt;&quot;english-msg.txt&quot;);
+<pre>    $ent = MIME::Entity-&gt;build(Path=&gt;&quot;english-msg.txt&quot;);
 </pre>
 <p class="Pp">Create a document for a text file with 8-bit (Latin-1)
   characters:</p>
 <p class="Pp"></p>
-<pre>
-    $ent = MIME::Entity-&gt;build(Path     =&gt;&quot;french-msg.txt&quot;,
+<pre>    $ent = MIME::Entity-&gt;build(Path     =&gt;&quot;french-msg.txt&quot;,
                                Encoding =&gt;&quot;quoted-printable&quot;,
                                From     =&gt;'jean.luc@inria.fr',
                                Subject  =&gt;&quot;C'est bon!&quot;);
@@ -82,8 +77,7 @@
     optional; note that we have to specify content-type and encoding since
     they're not the default values):</p>
 <p class="Pp"></p>
-<pre>
-    $ent = MIME::Entity-&gt;build(Description =&gt; &quot;A pretty picture&quot;,
+<pre>    $ent = MIME::Entity-&gt;build(Description =&gt; &quot;A pretty picture&quot;,
                                Path        =&gt; &quot;./docs/mime-sm.gif&quot;,
                                Type        =&gt; &quot;image/gif&quot;,
                                Encoding    =&gt; &quot;base64&quot;);
@@ -91,8 +85,7 @@
 <p class="Pp">Create a document that you already have the text for, using
     &quot;Data&quot;:</p>
 <p class="Pp"></p>
-<pre>
-    $ent = MIME::Entity-&gt;build(Type        =&gt; &quot;text/plain&quot;,
+<pre>    $ent = MIME::Entity-&gt;build(Type        =&gt; &quot;text/plain&quot;,
                                Encoding    =&gt; &quot;quoted-printable&quot;,
                                Data        =&gt; [&quot;First line.\n&quot;,
                                               &quot;Second line.\n&quot;,
@@ -101,29 +94,24 @@
 <p class="Pp">Create a multipart message, with the entire structure given
     explicitly:</p>
 <p class="Pp"></p>
-<pre>
-    ### Create the top-level, and set up the mail headers:
+<pre>    ### Create the top-level, and set up the mail headers:
     $top = MIME::Entity-&gt;build(Type     =&gt; &quot;multipart/mixed&quot;,
                                From     =&gt; 'me@myhost.com',
                                To       =&gt; 'you@yourhost.com',
                                Subject  =&gt; &quot;Hello, nurse!&quot;);
-
     ### Attachment #1: a simple text document:
     $top-&gt;attach(Path=&gt;&quot;./testin/short.txt&quot;);
-
     ### Attachment #2: a GIF file:
     $top-&gt;attach(Path        =&gt; &quot;./docs/mime-sm.gif&quot;,
                  Type        =&gt; &quot;image/gif&quot;,
                  Encoding    =&gt; &quot;base64&quot;);
-
     ### Attachment #3: text we'll create with text we have on-hand:
     $top-&gt;attach(Data =&gt; $contents);
 </pre>
 <p class="Pp">Suppose you don't know ahead of time that you'll have attachments?
     No problem: you can &quot;attach&quot; to singleparts as well:</p>
 <p class="Pp"></p>
-<pre>
-    $top = MIME::Entity-&gt;build(From    =&gt; 'me@myhost.com',
+<pre>    $top = MIME::Entity-&gt;build(From    =&gt; 'me@myhost.com',
                                To      =&gt; 'you@yourhost.com',
                                Subject =&gt; &quot;Hello, nurse!&quot;,
                                Data    =&gt; \@my_message);
@@ -135,26 +123,20 @@
 <p class="Pp">Copy an entity (headers, parts... everything but external body
     data):</p>
 <p class="Pp"></p>
-<pre>
-    my $deepcopy = $top-&gt;dup;
+<pre>    my $deepcopy = $top-&gt;dup;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Access_examples"><a class="permalink" href="#Access_examples">Access
   examples</a></h2>
-<pre>
-    ### Get the head, a MIME::Head:
+<pre>    ### Get the head, a MIME::Head:
     $head = $ent-&gt;head;
-
     ### Get the body, as a MIME::Body;
     $bodyh = $ent-&gt;bodyhandle;
-
     ### Get the intended MIME type (as declared in the header):
     $type = $ent-&gt;mime_type;
-
     ### Get the effective MIME type (in case decoding failed):
     $eff_type = $ent-&gt;effective_type;
-
     ### Get preamble, parts, and epilogue:
     $preamble   = $ent-&gt;preamble;          ### ref to array of lines
     $num_parts  = $ent-&gt;parts;
@@ -167,51 +149,42 @@
   examples</a></h2>
 <p class="Pp">Muck about with the body data:</p>
 <p class="Pp"></p>
-<pre>
-    ### Read the (unencoded) body data:
+<pre>    ### Read the (unencoded) body data:
     if ($io = $ent-&gt;open(&quot;r&quot;)) {
         while (defined($_ = $io-&gt;getline)) { print $_ }
         $io-&gt;close;
     }
-
     ### Write the (unencoded) body data:
     if ($io = $ent-&gt;open(&quot;w&quot;)) {
         foreach (@lines) { $io-&gt;print($_) }
         $io-&gt;close;
     }
-
     ### Delete the files for any external (on-disk) data:
     $ent-&gt;purge;
 </pre>
 <p class="Pp">Muck about with the signature:</p>
 <p class="Pp"></p>
-<pre>
-    ### Sign it (automatically removes any existing signature):
+<pre>    ### Sign it (automatically removes any existing signature):
     $top-&gt;sign(File=&gt;&quot;$ENV{HOME}/.signature&quot;);
-
     ### Remove any signature within 15 lines of the end:
     $top-&gt;remove_sig(15);
 </pre>
 <p class="Pp">Muck about with the headers:</p>
 <p class="Pp"></p>
-<pre>
-    ### Compute content-lengths for singleparts based on bodies:
+<pre>    ### Compute content-lengths for singleparts based on bodies:
     ###   (Do this right before you print!)
     $entity-&gt;sync_headers(Length=&gt;'COMPUTE');
 </pre>
 <p class="Pp">Muck about with the structure:</p>
 <p class="Pp"></p>
-<pre>
-    ### If a 0- or 1-part multipart, collapse to a singlepart:
+<pre>    ### If a 0- or 1-part multipart, collapse to a singlepart:
     $top-&gt;make_singlepart;
-
     ### If a singlepart, inflate to a multipart with 1 part:
     $top-&gt;make_multipart;
 </pre>
 <p class="Pp">Delete parts:</p>
 <p class="Pp"></p>
-<pre>
-    ### Delete some parts of a multipart message:
+<pre>    ### Delete some parts of a multipart message:
     my @keep = grep { keep_part($_) } $msg-&gt;parts;
     $msg-&gt;parts(\@keep);
 </pre>
@@ -221,13 +194,10 @@
   examples</a></h2>
 <p class="Pp">Print to filehandles:</p>
 <p class="Pp"></p>
-<pre>
-    ### Print the entire message:
+<pre>    ### Print the entire message:
     $top-&gt;print(\*STDOUT);
-
     ### Print just the header:
     $top-&gt;print_header(\*STDOUT);
-
     ### Print just the (encoded) body... includes parts as well!
     $top-&gt;print_body(\*STDOUT);
 </pre>
@@ -246,20 +216,16 @@
     delimiter and is output as-is, the line-ending is not changed to match
     <span class="Li">$MIME::Entity::BOUNDARY_DELIMITER</span>.</p>
 <p class="Pp"></p>
-<pre>
-    ### Stringify the entire message:
+<pre>    ### Stringify the entire message:
     print $top-&gt;stringify;              ### or $top-&gt;as_string
-
     ### Stringify just the header:
     print $top-&gt;stringify_header;       ### or $top-&gt;header_as_string
-
     ### Stringify just the (encoded) body... includes parts as well!
     print $top-&gt;stringify_body;         ### or $top-&gt;body_as_string
 </pre>
 <p class="Pp">Debug:</p>
 <p class="Pp"></p>
-<pre>
-    ### Output debugging info:
+<pre>    ### Output debugging info:
     $entity-&gt;dump_skeleton(\*STDERR);
 </pre>
 </section>
@@ -303,8 +269,7 @@
       <span class="Li">&quot;build&quot;</span> a new entity; this method is
       basically equivalent to:
     <p class="Pp"></p>
-    <pre>
-    $entity-&gt;add_part(ref($entity)-&gt;build(PARAMHASH, Top=&gt;0));
+    <pre>    $entity-&gt;add_part(ref($entity)-&gt;build(PARAMHASH, Top=&gt;0));
     </pre>
     <p class="Pp"><b>Note:</b> normally, you attach to multipart entities;
         however, if you attach something to a singlepart (like attaching a GIF
@@ -315,8 +280,7 @@
   <dd><i>Class/instance method.</i> A quick-and-easy catch-all way to create an
       entity. Use it like this to build a &quot;normal&quot; single-part entity:
     <p class="Pp"></p>
-    <pre>
-   $ent = MIME::Entity-&gt;build(Type     =&gt; &quot;image/gif&quot;,
+    <pre>   $ent = MIME::Entity-&gt;build(Type     =&gt; &quot;image/gif&quot;,
                               Encoding =&gt; &quot;base64&quot;,
                               Path     =&gt; &quot;/path/to/xyz12345.gif&quot;,
                               Filename =&gt; &quot;saveme.gif&quot;,
@@ -324,16 +288,14 @@
     </pre>
     <p class="Pp">And like this to build a &quot;multipart&quot; entity:</p>
     <p class="Pp"></p>
-    <pre>
-   $ent = MIME::Entity-&gt;build(Type     =&gt; &quot;multipart/mixed&quot;,
+    <pre>   $ent = MIME::Entity-&gt;build(Type     =&gt; &quot;multipart/mixed&quot;,
                               Boundary =&gt; &quot;---1234567&quot;);
     </pre>
     <p class="Pp">A minimal MIME header will be created. If you want to add or
         modify any header fields afterwards, you can of course do so via the
         underlying head object... but hey, there's now a prettier syntax!</p>
     <p class="Pp"></p>
-    <pre>
-   $ent = MIME::Entity-&gt;build(Type          =&gt;&quot;multipart/mixed&quot;,
+    <pre>   $ent = MIME::Entity-&gt;build(Type          =&gt;&quot;multipart/mixed&quot;,
                               From          =&gt; $myaddr,
                               Subject       =&gt; &quot;Hi!&quot;,
                               'X-Certified' =&gt; ['SINED',
@@ -346,14 +308,12 @@
         generate to be traced back to us. You can of course overwrite that
         header with your own:</p>
     <p class="Pp"></p>
-    <pre>
-   $ent = MIME::Entity-&gt;build(Type        =&gt; &quot;multipart/mixed&quot;,
+    <pre>   $ent = MIME::Entity-&gt;build(Type        =&gt; &quot;multipart/mixed&quot;,
                               'X-Mailer'  =&gt; &quot;myprog 1.1&quot;);
     </pre>
     <p class="Pp">Or remove it entirely:</p>
     <p class="Pp"></p>
-    <pre>
-   $ent = MIME::Entity-&gt;build(Type       =&gt; &quot;multipart/mixed&quot;,
+    <pre>   $ent = MIME::Entity-&gt;build(Type       =&gt; &quot;multipart/mixed&quot;,
                               'X-Mailer' =&gt; undef);
     </pre>
     <p class="Pp">OK, enough hype. The parameters are:</p>
@@ -365,8 +325,7 @@
   <dd>Any field you want placed in the message header, taken from the standard
       list of header fields (you don't need to worry about case):
     <p class="Pp"></p>
-    <pre>
-    Bcc           Encrypted     Received      Sender
+    <pre>    Bcc           Encrypted     Received      Sender
     Cc            From          References    Subject
     Comments      Keywords      Reply-To      To
     Content-*     Message-ID    Resent-*      X-*
@@ -476,8 +435,7 @@
         determined by (1) its content type, and (2) whether-or-not the parser
         was told to extract nested messages:</p>
     <p class="Pp"></p>
-    <pre>
-    Type:        | Extract nested? | bodyhandle() | parts()
+    <pre>    Type:        | Extract nested? | bodyhandle() | parts()
     -----------------------------------------------------------------------
     multipart/*  | -               | undef        | 0 or more MIME::Entity
     message/*    | true            | undef        | 0 or 1 MIME::Entity
@@ -498,8 +456,7 @@
       entity. This is <i>usually</i> identical to the actual (or defaulted) MIME
       type, but in some cases it differs. For example, from RFC-2045:
     <p class="Pp"></p>
-    <pre>
-   Any entity with an unrecognized Content-Transfer-Encoding must be
+    <pre>   Any entity with an unrecognized Content-Transfer-Encoding must be
    treated as if it has a Content-Type of &quot;application/octet-stream&quot;,
    regardless of what the Content-Type header field actually says.
     </pre>
@@ -581,8 +538,7 @@
         method <i>sets</i> the parts to a copy of that array, and returns the
         parts. This can be used to delete parts, as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Delete some parts of a multipart message:
+    <pre>    ### Delete some parts of a multipart message:
     $msg-&gt;parts([ grep { keep_part($_) } $msg-&gt;parts ]);
     </pre>
     <p class="Pp"><b>Note:</b> for multipart messages, the preamble and epilogue
@@ -631,25 +587,20 @@
       singlepart, <i>strip out</i> the non-MIME headers from that, and make it a
       part of the new multipart. So this:
     <p class="Pp"></p>
-    <pre>
-    From: me
+    <pre>    From: me
     To: you
     Content-type: text/plain
     Content-length: 12
-
     Hello there!
     </pre>
     <p class="Pp">Becomes something like this:</p>
     <p class="Pp"></p>
-    <pre>
-    From: me
+    <pre>    From: me
     To: you
     Content-type: multipart/mixed; boundary=&quot;----abc----&quot;
-
     ------abc----
     Content-type: text/plain
     Content-length: 12
-
     Hello there!
     ------abc------
     </pre>
@@ -689,8 +640,7 @@
         <span class="Li">&quot;MIME::Parser::file_under()&quot;</span>, and then
         do this before parsing your next message:</p>
     <p class="Pp"></p>
-    <pre>
-    $parser-&gt;filer-&gt;purge();
+    <pre>    $parser-&gt;filer-&gt;purge();
     </pre>
     <p class="Pp">I wouldn't attempt to read those body files after you do this,
         for obvious reasons. As of MIME-tools 4.x, each body's path <i>is</i>
@@ -775,8 +725,7 @@
         means that the message is 7bit-ok. Other types are chosen independent of
         their body:</p>
     <p class="Pp"></p>
-    <pre>
-    Major type:      7bit ok?    Suggested encoding:
+    <pre>    Major type:      7bit ok?    Suggested encoding:
     -----------------------------------------------------------
     text             yes         7bit
     text             no          quoted-printable
@@ -846,8 +795,7 @@
     <p class="Pp">Each entity is output with an appropriate indentation level,
         the following selection of attributes:</p>
     <p class="Pp"></p>
-    <pre>
-    Content-type: multipart/mixed
+    <pre>    Content-type: multipart/mixed
     Effective-type: multipart/mixed
     Body-file: NONE
     Subject: Hey there!
@@ -865,20 +813,16 @@
         encoded if the header says that it should be. For example, your output
         may look like this:</p>
     <p class="Pp"></p>
-    <pre>
-    Subject: Greetings
+    <pre>    Subject: Greetings
     Content-transfer-encoding: base64
-
     SGkgdGhlcmUhCkJ5ZSB0aGVyZSEK
     </pre>
     <p class="Pp"><i>If this entity has MIME type &quot;multipart/*&quot;,</i>
         the preamble, parts, and epilogue are all output with appropriate
         boundaries separating each. Any bodyhandle is ignored:</p>
     <p class="Pp"></p>
-    <pre>
-    Content-type: multipart/mixed; boundary=&quot;*----*&quot;
+    <pre>    Content-type: multipart/mixed; boundary=&quot;*----*&quot;
     Content-transfer-encoding: 7bit
-
     [Preamble]
     --*----*
     [Entity: Part 0]
@@ -892,10 +836,8 @@
         output according to the encoding specified by the header. If no body
         exists, a warning is output and the body is treated as empty:</p>
     <p class="Pp"></p>
-    <pre>
-    Content-type: image/gif
+    <pre>    Content-type: image/gif
     Content-transfer-encoding: base64
-
     [Encoded body]
     </pre>
     <p class="Pp"><i>If this entity has a single-part MIME type but it also has
@@ -907,12 +849,9 @@
         on the parser to true). In this case, the parts are output with single
         blank lines separating each, and any bodyhandle is ignored:</p>
     <p class="Pp"></p>
-    <pre>
-    Content-type: message/rfc822
+    <pre>    Content-type: message/rfc822
     Content-transfer-encoding: 7bit
-
     [Entity: Part 0]
-
     [Entity: Part 1]
     </pre>
     <p class="Pp">In all cases, when outputting a &quot;part&quot; of the
@@ -941,8 +880,7 @@
         head. If you want the <i>raw body data</i> to be output, you can either
         read it from the bodyhandle yourself, or use:</p>
     <p class="Pp"></p>
-    <pre>
-    $ent-&gt;bodyhandle-&gt;print($outstream);
+    <pre>    $ent-&gt;bodyhandle-&gt;print($outstream);
     </pre>
     <p class="Pp">which uses <b>read()</b> calls to extract the information, and
         thus will work with both text and binary bodies.</p>
@@ -968,8 +906,7 @@
         with a singlepart message (like a &quot;text/plain&quot;), use
         <span class="Li">&quot;bodyhandle()&quot;</span> instead:</p>
     <p class="Pp"></p>
-    <pre>
-    if ($ent-&gt;bodyhandle) {
+    <pre>    if ($ent-&gt;bodyhandle) {
         $unencoded_data = $ent-&gt;bodyhandle-&gt;as_string;
     }
     else {
@@ -997,8 +934,7 @@
       containing the decoded body data. This is only defined if the message is a
       &quot;singlepart&quot; type:
     <p class="Pp"></p>
-    <pre>
-    application/*
+    <pre>    application/*
     audio/*
     image/*
     text/*
@@ -1009,8 +945,7 @@
       number of parts will only be nonzero if the content-type is <i>not</i> one
       of the &quot;singlepart&quot; types:
     <p class="Pp"></p>
-    <pre>
-    message/*        (should have exactly one part)
+    <pre>    message/*        (should have exactly one part)
     multipart/*      (should have one or more parts)
     </pre>
   </li>
@@ -1056,8 +991,7 @@
         data is referenced via a MIME::Body object, accessed via the
         <span class="Li">&quot;bodyhandle()&quot;</span> method:</p>
     <p class="Pp"></p>
-    <pre>
-                      bodyhandle()   parts()
+    <pre>                      bodyhandle()   parts()
     Content-type:     returns:       returns:
     ------------------------------------------------------------
     application/*     MIME::Body     empty
@@ -1094,8 +1028,7 @@
     <p class="Pp"><b>MIME::Entity:</b> Use the <b>body()</b> method. You can
         also use:</p>
     <p class="Pp"></p>
-    <pre>
-    $entity-&gt;print_body()
+    <pre>    $entity-&gt;print_body()
     $entity-&gt;stringify_body()   ### a.k.a. $entity-&gt;body_as_string()
     </pre>
   </dd>
@@ -1111,8 +1044,7 @@
         &quot;multipart&quot; message): in this case, you should access the
         components via the <b>parts()</b> method. Like this:</p>
     <p class="Pp"></p>
-    <pre>
-    if ($bh = $entity-&gt;bodyhandle) {
+    <pre>    if ($bh = $entity-&gt;bodyhandle) {
         $io = $bh-&gt;open;
         ...access unencoded data via $io-&gt;getline or $io-&gt;read...
         $io-&gt;close;
@@ -1125,8 +1057,7 @@
     </pre>
     <p class="Pp">You can also use:</p>
     <p class="Pp"></p>
-    <pre>
-    if ($bh = $entity-&gt;bodyhandle) {
+    <pre>    if ($bh = $entity-&gt;bodyhandle) {
         $unencoded_data = $bh-&gt;as_string;
     }
     else {
@@ -1186,13 +1117,11 @@
       encapsulation boundary.
     <p class="Pp">According to RFC 2046:</p>
     <p class="Pp"></p>
-    <pre>
-    There appears to be room for additional information prior
+    <pre>    There appears to be room for additional information prior
     to the first encapsulation boundary and following the final
     boundary.  These areas should generally be left blank, and
     implementations must ignore anything that appears before the
     first boundary or after the last one.
-
     NOTE: These &quot;preamble&quot; and &quot;epilogue&quot; areas are generally
     not used because of the lack of proper typing of these parts
     and the lack of clear semantics for handling these areas at

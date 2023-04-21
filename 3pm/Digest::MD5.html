@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Digest::MD5(3pm)</title>
 </head>
@@ -28,22 +29,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- # Functional style
+<pre> # Functional style
  use Digest::MD5 qw(md5 md5_hex md5_base64);
-
  $digest = md5($data);
  $digest = md5_hex($data);
  $digest = md5_base64($data);
-
  # OO style
  use Digest::MD5;
-
  $ctx = Digest::MD5-&gt;new;
-
  $ctx-&gt;add($data);
  $ctx-&gt;addfile($file_handle);
-
  $digest = $ctx-&gt;digest;
  $digest = $ctx-&gt;hexdigest;
  $digest = $ctx-&gt;b64digest;
@@ -122,8 +117,7 @@
       value of the digest, e.g. when calculating digests iteratively on a
       continuous data stream. Example:
     <p class="Pp"></p>
-    <pre>
-    my $md5 = Digest::MD5-&gt;new;
+    <pre>    my $md5 = Digest::MD5-&gt;new;
     while (&lt;&gt;) {
         $md5-&gt;add($_);
         print &quot;Line $.: &quot;, $md5-&gt;clone-&gt;hexdigest, &quot;\n&quot;;
@@ -137,8 +131,7 @@
     <p class="Pp">All these lines will have the same effect on the state of the
         <span class="Li">$md5</span> object:</p>
     <p class="Pp"></p>
-    <pre>
-    $md5-&gt;add(&quot;a&quot;); $md5-&gt;add(&quot;b&quot;); $md5-&gt;add(&quot;c&quot;);
+    <pre>    $md5-&gt;add(&quot;a&quot;); $md5-&gt;add(&quot;b&quot;); $md5-&gt;add(&quot;c&quot;);
     $md5-&gt;add(&quot;a&quot;)-&gt;add(&quot;b&quot;)-&gt;add(&quot;c&quot;);
     $md5-&gt;add(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
     $md5-&gt;add(&quot;abc&quot;);
@@ -208,19 +201,16 @@
 <p class="Pp">The simplest way to use this library is to import the
     <b>md5_hex()</b> function (or one of its cousins):</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5 qw(md5_hex);
+<pre>    use Digest::MD5 qw(md5_hex);
     print &quot;Digest is &quot;, md5_hex(&quot;foobarbaz&quot;), &quot;\n&quot;;
 </pre>
 <p class="Pp">The above example would print out the message:</p>
 <p class="Pp"></p>
-<pre>
-    Digest is 6df23dc03f9b54cc38a0fc1483df6e21
+<pre>    Digest is 6df23dc03f9b54cc38a0fc1483df6e21
 </pre>
 <p class="Pp">The same checksum can also be calculated in OO style:</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5;
+<pre>    use Digest::MD5;
     
     $md5 = Digest::MD5-&gt;new;
     $md5-&gt;add('foo', 'bar');
@@ -234,13 +224,10 @@
     i.e. we can handle messages of any size.</p>
 <p class="Pp">This is useful when calculating checksum for files:</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5;
-
+<pre>    use Digest::MD5;
     my $filename = shift || &quot;/etc/passwd&quot;;
     open (my $fh, '&lt;', $filename) or die &quot;Can't open '$filename': $!&quot;;
     binmode($fh);
-
     $md5 = Digest::MD5-&gt;new;
     while (&lt;$fh&gt;) {
         $md5-&gt;add($_);
@@ -251,13 +238,10 @@
 <p class="Pp">Or we can use the addfile method for more efficient reading of the
     file:</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5;
-
+<pre>    use Digest::MD5;
     my $filename = shift || &quot;/etc/passwd&quot;;
     open (my $fh, '&lt;', $filename) or die &quot;Can't open '$filename': $!&quot;;
     binmode ($fh);
-
     print Digest::MD5-&gt;new-&gt;addfile($fh)-&gt;hexdigest, &quot; $filename\n&quot;;
 </pre>
 <p class="Pp">Since the MD5 algorithm is only defined for strings of bytes, it
@@ -265,9 +249,7 @@
     (Unicode strings). The MD5 functions and methods will croak if you try to
     feed them such input data:</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5 qw(md5_hex);
-
+<pre>    use Digest::MD5 qw(md5_hex);
     my $str = &quot;abc\x{300}&quot;;
     print md5_hex($str), &quot;\n&quot;;  # croaks
     # Wide character in subroutine entry
@@ -276,10 +258,8 @@
     representation of such strings. This is achieved by filtering the string
     through <b>encode_utf8()</b> function:</p>
 <p class="Pp"></p>
-<pre>
-    use Digest::MD5 qw(md5_hex);
+<pre>    use Digest::MD5 qw(md5_hex);
     use Encode qw(encode_utf8);
-
     my $str = &quot;abc\x{300}&quot;;
     print md5_hex(encode_utf8($str)), &quot;\n&quot;;
     # 8c2d46911f3f5a326455f0ed7a8ed3b3
@@ -300,8 +280,7 @@
 <p class="Pp">This library is free software; you can redistribute it and/or
     modify it under the same terms as Perl itself.</p>
 <p class="Pp"></p>
-<pre>
- Copyright 1998-2003 Gisle Aas.
+<pre> Copyright 1998-2003 Gisle Aas.
  Copyright 1995-1996 Neil Winton.
  Copyright 1991-1992 RSA Data Security, Inc.
 </pre>

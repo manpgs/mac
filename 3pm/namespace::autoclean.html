@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>namespace::autoclean(3)</title>
 </head>
@@ -32,13 +33,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Foo;
+<pre>    package Foo;
     use namespace::autoclean;
     use Some::Package qw/imported_function/;
-
     sub bar { imported_function('stuff') }
-
     # later on:
     Foo-&gt;bar;               # works
     Foo-&gt;imported_function; # will fail. imported_function got cleaned after compilation
@@ -62,12 +60,9 @@
     <span class="Li">&quot;-cleanee&quot;</span> switch to specify what package
     to clean:</p>
 <p class="Pp"></p>
-<pre>
-  package My::MooseX::namespace::autoclean;
+<pre>  package My::MooseX::namespace::autoclean;
   use strict;
-
   use namespace::autoclean (); # no cleanup, just load
-
   sub import {
       namespace::autoclean-&gt;import(
         -cleanee =&gt; scalar(caller),
@@ -104,28 +99,22 @@
     <span class="Li">&quot;-also&quot;</span> switch can be used to declare a
     list of functions that should be removed additional to any imports:</p>
 <p class="Pp"></p>
-<pre>
-    use namespace::autoclean -also =&gt; ['some_function', 'another_function'];
+<pre>    use namespace::autoclean -also =&gt; ['some_function', 'another_function'];
 </pre>
 <p class="Pp">If only one function needs to be additionally cleaned the
     <span class="Li">&quot;-also&quot;</span> switch also accepts a plain
     string:</p>
 <p class="Pp"></p>
-<pre>
-    use namespace::autoclean -also =&gt; 'some_function';
+<pre>    use namespace::autoclean -also =&gt; 'some_function';
 </pre>
 <p class="Pp">In some situations, you may wish for a more <i>powerful</i>
     cleaning solution.</p>
 <p class="Pp">The <span class="Li">&quot;-also&quot;</span> switch can take a
     Regex or a CodeRef to match against local function names to clean.</p>
 <p class="Pp"></p>
-<pre>
-    use namespace::autoclean -also =&gt; qr/^_/
-
+<pre>    use namespace::autoclean -also =&gt; qr/^_/
     use namespace::autoclean -also =&gt; sub { $_ =~ m{^_} };
-
     use namespace::autoclean -also =&gt; [qr/^_/ , qr/^hidden_/ ];
-
     use namespace::autoclean -also =&gt; [sub { $_ =~ m/^_/ or $_ =~ m/^hidden/ }, sub { uc($_) == $_ } ];
 </pre>
 </section>
@@ -151,14 +140,11 @@
     methods won't work correctly for methods from roles consumed at compile
     time.</p>
 <p class="Pp"></p>
-<pre>
-  package My::Class;
+<pre>  package My::Class;
   use Moo;
   use namespace::autoclean;
-
   # Bad, any consumed methods will be cleaned
   BEGIN { with 'Some::Role' }
-
   # Good, methods from role will be maintained
   with 'Some::Role';
 </pre>

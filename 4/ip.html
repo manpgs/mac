@@ -38,6 +38,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IP(4)</title>
 </head>
@@ -87,23 +88,19 @@
     address will be extracted from the option list and the size adjusted
     accordingly before use. To disable previously specified options, use a
     zero-length buffer:</p>
-<div class="Bd Pp">
-<pre>
-setsockopt(s, IPPROTO_IP, IP_OPTIONS, NULL, 0);
-</pre>
+<div class="Bd Pp Li">
+<pre>setsockopt(s, IPPROTO_IP, IP_OPTIONS, NULL, 0);</pre>
 </div>
 <p class="Pp"><code class="Dv">IP_TOS</code> and <code class="Dv">IP_TTL</code>
     may be used to set the type-of-service and time-to-live fields in the IP
     header for <code class="Dv">SOCK_STREAM</code> and
     <code class="Dv">SOCK_DGRAM</code> sockets. For example,</p>
-<div class="Bd Pp">
-<pre>
-int tos = IPTOS_LOWDELAY;       /* see &lt;netinet/in.h&gt; */
+<div class="Bd Pp Li">
+<pre>int tos = IPTOS_LOWDELAY;       /* see &lt;netinet/in.h&gt; */
 setsockopt(s, IPPROTO_IP, IP_TOS, &amp;tos, sizeof(tos));
 
 int ttl = 60;                   /* max = 255 */
-setsockopt(s, IPPROTO_IP, IP_TTL, &amp;ttl, sizeof(ttl));
-</pre>
+setsockopt(s, IPPROTO_IP, IP_TTL, &amp;ttl, sizeof(ttl));</pre>
 </div>
 <p class="Pp">If the <code class="Dv">IP_RECVDSTADDR</code> option is enabled on
     a <code class="Dv">SOCK_DGRAM</code> socket, the
@@ -112,12 +109,10 @@ setsockopt(s, IPPROTO_IP, IP_TTL, &amp;ttl, sizeof(ttl));
     msghdr structure points to a buffer that contains a cmsghdr structure
     followed by the IP address. The cmsghdr fields have the following
   values:</p>
-<div class="Bd Pp">
-<pre>
-cmsg_len = CMSG_LEN(sizeof(struct in_addr))
+<div class="Bd Pp Li">
+<pre>cmsg_len = CMSG_LEN(sizeof(struct in_addr))
 cmsg_level = IPPROTO_IP
-cmsg_type = IP_RECVDSTADDR
-</pre>
+cmsg_type = IP_RECVDSTADDR</pre>
 </div>
 <p class="Pp">If the <code class="Dv">IP_RECVTOS</code> option is enabled on a
     <code class="Dv">SOCK_DGRAM</code> or <code class="Dv">SOCK_RAW</code>
@@ -125,12 +120,10 @@ cmsg_type = IP_RECVDSTADDR
     the TOS (type of service) field of the IP header. The msg_control field in
     the msghdr structure points to a buffer that contains a cmsghdr structure
     followed by the TOS. The cmsghdr fields have the following values:</p>
-<div class="Bd Pp">
-<pre>
-cmsg_len = CMSG_LEN(sizeof(u_char))
+<div class="Bd Pp Li">
+<pre>cmsg_len = CMSG_LEN(sizeof(u_char))
 cmsg_level = IPPROTO_IP
-cmsg_type = IP_RECVTOS
-</pre>
+cmsg_type = IP_RECVTOS</pre>
 </div>
 <section class="Ss">
 <h2 class="Ss" id="Multicast_Options"><a class="permalink" href="#Multicast_Options">Multicast
@@ -142,11 +135,9 @@ cmsg_type = IP_RECVTOS
 <p class="Pp">The <code class="Dv">IP_MULTICAST_TTL</code> option changes the
     time-to-live (TTL) for outgoing multicast datagrams in order to control the
     scope of the multicasts:</p>
-<div class="Bd Pp">
-<pre>
-u_char ttl;	/* range: 0 to 255, default = 1 */
-setsockopt(s, IPPROTO_IP, IP_MULTICAST_TTL, &amp;ttl, sizeof(ttl));
-</pre>
+<div class="Bd Pp Li">
+<pre>u_char ttl;	/* range: 0 to 255, default = 1 */
+setsockopt(s, IPPROTO_IP, IP_MULTICAST_TTL, &amp;ttl, sizeof(ttl));</pre>
 </div>
 <p class="Pp">Datagrams with a TTL of 1 are not forwarded beyond the local
     network. Multicast datagrams with a TTL of 0 will not be transmitted on any
@@ -159,11 +150,9 @@ setsockopt(s, IPPROTO_IP, IP_MULTICAST_TTL, &amp;ttl, sizeof(ttl));
     sent from the primary network interface. The
     <code class="Dv">IP_MULTICAST_IF</code> option overrides the default for
     subsequent transmissions from a given socket:</p>
-<div class="Bd Pp">
-<pre>
-struct in_addr addr;
-setsockopt(s, IPPROTO_IP, IP_MULTICAST_IF, &amp;addr, sizeof(addr));
-</pre>
+<div class="Bd Pp Li">
+<pre>struct in_addr addr;
+setsockopt(s, IPPROTO_IP, IP_MULTICAST_IF, &amp;addr, sizeof(addr));</pre>
 </div>
 <p class="Pp">where &quot;addr&quot; is the local IP address of the desired
     interface or <code class="Dv">INADDR_ANY</code> to specify the default
@@ -176,11 +165,9 @@ setsockopt(s, IPPROTO_IP, IP_MULTICAST_IF, &amp;addr, sizeof(addr));
     by default, looped back by the IP layer for local delivery. The
     <code class="Dv">IP_MULTICAST_LOOP</code> option gives the sender explicit
     control over whether or not subsequent datagrams are looped back:</p>
-<div class="Bd Pp">
-<pre>
-u_char loop;	/* 0 = disable, 1 = enable (default) */
-setsockopt(s, IPPROTO_IP, IP_MULTICAST_LOOP, &amp;loop, sizeof(loop));
-</pre>
+<div class="Bd Pp Li">
+<pre>u_char loop;	/* 0 = disable, 1 = enable (default) */
+setsockopt(s, IPPROTO_IP, IP_MULTICAST_LOOP, &amp;loop, sizeof(loop));</pre>
 </div>
 <p class="Pp">This option improves performance for applications that may have no
     more than one instance on a single host (such as a router demon), by
@@ -196,20 +183,16 @@ setsockopt(s, IPPROTO_IP, IP_MULTICAST_LOOP, &amp;loop, sizeof(loop));
 <p class="Pp">A host must become a member of a multicast group before it can
     receive datagrams sent to the group. To join a multicast group, use the
     <code class="Dv">IP_ADD_MEMBERSHIP</code> option:</p>
-<div class="Bd Pp">
-<pre>
-struct ip_mreq mreq;
-setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;mreq, sizeof(mreq));
-</pre>
+<div class="Bd Pp Li">
+<pre>struct ip_mreq mreq;
+setsockopt(s, IPPROTO_IP, IP_ADD_MEMBERSHIP, &amp;mreq, sizeof(mreq));</pre>
 </div>
 <p class="Pp">where <var class="Fa">mreq</var> is the following structure:</p>
-<div class="Bd Pp">
-<pre>
-struct ip_mreq {
+<div class="Bd Pp Li">
+<pre>struct ip_mreq {
     struct in_addr imr_multiaddr; /* multicast group to join */
     struct in_addr imr_interface; /* interface to join on */
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp"><code class="Dv">imr_interface</code> should be
     <code class="Dv">INADDR_ANY</code> to choose the default multicast
@@ -219,11 +202,9 @@ struct ip_mreq {
     than one interface. Up to <code class="Dv">IP_MAX_MEMBERSHIPS</code>
     (currently 20) memberships may be added on a single socket.</p>
 <p class="Pp">To drop a membership, use:</p>
-<div class="Bd Pp">
-<pre>
-struct ip_mreq mreq;
-setsockopt(s, IPPROTO_IP, IP_DROP_MEMBERSHIP, &amp;mreq, sizeof(mreq));
-</pre>
+<div class="Bd Pp Li">
+<pre>struct ip_mreq mreq;
+setsockopt(s, IPPROTO_IP, IP_DROP_MEMBERSHIP, &amp;mreq, sizeof(mreq));</pre>
 </div>
 <p class="Pp">where <var class="Fa">mreq</var> contains the same values as used
     to add the membership. Memberships are dropped when the socket is closed or
@@ -253,24 +234,20 @@ setsockopt(s, IPPROTO_IP, IP_DROP_MEMBERSHIP, &amp;mreq, sizeof(mreq));
 <p class="Pp"><code class="Dv">IP_HDRINCL</code> indicates the complete IP
     header is included with the data and may be used only with the
     <code class="Dv">SOCK_RAW</code> type.</p>
-<div class="Bd Pp">
-<pre>
-#include &lt;netinet/ip.h&gt;
+<div class="Bd Pp Li">
+<pre>#include &lt;netinet/ip.h&gt;
 
 int hincl = 1;                  /* 1 = on, 0 = off */
-setsockopt(s, IPPROTO_IP, IP_HDRINCL, &amp;hincl, sizeof(hincl));
-</pre>
+setsockopt(s, IPPROTO_IP, IP_HDRINCL, &amp;hincl, sizeof(hincl));</pre>
 </div>
 <p class="Pp">Unlike previous BSD releases, the program must set all the fields
     of the IP header, including the following:</p>
-<div class="Bd Pp">
-<pre>
-ip-&gt;ip_v = IPVERSION;
+<div class="Bd Pp Li">
+<pre>ip-&gt;ip_v = IPVERSION;
 ip-&gt;ip_hl = hlen &gt;&gt; 2;
 ip-&gt;ip_id = 0;  /* 0 means kernel set appropriate value */
 ip-&gt;ip_off = offset;
-ip-&gt;ip_len = len;
-</pre>
+ip-&gt;ip_len = len;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Note that the ip_off and ip_len fields are in host byte order.</p>

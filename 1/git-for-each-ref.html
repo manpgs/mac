@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-FOR-EACH-REF(1)</title>
 </head>
@@ -30,13 +31,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git for-each-ref</i> [--count=&lt;count&gt;] [--shell|--perl|--python|--tcl]
+<pre><i>git for-each-ref</i> [--count=&lt;count&gt;] [--shell|--perl|--python|--tcl]
                    [(--sort=&lt;key&gt;)...] [--format=&lt;format&gt;] [&lt;pattern&gt;...]
                    [--points-at=&lt;object&gt;]
                    [--merged[=&lt;object&gt;]] [--no-merged[=&lt;object&gt;]]
-                   [--contains[=&lt;object&gt;]] [--no-contains[=&lt;object&gt;]]
-</pre>
+                   [--contains[=&lt;object&gt;]] [--no-contains[=&lt;object&gt;]]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -282,39 +281,34 @@
     3 tagged commits:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-#!/bin/sh
+<pre>#!/bin/sh
 git for-each-ref --count=3 --sort='-*authordate' \
 --format='From: %(*authorname) %(*authoremail)
 Subject: %(*subject)
 Date: %(*authordate)
 Ref: %(*refname)
 %(*body)
-' 'refs/tags'
-</pre>
+' 'refs/tags'</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">A simple example showing the use of shell eval on the output,
     demonstrating the use of --shell. List the prefixes of all heads:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-#!/bin/sh
+<pre>#!/bin/sh
 git for-each-ref --shell --format=&quot;ref=%(refname)&quot; refs/heads | \
 while read entry
 do
         eval &quot;$entry&quot;
         echo `dirname $ref`
-done
-</pre>
+done</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">A bit more elaborate report on tags, demonstrating that the format
     may be an entire script:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-#!/bin/sh
+<pre>#!/bin/sh
 fmt='
         r=%(refname)
         t=%(*objecttype)
@@ -354,8 +348,7 @@ eval=`git for-each-ref --shell --format=&quot;$fmt&quot; \
         --sort='*objecttype' \
         --sort=-taggerdate \
         refs/tags`
-eval &quot;$eval&quot;
-</pre>
+eval &quot;$eval&quot;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">An example to show the usage of
@@ -363,18 +356,14 @@ eval &quot;$eval&quot;
     star.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git for-each-ref --format=&quot;%(if)%(HEAD)%(then)* %(else)  %(end)%(refname:short)&quot; refs/heads/
-</pre>
+<pre>git for-each-ref --format=&quot;%(if)%(HEAD)%(then)* %(else)  %(end)%(refname:short)&quot; refs/heads/</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">An example to show the usage of %(if)...%(then)...%(end). This
     prints the authorname, if present.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git for-each-ref --format=&quot;%(refname)%(if)%(authorname)%(then) Authored by: %(authorname)%(end)&quot;
-</pre>
+<pre>git for-each-ref --format=&quot;%(refname)%(if)%(authorname)%(then) Authored by: %(authorname)%(end)&quot;</pre>
 </div>
 <p class="Pp"></p>
 </section>

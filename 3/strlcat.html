@@ -32,6 +32,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>STRLCPY(3)</title>
 </head>
@@ -84,7 +85,14 @@
 <p class="Pp" id="strlcpy~2"><a class="permalink" href="#strlcpy~2"><code class="Fn">strlcpy</code></a>()
     and <code class="Fn">strlcat</code>() take the full size of the destination
     buffer and guarantee NUL-termination if there is room. Note that room for
-    the NUL should be included in <var class="Fa">dstsize</var>.</p>
+    the NUL should be included in <var class="Fa">dstsize</var>. Also note that
+    <code class="Fn">strlcpy</code>() and <code class="Fn">strlcat</code>() only
+    operate on true ''C'' strings. This means that for
+    <code class="Fn">strlcpy</code>() <var class="Fa">src</var> must be
+    NUL-terminated and for <code class="Fn">strlcat</code>() both
+    <var class="Fa">src</var> and
+    <a class="permalink" href="#dst"><code class="Fn" id="dst">dst</code></a>()
+    must be NUL-terminated.</p>
 <p class="Pp" id="strlcpy~3"><a class="permalink" href="#strlcpy~3"><code class="Fn">strlcpy</code></a>()
     copies up to <var class="Fa">dstsize</var> - 1 characters from the string
     <var class="Fa">src</var> to <var class="Fa">dst</var>, NUL-terminating the
@@ -108,11 +116,9 @@
     (<var class="Va">size_t</var> versus <var class="Va">int</var>) and signal
     handler safety (<a class="Xr" href="../3/snprintf">snprintf(3)</a> is not
     entirely safe on some systems), the following two are equivalent:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-n = strlcpy(dst, src, len);
-n = snprintf(dst, len, &quot;%s&quot;, src);
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>n = strlcpy(dst, src, len);
+n = snprintf(dst, len, &quot;%s&quot;, src);</pre>
 </div>
 <p class="Pp">Like <a class="Xr" href="../3/snprintf">snprintf(3)</a>, the
     <code class="Fn">strlcpy</code>() and <code class="Fn">strlcat</code>()
@@ -128,35 +134,30 @@ n = snprintf(dst, len, &quot;%s&quot;, src);
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">The following code fragment illustrates the simple case:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-char *s, *p, buf[BUFSIZ];
+<div class="Bd Pp Bd-indent Li">
+<pre>char *s, *p, buf[BUFSIZ];
 
 ...
 
 (void)strlcpy(buf, s, sizeof(buf));
-(void)strlcat(buf, p, sizeof(buf));
-</pre>
+(void)strlcat(buf, p, sizeof(buf));</pre>
 </div>
 <p class="Pp">To detect truncation, perhaps while building a pathname, something
     like the following might be used:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-char *dir, *file, pname[MAXPATHLEN];
+<div class="Bd Pp Bd-indent Li">
+<pre>char *dir, *file, pname[MAXPATHLEN];
 
 ...
 
 if (strlcpy(pname, dir, sizeof(pname)) &gt;= sizeof(pname))
 	goto toolong;
 if (strlcat(pname, file, sizeof(pname)) &gt;= sizeof(pname))
-	goto toolong;
-</pre>
+	goto toolong;</pre>
 </div>
 <p class="Pp">Since it is known how many characters were copied the first time,
     things can be sped up a bit by using a copy instead of an append:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-char *dir, *file, pname[MAXPATHLEN];
+<div class="Bd Pp Bd-indent Li">
+<pre>char *dir, *file, pname[MAXPATHLEN];
 size_t n;
 
 ...
@@ -165,8 +166,7 @@ n = strlcpy(pname, dir, sizeof(pname));
 if (n &gt;= sizeof(pname))
 	goto toolong;
 if (strlcpy(pname + n, file, sizeof(pname) - n) &gt;= sizeof(pname) - n)
-	goto toolong;
-</pre>
+	goto toolong;</pre>
 </div>
 <p class="Pp">However, one may question the validity of such optimizations, as
     they defeat the whole purpose of <code class="Fn">strlcpy</code>() and
@@ -192,7 +192,7 @@ if (strlcpy(pname + n, file, sizeof(pname) - n) &gt;= sizeof(pname) - n)
 <table class="foot">
   <tr>
     <td class="foot-date">February 26, 2016</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

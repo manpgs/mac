@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ENC2XS(1)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  enc2xs -[options]
+<pre>  enc2xs -[options]
   enc2xs -M ModName mapfiles...
   enc2xs -C
 </pre>
@@ -55,16 +55,14 @@
       below, I'll call my theoretical encoding myascii, defined in
       <i>my.ucm</i>. <span class="Li">&quot;$&quot;</span> is a shell prompt.
     <p class="Pp"></p>
-    <pre>
-  $ ls -F
+    <pre>  $ ls -F
   my.ucm
     </pre>
   </dd>
   <dt>1.</dt>
   <dd>Issue a command as follows;
     <p class="Pp"></p>
-    <pre>
-  $ enc2xs -M My my.ucm
+    <pre>  $ enc2xs -M My my.ucm
   generating Makefile.PL
   generating My.pm
   generating README
@@ -73,14 +71,12 @@
     <p class="Pp">Now take a look at your current directory. It should look like
         this.</p>
     <p class="Pp"></p>
-    <pre>
-  $ ls -F
+    <pre>  $ ls -F
   Makefile.PL   My.pm         my.ucm        t/
     </pre>
     <p class="Pp">The following files were created.</p>
     <p class="Pp"></p>
-    <pre>
-  Makefile.PL - MakeMaker script
+    <pre>  Makefile.PL - MakeMaker script
   My.pm       - Encode submodule
   t/My.t      - test file
     </pre>
@@ -91,8 +87,7 @@
   <dt>1.1.</dt>
   <dd>If you want *.ucm installed together with the modules, do as follows;
     <p class="Pp"></p>
-    <pre>
-  $ mkdir Encode
+    <pre>  $ mkdir Encode
   $ mv *.ucm Encode
   $ enc2xs -M My Encode/*ucm
     </pre>
@@ -108,16 +103,14 @@
   <dt>3.</dt>
   <dd>Now issue a command all Perl Mongers love:
     <p class="Pp"></p>
-    <pre>
-  $ perl Makefile.PL
+    <pre>  $ perl Makefile.PL
   Writing Makefile for Encode::My
     </pre>
   </dd>
   <dt>4.</dt>
   <dd>Now all you have to do is make.
     <p class="Pp"></p>
-    <pre>
-  $ make
+    <pre>  $ make
   cp My.pm blib/lib/Encode/My.pm
   /usr/local/bin/perl /usr/local/bin/enc2xs -Q -O \
     -o encode_t.c -f encode_t.fnm
@@ -137,8 +130,7 @@
   <dt>5.</dt>
   <dd>You can &quot;make install&quot; already but you should test first.
     <p class="Pp"></p>
-    <pre>
-  $ make test
+    <pre>  $ make test
   PERL_DL_NONLAZY=1 /usr/local/bin/perl -Iblib/arch -Iblib/lib \
     -e 'use Test::Harness  qw(&amp;runtests $verbose); \
     $verbose=0; runtests @ARGV;' t/*.t
@@ -155,8 +147,7 @@
   <dd>If you want to add your encoding to Encode's demand-loading list (so you
       don't have to &quot;use Encode::YourEncoding&quot;), run
     <p class="Pp"></p>
-    <pre>
-  enc2xs -C
+    <pre>  enc2xs -C
     </pre>
     <p class="Pp">to update Encode::ConfigLocal, a module that controls local
         settings. After that, &quot;use Encode;&quot; is enough to load your
@@ -174,8 +165,7 @@
     recommended format for Encode now.</p>
 <p class="Pp">A UCM file looks like this.</p>
 <p class="Pp"></p>
-<pre>
-  #
+<pre>  #
   # Comments
   #
   &lt;code_set_name&gt; &quot;US-ascii&quot; # Required
@@ -210,8 +200,7 @@
   </li>
   <li>CHARMAP starts the character map section. Each line has a form as follows:
     <p class="Pp"></p>
-    <pre>
-  &lt;UXXXX&gt; \xXX.. |0 # comment
+    <pre>  &lt;UXXXX&gt; \xXX.. |0 # comment
     ^     ^      ^
     |     |      +- Fallback flag
     |     +-------- Encoded byte sequence
@@ -268,15 +257,13 @@
 </ul>
 <p class="Pp">Here is an example from big5-eten.</p>
 <p class="Pp"></p>
-<pre>
-  &lt;U2550&gt; \xF9\xF9 |0
+<pre>  &lt;U2550&gt; \xF9\xF9 |0
   &lt;U2550&gt; \xA2\xA4 |3
 </pre>
 <p class="Pp">Internally Encoding -&gt; Unicode and Unicode -&gt; Encoding Map
     looks like this;</p>
 <p class="Pp"></p>
-<pre>
-  E to U               U to E
+<pre>  E to U               U to E
   --------------------------------------
   \xF9\xF9 =&gt; U2550    U2550 =&gt; \xF9\xF9
   \xA2\xA4 =&gt; U2550
@@ -284,8 +271,7 @@
 <p class="Pp">So it is round-trip safe for \xF9\xF9. But if the line above is
     upside down, here is what happens.</p>
 <p class="Pp"></p>
-<pre>
-  E to U               U to E
+<pre>  E to U               U to E
   --------------------------------------
   \xA2\xA4 =&gt; U2550    U2550 =&gt; \xF9\xF9
   (\xF9\xF9 =&gt; U2550 is now overwritten!)
@@ -315,7 +301,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.3</td>
   </tr>
 </table>

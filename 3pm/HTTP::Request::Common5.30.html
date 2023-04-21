@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTTP::Request::Common(3)</title>
 </head>
@@ -32,8 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use HTTP::Request::Common;
+<pre>  use HTTP::Request::Common;
   $ua = LWP::UserAgent-&gt;new;
   $ua-&gt;request(GET 'http://www.sn.no/');
   $ua-&gt;request(POST 'http://somewhere/foo', [foo =&gt; bar, bar =&gt; foo]);
@@ -65,8 +65,7 @@
       HTTP::Request object initialized with the &quot;GET&quot; method and the
       specified URL. It is roughly equivalent to the following call
     <p class="Pp"></p>
-    <pre>
-  HTTP::Request-&gt;new(
+    <pre>  HTTP::Request-&gt;new(
      GET =&gt; $url,
      HTTP::Headers-&gt;new(Header =&gt; Value,...),
   )
@@ -162,8 +161,7 @@
       <span class="Li">&quot;PATCH&quot;</span> and
       <span class="Li">&quot;PUT&quot;</span> all work with the same parameters.
     <p class="Pp"></p>
-    <pre>
-  %data = ( title =&gt; 'something', body =&gt; something else' );
+    <pre>  %data = ( title =&gt; 'something', body =&gt; something else' );
   $ua = LWP::UserAgent-&gt;new();
   $request = HTTP::Request::Common::POST( $url, [ %data ] );
   $response = $ua-&gt;request($request);
@@ -185,8 +183,7 @@
         content type. This means that you can emulate an HTML &lt;form&gt;
         POSTing like this:</p>
     <p class="Pp"></p>
-    <pre>
-  POST 'http://www.perl.org/survey.cgi',
+    <pre>  POST 'http://www.perl.org/survey.cgi',
        [ name   =&gt; 'Gisle Aas',
          email  =&gt; 'gisle@aas.no',
          gender =&gt; 'M',
@@ -197,11 +194,9 @@
     <p class="Pp">This will create an HTTP::Request object that looks like
       this:</p>
     <p class="Pp"></p>
-    <pre>
-  POST http://www.perl.org/survey.cgi
+    <pre>  POST http://www.perl.org/survey.cgi
   Content-Length: 66
   Content-Type: application/x-www-form-urlencoded
-
   name=Gisle%20Aas&amp;email=gisle%40aas.no&amp;gender=M&amp;born=1964&amp;perc=3%25
     </pre>
     <p class="Pp">Multivalued form fields can be specified by either repeating
@@ -215,8 +210,7 @@
         reference, then it is treated as a file part specification with the
         following interpretation:</p>
     <p class="Pp"></p>
-    <pre>
-  [ $file, $filename, Header =&gt; Value... ]
+    <pre>  [ $file, $filename, Header =&gt; Value... ]
   [ undef, $filename, Header =&gt; Value,..., Content =&gt; $content ]
     </pre>
     <p class="Pp">The first value in the array ($file) is the name of a file to
@@ -240,8 +234,7 @@
     <p class="Pp">Sending my <i>~/.profile</i> to the survey used as example
         above can be achieved by this:</p>
     <p class="Pp"></p>
-    <pre>
-  POST 'http://www.perl.org/survey.cgi',
+    <pre>  POST 'http://www.perl.org/survey.cgi',
        Content_Type =&gt; 'form-data',
        Content      =&gt; [ name  =&gt; 'Gisle Aas',
                          email =&gt; 'gisle@aas.no',
@@ -254,34 +247,26 @@
         this (the boundary and the content of your <i>~/.profile</i> is likely
         to be different):</p>
     <p class="Pp"></p>
-    <pre>
-  POST http://www.perl.org/survey.cgi
+    <pre>  POST http://www.perl.org/survey.cgi
   Content-Length: 388
   Content-Type: multipart/form-data; boundary=&quot;6G+f&quot;
-
   --6G+f
   Content-Disposition: form-data; name=&quot;name&quot;
-
   Gisle Aas
   --6G+f
   Content-Disposition: form-data; name=&quot;email&quot;
-
   gisle@aas.no
   --6G+f
   Content-Disposition: form-data; name=&quot;gender&quot;
-
   M
   --6G+f
   Content-Disposition: form-data; name=&quot;born&quot;
-
   1964
   --6G+f
   Content-Disposition: form-data; name=&quot;init&quot;; filename=&quot;.profile&quot;
   Content-Type: text/plain
-
   PATH=/local/perl/bin:$PATH
   export PATH
-
   --6G+f--
     </pre>
     <p class="Pp">If you set the <span class="Li">$DYNAMIC_FILE_UPLOAD</span>

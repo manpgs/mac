@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pegex::Tutorial::Calculator(3)</title>
 </head>
@@ -54,22 +55,19 @@
     and right associativity.</p>
 <p class="Pp">Consider the equation:</p>
 <p class="Pp"></p>
-<pre>
-    1 - 2 ^ 3 ^ 4 + 5 * 6 / 7
+<pre>    1 - 2 ^ 3 ^ 4 + 5 * 6 / 7
 </pre>
 <p class="Pp">Normal precedence and associativity rules make this the same
   as:</p>
 <p class="Pp"></p>
-<pre>
-    (1 - (2 ^ (3 ^ 4)) + ((5 * 6) / 7))
+<pre>    (1 - (2 ^ (3 ^ 4)) + ((5 * 6) / 7))
 </pre>
 <p class="Pp">Our calculator should produce the same result for both. Note that
     this means we will be parsing numbers, 5 operators, parentheses, and
     separating whitespace.</p>
 <p class="Pp">Here's an example of the calculator program running:</p>
 <p class="Pp"></p>
-<pre>
-    &gt; perl eg/calculator1.pl
+<pre>    &gt; perl eg/calculator1.pl
     Enter an equation: 1+2*3
     1+2*3 = 7
     Enter an equation: (1 + 2) * 3
@@ -103,8 +101,7 @@
     rules such that they imply precedence. Here's the pegex grammar from the
     code:</p>
 <p class="Pp"></p>
-<pre>
-    expr: add-sub
+<pre>    expr: add-sub
     add-sub: mul-div+ % /- ( [ '+-' ])/
     mul-div: power+ % /- ([ '*/' ])/
     power: token+ % /- '^' /
@@ -122,15 +119,12 @@
     the answer for each level. Whatever the return value of the final operation
     is, becomes the result of the parse. Here's the receiver class:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Calculator;
         use base 'Pegex::Tree';
-
         sub gotrule {
             my ($self, $list) = @_;
             return $list unless ref $list;
-
             # Right associative:
             if ($self-&gt;rule eq 'power') {
                 while (@$list &gt; 1) {
@@ -160,15 +154,13 @@
     want to use.</p>
 <p class="Pp">Our runner code looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    while (1) {
+<pre>    while (1) {
         print &quot;\nEnter an equation: &quot;;
         my $expr = &lt;&gt; || '';
         chomp $expr;
         last unless length $expr;
         calc($expr);
     }
-
     sub calc {
         my ($expr) = @_;
         my $result = pegex($grammar, 'Calculator')-&gt;parse($expr);
@@ -194,13 +186,11 @@
     associativity are accounted for.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    1 / 2 - ( -3 * 4 )
+<pre>    1 / 2 - ( -3 * 4 )
 </pre>
 <p class="Pp">becomes:</p>
 <p class="Pp"></p>
-<pre>
-    1, 2, /, -3, 4, *, -
+<pre>    1, 2, /, -3, 4, *, -
 </pre>
 <p class="Pp">To evaluate an RPN you pop off an operator and then attempt to pop
     off and operand. If the operand is another operator you recurse. When you
@@ -210,8 +200,7 @@
 <p class="Pp">Let's look at our new grammar in
     <span class="Li">&quot;calculator2.pl&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    expr: operand (operator operand)*
+<pre>    expr: operand (operator operand)*
     operator: /- (['+-*/^'])/
     operand: num | /- '('/ expr /- ')'/
     num: /- ('-'? DIGIT+)/
@@ -220,11 +209,9 @@
     tokens. In a (very real) sense, we are using Pegex as a lexer.</p>
 <p class="Pp">Now let's look at the receiver class:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Calculator;
         use base 'Pegex::Tree', 'Precedence';
-
         my $operator_precedence_table = {
             '+' =&gt; {p =&gt; 1, a =&gt; 'l'},
             '-' =&gt; {p =&gt; 1, a =&gt; 'l'},
@@ -232,7 +219,6 @@
             '/' =&gt; {p =&gt; 2, a =&gt; 'l'},
             '^' =&gt; {p =&gt; 3, a =&gt; 'r'},
         };
-
         sub got_expr {
             my ($self, $expr) = @_;
             $self-&gt;precedence_rpn($expr, $operator_precedence_table);
@@ -255,8 +241,7 @@
 <p class="Pp">But we are writing a calculator and we still need to evaluate this
     puppy. I changed the runner code to look like this:</p>
 <p class="Pp"></p>
-<pre>
-    sub calc {
+<pre>    sub calc {
         my $expr = shift;
         my $calculator = pegex($grammar, 'Calculator');
         my $rpn = eval { $calculator-&gt;parse($expr) };

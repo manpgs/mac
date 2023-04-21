@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLMROAPI(1)</title>
 </head>
@@ -35,8 +36,7 @@
 <p class="Pp">Each plugin should register itself by providing the following
     structure</p>
 <p class="Pp"></p>
-<pre>
-    struct mro_alg {
+<pre>    struct mro_alg {
         AV *(*resolve)(pTHX_ HV *stash, U32 level);
         const char *name;
         U16 length;
@@ -47,8 +47,7 @@
 <p class="Pp">and calling
   <span class="Li">&quot;Perl_mro_register&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    Perl_mro_register(aTHX_ &amp;my_mro_alg);
+<pre>    Perl_mro_register(aTHX_ &amp;my_mro_alg);
 </pre>
 <dl class="Bl-tag">
   <dt id="resolve"><a class="permalink" href="#resolve">resolve</a></dt>
@@ -97,15 +96,13 @@
     <span class="Li">&quot;mro_meta&quot;</span> structure from the stash, and a
     pointer to your <span class="Li">&quot;mro_alg&quot;</span> structure:</p>
 <p class="Pp"></p>
-<pre>
-    meta = HvMROMETA(stash);
+<pre>    meta = HvMROMETA(stash);
     private_sv = MRO_GET_PRIVATE_DATA(meta, &amp;my_mro_alg);
 </pre>
 <p class="Pp">To set your private value, call
     <span class="Li">&quot;Perl_mro_set_private_data()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    Perl_mro_set_private_data(aTHX_ meta, &amp;c3_alg, private_sv);
+<pre>    Perl_mro_set_private_data(aTHX_ meta, &amp;c3_alg, private_sv);
 </pre>
 <p class="Pp">The private data cache will take ownership of a reference to
     private_sv, much the same way that

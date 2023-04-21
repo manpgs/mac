@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Socket::SSL::Intercept(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use IO::Socket::SSL::Intercept;
+<pre>    use IO::Socket::SSL::Intercept;
     # create interceptor with proxy certificates
     my $mitm = IO::Socket::SSL::Intercept-&gt;new(
         proxy_cert_file =&gt; 'proxy_cert.pem',
@@ -86,8 +86,7 @@
     <p class="Pp">Using openssl such a proxy CA certificate and private key can
         be created with:</p>
     <p class="Pp"></p>
-    <pre>
-  openssl genrsa -out proxy_key.pem 1024
+    <pre>  openssl genrsa -out proxy_key.pem 1024
   openssl req -new -x509 -extensions v3_ca -key proxy_key.pem -out proxy_cert.pem
   # export as PKCS12 for import into browser
   openssl pkcs12 -export -in proxy_cert.pem -inkey proxy_key.pem -out proxy_cert.p12
@@ -115,7 +114,7 @@
 <p class="Pp">IO::Socket::SSL::Intercept helps creating the cloned certificate
     with the following methods:</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$mitm</b><b> =
+  <dt><b></b><span class="Li"><b>$mitm</b></span><b> =
     IO::Socket::SSL::Intercept-&gt;new(%args)</b></dt>
   <dd>This creates a new interceptor object. <span class="Li">%args</span>
       should be</dd>
@@ -180,21 +179,22 @@
 <div class="Bd-indent"></div>
 <dl class="Bl-tag">
   <dt><b>($clone_cert,$key) =
-    </b><b>$mitm</b><b>-&gt;clone_cert($original_cert,[ </b><b>$ident</b><b>
-    ])</b></dt>
+    </b><span class="Li"><b>$mitm</b></span><b>-&gt;clone_cert($original_cert,[
+    </b><span class="Li"><b>$ident</b></span><b> ])</b></dt>
   <dd>This clones the given certificate. An ident as the key into the cache can
       be given (like <span class="Li">&quot;host:port&quot;</span>), if not it
       will be created from the properties of the original certificate. It
       returns the cloned certificate and its key (which is the same for alle
       created certificates).</dd>
-  <dt><b></b><b>$string</b><b> = </b><b>$mitm</b><b>-&gt;serialize</b></dt>
+  <dt><b></b><span class="Li"><b>$string</b></span><b> =
+    </b><span class="Li"><b>$mitm</b></span><b>-&gt;serialize</b></dt>
   <dd>This creates a serialized version of the object (e.g. a string) which can
       then be used to persistantly store created certificates over restarts of
       the application. The cache will only be serialized if it is a HASH. To
       work together with Storable the
       <span class="Li">&quot;STORABLE_freeze&quot;</span> function is defined to
       call <span class="Li">&quot;serialize&quot;</span>.</dd>
-  <dt><b></b><b>$mitm</b><b> =
+  <dt><b></b><span class="Li"><b>$mitm</b></span><b> =
     IO::Socket::SSL::Intercept-&gt;unserialize($string)</b></dt>
   <dd>This restores an Intercept object from a serialized string. To work
       together with Storable the

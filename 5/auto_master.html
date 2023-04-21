@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>AUTO_MASTER(5)</title>
 </head>
@@ -25,17 +26,15 @@
     the directories that are to be automounted. Associated with each directory
     is the name of a map that lists the locations of the filesystems to be
     automounted there. The default map looks like this:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-#
+<div class="Bd Pp Bd-indent Li">
+<pre>#
 # Automounter master map
 #
 +auto_master		# Use directory service
 #/net			-hosts		-nobrowse,hidefromfinder,nosuid
 /home			auto_home	-nobrowse,hidefromfinder
 /Network/Servers	-fstab
-/-			-static
-</pre>
+/-			-static</pre>
 </div>
 <p class="Pp">A &#x201C;#&#x201D; is the comment character. All characters from
     it to the end of line are ignored. A line beginning with &#x201C;+&#x201D;
@@ -71,11 +70,9 @@
 <p class="Pp">If more than one entry in the master map has the same
     <var class="Va">mountpoint</var> then all but the first are ignored. For
     instance, in the following master map:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-/shared		my_auto_shared
-+auto_master
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>/shared		my_auto_shared
++auto_master</pre>
 </div>
 <p class="Pp">The <span class="Pa">/shared</span> entry overrides any
     <span class="Pa">/shared</span> specification imported from the network
@@ -94,20 +91,16 @@
     LDAP tables indexed by the key, or from output of an executable map. Most
     commonly, the <var class="Va">location</var> is simply the name of an NFS
     server and the path to an exported file system, e.g.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-local	mynfs:/export/local
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>local	mynfs:/export/local</pre>
 </div>
 <p class="Pp">A <var class="Va">location</var> can also represent multiple
     mounts, where each is associated with a relative path, for example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pkg	\
+<div class="Bd Pp Bd-indent Li">
+<pre>pkg	\
 	/data	mynfs:/export/pkg/data \
 	/bin	mynfs:/export/pkg/bin  \
-	/man	mynfs:/export/pkg/man
-</pre>
+	/man	mynfs:/export/pkg/man</pre>
 </div>
 <p class="Pp">Reference to this entry will provide access to any of three
     exported file systems from the server, each via its own subdirectory. Each
@@ -117,32 +110,26 @@ pkg	\
 <p class="Pp">The <var class="Va">location</var> can be preceded by a
     comma-separated list of mount options with a prepended &#x201C;-&#x201D;.
     For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-bin	-ro,nosuid  mynfs:/export/bin
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>bin	-ro,nosuid  mynfs:/export/bin</pre>
 </div>
 <p class="Pp">For file system types other than NFS, the mount option
     <code class="Cm">-fstype</code>=&#x27E8;<var class="Ar">type</var>&#x27E9;
     can be used to specify the file system type. The
     <var class="Va">location</var> would be in the form expected by the mount
     command for that file system type. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-smb	-fstype=smb //guest@smbserver/share
-afp	-fstype=afp afp://;AUTH=NO%20USER%20AUTHENT@afpserver/share
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>smb	-fstype=smb //guest@smbserver/share
+afp	-fstype=afp afp://;AUTH=NO%20USER%20AUTHENT@afpserver/share</pre>
 </div>
 <p class="Pp">If the <var class="Va">location</var> is a URL, with a scheme
     specifying AFP, NFS, or SMB, then, if no file system type is specified, the
     directory referred to by that URL will be mounted using
     <a class="Xr" href="../8/mount_url">mount_url(8)</a>. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-nfsurl	nfs://nfsserver/path/to/mount
+<div class="Bd Pp Bd-indent Li">
+<pre>nfsurl	nfs://nfsserver/path/to/mount
 smburl	smb://guest@smbserver/share
-afpurl	afp://;AUTH=NO%20USER%20AUTHENT@afpserver/share
-</pre>
+afpurl	afp://;AUTH=NO%20USER%20AUTHENT@afpserver/share</pre>
 </div>
 </section>
 <section class="Sh">
@@ -160,20 +147,16 @@ afpurl	afp://;AUTH=NO%20USER%20AUTHENT@afpserver/share
     chosen. A <var class="Va">location</var> can be given a weighting factor;
     the higher the weighting factor, the lower the preference for that server.
     For example, with an entry such as</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-data	net1a:/data net1b:/data net1c(1):/otherdata
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>data	net1a:/data net1b:/data net1c(1):/otherdata</pre>
 </div>
 <p class="Pp">if either host net1a or net1b is available, the one with the
     shortest response time will be chosen; host net1c will be chosen only if it
     is available and neither hosts net1a nor net1b are available.</p>
 <p class="Pp">If all <var class="Va">locations</var> have the same path, a
     comma-separated list of hosts followed by the path can be used:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-data	net1a,net1b,net1c(1):/data
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>data	net1a,net1b,net1c(1):/data</pre>
 </div>
 <p class="Pp">If a server that has been mounted becomes unavailable, the NFS
     client will not automatically fail over to another server; the mount must be
@@ -186,11 +169,9 @@ data	net1a,net1b,net1c(1):/data
     <a class="permalink" href="#direct"><i class="Em" id="direct">direct</i></a>
     map associates filesystem locations directly with directories. The entry key
     is the full path name of a directory. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-/usr/local	eng4:/export/local
-/src		eng4:/export/src
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>/usr/local	eng4:/export/local
+/src		eng4:/export/src</pre>
 </div>
 <p class="Pp">Since the direct map as a whole isn't associated with a single
     directory, it is specified in the master map with a dummy directory name of
@@ -206,12 +187,10 @@ data	net1a,net1b,net1c(1):/data
     entry. A good example of this is the <span class="Pa">auto_home</span> map
     which determines the entries under the <span class="Pa">/home</span>
     directory. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-bill	argon:/export/home/bill
+<div class="Bd Pp Bd-indent Li">
+<pre>bill	argon:/export/home/bill
 brent	depot:/export/home/brent
-guy	depot:/export/home/guy
-</pre>
+guy	depot:/export/home/guy</pre>
 </div>
 </section>
 <section class="Sh">
@@ -232,9 +211,8 @@ guy	depot:/export/home/guy
     has one entry for every user, with the key being the user's login name and
     the entry being the URL of the user's home directory, could be implemented
     as</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-#!/bin/sh
+<div class="Bd Pp Bd-indent Li">
+<pre>#!/bin/sh
 if [ $# = 0 ]; then # List keys
 	dscl /Search -list Users
 	exit
@@ -276,8 +254,7 @@ case &quot;$homedirloc&quot; in
 	#
 	exit 1
 	;;
-esac
-</pre>
+esac</pre>
 </div>
 <p class="Pp">(this is a simplified example; it does not handle users who do not
     have a network home directory, but includes them in the directory
@@ -289,16 +266,12 @@ esac
 <p class="Pp">If a <var class="Va">location</var> in a map entry contains an
     ampersand (&amp;), the ampersand will be replaced by the value of the key
     for the map entry. For example, a map entry of</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-bill	argon:/export/home/&amp;
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>bill	argon:/export/home/&amp;</pre>
 </div>
 <p class="Pp">is equivalent to a map entry of</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-bill	argon:/export/home/bill
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>bill	argon:/export/home/bill</pre>
 </div>
 </section>
 <section class="Sh">
@@ -306,11 +279,9 @@ bill	argon:/export/home/bill
 <p class="Pp">If the key in an indirect map entry is an asterisk (*), that entry
     will match any name that isn't matched by any other entry. For example, a
     map with</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-bill	argon:/export/home/bill
-*	depot:/export/home/&amp;
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>bill	argon:/export/home/bill
+*	depot:/export/home/&amp;</pre>
 </div>
 <p class="Pp">as entries will mount
     <span class="Pa">argon:/export/home/bill</span> on
@@ -351,10 +322,8 @@ bill	argon:/export/home/bill
 </dl>
 </div>
 <p class="Pp">For example, a direct map entry such as</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-/usr/local/bin	-ro	server:/export/bin/$OSNAME/$CPU
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>/usr/local/bin	-ro	server:/export/bin/$OSNAME/$CPU</pre>
 </div>
 <p class="Pp">would mount on <span class="Pa">/usr/local/bin</span> a directory
     from the specified server containing executable images appropriate to the
@@ -389,10 +358,8 @@ bill	argon:/export/home/bill
       by <a class="Xr" href="../3/getfsent">getfsent(3)</a>) that have the
       <code class="Li">net</code> option and that specify mounts from that
       server. An entry of the form
-    <div class="Bd Pp Bd-indent">
-    <pre>
-server:/path mountpoint fstype options 0 0
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>server:/path mountpoint fstype options 0 0</pre>
     </div>
     <p class="Pp">will be mounted in
         <var class="Va">server</var>/<var class="Va">path</var> under the mount
@@ -407,13 +374,11 @@ server:/path mountpoint fstype options 0 0
       generated from the list of file systems exported by that server. For
       example, a server that exports three NFS filesystems might have an
       equivalent map entry of:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-myserv	\
+    <div class="Bd Pp Bd-indent Li">
+    <pre>myserv	\
 	/export/home	myserv:/export/home \
 	/export/local	myserv:/export/local \
-	/export/pkg	myserv:/export/pkg
-    </pre>
+	/export/pkg	myserv:/export/pkg</pre>
     </div>
     <p class="Pp">To access the first mount, the path would be
         <span class="Pa">/net/myserv/export/home</span> if the map was
@@ -422,11 +387,9 @@ myserv	\
   <dt id="null"><a class="permalink" href="#null"><code class="Dv">-null</code></a></dt>
   <dd>This map has no entries. It is used to disable entries that occur later in
       the <code class="Nm">auto_master</code> file. For example:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-/shared		-null
-+auto_master
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>/shared		-null
++auto_master</pre>
     </div>
     <p class="Pp">The -null entry disables any <span class="Pa">/shared</span>
         entry in +auto_master.</p>
@@ -438,16 +401,12 @@ myserv	\
       <a class="Xr" href="../3/getfsent">getfsent(3)</a>) that do not have the
       <code class="Li">net</code> option. An
       <a class="Xr" href="../5/fstab">fstab(5)</a> entry of the form
-    <div class="Bd Pp Bd-indent">
-    <pre>
-server:/path mountpoint fstype options rw 0 0
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>server:/path mountpoint fstype options rw 0 0</pre>
     </div>
     <p class="Pp">will generate a direct map entry of the form</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-mountpoint options server:/path
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>mountpoint options server:/path</pre>
     </div>
   </dd>
 </dl>

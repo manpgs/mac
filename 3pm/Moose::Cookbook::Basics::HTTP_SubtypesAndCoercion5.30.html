@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion(3)</title>
 </head>
@@ -33,25 +34,19 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Request;
+<pre>  package Request;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   use HTTP::Headers  ();
   use Params::Coerce ();
   use URI            ();
-
   subtype 'My::Types::HTTP::Headers' =&gt; as class_type('HTTP::Headers');
-
   coerce 'My::Types::HTTP::Headers'
       =&gt; from 'ArrayRef'
           =&gt; via { HTTP::Headers-&gt;new( @{$_} ) }
       =&gt; from 'HashRef'
           =&gt; via { HTTP::Headers-&gt;new( %{$_} ) };
-
   subtype 'My::Types::URI' =&gt; as class_type('URI');
-
   coerce 'My::Types::URI'
       =&gt; from 'Object'
           =&gt; via { $_-&gt;isa('URI')
@@ -59,11 +54,9 @@
                    : Params::Coerce::coerce( 'URI', $_ ); }
       =&gt; from 'Str'
           =&gt; via { URI-&gt;new( $_, 'http' ) };
-
   subtype 'Protocol'
       =&gt; as 'Str'
       =&gt; where { /^HTTP\/[0-9]\.[0-9]$/ };
-
   has 'base' =&gt; ( is =&gt; 'rw', isa =&gt; 'My::Types::URI', coerce =&gt; 1 );
   has 'uri'  =&gt; ( is =&gt; 'rw', isa =&gt; 'My::Types::URI', coerce =&gt; 1 );
   has 'method'   =&gt; ( is =&gt; 'rw', isa =&gt; 'Str' );
@@ -89,8 +82,7 @@
 <p class="Pp">First, we create the subtype to which we will coerce the other
     types:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'My::Types::HTTP::Headers' =&gt; as class_type('HTTP::Headers');
+<pre>  subtype 'My::Types::HTTP::Headers' =&gt; as class_type('HTTP::Headers');
 </pre>
 <p class="Pp">We are creating a subtype rather than using
     <span class="Li">&quot;HTTP::Headers&quot;</span> as a type directly. The
@@ -102,8 +94,7 @@
 <p class="Pp">The <span class="Li">&quot;class_type&quot;</span> sugar function
     is simply a shortcut for this:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'HTTP::Headers'
+<pre>  subtype 'HTTP::Headers'
       =&gt; as 'Object'
       =&gt; where { $_-&gt;isa('HTTP::Headers') };
 </pre>
@@ -111,8 +102,7 @@
     class, but for non-Moose classes, the type must be declared explicitly.</p>
 <p class="Pp">We could go ahead and use this new type directly:</p>
 <p class="Pp"></p>
-<pre>
-  has 'headers' =&gt; (
+<pre>  has 'headers' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'My::Types::HTTP::Headers',
       default =&gt; sub { HTTP::Headers-&gt;new }
@@ -127,8 +117,7 @@
     structures instead of an <b>HTTP::Headers</b> instance, and just do the
     right thing. This is exactly what coercion is for:</p>
 <p class="Pp"></p>
-<pre>
-  coerce 'My::Types::HTTP::Headers'
+<pre>  coerce 'My::Types::HTTP::Headers'
       =&gt; from 'ArrayRef'
           =&gt; via { HTTP::Headers-&gt;new( @{$_} ) }
       =&gt; from 'HashRef'
@@ -143,8 +132,7 @@
 <p class="Pp">However, defining the coercion doesn't do anything until we tell
     Moose we want a particular attribute to be coerced:</p>
 <p class="Pp"></p>
-<pre>
-  has 'headers' =&gt; (
+<pre>  has 'headers' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'My::Types::HTTP::Headers',
       coerce  =&gt; 1,
@@ -157,8 +145,7 @@
     HTTP::Headers instance. With the coercion in place, the following lines of
     code are all equivalent:</p>
 <p class="Pp"></p>
-<pre>
-  $foo-&gt;headers( HTTP::Headers-&gt;new( bar =&gt; 1, baz =&gt; 2 ) );
+<pre>  $foo-&gt;headers( HTTP::Headers-&gt;new( bar =&gt; 1, baz =&gt; 2 ) );
   $foo-&gt;headers( [ 'bar', 1, 'baz', 2 ] );
   $foo-&gt;headers( { bar =&gt; 1, baz =&gt; 2 } );
 </pre>
@@ -170,13 +157,11 @@
 <p class="Pp">Once again, we need to declare a class type for our non-Moose URI
     class:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'My::Types::URI' =&gt; as class_type('URI');
+<pre>  subtype 'My::Types::URI' =&gt; as class_type('URI');
 </pre>
 <p class="Pp">Then we define the coercion:</p>
 <p class="Pp"></p>
-<pre>
-  coerce 'My::Types::URI'
+<pre>  coerce 'My::Types::URI'
       =&gt; from 'Object'
           =&gt; via { $_-&gt;isa('URI')
                    ? $_
@@ -196,8 +181,7 @@
     string is assumed to be an <span class="Li">&quot;http&quot;</span> URI.</p>
 <p class="Pp">Finally, we need to make sure our attributes enable coercion.</p>
 <p class="Pp"></p>
-<pre>
-  has 'base' =&gt; ( is =&gt; 'rw', isa =&gt; 'My::Types::URI', coerce =&gt; 1 );
+<pre>  has 'base' =&gt; ( is =&gt; 'rw', isa =&gt; 'My::Types::URI', coerce =&gt; 1 );
   has 'uri'  =&gt; ( is =&gt; 'rw', isa =&gt; 'My::Types::URI', coerce =&gt; 1 );
 </pre>
 <p class="Pp">Re-using the coercion lets us enforce a consistent API across

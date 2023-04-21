@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>install::TempContent::Objects::mod_perl-2.0.9::docs::api::Apache2::compat(3)</title>
 </head>
@@ -29,12 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h1>
-<pre>
-  # either add at the very beginning of startup.pl
+<pre>  # either add at the very beginning of startup.pl
   use Apache2::compat;
   # or httpd.conf
   PerlModule Apache2::compat
-
   # override and restore compat functions colliding with mp2 API
   Apache2::compat::override_mp2_api('Apache2::Connection::local_addr');
   my ($local_port, $local_addr) = sockaddr_in($c-&gt;local_addr);
@@ -65,15 +64,13 @@
     of arguments, but either the arguments themselves aren't the same or the
     return values are different. For example the mod_perl 1.0 code:</p>
 <p class="Pp"></p>
-<pre>
-  require Socket;
+<pre>  require Socket;
   my $sockaddr_in = $c-&gt;local_addr;
   my ($local_port, $local_addr) = Socket::sockaddr_in($sockaddr_in);
 </pre>
 <p class="Pp">should be adjusted to be:</p>
 <p class="Pp"></p>
-<pre>
-  require Apache2::Connection;
+<pre>  require Apache2::Connection;
   require APR::SockAddr;
   my $sockaddr = $c-&gt;local_addr;
   my ($local_port, $local_addr) = ($sockaddr-&gt;port, $sockaddr-&gt;ip_get);
@@ -91,19 +88,16 @@
     functions only when needed and which can be restored when no longer needed.
     So for example if you have code from mod_perl 1.0:</p>
 <p class="Pp"></p>
-<pre>
-  my ($local_port, $local_addr) = Socket::sockaddr_in($c-&gt;local_addr);
+<pre>  my ($local_port, $local_addr) = Socket::sockaddr_in($c-&gt;local_addr);
 </pre>
 <p class="Pp">and you aren't ready to port it to to use the mp2 API:</p>
 <p class="Pp"></p>
-<pre>
-  my ($local_port, $local_addr) = ($c-&gt;local_addr-&gt;port,
+<pre>  my ($local_port, $local_addr) = ($c-&gt;local_addr-&gt;port,
                                    $c-&gt;local_addr-&gt;ip_get);
 </pre>
 <p class="Pp">you could do the following:</p>
 <p class="Pp"></p>
-<pre>
-  Apache2::compat::override_mp2_api('Apache2::Connection::local_addr');
+<pre>  Apache2::compat::override_mp2_api('Apache2::Connection::local_addr');
   my ($local_port, $local_addr) = Socket::sockaddr_in($c-&gt;local_addr);
   Apache2::compat::restore_mp2_api('Apache2::Connection::local_addr');
 </pre>
@@ -163,8 +157,7 @@
     <span class="Li">&quot;Apache2::compat&quot;</span>, can prevent this from
     happening by adding</p>
 <p class="Pp"></p>
-<pre>
-  $INC{'Apache2/compat.pm'} = __FILE__;
+<pre>  $INC{'Apache2/compat.pm'} = __FILE__;
 </pre>
 <p class="Pp">at the very beginning of their <i>startup.pl</i>. But this will
     most certainly break the module that needed this module.</p>

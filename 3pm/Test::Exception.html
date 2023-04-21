@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Exception(3)</title>
 </head>
@@ -28,32 +29,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Test::More tests =&gt; 5;
+<pre>  use Test::More tests =&gt; 5;
   use Test::Exception;
-
   # or if you don't need Test::More
-
   use Test::Exception tests =&gt; 5;
-
   # then...
-
   # Check that the stringified exception matches given regex
   throws_ok { $foo-&gt;method } qr/division by zero/, 'zero caught okay';
-
   # Check an exception of the given class (or subclass) is thrown
   throws_ok { $foo-&gt;method } 'Error::Simple', 'simple error thrown';
   
   # all Test::Exceptions subroutines are guaranteed to preserve the state 
   # of $@ so you can do things like this after throws_ok and dies_ok
   like $@, 'what the stringified exception should look like';
-
   # Check that something died - we do not care why
   dies_ok { $foo-&gt;method } 'expecting to die';
-
   # Check that something did not die
   lives_ok { $foo-&gt;method } 'expecting to live';
-
   # Check that a test runs without an exception
   lives_and { is $foo-&gt;method, 42 } 'method is 42';
   
@@ -91,29 +83,25 @@
   <dd>Tests to see that a specific exception is thrown. <b>throws_ok()</b> has
       two forms:
     <p class="Pp"></p>
-    <pre>
-  throws_ok BLOCK REGEX, TEST_DESCRIPTION
+    <pre>  throws_ok BLOCK REGEX, TEST_DESCRIPTION
   throws_ok BLOCK CLASS, TEST_DESCRIPTION
     </pre>
     <p class="Pp">In the first form the test passes if the stringified exception
         matches the give regular expression. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    throws_ok { read_file( 'unreadable' ) } qr/No file/, 'no file';
+    <pre>    throws_ok { read_file( 'unreadable' ) } qr/No file/, 'no file';
     </pre>
     <p class="Pp">If your perl does not support
         <span class="Li">&quot;qr//&quot;</span> you can also pass a regex-like
         string, for example:</p>
     <p class="Pp"></p>
-    <pre>
-    throws_ok { read_file( 'unreadable' ) } '/No file/', 'no file';
+    <pre>    throws_ok { read_file( 'unreadable' ) } '/No file/', 'no file';
     </pre>
     <p class="Pp">The second form of <b>throws_ok()</b> test passes if the
         exception is of the same class as the one supplied, or a subclass of
         that class. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    throws_ok { $foo-&gt;bar } &quot;Error::Simple&quot;, 'simple error';
+    <pre>    throws_ok { $foo-&gt;bar } &quot;Error::Simple&quot;, 'simple error';
     </pre>
     <p class="Pp">Will only pass if the <span class="Li">&quot;bar&quot;</span>
         method throws an Error::Simple exception, or a subclass of an
@@ -122,15 +110,13 @@
         exception you want to look for. The following is equivalent to the
         previous example:</p>
     <p class="Pp"></p>
-    <pre>
-    my $SIMPLE = Error::Simple-&gt;new;
+    <pre>    my $SIMPLE = Error::Simple-&gt;new;
     throws_ok { $foo-&gt;bar } $SIMPLE, 'simple error';
     </pre>
     <p class="Pp">Should a <b>throws_ok()</b> test fail it produces appropriate
         diagnostic messages. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    not ok 3 - simple error
+    <pre>    not ok 3 - simple error
     #     Failed test (test.t at line 48)
     # expecting: Error::Simple exception
     # found: normal exit
@@ -138,8 +124,7 @@
     <p class="Pp">Like all other Test::Exception functions you can avoid
         prototypes by passing a subroutine explicitly:</p>
     <p class="Pp"></p>
-    <pre>
-    throws_ok( sub {$foo-&gt;bar}, &quot;Error::Simple&quot;, 'simple error' );
+    <pre>    throws_ok( sub {$foo-&gt;bar}, &quot;Error::Simple&quot;, 'simple error' );
     </pre>
     <p class="Pp">A true value is returned if the test succeeds, false
         otherwise. On exit $@ is guaranteed to be the cause of death (if
@@ -156,14 +141,11 @@
   <dd>Checks that a piece of code dies, rather than returning normally. For
       example:
     <p class="Pp"></p>
-    <pre>
-    sub div {
+    <pre>    sub div {
         my ( $a, $b ) = @_;
         return $a / $b;
     };
-
     dies_ok { div( 1, 0 ) } 'divide by zero detected';
-
     # or if you don't like prototypes
     dies_ok( sub { div( 1, 0 ) }, 'divide by zero detected' );
     </pre>
@@ -180,26 +162,22 @@
       continue, rather than aborting if you get an unexpected exception. For
       example:
     <p class="Pp"></p>
-    <pre>
-    sub read_file {
+    <pre>    sub read_file {
         my $file = shift;
         local $/;
         open my $fh, '&lt;', $file or die &quot;open failed ($!)\n&quot;;
         $file = &lt;FILE&gt;;
         return $file;
     };
-
     my $file;
     lives_ok { $file = read_file('test.txt') } 'file read';
-
     # or if you don't like prototypes
     lives_ok( sub { $file = read_file('test.txt') }, 'file read' );
     </pre>
     <p class="Pp">Should a <b>lives_ok()</b> test fail it produces appropriate
         diagnostic messages. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    not ok 1 - file read
+    <pre>    not ok 1 - file read
     #     Failed test (test.t at line 15)
     # died: open failed (No such file or directory)
     </pre>
@@ -211,29 +189,25 @@
   <dt id="lives_and"><a class="permalink" href="#lives_and"><b>lives_and</b></a></dt>
   <dd>Run a test that may throw an exception. For example, instead of doing:
     <p class="Pp"></p>
-    <pre>
-  my $file;
+    <pre>  my $file;
   lives_ok { $file = read_file('answer.txt') } 'read_file worked';
   is $file, &quot;42&quot;, 'answer was 42';
     </pre>
     <p class="Pp">You can use <b>lives_and()</b> like this:</p>
     <p class="Pp"></p>
-    <pre>
-  lives_and { is read_file('answer.txt'), &quot;42&quot; } 'answer is 42';
+    <pre>  lives_and { is read_file('answer.txt'), &quot;42&quot; } 'answer is 42';
   # or if you don't like prototypes
   lives_and(sub {is read_file('answer.txt'), &quot;42&quot;}, 'answer is 42');
     </pre>
     <p class="Pp">Which is the same as doing</p>
     <p class="Pp"></p>
-    <pre>
-  is read_file('answer.txt'), &quot;42\n&quot;, 'answer is 42';
+    <pre>  is read_file('answer.txt'), &quot;42\n&quot;, 'answer is 42';
     </pre>
     <p class="Pp">unless
         <span class="Li">&quot;read_file('answer.txt')&quot;</span> dies, in
         which case you get the same kind of error as <b>lives_ok()</b></p>
     <p class="Pp"></p>
-    <pre>
-  not ok 1 - answer is 42
+    <pre>  not ok 1 - answer is 42
   #     Failed test (test.t at line 15)
   # died: open failed (No such file or directory)
     </pre>
@@ -252,8 +226,7 @@
     to do this is to skip the tests if Test::Exception is absent. You can do
     this with code something like this:</p>
 <p class="Pp"></p>
-<pre>
-  use strict;
+<pre>  use strict;
   use warnings;
   use Test::More;
   

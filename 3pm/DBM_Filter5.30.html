@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBM_Filter(3pm)</title>
 </head>
@@ -28,33 +29,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use DBM_Filter ;
+<pre>    use DBM_Filter ;
     use SDBM_File; # or DB_File, GDBM_File, NDBM_File, or ODBM_File
-
     $db = tie %hash, ...
-
     $db-&gt;Filter_Push(Fetch =&gt; sub {...},
                      Store =&gt; sub {...});
-
     $db-&gt;Filter_Push('my_filter1');
     $db-&gt;Filter_Push('my_filter2', params...);
-
     $db-&gt;Filter_Key_Push(...) ;
     $db-&gt;Filter_Value_Push(...) ;
-
     $db-&gt;Filter_Pop();
     $db-&gt;Filtered();
-
     package DBM_Filter::my_filter1;
-
     sub Store { ... }
     sub Fetch { ... }
-
     1;
-
     package DBM_Filter::my_filter2;
-
     sub Filter
     {
         my @opts = @_;
@@ -63,7 +53,6 @@
             sub Store { ... },
             sub Fetch { ... } );
     }
-
     1;
 </pre>
 </section>
@@ -85,15 +74,13 @@
     and just after it is read back from the DBM file. For example, this snippet
     of code</p>
 <p class="Pp"></p>
-<pre>
-    $some_hash{&quot;abc&quot;} = 42;
+<pre>    $some_hash{&quot;abc&quot;} = 42;
 </pre>
 <p class="Pp">could potentially trigger two filters, one for the writing of the
     key &quot;abc&quot; and another for writing the value 42. Similarly, this
     snippet</p>
 <p class="Pp"></p>
-<pre>
-    my ($key, $value) = each %some_hash
+<pre>    my ($key, $value) = each %some_hash
 </pre>
 <p class="Pp">will trigger two filters, one for the reading of the key and one
     for the reading of the value.</p>
@@ -155,8 +142,7 @@
     used at the point where the filter is applied to a dbm. In this mode the
     Filter_*_Push methods expects to receive exactly two parameters.</p>
 <p class="Pp"></p>
-<pre>
-    my $db = tie %hash, 'SDBM_File', ...
+<pre>    my $db = tie %hash, 'SDBM_File', ...
     $db-&gt;Filter_Push( Store =&gt; sub { },
                       Fetch =&gt; sub { });
 </pre>
@@ -169,8 +155,7 @@
     character to all strings before they are written to the DBM file, and
     removes the trailing NULL when they are read from the DBM file</p>
 <p class="Pp"></p>
-<pre>
-    my $db = tie %hash, 'SDBM_File', ...
+<pre>    my $db = tie %hash, 'SDBM_File', ...
     $db-&gt;Filter_Push( Store =&gt; sub { $_ .= &quot;\x00&quot; ; },
                       Fetch =&gt; sub { s/\x00$// ;    });
 </pre>
@@ -189,8 +174,7 @@
     module.</p>
 <p class="Pp">The usage is for a canned filter is:</p>
 <p class="Pp"></p>
-<pre>
-    $db-&gt;Filter_Push(&quot;name&quot;, params)
+<pre>    $db-&gt;Filter_Push(&quot;name&quot;, params)
 </pre>
 <p class="Pp">where</p>
 <dl class="Bl-tag">
@@ -201,8 +185,7 @@
       that the full names for canned filters, &quot;null&quot; and
       &quot;utf8&quot;, included with this module are:
     <p class="Pp"></p>
-    <pre>
-    DBM_Filter::null
+    <pre>    DBM_Filter::null
     DBM_Filter::utf8
     </pre>
   </dd>
@@ -213,22 +196,17 @@
 <p class="Pp">The module that implements the canned filter can take one of two
     forms. Here is a template for the first</p>
 <p class="Pp"></p>
-<pre>
-    package DBM_Filter::null ;
-
+<pre>    package DBM_Filter::null ;
     use strict;
     use warnings;
-
     sub Store 
     {
         # store code here    
     }
-
     sub Fetch
     {
         # fetch code here
     }
-
     1;
 </pre>
 <p class="Pp">Notes:</p>
@@ -243,23 +221,18 @@
 <p class="Pp">The second form allows the filter to hold state information using
     a closure, thus:</p>
 <p class="Pp"></p>
-<pre>
-    package DBM_Filter::encoding ;
-
+<pre>    package DBM_Filter::encoding ;
     use strict;
     use warnings;
-
     sub Filter
     {
         my @params = @_ ;
-
         ...
         return {
             Store   =&gt; sub { $_ = $encoding-&gt;encode($_) },
             Fetch   =&gt; sub { $_ = $encoding-&gt;decode($_) }
             } ;
     }
-
     1;
 </pre>
 <p class="Pp">In this instance the &quot;Store&quot; and &quot;Fetch&quot;
@@ -316,8 +289,7 @@
 <p class="Pp">If you don't provide an exact inverse transformation, you will
     find that code like this will not behave as you expect.</p>
 <p class="Pp"></p>
-<pre>
-     while (my ($k, $v) = each %hash)
+<pre>     while (my ($k, $v) = each %hash)
      {
          ...
      }
@@ -350,11 +322,8 @@
     stores keys as C ints and the values and null terminated UTF-8 strings. Here
     is how you would set that up</p>
 <p class="Pp"></p>
-<pre>
-    my $db = tie %hash, 'SDBM_File', ...
-
+<pre>    my $db = tie %hash, 'SDBM_File', ...
     $db-&gt;Filter_Key_Push('int32') ;
-
     $db-&gt;Filter_Value_Push('utf8');
     $db-&gt;Filter_Value_Push('null');
 </pre>

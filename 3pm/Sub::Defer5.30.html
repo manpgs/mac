@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sub::Defer(3)</title>
 </head>
@@ -29,14 +30,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Sub::Defer;
-
+<pre> use Sub::Defer;
  my $deferred = defer_sub 'Logger::time_since_first_log' =&gt; sub {
     my $t = time;
     sub { time - $t };
  };
-
   Logger-&gt;time_since_first_log; # returns 0 and replaces itself
   Logger-&gt;time_since_first_log; # returns time - $t
 </pre>
@@ -50,8 +48,7 @@
 <h1 class="Sh" id="SUBROUTINES"><a class="permalink" href="#SUBROUTINES">SUBROUTINES</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="defer_sub"><a class="permalink" href="#defer_sub">defer_sub</a></h2>
-<pre>
- my $coderef = defer_sub $name =&gt; sub { ... }, \%options;
+<pre> my $coderef = defer_sub $name =&gt; sub { ... }, \%options;
 </pre>
 <p class="Pp">This subroutine returns a coderef that encapsulates the provided
     sub - when it is first called, the provided sub is called and is -itself-
@@ -75,8 +72,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="undefer_sub"><a class="permalink" href="#undefer_sub">undefer_sub</a></h2>
-<pre>
- my $coderef = undefer_sub \&amp;Foo::name;
+<pre> my $coderef = undefer_sub \&amp;Foo::name;
 </pre>
 <p class="Pp">If the passed coderef has been deferred this will
     &quot;undefer&quot; it. If the passed coderef has not been deferred, this
@@ -87,8 +83,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="defer_info"><a class="permalink" href="#defer_info">defer_info</a></h2>
-<pre>
- my $data = defer_info $sub;
+<pre> my $data = defer_info $sub;
  my ($name, $generator, $options, $undeferred_sub) = @$data;
 </pre>
 <p class="Pp">Returns original arguments to defer_sub, plus the undeferred
@@ -99,8 +94,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="undefer_all"><a class="permalink" href="#undefer_all">undefer_all</a></h2>
-<pre>
- undefer_all();
+<pre> undefer_all();
 </pre>
 <p class="Pp">This will undefer all deferred subs in one go. This can be very
     useful in a forking environment where child processes would each have to
@@ -113,8 +107,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="undefer_package"><a class="permalink" href="#undefer_package">undefer_package</a></h2>
-<pre>
-  undefer_package($package);
+<pre>  undefer_package($package);
 </pre>
 <p class="Pp">This undefers all deferred subs in a package.</p>
 <p class="Pp">Not exported by default.</p>

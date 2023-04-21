@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>KEXTUTIL(8)</title>
 </head>
@@ -271,18 +272,14 @@
   Loading</a></h2>
 <p class="Pp">To load a kext you must run <code class="Nm">kextutil</code> as
     the superuser and supply a kext bundle name; no options are required:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil TabletDriver.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil TabletDriver.kext</pre>
 </div>
 <p class="Pp">Alternatively, you can use the <code class="Fl">-bundle-id</code>
     (<code class="Fl">-b</code>) option to specify a kext by its
     CFBundleIdentifier:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -b com.mycompany.driver.TabletDriver
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -b com.mycompany.driver.TabletDriver</pre>
 </div>
 <p class="Pp">With no additional options <code class="Nm">kextutil</code> looks
     in <span class="Pa">/System/Library/Extensions/</span> and
@@ -292,10 +289,8 @@ kextutil -b com.mycompany.driver.TabletDriver
     individual kexts with the <code class="Fl">-dependency</code>
     (<code class="Fl">-d</code>) option expands the set of kexts that
     <code class="Nm">kextutil</code> looks among:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -r ${USER}/Library/Extensions TabletDriver.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -r ${USER}/Library/Extensions TabletDriver.kext</pre>
 </div>
 </section>
 <section class="Ss">
@@ -318,10 +313,8 @@ kextutil -r ${USER}/Library/Extensions TabletDriver.kext
     <span class="Pa">/System/Library/Extensions/</span> and
     <span class="Pa">/Library/Extensions/</span> repositories and to suppress
     dependency resolution, respectively:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -entZ PacketSniffer.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -entZ PacketSniffer.kext</pre>
 </div>
 <p class="Pp">Only validation and authentication checks are performed.</p>
 </section>
@@ -332,10 +325,8 @@ kextutil -entZ PacketSniffer.kext
     use the <code class="Fl">-symbols</code> (<code class="Fl">-s</code>) option
     to specify a directory where symbol files will be written for the kext being
     loaded and all its dependencies.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -s ~/ksyms PacketSniffer.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -s ~/ksyms PacketSniffer.kext</pre>
 </div>
 </section>
 <section class="Ss">
@@ -355,37 +346,31 @@ kextutil -s ~/ksyms PacketSniffer.kext
     <a class="Xr" href="../1/gdb">gdb(1)</a> macro defined by the
     <span class="Pa">kgmacros</span> file in the Kernel Development Kit, or
     consult a panic backtrace.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -n -s ~/ksyms GrobbleEthernet.kext
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -n -s ~/ksyms GrobbleEthernet.kext
 enter the hexadecimal load addresses for these modules:
 com.apple.iokit.IONetworkingFamily: 0x1001000
-...
-</pre>
+...</pre>
 </div>
 <p class="Pp">Alternatively, if you know the CFBundleIdentifiers of all the
     kexts, you can use the <code class="Fl">-address</code>
     (<code class="Fl">-a</code>) option for each kext (you needn't specify
     <code class="Fl">-no-load</code> when using the
     <code class="Fl">-address</code> option):</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -s ~/ksyms \
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -s ~/ksyms \
     -a com.apple.iokit.IONetworkingFamily@0x1001000 \
     -a com.apple.iokit.IOPCIFamily@0x1004000 \
     -a com.mycompany.driver.GrobbleEthernet@0x1007000 \
-    GrobbleEthernet.kext
-</pre>
+    GrobbleEthernet.kext</pre>
 </div>
 <p class="Pp">Simplest of all, however, provided you can run
     <code class="Nm">kextutil</code> on the same machine as the loaded kext, is
     to use the <code class="Fl">-use-load-addresses</code>
     (<code class="Fl">-A</code>) option, which checks with the kernel for all
     loaded kexts and automatically gets their load addresses.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -s ~/ksyms -A GrobbleEthernet.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -s ~/ksyms -A GrobbleEthernet.kext</pre>
 </div>
 </section>
 <section class="Ss">
@@ -420,12 +405,10 @@ kextutil -s ~/ksyms -A GrobbleEthernet.kext
     kext as a candidate, or <code class="Fl">-repository</code>
     (<code class="Fl">-r</code><code class="Li">),</code> which adds an entire
     directory of extensions.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -n -s ~/ksyms -e \
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -n -s ~/ksyms -e \
     -d /System/Library/Extensions/System.kext \
-    -r ~/TestKexts -d JoystickSupport.kext JoystickDriver.kext
-</pre>
+    -r ~/TestKexts -d JoystickSupport.kext JoystickDriver.kext</pre>
 </div>
 <p class="Pp">Note also that if you use
     <code class="Fl">-no-system-extensions</code>
@@ -446,19 +429,15 @@ kextutil -n -s ~/ksyms -e \
     an I/O Kit driver's early startup code, you can load the driver on the
     target machine without starting matching by using the
     <code class="Fl">-load-only</code> (<code class="Fl">-l</code>) option:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -l DiskController.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -l DiskController.kext</pre>
 </div>
 <p class="Pp">Once you have done this, you can use the generated symbol file in
     your debug session to set breakpoints and then trigger matching by running
     <code class="Nm">kextutil</code> again on the target machine with the
     <code class="Fl">-match-only</code> (<code class="Fl">-m</code>) option:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -m DiskController.kext
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -m DiskController.kext</pre>
 </div>
 <p class="Pp">You may wish to use the <code class="Fl">-personality</code>
     (<code class="Fl">-p</code>) option as well in order to send selected
@@ -467,9 +446,8 @@ kextutil -m DiskController.kext
     the whole process, which causes <code class="Nm">kextutil</code> to pause
     just before loading any personalities and then to ask you for each
     personality whether that one should be sent to the kernel:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-kextutil -i DiskController.kext
+<div class="Bd Pp Bd-indent Li">
+<pre>kextutil -i DiskController.kext
 DiskController.kext appears to be loadable (not including linkage
 for on-disk libraries).
 Load DiskController.kext and its dependencies into the kernel [Y/n]? y
@@ -483,8 +461,7 @@ You may now set breakpoints in the debugger before starting them.
 start DiskController.kext [Y/n]? y
 DiskController.kext started.
 send personalities for DiskController.kext [Y/n]? y
-send personality Test Match Personality [Y/n]? y
-</pre>
+send personality Test Match Personality [Y/n]? y</pre>
 </div>
 </section>
 <section class="Ss">

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>B::Deparse(3pm)</title>
 </head>
@@ -81,16 +82,14 @@
       whenever they would be legal. This can be useful if you are used to LISP,
       or if you want to see how perl parses your input. If you say
     <p class="Pp"></p>
-    <pre>
-    if ($var &amp; 0x7f == 65) {print &quot;Gimme an A!&quot;}
+    <pre>    if ($var &amp; 0x7f == 65) {print &quot;Gimme an A!&quot;}
     print ($which ? $a : $b), &quot;\n&quot;;
     $name = $ENV{USER} or &quot;Bob&quot;;
     </pre>
     <p class="Pp"><span class="Li">&quot;B::Deparse,-p&quot;</span> will
       print</p>
     <p class="Pp"></p>
-    <pre>
-    if (($var &amp; 0)) {
+    <pre>    if (($var &amp; 0)) {
         print('Gimme an A!')
     };
     (print(($which ? $a : $b)), '???');
@@ -104,13 +103,11 @@
   <dd>Disable prototype checking. With this option, all function calls are
       deparsed as if no prototype was defined for them. In other words,
     <p class="Pp"></p>
-    <pre>
-    perl -MO=Deparse,-P -e 'sub foo (\@) { 1 } foo @x'
+    <pre>    perl -MO=Deparse,-P -e 'sub foo (\@) { 1 } foo @x'
     </pre>
     <p class="Pp">will print</p>
     <p class="Pp"></p>
-    <pre>
-    sub foo (\@) {
+    <pre>    sub foo (\@) {
         1;
     }
     &amp;foo(\@x);
@@ -123,13 +120,11 @@
       concatenation, uc, ucfirst, lc, lcfirst, quotemeta, and join. For
       instance, print
     <p class="Pp"></p>
-    <pre>
-    print &quot;Hello, $world, @ladies, \u$gentlemen\E, \u\L$me!&quot;;
+    <pre>    print &quot;Hello, $world, @ladies, \u$gentlemen\E, \u\L$me!&quot;;
     </pre>
     <p class="Pp">as</p>
     <p class="Pp"></p>
-    <pre>
-    print 'Hello, ' . $world . ', ' . join($&quot;, @ladies) . ', '
+    <pre>    print 'Hello, ' . $world . ', ' . join($&quot;, @ladies) . ', '
           . ucfirst($gentlemen) . ', ' . ucfirst(lc $me . '!');
     </pre>
     <p class="Pp">Note that the expanded form represents the way perl handles
@@ -152,8 +147,7 @@
       <span class="Li">&quot;else&quot;</span>, and
       <span class="Li">&quot;continue&quot;</span> blocks. For example, print
     <p class="Pp"></p>
-    <pre>
-    if (...) {
+    <pre>    if (...) {
          ...
     } else {
          ...
@@ -161,8 +155,7 @@
     </pre>
     <p class="Pp">instead of</p>
     <p class="Pp"></p>
-    <pre>
-    if (...) {
+    <pre>    if (...) {
          ...
     }
     else {
@@ -207,15 +200,13 @@
         <span class="Li">&quot;for&quot;</span> loops will be translated into
         equivalent while loops with continue blocks; for instance</p>
     <p class="Pp"></p>
-    <pre>
-    for ($i = 0; $i &lt; 10; ++$i) {
+    <pre>    for ($i = 0; $i &lt; 10; ++$i) {
         print $i;
     }
     </pre>
     <p class="Pp">turns into</p>
     <p class="Pp"></p>
-    <pre>
-    $i = 0;
+    <pre>    $i = 0;
     while ($i &lt; 10) {
         print $i;
     } continue {
@@ -232,13 +223,11 @@
         to <span class="Li">&quot;require&quot;</span> and
         <span class="Li">&quot;import&quot;</span>; for instance,</p>
     <p class="Pp"></p>
-    <pre>
-    use strict 'refs';
+    <pre>    use strict 'refs';
     </pre>
     <p class="Pp">turns into</p>
     <p class="Pp"></p>
-    <pre>
-    sub BEGIN {
+    <pre>    sub BEGIN {
         require strict;
         do {
             'strict'-&gt;import('refs')
@@ -252,8 +241,7 @@
         <span class="Li">&quot;?:&quot;</span> and <span class="Li">&quot;do
         {}&quot;</span>; for instance</p>
     <p class="Pp"></p>
-    <pre>
-    print 'hi' if $nice;
+    <pre>    print 'hi' if $nice;
     if ($nice) {
         print 'hi';
     }
@@ -265,8 +253,7 @@
     </pre>
     <p class="Pp">turns into</p>
     <p class="Pp"></p>
-    <pre>
-    $nice and print 'hi';
+    <pre>    $nice and print 'hi';
     $nice and do { print 'hi' };
     $nice ? do { print 'hi' } : do { print 'bye' };
     </pre>
@@ -280,8 +267,7 @@
   B::Deparse AS A MODULE</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h2>
-<pre>
-    use B::Deparse;
+<pre>    use B::Deparse;
     $deparse = B::Deparse-&gt;new(&quot;-p&quot;, &quot;-sC&quot;);
     $body = $deparse-&gt;coderef2text(\&amp;func);
     eval &quot;sub func $body&quot;; # the inverse operation
@@ -294,8 +280,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-    $deparse = B::Deparse-&gt;new(OPTIONS)
+<pre>    $deparse = B::Deparse-&gt;new(OPTIONS)
 </pre>
 <p class="Pp">Create an object to store the state of a deparsing operation and
     any options. The options are the same as those that can be given on the
@@ -304,8 +289,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ambient_pragmas"><a class="permalink" href="#ambient_pragmas">ambient_pragmas</a></h2>
-<pre>
-    $deparse-&gt;ambient_pragmas(strict =&gt; 'all', '$[' =&gt; $[);
+<pre>    $deparse-&gt;ambient_pragmas(strict =&gt; 'all', '$[' =&gt; $[);
 </pre>
 <p class="Pp">The compilation of a subroutine can be affected by a few compiler
     directives, <b>pragmas</b>. These are:</p>
@@ -336,8 +320,7 @@
       whitespace. The special values &quot;all&quot; and &quot;none&quot; mean
       what you'd expect.
     <p class="Pp"></p>
-    <pre>
-    $deparse-&gt;ambient_pragmas(strict =&gt; 'subs refs');
+    <pre>    $deparse-&gt;ambient_pragmas(strict =&gt; 'subs refs');
     </pre>
   </dd>
   <dt>$[</dt>
@@ -355,8 +338,7 @@
       The values &quot;all&quot; and &quot;none&quot; are special. It's also
       permissible to pass an array reference here.
     <p class="Pp"></p>
-    <pre>
-    $deparser-&gt;ambient_pragmas(re =&gt; 'eval');
+    <pre>    $deparser-&gt;ambient_pragmas(re =&gt; 'eval');
     </pre>
   </dd>
   <dt id="warnings"><a class="permalink" href="#warnings">warnings</a></dt>
@@ -364,8 +346,7 @@
       The values &quot;all&quot; and &quot;none&quot; are special, again. It's
       also permissible to pass an array reference here.
     <p class="Pp"></p>
-    <pre>
-    $deparser-&gt;ambient_pragmas(warnings =&gt; [qw[void io]]);
+    <pre>    $deparser-&gt;ambient_pragmas(warnings =&gt; [qw[void io]]);
     </pre>
     <p class="Pp">If one of the values is the string &quot;FATAL&quot;, then all
         the warnings in that list will be considered fatal, just as with the
@@ -373,8 +354,7 @@
         warnings are fatal, and others are merely enabled, you can pass the
         <b>warnings</b> parameter twice:</p>
     <p class="Pp"></p>
-    <pre>
-    $deparser-&gt;ambient_pragmas(
+    <pre>    $deparser-&gt;ambient_pragmas(
         warnings =&gt; 'all',
         warnings =&gt; [FATAL =&gt; qw/void io/],
     );
@@ -388,8 +368,7 @@
       used by the special variables $^H and ${^WARNING_BITS}.
     <p class="Pp">They exist principally so that you can write code like:</p>
     <p class="Pp"></p>
-    <pre>
-    { my ($hint_bits, $warning_bits);
+    <pre>    { my ($hint_bits, $warning_bits);
     BEGIN {($hint_bits, $warning_bits) = ($^H, ${^WARNING_BITS})}
     $deparser-&gt;ambient_pragmas (
         hint_bits    =&gt; $hint_bits,
@@ -407,8 +386,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="coderef2text"><a class="permalink" href="#coderef2text">coderef2text</a></h2>
-<pre>
-    $body = $deparse-&gt;coderef2text(\&amp;func)
+<pre>    $body = $deparse-&gt;coderef2text(\&amp;func)
     $body = $deparse-&gt;coderef2text(sub ($$) { ... })
 </pre>
 <p class="Pp">Return source code for the body of a subroutine (a block,
@@ -446,9 +424,7 @@
       instance, neither B::Deparse nor Data::Dumper know how to print
       dual-valued scalars correctly, as in:
     <p class="Pp"></p>
-    <pre>
-    use constant E2BIG =&gt; ($!=7); $y = E2BIG; print $y, 0+$y;
-
+    <pre>    use constant E2BIG =&gt; ($!=7); $y = E2BIG; print $y, 0+$y;
     use constant H =&gt; { &quot;#&quot; =&gt; 1 }; H-&gt;{&quot;#&quot;};
     </pre>
   </li>
@@ -459,13 +435,11 @@
   <li>Optimized-away statements are rendered as '???'. This includes statements
       that have a compile-time side-effect, such as the obscure
     <p class="Pp"></p>
-    <pre>
-    my $x if 0;
+    <pre>    my $x if 0;
     </pre>
     <p class="Pp">which is not, consequently, deparsed correctly.</p>
     <p class="Pp"></p>
-    <pre>
-    foreach my $i (@_) { 0 }
+    <pre>    foreach my $i (@_) { 0 }
   =&gt;
     foreach my $i (@_) { '???' }
     </pre>

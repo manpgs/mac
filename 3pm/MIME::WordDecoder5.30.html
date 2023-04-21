@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::WordDecoder(3)</title>
 </head>
@@ -35,23 +36,15 @@
 <p class="Pp">See MIME::Words for the basics of encoded words. See
     &quot;DESCRIPTION&quot; for how this class works.</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::WordDecoder;
-
-
+<pre>    use MIME::WordDecoder;
     ### Get the default word-decoder (used by unmime()):
     $wd = default MIME::WordDecoder;
-
     ### Get a word-decoder which maps to ISO-8859-1 (Latin1):
     $wd = supported MIME::WordDecoder &quot;ISO-8859-1&quot;;
-
-
     ### Decode a MIME string (e.g., into Latin1) via the default decoder:
     $str = $wd-&gt;decode('To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld&gt;');
-
     ### Decode a string using the default decoder, non-OO style:
     $str = unmime('To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld&gt;');
-
     ### Decode a string to an internal Perl string, non-OO style
     ### The result is likely to have the UTF8 flag ON.
     $str = mime_to_perl_string('To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld&gt;');
@@ -73,8 +66,7 @@
   name).</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    ### Keep 7-bit characters as-is, convert 8-bit characters to '#':
+<pre>    ### Keep 7-bit characters as-is, convert 8-bit characters to '#':
     sub keep7bit {
         local $_ = shift;
         tr/\x00-\x7F/#/c;
@@ -83,25 +75,21 @@
 </pre>
 <p class="Pp">Here's a decoder which uses that:</p>
 <p class="Pp"></p>
-<pre>
-   ### Construct a decoder:
+<pre>   ### Construct a decoder:
    $wd = MIME::WordDecoder-&gt;new({'US-ASCII'   =&gt; &quot;KEEP&quot;,   ### sub { $_[0] }
                                  'ISO-8859-1' =&gt; \&amp;keep7bit,
                                  'ISO-8859-2' =&gt; \&amp;keep7bit,
                                  'Big5'       =&gt; &quot;WARN&quot;,
                                  '*'          =&gt; &quot;DIE&quot;});
-
    ### Convert some MIME text to a pure ASCII string...
    $ascii = $wd-&gt;decode('To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld&gt;');
-
    ### ...which will now hold: &quot;To: Keld J#rn Simonsen &lt;keld&gt;&quot;
 </pre>
 <p class="Pp">The UTF-8 built-in decoder decodes everything into Perl's internal
     string format, possibly turning on the internal UTF8 flag. Use it like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    $wd = supported MIME::WordDecoder 'UTF-8';
+<pre>    $wd = supported MIME::WordDecoder 'UTF-8';
     $perl_string = $wd-&gt;decode('To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld&gt;');
     # perl_string will be a valid UTF-8 string with the &quot;UTF8&quot; flag set.
 </pre>
@@ -121,13 +109,11 @@
       which maps data into that character set (the character set is forced to
       all-uppercase).
     <p class="Pp"></p>
-    <pre>
-    $wd = supported MIME::WordDecoder &quot;ISO-8859-1&quot;;
+    <pre>    $wd = supported MIME::WordDecoder &quot;ISO-8859-1&quot;;
     </pre>
     <p class="Pp">If DECODER is given, installs such an object:</p>
     <p class="Pp"></p>
-    <pre>
-    MIME::WordDecoder-&gt;supported(&quot;ISO-8859-1&quot; =&gt;
+    <pre>    MIME::WordDecoder-&gt;supported(&quot;ISO-8859-1&quot; =&gt;
                                  (new MIME::WordDecoder::ISO_8859 &quot;1&quot;));
     </pre>
     <p class="Pp">You should not override this method.</p>
@@ -145,8 +131,7 @@
         character set CHARSET. The subroutine will be invoked with the following
         arguments:</p>
     <p class="Pp"></p>
-    <pre>
-    DATA    - the data in the given character set.
+    <pre>    DATA    - the data in the given character set.
     CHARSET - the upcased character set name, which may prove useful
               if you are using the same SUBREF for multiple CHARSETs.
     DECODER - the decoder itself, if it contains configuration information
@@ -154,8 +139,7 @@
     </pre>
     <p class="Pp">For example:</p>
     <p class="Pp"></p>
-    <pre>
-    $wd = new MIME::WordDecoder;
+    <pre>    $wd = new MIME::WordDecoder;
     $wd-&gt;handler('US-ASCII'   =&gt; &quot;KEEP&quot;);
     $wd-&gt;handler('ISO-8859-1' =&gt; \&amp;handle_latin1,
                  'ISO-8859-2' =&gt; \&amp;handle_latin1,
@@ -164,8 +148,7 @@
     <p class="Pp">Notice that, much as with <span class="Li">%SIG</span>, the
         SUBREF can also be taken from a set of special keywords:</p>
     <p class="Pp"></p>
-    <pre>
-   KEEP     Pass data through unchanged.
+    <pre>   KEEP     Pass data through unchanged.
    IGNORE   Ignore data in this character set, without warning.
    WARN     Ignore data in this character set, with warning.
    DIE      Fatal exception with &quot;can't handle character set&quot; message.
@@ -202,14 +185,11 @@
       character sets and UTF8, and also keeps 8-bit characters from the
       indicated character set.
     <p class="Pp"></p>
-    <pre>
-    ### Construct:
+    <pre>    ### Construct:
     $wd = new MIME::WordDecoder::ISO_8859 2;    ### ISO-8859-2
-
     ### What to translate unknown characters to (can also use empty):
     ### Default is &quot;?&quot;.
     $wd-&gt;unknown(&quot;?&quot;);
-
     ### Collapse runs of unknown characters to a single unknown()?
     ### Default is false.
     $wd-&gt;collapse(1);
@@ -220,8 +200,7 @@
         standardized multilingual single-byte coded (8bit) graphic character
         sets for writing in alphabetic languages:</p>
     <p class="Pp"></p>
-    <pre>
-    1. Latin1 (West European)
+    <pre>    1. Latin1 (West European)
     2. Latin2 (East European)
     3. Latin3 (South European)
     4. Latin4 (North European)

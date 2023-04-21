@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-CAT-FILE(1)</title>
 </head>
@@ -31,16 +32,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git cat-file</i> &lt;type&gt; &lt;object&gt;
+<pre><i>git cat-file</i> &lt;type&gt; &lt;object&gt;
 <i>git cat-file</i> (-e | -p) &lt;object&gt;
 <i>git cat-file</i> (-t | -s) [--allow-unknown-type] &lt;object&gt;
 <i>git cat-file</i> (--batch | --batch-check | --batch-command) [--batch-all-objects]
              [--buffer] [--follow-symlinks] [--unordered]
              [--textconv | --filters]
 <i>git cat-file</i> (--textconv | --filters)
-             [&lt;rev&gt;:&lt;path|tree-ish&gt; | --path=&lt;path|tree-ish&gt; &lt;rev&gt;]
-</pre>
+             [&lt;rev&gt;:&lt;path|tree-ish&gt; | --path=&lt;path|tree-ish&gt; &lt;rev&gt;]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -173,21 +172,17 @@
 <p class="Pp">For example, consider a git repository containing:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-f: a file containing &quot;hello\n&quot;
+<pre>f: a file containing &quot;hello\n&quot;
 link: a symlink to f
 dir/link: a symlink to ../f
 plink: a symlink to ../f
-alink: a symlink to /etc/passwd
-</pre>
+alink: a symlink to /etc/passwd</pre>
 </div>
 <p class="Pp">For a regular file <b>f</b>, <b>echo HEAD:f | git cat-file
     --batch</b> would print</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-ce013625030ba8dba906f756967f9e9ca394464a blob 6
-</pre>
+<pre>ce013625030ba8dba906f756967f9e9ca394464a blob 6</pre>
 </div>
 <p class="Pp">And <b>echo HEAD:link | git cat-file --batch --follow-symlinks</b>
     would print the same thing, as would <b>HEAD:dir/link</b>, as they both
@@ -196,25 +191,19 @@ ce013625030ba8dba906f756967f9e9ca394464a blob 6
     symlink itself. In the case of <b>HEAD:link</b>, you would see</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-4d1ae35ba2c8ec712fa2a379db44ad639ca277bd blob 1
-</pre>
+<pre>4d1ae35ba2c8ec712fa2a379db44ad639ca277bd blob 1</pre>
 </div>
 <p class="Pp">Both <b>plink</b> and <b>alink</b> point outside the tree, so they
     would respectively print:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-symlink 4
-../f
-</pre>
+<pre>symlink 4
+../f</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-symlink 11
-/etc/passwd
-</pre>
+<pre>symlink 11
+/etc/passwd</pre>
 </div>
 </div>
 </section>
@@ -278,19 +267,15 @@ symlink 11
   produce:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;oid&gt; SP &lt;type&gt; SP &lt;size&gt; LF
-&lt;contents&gt; LF
-</pre>
+<pre>&lt;oid&gt; SP &lt;type&gt; SP &lt;size&gt; LF
+&lt;contents&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Whereas <b>--batch-check='%(objectname) %(objecttype)'</b> would
     produce:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;oid&gt; SP &lt;type&gt; LF
-</pre>
+<pre>&lt;oid&gt; SP &lt;type&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">If a name is specified on stdin that cannot be resolved to an
@@ -298,9 +283,7 @@ symlink 11
     and print:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;object&gt; SP missing LF
-</pre>
+<pre>&lt;object&gt; SP missing LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">If a name is specified that might refer to more than one object
@@ -308,9 +291,7 @@ symlink 11
     and print:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;object&gt; SP ambiguous LF
-</pre>
+<pre>&lt;object&gt; SP ambiguous LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">If <b>--follow-symlinks</b> is used, and a symlink in the
@@ -318,10 +299,8 @@ symlink 11
     any custom format and print:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-symlink SP &lt;size&gt; LF
-&lt;symlink&gt; LF
-</pre>
+<pre>symlink SP &lt;size&gt; LF
+&lt;symlink&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The symlink will either be absolute (beginning with a <b>/</b>),
@@ -332,38 +311,30 @@ symlink SP &lt;size&gt; LF
     will be displayed:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;object&gt; SP missing LF
-</pre>
+<pre>&lt;object&gt; SP missing LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">is printed when the initial symlink requested does not exist.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-dangling SP &lt;size&gt; LF
-&lt;object&gt; LF
-</pre>
+<pre>dangling SP &lt;size&gt; LF
+&lt;object&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">is printed when the initial symlink exists, but something that it
     (transitive-of) points to does not.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-loop SP &lt;size&gt; LF
-&lt;object&gt; LF
-</pre>
+<pre>loop SP &lt;size&gt; LF
+&lt;object&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">is printed for symlink loops (or any symlinks that require more
     than 40 link resolutions to resolve).</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-notdir SP &lt;size&gt; LF
-&lt;object&gt; LF
-</pre>
+<pre>notdir SP &lt;size&gt; LF
+&lt;object&gt; LF</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">is printed when, during symlink resolution, a file is used as a

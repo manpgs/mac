@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Select(3pm)</title>
 </head>
@@ -28,16 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use IO::Select;
-
+<pre>    use IO::Select;
     $s = IO::Select-&gt;new();
-
     $s-&gt;add(\*STDIN);
     $s-&gt;add($some_handle);
-
     @ready = $s-&gt;can_read($timeout);
-
     @ready = IO::Select-&gt;new(@handles)-&gt;can_read(0);
 </pre>
 </section>
@@ -145,13 +141,10 @@
     server which communicates with several sockets while also listening for more
     connections on a listen socket</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Select;
+<pre>    use IO::Select;
     use IO::Socket;
-
     $lsn = IO::Socket::INET-&gt;new(Listen =&gt; 1, LocalPort =&gt; 8080);
     $sel = IO::Select-&gt;new( $lsn );
-
     while(@ready = $sel-&gt;can_read) {
         foreach $fh (@ready) {
             if($fh == $lsn) {
@@ -161,7 +154,6 @@
             }
             else {
                 # Process socket
-
                 # Maybe we have finished with the socket
                 $sel-&gt;remove($fh);
                 $fh-&gt;close;

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ExtUtils::MM_Any(3pm)</title>
 </head>
@@ -28,11 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  FOR INTERNAL USE ONLY!
-
+<pre>  FOR INTERNAL USE ONLY!
   package ExtUtils::MM_SomeOS;
-
   # Temporarily, you have to subclass both.  Put MM_Any first.
   require ExtUtils::MM_Any;
   require ExtUtils::MM_Unix;
@@ -59,8 +57,7 @@
 <p class="Pp">These are methods which help writing cross-platform code.</p>
 <p class="Pp"><i>os_flavor </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    my @os_flavor = $mm-&gt;os_flavor;
+<pre>    my @os_flavor = $mm-&gt;os_flavor;
 </pre>
 <p class="Pp"><span class="Li">@os_flavor</span> is the style of operating
     system this is, usually corresponding to the MM_*.pm file we're using.</p>
@@ -69,8 +66,7 @@
     families.</p>
 <p class="Pp">Some examples:</p>
 <p class="Pp"></p>
-<pre>
-    Cygwin98       ('Unix',  'Cygwin', 'Cygwin9x')
+<pre>    Cygwin98       ('Unix',  'Cygwin', 'Cygwin9x')
     Windows        ('Win32')
     Win98          ('Win32', 'Win9x')
     Linux          ('Unix',  'Linux')
@@ -81,16 +77,14 @@
     <b>os_flavor_is()</b> for use.</p>
 <p class="Pp"><i>os_flavor_is</i></p>
 <p class="Pp"></p>
-<pre>
-    my $is_this_flavor = $mm-&gt;os_flavor_is($this_flavor);
+<pre>    my $is_this_flavor = $mm-&gt;os_flavor_is($this_flavor);
     my $is_this_flavor = $mm-&gt;os_flavor_is(@one_of_these_flavors);
 </pre>
 <p class="Pp">Checks to see if the current operating system is one of the given
     flavors.</p>
 <p class="Pp">This is useful for code like:</p>
 <p class="Pp"></p>
-<pre>
-    if( $mm-&gt;os_flavor_is('Unix') ) {
+<pre>    if( $mm-&gt;os_flavor_is('Unix') ) {
         $out = `foo 2&gt;&amp;1`;
     }
     else {
@@ -99,16 +93,14 @@
 </pre>
 <p class="Pp"><i>can_load_xs</i></p>
 <p class="Pp"></p>
-<pre>
-    my $can_load_xs = $self-&gt;can_load_xs;
+<pre>    my $can_load_xs = $self-&gt;can_load_xs;
 </pre>
 <p class="Pp">Returns true if we have the ability to load XS.</p>
 <p class="Pp">This is important because miniperl, used to build XS modules in
     the core, can not load XS.</p>
 <p class="Pp"><i>can_run</i></p>
 <p class="Pp"></p>
-<pre>
-  use ExtUtils::MM;
+<pre>  use ExtUtils::MM;
   my $runnable = MM-&gt;can_run($Config{make});
 </pre>
 <p class="Pp">If called in a scalar context it will return the full path to the
@@ -122,39 +114,34 @@
     <span class="Li">$INSTANCES</span> capability).</p>
 <p class="Pp"><i>can_redirect_error</i></p>
 <p class="Pp"></p>
-<pre>
-  $useredirect = MM-&gt;can_redirect_error;
+<pre>  $useredirect = MM-&gt;can_redirect_error;
 </pre>
 <p class="Pp">True if on an OS where qx operator (or backticks) can redirect
     <span class="Li">&quot;STDERR&quot;</span> onto
     <span class="Li">&quot;STDOUT&quot;</span>.</p>
 <p class="Pp"><i>is_make_type</i></p>
 <p class="Pp"></p>
-<pre>
-    my $is_dmake = $self-&gt;is_make_type('dmake');
+<pre>    my $is_dmake = $self-&gt;is_make_type('dmake');
 </pre>
 <p class="Pp">Returns true if
     <span class="Li">&quot;&lt;$self-&quot;</span>make&gt;&gt; is the given
     type; possibilities are:</p>
 <p class="Pp"></p>
-<pre>
-  gmake    GNU make
+<pre>  gmake    GNU make
   dmake
   nmake
   bsdmake  BSD pmake-derived
 </pre>
 <p class="Pp"><i>can_dep_space</i></p>
 <p class="Pp"></p>
-<pre>
-    my $can_dep_space = $self-&gt;can_dep_space;
+<pre>    my $can_dep_space = $self-&gt;can_dep_space;
 </pre>
 <p class="Pp">Returns true if <span class="Li">&quot;make&quot;</span> can
     handle (probably by quoting) dependencies that contain a space. Currently
     known true for GNU make, false for BSD pmake derivative.</p>
 <p class="Pp"><i>quote_dep</i></p>
 <p class="Pp"></p>
-<pre>
-  $text = $mm-&gt;quote_dep($text);
+<pre>  $text = $mm-&gt;quote_dep($text);
 </pre>
 <p class="Pp">Method that protects Makefile single-value constants (mainly
     filenames), so that make will still treat them as single values even if they
@@ -162,8 +149,7 @@
     such protection and the given text would need it, throws an exception.</p>
 <p class="Pp"><i>split_command</i></p>
 <p class="Pp"></p>
-<pre>
-    my @cmds = $MM-&gt;split_command($cmd, @args);
+<pre>    my @cmds = $MM-&gt;split_command($cmd, @args);
 </pre>
 <p class="Pp">Most OS have a maximum command length they can execute at once.
     Large modules can easily generate commands well past that limit. Its
@@ -182,16 +168,14 @@
     this is a heuristic for things like pm_to_blib and pod2man which work on
     pairs of arguments. This makes things like this safe:</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;split_command($cmd, %pod2man);
+<pre>    $self-&gt;split_command($cmd, %pod2man);
 </pre>
 <p class="Pp"><i>make_type</i></p>
 <p class="Pp">Returns a suitable string describing the type of makefile being
     written.</p>
 <p class="Pp"><i>stashmeta</i></p>
 <p class="Pp"></p>
-<pre>
-    my @recipelines = $MM-&gt;stashmeta($text, $file);
+<pre>    my @recipelines = $MM-&gt;stashmeta($text, $file);
 </pre>
 <p class="Pp">Generates a set of <span class="Li">@recipelines</span> which will
     result in the literal <span class="Li">$text</span> ending up in literal
@@ -201,8 +185,7 @@
     at build-time.</p>
 <p class="Pp"><i>echo</i></p>
 <p class="Pp"></p>
-<pre>
-    my @commands = $MM-&gt;echo($text);
+<pre>    my @commands = $MM-&gt;echo($text);
     my @commands = $MM-&gt;echo($text, $file);
     my @commands = $MM-&gt;echo($text, $file, \%opts);
 </pre>
@@ -219,26 +202,22 @@
     escape all <span class="Li">&quot;$&quot;</span>.</p>
 <p class="Pp">Example of use:</p>
 <p class="Pp"></p>
-<pre>
-    my $make = join '', map &quot;\t$_\n&quot;, $MM-&gt;echo($text, $file);
+<pre>    my $make = join '', map &quot;\t$_\n&quot;, $MM-&gt;echo($text, $file);
 </pre>
 <p class="Pp"><i>wraplist</i></p>
 <p class="Pp"></p>
-<pre>
-  my $args = $mm-&gt;wraplist(@list);
+<pre>  my $args = $mm-&gt;wraplist(@list);
 </pre>
 <p class="Pp">Takes an array of items and turns them into a well-formatted list
     of arguments. In most cases this is simply something like:</p>
 <p class="Pp"></p>
-<pre>
-    FOO \
+<pre>    FOO \
     BAR \
     BAZ
 </pre>
 <p class="Pp"><i>maketext_filter</i></p>
 <p class="Pp"></p>
-<pre>
-    my $filter_make_text = $mm-&gt;maketext_filter($make_text);
+<pre>    my $filter_make_text = $mm-&gt;maketext_filter($make_text);
 </pre>
 <p class="Pp">The text of the Makefile is run through this method before writing
     to disk. It allows systems a chance to make portability fixes to the
@@ -248,15 +227,13 @@
     MakeMaker.</p>
 <p class="Pp"><i>cd </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-  my $subdir_cmd = $MM-&gt;cd($subdir, @cmds);
+<pre>  my $subdir_cmd = $MM-&gt;cd($subdir, @cmds);
 </pre>
 <p class="Pp">This will generate a make fragment which runs the
     <span class="Li">@cmds</span> in the given <span class="Li">$dir</span>. The
     rough equivalent to this, except cross platform.</p>
 <p class="Pp"></p>
-<pre>
-  cd $subdir &amp;&amp; $cmd
+<pre>  cd $subdir &amp;&amp; $cmd
 </pre>
 <p class="Pp">Currently <span class="Li">$dir</span> can only go down one level.
     &quot;foo&quot; is fine. &quot;foo/bar&quot; is not. &quot;../foo&quot; is
@@ -265,8 +242,7 @@
     tab nor trailing newline. This makes it easier to embed in a make string.
     For example.</p>
 <p class="Pp"></p>
-<pre>
-      my $make = sprintf &lt;&lt;'CODE', $subdir_cmd;
+<pre>      my $make = sprintf &lt;&lt;'CODE', $subdir_cmd;
   foo :
       $(ECHO) what
       %s
@@ -275,8 +251,7 @@
 </pre>
 <p class="Pp"><i>oneliner </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-  my $oneliner = $MM-&gt;oneliner($perl_code);
+<pre>  my $oneliner = $MM-&gt;oneliner($perl_code);
   my $oneliner = $MM-&gt;oneliner($perl_code, \@switches);
 </pre>
 <p class="Pp">This will generate a perl one-liner safe for the particular
@@ -288,16 +263,14 @@
     escaped. Leading and trailing newlines will be stripped. Makes this idiom
     much easier:</p>
 <p class="Pp"></p>
-<pre>
-    my $code = $MM-&gt;oneliner(&lt;&lt;'CODE', [...switches...]);
+<pre>    my $code = $MM-&gt;oneliner(&lt;&lt;'CODE', [...switches...]);
 some code here
 another line here
 CODE
 </pre>
 <p class="Pp">Usage might be something like:</p>
 <p class="Pp"></p>
-<pre>
-    # an echo emulation
+<pre>    # an echo emulation
     $oneliner = $MM-&gt;oneliner('print &quot;Foo\n&quot;');
     $make = '$oneliner &gt; somefile';
 </pre>
@@ -309,16 +282,14 @@ CODE
     left for make to expand. Remember to quote make macros else it might be used
     as a bareword. For example:</p>
 <p class="Pp"></p>
-<pre>
-    # Assign the value of the $(VERSION_FROM) make macro to $vf.
+<pre>    # Assign the value of the $(VERSION_FROM) make macro to $vf.
     $oneliner = $MM-&gt;oneliner('$vf = &quot;$(VERSION_FROM)&quot;');
 </pre>
 <p class="Pp">Its currently very simple and may be expanded sometime in the
     figure to include more flexible code and switches.</p>
 <p class="Pp"><i>quote_literal </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    my $safe_text = $MM-&gt;quote_literal($text);
+<pre>    my $safe_text = $MM-&gt;quote_literal($text);
     my $safe_text = $MM-&gt;quote_literal($text, \%options);
 </pre>
 <p class="Pp">This will quote <span class="Li">$text</span> so it is interpreted
@@ -332,36 +303,31 @@ CODE
     <span class="Li">&quot;$&quot;</span>. Defaults to true.</p>
 <p class="Pp"><i>escape_dollarsigns</i></p>
 <p class="Pp"></p>
-<pre>
-    my $escaped_text = $MM-&gt;escape_dollarsigns($text);
+<pre>    my $escaped_text = $MM-&gt;escape_dollarsigns($text);
 </pre>
 <p class="Pp">Escapes stray <span class="Li">&quot;$&quot;</span> so they are
     not interpreted as make variables.</p>
 <p class="Pp">It lets by <span class="Li">&quot;$(...)&quot;</span>.</p>
 <p class="Pp"><i>escape_all_dollarsigns</i></p>
 <p class="Pp"></p>
-<pre>
-    my $escaped_text = $MM-&gt;escape_all_dollarsigns($text);
+<pre>    my $escaped_text = $MM-&gt;escape_all_dollarsigns($text);
 </pre>
 <p class="Pp">Escapes all <span class="Li">&quot;$&quot;</span> so they are not
     interpreted as make variables.</p>
 <p class="Pp"><i>escape_newlines </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    my $escaped_text = $MM-&gt;escape_newlines($text);
+<pre>    my $escaped_text = $MM-&gt;escape_newlines($text);
 </pre>
 <p class="Pp">Shell escapes newlines in <span class="Li">$text</span>.</p>
 <p class="Pp"><i>max_exec_len </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    my $max_exec_len = $MM-&gt;max_exec_len;
+<pre>    my $max_exec_len = $MM-&gt;max_exec_len;
 </pre>
 <p class="Pp">Calculates the maximum command size the OS can exec. Effectively,
     this is the max size of a shell command line.</p>
 <p class="Pp"><i>make</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make = $MM-&gt;make;
+<pre>    my $make = $MM-&gt;make;
 </pre>
 <p class="Pp">Returns the make variant we're generating the Makefile for. This
     attempts to do some normalization on the information from
@@ -374,8 +340,7 @@ CODE
 <p class="Pp">Generate the default target 'all'.</p>
 <p class="Pp"><i>blibdirs_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $mm-&gt;blibdirs_target;
+<pre>    my $make_frag = $mm-&gt;blibdirs_target;
 </pre>
 <p class="Pp">Creates the blibdirs target which creates all the directories we
     use in blib/.</p>
@@ -385,15 +350,13 @@ CODE
 <p class="Pp">Defines the clean target.</p>
 <p class="Pp"><i>clean_subdirs_target</i></p>
 <p class="Pp"></p>
-<pre>
-  my $make_frag = $MM-&gt;clean_subdirs_target;
+<pre>  my $make_frag = $MM-&gt;clean_subdirs_target;
 </pre>
 <p class="Pp">Returns the clean_subdirs target. This is used by the clean target
     to call clean on any subdirectories which contain Makefiles.</p>
 <p class="Pp"><i>dir_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $mm-&gt;dir_target(@directories);
+<pre>    my $make_frag = $mm-&gt;dir_target(@directories);
 </pre>
 <p class="Pp">Generates targets to create the specified directories and set its
     permission to PERM_DIR.</p>
@@ -403,8 +366,7 @@ CODE
     depend on. For portability purposes you should use the $(DIRFILESEP) macro
     rather than a '/' to separate the directory from the file.</p>
 <p class="Pp"></p>
-<pre>
-    yourdirectory$(DIRFILESEP).exists
+<pre>    yourdirectory$(DIRFILESEP).exists
 </pre>
 <p class="Pp"><i>distdir</i></p>
 <p class="Pp">Defines the scratch directory target that will hold the
@@ -431,8 +393,7 @@ CODE
     appropriate arguments.</p>
 <p class="Pp"><i>xs_make_dlsyms</i></p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;xs_make_dlsyms(
+<pre>    $self-&gt;xs_make_dlsyms(
         \%attribs, # hashref from %attribs in caller
         &quot;$self-&gt;{BASEEXT}.def&quot;, # output file for Makefile target
         'Makefile.PL', # dependency
@@ -451,8 +412,7 @@ CODE
 <p class="Pp">Defines the dynamic target.</p>
 <p class="Pp"><i>makemakerdflt_target</i></p>
 <p class="Pp"></p>
-<pre>
-  my $make_frag = $mm-&gt;makemakerdflt_target
+<pre>  my $make_frag = $mm-&gt;makemakerdflt_target
 </pre>
 <p class="Pp">Returns a make fragment with the makemakerdeflt_target specified.
     This target is the first target in the Makefile, is the default target and
@@ -460,15 +420,13 @@ CODE
     something gets snuck in before the real 'all' target.</p>
 <p class="Pp"><i>manifypods_target</i></p>
 <p class="Pp"></p>
-<pre>
-  my $manifypods_target = $self-&gt;manifypods_target;
+<pre>  my $manifypods_target = $self-&gt;manifypods_target;
 </pre>
 <p class="Pp">Generates the manifypods target. This target generates man pages
     from all POD files in MAN1PODS and MAN3PODS.</p>
 <p class="Pp"><i>metafile_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $target = $mm-&gt;metafile_target;
+<pre>    my $target = $mm-&gt;metafile_target;
 </pre>
 <p class="Pp">Generate the metafile target.</p>
 <p class="Pp">Writes the file META.yml (YAML encoded meta-data) and META.json
@@ -476,8 +434,7 @@ CODE
     Module::Build's as closely as possible.</p>
 <p class="Pp"><i>metafile_data</i></p>
 <p class="Pp"></p>
-<pre>
-    my $metadata_hashref = $mm-&gt;metafile_data(\%meta_add, \%meta_merge);
+<pre>    my $metadata_hashref = $mm-&gt;metafile_data(\%meta_add, \%meta_merge);
 </pre>
 <p class="Pp">Returns the data which MakeMaker turns into the META.yml file and
     the META.json file. It is always in version 2.0 of the format.</p>
@@ -486,8 +443,7 @@ CODE
     merged with them.</p>
 <p class="Pp"><i>metafile_file</i></p>
 <p class="Pp"></p>
-<pre>
-    my $meta_yml = $mm-&gt;metafile_file(@metadata_pairs);
+<pre>    my $meta_yml = $mm-&gt;metafile_file(@metadata_pairs);
 </pre>
 <p class="Pp">Turns the <span class="Li">@metadata_pairs</span> into YAML.</p>
 <p class="Pp">This method does not implement a complete YAML dumper, being
@@ -495,52 +451,45 @@ CODE
     hashes and arrays of strings. No quoting/escaping is done.</p>
 <p class="Pp"><i>distmeta_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $mm-&gt;distmeta_target;
+<pre>    my $make_frag = $mm-&gt;distmeta_target;
 </pre>
 <p class="Pp">Generates the distmeta target to add META.yml and META.json to the
     MANIFEST in the distdir.</p>
 <p class="Pp"><i>mymeta</i></p>
 <p class="Pp"></p>
-<pre>
-    my $mymeta = $mm-&gt;mymeta;
+<pre>    my $mymeta = $mm-&gt;mymeta;
 </pre>
 <p class="Pp">Generate MYMETA information as a hash either from an existing CPAN
     Meta file (META.json or META.yml) or from internal data.</p>
 <p class="Pp"><i>write_mymeta</i></p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;write_mymeta( $mymeta );
+<pre>    $self-&gt;write_mymeta( $mymeta );
 </pre>
 <p class="Pp">Write MYMETA information to MYMETA.json and MYMETA.yml.</p>
 <p class="Pp"><i>realclean (o)</i></p>
 <p class="Pp">Defines the realclean target.</p>
 <p class="Pp"><i>realclean_subdirs_target</i></p>
 <p class="Pp"></p>
-<pre>
-  my $make_frag = $MM-&gt;realclean_subdirs_target;
+<pre>  my $make_frag = $MM-&gt;realclean_subdirs_target;
 </pre>
 <p class="Pp">Returns the realclean_subdirs target. This is used by the
     realclean target to call realclean on any subdirectories which contain
     Makefiles.</p>
 <p class="Pp"><i>signature_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $target = $mm-&gt;signature_target;
+<pre>    my $target = $mm-&gt;signature_target;
 </pre>
 <p class="Pp">Generate the signature target.</p>
 <p class="Pp">Writes the file SIGNATURE with &quot;cpansign -s&quot;.</p>
 <p class="Pp"><i>distsignature_target</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $mm-&gt;distsignature_target;
+<pre>    my $make_frag = $mm-&gt;distsignature_target;
 </pre>
 <p class="Pp">Generates the distsignature target to add SIGNATURE to the
     MANIFEST in the distdir.</p>
 <p class="Pp"><i>special_targets</i></p>
 <p class="Pp"></p>
-<pre>
-  my $make_frag = $mm-&gt;special_targets
+<pre>  my $make_frag = $mm-&gt;special_targets
 </pre>
 <p class="Pp">Returns a make fragment containing any targets which have special
     meaning to make. For example, .SUFFIXES and .PHONY.</p>
@@ -551,37 +500,31 @@ CODE
 <p class="Pp">Methods which help initialize the MakeMaker object and macros.</p>
 <p class="Pp"><i>init_ABSTRACT</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_ABSTRACT
+<pre>    $mm-&gt;init_ABSTRACT
 </pre>
 <p class="Pp"><i>init_INST</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_INST;
+<pre>    $mm-&gt;init_INST;
 </pre>
 <p class="Pp">Called by init_main. Sets up all INST_* variables except those
     related to XS code. Those are handled in init_xs.</p>
 <p class="Pp"><i>init_INSTALL</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_INSTALL;
+<pre>    $mm-&gt;init_INSTALL;
 </pre>
 <p class="Pp">Called by init_main. Sets up all INSTALL_* variables (except
     INSTALLDIRS) and *PREFIX.</p>
 <p class="Pp"><i>init_INSTALL_from_PREFIX</i></p>
 <p class="Pp"></p>
-<pre>
-  $mm-&gt;init_INSTALL_from_PREFIX;
+<pre>  $mm-&gt;init_INSTALL_from_PREFIX;
 </pre>
 <p class="Pp"><i>init_from_INSTALL_BASE</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_from_INSTALL_BASE
+<pre>    $mm-&gt;init_from_INSTALL_BASE
 </pre>
 <p class="Pp"><i>init_VERSION </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_VERSION
+<pre>    $mm-&gt;init_VERSION
 </pre>
 <p class="Pp">Initialize macros representing versions of MakeMaker and other
     tools</p>
@@ -605,8 +548,7 @@ CODE
 <p class="Pp">Called by init_main.</p>
 <p class="Pp"><i>init_tools</i></p>
 <p class="Pp"></p>
-<pre>
-    $MM-&gt;init_tools();
+<pre>    $MM-&gt;init_tools();
 </pre>
 <p class="Pp">Initializes the simple macro definitions used by
     <b>tools_other()</b> and places them in the <span class="Li">$MM</span>
@@ -614,14 +556,10 @@ CODE
     overridden with platform specific versions for performance.</p>
 <p class="Pp">Defines at least these macros.</p>
 <p class="Pp"></p>
-<pre>
-  Macro             Description
-
+<pre>  Macro             Description
   NOOP              Do nothing
   NOECHO            Tell make not to display the command itself
-
   SHELL             Program used to run shell commands
-
   ECHO              Print text adding a newline on the end
   RM_F              Remove a file
   RM_RF             Remove a directory
@@ -634,14 +572,12 @@ CODE
   CHMOD             Change permissions on a file
   FALSE             Exit with non-zero
   TRUE              Exit with zero
-
   UMASK_NULL        Nullify umask
   DEV_NULL          Suppress all command output
 </pre>
 <p class="Pp"><i>init_others</i></p>
 <p class="Pp"></p>
-<pre>
-    $MM-&gt;init_others();
+<pre>    $MM-&gt;init_others();
 </pre>
 <p class="Pp">Initializes the macro definitions having to do with compiling and
     linking used by <b>tools_other()</b> and places them in the
@@ -650,15 +586,13 @@ CODE
     <b>WriteMakefile()</b> documented in ExtUtils::MakeMaker.</p>
 <p class="Pp"><i>tools_other</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $MM-&gt;tools_other;
+<pre>    my $make_frag = $MM-&gt;tools_other;
 </pre>
 <p class="Pp">Returns a make fragment containing definitions for the macros
     <b>init_others()</b> initializes.</p>
 <p class="Pp"><i>init_DIRFILESEP </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-  $MM-&gt;init_DIRFILESEP;
+<pre>  $MM-&gt;init_DIRFILESEP;
   my $dirfilesep = $MM-&gt;{DIRFILESEP};
 </pre>
 <p class="Pp">Initializes the DIRFILESEP macro which is the separator between
@@ -666,8 +600,7 @@ CODE
     nothing on VMS.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    # instead of $(INST_ARCHAUTODIR)/extralibs.ld
+<pre>    # instead of $(INST_ARCHAUTODIR)/extralibs.ld
     $(INST_ARCHAUTODIR)$(DIRFILESEP)extralibs.ld
 </pre>
 <p class="Pp">Something of a hack but it prevents a lot of code duplication
@@ -677,8 +610,7 @@ CODE
     directories and filenames (for example: VOLUME:[dir1.dir2]file on VMS).</p>
 <p class="Pp"><i>init_linker </i><i>Abstract</i><i></i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_linker;
+<pre>    $mm-&gt;init_linker;
 </pre>
 <p class="Pp">Initialize macros which have to do with linking.</p>
 <p class="Pp">PERL_ARCHIVE: path to libperl.a equivalent to be linked to dynamic
@@ -692,8 +624,7 @@ CODE
 <p class="Pp">Some OSes do not need these in which case leave it blank.</p>
 <p class="Pp"><i>init_platform</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_platform
+<pre>    $mm-&gt;init_platform
 </pre>
 <p class="Pp">Initialize any macros which are for platform specific use
   only.</p>
@@ -701,8 +632,7 @@ CODE
     (ie. MM_Unix_VERSION or MM_VMS_VERSION).</p>
 <p class="Pp"><i>init_MAKE</i></p>
 <p class="Pp"></p>
-<pre>
-    $mm-&gt;init_MAKE
+<pre>    $mm-&gt;init_MAKE
 </pre>
 <p class="Pp">Initialize MAKE from either a MAKE environment variable or
     <span class="Li">$Config</span>{make}.</p>
@@ -716,21 +646,18 @@ CODE
     and put them into the INST_* directories.</p>
 <p class="Pp"><i>POD2MAN_macro</i></p>
 <p class="Pp"></p>
-<pre>
-  my $pod2man_macro = $self-&gt;POD2MAN_macro
+<pre>  my $pod2man_macro = $self-&gt;POD2MAN_macro
 </pre>
 <p class="Pp">Returns a definition for the POD2MAN macro. This is a program
     which emulates the pod2man utility. You can add more switches to the command
     by simply appending them on the macro.</p>
 <p class="Pp">Typical usage:</p>
 <p class="Pp"></p>
-<pre>
-    $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) podfile1 man_page1 ...
+<pre>    $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) podfile1 man_page1 ...
 </pre>
 <p class="Pp"><i>test_via_harness</i></p>
 <p class="Pp"></p>
-<pre>
-  my $command = $mm-&gt;test_via_harness($perl, $tests);
+<pre>  my $command = $mm-&gt;test_via_harness($perl, $tests);
 </pre>
 <p class="Pp">Returns a <span class="Li">$command</span> line which runs the
     given set of <span class="Li">$tests</span> with Test::Harness and the given
@@ -738,8 +665,7 @@ CODE
 <p class="Pp">Used on the t/*.t files.</p>
 <p class="Pp"><i>test_via_script</i></p>
 <p class="Pp"></p>
-<pre>
-  my $command = $mm-&gt;test_via_script($perl, $script);
+<pre>  my $command = $mm-&gt;test_via_script($perl, $script);
 </pre>
 <p class="Pp">Returns a <span class="Li">$command</span> line which just runs a
     single test without Test::Harness. No checks are done on the results,
@@ -751,8 +677,7 @@ CODE
     by pm_to_blib soon.</p>
 <p class="Pp"><i>arch_check</i></p>
 <p class="Pp"></p>
-<pre>
-    my $arch_ok = $mm-&gt;arch_check(
+<pre>    my $arch_ok = $mm-&gt;arch_check(
         $INC{&quot;Config.pm&quot;},
         File::Spec-&gt;catfile($Config{archlibexp}, &quot;Config.pm&quot;)
     );
@@ -779,47 +704,40 @@ CODE
 <p class="Pp">Methods I can't really figure out where they should go yet.</p>
 <p class="Pp"><i>find_tests</i></p>
 <p class="Pp"></p>
-<pre>
-  my $test = $mm-&gt;find_tests;
+<pre>  my $test = $mm-&gt;find_tests;
 </pre>
 <p class="Pp">Returns a string suitable for feeding to the shell to return all
     tests in t/*.t.</p>
 <p class="Pp"><i>find_tests_recursive</i></p>
 <p class="Pp"></p>
-<pre>
-  my $tests = $mm-&gt;find_tests_recursive;
+<pre>  my $tests = $mm-&gt;find_tests_recursive;
 </pre>
 <p class="Pp">Returns a string suitable for feeding to the shell to return all
     tests in t/ but recursively. Equivalent to</p>
 <p class="Pp"></p>
-<pre>
-  my $tests = $mm-&gt;find_tests_recursive_in('t');
+<pre>  my $tests = $mm-&gt;find_tests_recursive_in('t');
 </pre>
 <p class="Pp"><i>find_tests_recursive_in</i></p>
 <p class="Pp"></p>
-<pre>
-  my $tests = $mm-&gt;find_tests_recursive_in($dir);
+<pre>  my $tests = $mm-&gt;find_tests_recursive_in($dir);
 </pre>
 <p class="Pp">Returns a string suitable for feeding to the shell to return all
     tests in <span class="Li">$dir</span> recursively.</p>
 <p class="Pp"><i>extra_clean_files</i></p>
 <p class="Pp"></p>
-<pre>
-    my @files_to_clean = $MM-&gt;extra_clean_files;
+<pre>    my @files_to_clean = $MM-&gt;extra_clean_files;
 </pre>
 <p class="Pp">Returns a list of OS specific files to be removed in the clean
     target in addition to the usual set.</p>
 <p class="Pp"><i>installvars</i></p>
 <p class="Pp"></p>
-<pre>
-    my @installvars = $mm-&gt;installvars;
+<pre>    my @installvars = $mm-&gt;installvars;
 </pre>
 <p class="Pp">A list of all the INSTALL* variables without the INSTALL prefix.
     Useful for iteration or building related variable sets.</p>
 <p class="Pp"><i>libscan</i></p>
 <p class="Pp"></p>
-<pre>
-  my $wanted = $self-&gt;libscan($path);
+<pre>  my $wanted = $self-&gt;libscan($path);
 </pre>
 <p class="Pp">Takes a path to a file or dir and returns an empty string if we
     don't want to include this file in the library. Otherwise it returns the the
@@ -828,8 +746,7 @@ CODE
     and base-level <i>README.pod</i> from installation.</p>
 <p class="Pp"><i>platform_constants</i></p>
 <p class="Pp"></p>
-<pre>
-    my $make_frag = $mm-&gt;platform_constants
+<pre>    my $make_frag = $mm-&gt;platform_constants
 </pre>
 <p class="Pp">Returns a make fragment defining all the macros initialized in
     <b>init_platform()</b> rather than put them in <b>constants()</b>.</p>

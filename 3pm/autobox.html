@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>autobox(3)</title>
 </head>
@@ -28,41 +29,25 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use autobox;
-
+<pre>    use autobox;
     # integers
-
         my $range = 10-&gt;to(1); # [ 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 ]
-
     # floats
-
         my $error = 3.1415927-&gt;minus(22/7)-&gt;abs();
-
     # strings
-
         my @list = 'SELECT * FROM foo'-&gt;list();
         my $greeting = &quot;Hello, world!&quot;-&gt;upper(); # &quot;HELLO, WORLD!&quot;
-
         $greeting-&gt;for_each(\&amp;character_handler);
-
     # arrays and array refs
-
         my $schwartzian = @_-&gt;map(...)-&gt;sort(...)-&gt;map(...);
         my $hash = [ 'SELECT * FROM foo WHERE id IN (?, ?)', 1, 2 ]-&gt;hash();
-
     # hashes and hash refs
-
         { alpha =&gt; 'beta', gamma =&gt; 'vlissides' }-&gt;for_each(...);
         %hash-&gt;keys();
-
     # code refs
-
         my $plus_five = (\&amp;add)-&gt;curry()-&gt;(5);
         my $minus_three = sub { $_[0] - $_[1] }-&gt;reverse-&gt;curry-&gt;(3);
-
     # can, isa, VERSION, import and unimport can be accessed via autobox_class
-
         42-&gt;autobox_class-&gt;isa('MyNumber')
         say []-&gt;autobox_class-&gt;VERSION
 </pre>
@@ -87,39 +72,33 @@
     argument of the specified method. Consequently, given a vanilla
     <span class="Li">&quot;use autobox&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Hello, world!&quot;-&gt;upper()
+<pre>    &quot;Hello, world!&quot;-&gt;upper()
 </pre>
 <p class="Pp">is invoked as:</p>
 <p class="Pp"></p>
-<pre>
-    SCALAR::upper(&quot;hello, world!&quot;)
+<pre>    SCALAR::upper(&quot;hello, world!&quot;)
 </pre>
 <p class="Pp">while:</p>
 <p class="Pp"></p>
-<pre>
-    [ 1 .. 10 ]-&gt;for_each(sub { ... })
+<pre>    [ 1 .. 10 ]-&gt;for_each(sub { ... })
 </pre>
 <p class="Pp">resolves to:</p>
 <p class="Pp"></p>
-<pre>
-    ARRAY::for_each([ 1 .. 10 ], sub { ... })
+<pre>    ARRAY::for_each([ 1 .. 10 ], sub { ... })
 </pre>
 <p class="Pp">Values beginning with the array
     <span class="Li">&quot;@&quot;</span> and hash
     <span class="Li">&quot;%&quot;</span> sigils are passed by reference, i.e.
     under the default bindings:</p>
 <p class="Pp"></p>
-<pre>
-    @array-&gt;join(', ')
+<pre>    @array-&gt;join(', ')
     @{ ... }-&gt;length()
     %hash-&gt;keys()
     %$hash-&gt;values()
 </pre>
 <p class="Pp">are equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    ARRAY::join(\@array, ', ')
+<pre>    ARRAY::join(\@array, ', ')
     ARRAY::length(\@{ ... })
     HASH::keys(\%hash)
     HASH::values(\%$hash)
@@ -131,23 +110,20 @@
     associated with multiple types).</p>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox SCALAR =&gt; 'Foo';
+<pre>    use autobox SCALAR =&gt; 'Foo';
     use autobox SCALAR =&gt; 'Bar';
 </pre>
 <p class="Pp">- associates SCALAR types with a synthetic class whose
     <span class="Li">@ISA</span> includes both Foo and Bar (in that order).</p>
 <p class="Pp">Likewise:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox SCALAR =&gt; 'Foo';
+<pre>    use autobox SCALAR =&gt; 'Foo';
     use autobox SCALAR =&gt; 'Bar';
     use autobox ARRAY  =&gt; 'Baz';
 </pre>
 <p class="Pp">and</p>
 <p class="Pp"></p>
-<pre>
-    use autobox SCALAR =&gt; [ 'Foo', 'Bar' ];
+<pre>    use autobox SCALAR =&gt; [ 'Foo', 'Bar' ];
     use autobox ARRAY  =&gt; 'Baz';
 </pre>
 <p class="Pp">- bind SCALAR types to the Foo and Bar classes and ARRAY types to
@@ -155,17 +131,14 @@
 <p class="Pp">autobox is lexically scoped, and bindings for an outer scope can
     be extended or countermanded in a nested scope:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         use autobox; # default bindings: autobox all native types
         ...
-
         {
             # appends 'MyScalar' to the @ISA associated with SCALAR types
             use autobox SCALAR =&gt; 'MyScalar';
             ...
         }
-
         # back to the default (no MyScalar)
         ...
     }
@@ -173,8 +146,7 @@
 <p class="Pp">Autoboxing can be turned off entirely by using the
     <span class="Li">&quot;no&quot;</span> syntax:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         use autobox;
         ...
         no autobox;
@@ -184,24 +156,18 @@
 <p class="Pp">- or can be selectively disabled by passing arguments to the
     <span class="Li">&quot;no autobox&quot;</span> statement:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox; # default bindings
-
+<pre>    use autobox; # default bindings
     no autobox qw(SCALAR);
-
     []-&gt;foo(); # OK: ARRAY::foo([])
-
     &quot;Hello, world!&quot;-&gt;bar(); # runtime error
 </pre>
 <p class="Pp">Autoboxing is not performed for barewords i.e.</p>
 <p class="Pp"></p>
-<pre>
-    my $foo = Foo-&gt;new();
+<pre>    my $foo = Foo-&gt;new();
 </pre>
 <p class="Pp">and:</p>
 <p class="Pp"></p>
-<pre>
-    my $foo = new Foo;
+<pre>    my $foo = new Foo;
 </pre>
 <p class="Pp">behave as expected.</p>
 <p class="Pp">Methods are called on native types by means of the arrow operator.
@@ -209,12 +175,10 @@
     bare method name or a variable containing a method name or subroutine
     reference. Thus the following are all valid:</p>
 <p class="Pp"></p>
-<pre>
-    sub method1 { ... }
+<pre>    sub method1 { ... }
     my $method2 = 'some_method';
     my $method3 = sub { ... };
     my $method4 = \&amp;some_method;
-
     &quot; ... &quot;-&gt;method1();
     [ ... ]-&gt;$method2();
     { ... }-&gt;$method3();
@@ -224,17 +188,14 @@
     class mapping is supplied in the <span class="Li">&quot;use
     autobox&quot;</span> statement. Thus the following will not work:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox SCALAR =&gt; 'MyScalar';
-
+<pre>    use autobox SCALAR =&gt; 'MyScalar';
     @array-&gt;some_array_method();
 </pre>
 <p class="Pp">- as no class is specified for the ARRAY type. Note: the result of
     calling a method on a native type that is not associated with a class is the
     usual runtime error message:</p>
 <p class="Pp"></p>
-<pre>
-    Can't call method &quot;some_array_method&quot; on unblessed reference at ...
+<pre>    Can't call method &quot;some_array_method&quot; on unblessed reference at ...
 </pre>
 <p class="Pp">As a convenience, there is one exception to this rule. If
     <span class="Li">&quot;use autobox&quot;</span> is invoked with no arguments
@@ -242,13 +203,11 @@
     classes of the same name.</p>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox;
+<pre>    use autobox;
 </pre>
 <p class="Pp">- is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         SCALAR =&gt; 'SCALAR',
         ARRAY  =&gt; 'ARRAY',
         HASH   =&gt; 'HASH',
@@ -257,12 +216,9 @@
 </pre>
 <p class="Pp">This facilitates one-liners and prototypes:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox;
-
+<pre>    use autobox;
     sub SCALAR::split { [ split '', $_[0] ] }
     sub ARRAY::length { scalar @{$_[0]} }
-
     print &quot;Hello, world!&quot;-&gt;split-&gt;length();
 </pre>
 <p class="Pp">However, using these default bindings is not recommended as
@@ -276,8 +232,7 @@
     <span class="Li">&quot;use autobox&quot;</span> statement.</p>
 <p class="Pp">The following example shows the range of valid arguments:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         SCALAR    =&gt; 'MyScalar'                     # class name
         ARRAY     =&gt; 'MyNamespace::',               # class prefix (ending in '::')
         HASH      =&gt; [ 'MyHash', 'MyNamespace::' ], # one or more class names and/or prefixes
@@ -298,8 +253,7 @@
 <ul class="Bl-bullet">
   <li>A class name e.g.
     <p class="Pp"></p>
-    <pre>
-    use autobox INTEGER =&gt; 'MyInt';
+    <pre>    use autobox INTEGER =&gt; 'MyInt';
     </pre>
     <p class="Pp">This binds the specified native type to the specified class.
         All methods invoked on values of type
@@ -312,13 +266,11 @@
       appended:
     <p class="Pp">Thus:</p>
     <p class="Pp"></p>
-    <pre>
-    use autobox ARRAY =&gt; 'Prelude::';
+    <pre>    use autobox ARRAY =&gt; 'Prelude::';
     </pre>
     <p class="Pp">is equivalent to:</p>
     <p class="Pp"></p>
-    <pre>
-    use autobox ARRAY =&gt; 'Prelude::ARRAY';
+    <pre>    use autobox ARRAY =&gt; 'Prelude::ARRAY';
     </pre>
   </li>
   <li>A reference to an array of class names and/or namespaces. This associates
@@ -337,16 +289,14 @@
     namespaces.</p>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         STRING  =&gt; 'MyString',
         DEFAULT =&gt; 'MyDefault',
     }
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         STRING  =&gt; 'MyString',
         SCALAR  =&gt; 'MyDefault',
         ARRAY   =&gt; 'MyDefault',
@@ -356,8 +306,7 @@
 </pre>
 <p class="Pp">Which in turn is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         INTEGER =&gt; 'MyDefault',
         FLOAT   =&gt; 'MyDefault',
         STRING  =&gt; [ 'MyString', 'MyDefault' ],
@@ -371,8 +320,7 @@
     FLOAT &amp;c.</p>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         ARRAY   =&gt; 'MyArray',
         HASH    =&gt; 'MyHash',
         CODE    =&gt; 'MyCode',
@@ -381,8 +329,7 @@
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         INTEGER =&gt; 'MyNamespace::SCALAR',
         FLOAT   =&gt; 'MyNamespace::SCALAR',
         STRING  =&gt; 'MyNamespace::SCALAR',
@@ -394,15 +341,12 @@
 <p class="Pp">Any of the four default types can be exempted from defaulting to
     the DEFAULT value by supplying a value of undef:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         HASH    =&gt; undef,
         DEFAULT =&gt; 'MyDefault',
     }
-
     42-&gt;foo # ok: MyDefault::foo
     []-&gt;bar # ok: MyDefault::bar
-
     %INC-&gt;baz # not ok: runtime error
 </pre>
 </section>
@@ -412,23 +356,17 @@
     These are not autoboxed by default.</p>
 <p class="Pp">This doesn't work:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox;
-
+<pre>    use autobox;
     undef-&gt;foo() # runtime error
 </pre>
 <p class="Pp">This works:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox UNDEF =&gt; 'MyUndef';
-
+<pre>    use autobox UNDEF =&gt; 'MyUndef';
     undef-&gt;foo(); # ok
 </pre>
 <p class="Pp">So does this:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox UNDEF =&gt; 'MyNamespace::';
-
+<pre>    use autobox UNDEF =&gt; 'MyNamespace::';
     undef-&gt;foo(); # ok
 </pre>
 </section>
@@ -438,8 +376,7 @@
     or shortcuts which create bindings for their subtypes. The type hierarchy is
     as follows:</p>
 <p class="Pp"></p>
-<pre>
-  UNIVERSAL -+
+<pre>  UNIVERSAL -+
              |
              +- SCALAR -+
              |          |
@@ -459,26 +396,22 @@
 </pre>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox NUMBER =&gt; 'MyNumber';
+<pre>    use autobox NUMBER =&gt; 'MyNumber';
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         INTEGER =&gt; 'MyNumber',
         FLOAT   =&gt; 'MyNumber',
     }
 </pre>
 <p class="Pp">And:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox SCALAR =&gt; 'MyScalar';
+<pre>    use autobox SCALAR =&gt; 'MyScalar';
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         INTEGER =&gt; 'MyScalar',
         FLOAT   =&gt; 'MyScalar',
         STRING  =&gt; 'MyScalar',
@@ -489,20 +422,17 @@
     <span class="Li">&quot;no autobox&quot;</span> syntax. This disables
     autoboxing for the corresponding subtypes e.g.</p>
 <p class="Pp"></p>
-<pre>
-    no autobox qw(NUMBER);
+<pre>    no autobox qw(NUMBER);
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    no autobox qw(INTEGER FLOAT);
+<pre>    no autobox qw(INTEGER FLOAT);
 </pre>
 <p class="Pp">Virtual type bindings can be mixed with ordinary bindings to
     provide fine-grained control over inheritance and delegation. For
   instance:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         INTEGER =&gt; 'MyInteger',
         NUMBER  =&gt; 'MyNumber',
         SCALAR  =&gt; 'MyScalar',
@@ -510,24 +440,21 @@
 </pre>
 <p class="Pp">would result in the following bindings:</p>
 <p class="Pp"></p>
-<pre>
-    42-&gt;foo              -&gt; [ MyInteger, MyNumber, MyScalar ]
+<pre>    42-&gt;foo              -&gt; [ MyInteger, MyNumber, MyScalar ]
     3.1415927-&gt;bar       -&gt; [ MyNumber, MyScalar ]
     &quot;Hello, world!&quot;-&gt;baz -&gt; [ MyScalar ]
 </pre>
 <p class="Pp">Note that DEFAULT bindings take precedence over virtual type
     bindings i.e.</p>
 <p class="Pp"></p>
-<pre>
-    use autobox {
+<pre>    use autobox {
         UNIVERSAL =&gt; 'MyUniversal',
         DEFAULT   =&gt; 'MyDefault', # default SCALAR, ARRAY, HASH and CODE before UNIVERSAL
     }
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  use autobox {
+<pre>  use autobox {
       INTEGER =&gt; [ 'MyDefault', 'MyUniversal' ],
       FLOAT   =&gt; [ 'MyDefault', 'MyUniversal' ], # ... &amp;c.
   }
@@ -547,22 +474,18 @@
     not a CODE ref, the bindings are dumped to STDERR.</p>
 <p class="Pp">Thus:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox DEBUG =&gt; 1, ...
+<pre>    use autobox DEBUG =&gt; 1, ...
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    use autobox DEBUG =&gt; sub { ... }, ...
+<pre>    use autobox DEBUG =&gt; sub { ... }, ...
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    sub my_callback ($) {
+<pre>    sub my_callback ($) {
         my $hashref = shift;
         ...
     }
-
     use autobox DEBUG =&gt; \&amp;my_callback, ...
 </pre>
 </section>
@@ -581,28 +504,21 @@
     effectively translate <span class="Li">&quot;use MyModule&quot;</span> into
     a bespoke <span class="Li">&quot;use autobox&quot;</span> call e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    package String::Trim;
-
+<pre>    package String::Trim;
     use base qw(autobox);
-
     sub import {
         my $class = shift;
-
         $class-&gt;SUPER::import(
             STRING =&gt; 'String::Trim::String'
         );
     }
-
     package String::Trim::String;
-
     sub trim {
         my $string = shift;
         $string =~ s/^\s+//;
         $string =~ s/\s+$//;
         $string;
     }
-
     1;
 </pre>
 <p class="Pp">Note that <span class="Li">&quot;trim&quot;</span> is defined in
@@ -614,11 +530,8 @@
     <span class="Li">&quot;trim&quot;</span> method in the current lexical scope
     e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/env perl
-
+<pre>    #!/usr/bin/env perl
     use String::Trim;
-
     print &quot;  Hello, world!  &quot;-&gt;trim();
 </pre>
 </section>
@@ -637,8 +550,7 @@
     <span class="Li">&quot;unimport&quot;</span> and
     <span class="Li">&quot;VERSION&quot;</span> e.g.</p>
 <p class="Pp"></p>
-<pre>
-    if (sub { ... }-&gt;autobox_class-&gt;can('curry')) ...
+<pre>    if (sub { ... }-&gt;autobox_class-&gt;can('curry')) ...
     if (42-&gt;autobox_class-&gt;isa('SCALAR')) ...
 </pre>
 <p class="Pp">Note: <span class="Li">&quot;autobox_class&quot;</span> must
@@ -646,8 +558,7 @@
     native types produces the same results as calling them with autobox disabled
     e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    42-&gt;isa('NUMBER') # &quot;&quot; (interpeted as &quot;42&quot;-&gt;isa(&quot;NUMBER&quot;))
+<pre>    42-&gt;isa('NUMBER') # &quot;&quot; (interpeted as &quot;42&quot;-&gt;isa(&quot;NUMBER&quot;))
     []-&gt;can('push')   # Error: Can't call method &quot;can&quot; on unblessed reference
 </pre>
 </section>
@@ -663,9 +574,7 @@
     used by autobox to associate a method invocant with its designated classes
     e.g.</p>
 <p class="Pp"></p>
-<pre>
-    use autobox::universal qw(type);
-
+<pre>    use autobox::universal qw(type);
     type(&quot;42&quot;)  # STRING
     type(42)    # INTEGER
     type(42.0)  # FLOAT
@@ -676,9 +585,7 @@
     <span class="Li">&quot;type&quot;</span> method for autoboxed values
   e.g.</p>
 <p class="Pp"></p>
-<pre>
-    use autobox UNIVERSAL =&gt; 'autobox::universal';
-
+<pre>    use autobox UNIVERSAL =&gt; 'autobox::universal';
     42-&gt;type        # INTEGER
     3.1415927-&gt;type # FLOAT
     %ENV-&gt;type      # HASH
@@ -691,14 +598,12 @@
 <h2 class="Ss" id="Performance"><a class="permalink" href="#Performance">Performance</a></h2>
 <p class="Pp">Calling</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Hello, world!&quot;-&gt;length()
+<pre>    &quot;Hello, world!&quot;-&gt;length()
 </pre>
 <p class="Pp">is slightly slower than the equivalent method call on a
     string-like object, and significantly slower than</p>
 <p class="Pp"></p>
-<pre>
-    length(&quot;Hello, world!&quot;)
+<pre>    length(&quot;Hello, world!&quot;)
 </pre>
 </section>
 <section class="Ss">
@@ -708,28 +613,22 @@
     to be parenthesized:</p>
 <p class="Pp">For instance, while this works:</p>
 <p class="Pp"></p>
-<pre>
-    my $curried = sub { ... }-&gt;curry();
+<pre>    my $curried = sub { ... }-&gt;curry();
 </pre>
 <p class="Pp">this doesn't:</p>
 <p class="Pp"></p>
-<pre>
-    my $curried = \&amp;foo-&gt;curry();
+<pre>    my $curried = \&amp;foo-&gt;curry();
 </pre>
 <p class="Pp">The solution is to wrap the reference in parentheses:</p>
 <p class="Pp"></p>
-<pre>
-    my $curried = (\&amp;foo)-&gt;curry();
+<pre>    my $curried = (\&amp;foo)-&gt;curry();
 </pre>
 <p class="Pp">The same applies for signed integer and float literals:</p>
 <p class="Pp"></p>
-<pre>
-    # this works
+<pre>    # this works
     my $range = 10-&gt;to(1);
-
     # this doesn't work
     my $range = -10-&gt;to(10);
-
     # this works
     my $range = (-10)-&gt;to(10);
 </pre>
@@ -740,16 +639,12 @@
     curly brackets denote an anonymous HASH ref) may require some further
     disambiguation:</p>
 <p class="Pp"></p>
-<pre>
-    # this works
+<pre>    # this works
     print { foo =&gt; 'bar' }-&gt;foo();
-
     # and this
     print { 'foo', 'bar' }-&gt;foo();
-
     # and even this
     print { 'foo', 'bar', @_ }-&gt;foo();
-
     # but this doesn't
     print { @_ }-&gt;foo() ? 1 : 0
 </pre>
@@ -757,20 +652,15 @@
     a HASH ref literal as the first argument to
     <span class="Li">&quot;print()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    # e.g.
+<pre>    # e.g.
     print STDOUT { @_ }-&gt;foo() ? 1 : 0;
-
     # or
     my $hashref = { @_ };
     print $hashref-&gt;foo() ? 1 : 0;
-
     # or
     print '', { @_ }-&gt;foo() ? 1 : 0;
-
     # or
     print '' . { @_ }-&gt;foo() ? 1 : 0;
-
     # or even
     { @_ }-&gt;print_if_foo(1, 0);
 </pre>
@@ -779,16 +669,13 @@
     and, as a result, runtime string <span class="Li">&quot;eval&quot;</span>s
     are not executed within its scope i.e. this doesn't work:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox;
-
+<pre>    use autobox;
     eval &quot;42-&gt;foo&quot;;
 </pre>
 <p class="Pp">The workaround is to use autobox within the
     <span class="Li">&quot;eval&quot;</span> e.g.</p>
 <p class="Pp"></p>
-<pre>
-    eval &lt;&lt;'EOS';
+<pre>    eval &lt;&lt;'EOS';
         use autobox;
         42-&gt;foo();
     EOS
@@ -796,9 +683,7 @@
 <p class="Pp">Note that the <span class="Li">&quot;eval BLOCK&quot;</span> form
     works as expected:</p>
 <p class="Pp"></p>
-<pre>
-    use autobox;
-
+<pre>    use autobox;
     eval { 42-&gt;foo() }; # OK
 </pre>
 <p class="Pp"><i>Operator Overloading</i></p>

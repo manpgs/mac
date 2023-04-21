@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Decoder(3)</title>
 </head>
@@ -39,9 +40,7 @@
 <p class="Pp">Here's a simple filter program to read quoted-printable data from
     STDIN (until EOF) and write the decoded data to STDOUT:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Decoder;
-
+<pre>    use MIME::Decoder;
     $decoder = new MIME::Decoder 'quoted-printable' or die &quot;unsupported&quot;;
     $decoder-&gt;decode(\*STDIN, \*STDOUT);
 </pre>
@@ -52,9 +51,7 @@
 <p class="Pp">Here's a simple filter program to read binary data from STDIN
     (until EOF) and write base64-encoded data to STDOUT:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Decoder;
-
+<pre>    use MIME::Decoder;
     $decoder = new MIME::Decoder 'base64' or die &quot;unsupported&quot;;
     $decoder-&gt;encode(\*STDIN, \*STDOUT);
 </pre>
@@ -65,15 +62,12 @@
 <p class="Pp">You can <b>write and install</b> your own decoders so that
     MIME::Decoder will know about them:</p>
 <p class="Pp"></p>
-<pre>
-    use MyBase64Decoder;
-
+<pre>    use MyBase64Decoder;
     install MyBase64Decoder 'base64';
 </pre>
 <p class="Pp">You can also <b>test</b> if a given encoding is supported:</p>
 <p class="Pp"></p>
-<pre>
-    if (supported MIME::Decoder 'x-uuencode') {
+<pre>    if (supported MIME::Decoder 'x-uuencode') {
         ### we can uuencode!
     }
 </pre>
@@ -109,8 +103,7 @@
   <dd><i>Class method, constructor.</i> Create and return a new decoder object
       which can handle the given ENCODING.
     <p class="Pp"></p>
-    <pre>
-    my $decoder = new MIME::Decoder &quot;7bit&quot;;
+    <pre>    my $decoder = new MIME::Decoder &quot;7bit&quot;;
     </pre>
     <p class="Pp">Returns the undefined value if no known decoders are
         appropriate.</p>
@@ -121,8 +114,7 @@
       raising a suitable warning (it's a fatal error if there's no binary
       decoder).
     <p class="Pp"></p>
-    <pre>
-    my $decoder = best MIME::Decoder &quot;x-gzip64&quot;;
+    <pre>    my $decoder = best MIME::Decoder &quot;x-gzip64&quot;;
     </pre>
     <p class="Pp">Will either return a decoder, or a raise a fatal
       exception.</p>
@@ -155,8 +147,7 @@
       little about the file they are encoding/decoding; e.g., x-uu likes to have
       the filename. The HEAD is any object which responds to messages like:
     <p class="Pp"></p>
-    <pre>
-    $head-&gt;mime_attr('content-disposition.filename');
+    <pre>    $head-&gt;mime_attr('content-disposition.filename');
     </pre>
   </dd>
   <dt id="supported"><a class="permalink" href="#supported">supported
@@ -165,8 +156,7 @@
       that encoding is currently handled, and falsity otherwise. The ENCODING
       will be automatically coerced to lowercase:
     <p class="Pp"></p>
-    <pre>
-    if (supported MIME::Decoder '7BIT') {
+    <pre>    if (supported MIME::Decoder '7BIT') {
         ### yes, we can handle it...
     }
     else {
@@ -241,8 +231,7 @@
       will go to the OUT argument).
     <p class="Pp">For example, here's a decoder that un-gzips its data:</p>
     <p class="Pp"></p>
-    <pre>
-    sub decode_it {
+    <pre>    sub decode_it {
         my ($self, $in, $out) = @_;
         $self-&gt;filter($in, $out, &quot;gzip -d -&quot;);
     }
@@ -261,8 +250,7 @@
   <dd><i>Class method</i>. Install this class so that each encoding in ENCODINGS
       is handled by it:
     <p class="Pp"></p>
-    <pre>
-    install MyBase64Decoder 'base64', 'x-base64super';
+    <pre>    install MyBase64Decoder 'base64', 'x-base64super';
     </pre>
     <p class="Pp">You should not override this method.</p>
   </dd>
@@ -272,8 +260,7 @@
       turn off the decoding of &quot;experimental&quot; encodings. For safety,
       always use MIME::Decoder directly:
     <p class="Pp"></p>
-    <pre>
-    uninstall MIME::Decoder 'x-uu', 'x-uuencode';
+    <pre>    uninstall MIME::Decoder 'x-uu', 'x-uuencode';
     </pre>
     <p class="Pp">You should not override this method.</p>
   </dd>
@@ -287,8 +274,7 @@
     other Perl modules; the following &quot;standard&quot; subclasses are
     included as part of MIME::Decoder:</p>
 <p class="Pp"></p>
-<pre>
-     Class:                         Handles encodings:
+<pre>     Class:                         Handles encodings:
      ------------------------------------------------------------
      MIME::Decoder::Binary          binary
      MIME::Decoder::NBit            7bit, 8bit
@@ -298,8 +284,7 @@
 <p class="Pp">The following &quot;non-standard&quot; subclasses are also
     included:</p>
 <p class="Pp"></p>
-<pre>
-     Class:                         Handles encodings:
+<pre>     Class:                         Handles encodings:
      ------------------------------------------------------------
      MIME::Decoder::UU              x-uu, x-uuencode
      MIME::Decoder::Gzip64          x-gzip64            ** requires gzip!
@@ -318,8 +303,7 @@
     which respond to a subset of the messages defined in the IO::Handle
     interface; minimally:</p>
 <p class="Pp"></p>
-<pre>
-      print
+<pre>      print
       getline
       read(BUF,NBYTES)
 </pre>
@@ -338,8 +322,7 @@
   <dt>2.</dt>
   <dd>Create the following instance methods in your class, as described above:
     <p class="Pp"></p>
-    <pre>
-    decode_it
+    <pre>    decode_it
     encode_it
     init
     </pre>
@@ -348,9 +331,7 @@
   <dd>In your application program, activate your decoder for one or more
       encodings like this:
     <p class="Pp"></p>
-    <pre>
-    require MyDecoder;
-
+    <pre>    require MyDecoder;
     install MyDecoder &quot;7bit&quot;;   ### use MyDecoder to decode &quot;7bit&quot;
     install MyDecoder &quot;x-foo&quot;;  ### also use MyDecoder to decode &quot;x-foo&quot;
     </pre>
@@ -359,13 +340,10 @@
 <p class="Pp">To illustrate, here's a custom decoder class for the
     <span class="Li">&quot;quoted-printable&quot;</span> encoding:</p>
 <p class="Pp"></p>
-<pre>
-    package MyQPDecoder;
-
+<pre>    package MyQPDecoder;
     @ISA = qw(MIME::Decoder);
     use MIME::Decoder;
     use MIME::QuotedPrint;
-
     ### decode_it - the private decoding method
     sub decode_it {
         my ($self, $in, $out) = @_;
@@ -376,11 +354,9 @@
         }
         1;
     }
-
     ### encode_it - the private encoding method
     sub encode_it {
         my ($self, $in, $out) = @_;
-
         my ($buf, $nread) = ('', 0);
         while ($in-&gt;read($buf, 60)) {
             my $encoded = encode_qp($buf);

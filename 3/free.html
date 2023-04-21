@@ -23,6 +23,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MALLOC(3)</title>
 </head>
@@ -257,6 +258,24 @@
       out of memory conditions, making it more useful to catch only those errors
       which will cause memory corruption. MallocCorruptionAbort is always set on
       64-bit processes.</dd>
+  <dt id="MallocZeroOnFree"><a class="permalink" href="#MallocZeroOnFree"><code class="Ev">MallocZeroOnFree</code></a></dt>
+  <dd>Starting in macOS 13, iOS 16.1 and aligned releases,
+      <a class="Xr" href="../3/free">free(3)</a> fully zeroes many blocks
+      immediately. This may expose some previously-silent bugs in existing
+      applications. In particular, read-after-free bugs may now observe zeroes
+      instead of the previous content of an allocation, and write-after-free
+      bugs may cause <a class="Xr" href="../3/calloc">calloc(3)</a> to return
+      non-zero memory. <code class="Ev">MallocZeroOnFree</code> can be set to 0
+      or 1 to explicitly disable or enable this zeroing behavior to aid in
+      diagnosing such bugs. Support for this environment variable will
+      eventually be removed, and it should not be used by shipping
+    software.</dd>
+  <dt id="MallocCheckZeroOnFreeCorruption"><a class="permalink" href="#MallocCheckZeroOnFreeCorruption"><code class="Ev">MallocCheckZeroOnFreeCorruption</code></a></dt>
+  <dd>When zero-on-free behavior is active, this environment variable can be set
+      to 1 to cause the allocator to check that the free block chosen for a
+      given allocation remained fully zeroed and was not corrupted by any
+      invalid use-after-free writes. If corruption is detected, the allocator
+      will abort.</dd>
   <dt id="MallocHelp"><a class="permalink" href="#MallocHelp"><code class="Ev">MallocHelp</code></a></dt>
   <dd>If set, print a list of environment variables that are paid heed to by the
       allocation-related functions, along with short descriptions. The list
@@ -282,7 +301,7 @@
 <table class="foot">
   <tr>
     <td class="foot-date">August 13, 2008</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

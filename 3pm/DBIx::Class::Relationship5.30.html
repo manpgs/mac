@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Relationship(3)</title>
 </head>
@@ -28,18 +29,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  ## Creating relationships
+<pre>  ## Creating relationships
   MyApp::Schema::Actor-&gt;has_many('actorroles' =&gt; 'MyApp::Schema::ActorRole',
                                 'actor');
   MyApp::Schema::Role-&gt;has_many('actorroles' =&gt; 'MyApp::Schema::ActorRole',
                                 'role');
   MyApp::Schema::ActorRole-&gt;belongs_to('role' =&gt; 'MyApp::Schema::Role');
   MyApp::Schema::ActorRole-&gt;belongs_to('actor' =&gt; 'MyApp::Schema::Actor');
-
   MyApp::Schema::Role-&gt;many_to_many('actors' =&gt; 'actorroles', 'actor');
   MyApp::Schema::Actor-&gt;many_to_many('roles' =&gt; 'actorroles', 'role');
-
   ## Using relationships
   $schema-&gt;resultset('Actor')-&gt;find({ id =&gt; 1})-&gt;roles();
   $schema-&gt;resultset('Role')-&gt;find({ id =&gt; 1 })-&gt;actorroles-&gt;search_related('actor', { Name =&gt; 'Fred' });
@@ -57,16 +55,14 @@
     queries, create relationships between any and all tables that have something
     in common, for example if you have a table Authors:</p>
 <p class="Pp"></p>
-<pre>
-  ID  | Name | Age
+<pre>  ID  | Name | Age
  ------------------
    1  | Fred | 30
    2  | Joe  | 32
 </pre>
 <p class="Pp">and a table Books:</p>
 <p class="Pp"></p>
-<pre>
-  ID  | Author | Name
+<pre>  ID  | Author | Name
  --------------------
    1  |      1 | Rulers of the universe
    2  |      1 | Rulers of the galaxy
@@ -74,15 +70,13 @@
 <p class="Pp">Then without relationships, the method of getting all books by
     Fred goes like this:</p>
 <p class="Pp"></p>
-<pre>
- my $fred = $schema-&gt;resultset('Author')-&gt;find({ Name =&gt; 'Fred' });
+<pre> my $fred = $schema-&gt;resultset('Author')-&gt;find({ Name =&gt; 'Fred' });
  my $fredsbooks = $schema-&gt;resultset('Book')-&gt;search({ Author =&gt; $fred-&gt;ID });
 </pre>
 <p class="Pp">With a has_many relationship called &quot;books&quot; on Author
     (see below for details), we can do this instead:</p>
 <p class="Pp"></p>
-<pre>
- my $fredsbooks = $schema-&gt;resultset('Author')-&gt;find({ Name =&gt; 'Fred' })-&gt;books;
+<pre> my $fredsbooks = $schema-&gt;resultset('Author')-&gt;find({ Name =&gt; 'Fred' })-&gt;books;
 </pre>
 <p class="Pp">Each relationship sets up an accessor method on the Result objects
     that represent the items of your table. From ResultSet objects, the
@@ -93,8 +87,7 @@
     the database is not actually queried until you attempt to retrieve the data
     for an actual item, no time is wasted producing them.</p>
 <p class="Pp"></p>
-<pre>
- my $cheapfredbooks = $schema-&gt;resultset('Author')-&gt;find({
+<pre> my $cheapfredbooks = $schema-&gt;resultset('Author')-&gt;find({
    Name =&gt; 'Fred',
  })-&gt;books-&gt;search_related('prices', {
    Price =&gt; { '&lt;=' =&gt; '5.00' },
@@ -102,8 +95,7 @@
 </pre>
 <p class="Pp">will produce a query something like:</p>
 <p class="Pp"></p>
-<pre>
- SELECT * FROM Author me
+<pre> SELECT * FROM Author me
  LEFT JOIN Books books ON books.author = me.id
  LEFT JOIN Prices prices ON prices.book = books.id
  WHERE prices.Price &lt;= 5.00
@@ -119,8 +111,7 @@
 <p class="Pp">All helper methods are called similar to the following
   template:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;$method_name('rel_name', 'Foreign::Class', \%cond|\@cond|\&amp;cond?, \%attrs?);
+<pre>  __PACKAGE__-&gt;$method_name('rel_name', 'Foreign::Class', \%cond|\@cond|\&amp;cond?, \%attrs?);
 </pre>
 <p class="Pp">Both <span class="Li">&quot;cond&quot;</span> and
     <span class="Li">&quot;attrs&quot;</span> are optional. Pass
@@ -173,32 +164,27 @@
     DBIx::Class::Relationship::Base.</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # in a Book class (where Author has many Books)
+<pre>  # in a Book class (where Author has many Books)
   My::DBIC::Schema::Book-&gt;belongs_to(
     author =&gt;
     'My::DBIC::Schema::Author',
     'author_id'
   );
-
   # OR (same result)
   My::DBIC::Schema::Book-&gt;belongs_to(
     author =&gt;
     'My::DBIC::Schema::Author',
     { 'foreign.author_id' =&gt; 'self.author_id' }
   );
-
   # OR (similar result but uglier accessor name)
   My::DBIC::Schema::Book-&gt;belongs_to(
     author_id =&gt;
     'My::DBIC::Schema::Author'
   );
-
   # Usage
   my $author_obj = $book-&gt;author; # get author object
   $book-&gt;author( $new_author_obj ); # set author object
   $book-&gt;author_id(); # get the plain id
-
   # To retrieve the plain id if you used the ugly version:
   $book-&gt;get_column('author_id');
 </pre>
@@ -211,8 +197,7 @@
     traversal works consistently in all situations. (i.e. resultsets involving
     join or prefetch). The modified declaration is shown below:</p>
 <p class="Pp"></p>
-<pre>
-  # in a Book class (where Author has_many Books)
+<pre>  # in a Book class (where Author has_many Books)
   __PACKAGE__-&gt;belongs_to(
     author =&gt;
     'My::DBIC::Schema::Author',
@@ -278,47 +263,38 @@
     DBIx::Class::Relationship::Base.</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # in an Author class (where Author has_many Books)
+<pre>  # in an Author class (where Author has_many Books)
   # assuming related class is storing our PK in &quot;author_id&quot;
   My::DBIC::Schema::Author-&gt;has_many(
     books =&gt;
     'My::DBIC::Schema::Book',
     'author_id'
   );
-
   # OR (same result)
   My::DBIC::Schema::Author-&gt;has_many(
     books =&gt;
     'My::DBIC::Schema::Book',
     { 'foreign.author_id' =&gt; 'self.id' },
   );
-
   # OR (similar result, assuming related_class is storing our PK, in &quot;author&quot;)
   # (the &quot;author&quot; is guessed at from &quot;Author&quot; in the class namespace)
   My::DBIC::Schema::Author-&gt;has_many(
     books =&gt;
     'My::DBIC::Schema::Book',
   );
-
-
   # Usage
   # resultset of Books belonging to author
   my $booklist = $author-&gt;books;
-
   # resultset of Books belonging to author, restricted by author name
   my $booklist = $author-&gt;books({
     name =&gt; { LIKE =&gt; '%macaroni%' },
     { prefetch =&gt; [qw/book/],
   });
-
   # array of Book objects belonging to author
   my @book_objs = $author-&gt;books;
-
   # force resultset even in list context
   my $books_rs = $author-&gt;books;
   ( $books_rs ) = $obj-&gt;books_rs;
-
   # create a new book for this author, the relation fields are auto-filled
   $author-&gt;create_related('books', \%col_data);
   # alternative method for the above
@@ -394,27 +370,23 @@
     DBIx::Class::Relationship::Base.</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # Author may have an entry in the pseudonym table
+<pre>  # Author may have an entry in the pseudonym table
   My::DBIC::Schema::Author-&gt;might_have(
     pseudonym =&gt;
     'My::DBIC::Schema::Pseudonym',
     'author_id',
   );
-
   # OR (same result, assuming the related_class stores our PK)
   My::DBIC::Schema::Author-&gt;might_have(
     pseudonym =&gt;
     'My::DBIC::Schema::Pseudonym',
   );
-
   # OR (same result)
   My::DBIC::Schema::Author-&gt;might_have(
     pseudonym =&gt;
     'My::DBIC::Schema::Pseudonym',
     { 'foreign.author_id' =&gt; 'self.id' },
   );
-
   # Usage
   my $pname = $author-&gt;pseudonym; # to get the Pseudonym object
 </pre>
@@ -438,8 +410,7 @@
     this because it's naughty and you shouldn't do that. The warning will look
     something like:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;might_have/has_one&quot; must not be on columns with is_nullable set to true (MySchema::SomeClass/key)
+<pre>  &quot;might_have/has_one&quot; must not be on columns with is_nullable set to true (MySchema::SomeClass/key)
 </pre>
 <p class="Pp">If you must be naughty, you can suppress the warning by setting
     <span class="Li">&quot;DBIC_DONT_VALIDATE_RELS&quot;</span> environment
@@ -484,27 +455,23 @@
     DBIx::Class::Relationship::Base.</dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # Every book has exactly one ISBN
+<pre>  # Every book has exactly one ISBN
   My::DBIC::Schema::Book-&gt;has_one(
     isbn =&gt;
     'My::DBIC::Schema::ISBN',
     'book_id',
   );
-
   # OR (same result, assuming related_class stores our PK)
   My::DBIC::Schema::Book-&gt;has_one(
     isbn =&gt;
     'My::DBIC::Schema::ISBN',
   );
-
   # OR (same result)
   My::DBIC::Schema::Book-&gt;has_one(
     isbn =&gt;
     'My::DBIC::Schema::ISBN',
     { 'foreign.book_id' =&gt; 'self.id' },
   );
-
   # Usage
   my $isbn_obj = $book-&gt;isbn; # to get the ISBN object
 </pre>
@@ -567,32 +534,27 @@
 </dl>
 <p class="Pp">To create a many_to_many relationship from Actor to Role:</p>
 <p class="Pp"></p>
-<pre>
-  My::DBIC::Schema::Actor-&gt;has_many( actor_roles =&gt;
+<pre>  My::DBIC::Schema::Actor-&gt;has_many( actor_roles =&gt;
                                      'My::DBIC::Schema::ActorRoles',
                                      'actor' );
   My::DBIC::Schema::ActorRoles-&gt;belongs_to( role =&gt;
                                             'My::DBIC::Schema::Role' );
   My::DBIC::Schema::ActorRoles-&gt;belongs_to( actor =&gt;
                                             'My::DBIC::Schema::Actor' );
-
   My::DBIC::Schema::Actor-&gt;many_to_many( roles =&gt; 'actor_roles',
                                          'role' );
 </pre>
 <p class="Pp">And, for the reverse relationship, from Role to Actor:</p>
 <p class="Pp"></p>
-<pre>
-  My::DBIC::Schema::Role-&gt;has_many( actor_roles =&gt;
+<pre>  My::DBIC::Schema::Role-&gt;has_many( actor_roles =&gt;
                                     'My::DBIC::Schema::ActorRoles',
                                     'role' );
-
   My::DBIC::Schema::Role-&gt;many_to_many( actors =&gt; 'actor_roles', 'actor' );
 </pre>
 <p class="Pp">To add a role for your actor, and fill in the year of the role in
     the actor_roles table:</p>
 <p class="Pp"></p>
-<pre>
-  $actor-&gt;add_to_roles($role, { year =&gt; 1995 });
+<pre>  $actor-&gt;add_to_roles($role, { year =&gt; 1995 });
 </pre>
 <p class="Pp">In the above example, ActorRoles is the link table class, and Role
     is the foreign class. The <span class="Li">$link_rel_name</span> parameter

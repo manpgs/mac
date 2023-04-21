@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HDIUTIL(1)</title>
 </head>
@@ -470,15 +471,7 @@
         <code class="Fl">-imagekey</code>
         <var class="Ar">di-shadow-puma-compatible=TRUE</var> will create,
         respectively, sparse and shadow images that can be attached on Mac OS X
-        10.1. <code class="Fl">-imagekey</code>
-        <var class="Ar">encrypted-encoding-version</var> can select between
-        version 1 and version 2 of the encrypted encoding. The framework
-        preferences have a corresponding key to change the default for all
-        images. Version 2 is not compatible with Mac OS X 10.2 but is more
-        robust for SPARSE (UDSP) images. Version 1 is the default for non-sparse
-        images. As of Mac OS X 10.4.7, sparse encrypted images always use
-        version 2 and as of Mac OS X 10.5, all encrypted images default to
-        version 2.</p>
+        10.1.</p>
     <p class="Pp">General options:</p>
     <dl class="Bl-hang Bl-compact">
       <dt id="align"><a class="permalink" href="#align"><code class="Fl">-align</code></a>
@@ -1526,11 +1519,9 @@
   image.sparsebundle</code></div>
 <div class="Bd Bd-indent">converts image.dmg to format UDSB by automatically
   detecting the file extension .sparsebundle.</div>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil convert files.sparsebundle -format UDZO \
-    -imagekey zlib-level=5 -o files
-</pre>
+<div class="Bd Bd-indent Li">
+<pre>hdiutil convert files.sparsebundle -format UDZO \
+    -imagekey zlib-level=5 -o files</pre>
 </div>
 <div class="Bd Bd-indent">converts files.sparsebundle to files.dmg: a read-only,
   compressed disk image using zlib level 5 instead of the default.</div>
@@ -1551,19 +1542,15 @@ hdiutil convert files.sparsebundle -format UDZO \
   e.dmg -fs HFS+J</code></div>
 <p class="Pp">Creating a 50 MB read/write encrypted image protected with public
     key only:</p>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil create -encryption -size 50m e.dmg -fs HFS+J \
-    -pubkey F534A3B0C2AEE3B988308CC89AA04ABE7FDB5F30
-</pre>
+<div class="Bd Bd-indent Li">
+<pre>hdiutil create -encryption -size 50m e.dmg -fs HFS+J \
+    -pubkey F534A3B0C2AEE3B988308CC89AA04ABE7FDB5F30</pre>
 </div>
 <p class="Pp">Creating a 50 MB read/write encrypted image protected with public
     key and password:</p>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil create -encryption -size 50m e.dmg -fs HFS+J -agentpass \
-    -pubkey F534A3B0C2AEE3B988308CC89AA04ABE7FDB5F30
-</pre>
+<div class="Bd Bd-indent Li">
+<pre>hdiutil create -encryption -size 50m e.dmg -fs HFS+J -agentpass \
+    -pubkey F534A3B0C2AEE3B988308CC89AA04ABE7FDB5F30</pre>
 </div>
 <p class="Pp">Note that these two -pubkey usage examples assume a certificate
     corresponding to this public key is currently in the user's keychain or
@@ -1586,53 +1573,43 @@ hdiutil create -encryption -size 50m e.dmg -fs HFS+J -agentpass \
   1.3m -fs HFS+ -attach Moby.dmg</code></div>
 <p class="Pp">Attaching an image on a web server to the system, with any writes
     going to a local file:</p>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil attach https://my.webserver.com/master.dmg \
-    -shadow /tmp/mastershadowfile
-</pre>
+<div class="Bd Bd-indent Li">
+<pre>hdiutil attach https://my.webserver.com/master.dmg \
+    -shadow /tmp/mastershadowfile</pre>
 </div>
 <p class="Pp">Using a shadow file to attach a read-only image read/write to
     modify it, then convert it back to a read-only image. This method eliminates
     the time/space required to convert a image to read/write before modifying
     it.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-hdiutil attach -owners on Moby.dmg -shadow
+<div class="Bd Pp Bd-indent Li">
+<pre>hdiutil attach -owners on Moby.dmg -shadow
 /dev/disk2   Apple_partition_scheme
 /dev/disk2s1 Apple_partition_map
 /dev/disk2s2 Apple_HFS               /Volumes/Dick
 
 ditto /Applications/Preview.app /Volumes/Dick
 hdiutil detach /dev/disk2
-hdiutil convert -format UDZO Moby.dmg -shadow
-</pre>
+hdiutil convert -format UDZO Moby.dmg -shadow</pre>
 </div>
 <p class="Pp">Creating a RAM-backed device and filesystem:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-NUMSECTORS=128000       # a sector is 512 bytes
+<div class="Bd Pp Bd-indent Li">
+<pre>NUMSECTORS=128000       # a sector is 512 bytes
 mydev=`hdiutil attach -nomount ram://$NUMSECTORS`
 newfs_hfs $mydev
 mkdir /tmp/mymount
-mount -t hfs $mydev /tmp/mymount
-</pre>
+mount -t hfs $mydev /tmp/mymount</pre>
 </div>
 <p class="Pp">Using makehybrid to create cross-platform data with files
     overlapping between filesystem views, containing these files:</p>
-<div class="Bd Bd-indent">
-<pre>
-albumlist.txt song2.wma     song4.m4a     song6.mp3     song8.mp3
-song1.wma     song3.m4a     song5.mp3     song7.mp3
-</pre>
+<div class="Bd Bd-indent Li">
+<pre>albumlist.txt song2.wma     song4.m4a     song6.mp3     song8.mp3
+song1.wma     song3.m4a     song5.mp3     song7.mp3</pre>
 </div>
 <p class="Pp"></p>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil makehybrid -o MusicBackup.iso Music -hfs -iso -joliet \
+<div class="Bd Bd-indent Li">
+<pre>hdiutil makehybrid -o MusicBackup.iso Music -hfs -iso -joliet \
     -hide-hfs 'Music/*.wma' -hide-joliet 'Music/{*.m4a,*.mp3}' \
-    -hide-iso 'Music/*.{wma,m4a}'
-</pre>
+    -hide-iso 'Music/*.{wma,m4a}'</pre>
 </div>
 <p class="Pp">will create an image with three filesystems pointing to the same
     blocks. The HFS+ filesystem, typically only visible on Macintosh systems,
@@ -1656,16 +1633,14 @@ hdiutil makehybrid -o MusicBackup.iso Music -hfs -iso -joliet \
   bundle image can be removed after the process is complete.</div>
 <p class="Pp">Manually changing ownership settings of a read-only disk
   image:</p>
-<div class="Bd Bd-indent">
-<pre>
-hdiutil attach myimage.dmg
+<div class="Bd Bd-indent Li">
+<pre>hdiutil attach myimage.dmg
 ...
 /dev/disk1s2            Apple_HFS         /Volumes/myVolume
 diskutil unmount disk1s2
 mkdir /Volumes/myVolume
 sudo mount -r -t hfs -o owners /dev/disk1s2 /Volumes/myVolume
-# -o owners is the default for manual mounts
-</pre>
+# -o owners is the default for manual mounts</pre>
 </div>
 <p class="Pp">Forcing a known image to attach:</p>
 <div class="Bd Bd-indent"><code class="Li">hdiutil attach -imagekey
@@ -1967,10 +1942,15 @@ will show whatever is really stored in the filesystem (possibly _unknown)
 </ul>
 <p class="Pp">macOS 12.0:</p>
 <ul class="Bl-bullet Bd-indent">
-  <li>Deprecated UDBZ format (bzip2 compression)</li>
+  <li>Deprecated UDBZ format (bzip2 compression).</li>
   <li>Deprecated segmented UDIF images (hdiutil segment, -segmentSize argument
-      in hdiutil create &amp; convert)</li>
-  <li>Deprecated hdiutil udifrez/udifderez (embed and extract resources)</li>
+      in hdiutil create &amp; convert).</li>
+  <li>Deprecated hdiutil udifrez/udifderez (embed and extract resources).</li>
+</ul>
+<p class="Pp">macOS 13.0:</p>
+<ul class="Bl-bullet Bd-indent">
+  <li>Removed the option &quot;encrypted-encoding-version&quot;. All new
+      encrypted images are created with encrypted encoding version 2.</li>
 </ul>
 </section>
 <section class="Sh">

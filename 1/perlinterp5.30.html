@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLINTERP(1)</title>
 </head>
@@ -53,8 +54,7 @@
 <p class="Pp">First, <i>perlmain.c</i> allocates some memory and constructs a
     Perl interpreter, along these lines:</p>
 <p class="Pp"></p>
-<pre>
-    1 PERL_SYS_INIT3(&amp;argc,&amp;argv,&amp;env);
+<pre>    1 PERL_SYS_INIT3(&amp;argc,&amp;argv,&amp;env);
     2
     3 if (!PL_do_undump) {
     4     my_perl = perl_alloc();
@@ -75,8 +75,7 @@
     Perl interpreter. It's quite a simple function, and the guts of it looks
     like this:</p>
 <p class="Pp"></p>
-<pre>
- my_perl = (PerlInterpreter*)PerlMem_malloc(sizeof(PerlInterpreter));
+<pre> my_perl = (PerlInterpreter*)PerlMem_malloc(sizeof(PerlInterpreter));
 </pre>
 <p class="Pp">Here you see an example of Perl's system abstraction, which we'll
     see later: <span class="Li">&quot;PerlMem_malloc&quot;</span> is either your
@@ -88,12 +87,9 @@
     variables that Perl needs, the stacks, and so on.</p>
 <p class="Pp">Now we pass Perl the command line options, and tell it to go:</p>
 <p class="Pp"></p>
-<pre>
- if (!perl_parse(my_perl, xs_init, argc, argv, (char **)NULL))
+<pre> if (!perl_parse(my_perl, xs_init, argc, argv, (char **)NULL))
      perl_run(my_perl);
-
  exitstatus = perl_destruct(my_perl);
-
  perl_free(my_perl);
 </pre>
 <p class="Pp"><span class="Li">&quot;perl_parse&quot;</span> is actually a
@@ -151,15 +147,13 @@
     <i>run.c</i>; more specifically, it's done by these three innocent looking
     lines:</p>
 <p class="Pp"></p>
-<pre>
-    while ((PL_op = PL_op-&gt;op_ppaddr(aTHX))) {
+<pre>    while ((PL_op = PL_op-&gt;op_ppaddr(aTHX))) {
         PERL_ASYNC_CHECK();
     }
 </pre>
 <p class="Pp">You may be more comfortable with the Perl version of that:</p>
 <p class="Pp"></p>
-<pre>
-    PERL_ASYNC_CHECK() while $Perl::op = &amp;{$Perl::op-&gt;{function}};
+<pre>    PERL_ASYNC_CHECK() while $Perl::op = &amp;{$Perl::op-&gt;{function}};
 </pre>
 <p class="Pp">Well, maybe not. Anyway, each op contains a function pointer,
     which stipulates the function which will actually carry out the operation.
@@ -245,8 +239,7 @@
 <p class="Pp">Sometimes ops are executed within an inner runops loop, such as
     tie, sort or overload code. In this case, something like</p>
 <p class="Pp"></p>
-<pre>
-    sub FETCH { eval { die } }
+<pre>    sub FETCH { eval { die } }
 </pre>
 <p class="Pp">would cause a longjmp right back to the guard in
     <span class="Li">&quot;perl_run&quot;</span>, popping both runops loops,
@@ -271,8 +264,7 @@
     re-throws the exception. In this way any inner loops get popped.</p>
 <p class="Pp">Here's an example.</p>
 <p class="Pp"></p>
-<pre>
-    1: eval { tie @a, 'A' };
+<pre>    1: eval { tie @a, 'A' };
     2: sub A::TIEARRAY {
     3:     eval { die };
     4:     die;
@@ -294,8 +286,7 @@
     loop, which then executes the die op. At this point the C call stack looks
     like this:</p>
 <p class="Pp"></p>
-<pre>
-    Perl_pp_die
+<pre>    Perl_pp_die
     Perl_runops      # third loop
     S_docatch_body
     S_docatch
@@ -312,8 +303,7 @@
 <p class="Pp">and the context and data stacks, as shown by
     <span class="Li">&quot;-Dstv&quot;</span>, look like:</p>
 <p class="Pp"></p>
-<pre>
-    STACK 0: MAIN
+<pre>    STACK 0: MAIN
       CX 0: BLOCK  =&gt;
       CX 1: EVAL   =&gt; AV()  PV(&quot;A&quot;\0)
       retop=leave
@@ -334,8 +324,7 @@
     this is because of the optimization mentioned earlier. However, the context
     stack now looks like this, ie with the top CxEVAL popped:</p>
 <p class="Pp"></p>
-<pre>
-    STACK 0: MAIN
+<pre>    STACK 0: MAIN
       CX 0: BLOCK  =&gt;
       CX 1: EVAL   =&gt; AV()  PV(&quot;A&quot;\0)
       retop=leave
@@ -346,8 +335,7 @@
 <p class="Pp">The die on line 4 pops the context stack back down to the CxEVAL,
     leaving it as:</p>
 <p class="Pp"></p>
-<pre>
-    STACK 0: MAIN
+<pre>    STACK 0: MAIN
       CX 0: BLOCK  =&gt;
 </pre>
 <p class="Pp">As usual, <span class="Li">&quot;PL_restartop&quot;</span> is
@@ -355,8 +343,7 @@
     <span class="Li">JMPENV_JUMP(3)</span> done, which pops the C stack back to
     the docatch:</p>
 <p class="Pp"></p>
-<pre>
-    S_docatch
+<pre>    S_docatch
     Perl_pp_entertry
     Perl_runops      # second loop
     S_call_body
@@ -373,8 +360,7 @@
     <span class="Li">&quot;docatch&quot;</span> just does a
     <span class="Li">JMPENV_JUMP(3)</span> and the C stack unwinds to:</p>
 <p class="Pp"></p>
-<pre>
-    perl_run
+<pre>    perl_run
     main
 </pre>
 <p class="Pp">Because <span class="Li">&quot;PL_restartop&quot;</span> is
@@ -396,8 +382,7 @@
     program. Let's see, for instance, how Perl treats the constant
     <span class="Li">&quot;hello&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-      % perl -MDevel::Peek -e 'Dump(&quot;hello&quot;)'
+<pre>      % perl -MDevel::Peek -e 'Dump(&quot;hello&quot;)'
     1 SV = PV(0xa041450) at 0xa04ecbc
     2   REFCNT = 1
     3   FLAGS = (POK,READONLY,pPOK)
@@ -433,13 +418,11 @@
 <p class="Pp">Let's take an example of manipulating a PV, from
     <span class="Li">&quot;sv_catpvn&quot;</span>, in <i>sv.c</i></p>
 <p class="Pp"></p>
-<pre>
-     1  void
+<pre>     1  void
      2  Perl_sv_catpvn(pTHX_ SV *sv, const char *ptr, STRLEN len)
      3  {
      4      STRLEN tlen;
      5      char *junk;
-
      6      junk = SvPV_force(sv, tlen);
      7      SvGROW(sv, tlen + len + 1);
      8      if (ptr == junk)
@@ -517,8 +500,7 @@
 <p class="Pp">Let's have a look at how Perl sees <span class="Li">&quot;$a = $b
     + $c&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-     % perl -MO=Terse -e '$a=$b+$c'
+<pre>     % perl -MO=Terse -e '$a=$b+$c'
      1  LISTOP (0x8179888) leave
      2      OP (0x81798b0) enter
      3      COP (0x8179850) nextstate
@@ -548,8 +530,7 @@
     just to replace the redundant operation with the null op. Originally, the
     tree would have looked like this:</p>
 <p class="Pp"></p>
-<pre>
-    10          SVOP (0x816b4f0) rv2sv [15]
+<pre>    10          SVOP (0x816b4f0) rv2sv [15]
     11              SVOP (0x816dcf0) gv  GV (0x80fa460) *a
 </pre>
 <p class="Pp">That is, fetch the <span class="Li">&quot;a&quot;</span> entry
@@ -563,8 +544,7 @@
     together two <span class="Li">&quot;gvsv&quot;</span>s.</p>
 <p class="Pp">Now, what's this about?</p>
 <p class="Pp"></p>
-<pre>
-     1  LISTOP (0x8179888) leave
+<pre>     1  LISTOP (0x8179888) leave
      2      OP (0x81798b0) enter
      3      COP (0x8179850) nextstate
 </pre>
@@ -583,8 +563,7 @@
     a marker.</p>
 <p class="Pp">That's how Perl parsed the program, from top to bottom:</p>
 <p class="Pp"></p>
-<pre>
-                        Program
+<pre>                        Program
                            |
                        Statement
                            |
@@ -605,8 +584,7 @@
     <span class="Li">&quot;exec&quot;</span> option to
     <span class="Li">&quot;B::Terse&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-     % perl -MO=Terse,exec -e '$a=$b+$c'
+<pre>     % perl -MO=Terse,exec -e '$a=$b+$c'
      1  OP (0x8179928) enter
      2  COP (0x81798c8) nextstate
      3  SVOP (0x81796c8) gvsv  GV (0x80fa4d4) *b
@@ -635,8 +613,7 @@
     operators beginning with <span class="Li">&quot;=&quot;</span>, so most of
     it is omitted for brevity):</p>
 <p class="Pp"></p>
-<pre>
-     1    case '=':
+<pre>     1    case '=':
      2        s++;
               ... code that handles == =&gt; etc. and pod ...
      3        pl_yylval.ival = 0;
@@ -648,8 +625,7 @@
     <i>toke.c</i>, that returns the token type, among other things). And
     <span class="Li">&quot;+&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-     1     case '+':
+<pre>     1     case '+':
      2         {
      3             const char tmp = *s++;
                    ... code for ++ ...
@@ -668,8 +644,7 @@
     parser, let's take the piece of <i>perly.y</i> we need to construct the tree
     for <span class="Li">&quot;$a = $b + $c&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    1 term    :   term ASSIGNOP term
+<pre>    1 term    :   term ASSIGNOP term
     2                { $$ = newASSIGNOP(OPf_STACKED, $1, $2, $3); }
     3         |   term ADDOP term
     4                { $$ = newBINOP($2, 0, scalar($1), scalar($3)); }
@@ -705,8 +680,7 @@
     the code in line 2. If you see <span class="Li">&quot;+&quot;</span>, you'll
     do the code in line 4. It's this code which contributes to the op tree.</p>
 <p class="Pp"></p>
-<pre>
-            |   term ADDOP term
+<pre>            |   term ADDOP term
             { $$ = newBINOP($2, 0, scalar($1), scalar($3)); }
 </pre>
 <p class="Pp">What this does is creates a new binary op, and feeds it a number
@@ -737,20 +711,17 @@
     the parser passes to <span class="Li">&quot;newBINOP&quot;</span> as its
     first argument.) Here is the relevant line:</p>
 <p class="Pp"></p>
-<pre>
-    add             addition (+)            ck_null         IfsT2   S S
+<pre>    add             addition (+)            ck_null         IfsT2   S S
 </pre>
 <p class="Pp">The check function in this case is
     <span class="Li">&quot;Perl_ck_null&quot;</span>, which does nothing. Let's
     look at a more interesting case:</p>
 <p class="Pp"></p>
-<pre>
-    readline        &lt;HANDLE&gt;                ck_readline     t%      F?
+<pre>    readline        &lt;HANDLE&gt;                ck_readline     t%      F?
 </pre>
 <p class="Pp">And here is the function from <i>op.c</i>:</p>
 <p class="Pp"></p>
-<pre>
-     1 OP *
+<pre>     1 OP *
      2 Perl_ck_readline(pTHX_ OP *o)
      3 {
      4     PERL_ARGS_ASSERT_CK_READLINE;
@@ -792,8 +763,7 @@
     wish, and then push the result back onto the stack. This is how, for
     instance, the cosine operator works:</p>
 <p class="Pp"></p>
-<pre>
-      NV value;
+<pre>      NV value;
       value = POPn;
       value = Perl_cos(value);
       XPUSHn(value);
@@ -815,8 +785,7 @@
     the top SV/IV/NV/etc. on the stack. So, for instance, to do unary negation
     of an integer:</p>
 <p class="Pp"></p>
-<pre>
-     SETi(-TOPi);
+<pre>     SETi(-TOPi);
 </pre>
 <p class="Pp">Just set the integer value of the top stack entry to its
   negation.</p>
@@ -841,8 +810,7 @@
     tied <span class="Li">&quot;push&quot;</span> is implemented; see
     <span class="Li">&quot;av_push&quot;</span> in <i>av.c</i>:</p>
 <p class="Pp"></p>
-<pre>
-     1  PUSHMARK(SP);
+<pre>     1  PUSHMARK(SP);
      2  EXTEND(SP,2);
      3  PUSHs(SvTIED_obj((SV*)av, mg));
      4  PUSHs(val);
@@ -853,15 +821,13 @@
 </pre>
 <p class="Pp">Let's examine the whole implementation, for practice:</p>
 <p class="Pp"></p>
-<pre>
-     1  PUSHMARK(SP);
+<pre>     1  PUSHMARK(SP);
 </pre>
 <p class="Pp">Push the current state of the stack pointer onto the mark stack.
     This is so that when we've finished adding items to the argument stack, Perl
     knows how many things we've added recently.</p>
 <p class="Pp"></p>
-<pre>
-     2  EXTEND(SP,2);
+<pre>     2  EXTEND(SP,2);
      3  PUSHs(SvTIED_obj((SV*)av, mg));
      4  PUSHs(val);
 </pre>
@@ -872,15 +838,13 @@
     <span class="Li">&quot;SvTIED_obj&quot;</span>, and the value, the SV
     <span class="Li">&quot;val&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-     5  PUTBACK;
+<pre>     5  PUTBACK;
 </pre>
 <p class="Pp">Next we tell Perl to update the global stack pointer from our
     internal variable: <span class="Li">&quot;dSP&quot;</span> only gave us a
     local copy, not a reference to the global.</p>
 <p class="Pp"></p>
-<pre>
-     6  ENTER;
+<pre>     6  ENTER;
      7  call_method(&quot;PUSH&quot;, G_SCALAR|G_DISCARD);
      8  LEAVE;
 </pre>
@@ -906,8 +870,7 @@
     <span class="Li">&quot;LEAVE&quot;</span> are used as scoping braces; the
     save stack implements the C equivalent of, for example:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         local $foo = 42;
         ...
     }
@@ -924,8 +887,7 @@
     understand, others find it adds to clarity. Let's take an example, a
     stripped-down version the code which implements the addition operator:</p>
 <p class="Pp"></p>
-<pre>
-   1  PP(pp_add)
+<pre>   1  PP(pp_add)
    2  {
    3      dSP; dATARGET;
    4      tryAMAGICbin_MG(add_amg, AMGf_assign|AMGf_numeric);

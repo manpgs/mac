@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GSSAPI(3)</title>
 </head>
@@ -29,14 +30,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use GSSAPI;
-
+<pre>  use GSSAPI;
   my $targethostname = 'HTTP@moerbsen.grolmsnet.lan';
   my $status;
-
-
-
    TRY: {
        my ($target, $tname, $ttl );
        $status = GSSAPI::Name-&gt;import( $target,
@@ -45,7 +41,6 @@
                or last;
        $status = $target-&gt;display($tname) or last;
        print &quot;\n using Name $tname&quot;;
-
        my $ctx = GSSAPI::Context-&gt;new();
        my $imech = GSSAPI::OID::gss_mech_krb5;
        my $iflags = 0 ;
@@ -54,14 +49,12 @@
        my $itime = 0;
        my $itoken = q{};
        my $otoken;
-
        $status = $ctx-&gt;init($creds,$target,
                             $imech,$iflags,$itime,$bindings,$itoken,
                             undef, $otoken,undef,undef) or last;
        $status = $ctx-&gt;valid_time_left($ttl) or last;
        print &quot;\n Security context's time to live $ttl secs&quot;;
    }
-
    unless ($status-&gt;major == GSS_S_COMPLETE  ) {
       print &quot;\nErrors: &quot;, $status;
    } else {
@@ -145,8 +138,7 @@
   <dd>returns GSSAPI::Status Object</dd>
   <dt id="Example:"><a class="permalink" href="#Example:">Example:</a></dt>
   <dd>
-    <pre>
-     $status = GSSAPI::Name-&gt;import( $gssapinameobj,
+    <pre>     $status = GSSAPI::Name-&gt;import( $gssapinameobj,
                                      'HTTP@moerbsen.grolmsnet.lan',
                                      GSSAPI::OID::gss_nt_hostbased_service);
     </pre>
@@ -168,8 +160,7 @@
   <dd>returns GSSAPI::Status Object</dd>
   <dt id="Example:~2"><a class="permalink" href="#Example:~2">Example:</a></dt>
   <dd>
-    <pre>
-     my $tname;
+    <pre>     my $tname;
      $status = $gssapinameobj-&gt;display($tname);
      die 'hmm, error...' if($status-&gt;major != GSS_S_COMPLETE );
      print &quot;\n  Name is $tname&quot;;
@@ -224,8 +215,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">EXPORT</h2>
-<pre>
-  GSS_C_ACCEPT
+<pre>  GSS_C_ACCEPT
   GSS_C_AF_APPLETALK
   GSS_C_AF_BSC
   GSS_C_AF_CCITT
@@ -310,23 +300,17 @@
 <section class="Ss">
 <h2 class="Ss" id="Exportable_functions"><a class="permalink" href="#Exportable_functions">Exportable
   functions</a></h2>
-<pre>
-    $status = indicate_mechs($oidset)
+<pre>    $status = indicate_mechs($oidset)
 </pre>
 <p class="Pp">Example</p>
 <p class="Pp"></p>
-<pre>
-   use GSSAPI qw(:all);
-
+<pre>   use GSSAPI qw(:all);
    my $oidset;
    my $isin = 0;
-
    my $status = indicate_mechs( $oidset );
    $status-&gt;major == GSS_S_COMPLETE || die 'error';
-
    $status = $oidset-&gt;contains( gss_mech_krb5_old, $isin );
    $status-&gt;major == GSS_S_COMPLETE || die 'error';
-
    if ( $isin ) {
      print 'Support of Kerberos 5 old mechtype';
    } else {
@@ -335,8 +319,7 @@
 </pre>
 <p class="Pp"><i>Constant OIDs provided:</i></p>
 <p class="Pp"></p>
-<pre>
-    # Constant OIDs provided:
+<pre>    # Constant OIDs provided:
     $oid = gss_nt_user_name;
     $oid = gss_nt_machine_uid_name;
     $oid = gss_nt_string_uid_name;

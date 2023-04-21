@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CGI::Cookie(3)</title>
 </head>
@@ -28,10 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use CGI qw/:standard/;
+<pre>    use CGI qw/:standard/;
     use CGI::Cookie;
-
     # Create new cookies and send them
     $cookie1 = CGI::Cookie-&gt;new(-name=&gt;'ID',-value=&gt;123456);
     $cookie2 = CGI::Cookie-&gt;new(-name=&gt;'preferences',
@@ -39,11 +38,9 @@
                                          size =&gt; 12 } 
                                );
     print header(-cookie=&gt;[$cookie1,$cookie2]);
-
     # fetch existing cookies
     %cookies = CGI::Cookie-&gt;fetch;
     $id = $cookies{'ID'}-&gt;value;
-
     # create cookies returned from an external source
     %cookies = CGI::Cookie-&gt;parse($ENV{COOKIE});
 </pre>
@@ -57,8 +54,7 @@
     independently.</p>
 <p class="Pp">For full information on cookies see</p>
 <p class="Pp"></p>
-<pre>
-    https://tools.ietf.org/html/rfc6265
+<pre>    https://tools.ietf.org/html/rfc6265
 </pre>
 </section>
 <section class="Sh">
@@ -108,8 +104,7 @@
     <p class="Pp">This feature is supported by nearly all modern browsers.</p>
     <p class="Pp">See these URLs for more information:</p>
     <p class="Pp"></p>
-    <pre>
-    http://msdn.microsoft.com/en-us/library/ms533046.aspx
+    <pre>    http://msdn.microsoft.com/en-us/library/ms533046.aspx
     http://www.browserscope.org/?category=security&amp;v=top
     </pre>
   </dd>
@@ -124,8 +119,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Creating_New_Cookies"><a class="permalink" href="#Creating_New_Cookies">Creating
   New Cookies</a></h2>
-<pre>
-        my $c = CGI::Cookie-&gt;new(-name    =&gt;  'foo',
+<pre>        my $c = CGI::Cookie-&gt;new(-name    =&gt;  'foo',
                              -value   =&gt;  'bar',
                              -expires =&gt;  '+3M',
                            '-max-age' =&gt;  '+3M',
@@ -174,8 +168,7 @@
     a mod_perl request object as the first argument to
     <span class="Li">&quot;new()&quot;</span>. It will simply be ignored:</p>
 <p class="Pp"></p>
-<pre>
-  my $c = CGI::Cookie-&gt;new($r,
+<pre>  my $c = CGI::Cookie-&gt;new($r,
                           -name    =&gt;  'foo',
                           -value   =&gt;  ['bar','baz']);
 </pre>
@@ -186,26 +179,22 @@
 <p class="Pp">The simplest way to send a cookie to the browser is by calling the
     <b>bake()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  $c-&gt;bake;
+<pre>  $c-&gt;bake;
 </pre>
 <p class="Pp">This will print the Set-Cookie HTTP header to STDOUT using CGI.pm.
     CGI.pm will be loaded for this purpose if it is not already. Otherwise
     CGI.pm is not required or used by this module.</p>
 <p class="Pp">Under mod_perl, pass in an Apache request object:</p>
 <p class="Pp"></p>
-<pre>
-  $c-&gt;bake($r);
+<pre>  $c-&gt;bake($r);
 </pre>
 <p class="Pp">If you want to set the cookie yourself, Within a CGI script you
     can send a cookie to the browser by creating one or more Set-Cookie: fields
     in the HTTP header. Here is a typical sequence:</p>
 <p class="Pp"></p>
-<pre>
-  my $c = CGI::Cookie-&gt;new(-name    =&gt;  'foo',
+<pre>  my $c = CGI::Cookie-&gt;new(-name    =&gt;  'foo',
                           -value   =&gt;  ['bar','baz'],
                           -expires =&gt;  '+3M');
-
   print &quot;Set-Cookie: $c\n&quot;;
   print &quot;Content-Type: text/html\n\n&quot;;
 </pre>
@@ -214,14 +203,12 @@
 <p class="Pp">If you are using CGI.pm, you send cookies by providing a -cookie
     argument to the <b>header()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  print header(-cookie=&gt;$c);
+<pre>  print header(-cookie=&gt;$c);
 </pre>
 <p class="Pp">Mod_perl users can set cookies using the request object's
     <b>header_out()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  $r-&gt;err_headers_out-&gt;add('Set-Cookie' =&gt; $c);
+<pre>  $r-&gt;err_headers_out-&gt;add('Set-Cookie' =&gt; $c);
 </pre>
 <p class="Pp">Internally, Cookie overloads the &quot;&quot; operator to call its
     <b>as_string()</b> method when incorporated into the HTTP header.
@@ -229,22 +216,19 @@
     RFC-compliant text representation. You may call <b>as_string()</b> yourself
     if you prefer:</p>
 <p class="Pp"></p>
-<pre>
-  print &quot;Set-Cookie: &quot;,$c-&gt;as_string,&quot;\n&quot;;
+<pre>  print &quot;Set-Cookie: &quot;,$c-&gt;as_string,&quot;\n&quot;;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Recovering_Previous_Cookies"><a class="permalink" href="#Recovering_Previous_Cookies">Recovering
   Previous Cookies</a></h2>
-<pre>
-        %cookies = CGI::Cookie-&gt;fetch;
+<pre>        %cookies = CGI::Cookie-&gt;fetch;
 </pre>
 <p class="Pp"><b>fetch</b> returns an associative array consisting of all
     cookies returned by the browser. The keys of the array are the cookie names.
     You can iterate through the cookies this way:</p>
 <p class="Pp"></p>
-<pre>
-        %cookies = CGI::Cookie-&gt;fetch;
+<pre>        %cookies = CGI::Cookie-&gt;fetch;
         for (keys %cookies) {
            do_something($cookies{$_});
         }
@@ -259,15 +243,13 @@
 <p class="Pp">You may also retrieve cookies that were stored in some external
     form using the <b>parse()</b> class method:</p>
 <p class="Pp"></p>
-<pre>
-       $COOKIES = `cat /usr/tmp/Cookie_stash`;
+<pre>       $COOKIES = `cat /usr/tmp/Cookie_stash`;
        %cookies = CGI::Cookie-&gt;parse($COOKIES);
 </pre>
 <p class="Pp">If you are in a mod_perl environment, you can save some overhead
     by passing the request object to <b>fetch()</b> like this:</p>
 <p class="Pp"></p>
-<pre>
-   CGI::Cookie-&gt;fetch($r);
+<pre>   CGI::Cookie-&gt;fetch($r);
 </pre>
 <p class="Pp">If the value passed to <b>parse()</b> is undefined, an empty array
     will returned in list context, and an empty hashref will be returned in
@@ -285,16 +267,14 @@
   <dt id="name()"><a class="permalink" href="#name()"><b></b><b>name()</b><b></b></a></dt>
   <dd>Get or set the cookie's name. Example:
     <p class="Pp"></p>
-    <pre>
-        $name = $c-&gt;name;
+    <pre>        $name = $c-&gt;name;
         $new_name = $c-&gt;name('fred');
     </pre>
   </dd>
   <dt id="value()"><a class="permalink" href="#value()"><b></b><b>value()</b><b></b></a></dt>
   <dd>Get or set the cookie's value. Example:
     <p class="Pp"></p>
-    <pre>
-        $value = $c-&gt;value;
+    <pre>        $value = $c-&gt;value;
         @new_value = $c-&gt;value(['a','b','c','d']);
     </pre>
     <p class="Pp"><b></b><b>value()</b><b></b> is context sensitive. In a list

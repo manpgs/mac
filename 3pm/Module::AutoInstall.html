@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Module::AutoInstall(3)</title>
 </head>
@@ -32,8 +33,7 @@
 <p class="Pp">In <i>Makefile.PL</i>, with Module::Install available on the
     author's system:</p>
 <p class="Pp"></p>
-<pre>
-    use inc::Module::Install;
+<pre>    use inc::Module::Install;
     
     name        'Joe-Hacker';
     abstract    'Perl Interface to Joe Hacker';
@@ -60,8 +60,7 @@
 </pre>
 <p class="Pp">Invoking the resulting <i>Makefile.PL</i>:</p>
 <p class="Pp"></p>
-<pre>
-    % perl Makefile.PL                  # interactive behaviour
+<pre>    % perl Makefile.PL                  # interactive behaviour
     % perl Makefile.PL --defaultdeps    # accept default value on prompts
     % perl Makefile.PL --checkdeps      # check only, no Makefile produced
     % perl Makefile.PL --skipdeps       # ignores all dependencies
@@ -77,8 +76,7 @@
     for every invocation of <i>Makefile.PL</i>.</p>
 <p class="Pp">Using <i>make</i> (or <i>nmake</i>):</p>
 <p class="Pp"></p>
-<pre>
-    % make [all|test|install]           # install dependencies first
+<pre>    % make [all|test|install]           # install dependencies first
     % make checkdeps                    # same as the --checkdeps above
     % make installdeps                  # install dependencies only
     % make installdeps_notest           # same without running tests
@@ -165,14 +163,12 @@
     module (e.g. <b>Acme::KillarApp</b>, v1.21 or greater), then use something
     like below:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         require Module::AutoInstall;
         # the first argument is an arrayref of the -config flags
         Module::AutoInstall-&gt;install([], 'Acme::KillerApp' =&gt; 1.21);
     }
     use Acme::KillerApp 1.21;
-
     Module::AutoInstall-&gt;import(
         # ... arguments as usual ...
     );
@@ -189,10 +185,8 @@
     and <span class="Li">&quot;MY::postinstall&quot;</span> subroutines, as
     shown below:</p>
 <p class="Pp"></p>
-<pre>
-    # pre-install handler; takes $module_name and $version
+<pre>    # pre-install handler; takes $module_name and $version
     sub MY::preinstall  { return 1; } # return false to skip install
-
     # post-install handler; takes $module_name, $version, $success
     sub MY::postinstall { return; }   # the return value doesn't matter
 </pre>
@@ -235,8 +229,7 @@
     <span class="Li">&quot;dbd_postamble&quot;</span>, so their
     <i>Makefile.PL</i> may contain lines like this:</p>
 <p class="Pp"></p>
-<pre>
-    sub MY::postamble {
+<pre>    sub MY::postamble {
         return &amp;Module::AutoInstall::postamble . &amp;dbd_postamble;
     }
 </pre>

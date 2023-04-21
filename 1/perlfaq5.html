@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ5(1)</title>
 </head>
@@ -47,12 +48,10 @@
     Instead of seeing a dot for every line, Perl buffers the output and you have
     a long wait before you see a row of 50 dots all at once:</p>
 <p class="Pp"></p>
-<pre>
-    # long wait, then row of dots all at once
+<pre>    # long wait, then row of dots all at once
     while( &lt;&gt; ) {
         print &quot;.&quot;;
         print &quot;\n&quot; unless ++$count % 50;
-
         #... expensive line processing operations
     }
 </pre>
@@ -61,14 +60,11 @@
     special variable <span class="Li">$|</span> to a true value (mnemonic:
     making your filehandles &quot;piping hot&quot;):</p>
 <p class="Pp"></p>
-<pre>
-    $|++;
-
+<pre>    $|++;
     # dot shown immediately
     while( &lt;&gt; ) {
         print &quot;.&quot;;
         print &quot;\n&quot; unless ++$count % 50;
-
         #... expensive line processing operations
     }
 </pre>
@@ -77,15 +73,13 @@
     want to merge standard output and standard error for instance, you have to
     unbuffer each (although STDERR might be unbuffered by default):</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         my $previous_default = select(STDOUT);  # save previous default
         $|++;                                   # autoflush STDOUT
         select(STDERR);
         $|++;                                   # autoflush STDERR, to be sure
         select($previous_default);              # restore previous default
     }
-
     # now should alternate . and +
     while( 1 ) {
         sleep 1;
@@ -98,9 +92,7 @@
     use <span class="Li">&quot;binmode&quot;</span> to give your filehandle a
     <span class="Li">&quot;:unix&quot;</span> layer, which is unbuffered:</p>
 <p class="Pp"></p>
-<pre>
-    binmode( STDOUT, &quot;:unix&quot; );
-
+<pre>    binmode( STDOUT, &quot;:unix&quot; );
     while( 1 ) {
         sleep 1;
         print &quot;.&quot;;
@@ -114,8 +106,7 @@
     the <span class="Li">&quot;autoflush&quot;</span> method to change the
     settings of the filehandle:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Handle;
+<pre>    use IO::Handle;
     open my( $io_fh ), &quot;&gt;&quot;, &quot;output.txt&quot;;
     $io_fh-&gt;autoflush(1);
 </pre>
@@ -123,8 +114,7 @@
     <span class="Li">&quot;flush&quot;</span> method. You can flush the buffer
     any time you want without auto-buffering</p>
 <p class="Pp"></p>
-<pre>
-    $io_fh-&gt;flush;
+<pre>    $io_fh-&gt;flush;
 </pre>
 </section>
 <section class="Ss">
@@ -141,14 +131,11 @@
 <p class="Pp">A Perl program to do these tasks takes the basic form of opening a
     file, printing its lines, then closing the file:</p>
 <p class="Pp"></p>
-<pre>
-    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
+<pre>    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
     open my $out, '&gt;', &quot;$file.new&quot; or die &quot;Can't write new file: $!&quot;;
-
     while( &lt;$in&gt; ) {
             print $out $_;
     }
-
     close $out;
 </pre>
 <p class="Pp">Within that basic form, add the parts that you need to insert,
@@ -156,16 +143,12 @@
 <p class="Pp">To prepend lines to the beginning, print those lines before you
     enter the loop that prints the existing lines.</p>
 <p class="Pp"></p>
-<pre>
-    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
+<pre>    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
     open my $out, '&gt;', &quot;$file.new&quot; or die &quot;Can't write new file: $!&quot;;
-
     print $out &quot;# Add this line to the top\n&quot;; # &lt;--- HERE'S THE MAGIC
-
     while( &lt;$in&gt; ) {
             print $out $_;
     }
-
     close $out;
 </pre>
 <p class="Pp">To change existing lines, insert the code to modify the lines
@@ -174,17 +157,13 @@
     The happens for every line, so be sure that you're supposed to do that on
     every line!</p>
 <p class="Pp"></p>
-<pre>
-    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
+<pre>    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;;
     open my $out, '&gt;', &quot;$file.new&quot; or die &quot;Can't write new file: $!&quot;;
-
     print $out &quot;# Add this line to the top\n&quot;;
-
     while( &lt;$in&gt; ) {
         s/\b(perl)\b/Perl/g;
         print $out $_;
     }
-
     close $out;
 </pre>
 <p class="Pp">To change only a particular line, the input line number,
@@ -193,16 +172,13 @@
     change it, and print it. After that, read the rest of the lines and print
     those:</p>
 <p class="Pp"></p>
-<pre>
-    while( &lt;$in&gt; ) { # print the lines before the change
+<pre>    while( &lt;$in&gt; ) { # print the lines before the change
         print $out $_;
         last if $. == 4; # line number before change
     }
-
     my $line = &lt;$in&gt;;
     $line =~ s/\b(perl)\b/Perl/g;
     print $out $line;
-
     while( &lt;$in&gt; ) { # print the rest of the lines
         print $out $_;
     }
@@ -213,8 +189,7 @@
     once it encounters either <span class="Li">&quot;__END__&quot;</span> or
     <span class="Li">&quot;__DATA__&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    while( &lt;$in&gt; ) {
+<pre>    while( &lt;$in&gt; ) {
         next if /^\s+#/;             # skip comment lines
         last if /^__(END|DATA)__$/;  # stop at end of code marker
         print $out $_;
@@ -224,8 +199,7 @@
     <span class="Li">&quot;next&quot;</span> to skip the lines you don't want to
     show up in the output. This example skips every fifth line:</p>
 <p class="Pp"></p>
-<pre>
-    while( &lt;$in&gt; ) {
+<pre>    while( &lt;$in&gt; ) {
         next unless $. % 5;
         print $out $_;
     }
@@ -234,14 +208,10 @@
     once rather than processing line-by-line, you can slurp it in (as long as
     you can fit the whole thing in memory!):</p>
 <p class="Pp"></p>
-<pre>
-    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;
+<pre>    open my $in,  '&lt;',  $file      or die &quot;Can't read old file: $!&quot;
     open my $out, '&gt;', &quot;$file.new&quot; or die &quot;Can't write new file: $!&quot;;
-
     my $content = do { local $/; &lt;$in&gt; }; # slurp!
-
         # do your magic here
-
     print $out $content;
 </pre>
 <p class="Pp">Modules such as Path::Tiny and Tie::File can help with that too.
@@ -259,34 +229,29 @@
     of <span class="Li">$_</span> at the end of the loop. See perlrun for more
     details.</p>
 <p class="Pp"></p>
-<pre>
-    perl -pi -e 's/Fred/Barney/' inFile.txt
+<pre>    perl -pi -e 's/Fred/Barney/' inFile.txt
 </pre>
 <p class="Pp">To make a backup of
     <span class="Li">&quot;inFile.txt&quot;</span>, give
     <span class="Li">&quot;-i&quot;</span> a file extension to add:</p>
 <p class="Pp"></p>
-<pre>
-    perl -pi.bak -e 's/Fred/Barney/' inFile.txt
+<pre>    perl -pi.bak -e 's/Fred/Barney/' inFile.txt
 </pre>
 <p class="Pp">To change only the fifth line, you can add a test checking
     <span class="Li">$.</span>, the input line number, then only perform the
     operation when the test passes:</p>
 <p class="Pp"></p>
-<pre>
-    perl -pi -e 's/Fred/Barney/ if $. == 5' inFile.txt
+<pre>    perl -pi -e 's/Fred/Barney/ if $. == 5' inFile.txt
 </pre>
 <p class="Pp">To add lines before a certain line, you can add a line (or lines!)
     before Perl prints <span class="Li">$_</span>:</p>
 <p class="Pp"></p>
-<pre>
-    perl -pi -e 'print &quot;Put before third line\n&quot; if $. == 3' inFile.txt
+<pre>    perl -pi -e 'print &quot;Put before third line\n&quot; if $. == 3' inFile.txt
 </pre>
 <p class="Pp">You can even add a line to the beginning of a file, since the
     current line prints at the end of the loop:</p>
 <p class="Pp"></p>
-<pre>
-    perl -pi -e 'print &quot;Put before first line\n&quot; if $. == 1' inFile.txt
+<pre>    perl -pi -e 'print &quot;Put before first line\n&quot; if $. == 1' inFile.txt
 </pre>
 <p class="Pp">To insert a line after one already in the file, use the
     <span class="Li">&quot;-n&quot;</span> switch. It's just like
@@ -295,13 +260,11 @@
     yourself. In this case, print <span class="Li">$_</span> first, then print
     the line that you want to add.</p>
 <p class="Pp"></p>
-<pre>
-    perl -ni -e 'print; print &quot;Put after fifth line\n&quot; if $. == 5' inFile.txt
+<pre>    perl -ni -e 'print; print &quot;Put after fifth line\n&quot; if $. == 5' inFile.txt
 </pre>
 <p class="Pp">To delete lines, only print the ones that you want.</p>
 <p class="Pp"></p>
-<pre>
-    perl -ni -e 'print if /d/' inFile.txt
+<pre>    perl -ni -e 'print if /d/' inFile.txt
 </pre>
 </section>
 <section class="Ss">
@@ -311,32 +274,27 @@
 <p class="Pp">Conceptually, the easiest way to count the lines in a file is to
     simply read them and count them:</p>
 <p class="Pp"></p>
-<pre>
-    my $count = 0;
+<pre>    my $count = 0;
     while( &lt;$fh&gt; ) { $count++; }
 </pre>
 <p class="Pp">You don't really have to count them yourself, though, since Perl
     already does that with the <span class="Li">$.</span> variable, which is the
     current line number from the last filehandle read:</p>
 <p class="Pp"></p>
-<pre>
-    1 while( &lt;$fh&gt; );
+<pre>    1 while( &lt;$fh&gt; );
     my $count = $.;
 </pre>
 <p class="Pp">If you want to use <span class="Li">$.</span>, you can reduce it
     to a simple one-liner, like one of these:</p>
 <p class="Pp"></p>
-<pre>
-    % perl -lne '} print $.; {'    file
-
+<pre>    % perl -lne '} print $.; {'    file
     % perl -lne 'END { print $. }' file
 </pre>
 <p class="Pp">Those can be rather inefficient though. If they aren't fast enough
     for you, you might just read chunks of data and count the number of
     newlines:</p>
 <p class="Pp"></p>
-<pre>
-    my $lines = 0;
+<pre>    my $lines = 0;
     open my($fh), '&lt;:raw', $filename or die &quot;Can't open $filename: $!&quot;;
     while( sysread $fh, $buffer, 4096 ) {
         $lines += ( $buffer =~ tr/\n// );
@@ -348,8 +306,7 @@
     <span class="Li">&quot;s///&quot;</span> so you can count the number of
     times the input record separator, <span class="Li">$/</span>, shows up:</p>
 <p class="Pp"></p>
-<pre>
-    my $lines = 0;
+<pre>    my $lines = 0;
     open my($fh), '&lt;:raw', $filename or die &quot;Can't open $filename: $!&quot;;
     while( sysread $fh, $buffer, 4096 ) {
         $lines += ( $buffer =~ s|$/||g; );
@@ -361,11 +318,8 @@
     with the extra interprocess overhead. Ensure that you have an untainted
     filename though:</p>
 <p class="Pp"></p>
-<pre>
-    #!perl -T
-
+<pre>    #!perl -T
     $ENV{PATH} = undef;
-
     my $lines;
     if( $filename =~ /^([0-9a-z_.]+)\z/ ) {
         $lines = `/usr/bin/wc -l $1`
@@ -391,21 +345,16 @@
     this case, you get the file position at the end of the last line you want to
     keep and truncate the file to that point:</p>
 <p class="Pp"></p>
-<pre>
-    use File::ReadBackwards;
-
+<pre>    use File::ReadBackwards;
     my $filename = 'test.txt';
     my $Lines_to_truncate = 2;
-
     my $bw = File::ReadBackwards-&gt;new( $filename )
         or die &quot;Could not read backwards in [$filename]: $!&quot;;
-
     my $lines_from_end = 0;
     until( $bw-&gt;eof or $lines_from_end == $Lines_to_truncate ) {
         print &quot;Got: &quot;, $bw-&gt;readline;
         $lines_from_end++;
     }
-
     truncate( $filename, $bw-&gt;tell );
 </pre>
 <p class="Pp">The File::ReadBackwards module also has the advantage of setting
@@ -424,8 +373,7 @@
     By modifying the appropriate variables directly, you can get the same
     behavior within a larger program. For example:</p>
 <p class="Pp"></p>
-<pre>
-    # ...
+<pre>    # ...
     {
         local($^I, @ARGV) = ('.orig', glob(&quot;*.c&quot;));
         while (&lt;&gt;) {
@@ -450,9 +398,7 @@
 <p class="Pp">Use the File::Copy module. It comes with Perl and can do a true
     copy across file systems, and it does its magic in a portable fashion.</p>
 <p class="Pp"></p>
-<pre>
-    use File::Copy;
-
+<pre>    use File::Copy;
     copy( $original, $new_copy ) or die &quot;Copy failed: $!&quot;;
 </pre>
 <p class="Pp">If you can't use File::Copy, you'll have to do the work yourself:
@@ -469,19 +415,14 @@
     5.8 or later, the <span class="Li">&quot;open()&quot;</span> function
     creates an anonymous temporary file:</p>
 <p class="Pp"></p>
-<pre>
-    open my $tmp, '+&gt;', undef or die $!;
+<pre>    open my $tmp, '+&gt;', undef or die $!;
 </pre>
 <p class="Pp">Otherwise, you can use the File::Temp module.</p>
 <p class="Pp"></p>
-<pre>
-    use File::Temp qw/ tempfile tempdir /;
-
+<pre>    use File::Temp qw/ tempfile tempdir /;
     my $dir = tempdir( CLEANUP =&gt; 1 );
     ($fh, $filename) = tempfile( DIR =&gt; $dir );
-
     # or if you don't need to know the filename
-
     my $fh = tempfile( DIR =&gt; $dir );
 </pre>
 <p class="Pp">The File::Temp has been a standard module since Perl 5.6.1. If you
@@ -490,8 +431,7 @@
     IO::File module to get a filehandle opened for reading and writing. Use it
     if you don't need to know the file's name:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::File;
+<pre>    use IO::File;
     my $fh = IO::File-&gt;new_tmpfile()
         or die &quot;Unable to make new temporary file: $!&quot;;
 </pre>
@@ -499,14 +439,12 @@
     process ID and/or the current time-value. If you need to have many temporary
     files in one process, use a counter:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         use Fcntl;
         use File::Spec;
         my $temp_dir  = File::Spec-&gt;tmpdir();
         my $file_base = sprintf &quot;%d-%d-0000&quot;, $$, time;
         my $base_name = File::Spec-&gt;catfile($temp_dir, $file_base);
-
         sub temp_file {
             my $fh;
             my $count = 0;
@@ -515,7 +453,6 @@
                 # O_EXCL is required for security reasons.
                 sysopen $fh, $base_name, O_WRONLY|O_EXCL|O_CREAT;
             }
-
             if( defined fileno($fh) ) {
                 return ($fh, $base_name);
             }
@@ -536,8 +473,7 @@
     again some fixed-format input lines, in this case from the output of a
     normal, Berkeley-style ps:</p>
 <p class="Pp"></p>
-<pre>
-    # sample input line:
+<pre>    # sample input line:
     #   15158 p5  T      0:00 perl /home/tchrist/scripts/now-what
     my $PS_T = 'A6 A4 A7 A5 A*';
     open my $ps, '-|', 'ps';
@@ -567,13 +503,9 @@
     can then pass these references just like any other scalar, and use them in
     the place of named handles.</p>
 <p class="Pp"></p>
-<pre>
-    open my    $fh, $file_name;
-
+<pre>    open my    $fh, $file_name;
     open local $fh, $file_name;
-
     print $fh &quot;Hello World!\n&quot;;
-
     process_file( $fh );
 </pre>
 <p class="Pp">If you like, you can store these filehandles in an array or a
@@ -582,9 +514,7 @@
     the filehandle reference in braces. Perl can only figure it out on its own
     when the filehandle reference is a simple scalar.</p>
 <p class="Pp"></p>
-<pre>
-    my @fhs = ( $fh1, $fh2, $fh3 );
-
+<pre>    my @fhs = ( $fh1, $fh2, $fh3 );
     for( $i = 0; $i &lt;= $#fhs; $i++ ) {
         print {$fhs[$i]} &quot;just another Perl answer, \n&quot;;
     }
@@ -592,11 +522,9 @@
 <p class="Pp">Before perl5.6, you had to deal with various typeglob idioms which
     you may see in older code.</p>
 <p class="Pp"></p>
-<pre>
-    open FILE, &quot;&gt; $filename&quot;;
+<pre>    open FILE, &quot;&gt; $filename&quot;;
     process_typeglob(   *FILE );
     process_reference( \*FILE );
-
     sub process_typeglob  { local *FH = shift; print FH  &quot;Typeglob!&quot; }
     sub process_reference { local $fh = shift; print $fh &quot;Reference!&quot; }
 </pre>
@@ -610,8 +538,7 @@
     in a place that a filehandle is expected. Here are ways to get indirect
     filehandles:</p>
 <p class="Pp"></p>
-<pre>
-    $fh =   SOME_FH;       # bareword is strict-subs hostile
+<pre>    $fh =   SOME_FH;       # bareword is strict-subs hostile
     $fh =  &quot;SOME_FH&quot;;      # strict-refs hostile; same package only
     $fh =  *SOME_FH;       # typeglob
     $fh = \*SOME_FH;       # ref to typeglob (bless-able)
@@ -621,8 +548,7 @@
     from one of the IO::* modules to create an anonymous filehandle and store
     that in a scalar variable.</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Handle;                     # 5.004 or higher
+<pre>    use IO::Handle;                     # 5.004 or higher
     my $fh = IO::Handle-&gt;new();
 </pre>
 <p class="Pp">Then use any of those as you would a normal filehandle. Anywhere
@@ -634,8 +560,7 @@
     <span class="Li">&quot;&lt;FH&gt;&quot;</span> diamond operator will accept
     either a named filehandle or a scalar variable containing one:</p>
 <p class="Pp"></p>
-<pre>
-    ($ifh, $ofh, $efh) = (*STDIN, *STDOUT, *STDERR);
+<pre>    ($ifh, $ofh, $efh) = (*STDIN, *STDOUT, *STDERR);
     print $ofh &quot;Type it: &quot;;
     my $got = &lt;$ifh&gt;
     print $efh &quot;What was that: $got&quot;;
@@ -643,16 +568,14 @@
 <p class="Pp">If you're passing a filehandle to a function, you can write the
     function in two ways:</p>
 <p class="Pp"></p>
-<pre>
-    sub accept_fh {
+<pre>    sub accept_fh {
         my $fh = shift;
         print $fh &quot;Sending to indirect filehandle\n&quot;;
     }
 </pre>
 <p class="Pp">Or it can localize a typeglob and use the filehandle directly:</p>
 <p class="Pp"></p>
-<pre>
-    sub accept_fh {
+<pre>    sub accept_fh {
         local *FH = shift;
         print  FH &quot;Sending to localized filehandle\n&quot;;
     }
@@ -661,8 +584,7 @@
     filehandles. (They might also work with strings under some circumstances,
     but this is risky.)</p>
 <p class="Pp"></p>
-<pre>
-    accept_fh(*STDOUT);
+<pre>    accept_fh(*STDOUT);
     accept_fh($handle);
 </pre>
 <p class="Pp">In the examples above, we assigned the filehandle to a scalar
@@ -673,8 +595,7 @@
     something other than a simple scalar variable as a filehandle is illegal and
     won't even compile:</p>
 <p class="Pp"></p>
-<pre>
-    my @fd = (*STDIN, *STDOUT, *STDERR);
+<pre>    my @fd = (*STDIN, *STDOUT, *STDERR);
     print $fd[1] &quot;Type it: &quot;;                           # WRONG
     my $got = &lt;$fd[0]&gt;                                  # WRONG
     print $fd[2] &quot;What was that: $got&quot;;                 # WRONG
@@ -683,16 +604,14 @@
     <span class="Li">&quot;printf&quot;</span>, you get around this by using a
     block and an expression where you would place the filehandle:</p>
 <p class="Pp"></p>
-<pre>
-    print  { $fd[1] } &quot;funny stuff\n&quot;;
+<pre>    print  { $fd[1] } &quot;funny stuff\n&quot;;
     printf { $fd[1] } &quot;Pity the poor %x.\n&quot;, 3_735_928_559;
     # Pity the poor deadbeef.
 </pre>
 <p class="Pp">That block is a proper block like any other, so you can put more
     complicated code there. This sends the message out to one of two places:</p>
 <p class="Pp"></p>
-<pre>
-    my $ok = -x &quot;/bin/cat&quot;;
+<pre>    my $ok = -x &quot;/bin/cat&quot;;
     print { $ok ? $fd[1] : $fd[2] } &quot;cat stat $ok\n&quot;;
     print { $fd[ 1+ ($ok || 0) ]  } &quot;cat stat $ok\n&quot;;
 </pre>
@@ -708,8 +627,7 @@
     but only because <b>readline()</b> requires a typeglob. It doesn't work with
     objects or strings, which might be a bug we haven't fixed yet.</p>
 <p class="Pp"></p>
-<pre>
-    $got = readline($fd[0]);
+<pre>    $got = readline($fd[0]);
 </pre>
 <p class="Pp">Let it be noted that the flakiness of indirect filehandles is not
     related to whether they're strings, typeglobs, objects, or anything else.
@@ -725,11 +643,9 @@
     filename. This file handle can then be used to read from or write to the
     string:</p>
 <p class="Pp"></p>
-<pre>
-    open(my $fh, '&gt;', \$string) or die &quot;Could not open string for writing&quot;;
+<pre>    open(my $fh, '&gt;', \$string) or die &quot;Could not open string for writing&quot;;
     print $fh &quot;foo\n&quot;;
     print $fh &quot;bar\n&quot;;    # $string now contains &quot;foo\nbar\n&quot;
-
     open(my $fh, '&lt;', \$string) or die &quot;Could not open string for reading&quot;;
     my $x = &lt;$fh&gt;;    # $x now contains &quot;foo\n&quot;
 </pre>
@@ -750,8 +666,7 @@
     string, you just have to &lt;open&gt; a filehandle to a string, which Perl
     has been able to do since Perl 5.6:</p>
 <p class="Pp"></p>
-<pre>
-    open FH, '&gt;', \my $string;
+<pre>    open FH, '&gt;', \my $string;
     write( FH );
 </pre>
 <p class="Pp">Since you want to be a good programmer, you probably want to use a
@@ -762,20 +677,16 @@
     and <span class="Li">$~</span> which shows the line format. You have to
     change the default filehandle to set these variables:</p>
 <p class="Pp"></p>
-<pre>
-    open my($fh), '&gt;', \my $string;
-
+<pre>    open my($fh), '&gt;', \my $string;
     { # set per-filehandle variables
         my $old_fh = select( $fh );
         $~ = 'ANIMAL';
         $^ = 'ANIMAL_TOP';
         select( $old_fh );
     }
-
     format ANIMAL_TOP =
      ID  Type    Name
     .
-
     format ANIMAL =
     @##   @&lt;&lt;&lt;    @&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
     $id,  $type,  $name
@@ -785,12 +696,10 @@
     whatever variables you use have to scope in the format. That most likely
     means you'll want to localize some package variables:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         local( $id, $type, $name ) = qw( 12 cat Buster );
         write( $fh );
     }
-
     print $string;
 </pre>
 <p class="Pp">There are also some tricks that you can play with
@@ -808,8 +717,7 @@
     instead (or anything else that they want to use, really).</p>
 <p class="Pp">This subroutine will add commas to your number:</p>
 <p class="Pp"></p>
-<pre>
-    sub commify {
+<pre>    sub commify {
         local $_  = shift;
         1 while s/^([-+]?\d+)(\d{3})/$1,$2/;
         return $_;
@@ -817,13 +725,11 @@
 </pre>
 <p class="Pp">This regex from Benjamin Goldberg will add commas to numbers:</p>
 <p class="Pp"></p>
-<pre>
-    s/(^[-+]?\d+?(?=(?&gt;(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
+<pre>    s/(^[-+]?\d+?(?=(?&gt;(?:\d{3})+)(?!\d))|\G\d{3}(?=\d))/$1,/g;
 </pre>
 <p class="Pp">It is easier to see with comments:</p>
 <p class="Pp"></p>
-<pre>
-    s/(
+<pre>    s/(
         ^[-+]?             # beginning of number.
         \d+?               # first digits before first comma
         (?=                # followed by, (but not included in the match) :
@@ -846,8 +752,7 @@
     gives more portable glob functionality.</p>
 <p class="Pp">Within Perl, you may use this directly:</p>
 <p class="Pp"></p>
-<pre>
-    $filename =~ s{
+<pre>    $filename =~ s{
       ^ ~             # find a leading tilde
       (               # save this in $1
           [^/]        # a non-slash character
@@ -866,14 +771,12 @@
 <p class="Pp">Because you're using something like this, which truncates the file
     <i>then</i> gives you read-write access:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '+&gt;', '/path/name'; # WRONG (almost always)
+<pre>    open my $fh, '+&gt;', '/path/name'; # WRONG (almost always)
 </pre>
 <p class="Pp">Whoops. You should instead use this, which will fail if the file
     doesn't exist:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '+&lt;', '/path/name'; # open for update
+<pre>    open my $fh, '+&lt;', '/path/name'; # open for update
 </pre>
 <p class="Pp">Using &quot;&gt;&quot; always clobbers or creates. Using
     &quot;&lt;&quot; never does either. The &quot;+&quot; doesn't change
@@ -882,64 +785,54 @@
     <span class="Li">&quot;sysopen&quot;</span> all assume that you've pulled in
     the constants from Fcntl:</p>
 <p class="Pp"></p>
-<pre>
-    use Fcntl;
+<pre>    use Fcntl;
 </pre>
 <p class="Pp">To open file for reading:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '&lt;', $path                               or die $!;
+<pre>    open my $fh, '&lt;', $path                               or die $!;
     sysopen my $fh, $path, O_RDONLY                       or die $!;
 </pre>
 <p class="Pp">To open file for writing, create new file if needed or else
     truncate old file:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '&gt;', $path                               or die $!;
+<pre>    open my $fh, '&gt;', $path                               or die $!;
     sysopen my $fh, $path, O_WRONLY|O_TRUNC|O_CREAT       or die $!;
     sysopen my $fh, $path, O_WRONLY|O_TRUNC|O_CREAT, 0666 or die $!;
 </pre>
 <p class="Pp">To open file for writing, create new file, file must not
   exist:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, $path, O_WRONLY|O_EXCL|O_CREAT        or die $!;
+<pre>    sysopen my $fh, $path, O_WRONLY|O_EXCL|O_CREAT        or die $!;
     sysopen my $fh, $path, O_WRONLY|O_EXCL|O_CREAT, 0666  or die $!;
 </pre>
 <p class="Pp">To open file for appending, create if necessary:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '&gt;&gt;', $path                              or die $!;
+<pre>    open my $fh, '&gt;&gt;', $path                              or die $!;
     sysopen my $fh, $path, O_WRONLY|O_APPEND|O_CREAT      or die $!;
     sysopen my $fh, $path, O_WRONLY|O_APPEND|O_CREAT, 0666 or die $!;
 </pre>
 <p class="Pp">To open file for appending, file must exist:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, $path, O_WRONLY|O_APPEND              or die $!;
+<pre>    sysopen my $fh, $path, O_WRONLY|O_APPEND              or die $!;
 </pre>
 <p class="Pp">To open file for update, file must exist:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '+&lt;', $path                              or die $!;
+<pre>    open my $fh, '+&lt;', $path                              or die $!;
     sysopen my $fh, $path, O_RDWR                         or die $!;
 </pre>
 <p class="Pp">To open file for update, create file if necessary:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, $path, O_RDWR|O_CREAT                 or die $!;
+<pre>    sysopen my $fh, $path, O_RDWR|O_CREAT                 or die $!;
     sysopen my $fh, $path, O_RDWR|O_CREAT, 0666           or die $!;
 </pre>
 <p class="Pp">To open file for update, file must not exist:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, $path, O_RDWR|O_EXCL|O_CREAT          or die $!;
+<pre>    sysopen my $fh, $path, O_RDWR|O_EXCL|O_CREAT          or die $!;
     sysopen my $fh, $path, O_RDWR|O_EXCL|O_CREAT, 0666    or die $!;
 </pre>
 <p class="Pp">To open a file without blocking, creating if necessary:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, '/foo/somefile', O_WRONLY|O_NDELAY|O_CREAT
+<pre>    sysopen my $fh, '/foo/somefile', O_WRONLY|O_NDELAY|O_CREAT
         or die &quot;can't open /foo/somefile: $!&quot;:
 </pre>
 <p class="Pp">Be warned that neither creation nor deletion of files is
@@ -977,8 +870,7 @@
     you should use the three-argument form of <b>open()</b> which does not treat
     any characters in the filename as special.</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, &quot;&lt;&quot;, &quot;  file  &quot;;  # filename is &quot;   file   &quot;
+<pre>    open my $fh, &quot;&lt;&quot;, &quot;  file  &quot;;  # filename is &quot;   file   &quot;
     open my $fh, &quot;&gt;&quot;, &quot;&gt;file&quot;;     # filename is &quot;&gt;file&quot;
 </pre>
 </section>
@@ -988,8 +880,7 @@
 <p class="Pp">If your operating system supports a proper <b>mv</b>(1) utility or
     its functional equivalent, this works:</p>
 <p class="Pp"></p>
-<pre>
-    rename($old, $new) or system(&quot;mv&quot;, $old, $new);
+<pre>    rename($old, $new) or system(&quot;mv&quot;, $old, $new);
 </pre>
 <p class="Pp">It may be more portable to use the File::Copy module instead. You
     just copy to the new file to the new name (checking return values), then
@@ -1043,8 +934,7 @@
   can't I just open(FH, &quot;&gt;file.lock&quot;)?</a></h2>
 <p class="Pp">A common bit of code <b>NOT TO USE</b> is this:</p>
 <p class="Pp"></p>
-<pre>
-    sleep(3) while -e 'file.lock';    # PLEASE DO NOT USE
+<pre>    sleep(3) while -e 'file.lock';    # PLEASE DO NOT USE
     open my $lock, '&gt;', 'file.lock'; # THIS BROKEN CODE
 </pre>
 <p class="Pp">This is a classic race condition: you take two steps to do
@@ -1052,8 +942,7 @@
     an atomic test-and-set instruction. In theory, this &quot;ought&quot; to
     work:</p>
 <p class="Pp"></p>
-<pre>
-    sysopen my $fh, &quot;file.lock&quot;, O_WRONLY|O_EXCL|O_CREAT
+<pre>    sysopen my $fh, &quot;file.lock&quot;, O_WRONLY|O_EXCL|O_CREAT
         or die &quot;can't open  file.lock: $!&quot;;
 </pre>
 <p class="Pp">except that lamentably, file creation (and deletion) is not atomic
@@ -1071,8 +960,7 @@
     they're more realistic.</p>
 <p class="Pp">Anyway, this is what you can do if you can't help yourself.</p>
 <p class="Pp"></p>
-<pre>
-    use Fcntl qw(:DEFAULT :flock);
+<pre>    use Fcntl qw(:DEFAULT :flock);
     sysopen my $fh, &quot;numfile&quot;, O_RDWR|O_CREAT or die &quot;can't open numfile: $!&quot;;
     flock $fh, LOCK_EX                        or die &quot;can't flock numfile: $!&quot;;
     my $num = &lt;$fh&gt; || 0;
@@ -1083,8 +971,7 @@
 </pre>
 <p class="Pp">Here's a much better web-page hit counter:</p>
 <p class="Pp"></p>
-<pre>
-    $hits = int( (time() - 850_000_000) / rand(1_000) );
+<pre>    $hits = int( (time() - 850_000_000) / rand(1_000) );
 </pre>
 <p class="Pp">If the count doesn't impress your friends, then the code might.
     :-)</p>
@@ -1129,14 +1016,12 @@
 <p class="Pp">If you're just trying to patch a binary, in many cases something
     as simple as this works:</p>
 <p class="Pp"></p>
-<pre>
-    perl -i -pe 's{window manager}{window mangler}g' /usr/bin/emacs
+<pre>    perl -i -pe 's{window manager}{window mangler}g' /usr/bin/emacs
 </pre>
 <p class="Pp">However, if you have fixed sized records, then you might do
     something more like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $RECSIZE = 220; # size of record, in bytes
+<pre>    my $RECSIZE = 220; # size of record, in bytes
     my $recno   = 37;  # which record to update
     open my $fh, '+&lt;', 'somewhere' or die &quot;can't update somewhere: $!&quot;;
     seek $fh, $recno * $RECSIZE, 0;
@@ -1165,16 +1050,14 @@
     human-readable form.</p>
 <p class="Pp">Here's an example:</p>
 <p class="Pp"></p>
-<pre>
-    my $write_secs = (stat($file))[9];
+<pre>    my $write_secs = (stat($file))[9];
     printf &quot;file %s updated at %s\n&quot;, $file,
         scalar localtime($write_secs);
 </pre>
 <p class="Pp">If you prefer something more legible, use the File::stat module
     (part of the standard distribution in version 5.004 and later):</p>
 <p class="Pp"></p>
-<pre>
-    # error checking left as an exercise for reader.
+<pre>    # error checking left as an exercise for reader.
     use File::stat;
     use Time::localtime;
     my $date_string = ctime(stat($file)-&gt;mtime);
@@ -1191,8 +1074,7 @@
     that copies the read and write times from its first argument to all the rest
     of them.</p>
 <p class="Pp"></p>
-<pre>
-    if (@ARGV &lt; 2) {
+<pre>    if (@ARGV &lt; 2) {
         die &quot;usage: cptimes timestamp_file other_files ...\n&quot;;
     }
     my $timestamp = shift;
@@ -1217,8 +1099,7 @@
 <p class="Pp">If you only have to do this once, you can print individually to
     each filehandle.</p>
 <p class="Pp"></p>
-<pre>
-    for my $fh ($fh1, $fh2, $fh3) { print $fh &quot;whatever\n&quot; }
+<pre>    for my $fh ($fh1, $fh2, $fh3) { print $fh &quot;whatever\n&quot; }
 </pre>
 </section>
 <section class="Ss">
@@ -1227,8 +1108,7 @@
 <p class="Pp">The customary Perl approach for processing all the lines in a file
     is to do so one line at a time:</p>
 <p class="Pp"></p>
-<pre>
-    open my $input, '&lt;', $file or die &quot;can't open $file: $!&quot;;
+<pre>    open my $input, '&lt;', $file or die &quot;can't open $file: $!&quot;;
     while (&lt;$input&gt;) {
         chomp;
         # do something with $_
@@ -1240,8 +1120,7 @@
     time, which is often--if not almost always--the wrong approach. Whenever you
     see someone do this:</p>
 <p class="Pp"></p>
-<pre>
-    my @lines = &lt;INPUT&gt;;
+<pre>    my @lines = &lt;INPUT&gt;;
 </pre>
 <p class="Pp">You should think long and hard about why you need everything
     loaded at once. It's just not a scalable solution.</p>
@@ -1249,9 +1128,7 @@
     CPAN, you can virtually load the entire file into a string without actually
     storing it in memory:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Map qw(map_file);
-
+<pre>    use File::Map qw(map_file);
     map_file my $string, $filename;
 </pre>
 <p class="Pp">Once mapped, you can treat <span class="Li">$string</span> as you
@@ -1264,17 +1141,14 @@
 <p class="Pp">If you want to load the entire file, you can use the Path::Tiny
     module to do it in one simple and efficient step:</p>
 <p class="Pp"></p>
-<pre>
-    use Path::Tiny;
-
+<pre>    use Path::Tiny;
     my $all_of_it = path($filename)-&gt;slurp; # entire file in scalar
     my @all_lines = path($filename)-&gt;lines; # one line per element
 </pre>
 <p class="Pp">Or you can read the entire file contents into a scalar like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    my $var;
+<pre>    my $var;
     {
         local $/;
         open my $fh, '&lt;', $file or die &quot;can't open $file: $!&quot;;
@@ -1285,20 +1159,17 @@
     automatically close the file at block exit. If the file is already open,
     just use this:</p>
 <p class="Pp"></p>
-<pre>
-    my $var = do { local $/; &lt;$fh&gt; };
+<pre>    my $var = do { local $/; &lt;$fh&gt; };
 </pre>
 <p class="Pp">You can also use a localized <span class="Li">@ARGV</span> to
     eliminate the <span class="Li">&quot;open&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    my $var = do { local( @ARGV, $/ ) = $file; &lt;&gt; };
+<pre>    my $var = do { local( @ARGV, $/ ) = $file; &lt;&gt; };
 </pre>
 <p class="Pp">For ordinary files you can also use the
     <span class="Li">&quot;read&quot;</span> function.</p>
 <p class="Pp"></p>
-<pre>
-    read( $fh, $var, -s $fh );
+<pre>    read( $fh, $var, -s $fh );
 </pre>
 <p class="Pp">That third argument tests the byte size of the data on the
     <span class="Li">$fh</span> filehandle and reads that many bytes into the
@@ -1329,8 +1200,7 @@
     interface (POSIX), you can use the following code, which you'll note turns
     off echo processing as well.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
+<pre>    #!/usr/bin/perl -w
     use strict;
     $| = 1;
     for (1..4) {
@@ -1339,33 +1209,25 @@
         print &quot;--&gt; $got\n&quot;;
     }
     exit;
-
     BEGIN {
         use POSIX qw(:termios_h);
-
         my ($term, $oterm, $echo, $noecho, $fd_stdin);
-
         my $fd_stdin = fileno(STDIN);
-
         $term     = POSIX::Termios-&gt;new();
         $term-&gt;getattr($fd_stdin);
         $oterm     = $term-&gt;getlflag();
-
         $echo     = ECHO | ECHOK | ICANON;
         $noecho   = $oterm &amp; ~$echo;
-
         sub cbreak {
             $term-&gt;setlflag($noecho);
             $term-&gt;setcc(VTIME, 1);
             $term-&gt;setattr($fd_stdin, TCSANOW);
         }
-
         sub cooked {
             $term-&gt;setlflag($oterm);
             $term-&gt;setcc(VTIME, 0);
             $term-&gt;setattr($fd_stdin, TCSANOW);
         }
-
         sub getone {
             my $key = '';
             cbreak();
@@ -1374,14 +1236,12 @@
             return $key;
         }
     }
-
     END { cooked() }
 </pre>
 <p class="Pp">The Term::ReadKey module from CPAN may be easier to use. Recent
     versions include also support for non-portable systems as well.</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ReadKey;
+<pre>    use Term::ReadKey;
     open my $tty, '&lt;', '/dev/tty';
     print &quot;Gimme a char: &quot;;
     ReadMode &quot;raw&quot;;
@@ -1402,8 +1262,7 @@
     comp.unix.* for things like this: the answer is essentially the same. It's
     very system-dependent. Here's one solution that works on BSD systems:</p>
 <p class="Pp"></p>
-<pre>
-    sub key_ready {
+<pre>    sub key_ready {
         my($rin, $nfd);
         vec($rin, fileno(STDIN), 1) = 1;
         return $nfd = select($rin,undef,undef,0);
@@ -1415,9 +1274,7 @@
     <span class="Li">&quot;require&quot;</span>d. FIONREAD ends up defined as a
     function in the <i>sys/ioctl.ph</i> file:</p>
 <p class="Pp"></p>
-<pre>
-    require './sys/ioctl.ph';
-
+<pre>    require './sys/ioctl.ph';
     $size = pack(&quot;L&quot;, 0);
     ioctl(FH, FIONREAD(), $size)    or die &quot;Couldn't call ioctl: $!\n&quot;;
     $size = unpack(&quot;L&quot;, $size);
@@ -1425,14 +1282,12 @@
 <p class="Pp">If <i>h2ph</i> wasn't installed or doesn't work for you, you can
     <i>grep</i> the include files by hand:</p>
 <p class="Pp"></p>
-<pre>
-    % grep FIONREAD /usr/include/*/*
+<pre>    % grep FIONREAD /usr/include/*/*
     /usr/include/asm/ioctls.h:#define FIONREAD      0x541B
 </pre>
 <p class="Pp">Or write a small C program using the editor of champions:</p>
 <p class="Pp"></p>
-<pre>
-    % cat &gt; fionread.c
+<pre>    % cat &gt; fionread.c
     #include &lt;sys/ioctl.h&gt;
     main() {
         printf(&quot;%#08x\n&quot;, FIONREAD);
@@ -1445,9 +1300,7 @@
 <p class="Pp">And then hard-code it, leaving porting as an exercise to your
     successor.</p>
 <p class="Pp"></p>
-<pre>
-    $FIONREAD = 0x4004667f;         # XXX: opsys dependent
-
+<pre>    $FIONREAD = 0x4004667f;         # XXX: opsys dependent
     $size = pack(&quot;L&quot;, 0);
     ioctl(FH, $FIONREAD, $size)     or die &quot;Couldn't call ioctl: $!\n&quot;;
     $size = unpack(&quot;L&quot;, $size);
@@ -1460,8 +1313,7 @@
   do I do a &quot;tail -f&quot; in perl?</a></h2>
 <p class="Pp">First try</p>
 <p class="Pp"></p>
-<pre>
-    seek($gw_fh, 0, 1);
+<pre>    seek($gw_fh, 0, 1);
 </pre>
 <p class="Pp">The statement <span class="Li">&quot;seek($gw_fh, 0,
     1)&quot;</span> doesn't change the current position, but it does clear the
@@ -1471,8 +1323,7 @@
 <p class="Pp">If that doesn't work (it relies on features of your stdio
     implementation), then you need something more like this:</p>
 <p class="Pp"></p>
-<pre>
-    for (;;) {
+<pre>    for (;;) {
       for ($curpos = tell($gw_fh); &lt;$gw_fh&gt;; $curpos =tell($gw_fh)) {
         # search for some stuff and put it into files
       }
@@ -1491,14 +1342,12 @@
 <p class="Pp">If you check &quot;open&quot; in perlfunc, you'll see that several
     of the ways to call <b>open()</b> should do the trick. For example:</p>
 <p class="Pp"></p>
-<pre>
-    open my $log, '&gt;&gt;', '/foo/logfile';
+<pre>    open my $log, '&gt;&gt;', '/foo/logfile';
     open STDERR, '&gt;&amp;', $log;
 </pre>
 <p class="Pp">Or even with a literal numeric descriptor:</p>
 <p class="Pp"></p>
-<pre>
-    my $fd = $ENV{MHCONTEXTFD};
+<pre>    my $fd = $ENV{MHCONTEXTFD};
     open $mhcontext, &quot;&lt;&amp;=$fd&quot;;  # like fdopen(3S)
 </pre>
 <p class="Pp">Note that &quot;&lt;&amp;STDIN&quot; makes a copy, but
@@ -1517,9 +1366,7 @@
     <span class="Li">&quot;close()&quot;</span> function from the POSIX
   module:</p>
 <p class="Pp"></p>
-<pre>
-    use POSIX ();
-
+<pre>    use POSIX ();
     POSIX::close( $fd );
 </pre>
 <p class="Pp">This should rarely be necessary, as the Perl
@@ -1528,16 +1375,14 @@
     as with <span class="Li">&quot;MHCONTEXT&quot;</span> above. But if you
     really have to, you may be able to do this:</p>
 <p class="Pp"></p>
-<pre>
-    require './sys/syscall.ph';
+<pre>    require './sys/syscall.ph';
     my $rc = syscall(SYS_close(), $fd + 0);  # must force numeric
     die &quot;can't sysclose $fd: $!&quot; unless $rc == -1;
 </pre>
 <p class="Pp">Or, just use the fdopen(3S) feature of
     <span class="Li">&quot;open()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         open my $fh, &quot;&lt;&amp;=$fd&quot; or die &quot;Cannot reopen fd=$fd: $!&quot;;
         close $fh;
     }
@@ -1594,8 +1439,7 @@
     lines in the file, there are a couple of things that you can do.</p>
 <p class="Pp">Here's a reservoir-sampling algorithm from the Camel Book:</p>
 <p class="Pp"></p>
-<pre>
-    srand;
+<pre>    srand;
     rand($.) &lt; 1 &amp;&amp; ($line = $_) while &lt;&gt;;
 </pre>
 <p class="Pp">This has a significant advantage in space over reading the whole
@@ -1604,8 +1448,7 @@
 <p class="Pp">You can use the File::Random module which provides a function for
     that algorithm:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Random qw/random_line/;
+<pre>    use File::Random qw/random_line/;
     my $line = random_line($filename);
 </pre>
 <p class="Pp">Another way is to use the Tie::File module, which treats the
@@ -1619,8 +1462,7 @@
     you print the array, you are probably interpolating the array in double
     quotes:</p>
 <p class="Pp"></p>
-<pre>
-    my @animals = qw(camel llama alpaca vicuna);
+<pre>    my @animals = qw(camel llama alpaca vicuna);
     print &quot;animals are: @animals\n&quot;;
 </pre>
 <p class="Pp">It's the double quotes, not the
@@ -1629,30 +1471,26 @@
     spaces (or whatever is in <span class="Li">$&quot;</span>, which is a space
     by default):</p>
 <p class="Pp"></p>
-<pre>
-    animals are: camel llama alpaca vicuna
+<pre>    animals are: camel llama alpaca vicuna
 </pre>
 <p class="Pp">This is different than printing the array without the
     interpolation:</p>
 <p class="Pp"></p>
-<pre>
-    my @animals = qw(camel llama alpaca vicuna);
+<pre>    my @animals = qw(camel llama alpaca vicuna);
     print &quot;animals are: &quot;, @animals, &quot;\n&quot;;
 </pre>
 <p class="Pp">Now the output doesn't have the spaces between the elements
     because the elements of <span class="Li">@animals</span> simply become part
     of the list to <span class="Li">&quot;print&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    animals are: camelllamaalpacavicuna
+<pre>    animals are: camelllamaalpacavicuna
 </pre>
 <p class="Pp">You might notice this when each of the elements of
     <span class="Li">@array</span> end with a newline. You expect to print one
     element per line, but notice that every line after the first is
   indented:</p>
 <p class="Pp"></p>
-<pre>
-    this is a line
+<pre>    this is a line
      this is another line
      this is the third line
 </pre>
@@ -1660,8 +1498,7 @@
     don't want to put anything between your array elements, don't use the array
     in double quotes. You can send it to print without them:</p>
 <p class="Pp"></p>
-<pre>
-    print @lines;
+<pre>    print @lines;
 </pre>
 </section>
 <section class="Ss">
@@ -1673,11 +1510,8 @@
     the <span class="Li">&quot;find&quot;</span> subroutine with a callback
     subroutine and the directories you want to traverse:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Find;
-
+<pre>    use File::Find;
     find( \&amp;wanted, @directories );
-
     sub wanted {
         # full path in $File::Find::name
         # just filename in $_
@@ -1690,20 +1524,15 @@
     create the callback subroutine using something closer to the syntax of the
     <span class="Li">&quot;find&quot;</span> command-line utility:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Find;
+<pre>    use File::Find;
     use File::Finder;
-
     my $deep_dirs = File::Finder-&gt;depth-&gt;type('d')-&gt;ls-&gt;exec('rmdir','{}');
-
     find( $deep_dirs-&gt;as_options, @places );
 </pre>
 <p class="Pp">The File::Find::Rule module, which you can download from CPAN, has
     a similar interface, but does the traversal for you too:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Find::Rule;
-
+<pre>    use File::Find::Rule;
     my @files = File::Find::Rule-&gt;file()
                              -&gt;name( '*.pm' )
                              -&gt;in( @INC );
@@ -1721,9 +1550,7 @@
     <span class="Li">&quot;remove_tree&quot;</span> which can take care of all
     of the hard work for you:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Path qw(remove_tree);
-
+<pre>    use File::Path qw(remove_tree);
     remove_tree( @directories );
 </pre>
 <p class="Pp">The File::Path module also has a legacy interface to the older

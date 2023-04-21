@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Module::Load::Conditional(3pm)</title>
 </head>
@@ -29,43 +30,30 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Module::Load::Conditional qw[can_load check_install requires];
-
-
+<pre>    use Module::Load::Conditional qw[can_load check_install requires];
     my $use_list = {
             CPANPLUS        =&gt; 0.05,
             LWP             =&gt; 5.60,
             'Test::More'    =&gt; undef,
     };
-
     print can_load( modules =&gt; $use_list )
             ? 'all modules loaded successfully'
             : 'failed to load required modules';
-
-
     my $rv = check_install( module =&gt; 'LWP', version =&gt; 5.60 )
                 or print 'LWP is not installed!';
-
     print 'LWP up to date' if $rv-&gt;{uptodate};
     print &quot;LWP version is $rv-&gt;{version}\n&quot;;
     print &quot;LWP is installed as file $rv-&gt;{file}\n&quot;;
-
-
     print &quot;LWP requires the following modules to be installed:\n&quot;;
     print join &quot;\n&quot;, requires('LWP');
-
     ### allow M::L::C to peek in your %INC rather than just
     ### scanning @INC
     $Module::Load::Conditional::CHECK_INC_HASH = 1;
-
     ### reset the 'can_load' cache
     undef $Module::Load::Conditional::CACHE;
-
     ### don't have Module::Load::Conditional issue warnings --
     ### default is '1'
     $Module::Load::Conditional::VERBOSE = 0;
-
     ### The last error that happened during a call to 'can_load'
     my $err = $Module::Load::Conditional::ERROR;
 </pre>

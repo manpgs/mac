@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-READ-TREE(1)</title>
 </head>
@@ -30,11 +31,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git read-tree</i> [[-m [--trivial] [--aggressive] | --reset | --prefix=&lt;prefix&gt;]
+<pre><i>git read-tree</i> [[-m [--trivial] [--aggressive] | --reset | --prefix=&lt;prefix&gt;]
                 [-u | -i]] [--index-output=&lt;file&gt;] [--no-sparse-checkout]
-                (--empty | &lt;tree-ish1&gt; [&lt;tree-ish2&gt; [&lt;tree-ish3&gt;]])
-</pre>
+                (--empty | &lt;tree-ish1&gt; [&lt;tree-ish2&gt; [&lt;tree-ish3&gt;]])</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -200,8 +199,7 @@
      18 yes   no    yes     exists   exists   keep index
      19 no    no    yes     exists   exists   keep index
      20 yes   yes   no      exists   exists   use M
-     21 no    yes   no      exists   exists   fail
-</pre>
+     21 no    yes   no      exists   exists   fail</pre>
 </div>
 <p class="Pp">In all &quot;keep index&quot; cases, the index entry stays as in
     the original index file. If the entry is not up to date, <i>git
@@ -233,9 +231,7 @@
 <p class="Pp">This means that you can do</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git read-tree -m &lt;tree1&gt; &lt;tree2&gt; &lt;tree3&gt;
-</pre>
+<pre>$ git read-tree -m &lt;tree1&gt; &lt;tree2&gt; &lt;tree3&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">and you will end up with an index with all of the &lt;tree1&gt;
@@ -315,10 +311,8 @@ $ git read-tree -m &lt;tree1&gt; &lt;tree2&gt; &lt;tree3&gt;
     repository:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ JC=`git rev-parse --verify &quot;HEAD^0&quot;`
-$ git checkout-index -f -u -a $JC
-</pre>
+<pre>$ JC=`git rev-parse --verify &quot;HEAD^0&quot;`
+$ git checkout-index -f -u -a $JC</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You do random edits, without running <i>git update-index</i>. And
@@ -326,10 +320,8 @@ $ git checkout-index -f -u -a $JC
     since you pulled from him:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git fetch git://.... linus
-$ LT=`git rev-parse FETCH_HEAD`
-</pre>
+<pre>$ git fetch git://.... linus
+$ LT=`git rev-parse FETCH_HEAD`</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Your work tree is still based on your HEAD ($JC), but you have
@@ -338,12 +330,10 @@ $ LT=`git rev-parse FETCH_HEAD`
     right thing. So with the following sequence:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git read-tree -m -u `git merge-base $JC $LT` $JC $LT
+<pre>$ git read-tree -m -u `git merge-base $JC $LT` $JC $LT
 $ git merge-index git-merge-one-file -a
 $ echo &quot;Merge with Linus&quot; | \
-  git commit-tree `git write-tree` -p $JC -p $LT
-</pre>
+  git commit-tree `git write-tree` -p $JC -p $LT</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">what you would commit is a pure merge between $JC and $LT without
@@ -394,10 +384,8 @@ $ echo &quot;Merge with Linus&quot; | \
   <b>unwanted</b>:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-/*
-!unwanted
-</pre>
+<pre>/*
+!unwanted</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Another tricky thing is fully repopulating the working directory
@@ -408,9 +396,7 @@ $ echo &quot;Merge with Linus&quot; | \
     <b>$GIT_DIR/info/sparse-checkout</b> file content as follows:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-/*
-</pre>
+<pre>/*</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Then you can disable sparse checkout. Sparse checkout support in

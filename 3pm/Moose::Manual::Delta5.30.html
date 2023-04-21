@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Delta(3)</title>
 </head>
@@ -79,14 +80,11 @@
   <dd>This means that this will no longer die (and will also no longer try to
       load <span class="Li">&quot;Foo.pm&quot;</span>):
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
       package Foo;
       use Moose;
   }
-
   # ...
-
   use Foo;
     </pre>
     <p class="Pp">If you're using the MOP, this behavior will occur when the
@@ -120,22 +118,17 @@
         <span class="Li">%INC</span> manually now, where it may have worked in
         the past. For instance:</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
       package My::NonMoose;
-
       sub new { bless {}, shift }
-
       $INC{'My/NonMoose.pm'} = __FILE__;
       # alternatively:
       # use Module::Runtime 'module_notional_filename';
       # $INC{module_notional_filename(__PACKAGE__)} = __FILE__;
   }
-
   {
       package My::Moose;
       use Moose;
-
       extends 'My::NonMoose';
   }
     </pre>
@@ -157,8 +150,7 @@
   <dd>Originally, <span class="Li">&quot;enum&quot;</span> could be called like
       this:
     <p class="Pp"></p>
-    <pre>
-  enum('MyType' =&gt; qw(foo bar baz))
+    <pre>  enum('MyType' =&gt; qw(foo bar baz))
     </pre>
     <p class="Pp">This was confusing, however (since it was different from the
         syntax for anonymous enum types), and it makes error checking more
@@ -175,13 +167,11 @@
         as described above has been undocumented since version 0.93, and is now
         deprecated. You should replace</p>
     <p class="Pp"></p>
-    <pre>
-  enum MyType =&gt; qw(foo bar baz);
+    <pre>  enum MyType =&gt; qw(foo bar baz);
     </pre>
     <p class="Pp">in your code with</p>
     <p class="Pp"></p>
-    <pre>
-  enum MyType =&gt; [qw(foo bar baz)];
+    <pre>  enum MyType =&gt; [qw(foo bar baz)];
     </pre>
   </dd>
   <dt id="Moose~2"><a class="permalink" href="#Moose~2">Moose string exceptions
@@ -336,13 +326,11 @@
       rather than just displaying it directly. This will generally be much more
       useful. For instance, instead of this:
     <p class="Pp"></p>
-    <pre>
-  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value ARRAY(0x275eed8)
+    <pre>  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value ARRAY(0x275eed8)
     </pre>
     <p class="Pp">the error message will instead look like</p>
     <p class="Pp"></p>
-    <pre>
-  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value [ &quot;a&quot; ]
+    <pre>  Attribute (foo) does not pass the type constraint because: Validation failed for 'ArrayRef[Int]' with value [ &quot;a&quot; ]
     </pre>
     <p class="Pp">Note that Devel::PartialDump can't be made a direct dependency
         at the moment, because it uses Moose itself, but we're considering
@@ -366,8 +354,7 @@
       <span class="Li">&quot;applied_attribute&quot;</span> key to the
       <span class="Li">&quot;role_metaroles&quot;</span> option, as in:
     <p class="Pp"></p>
-    <pre>
-    Moose::Util::MetaRole::apply_metaroles(
+    <pre>    Moose::Util::MetaRole::apply_metaroles(
         for =&gt; __PACKAGE__,
         class_metaroles =&gt; {
             attribute =&gt; ['My::Meta::Role::Attribute'],
@@ -508,8 +495,7 @@
       same thing by hand. For example, the Array's push delegation ended up
       doing something like this:
     <p class="Pp"></p>
-    <pre>
-  push @{ $self-&gt;$reader() }, @_;
+    <pre>  push @{ $self-&gt;$reader() }, @_;
     </pre>
     <p class="Pp">If the attribute was created without a reader, the
         <span class="Li">$reader</span> sub reference followed a very slow code
@@ -608,15 +594,12 @@
         option.</p>
     <p class="Pp">Example of overriding this in an attribute trait:</p>
     <p class="Pp"></p>
-    <pre>
-  package Bar::Meta::Attribute;
+    <pre>  package Bar::Meta::Attribute;
   use Moose::Role;
-
   has 'my_illegal_option' =&gt; (
       isa =&gt; 'CodeRef',
       is  =&gt; 'rw',
   );
-
   around illegal_options_for_inheritance =&gt; sub {
       return ( shift-&gt;(@_), qw/my_illegal_option/ );
   };
@@ -757,8 +740,7 @@
       now deprecated. The work around if you still need the functionality they
       provided is to iterate over the list of names manually.
     <p class="Pp"></p>
-    <pre>
-    my %fields = map { $_ =&gt; $meta-&gt;get_attribute($_) } $meta-&gt;get_attribute_list;
+    <pre>    my %fields = map { $_ =&gt; $meta-&gt;get_attribute($_) } $meta-&gt;get_attribute_list;
     </pre>
     <p class="Pp">This was actually a change in Class::MOP, but this version of
         Moose requires a version of Class::MOP that includes said change.</p>
@@ -898,8 +880,7 @@
     simplify aliasing metaclasses and metatraits. This is a wrapper around the
     old</p>
 <p class="Pp"></p>
-<pre>
-  package Moose::Meta::Class::Custom::Trait::FooTrait;
+<pre>  package Moose::Meta::Class::Custom::Trait::FooTrait;
   sub register_implementation { 'My::Meta::Trait' }
 </pre>
 <p class="Pp">way of doing this.</p>
@@ -912,18 +893,14 @@
     <span class="Li">&quot;is =&gt; 'bare'&quot;</span>. You can maintain back
     compat with older versions of Moose by using something like:</p>
 <p class="Pp"></p>
-<pre>
-    ($Moose::VERSION &gt;= 0.84 ? is =&gt; 'bare' : ())
+<pre>    ($Moose::VERSION &gt;= 0.84 ? is =&gt; 'bare' : ())
 </pre>
 <p class="Pp">When an accessor overwrites an existing method, we now warn. To
     work around this warning (if you really must have this behavior), you can
     explicitly remove the method before creating it as an accessor:</p>
 <p class="Pp"></p>
-<pre>
-    sub foo {}
-
+<pre>    sub foo {}
     __PACKAGE__-&gt;meta-&gt;remove_method('foo');
-
     has foo =&gt; (
         is =&gt; 'ro',
     );
@@ -981,8 +958,7 @@
     the only argument now throws an exception. If you want an anonymous subtype
     do:</p>
 <p class="Pp"></p>
-<pre>
-    my $subtype = subtype as 'Foo';
+<pre>    my $subtype = subtype as 'Foo';
 </pre>
 <p class="Pp">This is related to the changes in version 0.71_01.</p>
 <p class="Pp">The <span class="Li">&quot;is_needed&quot;</span> method in
@@ -1003,13 +979,10 @@
 <p class="Pp">This &quot;feature&quot; was originally added to allow for cases
     such as this:</p>
 <p class="Pp"></p>
-<pre>
-  my $args;
-
+<pre>  my $args;
   if ( something() ) {
       $args = {...};
   }
-
   return My::Class-&gt;new($args);
 </pre>
 <p class="Pp">But we decided this is a bad idea and a little too magical,
@@ -1026,18 +999,15 @@
     <span class="Li">&quot;as&quot;</span>, and code like this will no longer
     work:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose::Util::TypeConstraints;
+<pre>  use Moose::Util::TypeConstraints;
   use Declare::Constraints::Simple -All;
-
   subtype 'ArrayOfInts'
       =&gt; as 'ArrayRef'
       =&gt; IsArrayRef(IsInt);
 </pre>
 <p class="Pp">Instead it must be changed to this:</p>
 <p class="Pp"></p>
-<pre>
-  subtype(
+<pre>  subtype(
       'ArrayOfInts' =&gt; {
           as    =&gt; 'ArrayRef',
           where =&gt; IsArrayRef(IsInt)
@@ -1048,8 +1018,7 @@
     Moose, you must explicitly test Moose's
     <span class="Li">&quot;VERSION&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  if ( Moose-&gt;VERSION &lt; 0.71_01 ) {
+<pre>  if ( Moose-&gt;VERSION &lt; 0.71_01 ) {
       subtype 'ArrayOfInts'
           =&gt; as 'ArrayRef'
           =&gt; IsArrayRef(IsInt);
@@ -1074,14 +1043,12 @@
     <span class="Li">$self</span> that is passed as the first argument to
     trigger, like so:</p>
 <p class="Pp"></p>
-<pre>
-  has 'foo' =&gt; (
+<pre>  has 'foo' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'Any',
       trigger =&gt; sub {
           my ( $self, $value ) = @_;
           my $attr = $self-&gt;meta-&gt;find_attribute_by_name('foo');
-
           # ...
       }
   );
@@ -1161,8 +1128,7 @@
 <h1 class="Sh" id="0.55_01"><a class="permalink" href="#0.55_01">0.55_01</a></h1>
 <p class="Pp">Implemented metaclass traits (and wrote a recipe for it):</p>
 <p class="Pp"></p>
-<pre>
-  use Moose -traits =&gt; 'Foo'
+<pre>  use Moose -traits =&gt; 'Foo'
 </pre>
 <p class="Pp">This should make writing small Moose extensions a little
   easier.</p>
@@ -1173,8 +1139,7 @@
     types just like <span class="Li">&quot;subtype&quot;</span> can. So that you
     can do:</p>
 <p class="Pp"></p>
-<pre>
-  coerce $some_anon_type =&gt; from 'Str' =&gt; via { ... };
+<pre>  coerce $some_anon_type =&gt; from 'Str' =&gt; via { ... };
 </pre>
 </section>
 <section class="Sh">
@@ -1190,8 +1155,7 @@
     <span class="Li">&quot;accessor&quot;</span> options. See the below table
     for details:</p>
 <p class="Pp"></p>
-<pre>
-  is =&gt; ro, writer =&gt; _foo    # turns into (reader =&gt; foo, writer =&gt; _foo)
+<pre>  is =&gt; ro, writer =&gt; _foo    # turns into (reader =&gt; foo, writer =&gt; _foo)
   is =&gt; rw, writer =&gt; _foo    # turns into (reader =&gt; foo, writer =&gt; _foo)
   is =&gt; rw, accessor =&gt; _foo  # turns into (accessor =&gt; _foo)
   is =&gt; ro, accessor =&gt; _foo  # error, accesor is rw

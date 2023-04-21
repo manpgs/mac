@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLPORT(1)</title>
 </head>
@@ -143,8 +144,7 @@
     <span class="Li">&quot;\r&quot;</span> (carriage return) are not
   reliable.</p>
 <p class="Pp"></p>
-<pre>
-    print $socket &quot;Hi there, client!\r\n&quot;;      # WRONG
+<pre>    print $socket &quot;Hi there, client!\r\n&quot;;      # WRONG
     print $socket &quot;Hi there, client!\015\012&quot;;  # RIGHT
 </pre>
 <p class="Pp">However, using <span class="Li">&quot;\015\012&quot;</span> (or
@@ -154,8 +154,7 @@
     <span class="Li">&quot;Socket&quot;</span> module supplies the Right Thing
     for those who want it.</p>
 <p class="Pp"></p>
-<pre>
-    use Socket qw(:DEFAULT :crlf);
+<pre>    use Socket qw(:DEFAULT :crlf);
     print $socket &quot;Hi there, client!$CRLF&quot;      # RIGHT
 </pre>
 <p class="Pp">When reading from a socket, remember that the default input record
@@ -164,18 +163,15 @@
     recognize as either <span class="Li">&quot;\012&quot;</span> or
     <span class="Li">&quot;\015\012&quot;</span> as end of line:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;$socket&gt;) {  # NOT ADVISABLE!
+<pre>    while (&lt;$socket&gt;) {  # NOT ADVISABLE!
         # ...
     }
 </pre>
 <p class="Pp">Because both CRLF and LF end in LF, the input record separator can
     be set to LF and any CR stripped later. Better to write:</p>
 <p class="Pp"></p>
-<pre>
-    use Socket qw(:DEFAULT :crlf);
+<pre>    use Socket qw(:DEFAULT :crlf);
     local($/) = LF;      # not needed if $/ is already \012
-
     while (&lt;$socket&gt;) {
         s/$CR?$LF/\n/;   # not sure if socket uses LF or CRLF, OK
     #   s/\015?\012/\n/; # same thing
@@ -190,18 +186,15 @@
     returning the data, if they've not yet been translated to the local newline
     representation. A single line of code will often suffice:</p>
 <p class="Pp"></p>
-<pre>
-    $data =~ s/\015?\012/\n/g;
+<pre>    $data =~ s/\015?\012/\n/g;
     return $data;
 </pre>
 <p class="Pp">Some of this may be confusing. Here's a handy reference to the
     ASCII CR and LF characters. You can print it out and stick it in your
     wallet.</p>
 <p class="Pp"></p>
-<pre>
-    LF  eq  \012  eq  \x0A  eq  \cJ  eq  chr(10)  eq  ASCII 10
+<pre>    LF  eq  \012  eq  \x0A  eq  \cJ  eq  chr(10)  eq  ASCII 10
     CR  eq  \015  eq  \x0D  eq  \cM  eq  chr(13)  eq  ASCII 13
-
              | Unix | DOS  | Mac  |
         ---------------------------
         \n   |  LF  |  LF  |  CR  |
@@ -221,12 +214,10 @@
     (using the ILE, the PASE is ASCII-based) the above material is similar to
     &quot;Unix&quot; but the code numbers change:</p>
 <p class="Pp"></p>
-<pre>
-    LF  eq  \025  eq  \x15  eq  \cU  eq  chr(21)  eq  CP-1047 21
+<pre>    LF  eq  \025  eq  \x15  eq  \cU  eq  chr(21)  eq  CP-1047 21
     LF  eq  \045  eq  \x25  eq           chr(37)  eq  CP-0037 37
     CR  eq  \015  eq  \x0D  eq  \cM  eq  chr(13)  eq  CP-1047 13
     CR  eq  \015  eq  \x0D  eq  \cM  eq  chr(13)  eq  CP-0037 13
-
              | z/OS | OS/400 |
         ----------------------
         \n   |  LF  |  LF    |
@@ -265,16 +256,14 @@
 <p class="Pp">You can explore the endianness of your platform by unpacking a
     data structure packed in native format such as:</p>
 <p class="Pp"></p>
-<pre>
-    print unpack(&quot;h*&quot;, pack(&quot;s2&quot;, 1, 2)), &quot;\n&quot;;
+<pre>    print unpack(&quot;h*&quot;, pack(&quot;s2&quot;, 1, 2)), &quot;\n&quot;;
     # '10002000' on e.g. Intel x86 or Alpha 21064 in little-endian mode
     # '00100020' on e.g. Motorola 68040
 </pre>
 <p class="Pp">If you need to distinguish between endian architectures you could
     use either of the variables set like so:</p>
 <p class="Pp"></p>
-<pre>
-    $is_big_endian   = unpack(&quot;h*&quot;, pack(&quot;s&quot;, 1)) =~ /01/;
+<pre>    $is_big_endian   = unpack(&quot;h*&quot;, pack(&quot;s&quot;, 1)) =~ /01/;
     $is_little_endian = unpack(&quot;h*&quot;, pack(&quot;s&quot;, 1)) =~ /^1/;
 </pre>
 <p class="Pp">Differing widths can cause truncation even between platforms of
@@ -344,10 +333,8 @@
     possibly native) syntax, <span class="Li">&quot;File::Spec&quot;</span> is
     your friend. Here are two brief examples:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Spec::Functions;
+<pre>    use File::Spec::Functions;
     chdir(updir());        # go up one directory
-
     # Concatenate a path from its components
     my $file = catfile(updir(), 'temp', 'file.txt');
     # on Unix:    '../temp/file.txt'
@@ -396,8 +383,7 @@
     first character of a filename. Always use the three-arg version of
     <span class="Li">&quot;open&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    open my $fh, '&lt;', $existing_file) or die $!;
+<pre>    open my $fh, '&lt;', $existing_file) or die $!;
 </pre>
 <p class="Pp">Two-arg <span class="Li">&quot;open&quot;</span> is magic and can
     translate characters like <span class="Li">&quot;&gt;&quot;</span>,
@@ -419,8 +405,7 @@
 <p class="Pp">The <i>portable filename characters</i> as defined by ANSI C
   are</p>
 <p class="Pp"></p>
-<pre>
- a b c d e f g h i j k l m n o p q r s t u v w x y z
+<pre> a b c d e f g h i j k l m n o p q r s t u v w x y z
  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
  0 1 2 3 4 5 6 7 8 9
  . _ -
@@ -468,8 +453,7 @@
     on those platforms remove just the most recent version, too). The portable
     idiom to remove all the versions of a file is</p>
 <p class="Pp"></p>
-<pre>
-    1 while unlink &quot;file&quot;;
+<pre>    1 while unlink &quot;file&quot;;
 </pre>
 <p class="Pp">This will terminate if the file is undeletable for some reason
     (protected, not there, and so on).</p>
@@ -534,8 +518,7 @@
     account of the requirements of the various operating system possibilities,
     say:</p>
 <p class="Pp"></p>
-<pre>
- use Config;
+<pre> use Config;
  my $thisperl = $^X;
  if ($^O ne 'VMS') {
      $thisperl .= $Config{_exe}
@@ -545,8 +528,7 @@
 <p class="Pp">To convert <span class="Li">$Config{perlpath}</span> to a file
     pathname, say:</p>
 <p class="Pp"></p>
-<pre>
- use Config;
+<pre> use Config;
  my $thisperl = $Config{perlpath};
  if ($^O ne 'VMS') {
      $thisperl .= $Config{_exe}
@@ -607,8 +589,7 @@
 <p class="Pp">One especially common bit of Perl code is opening a pipe to
     <b>sendmail</b>:</p>
 <p class="Pp"></p>
-<pre>
-    open(my $mail, '|-', '/usr/lib/sendmail -t')
+<pre>    open(my $mail, '|-', '/usr/lib/sendmail -t')
         or die &quot;cannot fork sendmail: $!&quot;;
 </pre>
 <p class="Pp">This is fine for systems programming when sendmail is known to be
@@ -703,8 +684,7 @@
 <p class="Pp">When calculating specific times, such as for tests in time or date
     modules, it may be appropriate to calculate an offset for the epoch.</p>
 <p class="Pp"></p>
-<pre>
-    use Time::Local qw(timegm);
+<pre>    use Time::Local qw(timegm);
     my $offset = timegm(0, 0, 0, 1, 0, 70);
 </pre>
 <p class="Pp">The value for <span class="Li">$offset</span> in Unix will be
@@ -769,9 +749,7 @@
     missing!) virtual memory systems then you want to be <i>especially</i>
     mindful of avoiding wasteful constructs such as:</p>
 <p class="Pp"></p>
-<pre>
-    my @lines = &lt;$very_large_file&gt;;            # bad
-
+<pre>    my @lines = &lt;$very_large_file&gt;;            # bad
     while (&lt;$fh&gt;) {$file .= $_}                # sometimes bad
     my $file = join('', &lt;$fh&gt;);                # better
 </pre>
@@ -816,8 +794,7 @@
     &quot;PLATFORMS&quot;.</p>
 <p class="Pp">Beware of the &quot;else syndrome&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  if ($^O eq 'MSWin32') {
+<pre>  if ($^O eq 'MSWin32') {
     # code that assumes Windows
   } else {
     # code that assumes Linux
@@ -883,8 +860,7 @@
     header file. Here, for example, are a few of the more popular Unix
   flavors:</p>
 <p class="Pp"></p>
-<pre>
-    uname         $^O        $Config{archname}
+<pre>    uname         $^O        $Config{archname}
     --------------------------------------------
     AIX           aix        aix
     BSD/OS        bsdos      i386-bsdos
@@ -927,8 +903,7 @@
     aware that each of these file specifications may have subtle
   differences:</p>
 <p class="Pp"></p>
-<pre>
-    my $filespec0 = &quot;c:/foo/bar/file.txt&quot;;
+<pre>    my $filespec0 = &quot;c:/foo/bar/file.txt&quot;;
     my $filespec1 = &quot;c:\\foo\\bar\\file.txt&quot;;
     my $filespec2 = 'c:\foo\bar\file.txt';
     my $filespec3 = 'c:\\foo\\bar\\file.txt';
@@ -970,8 +945,7 @@
     <span class="Li">$Config{archname}</span> values for various DOSish perls
     are as follows:</p>
 <p class="Pp"></p>
-<pre>
-    OS             $^O       $Config{archname}  ID    Version
+<pre>    OS             $^O       $Config{archname}  ID    Version
     ---------------------------------------------------------
     MS-DOS         dos       ?
     PC-DOS         dos       ?
@@ -998,8 +972,7 @@
     on via the value of the fifth element of the list returned from
     <span class="Li">&quot;Win32::GetOSVersion()&quot;</span>. For example:</p>
 <p class="Pp"></p>
-<pre>
-    if ($^O eq 'MSWin32') {
+<pre>    if ($^O eq 'MSWin32') {
         my @os_version_info = Win32::GetOSVersion();
         print +('3.1','95','NT')[$os_version_info[4]],&quot;\n&quot;;
     }
@@ -1011,8 +984,7 @@
     <span class="Li">&quot;perldoc Win32&quot;</span>. The very portable
     <span class="Li">&quot;POSIX::uname()&quot;</span> will work too:</p>
 <p class="Pp"></p>
-<pre>
-    c:\&gt; perl -MPOSIX -we &quot;print join '|', uname&quot;
+<pre>    c:\&gt; perl -MPOSIX -we &quot;print join '|', uname&quot;
     Windows NT|moonru|5.0|Build 2195 (Service Pack 2)|x86
 </pre>
 <p class="Pp">Errors set by Winsock functions are now put directly into
@@ -1064,23 +1036,19 @@
     shell often requires a different set of quotation marks than Unix shells do.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -e &quot;print &quot;&quot;Hello, world.\n&quot;&quot;&quot;
+<pre>    $ perl -e &quot;print &quot;&quot;Hello, world.\n&quot;&quot;&quot;
     Hello, world.
 </pre>
 <p class="Pp">There are several ways to wrap your Perl scripts in DCL
     <i>.COM</i> files, if you are so inclined. For example:</p>
 <p class="Pp"></p>
-<pre>
-    $ write sys$output &quot;Hello from DCL!&quot;
+<pre>    $ write sys$output &quot;Hello from DCL!&quot;
     $ if p1 .eqs. &quot;&quot;
     $ then perl -x 'f$environment(&quot;PROCEDURE&quot;)
     $ else perl -x - 'p1 'p2 'p3 'p4 'p5 'p6 'p7 'p8
     $ deck/dollars=&quot;__END__&quot;
     #!/usr/bin/perl
-
     print &quot;Hello from Perl!\n&quot;;
-
     __END__
     $ endif
 </pre>
@@ -1095,14 +1063,12 @@
 <p class="Pp">Perl on VMS can accept either VMS- or Unix-style file
     specifications as in either of the following:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -ne &quot;print if /perl_setup/i&quot; SYS$LOGIN:LOGIN.COM
+<pre>    $ perl -ne &quot;print if /perl_setup/i&quot; SYS$LOGIN:LOGIN.COM
     $ perl -ne &quot;print if /perl_setup/i&quot; /sys$login/login.com
 </pre>
 <p class="Pp">but not a mixture of both as in:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -ne &quot;print if /perl_setup/i&quot; sys$login:/login.com
+<pre>    $ perl -ne &quot;print if /perl_setup/i&quot; sys$login:/login.com
     Can't open sys$login:/login.com: file specification syntax error
 </pre>
 <p class="Pp">In general, the easiest path to portability is always to specify
@@ -1157,14 +1123,12 @@
     VOS can accept either VOS- or Unix-style file specifications as in either of
     the following:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -ne &quot;print if /perl_setup/i&quot; &gt;system&gt;notices
+<pre>    $ perl -ne &quot;print if /perl_setup/i&quot; &gt;system&gt;notices
     $ perl -ne &quot;print if /perl_setup/i&quot; /system/notices
 </pre>
 <p class="Pp">or even a mixture of both as in:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -ne &quot;print if /perl_setup/i&quot; &gt;system/notices
+<pre>    $ perl -ne &quot;print if /perl_setup/i&quot; &gt;system/notices
 </pre>
 <p class="Pp">Even though VOS allows the slash character to appear in object
     names, because the VOS port of Perl interprets it as a pathname delimiting
@@ -1229,12 +1193,10 @@
     scripts can be executed with a header similar to the following simple
     script:</p>
 <p class="Pp"></p>
-<pre>
-    : # use perl
+<pre>    : # use perl
         eval 'exec /usr/local/bin/perl -S $0 ${1+&quot;$@&quot;}'
             if 0;
     #!/usr/local/bin/perl     # just a comment really
-
     print &quot;Hello from perl!\n&quot;;
 </pre>
 <p class="Pp">OS/390 will support the <span class="Li">&quot;#!&quot;</span>
@@ -1244,8 +1206,7 @@
 <p class="Pp">On the AS/400, if PERL5 is in your library list, you may need to
     wrap your Perl scripts in a CL procedure to invoke them like so:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN
+<pre>    BEGIN
       CALL PGM(PERL5/PERL) PARM('/QOpenSys/hello.pl')
     ENDPGM
 </pre>
@@ -1272,14 +1233,12 @@
     statement to its ASCII equivalent (<span class="Li">&quot;\r&quot;</span> is
     the same under both Unix and z/OS):</p>
 <p class="Pp"></p>
-<pre>
-    print &quot;Content-type: text/html\r\n\r\n&quot;;
+<pre>    print &quot;Content-type: text/html\r\n\r\n&quot;;
 </pre>
 <p class="Pp">The values of <span class="Li">$^O</span> on some of these
     platforms include:</p>
 <p class="Pp"></p>
-<pre>
-    uname         $^O        $Config{archname}
+<pre>    uname         $^O        $Config{archname}
     --------------------------------------------
     OS/390        os390      os390
     OS400         os400      os400
@@ -1288,11 +1247,8 @@
 <p class="Pp">Some simple tricks for determining if you are running on an EBCDIC
     platform could include any of the following (perhaps all):</p>
 <p class="Pp"></p>
-<pre>
-    if (&quot;\t&quot; eq &quot;\005&quot;)  { print &quot;EBCDIC may be spoken here!\n&quot;; }
-
+<pre>    if (&quot;\t&quot; eq &quot;\005&quot;)  { print &quot;EBCDIC may be spoken here!\n&quot;; }
     if (ord('A') == 193) { print &quot;EBCDIC may be spoken here!\n&quot;; }
-
     if (chr(169) eq 'z') { print &quot;EBCDIC may be spoken here!\n&quot;; }
 </pre>
 <p class="Pp">One thing you may not want to rely on is the EBCDIC encoding of
@@ -1325,13 +1281,11 @@
     but other filesystems may not impose such limitations.</p>
 <p class="Pp">Native filenames are of the form</p>
 <p class="Pp"></p>
-<pre>
-    Filesystem#Special_Field::DiskName.$.Directory.Directory.File
+<pre>    Filesystem#Special_Field::DiskName.$.Directory.Directory.File
 </pre>
 <p class="Pp">where</p>
 <p class="Pp"></p>
-<pre>
-    Special_Field is not usually present, but may contain . and $ .
+<pre>    Special_Field is not usually present, but may contain . and $ .
     Filesystem =~ m|[A-Za-z0-9_]|
     DsicName   =~ m|[A-Za-z0-9_/]|
     $ represents the root directory
@@ -1362,8 +1316,9 @@
     for the file
     <span class="Li">&quot;$ENV{'System$Dir'}&#x00A0;.&#x00A0;'Modules'&quot;</span>.
     The obvious implication of this is that <b>fully qualified filenames can
-    start with </b><b>&quot;&lt;&gt;&quot;</b><b></b> and the three-argument
-    form of <span class="Li">&quot;open&quot;</span> should always be used.</p>
+    start with </b><span class="Li"><b>&quot;&lt;&gt;&quot;</b></span><b></b>
+    and the three-argument form of <span class="Li">&quot;open&quot;</span>
+    should always be used.</p>
 <p class="Pp">Because <span class="Li">&quot;.&quot;</span> was in use as a
     directory separator and filenames could not be assumed to be unique after 10
     characters, Acorn implemented the C compiler to strip the trailing
@@ -1374,8 +1329,7 @@
     source code and store the respective files in subdirectories named after the
     suffix. Hence files are translated:</p>
 <p class="Pp"></p>
-<pre>
-    foo.h           h.foo
+<pre>    foo.h           h.foo
     C:foo.h         C:h.foo        (logical path variable)
     sys/os.h        sys.h.os       (C compiler groks Unix-speak)
     10charname.c    c.10charname
@@ -1443,8 +1397,7 @@
     <span class="Li">$^O</span> values in the &quot;OTHER&quot; category
     include:</p>
 <p class="Pp"></p>
-<pre>
-    OS            $^O        $Config{archname}
+<pre>    OS            $^O        $Config{archname}
     ------------------------------------------
     Amiga DOS     amigaos    m68k-amigos
 </pre>
@@ -1623,8 +1576,7 @@
         <span class="Li">&quot;BEGIN&quot;</span>. A workaround is to use
         <span class="Li">&quot;POSIX::_exit&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-    exit unless $Config{archname} =~ /\bsolaris\b/;
+    <pre>    exit unless $Config{archname} =~ /\bsolaris\b/;
     require POSIX;
     POSIX::_exit(0);
     </pre>
@@ -2170,8 +2122,7 @@
     were able to build Perl from the standard source code distribution available
     at &lt;http://www.cpan.org/src/&gt;</p>
 <p class="Pp"></p>
-<pre>
-        AIX
+<pre>        AIX
         BeOS
         BSD/OS          (BSDi)
         Cygwin
@@ -2210,7 +2161,6 @@
         WinCE
         z/OS            (formerly OS/390)
         VM/ESA
-
         1) in DOS mode either the DOS or OS/2 ports can be used
         2) compilers: Borland, MinGW (GCC), VC6
 </pre>
@@ -2219,8 +2169,7 @@
     5.8.0 release. There is a very good chance that many of these will work fine
     with the 5.8.0.</p>
 <p class="Pp"></p>
-<pre>
-        BSD/OS
+<pre>        BSD/OS
         DomainOS
         Hurd
         LynxOS
@@ -2234,8 +2183,7 @@
 <p class="Pp">Known to be broken for 5.8.0 (but 5.6.1 and 5.7.2 can be
   used):</p>
 <p class="Pp"></p>
-<pre>
-        AmigaOS 3
+<pre>        AmigaOS 3
 </pre>
 <p class="Pp">The following platforms have been known to build Perl from source
     in the past (5.005_03 and earlier), but we haven't been able to verify their
@@ -2245,8 +2193,7 @@
     them, and let &lt;https://github.com/Perl/perl5/issues&gt; know of any
     trouble.</p>
 <p class="Pp"></p>
-<pre>
-        3b1
+<pre>        3b1
         A/UX
         ConvexOS
         CX/UX
@@ -2279,18 +2226,14 @@
 <p class="Pp">The following platforms have their own source code distributions
     and binaries available via &lt;http://www.cpan.org/ports/&gt;</p>
 <p class="Pp"></p>
-<pre>
-                                Perl release
-
+<pre>                                Perl release
         OS/400 (ILE)            5.005_02
         Tandem Guardian         5.004
 </pre>
 <p class="Pp">The following platforms have only binaries available via
     &lt;http://www.cpan.org/ports/index.html&gt; :</p>
 <p class="Pp"></p>
-<pre>
-                                Perl release
-
+<pre>                                Perl release
         Acorn RISCOS            5.005_02
         AOS                     5.002
         LynxOS                  5.004_02

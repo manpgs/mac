@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Most(3)</title>
 </head>
@@ -34,8 +35,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Instead of this:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Test::Exception 0.88;
     use Test::Differences 0.500;
@@ -45,8 +45,7 @@
 </pre>
 <p class="Pp">You type this:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most tests =&gt; 42;
+<pre>    use Test::Most tests =&gt; 42;
 </pre>
 </section>
 <section class="Sh">
@@ -60,9 +59,7 @@
     functions, along with automatically turning on strict and warning and gives
     you a bit more fine-grained control over your test suite.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most tests =&gt; 4, 'die';
-
+<pre>    use Test::Most tests =&gt; 4, 'die';
     ok 1, 'Normal calls to ok() should succeed';
     is 2, 2, '... as should all passing tests';
     eq_or_diff [3], [4], '... but failing tests should die';
@@ -75,8 +72,7 @@
     explicitly disable them. Thus, you must be explicit about what you want and
     no longer need to worry about accidentally forgetting them.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most tests =&gt; 4;
+<pre>    use Test::Most tests =&gt; 4;
     no strict;
     no warnings;
 </pre>
@@ -95,8 +91,7 @@
 <p class="Pp">Functions which are <i>optionally</i> exported from any of those
     modules must be referred to by their fully-qualified name:</p>
 <p class="Pp"></p>
-<pre>
-  Test::Deep::render_stack( $var, $stack );
+<pre>  Test::Deep::render_stack( $var, $stack );
 </pre>
 </section>
 <section class="Sh">
@@ -104,8 +99,7 @@
 <p class="Pp">Several other functions are also automatically exported:</p>
 <section class="Ss">
 <h2 class="Ss" id="_die_on_fail_"><a class="permalink" href="#_die_on_fail_">&quot;die_on_fail&quot;</a></h2>
-<pre>
- die_on_fail;
+<pre> die_on_fail;
  is_deeply $foo, bar, '... we throw an exception if this fails';
 </pre>
 <p class="Pp">This function, if called, will cause the test program to throw a
@@ -113,8 +107,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_bail_on_fail_"><a class="permalink" href="#_bail_on_fail_">&quot;bail_on_fail&quot;</a></h2>
-<pre>
- bail_on_fail;
+<pre> bail_on_fail;
  is_deeply $foo, bar, '... we bail out if this fails';
 </pre>
 <p class="Pp">This function, if called, will cause the test suite to
@@ -122,10 +115,8 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_restore_fail_"><a class="permalink" href="#_restore_fail_">&quot;restore_fail&quot;</a></h2>
-<pre>
- die_on_fail;
+<pre> die_on_fail;
  is_deeply $foo, bar, '... we throw an exception if this fails';
-
  restore_fail;
  cmp_bag(\@got, \@bag, '... we will not throw an exception if this fails';
 </pre>
@@ -137,8 +128,7 @@
 <p class="Pp">If you prefer other behavior to 'die_on_fail' or 'bail_on_fail',
     you can set your own failure handler:</p>
 <p class="Pp"></p>
-<pre>
- set_failure_handler( sub {
+<pre> set_failure_handler( sub {
      my $builder = shift;
      if ( $builder &amp;&amp; $builder-&gt;{Test_Results}[-1] =~ /critical/ ) {
         send_admin_email(&quot;critical failure in tests&quot;);
@@ -162,21 +152,18 @@
     in the argument list is automatically expanded using
     <span class="Li">&quot;Data::Dumper&quot;</span>. Thus, instead of this:</p>
 <p class="Pp"></p>
-<pre>
- my $self = Some::Object-&gt;new($id);
+<pre> my $self = Some::Object-&gt;new($id);
  use Data::Dumper;
  explain 'I was just created', Dumper($self);
 </pre>
 <p class="Pp">You can now just do this:</p>
 <p class="Pp"></p>
-<pre>
- my $self = Some::Object-&gt;new($id);
+<pre> my $self = Some::Object-&gt;new($id);
  explain 'I was just created:  ', $self;
 </pre>
 <p class="Pp">That output will look similar to:</p>
 <p class="Pp"></p>
-<pre>
- I was just created: bless( {
+<pre> I was just created: bless( {
    'id' =&gt; 2,
    'stack' =&gt; []
  }, 'Some::Object' )
@@ -199,8 +186,7 @@
     <span class="Li">&quot;explain&quot;</span>, but also tries to show you the
     lexical variable names:</p>
 <p class="Pp"></p>
-<pre>
- my $var   = 3;
+<pre> my $var   = 3;
  my @array = qw/ foo bar /;
  show $var, \@array;
  __END__
@@ -214,8 +200,7 @@
     <span class="Li">$VAR2</span> ... <span class="Li">$VAR_N</span> for every
     variable it cannot figure out the variable name to:</p>
 <p class="Pp"></p>
-<pre>
- my @array = qw/ foo bar /;
+<pre> my @array = qw/ foo bar /;
  show @array;
  __END__
  $VAR1 = 'foo';
@@ -253,8 +238,7 @@
     would <i>pass</i> with <span class="Li">&quot;no_plan&quot;</span> but fails
     with <span class="Li">&quot;all_done&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
- use Test::More 'defer_plan';
+<pre> use Test::More 'defer_plan';
  ok 1;
  exit;
  ok 2;
@@ -274,8 +258,7 @@
     <span class="Li">&quot;Time::HiRes&quot;</span> is not installed. The test
     will still be run, but no timing information will be displayed.</p>
 <p class="Pp"></p>
-<pre>
- use Test::Most 'timeit';
+<pre> use Test::Most 'timeit';
  timeit { is expensive_function(), $some_value, $message }
     &quot;expensive_function()&quot;;
  timeit { is expensive_function(), $some_value, $message };
@@ -286,13 +269,11 @@
     <span class="Li">&quot;Time::HiRes&quot;</span>. If a message is supplied,
     it will be formatted as:</p>
 <p class="Pp"></p>
-<pre>
-  sprintf &quot;$message: took %s seconds&quot; =&gt; $time;
+<pre>  sprintf &quot;$message: took %s seconds&quot; =&gt; $time;
 </pre>
 <p class="Pp">Otherwise, it will be formatted as:</p>
 <p class="Pp"></p>
-<pre>
-  sprintf &quot;$filename line $line: took %s seconds&quot; =&gt; $time;
+<pre>  sprintf &quot;$filename line $line: took %s seconds&quot; =&gt; $time;
 </pre>
 </section>
 </section>
@@ -305,8 +286,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Import_list"><a class="permalink" href="#Import_list">Import
   list</a></h2>
-<pre>
- use Test::Most 'die', tests =&gt; 7;
+<pre> use Test::Most 'die', tests =&gt; 7;
  use Test::Most qw&lt; no_plan bail &gt;;
 </pre>
 <p class="Pp">If <span class="Li">&quot;die&quot;</span> or
@@ -320,13 +300,10 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Functions"><a class="permalink" href="#Functions">Functions</a></h2>
-<pre>
- use Test::Most 'no_plan';
+<pre> use Test::Most 'no_plan';
  ok $bar, 'The test suite will continue if this passes';
-
  die_on_fail;
  is_deeply $foo, bar, '... we throw an exception if this fails';
-
  restore_fail;
  ok $baz, 'The test suite will continue if this passes';
 </pre>
@@ -337,8 +314,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Environment_variables"><a class="permalink" href="#Environment_variables">Environment
   variables</a></h2>
-<pre>
- DIE_ON_FAIL=1 prove t/
+<pre> DIE_ON_FAIL=1 prove t/
  BAIL_ON_FAIL=1 prove t/
 </pre>
 <p class="Pp">If the <span class="Li">&quot;DIE_ON_FAIL&quot;</span> or
@@ -354,8 +330,7 @@
 <p class="Pp">It used to be that this module would produce a warning when used
     with Moose:</p>
 <p class="Pp"></p>
-<pre>
-    Prototype mismatch: sub main::blessed ($) vs none
+<pre>    Prototype mismatch: sub main::blessed ($) vs none
 </pre>
 <p class="Pp">This was because Test::Deep exported a
     <span class="Li">&quot;blessed()&quot;</span> function by default, but its
@@ -363,8 +338,7 @@
     Test::Deep version by default. If you need it, you can call the
     fully-qualified version or request it on the command line:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most 'blessed';
+<pre>    use Test::Most 'blessed';
 </pre>
 <p class="Pp">Note that as of version <span class="Li">0.34</span>,
     <span class="Li">&quot;reftype&quot;</span> is also excluded from
@@ -380,14 +354,12 @@
     example, Test::Deep, when used with Moose, produces the following
   warning:</p>
 <p class="Pp"></p>
-<pre>
-    Prototype mismatch: sub main::blessed ($) vs none
+<pre>    Prototype mismatch: sub main::blessed ($) vs none
 </pre>
 <p class="Pp">You can exclude this with by adding the module to the import list
     with a '-' symbol in front:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most tests =&gt; 42, '-Test::Deep';
+<pre>    use Test::Most tests =&gt; 42, '-Test::Deep';
 </pre>
 <p class="Pp">See
     &lt;https://rt.cpan.org/Ticket/Display.html?id=54362&amp;results=e73ff63c5bf9ba0f796efdba5773cf3f&gt;
@@ -401,8 +373,7 @@
     symbol(s) in the standard way, by specifying the symbol in the import list
     with a '!' in front:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Most tests =&gt; 42, '!throws_ok';
+<pre>    use Test::Most tests =&gt; 42, '!throws_ok';
 </pre>
 </section>
 <section class="Ss">
@@ -413,8 +384,7 @@
     <span class="Li">&quot;done_testing()&quot;</span> from Test::More
   instead.</p>
 <p class="Pp"></p>
-<pre>
- use Test::Most qw&lt;defer_plan&gt;;
+<pre> use Test::Most qw&lt;defer_plan&gt;;
  use My::Tests;
  my $test_count = My::Tests-&gt;run;
  all_done($test_count);
@@ -423,8 +393,7 @@
     calculate the plan as your tests run. As a result, you want to defer the
     plan until the end of the test. Typically, the best you can do is this:</p>
 <p class="Pp"></p>
-<pre>
- use Test::More 'no_plan';
+<pre> use Test::More 'no_plan';
  use My::Tests;
  My::Tests-&gt;run;
 </pre>
@@ -465,8 +434,7 @@
     because we're now counting distributions which use a given module rather
     than simply the number of times a module is used).</p>
 <p class="Pp"></p>
-<pre>
-    1   Test::More                          14111
+<pre>    1   Test::More                          14111
     2   Test                                 1736
     3   Test::Exception                       744
     4   Test::Simple                          331
@@ -513,8 +481,7 @@
 <p class="Pp">You can find documentation for this module with the perldoc
     command.</p>
 <p class="Pp"></p>
-<pre>
-    perldoc Test::Most
+<pre>    perldoc Test::Most
 </pre>
 <p class="Pp">You can also look for information at:</p>
 <ul class="Bl-bullet">
@@ -542,9 +509,7 @@
     specifying the plan, but you must still call it before the tests are run.
     This is an error:</p>
 <p class="Pp"></p>
-<pre>
- use Test::More;
-
+<pre> use Test::More;
  my $tests = 0;
  foreach my $test (
      my $count = run($test); # assumes tests are being run
@@ -563,8 +528,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Cleaner_"><a class="permalink" href="#Cleaner_">Cleaner
   <b>skip()</b></a></h2>
-<pre>
- if ( $some_condition ) {
+<pre> if ( $some_condition ) {
      skip $message, $num_tests;
  }
  else {
@@ -584,9 +548,7 @@
     This means that its arguments are automatically evaluated before we can take
     action:</p>
 <p class="Pp"></p>
-<pre>
- use Test::Most qw&lt;no_plan die&gt;;
-
+<pre> use Test::Most qw&lt;no_plan die&gt;;
  ok $foo, 'Die if this fails';
  ok factorial(123456),
    '... but wait a loooong time before you throw an exception';

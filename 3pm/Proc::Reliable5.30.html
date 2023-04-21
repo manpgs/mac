@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Reliable(3)</title>
 </head>
@@ -32,26 +33,22 @@
 <p class="Pp">use Proc::Reliable;</p>
 <p class="Pp">Create a new process object</p>
 <p class="Pp"></p>
-<pre>
-   $myproc = Proc::Reliable-&gt;new();
+<pre>   $myproc = Proc::Reliable-&gt;new();
 </pre>
 <p class="Pp">Run a subprocess and collect its output</p>
 <p class="Pp"></p>
-<pre>
-   $output = $myproc-&gt;run(&quot;/bin/ls -l&quot;);
+<pre>   $output = $myproc-&gt;run(&quot;/bin/ls -l&quot;);
 </pre>
 <p class="Pp">Check for problems</p>
 <p class="Pp"></p>
-<pre>
-   if($myproc-&gt;status()) {
+<pre>   if($myproc-&gt;status()) {
      print(&quot;problem!\n&quot;);
    }
 </pre>
 <p class="Pp">Run another subprocess, keeping stdout and stderr separated. Also,
     send the subprocess some data on stdin.</p>
 <p class="Pp"></p>
-<pre>
-   $msg = &quot;Hello World\n&quot;);
+<pre>   $msg = &quot;Hello World\n&quot;);
    $p-&gt;want_single_list(0);
    $stdout = $p-&gt;run(&quot;/usr/bin/fastmail - foo@bar.com&quot;, $msg);
    if($p-&gt;status()) {
@@ -60,16 +57,14 @@
 </pre>
 <p class="Pp">Another way to get output</p>
 <p class="Pp"></p>
-<pre>
-   ($stdout, $stderr, $status, $msg) = $p-&gt;run(&quot;/bin/ls -l&quot;);
+<pre>   ($stdout, $stderr, $status, $msg) = $p-&gt;run(&quot;/bin/ls -l&quot;);
 </pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
 <p class="Pp">Run Modes</p>
 <p class="Pp"></p>
-<pre>
- $p-&gt;run(&quot;shell-command-line&quot;);  # Launch a shell process
+<pre> $p-&gt;run(&quot;shell-command-line&quot;);  # Launch a shell process
  $p-&gt;run(&quot;cmdline&quot;, &quot;data&quot;);     # Launch a shell process with stdin data
  $p-&gt;run([&quot;cmd&quot;, &quot;arg1&quot;, ...]);  # Bypass shell processing of arguments
  $p-&gt;run(sub { ... });           # Launch a perl subroutine
@@ -77,8 +72,7 @@
 </pre>
 <p class="Pp">Option settings below represent defaults</p>
 <p class="Pp"></p>
-<pre>
- $p-&gt;num_tries(1);           # execute the program only once
+<pre> $p-&gt;num_tries(1);           # execute the program only once
  $p-&gt;time_per_try(60);       # time per try 60 sec
  $p-&gt;maxtime(60);            # set overall timeout
  $p-&gt;time_btw_tries(5);      # time between tries 5 sec
@@ -97,8 +91,7 @@
 </pre>
 <p class="Pp">Getting output</p>
 <p class="Pp"></p>
-<pre>
- $out = $p-&gt;stdout();        # stdout produced by last run()
+<pre> $out = $p-&gt;stdout();        # stdout produced by last run()
  $err = $p-&gt;stderr();        # stderr produced by last run()
  $stat = $p-&gt;status();       # exit code produced by last run()
  $msg = $p-&gt;msg();           # module messages produced by last run()
@@ -123,28 +116,24 @@
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">A new process object is created by</p>
 <p class="Pp"></p>
-<pre>
-   $myproc = Proc::Reliable-&gt;new();
+<pre>   $myproc = Proc::Reliable-&gt;new();
 </pre>
 <p class="Pp">The default will run a subprocess only once with a 60-second
     timeout. Either shell-like command lines or references to perl subroutines
     can be specified for launching a process in background. A simple list
     process, for example, can be started via the shell as</p>
 <p class="Pp"></p>
-<pre>
-   $out = $myproc-&gt;run(&quot;ls&quot;);
+<pre>   $out = $myproc-&gt;run(&quot;ls&quot;);
 </pre>
 <p class="Pp">To separate stdout, stderr, and exit status:</p>
 <p class="Pp"></p>
-<pre>
-   ($out, $err, $status, $msg) = $myproc-&gt;run(&quot;ls&quot;);
+<pre>   ($out, $err, $status, $msg) = $myproc-&gt;run(&quot;ls&quot;);
 </pre>
 <p class="Pp">The output data is also stored within the
     <span class="Li">$myproc</span> object for later retrieval. You can also run
     a perl subroutine in a subprocess, with</p>
 <p class="Pp"></p>
-<pre>
-   $myproc-&gt;run(sub { return &lt;*&gt;; });
+<pre>   $myproc-&gt;run(sub { return &lt;*&gt;; });
 </pre>
 <p class="Pp">The <i>run</i> Method will try to run the named process. If the
     process times out (after <i>time_per_try</i> seconds) or has an error
@@ -157,8 +146,7 @@
     One common shorthand is to have the <i>run</i> method retry if there is any
     return from STDERR.</p>
 <p class="Pp"></p>
-<pre>
-   $myproc-&gt;accept_no_error();    # Re-try if any STDERR
+<pre>   $myproc-&gt;accept_no_error();    # Re-try if any STDERR
    $myproc-&gt;pattern_stdout($pat); # require STDOUT to match regex $pat
    $myproc-&gt;pattern_stderr($pat); # require STDERR to match regex $pat
 </pre>
@@ -178,22 +166,19 @@
   <dt id="new"><a class="permalink" href="#new">new (Constructor)</a></dt>
   <dd>Create a new instance of this class by writing either
     <p class="Pp"></p>
-    <pre>
-    $proc = new Proc::Reliable;   or   $proc = Proc::Reliable-&gt;new();
+    <pre>    $proc = new Proc::Reliable;   or   $proc = Proc::Reliable-&gt;new();
     </pre>
     <p class="Pp">The <i>new</i> method accepts any valid configuration
       options:</p>
     <p class="Pp"></p>
-    <pre>
-    $proc = Proc::Reliable-&gt;new('maxtime' =&gt; 200, 'num_tries' =&gt; 3);
+    <pre>    $proc = Proc::Reliable-&gt;new('maxtime' =&gt; 200, 'num_tries' =&gt; 3);
     </pre>
   </dd>
   <dt id="run"><a class="permalink" href="#run">run</a></dt>
   <dd>Run a new process and collect the standard output and standard error via
       separate pipes.
     <p class="Pp"></p>
-    <pre>
-  $out = $proc-&gt;run(&quot;program-name&quot;);
+    <pre>  $out = $proc-&gt;run(&quot;program-name&quot;);
  ($out, $err, $status, $msg) = $proc-&gt;run(&quot;program-name&quot;);
     </pre>
     <p class="Pp">by default with a single return value, stdout and stderr are
@@ -204,8 +189,7 @@
         to be combined, and <b>want_single_list</b>(0) to force them separated.
         The results from <b>run()</b> are stored as member data also:</p>
     <p class="Pp"></p>
-    <pre>
-  $proc-&gt;want_single_list(0);
+    <pre>  $proc-&gt;want_single_list(0);
   $proc-&gt;run(&quot;program&quot;);
   if($proc-&gt;status) {
     print($proc-&gt;stderr);
@@ -224,8 +208,7 @@
     <p class="Pp">There are a number of other options. You can also feed the
         forked program data on stdin via a second argument to <b>run()</b>:</p>
     <p class="Pp"></p>
-    <pre>
- $myinput = &quot;hello\ntest\n&quot;;
+    <pre> $myinput = &quot;hello\ntest\n&quot;;
  $output = $proc-&gt;run(&quot;program-name&quot;, $myinput);
     </pre>
     <p class="Pp">The first option to <b>run()</b> supports three forms: 1)
@@ -241,13 +224,11 @@
         &quot;eval&quot; except with timeout, retries, etc.). Simply provide the
         function reference like</p>
     <p class="Pp"></p>
-    <pre>
- $output = $proc-&gt;run(\&amp;perl_function);
+    <pre> $output = $proc-&gt;run(\&amp;perl_function);
     </pre>
     <p class="Pp">or supply an unnamed subroutine:</p>
     <p class="Pp"></p>
-    <pre>
- $output = $proc-&gt;run( sub { sleep(1) } );
+    <pre> $output = $proc-&gt;run( sub { sleep(1) } );
     </pre>
     <p class="Pp">The <i>run</i> Method returns after the the function finishes,
         one way or another.</p>

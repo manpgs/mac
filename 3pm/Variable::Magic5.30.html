@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Variable::Magic(3)</title>
 </head>
@@ -33,20 +34,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Variable::Magic qw&lt;wizard cast VMG_OP_INFO_NAME&gt;;
-
+<pre>    use Variable::Magic qw&lt;wizard cast VMG_OP_INFO_NAME&gt;;
     { # A variable tracer
      my $wiz = wizard(
       set  =&gt; sub { print &quot;now set to ${$_[0]}!\n&quot; },
       free =&gt; sub { print &quot;destroyed!\n&quot; },
      );
-
      my $a = 1;
      cast $a, $wiz;
      $a = 2;        # &quot;now set to 2!&quot;
     }               # &quot;destroyed!&quot;
-
     { # A hash with a default value
      my $wiz = wizard(
       data     =&gt; sub { $_[1] },
@@ -55,7 +52,6 @@
       copy_key =&gt; 1,
       op_info  =&gt; VMG_OP_INFO_NAME,
      );
-
      my %h = (_default =&gt; 0, apple =&gt; 2);
      cast %h, $wiz, '_default';
      print $h{banana}, &quot;\n&quot;; # &quot;0&quot; (there is no 'banana' key in %h)
@@ -207,8 +203,7 @@
 <h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="_wizard_"><a class="permalink" href="#_wizard_">&quot;wizard&quot;</a></h2>
-<pre>
-    wizard(
+<pre>    wizard(
      data     =&gt; sub { ... },
      get      =&gt; sub { my ($ref, $data [, $op]) = @_; ... },
      set      =&gt; sub { my ($ref, $data [, $op]) = @_; ... },
@@ -343,8 +338,7 @@
     callback were not destroyed before the variable.</p>
 <p class="Pp">Here is a simple usage example :</p>
 <p class="Pp"></p>
-<pre>
-    # A simple scalar tracer
+<pre>    # A simple scalar tracer
     my $wiz = wizard(
      get  =&gt; sub { print STDERR &quot;got ${$_[0]}\n&quot; },
      set  =&gt; sub { print STDERR &quot;set to ${$_[0]}\n&quot; },
@@ -354,8 +348,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_cast_"><a class="permalink" href="#_cast_">&quot;cast&quot;</a></h2>
-<pre>
-    cast [$@%&amp;*]var, $wiz, @args
+<pre>    cast [$@%&amp;*]var, $wiz, @args
 </pre>
 <p class="Pp">This function associates <span class="Li">$wiz</span> magic to the
     supplied variable, without overwriting any other kind of magic. It returns
@@ -367,8 +360,7 @@
     <span class="Li">@args</span> in <span class="Li">@_[1 .. @args]</span>.
     Otherwise, <span class="Li">@args</span> is ignored.</p>
 <p class="Pp"></p>
-<pre>
-    # Casts $wiz onto $x, passing (\$x, '1') to the data constructor.
+<pre>    # Casts $wiz onto $x, passing (\$x, '1') to the data constructor.
     my $x;
     cast $x, $wiz, 1;
 </pre>
@@ -380,8 +372,7 @@
     <span class="Li">'TZ'</span> environment variable is changed in
     <span class="Li">%ENV</span>, you can use :</p>
 <p class="Pp"></p>
-<pre>
-    use POSIX;
+<pre>    use POSIX;
     cast $ENV{TZ}, wizard set =&gt; sub { POSIX::tzset(); () };
 </pre>
 <p class="Pp">If you want to handle the possible deletion of the
@@ -390,8 +381,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_getdata_"><a class="permalink" href="#_getdata_">&quot;getdata&quot;</a></h2>
-<pre>
-    getdata [$@%&amp;*]var, $wiz
+<pre>    getdata [$@%&amp;*]var, $wiz
 </pre>
 <p class="Pp">This accessor fetches the private data associated with the magic
     <span class="Li">$wiz</span> in the variable. It croaks when
@@ -399,16 +389,14 @@
     returns an empty list if no such magic is attached to the variable or when
     the wizard has no data constructor.</p>
 <p class="Pp"></p>
-<pre>
-    # Get the data attached to $wiz in $x, or undef if $wiz
+<pre>    # Get the data attached to $wiz in $x, or undef if $wiz
     # did not attach any.
     my $data = getdata $x, $wiz;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_dispell_"><a class="permalink" href="#_dispell_">&quot;dispell&quot;</a></h2>
-<pre>
-    dispell [$@%&amp;*]variable, $wiz
+<pre>    dispell [$@%&amp;*]variable, $wiz
 </pre>
 <p class="Pp">The exact opposite of &quot;cast&quot; : it dissociates
     <span class="Li">$wiz</span> magic from the variable. This function returns
@@ -416,8 +404,7 @@
     <span class="Li">$wiz</span> could be found in the variable, and croaks if
     the supplied wizard is invalid.</p>
 <p class="Pp"></p>
-<pre>
-    # Dispell now.
+<pre>    # Dispell now.
     die 'no such magic in $x' unless dispell $x, $wiz;
 </pre>
 </section>
@@ -531,14 +518,10 @@
     APIs. It is similar to using inside-out objects, but without the drawback of
     having to implement a complex destructor.</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
      package Magical::UserData;
-
      use Variable::Magic qw&lt;wizard cast getdata&gt;;
-
      my $wiz = wizard data =&gt; sub { \$_[1] };
-
      sub ud (\[$@%*&amp;]) : lvalue {
       my ($var) = @_;
       my $data = &amp;getdata($var, $wiz);
@@ -550,13 +533,10 @@
       $$data;
      }
     }
-
     {
      BEGIN { *ud = \&amp;Magical::UserData::ud }
-
      my $cb;
      $cb = sub { print 'Hello, ', ud(&amp;$cb), &quot;!\n&quot; };
-
      ud(&amp;$cb) = 'world';
      $cb-&gt;(); # Hello, world!
     }
@@ -570,8 +550,7 @@
     <span class="Li">&quot;data&quot;</span>. This allows you to recursively
     cast magic on datastructures :</p>
 <p class="Pp"></p>
-<pre>
-    my $wiz;
+<pre>    my $wiz;
     $wiz = wizard data =&gt; sub {
      my ($var, $depth) = @_;
      $depth ||= 0;
@@ -589,7 +568,6 @@
      print &quot;free $r at depth $depth\n&quot;;
      ();
     };
-
     {
      my %h = (
       a =&gt; [ 1, 2 ],
@@ -601,8 +579,7 @@
 <p class="Pp">When <span class="Li">%h</span> goes out of scope, this prints
     something among the lines of :</p>
 <p class="Pp"></p>
-<pre>
-    free HASH at depth 0
+<pre>    free HASH at depth 0
     free HASH at depth 1
     free SCALAR at depth 2
     free ARRAY at depth 1
@@ -619,8 +596,7 @@
     callbacks can be used to delay the action until after the original action
     takes place :</p>
 <p class="Pp"></p>
-<pre>
-    my $delayed;
+<pre>    my $delayed;
     my $delayed_aux = wizard(
      data =&gt; sub { $_[1] },
      free =&gt; sub {
@@ -754,8 +730,7 @@
 <p class="Pp">You can find documentation for this module with the perldoc
     command.</p>
 <p class="Pp"></p>
-<pre>
-    perldoc Variable::Magic
+<pre>    perldoc Variable::Magic
 </pre>
 </section>
 <section class="Sh">

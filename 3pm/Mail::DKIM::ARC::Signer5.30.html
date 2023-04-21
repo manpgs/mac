@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Mail::DKIM::ARC::Signer(3)</title>
 </head>
@@ -29,10 +30,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Mail::DKIM::ARC::Signer;
+<pre>  use Mail::DKIM::ARC::Signer;
   use Mail::DKIM::TextWrap;  #recommended
-
   # create a signer object
   my $signer = Mail::DKIM::ARC::Signer-&gt;new(
                   Algorithm =&gt; 'rsa-sha256',
@@ -43,28 +42,22 @@
                   KeyFile =&gt; 'private.key',
                   Headers =&gt; 'x-header:x-header2',
              );
-
   # read an email from a file handle
   $signer-&gt;load(*STDIN);
-
   # NOTE: any email being ARC signed must have an Authentication-Results
   # header so that the ARC seal can cover those results copied into
   # an ARC-Authentication-Results header.
-
   # or read an email and pass it into the signer, one line at a time
   while (&lt;STDIN&gt;)
   {
       # remove local line terminators
       chomp;
       s/\015$//;
-
       # use SMTP line terminators
       $signer-&gt;PRINT(&quot;$_\015\012&quot;);
   }
   $signer-&gt;CLOSE;
-
   die 'Failed' $signer-&gt;result_details() unless $signer-&gt;result() eq 'sealed';
-
   # Get all the signature headers to prepend to the message
   # ARC-Seal, ARC-Message-Signature and ARC-Authentication-Results
   # in that order.
@@ -98,8 +91,7 @@
     linebreaks into the generated signature so that it looks nicer in the
     resulting message. To enable this module, simply call</p>
 <p class="Pp"></p>
-<pre>
-  use Mail::DKIM::TextWrap;
+<pre>  use Mail::DKIM::TextWrap;
 </pre>
 <p class="Pp">in your program before generating the signature.</p>
 </section>
@@ -110,8 +102,7 @@
 <h2 class="Ss"><b>new()</b></h2>
 <p class="Pp">Construct an object-oriented signer.</p>
 <p class="Pp"></p>
-<pre>
-  # create a signer using the default policy
+<pre>  # create a signer using the default policy
   my $signer = Mail::DKIM::ARC::Signer-&gt;new(
                   Algorithm =&gt; 'rsa-sha256',
                   Chain =&gt; 'none',    # or pass|fail|ar
@@ -144,8 +135,7 @@
         the <b>extended_headers()</b> method instead.</p>
     <p class="Pp">The list of headers signed by default is as follows</p>
     <p class="Pp"></p>
-    <pre>
-    From Sender Reply-To Subject Date
+    <pre>    From Sender Reply-To Subject Date
     Message-ID To Cc MIME-Version
     Content-Type Content-Transfer-Encoding Content-ID Content-Description
     Resent-Date Resent-From Resent-Sender Resent-To Resent-cc
@@ -164,8 +154,7 @@
 <h2 class="Ss"><b>PRINT()</b></h2>
 <p class="Pp">Feed part of the message to the signer.</p>
 <p class="Pp"></p>
-<pre>
-  $signer-&gt;PRINT(&quot;a line of the message\015\012&quot;);
+<pre>  $signer-&gt;PRINT(&quot;a line of the message\015\012&quot;);
 </pre>
 <p class="Pp">Feeds content of the message being signed into the signer. The API
     is designed this way so that the entire message does NOT need to be read
@@ -180,8 +169,7 @@
 <h2 class="Ss"><b>CLOSE()</b></h2>
 <p class="Pp">Call this when finished feeding in the message.</p>
 <p class="Pp"></p>
-<pre>
-  $signer-&gt;CLOSE;
+<pre>  $signer-&gt;CLOSE;
 </pre>
 <p class="Pp">This method finishes the canonicalization process, computes a
     hash, and generates a signature.</p>
@@ -202,8 +190,7 @@
 <p class="Pp">Keys are case insensitive with the values being added upto the
     highest value.</p>
 <p class="Pp"></p>
-<pre>
-    Headers =&gt; {
+<pre>    Headers =&gt; {
         'X-test'  =&gt; '*',
         'x-test'  =&gt; '1',
         'Subject' =&gt; '+',
@@ -215,8 +202,7 @@
 <h2 class="Ss"><b>add_signature()</b></h2>
 <p class="Pp">Used by signer policy to create a new signature.</p>
 <p class="Pp"></p>
-<pre>
-  $signer-&gt;add_signature(new Mail::DKIM::Signature(...));
+<pre>  $signer-&gt;add_signature(new Mail::DKIM::Signature(...));
 </pre>
 <p class="Pp">Signer policies can use this method to specify complete parameters
     for the signature to add, including what type of signature. For more
@@ -226,9 +212,7 @@
 <h2 class="Ss"><b>algorithm()</b></h2>
 <p class="Pp">Get or set the selected algorithm.</p>
 <p class="Pp"></p>
-<pre>
-  $alg = $signer-&gt;algorithm;
-
+<pre>  $alg = $signer-&gt;algorithm;
   $signer-&gt;algorithm('rsa-sha256');
 </pre>
 </section>
@@ -236,9 +220,7 @@
 <h2 class="Ss"><b>domain()</b></h2>
 <p class="Pp">Get or set the selected domain.</p>
 <p class="Pp"></p>
-<pre>
-  $alg = $signer-&gt;domain;
-
+<pre>  $alg = $signer-&gt;domain;
   $signer-&gt;domain('example.org');
 </pre>
 </section>
@@ -246,8 +228,7 @@
 <h2 class="Ss"><b>load()</b></h2>
 <p class="Pp">Load the entire message from a file handle.</p>
 <p class="Pp"></p>
-<pre>
-  $signer-&gt;load($file_handle);
+<pre>  $signer-&gt;load($file_handle);
 </pre>
 <p class="Pp">Reads a complete message from the designated file handle, feeding
     it into the signer. The message must use &lt;CRLF&gt; line terminators (same
@@ -257,8 +238,7 @@
 <h2 class="Ss"><b>headers()</b></h2>
 <p class="Pp">Determine which headers to put in signature.</p>
 <p class="Pp"></p>
-<pre>
-  my $headers = $signer-&gt;headers;
+<pre>  my $headers = $signer-&gt;headers;
 </pre>
 <p class="Pp">This is a string containing the names of the header fields that
     will be signed, separated by colons.</p>
@@ -267,9 +247,7 @@
 <h2 class="Ss"><b>key()</b></h2>
 <p class="Pp">Get or set the private key object.</p>
 <p class="Pp"></p>
-<pre>
-  my $key = $signer-&gt;key;
-
+<pre>  my $key = $signer-&gt;key;
   $signer-&gt;key(Mail::DKIM::PrivateKey-&gt;load(File =&gt; 'private.key'));
 </pre>
 <p class="Pp">The key object can be any object that implements the
@@ -282,9 +260,7 @@
 <h2 class="Ss"><b>key_file()</b></h2>
 <p class="Pp">Get or set the filename containing the private key.</p>
 <p class="Pp"></p>
-<pre>
-  my $filename = $signer-&gt;key_file;
-
+<pre>  my $filename = $signer-&gt;key_file;
   $signer-&gt;key_file('private.key');
 </pre>
 <p class="Pp">If you use this method to specify a private key file, do not use
@@ -294,8 +270,7 @@
 <h2 class="Ss"><b>message_originator()</b></h2>
 <p class="Pp">Access the &quot;From&quot; header.</p>
 <p class="Pp"></p>
-<pre>
-  my $address = $signer-&gt;message_originator;
+<pre>  my $address = $signer-&gt;message_originator;
 </pre>
 <p class="Pp">Returns the &quot;originator address&quot; found in the message,
     as a Mail::Address object. This is typically the (first) name and email
@@ -303,8 +278,7 @@
     empty Mail::Address object is returned.</p>
 <p class="Pp">To get just the email address part, do:</p>
 <p class="Pp"></p>
-<pre>
-  my $email = $signer-&gt;message_originator-&gt;address;
+<pre>  my $email = $signer-&gt;message_originator-&gt;address;
 </pre>
 <p class="Pp">See also &quot;<b>message_sender()</b>&quot;.</p>
 </section>
@@ -312,8 +286,7 @@
 <h2 class="Ss"><b>message_sender()</b></h2>
 <p class="Pp">Access the &quot;From&quot; or &quot;Sender&quot; header.</p>
 <p class="Pp"></p>
-<pre>
-  my $address = $dkim-&gt;message_sender;
+<pre>  my $address = $dkim-&gt;message_sender;
 </pre>
 <p class="Pp">Returns the &quot;sender&quot; found in the message, as a
     Mail::Address object. This is typically the (first) name and email address
@@ -322,8 +295,7 @@
     then an empty Mail::Address object is returned.</p>
 <p class="Pp">To get just the email address part, do:</p>
 <p class="Pp"></p>
-<pre>
-  my $email = $dkim-&gt;message_sender-&gt;address;
+<pre>  my $email = $dkim-&gt;message_sender-&gt;address;
 </pre>
 <p class="Pp">The &quot;sender&quot; is the mailbox of the agent responsible for
     the actual transmission of the message. For example, if a secretary were to
@@ -334,9 +306,7 @@
 <h2 class="Ss"><b>selector()</b></h2>
 <p class="Pp">Get or set the current key selector.</p>
 <p class="Pp"></p>
-<pre>
-  $alg = $dkim-&gt;selector;
-
+<pre>  $alg = $dkim-&gt;selector;
   $dkim-&gt;selector('alpha');
 </pre>
 </section>
@@ -344,8 +314,7 @@
 <h2 class="Ss"><b>signatures()</b></h2>
 <p class="Pp">Access list of generated signature objects.</p>
 <p class="Pp"></p>
-<pre>
-  my @signatures = $dkim-&gt;signatures;
+<pre>  my @signatures = $dkim-&gt;signatures;
 </pre>
 <p class="Pp">Returns all generated signatures, as a list.</p>
 </section>
@@ -353,8 +322,7 @@
 <h2 class="Ss"><b>as_string()</b></h2>
 <p class="Pp">Returns the new ARC headers</p>
 <p class="Pp"></p>
-<pre>
-  my $pre_headers = $signer-&gt;as_string();
+<pre>  my $pre_headers = $signer-&gt;as_string();
 </pre>
 <p class="Pp">The headers are separated by \015\012 (SMTP line separator)
     including a trailing separator, so can be directly injected in front of the
@@ -364,8 +332,7 @@
 <h2 class="Ss"><b>as_strings()</b></h2>
 <p class="Pp">Returns the new ARC headers</p>
 <p class="Pp"></p>
-<pre>
-  my @pre_headers = $signer-&gt;as_string();
+<pre>  my @pre_headers = $signer-&gt;as_string();
 </pre>
 <p class="Pp">The headers are returned as a list so you can add whatever line
     ending your local MTA prefers.</p>

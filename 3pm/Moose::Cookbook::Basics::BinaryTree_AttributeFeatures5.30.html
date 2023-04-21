@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::BinaryTree_AttributeFeatures(3)</title>
 </head>
@@ -34,19 +35,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package BinaryTree;
+<pre>  package BinaryTree;
   use Moose;
-
   has 'node' =&gt; ( is =&gt; 'rw', isa =&gt; 'Any' );
-
   has 'parent' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
       predicate =&gt; 'has_parent',
       weak_ref  =&gt; 1,
   );
-
   has 'left' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
@@ -55,7 +52,6 @@
       default   =&gt; sub { BinaryTree-&gt;new( parent =&gt; $_[0] ) },
       trigger   =&gt; \&amp;_set_parent_for_child
   );
-
   has 'right' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
@@ -64,13 +60,10 @@
       default   =&gt; sub { BinaryTree-&gt;new( parent =&gt; $_[0] ) },
       trigger   =&gt; \&amp;_set_parent_for_child
   );
-
   sub _set_parent_for_child {
       my ( $self, $child ) = @_;
-
       confess &quot;You cannot insert a tree which already has a parent&quot;
           if $child-&gt;has_parent;
-
       $child-&gt;parent($self);
   }
 </pre>
@@ -92,8 +85,7 @@
 <p class="Pp">Let's take a look at the <span class="Li">&quot;node&quot;</span>
     attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has 'node' =&gt; ( is =&gt; 'rw', isa =&gt; 'Any' );
+<pre>  has 'node' =&gt; ( is =&gt; 'rw', isa =&gt; 'Any' );
 </pre>
 <p class="Pp">Moose generates a read-write accessor for this attribute. The type
     constraint is <span class="Li">&quot;Any&quot;</span>, which literally means
@@ -104,8 +96,7 @@
 <p class="Pp">Next, let's move on to the
     <span class="Li">&quot;parent&quot;</span> attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has 'parent' =&gt; (
+<pre>  has 'parent' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
       predicate =&gt; 'has_parent',
@@ -135,8 +126,7 @@
     identical except for their names, so we'll just look at
     <span class="Li">&quot;left&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  has 'left' =&gt; (
+<pre>  has 'left' =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'BinaryTree',
       predicate =&gt; 'has_left',
@@ -166,14 +156,12 @@
 <p class="Pp">As a workaround, we use an anonymous subroutine to generate a new
     reference every time the default is called.</p>
 <p class="Pp"></p>
-<pre>
-  has 'foo' =&gt; ( is =&gt; 'rw', default =&gt; sub { [] } );
+<pre>  has 'foo' =&gt; ( is =&gt; 'rw', default =&gt; sub { [] } );
 </pre>
 <p class="Pp">In fact, using a non-subroutine reference as a default is illegal
     in Moose.</p>
 <p class="Pp"></p>
-<pre>
-  # will fail
+<pre>  # will fail
   has 'foo' =&gt; ( is =&gt; 'rw', default =&gt; [] );
 </pre>
 <p class="Pp">This will blow up, so don't do it.</p>
@@ -212,13 +200,10 @@
     provided by a <span class="Li">&quot;default&quot;</span> or
     <span class="Li">&quot;builder&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  sub _set_parent_for_child {
+<pre>  sub _set_parent_for_child {
       my ( $self, $child ) = @_;
-
       confess &quot;You cannot insert a tree which already has a parent&quot;
           if $child-&gt;has_parent;
-
       $child-&gt;parent($self);
   }
 </pre>

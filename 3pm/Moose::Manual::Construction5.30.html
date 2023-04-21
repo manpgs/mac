@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Construction(3)</title>
 </head>
@@ -34,7 +35,8 @@
 <section class="Sh">
 <h1 class="Sh" id="WHERE'S_THE_CONSTRUCTOR?"><a class="permalink" href="#WHERE'S_THE_CONSTRUCTOR?">WHERE'S
   THE CONSTRUCTOR?</a></h1>
-<p class="Pp"><b>Do not define a </b><b>&quot;new()&quot;</b><b> method for your
+<p class="Pp"><b>Do not define a
+    </b><span class="Li"><b>&quot;new()&quot;</b></span><b> method for your
     classes!</b></p>
 <p class="Pp">When you <span class="Li">&quot;use Moose&quot;</span> in your
     class, your class becomes a subclass of Moose::Object. The Moose::Object
@@ -83,11 +85,9 @@
     the <span class="Li">&quot;BUILDARGS&quot;</span> method to accommodate this
     calling style:</p>
 <p class="Pp"></p>
-<pre>
-  around BUILDARGS =&gt; sub {
+<pre>  around BUILDARGS =&gt; sub {
       my $orig  = shift;
       my $class = shift;
-
       if ( @_ == 1 &amp;&amp; !ref $_[0] ) {
           return $class-&gt;$orig( ssn =&gt; $_[0] );
       }
@@ -111,10 +111,8 @@
     attributes through the use of types, we can't validate the state of a whole
     object that way.</p>
 <p class="Pp"></p>
-<pre>
-  sub BUILD {
+<pre>  sub BUILD {
       my $self = shift;
-
       if ( $self-&gt;country_of_residence eq 'USA' ) {
           die 'All US residents must have an SSN'
               unless $self-&gt;has_ssn;
@@ -124,10 +122,8 @@
 <p class="Pp">Another use of a <span class="Li">&quot;BUILD&quot;</span> method
     could be for logging or tracking object creation.</p>
 <p class="Pp"></p>
-<pre>
-  sub BUILD {
+<pre>  sub BUILD {
       my $self = shift;
-
       debug( 'Made a new person - SSN = ', $self-&gt;ssn, );
   }
 </pre>
@@ -137,11 +133,9 @@
     chance to do something with parameters that do not represent object
     attributes.</p>
 <p class="Pp"></p>
-<pre>
-  sub BUILD {
+<pre>  sub BUILD {
       my $self = shift;
       my $args = shift;
-
       $self-&gt;add_friend(
           My::User-&gt;new(
               user_id =&gt; $args-&gt;{user_id},
@@ -153,13 +147,14 @@
 <p class="Pp">The interaction between multiple
     <span class="Li">&quot;BUILD&quot;</span> methods in an inheritance
     hierarchy is different from normal Perl methods. <b>You should never call
-    </b><b>&quot;$self-&gt;SUPER::BUILD&quot;</b><b></b>, nor should you ever
-    apply a method modifier to <span class="Li">&quot;BUILD&quot;</span>. Roles
-    are an exception to this rule, though: it's completely acceptable to apply a
-    method modifier to <span class="Li">&quot;BUILD&quot;</span> in a role; you
-    can even provide an empty <span class="Li">&quot;BUILD&quot;</span>
-    subroutine in a role so the role is applicable even to classes without their
-    own <span class="Li">&quot;BUILD&quot;</span>.</p>
+    </b><span class="Li"><b>&quot;$self-&gt;SUPER::BUILD&quot;</b></span><b></b>,
+    nor should you ever apply a method modifier to
+    <span class="Li">&quot;BUILD&quot;</span>. Roles are an exception to this
+    rule, though: it's completely acceptable to apply a method modifier to
+    <span class="Li">&quot;BUILD&quot;</span> in a role; you can even provide an
+    empty <span class="Li">&quot;BUILD&quot;</span> subroutine in a role so the
+    role is applicable even to classes without their own
+    <span class="Li">&quot;BUILD&quot;</span>.</p>
 <p class="Pp">Moose arranges to have all of the
     <span class="Li">&quot;BUILD&quot;</span> methods in a hierarchy called when
     an object is constructed, <i>from parents to</i> <i>children</i>. This might

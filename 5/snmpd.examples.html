@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SNMPD.EXAMPLES(5)</title>
 </head>
@@ -57,17 +58,13 @@ Other combinations are also valid.
     &quot;snmp&quot; group (defined in <i>/etc/group</i>), this could be done
     using the directives:</p>
 <div class="Bd-indent">
-<pre>
-agentuser  nobody
-agentgroup snmp
-</pre>
+<pre>agentuser  nobody
+agentgroup snmp</pre>
 </div>
 A similar effect could be achieved using numeric UID and/or GID values:
 <div class="Bd-indent">
-<pre>
-agentuser  #10
-agentgroup #10
-</pre>
+<pre>agentuser  #10
+agentgroup #10</pre>
 </div>
 </section>
 <section class="Ss">
@@ -92,11 +89,9 @@ or it could be specified explicitly, using:
 <p class="Pp">The following directives will create three users, all using
     exactly the same authentication and encryption settings:</p>
 <div class="Bd-indent">
-<pre>
-createUser me     MD5 &quot;single pass phrase&quot;
+<pre>createUser me     MD5 &quot;single pass phrase&quot;
 createUser myself MD5 &quot;single pass phrase&quot; DES
-createUser andI   MD5 &quot;single pass phrase&quot; DES &quot;single pass phrase&quot;
-</pre>
+createUser andI   MD5 &quot;single pass phrase&quot; DES &quot;single pass phrase&quot;</pre>
 </div>
 Note that this defines three <i>distinct</i> users, who could be granted
   different levels of access. Changing the passphrase for any one of these would
@@ -114,34 +109,26 @@ Remember that these <i>createUser</i> directives should be defined in the
 <p class="Pp">The SNMPv3 users defined above can be granted access to the full
     MIB tree using the directives:</p>
 <div class="Bd-indent">
-<pre>
-rouser me
-rwuser onering
-</pre>
+<pre>rouser me
+rwuser onering</pre>
 </div>
 Or selective access to individual subtrees using:
 <div class="Bd-indent">
-<pre>
-rouser myself   .1.3.6.1.2
-rwuser andI     system
-</pre>
+<pre>rouser myself   .1.3.6.1.2
+rwuser andI     system</pre>
 </div>
 <p class="Pp">Note that a combination repeating the same user, such as:</p>
 <div class="Bd-indent">
-<pre>
-rouser onering
-rwuser onering
-</pre>
+<pre>rouser onering
+rwuser onering</pre>
 </div>
 should <b>not</b> be used. This would configure the user <i>onering</i> with
   read-only access (and ignore the <i>rwuser</i> entry altogether). The same
   holds for the community-based directives.
 <p class="Pp">The directives:</p>
 <div class="Bd-indent">
-<pre>
-rocommunity public
-rwcommunity private
-</pre>
+<pre>rocommunity public
+rwcommunity private</pre>
 </div>
 would define the commonly-expected read and write community strings for SNMPv1
   and SNMPv2c requests. This behaviour is <b>not</b> configured by default, and
@@ -166,8 +153,7 @@ or a combination of the two.
 <p class="Pp">This last pair of settings are equivalent to the full VACM
     definitions:</p>
 <div class="Bd-indent">
-<pre>
-<i>#         sec.name  source        community</i>
+<pre><i>#         sec.name  source        community</i>
 com2sec   public    default       public
 com2sec   mynet     10.10.10.0/24 private
 com2sec6  mynet     fec0::/64     private
@@ -181,8 +167,7 @@ view   all     included    .1
 view   sysView included    system
 <i>#              context model level   prefix  read    write  notify (unused)</i>
 access  worldGroup  &quot;&quot;  any  noauth  exact   system  none   none
-access  myGroup     &quot;&quot;  any  noauth  exact   all     all    none
-</pre>
+access  myGroup     &quot;&quot;  any  noauth  exact   all     all    none</pre>
 </div>
 <p class="Pp">There are several points to note in this example:</p>
 <p class="Pp">The <i>group</i> directives must be repeated for both SNMPv1 and
@@ -207,12 +192,10 @@ access  myGroup     &quot;&quot;  any  noauth  exact   all     all    none
   Configuration</a></h2>
 <p class="Pp">A similar configuration could also be configured as follows:</p>
 <div class="Bd-indent">
-<pre>
-view   sys2View included    system
+<pre>view   sys2View included    system
 view   sys2View included    .1.3.6.1.2.1.25.1
 authcommunity read       public  default      -v sys2View
-authcommunity read,write private 10.10.10.0/8
-</pre>
+authcommunity read,write private 10.10.10.0/8</pre>
 </div>
 <p class="Pp">This mechanism allows multi-subtree (or other non-simple) views to
     be used with the one-line <i>rocommunity</i> style of configuration.</p>
@@ -229,8 +212,7 @@ authcommunity read,write private 10.10.10.0/8
 <p class="Pp">The full contents of the 'system' group (with the exception of
     sysUpTime) can be explicitly configured using:</p>
 <div class="Bd-indent">
-<pre>
-<i># Override 'uname -a' and hardcoded system OID - inherently read-only values</i>
+<pre><i># Override 'uname -a' and hardcoded system OID - inherently read-only values</i>
 sysDescr     Universal Turing Machine mk I
 sysObjectID  .1.3.6.1.4.1.8072.3.2.1066
 <i># Override default values from 'configure' - makes these objects read-only</i>
@@ -238,8 +220,7 @@ sysContact   Alan.Turing@pre-cs.man.ac.uk
 sysName      tortoise.turing.com
 sysLocation  An idea in the mind of AT
 <i># Standard end-host behaviour</i>
-sysServices  72
-</pre>
+sysServices  72</pre>
 </div>
 </section>
 <section class="Ss">
@@ -251,10 +232,8 @@ sysServices  72
 <div class="Bd-indent">ignoredisk /dev/rdsk/c0t2d0</div>
 which prevents the device <i>/dev/rdsk/c0t2d0</i> from being scanned,
 <div class="Bd-indent">
-<pre>
-ignoredisk /dev/rdsk/c0t[!6]d0
-ignoredisk /dev/rdsk/c0t[0-57-9a-f]d0
-</pre>
+<pre>ignoredisk /dev/rdsk/c0t[!6]d0
+ignoredisk /dev/rdsk/c0t[0-57-9a-f]d0</pre>
 </div>
 either of which prevents all devices <i>/dev/rdsk/c0t</i>X<i>d0</i> (except
   .../<i>c0t6d0</i>) from being scanned,
@@ -271,8 +250,7 @@ which prevents all devices <i>/dev/rdsk/c</i>X<i>t0d0</i> (where 'X' is any
 <p class="Pp">The list of services running on a system can be monitored (and
     provision made for correcting any problems), using:</p>
 <div class="Bd-indent">
-<pre>
-<i># At least one web server process must be running at all times</i>
+<pre><i># At least one web server process must be running at all times</i>
 proc    httpd
 procfix httpd  /etc/rc.d/init.d/httpd restart
 <i># There should never be more than 10 mail processes running</i>
@@ -281,8 +259,7 @@ proc    sendmail   10
 procfix sendmail  /etc/rc.d/init.d/sendmail stop
 <i># There should be a single network management agent running</i>
 <i>#   (&quot;There can be only one&quot;)</i>
-proc    snmpd    1  1
-</pre>
+proc    snmpd    1  1</pre>
 </div>
 Also see the &quot;DisMan Event MIB&quot; section later on.
 </section>
@@ -291,13 +268,11 @@ Also see the &quot;DisMan Event MIB&quot; section later on.
   Usage Monitoring</a></h2>
 <p class="Pp">The state of disk storage can be monitored using:</p>
 <div class="Bd-indent">
-<pre>
-includeAllDisks 10%
+<pre>includeAllDisks 10%
 disk /var 20%
 disk /usr  3%
 <i>#  Keep 100 MB free for crash dumps</i>
-disk /mnt/crash  100000
-</pre>
+disk /mnt/crash  100000</pre>
 </div>
 </section>
 <section class="Ss">
@@ -326,22 +301,18 @@ A more refined check (to allow brief periods of heavy use, but recognise
 <p class="Pp">Configuring the agent to report invalid access attempts might be
     done by:</p>
 <div class="Bd-indent">
-<pre>
-authtrapenable 1
+<pre>authtrapenable 1
 trapcommunity  public
-trap2sink      localhost
-</pre>
+trap2sink      localhost</pre>
 </div>
 Alternatively, the second and third directives could be combined (and an
   acknowledgement requested) using:
 <div class="Bd-indent">informsink localhost public</div>
 A configuration with repeated sink destinations, such as:
 <div class="Bd-indent">
-<pre>
-trapsink       localhost
+<pre>trapsink       localhost
 trap2sink      localhost
-informsink     localhost
-</pre>
+informsink     localhost</pre>
 </div>
 should <b>NOT</b> be used, as this will cause multiple copies of each trap to be
   sent to the same trap receiver.
@@ -356,8 +327,7 @@ should <b>NOT</b> be used, as this will cause multiple copies of each trap to be
 <p class="Pp">The simplest configuration for active self-monitoring of the
     agent, by the agent, for the agent, is probably:</p>
 <div class="Bd-indent">
-<pre>
-<i># Set up the credentials to retrieve monitored values</i>
+<pre><i># Set up the credentials to retrieve monitored values</i>
 createUser    _internal MD5 &quot;the first sign of madness&quot;
 iquerySecName _internal
 rouser        _internal
@@ -365,8 +335,7 @@ rouser        _internal
 defaultMonitors         yes
 linkUpDownNotifications yes
 <i># If there's a problem, then tell someone!</i>
-trap2sink localhost
-</pre>
+trap2sink localhost</pre>
 </div>
 <p class="Pp">The first block sets up a suitable user for retrieving the
     information to by monitored, while the following pair of directives
@@ -398,12 +367,10 @@ trap2sink localhost
 <p class="Pp">The <i>linkUpDownNotifications</i> directive above is broadly
     equivalent to:</p>
 <div class="Bd-indent">
-<pre>
-notificationEvent  linkUpTrap    linkUp   ifIndex ifAdminStatus ifOperStatus
+<pre>notificationEvent  linkUpTrap    linkUp   ifIndex ifAdminStatus ifOperStatus
 notificationEvent  linkDownTrap  linkDown ifIndex ifAdminStatus ifOperStatus
 monitor  -r 60 -e linkUpTrap   &quot;Generate linkUp&quot;   ifOperStatus != 2
-monitor  -r 60 -e linkDownTrap &quot;Generate linkDown&quot; ifOperStatus == 2
-</pre>
+monitor  -r 60 -e linkDownTrap &quot;Generate linkDown&quot; ifOperStatus == 2</pre>
 </div>
 <p class="Pp">This defines the traps to be sent (using
     <i>notificationEvent</i>), and explicitly references the relevant
@@ -412,23 +379,19 @@ monitor  -r 60 -e linkDownTrap &quot;Generate linkDown&quot; ifOperStatus == 2
 <p class="Pp">The <i>defaultMonitors</i> directive above is equivalent to a
     series of (boolean) monitor entries:</p>
 <div class="Bd-indent">
-<pre>
-monitor	-o prNames      -o prErrMessage  &quot;procTable&quot; prErrorFlag   != 0
+<pre>monitor	-o prNames      -o prErrMessage  &quot;procTable&quot; prErrorFlag   != 0
 monitor	-o memErrorName -o memSwapErrorMsg &quot;memory&quot;  memSwapError  != 0
 monitor	-o extNames     -o extOutput     &quot;extTable&quot;  extResult     != 0
 monitor	-o dskPath      -o dskErrorMsg   &quot;dskTable&quot;  dskErrorFlag  != 0
 monitor	-o laNames      -o laErrMessage  &quot;laTable&quot;   laErrorFlag   != 0
-monitor	-o fileName     -o fileErrorMsg  &quot;fileTable&quot; fileErrorFlag != 0
-</pre>
+monitor	-o fileName     -o fileErrorMsg  &quot;fileTable&quot; fileErrorFlag != 0</pre>
 </div>
 and will send a trap whenever any of these entries indicate a problem.
 <p class="Pp">An alternative approach would be to automatically invoke the
     corresponding &quot;fix&quot; action:</p>
 <div class="Bd-indent">
-<pre>
-setEvent   prFixIt  prErrFix = 1
-monitor -e prFixIt &quot;procTable&quot; prErrorFlag   != 0
-</pre>
+<pre>setEvent   prFixIt  prErrFix = 1
+monitor -e prFixIt &quot;procTable&quot; prErrorFlag   != 0</pre>
 </div>
 (and similarly for any of the other <i>defaultMonitor</i> entries).
 </section>
@@ -455,18 +418,14 @@ monitor -e prFixIt &quot;procTable&quot; prErrorFlag   != 0
   Extension Commands</a></h2>
 <p class="Pp"><i>Old Style</i></p>
 <div class="Bd-indent">
-<pre>
-exec [MIBOID] NAME PROG ARGS&quot;
+<pre>exec [MIBOID] NAME PROG ARGS&quot;
 sh   [MIBOID] NAME PROG ARGS&quot;
-execfix NAME PROG ARGS&quot;
-</pre>
+execfix NAME PROG ARGS&quot;</pre>
 </div>
 <i>New Style</i>
 <div class="Bd-indent">
-<pre>
-extend [MIBOID] NAME PROG ARGS&quot;
-extendfix [MIBOID] NAME PROG ARGS&quot;
-</pre>
+<pre>extend [MIBOID] NAME PROG ARGS&quot;
+extendfix [MIBOID] NAME PROG ARGS&quot;</pre>
 </div>
 </section>
 <section class="Ss">
@@ -486,28 +445,22 @@ extendfix [MIBOID] NAME PROG ARGS&quot;
 <p class="Pp">If embedded perl support is enabled in the agent, the default
     initialisation is equivalent to the directives:</p>
 <div class="Bd-indent">
-<pre>
-disablePerl  false
-perlInitFile /usr/share/snmp/snmp_perl.pl
-</pre>
+<pre>disablePerl  false
+perlInitFile /usr/share/snmp/snmp_perl.pl</pre>
 </div>
 The main mechanism for defining embedded perl scripts is the <i>perl</i>
   directive. A very simple (if somewhat pointless) MIB handler could be
   registered using:
 <div class="Bd-indent">
-<pre>
-perl use Data::Dumper;
+<pre>perl use Data::Dumper;
 perl sub myroutine  { print &quot;got called: &quot;,Dumper(@_),&quot;\n&quot;; }
-perl $agent-&gt;register('mylink', '.1.3.6.1.8765', \&amp;myroutine);
-</pre>
+perl $agent-&gt;register('mylink', '.1.3.6.1.8765', \&amp;myroutine);</pre>
 </div>
 <p class="Pp">This relies on the <i>$agent</i> object, defined in the example
     snmp_perl.pl file.</p>
 <p class="Pp">A more realistic MIB handler might be:</p>
 <div class="Bd-indent">
-<pre>
-<i>XXX - WHAT ???</i>
-</pre>
+<pre><i>XXX - WHAT ???</i></pre>
 </div>
 Alternatively, this code could be stored in an external file, and loaded using:
 <div class="Bd-indent">perl 'do /usr/share/snmp/perl_example.pl';</div>
@@ -524,12 +477,10 @@ Alternatively, this code could be stored in an external file, and loaded using:
 <p class="Pp">A configuration for acting as a simple proxy for two other SNMP
     agents (running on remote systems) might be:</p>
 <div class="Bd-indent">
-<pre>
-com2sec -Cn rem1context  rem1user default  remotehost1
+<pre>com2sec -Cn rem1context  rem1user default  remotehost1
 com2sec -Cn rem2context  rem2user default  remotehost2
 proxy -Cn rem1context  -v 1 -c public  remotehost1  .1.3
-proxy -Cn rem2context  -v 1 -c public  remotehost2  .1.3
-</pre>
+proxy -Cn rem2context  -v 1 -c public  remotehost2  .1.3</pre>
 </div>
 (plus suitable access control entries).
 <p class="Pp">The same <i>proxy</i> directives would also work with (incoming)
@@ -548,21 +499,17 @@ This mechanism can be used to link together two separate SNMP agents.
 <p class="Pp">A less usual approach is to map one subtree into a different area
     of the overall MIB tree (either locally or on a remote system):</p>
 <div class="Bd-indent">
-<pre>
-<i># uses SNMPv3 to access the MIB tree .1.3.6.1.2.1.1 on 'remotehost'</i>
+<pre><i># uses SNMPv3 to access the MIB tree .1.3.6.1.2.1.1 on 'remotehost'</i>
 <i># and maps this to the local tree .1.3.6.1.3.10</i>
-proxy -v 3 -l noAuthNoPriv -u user remotehost .1.3.6.1.3.10 .1.3.6.1.2.1.1
-</pre>
+proxy -v 3 -l noAuthNoPriv -u user remotehost .1.3.6.1.3.10 .1.3.6.1.2.1.1</pre>
 </div>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="SMUX_Sub-Agents"><a class="permalink" href="#SMUX_Sub-Agents">SMUX
   Sub-Agents</a></h2>
 <div class="Bd-indent">
-<pre>
-smuxsocket 127.0.0.1
-smuxpeer .1.3.6.1.2.1.14 ospf_pass
-</pre>
+<pre>smuxsocket 127.0.0.1
+smuxpeer .1.3.6.1.2.1.14 ospf_pass</pre>
 </div>
 </section>
 <section class="Ss">
@@ -572,37 +519,29 @@ smuxpeer .1.3.6.1.2.1.14 ospf_pass
     master agent (listening on a non-standard named socket, and running using
     the access privileges defined earlier), using:</p>
 <div class="Bd-indent">
-<pre>
-master agentx
+<pre>master agentx
 agentXSocket /tmp/agentx/master
-agentXPerms  0660 0550 nobody snmp
-</pre>
+agentXPerms  0660 0550 nobody snmp</pre>
 </div>
 A sub-agent wishing to connect to this master agent would need the same
   <i>agentXSocket</i> directive, or the equivalent code:
 <div class="Bd-indent">
-<pre>
-netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID, NETSNMP_DS_AGENT_X_SOCKET, 
-                      &quot;/tmp/agentx/master&quot;);
-</pre>
+<pre>netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID, NETSNMP_DS_AGENT_X_SOCKET, 
+                      &quot;/tmp/agentx/master&quot;);</pre>
 </div>
 <p class="Pp">A loopback networked AgentX configuration could be set up
   using:</p>
 <div class="Bd-indent">
-<pre>
-agentXSocket   tcp:localhost:705
+<pre>agentXSocket   tcp:localhost:705
 agentXTimeout  5
-agentXRetries  2
-</pre>
+agentXRetries  2</pre>
 </div>
 on the master side, and:
 <div class="Bd-indent">
-<pre>
-agentXSocket   tcp:localhost:705
+<pre>agentXSocket   tcp:localhost:705
 agentXTimeout  10
 agentXRetries  1
-agentXPingInterval 600
-</pre>
+agentXPingInterval 600</pre>
 </div>
 on the client.
 <p class="Pp">Note that the timeout and retry settings can be asymmetric for the

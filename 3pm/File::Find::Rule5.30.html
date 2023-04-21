@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::Find::Rule(3)</title>
 </head>
@@ -28,16 +29,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use File::Find::Rule;
+<pre>  use File::Find::Rule;
   # find all the subdirectories of a given directory
   my @subdirs = File::Find::Rule-&gt;directory-&gt;in( $directory );
-
   # find all the .pm files in @INC
   my @files = File::Find::Rule-&gt;file()
                               -&gt;name( '*.pm' )
                               -&gt;in( @INC );
-
   # as above, but without method chaining
   my $rule =  File::Find::Rule-&gt;new;
   $rule-&gt;file;
@@ -66,8 +64,7 @@
   <dt>&quot;name( @patterns )&quot;</dt>
   <dd>Specifies names that should match. May be globs or regular expressions.
     <p class="Pp"></p>
-    <pre>
- $set-&gt;name( '*.mp3', '*.ogg' ); # mp3s or oggs
+    <pre> $set-&gt;name( '*.mp3', '*.ogg' ); # mp3s or oggs
  $set-&gt;name( qr/\.(mp3|ogg)$/ ); # the same as a regex
  $set-&gt;name( 'foo.bar' );        # just things named foo.bar
     </pre>
@@ -76,8 +73,7 @@
   <dd>Synonyms are provided for each of the -X tests. See &quot;-X&quot; in
       perlfunc for details. None of these methods take arguments.
     <p class="Pp"></p>
-    <pre>
-  Test | Method               Test |  Method
+    <pre>  Test | Method               Test |  Method
  ------|-------------        ------|----------------
    -r  |  readable             -R  |  r_readable
    -w  |  writeable            -W  |  r_writeable
@@ -103,8 +99,7 @@
         <span class="Li">&quot;changed&quot;</span>), they have been included
         for completeness.</p>
     <p class="Pp"></p>
-    <pre>
- # find nonempty files
+    <pre> # find nonempty files
  $rule-&gt;file,
       -&gt;nonempty;
     </pre>
@@ -128,8 +123,7 @@
     <p class="Pp">Each of these can take a number of targets, which will follow
         Number::Compare semantics.</p>
     <p class="Pp"></p>
-    <pre>
- $rule-&gt;size( 7 );         # exactly 7
+    <pre> $rule-&gt;size( 7 );         # exactly 7
  $rule-&gt;size( &quot;&gt;7Ki&quot; );    # larger than 7 * 1024 * 1024 bytes
  $rule-&gt;size( &quot;&gt;=7&quot; )
       -&gt;size( &quot;&lt;=90&quot; );    # between 7 and 90, inclusive
@@ -143,8 +137,7 @@
       and-like nature of combined rules. <span class="Li">&quot;any&quot;</span>
       and <span class="Li">&quot;or&quot;</span> are interchangeable.
     <p class="Pp"></p>
-    <pre>
- # find avis, movs, things over 200M and empty files
+    <pre> # find avis, movs, things over 200M and empty files
  $rule-&gt;any( File::Find::Rule-&gt;name( '*.avi', '*.mov' ),
              File::Find::Rule-&gt;size( '&gt;200M' ),
              File::Find::Rule-&gt;file-&gt;empty,
@@ -158,8 +151,7 @@
       <span class="Li">&quot;none&quot;</span> and
       <span class="Li">&quot;not&quot;</span> are interchangeable.
     <p class="Pp"></p>
-    <pre>
-  # files that aren't 8.3 safe
+    <pre>  # files that aren't 8.3 safe
   $rule-&gt;file
        -&gt;not( $rule-&gt;new-&gt;name( qr/^[^.]{1,8}(\.[^.]{0,3})?$/ ) );
     </pre>
@@ -175,8 +167,7 @@
       filename.
     <p class="Pp">Return a true value if your rule matched.</p>
     <p class="Pp"></p>
-    <pre>
- # get things with long names
+    <pre> # get things with long names
  $rules-&gt;exec( sub { length &gt; 20 } );
     </pre>
   </dd>
@@ -190,8 +181,7 @@
         enclosing them in anonymous arrays. Should a negative specifier match
         the iteration is aborted and the clause is failed. For example:</p>
     <p class="Pp"></p>
-    <pre>
- $rule-&gt;grep( qr/^#!.*\bperl/, [ sub { 1 } ] );
+    <pre> $rule-&gt;grep( qr/^#!.*\bperl/, [ sub { 1 } ] );
     </pre>
     <p class="Pp">Is a passing clause if the first line of a file looks like a
         perl shebang line.</p>
@@ -212,8 +202,7 @@
     <p class="Pp">For example this allows you to specify following of symlinks
         like so:</p>
     <p class="Pp"></p>
-    <pre>
- my $rule = File::Find::Rule-&gt;extras({ follow =&gt; 1 });
+    <pre> my $rule = File::Find::Rule-&gt;extras({ follow =&gt; 1 });
     </pre>
     <p class="Pp">May be invoked many times per rule, but only the most recent
         value is used.</p>
@@ -235,9 +224,7 @@
   <dd>Negated version of the rule. An effective shortand related to ! in the
       procedural interface.
     <p class="Pp"></p>
-    <pre>
- $foo-&gt;not_name('*.pl');
-
+    <pre> $foo-&gt;not_name('*.pl');
  $foo-&gt;not( $foo-&gt;new-&gt;name('*.pl' ) );
     </pre>
   </dd>
@@ -255,8 +242,7 @@
       queried using &quot;match&quot;. This allows you to use a rule as an
       iterator.
     <p class="Pp"></p>
-    <pre>
- my $rule = File::Find::Rule-&gt;file-&gt;name(&quot;*.jpeg&quot;)-&gt;start( &quot;/web&quot; );
+    <pre> my $rule = File::Find::Rule-&gt;file-&gt;name(&quot;*.jpeg&quot;)-&gt;start( &quot;/web&quot; );
  while ( defined ( my $image = $rule-&gt;match ) ) {
      ...
  }
@@ -271,17 +257,14 @@
 <p class="Pp">Extension modules are available from CPAN in the File::Find::Rule
     namespace. In order to use these extensions either use them directly:</p>
 <p class="Pp"></p>
-<pre>
- use File::Find::Rule::ImageSize;
+<pre> use File::Find::Rule::ImageSize;
  use File::Find::Rule::MMagic;
-
  # now your rules can use the clauses supplied by the ImageSize and
  # MMagic extension
 </pre>
 <p class="Pp">or, specify that File::Find::Rule should load them for you:</p>
 <p class="Pp"></p>
-<pre>
- use File::Find::Rule qw( :ImageSize :MMagic );
+<pre> use File::Find::Rule qw( :ImageSize :MMagic );
 </pre>
 <p class="Pp">For notes on implementing your own extensions, consult
     File::Find::Rule::Extending</p>
@@ -293,8 +276,7 @@
   <dt id="Finding"><a class="permalink" href="#Finding">Finding perl
     scripts</a></dt>
   <dd>
-    <pre>
- my $finder = File::Find::Rule-&gt;or
+    <pre> my $finder = File::Find::Rule-&gt;or
   (
    File::Find::Rule-&gt;name( '*.pl' ),
    File::Find::Rule-&gt;exec(
@@ -314,8 +296,7 @@
   <dt id="ignore"><a class="permalink" href="#ignore">ignore CVS
     directories</a></dt>
   <dd>
-    <pre>
- my $rule = File::Find::Rule-&gt;new;
+    <pre> my $rule = File::Find::Rule-&gt;new;
  $rule-&gt;or($rule-&gt;new
                 -&gt;directory
                 -&gt;name('CVS')
@@ -350,8 +331,7 @@
     <span class="Li">&quot;untaint&quot;</span> file paths with a regex like
   so:</p>
 <p class="Pp"></p>
-<pre>
-    my $rule = File::Find::Rule-&gt;extras({ untaint =&gt; 1 });
+<pre>    my $rule = File::Find::Rule-&gt;extras({ untaint =&gt; 1 });
 </pre>
 <p class="Pp">Please consult File::Find's documentation for
     <span class="Li">&quot;untaint&quot;</span>,

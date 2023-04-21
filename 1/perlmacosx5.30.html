@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLMACOSX(1)</title>
 </head>
@@ -30,8 +31,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">This document briefly describes Perl under Mac OS X.</p>
 <p class="Pp"></p>
-<pre>
-  curl -O http://www.cpan.org/src/perl-5.30.3.tar.gz
+<pre>  curl -O http://www.cpan.org/src/perl-5.30.3.tar.gz
   tar -xzf perl-5.30.3.tar.gz
   cd perl-5.30.3
   ./Configure -des -Dprefix=/usr/local/
@@ -116,28 +116,22 @@
 <p class="Pp">Dtrace support has been added to perl to allow tracing of perl
     subroutine calls, both entry and return. Here is a quick example:</p>
 <p class="Pp"></p>
-<pre>
-    % cat test.pl
+<pre>    % cat test.pl
     #!/usr/bin/perl
-
     sub a {
         print &quot;Ah! death. Welcome to thee brother\n&quot;;
     }
-
     sub b {
         print &quot;Where art thou a()?\n&quot;;
         a();
     }
-
     sub c {
         print &quot;The band of alphabets\n&quot;;
         b();
     }
-
     sub main {
         c();
     }
-
     main();
     % cat pltest.d
     perl$target:::
@@ -152,19 +146,12 @@
     dtrace: pid 50272 has exited
     CPU     ID                    FUNCTION:NAME
       0  14231       Perl_pp_entersub:sub-entry main
-
       0  14231       Perl_pp_entersub:sub-entry c
-
       0  14231       Perl_pp_entersub:sub-entry b
-
       0  14231       Perl_pp_entersub:sub-entry a
-
       0  15806      Perl_pp_leavesub:sub-return a
-
       0  15806      Perl_pp_leavesub:sub-return b
-
       0  15806      Perl_pp_leavesub:sub-return c
-
       0  15806      Perl_pp_leavesub:sub-return main
 </pre>
 </section>
@@ -188,8 +175,7 @@
     and 64-bit only for Intel. With ARCHFLAGS, this can be changed to whatever
     architectures the user wants to build. For example:</p>
 <p class="Pp"></p>
-<pre>
-    % env ARCHFLAGS='-arch i386 -arch x86_64' perl Makefile.PL
+<pre>    % env ARCHFLAGS='-arch i386 -arch x86_64' perl Makefile.PL
     % make
     % make install
 </pre>
@@ -209,8 +195,7 @@
 <p class="Pp">Users can select the alternate version by simply running the
     following command:</p>
 <p class="Pp"></p>
-<pre>
-    % defaults write com.apple.versioner.perl Version
+<pre>    % defaults write com.apple.versioner.perl Version
 </pre>
 <p class="Pp">Subsequent invocations of '/usr/bin/perl' will then use the
     version.</p>
@@ -245,8 +230,7 @@
 <h2 class="Ss">SDK support</h2>
 <p class="Pp">First, export the path to the SDK into the build environment:</p>
 <p class="Pp"></p>
-<pre>
- export SDK=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+<pre> export SDK=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
 </pre>
 <p class="Pp">Please make sure the SDK version (i.e. the numbers right before
     '.sdk') matches your system's (in this case, Mac OS X 10.8 &quot;Mountain
@@ -260,8 +244,7 @@
 <p class="Pp">You can use the SDK by exporting some additions to Perl's
     'ccflags' and '..flags' config variables:</p>
 <p class="Pp"></p>
-<pre>
-    ./Configure -Accflags=&quot;-nostdinc -B$SDK/usr/include/gcc \
+<pre>    ./Configure -Accflags=&quot;-nostdinc -B$SDK/usr/include/gcc \
                            -B$SDK/usr/lib/gcc -isystem$SDK/usr/include \
                            -F$SDK/System/Library/Frameworks&quot; \
                 -Aldflags=&quot;-Wl,-syslibroot,$SDK&quot; \
@@ -279,16 +262,14 @@
     intel). In Mac OS X 10.4 &quot;Tiger&quot;, you must export the 'u' variant
     of the SDK:</p>
 <p class="Pp"></p>
-<pre>
-    export SDK=/Developer/SDKs/MacOSX10.4u.sdk
+<pre>    export SDK=/Developer/SDKs/MacOSX10.4u.sdk
 </pre>
 <p class="Pp">Mac OS X 10.5 &quot;Leopard&quot; and above do not require the 'u'
     variant.</p>
 <p class="Pp">In addition to the compiler flags used to select the SDK, also add
     the flags for creating a universal binary:</p>
 <p class="Pp"></p>
-<pre>
- ./Configure -Accflags=&quot;-arch i686 -arch ppc -nostdinc               \
+<pre> ./Configure -Accflags=&quot;-arch i686 -arch ppc -nostdinc               \
                          -B$SDK/usr/include/gcc                      \
                         -B$SDK/usr/lib/gcc -isystem$SDK/usr/include  \
                         -F$SDK/System/Library/Frameworks&quot;            \
@@ -321,8 +302,7 @@
     failures. You can use <span class="Li">&quot;file&quot;</span> to discover
     the architectures supported by a library:</p>
 <p class="Pp"></p>
-<pre>
-    $ file libgdbm.3.0.0.dylib 
+<pre>    $ file libgdbm.3.0.0.dylib 
     libgdbm.3.0.0.dylib: Mach-O fat file with 2 architectures
     libgdbm.3.0.0.dylib (for architecture ppc):      Mach-O dynamically linked shared library ppc
     libgdbm.3.0.0.dylib (for architecture ppc64):    Mach-O 64-bit dynamically linked shared library ppc64
@@ -382,21 +362,18 @@
     symbol problems, for example during &quot;make test&quot;. The safest bet is
     to run Configure as</p>
 <p class="Pp"></p>
-<pre>
-    Configure ... -Uloclibpth -Dlibpth=/usr/lib
+<pre>    Configure ... -Uloclibpth -Dlibpth=/usr/lib
 </pre>
 <p class="Pp">to make Configure look only into the system libraries. If you have
     some extra library directories that you really want to use (such as newer
     Berkeley DB libraries in pre-Panther systems), add those to the libpth:</p>
 <p class="Pp"></p>
-<pre>
-    Configure ... -Uloclibpth -Dlibpth='/usr/lib /opt/lib'
+<pre>    Configure ... -Uloclibpth -Dlibpth='/usr/lib /opt/lib'
 </pre>
 <p class="Pp">The default of building Perl statically may cause problems with
     complex applications like Tk: in that case consider building shared Perl</p>
 <p class="Pp"></p>
-<pre>
-    Configure ... -Duseshrplib
+<pre>    Configure ... -Duseshrplib
 </pre>
 <p class="Pp">but remember that there's a startup cost to pay in that case (see
     above &quot;libperl and Prebinding&quot;).</p>
@@ -431,20 +408,17 @@
     system if you do this.</p>
 <p class="Pp">First, get rid of the libperl.dylib:</p>
 <p class="Pp"></p>
-<pre>
-    # cd /System/Library/Perl/darwin/CORE
+<pre>    # cd /System/Library/Perl/darwin/CORE
     # rm libperl.dylib
 </pre>
 <p class="Pp">Then delete every .bundle file found anywhere in the folders:</p>
 <p class="Pp"></p>
-<pre>
-    /System/Library/Perl
+<pre>    /System/Library/Perl
     /Library/Perl
 </pre>
 <p class="Pp">You can find them for example by</p>
 <p class="Pp"></p>
-<pre>
-    # find /System/Library/Perl /Library/Perl -name '*.bundle' -print
+<pre>    # find /System/Library/Perl /Library/Perl -name '*.bundle' -print
 </pre>
 <p class="Pp">After this you can either copy Perl from your operating system
     media (you will need at least the /System/Library/Perl and /usr/bin/perl),
@@ -472,7 +446,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.3</td>
   </tr>
 </table>

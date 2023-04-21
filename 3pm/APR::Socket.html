@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>install::TempContent::Objects::mod_perl-2.0.9::docs::api::APR::Socket(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h1>
-<pre>
-  use APR::Socket ();
+<pre>  use APR::Socket ();
   
   ### set the socket to the blocking mode if it isn't already
   ### and read in the loop and echo it back
@@ -42,7 +42,6 @@
   while ($sock-&gt;recv(my $buff, $wanted)) {
       $sock-&gt;send($buff);
   }
-
   ### get/set IO timeout and try to read some data
   use APR::Const -compile =&gt; qw(TIMEUP);
   # timeout is in usecs!
@@ -62,7 +61,6 @@
       warn &quot;asked for $wanted bytes, read $rlen bytes\n&quot;;
       # do something with the data
   }
-
   # non-blocking io poll
   $sock-&gt;opt_set(APR::Const::SO_NONBLOCK =&gt; 1);
   my $rc = $sock-&gt;poll($c-&gt;pool, 1_000_000, APR::Const::POLLIN);
@@ -72,7 +70,6 @@
   else {
       # handle the condition
   }
-
   # fetch the operating level socket
   my $fd=$sock-&gt;fileno;
 </pre>
@@ -90,8 +87,7 @@
 <h2 class="Ss" id="_fileno_"><a class="permalink" href="#_fileno_">&quot;fileno&quot;</a></h2>
 <p class="Pp">Get the operating system socket, the file descriptor on UNIX.</p>
 <p class="Pp"></p>
-<pre>
-  $fd = $sock-&gt;fileno;
+<pre>  $fd = $sock-&gt;fileno;
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:"><a class="permalink" href="#obj:">obj: $sock ( &quot;APR::Socket
@@ -108,8 +104,7 @@
 <h2 class="Ss" id="_opt_get_"><a class="permalink" href="#_opt_get_">&quot;opt_get&quot;</a></h2>
 <p class="Pp">Query socket options for the specified socket</p>
 <p class="Pp"></p>
-<pre>
-  $val = $sock-&gt;opt_get($opt);
+<pre>  $val = $sock-&gt;opt_get($opt);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~2"><a class="permalink" href="#obj:~2">obj: $sock (
@@ -135,8 +130,7 @@
 <h2 class="Ss" id="_opt_set_"><a class="permalink" href="#_opt_set_">&quot;opt_set&quot;</a></h2>
 <p class="Pp">Setup socket options for the specified socket</p>
 <p class="Pp"></p>
-<pre>
-  $sock-&gt;opt_set($opt, $val);
+<pre>  $sock-&gt;opt_set($opt, $val);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~3"><a class="permalink" href="#obj:~3">obj: $sock (
@@ -166,8 +160,7 @@
 <h2 class="Ss" id="_poll_"><a class="permalink" href="#_poll_">&quot;poll&quot;</a></h2>
 <p class="Pp">Poll the socket for events:</p>
 <p class="Pp"></p>
-<pre>
-    $rc = $sock-&gt;poll($pool, $timeout, $events);
+<pre>    $rc = $sock-&gt;poll($pool, $timeout, $events);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~4"><a class="permalink" href="#obj:~4">obj: $sock (
@@ -203,8 +196,7 @@
 <p class="Pp">For example poll a non-blocking socket up to 1 second when reading
     data from the client:</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Socket ();
+<pre>  use APR::Socket ();
   use APR::Connection ();
   use APR::Error ();
   
@@ -230,8 +222,7 @@
 <h2 class="Ss" id="_recv_"><a class="permalink" href="#_recv_">&quot;recv&quot;</a></h2>
 <p class="Pp">Read incoming data from the socket</p>
 <p class="Pp"></p>
-<pre>
-  $len = $sock-&gt;recv($buffer, $wanted);
+<pre>  $len = $sock-&gt;recv($buffer, $wanted);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~5"><a class="permalink" href="#obj:~5">obj: $sock (
@@ -264,8 +255,7 @@
       and there is no data right away, you may get this exception thrown. So
       here is how to check for it and retry a few times after short delays:
     <p class="Pp"></p>
-    <pre>
-  use APR::Status ();
+    <pre>  use APR::Status ();
   $sock-&gt;opt_set(APR::Const::SO_NONBLOCK, 1);
   # ....
   my $tries = 0;
@@ -289,8 +279,7 @@
         need to catch the <span class="Li">&quot;APR::Const::TIMEUP&quot;</span>
         exception. For example:</p>
     <p class="Pp"></p>
-    <pre>
-  use APR::Const -compile =&gt; qw(TIMEUP);
+    <pre>  use APR::Const -compile =&gt; qw(TIMEUP);
   $sock-&gt;timeout_set(1_000_000); # 1 sec
   my $buffer;
   eval { $sock-&gt;recv($buffer, $wanted) };
@@ -307,8 +296,7 @@
         whether it's an error or not. This error usually happens when the client
         aborts the connection.</p>
     <p class="Pp"></p>
-    <pre>
-  use APR::Const -compile =&gt; qw(ECONNABORTED);
+    <pre>  use APR::Const -compile =&gt; qw(ECONNABORTED);
   my $buffer;
   eval { $sock-&gt;recv($buffer, $wanted) };
   if ($@ == APR::Const::ECONNABORTED) {
@@ -322,8 +310,7 @@
 <p class="Pp">Here is the quick prototype example, which doesn't handle any
     errors (mod_perl will do that for you):</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Socket ();
+<pre>  use APR::Socket ();
   
   # set the socket to the blocking mode if it isn't already
   use APR::Const -compile =&gt; qw(SO_NONBLOCK);
@@ -339,8 +326,7 @@
 <p class="Pp">If you want to handle errors by yourself, the loop may look
   like:</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Const -compile =&gt; qw(ECONNABORTED);
+<pre>  use APR::Const -compile =&gt; qw(ECONNABORTED);
   # ...
   while (1) {
       my $buf;
@@ -370,8 +356,7 @@
 <h2 class="Ss" id="_send_"><a class="permalink" href="#_send_">&quot;send&quot;</a></h2>
 <p class="Pp">Write data to the socket</p>
 <p class="Pp"></p>
-<pre>
-  $wlen = $sock-&gt;send($buf, $opt_len);
+<pre>  $wlen = $sock-&gt;send($buf, $opt_len);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~6"><a class="permalink" href="#obj:~6">obj: $sock (
@@ -397,8 +382,7 @@
 <h2 class="Ss" id="_timeout_get_"><a class="permalink" href="#_timeout_get_">&quot;timeout_get&quot;</a></h2>
 <p class="Pp">Get socket timeout settings</p>
 <p class="Pp"></p>
-<pre>
-  $usecs = $sock-&gt;timeout_get();
+<pre>  $usecs = $sock-&gt;timeout_get();
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~7"><a class="permalink" href="#obj:~7">obj: $sock (
@@ -420,8 +404,7 @@
 <h2 class="Ss" id="_timeout_set_"><a class="permalink" href="#_timeout_set_">&quot;timeout_set&quot;</a></h2>
 <p class="Pp">Setup socket timeout.</p>
 <p class="Pp"></p>
-<pre>
-  $sock-&gt;timeout_set($usecs);
+<pre>  $sock-&gt;timeout_set($usecs);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~8"><a class="permalink" href="#obj:~8">obj: $sock (
@@ -485,8 +468,7 @@
 <p class="Pp">META: Autogenerated - needs to be reviewed/completed</p>
 <p class="Pp">Bind the socket to its associated port</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $sock-&gt;bind($sa);
+<pre>  $ret = $sock-&gt;bind($sa);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~9"><a class="permalink" href="#obj:~9">obj: $sock (
@@ -510,8 +492,7 @@
 <p class="Pp">META: Autogenerated - needs to be reviewed/completed</p>
 <p class="Pp">Close a socket.</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $sock-&gt;close();
+<pre>  $ret = $sock-&gt;close();
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~10"><a class="permalink" href="#obj:~10">obj: $sock (
@@ -531,8 +512,7 @@
 <p class="Pp">Issue a connection request to a socket either on the same machine
     or a different one.</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $sock-&gt;connect($sa);
+<pre>  $ret = $sock-&gt;connect($sa);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~11"><a class="permalink" href="#obj:~11">obj: $sock (
@@ -555,8 +535,7 @@
 <p class="Pp">META: Autogenerated - needs to be reviewed/completed</p>
 <p class="Pp">Listen to a bound socket for connections.</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $sock-&gt;listen($backlog);
+<pre>  $ret = $sock-&gt;listen($backlog);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~12"><a class="permalink" href="#obj:~12">obj: $sock (
@@ -579,8 +558,7 @@
 <h2 class="Ss" id="_recvfrom_"><a class="permalink" href="#_recvfrom_">&quot;recvfrom&quot;</a></h2>
 <p class="Pp">META: Autogenerated - needs to be reviewed/completed</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $from-&gt;recvfrom($sock, $flags, $buf, $len);
+<pre>  $ret = $from-&gt;recvfrom($sock, $flags, $buf, $len);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~13"><a class="permalink" href="#obj:~13">obj: $from (
@@ -610,8 +588,7 @@
 <h2 class="Ss" id="_sendto_"><a class="permalink" href="#_sendto_">&quot;sendto&quot;</a></h2>
 <p class="Pp">META: Autogenerated - needs to be reviewed/completed</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $sock-&gt;sendto($where, $flags, $buf, $len);
+<pre>  $ret = $sock-&gt;sendto($where, $flags, $buf, $len);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~14"><a class="permalink" href="#obj:~14">obj: $sock (

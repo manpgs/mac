@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_multi_info_read(3)</title>
 </head>
@@ -44,10 +47,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLMsg *curl_multi_info_read( CURLM *multi_handle,
-  <br/>
-   int *msgs_in_queue);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLMsg *curl_multi_info_read(CURLM *multi_handle, int *msgs_in_queue);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -66,7 +67,7 @@
 <p class="Pp"><b>WARNING:</b> The data the returned pointer points to will not
     survive calling <i>curl_multi_cleanup(3)</i>,
     <i>curl_multi_remove_handle(3)</i> or <i>curl_easy_cleanup(3)</i>.</p>
-<p class="Pp">The 'CURLMsg' struct is very simple and only contains very basic
+<p class="Pp">The 'CURLMsg' struct is simple and only contains basic
     information. If more involved information is wanted, the particular
     &quot;easy handle&quot; is present in that struct and can be used in
     subsequent regular <i>curl_easy_getinfo(3)</i> calls (or similar):</p>
@@ -79,8 +80,7 @@
      void *whatever;    /* message-specific data */
      CURLcode result;   /* return code for transfer */
    } data;
- };
-</pre>
+ };</pre>
 When <b>msg</b> is <i>CURLMSG_DONE</i>, the message identifies a transfer that
   is done, and then <b>result</b> contains the return code for the easy handle
   that just completed.
@@ -88,8 +88,7 @@ When <b>msg</b> is <i>CURLMSG_DONE</i>, the message identifies a transfer that
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-struct CURLMsg *m;
+<pre>struct CURLMsg *m;
 /* call curl_multi_perform or curl_multi_socket_action first, then loop
    through and check if there are any transfers that have completed */
 do {
@@ -101,8 +100,11 @@ do {
     curl_multi_remove_handle(multi_handle, e);
     curl_easy_cleanup(e);
   }
-} while(m);
-</pre>
+} while(m);</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.9.6</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
@@ -120,8 +122,8 @@ do {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

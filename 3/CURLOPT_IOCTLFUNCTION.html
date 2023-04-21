@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_IOCTLFUNCTION(3)</title>
 </head>
@@ -44,8 +47,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-#include &lt;curl/curl.h&gt;
+<pre>#include &lt;curl/curl.h&gt;
 typedef enum {
   CURLIOE_OK,            /* I/O operation successful */
   CURLIOE_UNKNOWNCMD,    /* command was unknown to callback */
@@ -58,15 +60,14 @@ typedef enum  {
   CURLIOCMD_LAST         /* never use */
 } curliocmd;
 curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp);
-CURLcode curl_easy_setopt(CURL *handle, CURLOPT_IOCTLFUNCTION, ioctl_callback);
-</pre>
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_IOCTLFUNCTION, ioctl_callback);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">Pass a pointer to your callback function, which should match the
     prototype shown above.</p>
 <p class="Pp">This callback function gets called by libcurl when something
-    special I/O-related needs to be done that the library can't do by itself.
+    special I/O-related needs to be done that the library cannot do by itself.
     For now, rewinding the read data stream is the only action it can request.
     The rewinding of the read data stream may be necessary when doing an HTTP
     PUT or POST with a multi-pass authentication method.</p>
@@ -89,8 +90,7 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_IOCTLFUNCTION, ioctl_callback);
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-static curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp)
+<pre>static curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp)
 {
   struct data *io = (struct data *)clientp;
   if(cmd == CURLIOCMD_RESTARTREAD) {
@@ -104,8 +104,7 @@ static curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp)
   struct data ioctl_data;
   curl_easy_setopt(curl, CURLOPT_IOCTLFUNCTION, ioctl_callback);
   curl_easy_setopt(curl, CURLOPT_IOCTLDATA, &amp;ioctl_data);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -125,8 +124,8 @@ static curlioerr ioctl_callback(CURL *handle, int cmd, void *clientp)
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

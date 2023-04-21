@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Tools::Compare(3)</title>
 </head>
@@ -37,19 +38,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Tools::Compare;
-
+<pre>    use Test2::Tools::Compare;
     # Hash for demonstration purposes
     my $some_hash = {a =&gt; 1, b =&gt; 2, c =&gt; 3};
-
     # Strict checking, everything must match
     is(
         $some_hash,
         {a =&gt; 1, b =&gt; 2, c =&gt; 3},
         &quot;The hash we got matches our expectations&quot;
     );
-
     # Relaxed Checking, only fields we care about are checked, and we can use a
     # regex to approximate a field.
     like(
@@ -67,8 +64,7 @@
     output will tell you not only which fields was incorrect, but also the line
     on which you declared the field.</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::Tools::Compare qw{
+<pre>    use Test2::Tools::Compare qw{
         is like isnt unlike
         match mismatch validator
         hash array bag object meta number float rounded within string subset bool
@@ -79,7 +75,6 @@
         event fail_events
         exact_ref
     };
-
     is(
         $some_hash,
         hash {
@@ -116,8 +111,7 @@
         array references will be traversed and compared. Regex references will
         be compared to see if they have the same pattern.</p>
     <p class="Pp"></p>
-    <pre>
-    is(
+    <pre>    is(
         $some_hash,
         {a =&gt; 1, b =&gt; 2, c =&gt; 3},
         &quot;The hash we got matches our expectations&quot;
@@ -129,8 +123,7 @@
         strictness. Strictness only applies to literal values/references that
         are provided and converted to a specification for you.</p>
     <p class="Pp"></p>
-    <pre>
-    is(
+    <pre>    is(
         $some_hash,
         hash {    # Note: the hash function is not exported by default
             field a =&gt; 1;
@@ -143,8 +136,7 @@
     <p class="Pp">This works for both deep and shallow structures. For instance
         you can use this to compare two strings:</p>
     <p class="Pp"></p>
-    <pre>
-    is('foo', 'foo', &quot;strings match&quot;);
+    <pre>    is('foo', 'foo', &quot;strings match&quot;);
     </pre>
     <p class="Pp"><b>Note</b>: This is not the tool to use if you want to check
         if two references are the same exact reference, use
@@ -187,8 +179,7 @@
         <span class="Li">$_</span>) and the sub should return a boolean value.
         In this tool regexes will stringify the thing they are checking.</p>
     <p class="Pp"></p>
-    <pre>
-    like(
+    <pre>    like(
         $some_hash,
         {a =&gt; 1, b =&gt; qr/[0-9]+/},
         &quot;'a' is 1, 'b' is an integer, we don't care about other fields&quot;
@@ -197,8 +188,7 @@
     <p class="Pp">This works for both deep and shallow structures. For instance
         you can use this to compare two strings:</p>
     <p class="Pp"></p>
-    <pre>
-    like('foo bar', qr/^foo/, &quot;string matches the pattern&quot;);
+    <pre>    like('foo bar', qr/^foo/, &quot;string matches the pattern&quot;);
     </pre>
   </dd>
   <dt>$bool = unlike($got, $expect)</dt>
@@ -220,17 +210,14 @@
     <span class="Li">$expect</span> argument.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-    is($foo, T(), '$foo has a true value');
+<pre>    is($foo, T(), '$foo has a true value');
 </pre>
 <dl class="Bl-tag">
   <dt>$check = T()</dt>
   <dd>This verifies that the value in the corresponding
       <span class="Li">$got</span> structure is true, any true value will do.
     <p class="Pp"></p>
-    <pre>
-    is($foo, T(), '$foo has a true value');
-
+    <pre>    is($foo, T(), '$foo has a true value');
     is(
         { a =&gt; 'xxx' },
         { a =&gt; T() },
@@ -243,9 +230,7 @@
       <span class="Li">$got</span> structure is false, any false value will do,
       <b>but the value must exist</b>.
     <p class="Pp"></p>
-    <pre>
-    is($foo, F(), '$foo has a false value');
-
+    <pre>    is($foo, F(), '$foo has a false value');
     is(
         { a =&gt; 0 },
         { a =&gt; F() },
@@ -255,8 +240,7 @@
     <p class="Pp">It is important to note that a nonexistent value does not
         count as false. This check will generate a failing test result:</p>
     <p class="Pp"></p>
-    <pre>
-    is(
+    <pre>    is(
         { a =&gt; 1 },
         { a =&gt; 1, b =&gt; F() },
         &quot;The 'b' key is false&quot;
@@ -264,8 +248,7 @@
     </pre>
     <p class="Pp">This will produce the following output:</p>
     <p class="Pp"></p>
-    <pre>
-    not ok 1 - The b key is false
+    <pre>    not ok 1 - The b key is false
     # Failed test &quot;The 'b' key is false&quot;
     # at some_file.t line 10.
     # +------+------------------+-------+---------+
@@ -287,13 +270,11 @@
       <span class="Li">&quot;undef&quot;</span> will pass.
     <p class="Pp">This will pass:</p>
     <p class="Pp"></p>
-    <pre>
-    is('foo', D(), 'foo is defined');
+    <pre>    is('foo', D(), 'foo is defined');
     </pre>
     <p class="Pp">This will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    is(undef, D(), 'foo is defined');
+    <pre>    is(undef, D(), 'foo is defined');
     </pre>
   </dd>
   <dt>$check = U()</dt>
@@ -301,13 +282,11 @@
       structure is undefined.
     <p class="Pp">This will pass:</p>
     <p class="Pp"></p>
-    <pre>
-    is(undef, U(), 'not defined');
+    <pre>    is(undef, U(), 'not defined');
     </pre>
     <p class="Pp">This will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    is('foo', U(), 'not defined');
+    <pre>    is('foo', U(), 'not defined');
     </pre>
   </dd>
   <dt>$check = <b>DF()</b></dt>
@@ -316,13 +295,11 @@
       <span class="Li">&quot;undef&quot;</span> will pass.
     <p class="Pp">This will pass:</p>
     <p class="Pp"></p>
-    <pre>
-    is(0, DF(), 'foo is defined but false');
+    <pre>    is(0, DF(), 'foo is defined but false');
     </pre>
     <p class="Pp">These will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    is(undef, DF(), 'foo is defined but false');
+    <pre>    is(undef, DF(), 'foo is defined but false');
     is(1, DF(), 'foo is defined but false');
     </pre>
   </dd>
@@ -332,14 +309,12 @@
       even if the value is undefined.
     <p class="Pp">These pass:</p>
     <p class="Pp"></p>
-    <pre>
-    is(['a', 'b', undef], ['a', 'b', E()], &quot;There is a third item in the array&quot;);
+    <pre>    is(['a', 'b', undef], ['a', 'b', E()], &quot;There is a third item in the array&quot;);
     is({a =&gt; 1, b =&gt; 2}, {a =&gt; 1, b =&gt; E()}, &quot;The 'b' key exists in the hash&quot;);
     </pre>
     <p class="Pp">These will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    is(['a', 'b'], ['a', 'b', E()], &quot;Third item exists&quot;);
+    <pre>    is(['a', 'b'], ['a', 'b', E()], &quot;Third item exists&quot;);
     is({a =&gt; 1}, {a =&gt; 1, b =&gt; E()}, &quot;'b' key exists&quot;);
     </pre>
   </dd>
@@ -349,14 +324,12 @@
       hash.
     <p class="Pp">These pass:</p>
     <p class="Pp"></p>
-    <pre>
-    is(['a', 'b'], ['a', 'b', DNE()], &quot;There is no third item in the array&quot;);
+    <pre>    is(['a', 'b'], ['a', 'b', DNE()], &quot;There is no third item in the array&quot;);
     is({a =&gt; 1}, {a =&gt; 1, b =&gt; DNE()}, &quot;The 'b' key does not exist in the hash&quot;);
     </pre>
     <p class="Pp">These will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    is(['a', 'b', 'c'], ['a', 'b', DNE()], &quot;No third item&quot;);
+    <pre>    is(['a', 'b', 'c'], ['a', 'b', DNE()], &quot;No third item&quot;);
     is({a =&gt; 1, b =&gt; 2}, {a =&gt; 1, b =&gt; DNE()}, &quot;No 'b' key&quot;);
     </pre>
   </dd>
@@ -389,14 +362,12 @@
         rounded to 'precision' number of fractional decimal digits and compared
         with <span class="Li">&quot;eq&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-  is($near_val, float($val, precision =&gt; 4), &quot;Near 4 decimal digits&quot;);
+    <pre>  is($near_val, float($val, precision =&gt; 4), &quot;Near 4 decimal digits&quot;);
     </pre>
     <p class="Pp">Otherwise, the check will be made within a range of +/-
         'tolerance', with a default 'tolerance' of 1e-08.</p>
     <p class="Pp"></p>
-    <pre>
-  is( $near_val, float($val, tolerance =&gt; 0.01), &quot;Almost there...&quot;);
+    <pre>  is( $near_val, float($val, tolerance =&gt; 0.01), &quot;Almost there...&quot;);
     </pre>
     <p class="Pp">See also <span class="Li">&quot;within&quot;</span> and
         <span class="Li">&quot;rounded&quot;</span>.</p>
@@ -471,25 +442,18 @@
         <span class="Li">$_</span>, and it receives the value and several other
         items as named parameters.</p>
     <p class="Pp"></p>
-    <pre>
-    my $check = validator(sub {
+    <pre>    my $check = validator(sub {
         my %params = @_;
-
         # These both work:
         my $got = $_;
         my $got = $params{got};
-
         # Check if a value exists at all
         my $exists = $params{exists}
-
         # What $OP (if any) did we specify when creating the validator
         my $operator = $params{operator};
-
         # What name (if any) did we specify when creating the validator
         my $name = $params{name};
-
         ...
-
         return $bool;
     }
     </pre>
@@ -522,27 +486,20 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    $check = hash {
+<pre>    $check = hash {
         field foo =&gt; 1;
         field bar =&gt; 2;
-
         # Ensure the 'baz' keys does not even exist in the hash.
         field baz =&gt; DNE();
-
         # Ensure the key exists, but is set to undef
         field bat =&gt; undef;
-
         # Any check can be used
         field boo =&gt; $check;
-
         # Set checks that apply to all keys or values. Can be done multiple
         # times, and each call can define multiple checks, all will be run.
         all_vals match qr/a/, match qr/b/;    # All values must have an 'a' and a 'b'
         all_keys match qr/x/;                 # All keys must have an 'x'
-
         ...
-
         end(); # optional, enforces that no other keys are present.
     };
 </pre>
@@ -590,8 +547,7 @@
       <span class="Li">&quot;field()&quot;</span> to ensure that a field (D)oes
       (N)ot (E)xist.
     <p class="Pp"></p>
-    <pre>
-    field foo =&gt; DNE();
+    <pre>    field foo =&gt; DNE();
     </pre>
   </dd>
 </dl>
@@ -601,37 +557,27 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    $check = array {
+<pre>    $check = array {
         # Uses the next index, in this case index 0;
         item 'a';
-
         # Gets index 1 automatically
         item 'b';
-
         # Specify the index
         item 2 =&gt; 'c';
-
         # We skipped index 3, which means we don't care what it is.
         item 4 =&gt; 'e';
-
         # Gets index 5.
         item 'f';
-
         # Remove any REMAINING items that contain 0-9.
         filter_items { grep {!m/[0-9]/} @_ };
-
         # Set checks that apply to all items. Can be done multiple times, and
         # each call can define multiple checks, all will be run.
         all_items match qr/a/, match qr/b/;
         all_items match qr/x/;
-
         # Of the remaining items (after the filter is applied) the next one
         # (which is now index 6) should be 'g'.
         item 6 =&gt; 'g';
-
         item 7 =&gt; DNE; # Ensure index 7 does not exist.
-
         end(); # Ensure no other indexes exist.
     };
 </pre>
@@ -680,8 +626,7 @@
       <span class="Li">&quot;item()&quot;</span> to ensure that an index (D)oes
       (N)ot (E)xist.
     <p class="Pp"></p>
-    <pre>
-    item 5 =&gt; DNE();
+    <pre>    item 5 =&gt; DNE();
     </pre>
   </dd>
 </dl>
@@ -691,11 +636,9 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    $check = bag {
+<pre>    $check = bag {
         item 'a';
         item 'b';
-
         end(); # Ensure no other elements exist.
     };
 </pre>
@@ -734,15 +677,12 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    $check = subset {
+<pre>    $check = subset {
         item 'a';
         item 'b';
         item 'c';
-
         # Doesn't matter if the array has 'd', the check will skip past any
         # unknown items until it finds the next one in our subset.
-
         item 'e';
         item 'f';
     };
@@ -768,8 +708,7 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    my $check = meta {
+<pre>    my $check = meta {
         prop blessed =&gt; 'My::Module'; # Ensure value is blessed as our package
         prop reftype =&gt; 'HASH';       # Ensure value is a blessed hash
         prop size    =&gt; 4;            # Check the number of hash keys
@@ -815,29 +754,22 @@
 <p class="Pp"><b>Note: None of these are exported by default. You need to
     request them.</b></p>
 <p class="Pp"></p>
-<pre>
-    my $check = object {
+<pre>    my $check = object {
         call foo =&gt; 1; # Call the 'foo' method, check the result.
-
         # Call the specified sub-ref as a method on the object, check the
         # result. This is useful for wrapping methods that return multiple
         # values.
         call sub { [ shift-&gt;get_list ] } =&gt; [...];
-
         # This can be used to ensure a method does not exist.
         call nope =&gt; DNE();
-
         # Check the hash key 'foo' of the underlying reference, this only works
         # on blessed hashes.
         field foo =&gt; 1;
-
         # Check the value of index 4 on the underlying reference, this only
         # works on blessed arrays.
         item 4 =&gt; 'foo';
-
         # Check the meta-property 'blessed' of the object.
         prop blessed =&gt; 'My::Module';
-
         # Ensure only the specified hash keys or array indexes are present in
         # the underlying hash. Has no effect on meta-property checks or method
         # checks.
@@ -870,12 +802,10 @@
     <p class="Pp">The coderef form is useful if you need to do something more
         complex.</p>
     <p class="Pp"></p>
-    <pre>
-    my $ref = sub {
+    <pre>    my $ref = sub {
       local $SOME::GLOBAL::THING = 3;
       return [shift-&gt;get_values_for('thing')];
     };
-
     call $ref =&gt; ...;
     </pre>
   </dd>
@@ -899,8 +829,7 @@
   <dd>Same as <span class="Li">&quot;call&quot;</span>, but the method is
       invoked in list context, and the result is always an arrayref.
     <p class="Pp"></p>
-    <pre>
-    call_list get_items =&gt; [ ... ];
+    <pre>    call_list get_items =&gt; [ ... ];
     </pre>
   </dd>
   <dt id="call_hash"><a class="permalink" href="#call_hash">call_hash
@@ -924,8 +853,7 @@
       invoked in list context, and the result is always a hashref. This will
       warn if the method returns an odd number of values.
     <p class="Pp"></p>
-    <pre>
-    call_hash get_items =&gt; { ... };
+    <pre>    call_hash get_items =&gt; { ... };
     </pre>
   </dd>
   <dt id="field~3"><a class="permalink" href="#field~3">field $NAME =&gt;
@@ -981,32 +909,24 @@
     request them.</b></p>
 <p class="Pp">Check that we got an event of a specified type:</p>
 <p class="Pp"></p>
-<pre>
-    my $check = event 'Ok';
+<pre>    my $check = event 'Ok';
 </pre>
 <p class="Pp">Check for details about the event:</p>
 <p class="Pp"></p>
-<pre>
-    my $check = event Ok =&gt; sub {
+<pre>    my $check = event Ok =&gt; sub {
         # Check for a failure
         call pass =&gt; 0;
-
         # Effective pass after TODO/SKIP are accounted for.
         call effective_pass =&gt; 1;
-
         # Check the diagnostics
         call diag =&gt; [ match qr/Failed test foo/ ];
-
         # Check the file the event reports to
         prop file =&gt; 'foo.t';
-
         # Check the line number the event reports o
         prop line =&gt; '42';
-
         # You can check the todo/skip values as well:
         prop skip =&gt; 'broken';
         prop todo =&gt; 'fixme';
-
         # Thread-id and process-id where event was generated
         prop tid =&gt; 123;
         prop pid =&gt; 123;
@@ -1015,24 +935,20 @@
 <p class="Pp">You can also provide a fully qualified event package with the '+'
     prefix:</p>
 <p class="Pp"></p>
-<pre>
-    my $check = event '+My::Event' =&gt; sub { ... }
+<pre>    my $check = event '+My::Event' =&gt; sub { ... }
 </pre>
 <p class="Pp">You can also provide a hashref instead of a sub to directly check
     hash values of the event:</p>
 <p class="Pp"></p>
-<pre>
-    my $check = event Ok =&gt; { pass =&gt; 1, ... };
+<pre>    my $check = event Ok =&gt; { pass =&gt; 1, ... };
 </pre>
 <p class="Pp"><i>USE IN OTHER BUILDERS</i></p>
 <p class="Pp">You can use these all in other builders, simply use them in void
     context to have their value(s) appended to the build.</p>
 <p class="Pp"></p>
-<pre>
-    my $check = array {
+<pre>    my $check = array {
         event Ok =&gt; { ... };
         event Note =&gt; { ... };
-
         fail_events Ok =&gt; { pass =&gt; 0 };
         # Get a Diag for free.
     };

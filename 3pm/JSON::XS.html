@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>XS(3)</title>
 </head>
@@ -34,27 +35,20 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use JSON::XS;
-
+<pre> use JSON::XS;
  # exported functions, they croak on error
  # and expect/generate UTF-8
-
  $utf8_encoded_json_text = encode_json $perl_hash_or_arrayref;
  $perl_hash_or_arrayref  = decode_json $utf8_encoded_json_text;
-
  # OO-interface
-
  $coder = JSON::XS-&gt;new-&gt;ascii-&gt;pretty-&gt;allow_nonref;
  $pretty_printed_unencoded = $coder-&gt;encode ($perl_scalar);
  $perl_scalar = $coder-&gt;decode ($unicode_json_text);
-
  # Note that JSON version 2.0 and above will automatically use JSON::XS
  # if available, at virtually no speed overhead either, so you should
  # be able to just:
  
  use JSON;
-
  # and do the same things, except that you have a pure-perl fallback now.
 </pre>
 </section>
@@ -116,8 +110,7 @@
       (that is, the string contains octets only). Croaks on error.
     <p class="Pp">This function call is functionally identical to:</p>
     <p class="Pp"></p>
-    <pre>
-   $json_text = JSON::XS-&gt;new-&gt;utf8-&gt;encode ($perl_scalar)
+    <pre>   $json_text = JSON::XS-&gt;new-&gt;utf8-&gt;encode ($perl_scalar)
     </pre>
     <p class="Pp">Except being faster.</p>
   </dd>
@@ -127,8 +120,7 @@
       text, returning the resulting reference. Croaks on error.
     <p class="Pp">This function call is functionally identical to:</p>
     <p class="Pp"></p>
-    <pre>
-   $perl_scalar = JSON::XS-&gt;new-&gt;utf8-&gt;decode ($json_text)
+    <pre>   $perl_scalar = JSON::XS-&gt;new-&gt;utf8-&gt;decode ($json_text)
     </pre>
     <p class="Pp">Except being faster.</p>
   </dd>
@@ -185,8 +177,7 @@
     <p class="Pp">The mutators for flags all return the JSON object again and
         thus calls can be chained:</p>
     <p class="Pp"></p>
-    <pre>
-   my $json = JSON::XS-&gt;new-&gt;utf8-&gt;space_after-&gt;encode ({a =&gt; [1,2]})
+    <pre>   my $json = JSON::XS-&gt;new-&gt;utf8-&gt;space_after-&gt;encode ({a =&gt; [1,2]})
    =&gt; {&quot;a&quot;: [1, 2]}
     </pre>
   </dd>
@@ -211,8 +202,7 @@
         be transmitted over a 7-bit channel, as the encoded JSON texts will not
         contain any 8 bit characters.</p>
     <p class="Pp"></p>
-    <pre>
-  JSON::XS-&gt;new-&gt;ascii (1)-&gt;encode ([chr 0x10401])
+    <pre>  JSON::XS-&gt;new-&gt;ascii (1)-&gt;encode ([chr 0x10401])
   =&gt; [&quot;\ud801\udc01&quot;]
     </pre>
   </dd>
@@ -243,8 +233,7 @@
         efficiently in files or databases, not when talking to other JSON
         encoders/decoders.</p>
     <p class="Pp"></p>
-    <pre>
-  JSON::XS-&gt;new-&gt;latin1-&gt;encode ([&quot;\x{89}\x{abc}&quot;]
+    <pre>  JSON::XS-&gt;new-&gt;latin1-&gt;encode ([&quot;\x{89}\x{abc}&quot;]
   =&gt; [&quot;\x{89}\\u0abc&quot;]    # (perl syntax, U+abc escaped, U+89 not)
     </pre>
   </dd>
@@ -270,14 +259,12 @@
         in this document.</p>
     <p class="Pp">Example, output UTF-16BE-encoded JSON:</p>
     <p class="Pp"></p>
-    <pre>
-  use Encode;
+    <pre>  use Encode;
   $jsontext = encode &quot;UTF-16BE&quot;, JSON::XS-&gt;new-&gt;encode ($object);
     </pre>
     <p class="Pp">Example, decode UTF-32LE-encoded JSON:</p>
     <p class="Pp"></p>
-    <pre>
-  use Encode;
+    <pre>  use Encode;
   $object = JSON::XS-&gt;new-&gt;decode (decode &quot;UTF-32LE&quot;, $jsontext);
     </pre>
   </dd>
@@ -290,8 +277,7 @@
       compact) form possible.
     <p class="Pp">Example, pretty-print some simple structure:</p>
     <p class="Pp"></p>
-    <pre>
-   my $json = JSON::XS-&gt;new-&gt;pretty(1)-&gt;encode ({a =&gt; [1,2]})
+    <pre>   my $json = JSON::XS-&gt;new-&gt;pretty(1)-&gt;encode ({a =&gt; [1,2]})
    =&gt;
    {
       &quot;a&quot; : [
@@ -329,8 +315,7 @@
     <p class="Pp">Example, space_before enabled, space_after and indent
         disabled:</p>
     <p class="Pp"></p>
-    <pre>
-   {&quot;key&quot; :&quot;value&quot;}
+    <pre>   {&quot;key&quot; :&quot;value&quot;}
     </pre>
   </dd>
   <dt>$json = $json-&gt;space_after ([$enable])</dt>
@@ -349,8 +334,7 @@
     <p class="Pp">Example, space_before and indent disabled, space_after
         enabled:</p>
     <p class="Pp"></p>
-    <pre>
-   {&quot;key&quot;: &quot;value&quot;}
+    <pre>   {&quot;key&quot;: &quot;value&quot;}
     </pre>
   </dd>
   <dt>$json = $json-&gt;relaxed ([$enable])</dt>
@@ -377,8 +361,7 @@
         to be able to quickly append elements, so this extension accepts comma
         at the end of such items not just between them:</p>
     <p class="Pp"></p>
-    <pre>
-   [
+    <pre>   [
       1,
       2, &lt;- this comma not normally allowed
    ]
@@ -394,8 +377,7 @@
         or line-feed character, after which more white-space and comments are
         allowed.</p>
     <p class="Pp"></p>
-    <pre>
-  [
+    <pre>  [
      1, # this comment not allowed in JSON
         # neither this one...
   ]
@@ -405,8 +387,7 @@
     <p class="Pp">Literal ASCII TAB characters are now allowed in strings (and
         treated as <span class="Li">&quot;\t&quot;</span>).</p>
     <p class="Pp"></p>
-    <pre>
-  [
+    <pre>  [
      &quot;Hello\tWorld&quot;,
      &quot;Hello&lt;TAB&gt;World&quot;, # literal &lt;TAB&gt; would not normally be allowed
   ]
@@ -456,8 +437,7 @@
         <span class="Li">&quot;allow_nonref&quot;</span>, resulting in an
       error:</p>
     <p class="Pp"></p>
-    <pre>
-   JSON::XS-&gt;new-&gt;allow_nonref (0)-&gt;encode (&quot;Hello, World!&quot;)
+    <pre>   JSON::XS-&gt;new-&gt;allow_nonref (0)-&gt;encode (&quot;Hello, World!&quot;)
    =&gt; hash- or arrayref expected...
     </pre>
   </dd>
@@ -575,8 +555,7 @@
         deserialised hash in any way.</p>
     <p class="Pp">Example, convert all JSON objects into the integer 5:</p>
     <p class="Pp"></p>
-    <pre>
-   my $js = JSON::XS-&gt;new-&gt;filter_json_object (sub { 5 });
+    <pre>   my $js = JSON::XS-&gt;new-&gt;filter_json_object (sub { 5 });
    # returns [5]
    $js-&gt;decode ('[{}]')
    # throw an exception because allow_nonref is not enabled
@@ -620,25 +599,21 @@
         }&quot;</span> into the corresponding
         <span class="Li">$WIDGET{&lt;id&gt;}</span> object:</p>
     <p class="Pp"></p>
-    <pre>
-   # return whatever is in $WIDGET{5}:
+    <pre>   # return whatever is in $WIDGET{5}:
    JSON::XS
       -&gt;new
       -&gt;filter_json_single_key_object (__widget__ =&gt; sub {
             $WIDGET{ $_[0] }
          })
       -&gt;decode ('{&quot;__widget__&quot;: 5')
-
    # this can be used with a TO_JSON method in some &quot;widget&quot; class
    # for serialisation to json:
    sub WidgetBase::TO_JSON {
       my ($self) = @_;
-
       unless ($self-&gt;{id}) {
          $self-&gt;{id} = ..get..some..id..;
          $WIDGET{$self-&gt;{id}} = $self;
       }
-
       { __widget__ =&gt; $self-&gt;{id} }
    }
     </pre>
@@ -723,8 +698,7 @@
     <p class="Pp">This is useful if your JSON texts are not delimited by an
         outer protocol and you need to know where the JSON text ends.</p>
     <p class="Pp"></p>
-    <pre>
-   JSON::XS-&gt;new-&gt;decode_prefix (&quot;[1] the tail&quot;)
+    <pre>   JSON::XS-&gt;new-&gt;decode_prefix (&quot;[1] the tail&quot;)
    =&gt; ([1], 3)
     </pre>
   </dd>
@@ -779,8 +753,7 @@
     <p class="Pp">Example: Parse some JSON arrays/objects in a given string and
         return them.</p>
     <p class="Pp"></p>
-    <pre>
-   my @objs = JSON::XS-&gt;new-&gt;incr_parse (&quot;[5][7][1,2]&quot;);
+    <pre>   my @objs = JSON::XS-&gt;new-&gt;incr_parse (&quot;[5][7][1,2]&quot;);
     </pre>
   </dd>
   <dt>$lvalue_string = $json-&gt;incr_text</dt>
@@ -827,8 +800,7 @@
     following fragment, the parser <i>could</i> stop with an error, as this
     fragment <i>cannot</i> be the beginning of a valid JSON text:</p>
 <p class="Pp"></p>
-<pre>
-   [,
+<pre>   [,
 </pre>
 <p class="Pp">In reality, hopwever, the parser might continue to read data until
     a length limit is exceeded or it finds a closing bracket.</p>
@@ -840,14 +812,10 @@
     We want to decode the JSON object at the start of a string and identify the
     portion after the JSON object:</p>
 <p class="Pp"></p>
-<pre>
-   my $text = &quot;[1,2,3] hello&quot;;
-
+<pre>   my $text = &quot;[1,2,3] hello&quot;;
    my $json = new JSON::XS;
-
    my $obj = $json-&gt;incr_parse ($text)
       or die &quot;expected JSON object or array at beginning of string&quot;;
-
    my $tail = $json-&gt;incr_text;
    # $tail now contains &quot; hello&quot;
 </pre>
@@ -861,12 +829,9 @@
 <p class="Pp">Here is how you'd do it (it is trivial to write this in an
     event-based manner):</p>
 <p class="Pp"></p>
-<pre>
-   my $json = new JSON::XS;
-
+<pre>   my $json = new JSON::XS;
    # read some data from the socket
    while (sysread $socket, my $buf, 4096) {
-
       # split and decode as many requests as possible
       for my $request ($json-&gt;incr_parse ($buf)) {
          # act on the $request
@@ -880,18 +845,14 @@
     is where the lvalue-ness of <span class="Li">&quot;incr_text&quot;</span>
     comes in useful:</p>
 <p class="Pp"></p>
-<pre>
-   my $text = &quot;[1],[2], [3]&quot;;
+<pre>   my $text = &quot;[1],[2], [3]&quot;;
    my $json = new JSON::XS;
-
    # void context, so no parsing done
    $json-&gt;incr_parse ($text);
-
    # now extract as many objects as possible. note the
    # use of scalar context so incr_text can be called.
    while (my $obj = $json-&gt;incr_parse) {
       # do something with $obj
-
       # now skip the optional comma
       $json-&gt;incr_text =~ s/^ \s* , //x;
    }
@@ -906,25 +867,20 @@
     own (this wouldn't work if the array elements could be JSON numbers, for
     example):</p>
 <p class="Pp"></p>
-<pre>
-   my $json = new JSON::XS;
-
+<pre>   my $json = new JSON::XS;
    # open the monster
    open my $fh, &quot;&lt;bigfile.json&quot;
       or die &quot;bigfile: $!&quot;;
-
    # first parse the initial &quot;[&quot;
    for (;;) {
       sysread $fh, my $buf, 65536
          or die &quot;read error: $!&quot;;
       $json-&gt;incr_parse ($buf); # void context, so no parsing
-
       # Exit the loop once we found and removed(!) the initial &quot;[&quot;.
       # In essence, we are (ab-)using the $json object as a simple scalar
       # we append data to.
       last if $json-&gt;incr_text =~ s/^ \s* \[ //x;
    }
-
    # now we have the skipped the initial &quot;[&quot;, so continue
    # parsing all the elements.
    for (;;) {
@@ -934,35 +890,29 @@
             # do something with $obj
             last;
          }
-
          # add more data
          sysread $fh, my $buf, 65536
             or die &quot;read error: $!&quot;;
          $json-&gt;incr_parse ($buf); # void context, so no parsing
       }
-
       # in this loop we read data until we either found and parsed the
       # separating &quot;,&quot; between elements, or the final &quot;]&quot;
       for (;;) {
          # first skip whitespace
          $json-&gt;incr_text =~ s/^\s*//;
-
          # if we find &quot;]&quot;, we are done
          if ($json-&gt;incr_text =~ s/^\]//) {
             print &quot;finished.\n&quot;;
             exit;
          }
-
          # if we find &quot;,&quot;, we can continue with the next element
          if ($json-&gt;incr_text =~ s/^,//) {
             last;
          }
-
          # if we find anything else, we have a parse error!
          if (length $json-&gt;incr_text) {
             die &quot;parse error near &quot;, $json-&gt;incr_text;
          }
-
          # else add more data
          sysread $fh, my $buf, 65536
             or die &quot;read error: $!&quot;;
@@ -1078,8 +1028,7 @@
         <span class="Li">&quot;Types::Serialiser::true&quot;</span> to improve
         readability.</p>
     <p class="Pp"></p>
-    <pre>
-   use Types::Serialiser;
+    <pre>   use Types::Serialiser;
    encode_json [\0, Types::Serialiser::true]      # yields [false,true]
     </pre>
   </dd>
@@ -1101,24 +1050,20 @@
       last been used in a string context before encoding as JSON strings, and
       anything else as number value:
     <p class="Pp"></p>
-    <pre>
-   # dump as number
+    <pre>   # dump as number
    encode_json [2]                      # yields [2]
    encode_json [-3.0e17]                # yields [-3e+17]
    my $value = 5; encode_json [$value]  # yields [5]
-
    # used as string, so dump as string
    print $value;
    encode_json [$value]                 # yields [&quot;5&quot;]
-
    # undef becomes null
    encode_json [undef]                  # yields [null]
     </pre>
     <p class="Pp">You can force the type to be a JSON string by stringifying
       it:</p>
     <p class="Pp"></p>
-    <pre>
-   my $x = 3.1; # some variable containing a number
+    <pre>   my $x = 3.1; # some variable containing a number
    &quot;$x&quot;;        # stringified
    $x .= &quot;&quot;;    # another, more awkward way to stringify
    print $x;    # perl does it for you, too, quite often
@@ -1126,8 +1071,7 @@
     <p class="Pp">You can force the type to be a JSON number by numifying
       it:</p>
     <p class="Pp"></p>
-    <pre>
-   my $x = &quot;3&quot;; # some variable containing a string
+    <pre>   my $x = &quot;3&quot;; # some variable containing a string
    $x += 0;     # numify it, ensuring it will be dumped as a number
    $x *= 1;     # same thing, the choice is yours.
     </pre>
@@ -1173,13 +1117,11 @@
         paclkage/classname of the object will then be encoded as a tagged JSON
         value in the following format:</p>
     <p class="Pp"></p>
-    <pre>
-   (&quot;classname&quot;)[FREEZE return values...]
+    <pre>   (&quot;classname&quot;)[FREEZE return values...]
     </pre>
     <p class="Pp">e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-   (&quot;URI&quot;)[&quot;http://www.google.com/&quot;]
+    <pre>   (&quot;URI&quot;)[&quot;http://www.google.com/&quot;]
    (&quot;MyDate&quot;)[2013,10,29]
    (&quot;ImageData::JPEG&quot;)[&quot;Z3...VlCg==&quot;]
     </pre>
@@ -1189,10 +1131,8 @@
         <span class="Li">&quot;type&quot;</span> and
         <span class="Li">&quot;id&quot;</span> members to encode the object:</p>
     <p class="Pp"></p>
-    <pre>
-   sub My::Object::FREEZE {
+    <pre>   sub My::Object::FREEZE {
       my ($self, $serialiser) = @_;
-
       ($self-&gt;{type}, $self-&gt;{id})
    }
     </pre>
@@ -1208,8 +1148,7 @@
         objects to JSON strings when serialised. The fatc that these values
         originally were URI objects is lost.</p>
     <p class="Pp"></p>
-    <pre>
-   sub URI::TO_JSON {
+    <pre>   sub URI::TO_JSON {
       my ($uri) = @_;
       $uri-&gt;as_string
    }
@@ -1254,10 +1193,8 @@
     <span class="Li">&quot;My::Object&quot;</span> from the
     <span class="Li">&quot;FREEZE&quot;</span> example earlier:</p>
 <p class="Pp"></p>
-<pre>
-   sub My::Object::THAW {
+<pre>   sub My::Object::THAW {
       my ($class, $serialiser, $type, $id) = @_;
-
       $class-&gt;new (type =&gt; $type, id =&gt; $id)
    }
 </pre>
@@ -1383,9 +1320,7 @@
     the following Perl fragment will not output something that can be guaranteed
     to be parsable by javascript's <span class="Li">&quot;eval&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-   use JSON::XS;
-
+<pre>   use JSON::XS;
    print encode_json [chr 0x2028];
 </pre>
 <p class="Pp">The right fix for this is to use a proper JSON parser in your
@@ -1395,17 +1330,14 @@
 <p class="Pp">If this is not an option, you can, as a stop-gap measure, simply
     encode to ASCII-only JSON:</p>
 <p class="Pp"></p>
-<pre>
-   use JSON::XS;
-
+<pre>   use JSON::XS;
    print JSON::XS-&gt;new-&gt;ascii-&gt;encode ([chr 0x2028]);
 </pre>
 <p class="Pp">Note that this will enlarge the resulting JSON text quite a bit if
     you have many non-ASCII characters. You might be tempted to run some regexes
     to only escape U+2028 and U+2029, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-   # DO NOT USE THIS!
+<pre>   # DO NOT USE THIS!
    my $json = JSON::XS-&gt;new-&gt;utf8-&gt;encode ([chr 0x2028]);
    $json =~ s/\xe2\x80\xa8/\\u2028/g; # escape U+2028
    $json =~ s/\xe2\x80\xa9/\\u2029/g; # escape U+2029
@@ -1424,8 +1356,7 @@
 <p class="Pp">If that is a problem, you could parse try to filter the resulting
     JSON output for these property strings, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-   $json =~ s/&quot;__proto__&quot;\s*:/&quot;__proto__renamed&quot;:/g;
+<pre>   $json =~ s/&quot;__proto__&quot;\s*:/&quot;__proto__renamed&quot;:/g;
 </pre>
 <p class="Pp">This works because <span class="Li">&quot;__proto__&quot;</span>
     is not valid outside of strings, so every occurrence of
@@ -1443,8 +1374,7 @@
 <p class="Pp">If you really must use JSON::XS to generate YAML, you should use
     this algorithm (subject to change in future versions):</p>
 <p class="Pp"></p>
-<pre>
-   my $to_yaml = JSON::XS-&gt;new-&gt;utf8-&gt;space_after (1);
+<pre>   my $to_yaml = JSON::XS-&gt;new-&gt;utf8-&gt;space_after (1);
    my $yaml = $to_yaml-&gt;encode ($ref) . &quot;\n&quot;;
 </pre>
 <p class="Pp">This will <i>usually</i> generate JSON texts that also parse as
@@ -1496,8 +1426,7 @@
     short single-line JSON string (also available at
     &lt;http://dist.schmorp.de/misc/json/short.json&gt;).</p>
 <p class="Pp"></p>
-<pre>
-   {&quot;method&quot;: &quot;handleMessage&quot;, &quot;params&quot;: [&quot;user1&quot;,
+<pre>   {&quot;method&quot;: &quot;handleMessage&quot;, &quot;params&quot;: [&quot;user1&quot;,
    &quot;we were just talking&quot;], &quot;id&quot;: null, &quot;array&quot;:[1,11,234,-5,1e5,1e7,
    1,  0]}
 </pre>
@@ -1507,8 +1436,7 @@
     JSON::DWIW/DS uses the deserialise function, while JSON::DWIW::FJ uses the
     from_json method). Higher is better:</p>
 <p class="Pp"></p>
-<pre>
-   module        |     encode |     decode |
+<pre>   module        |     encode |     decode |
    --------------|------------|------------|
    JSON::DWIW/DS |  86302.551 | 102300.098 |
    JSON::DWIW/FJ |  86302.551 |  75983.768 |
@@ -1527,8 +1455,7 @@
 <p class="Pp">Using a longer test string (roughly 18KB, generated from Yahoo!
     Locals search API (&lt;http://dist.schmorp.de/misc/json/long.json&gt;).</p>
 <p class="Pp"></p>
-<pre>
-   module        |     encode |     decode |
+<pre>   module        |     encode |     decode |
    --------------|------------|------------|
    JSON::DWIW/DS |   1647.927 |   2673.916 |
    JSON::DWIW/FJ |   1630.249 |   2596.128 |
@@ -1600,15 +1527,13 @@
     &quot;old&quot; JSON texts and paste them together, and the result would be
     unambiguously parseable:</p>
 <p class="Pp"></p>
-<pre>
-   [1,3]{&quot;k&quot;:5}[][null] # four JSON texts, without doubt
+<pre>   [1,3]{&quot;k&quot;:5}[][null] # four JSON texts, without doubt
 </pre>
 <p class="Pp">By allowing scalars, this property is lost: in the following
     example, is this one JSON text (the number 12) or two JSON texts (the
     numbers 1 and 2):</p>
 <p class="Pp"></p>
-<pre>
-   12    # could be 12, or 1 and 2
+<pre>   12    # could be 12, or 1 and 2
 </pre>
 <p class="Pp">Another lost property of &quot;old&quot; JSON is that no lookahead
     is required to know the end of a JSON text, i.e. the JSON text definitely
@@ -1623,8 +1548,7 @@
     the easiest way to avoid problems with the &quot;new&quot; JSON definition
     is to explicitly disallow scalar values in your encoder and decoder:</p>
 <p class="Pp"></p>
-<pre>
-   $json_coder = JSON::XS-&gt;new-&gt;allow_nonref (0)
+<pre>   $json_coder = JSON::XS-&gt;new-&gt;allow_nonref (0)
 </pre>
 <p class="Pp">This is a somewhat unhappy situation, and the blame can fully be
     put on JSON's inmventor, Douglas Crockford, who unilaterally changed the
@@ -1719,31 +1643,26 @@
     without comma, newlines or single colons). First, the readable Perl
   version:</p>
 <p class="Pp"></p>
-<pre>
-   # if your FREEZE methods return no values, you need this replace first:
+<pre>   # if your FREEZE methods return no values, you need this replace first:
    $json =~ s/\( \s* (&quot; (?: [^\\&quot;:,]+|\\.|::)* &quot;) \s* \) \s* \[\s*\]/[$1]/gx;
-
    # this works for non-empty constructor arg lists:
    $json =~ s/\( \s* (&quot; (?: [^\\&quot;:,]+|\\.|::)* &quot;) \s* \) \s* \[/[$1,/gx;
 </pre>
 <p class="Pp">And here is a less readable version that is easy to adapt to other
     languages:</p>
 <p class="Pp"></p>
-<pre>
-   $json =~ s/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/[$1,/g;
+<pre>   $json =~ s/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/[$1,/g;
 </pre>
 <p class="Pp">Here is an ECMAScript version (same regex):</p>
 <p class="Pp"></p>
-<pre>
-   json = json.replace (/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/g, &quot;[$1,&quot;);
+<pre>   json = json.replace (/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/g, &quot;[$1,&quot;);
 </pre>
 <p class="Pp">Since this syntax converts to standard JSON arrays, it might be
     hard to distinguish serialised objects from normal arrays. You can prepend a
     &quot;magic number&quot; as first array element to reduce chances of a
     collision:</p>
 <p class="Pp"></p>
-<pre>
-   $json =~ s/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/[&quot;XU1peReLzT4ggEllLanBYq4G9VzliwKF&quot;,$1,/g;
+<pre>   $json =~ s/\(\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*\)\s*\[/[&quot;XU1peReLzT4ggEllLanBYq4G9VzliwKF&quot;,$1,/g;
 </pre>
 <p class="Pp">And after decoding the JSON text, you could walk the data
     structure looking for arrays with a first element of
@@ -1753,8 +1672,7 @@
     member, the classname as second, and constructor arguments last, encode it
     as part of your JSON structure, and then:</p>
 <p class="Pp"></p>
-<pre>
-   $json =~ s/\[\s*&quot;XU1peReLzT4ggEllLanBYq4G9VzliwKF&quot;\s*,\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*,/($1)[/g;
+<pre>   $json =~ s/\[\s*&quot;XU1peReLzT4ggEllLanBYq4G9VzliwKF&quot;\s*,\s*(&quot;([^\\&quot;:,]+|\\.|::)*&quot;)\s*,/($1)[/g;
 </pre>
 <p class="Pp">Again, this has some limitations - the magic string must not be
     encoded with character escapes, and the constructor arguments must be
@@ -1826,8 +1744,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
-<pre>
- Marc Lehmann &lt;schmorp@schmorp.de&gt;
+<pre> Marc Lehmann &lt;schmorp@schmorp.de&gt;
  http://home.schmorp.de/
 </pre>
 </section>

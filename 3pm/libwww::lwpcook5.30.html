@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>lwpcook(3)</title>
 </head>
@@ -40,47 +41,39 @@
     the net. The LWP::Simple module provides the <b>get()</b> function that
     return the document specified by its URL argument:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::Simple;
+<pre>  use LWP::Simple;
   $doc = get 'http://search.cpan.org/dist/libwww-perl/';
 </pre>
 <p class="Pp">or, as a perl one-liner using the <b>getprint()</b> function:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MLWP::Simple -e 'getprint &quot;http://search.cpan.org/dist/libwww-perl/&quot;'
+<pre>  perl -MLWP::Simple -e 'getprint &quot;http://search.cpan.org/dist/libwww-perl/&quot;'
 </pre>
 <p class="Pp">or, how about fetching the latest perl by running this
   command:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MLWP::Simple -e '
+<pre>  perl -MLWP::Simple -e '
     getstore &quot;ftp://ftp.sunet.se/pub/lang/perl/CPAN/src/latest.tar.gz&quot;,
              &quot;perl.tar.gz&quot;'
 </pre>
 <p class="Pp">You will probably first want to find a CPAN site closer to you by
     running something like the following command:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MLWP::Simple -e 'getprint &quot;http://www.cpan.org/SITES.html&quot;'
+<pre>  perl -MLWP::Simple -e 'getprint &quot;http://www.cpan.org/SITES.html&quot;'
 </pre>
 <p class="Pp">Enough of this simple stuff! The LWP object oriented interface
     gives you more control over the request sent to the server. Using this
     interface you have full control over headers sent and how you want to handle
     the response returned.</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
   $ua-&gt;agent(&quot;$0/0.1 &quot; . $ua-&gt;agent);
   # $ua-&gt;agent(&quot;Mozilla/8.0&quot;) # pretend we are very capable browser
-
   $req = HTTP::Request-&gt;new(
      GET =&gt; 'http://search.cpan.org/dist/libwww-perl/');
   $req-&gt;header('Accept' =&gt; 'text/html');
-
   # send request
   $res = $ua-&gt;request($req);
-
   # check the outcome
   if ($res-&gt;is_success) {
      print $res-&gt;decoded_content;
@@ -97,9 +90,7 @@
 <p class="Pp">If you just want to check if a document is present (i.e. the URL
     is valid) try to run code that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::Simple;
-
+<pre>  use LWP::Simple;
   if (head($url)) {
      # ok document exists
   }
@@ -118,15 +109,12 @@
     server. You must use the object oriented interface for this. The most common
     POST operation is to access a WWW form application:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
-
   my $req = HTTP::Request-&gt;new(
       POST =&gt; 'https://rt.cpan.org/Public/Dist/Display.html');
   $req-&gt;content_type('application/x-www-form-urlencoded');
   $req-&gt;content('Status=Active&amp;Name=libwww-perl');
-
   my $res = $ua-&gt;request($req);
   print $res-&gt;as_string;
 </pre>
@@ -134,14 +122,11 @@
     suitable POST request message (it handles all the escaping issues) and has a
     suitable default for the content_type:</p>
 <p class="Pp"></p>
-<pre>
-  use HTTP::Request::Common qw(POST);
+<pre>  use HTTP::Request::Common qw(POST);
   use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
-
   my $req = POST 'https://rt.cpan.org/Public/Dist/Display.html',
                 [ Status =&gt; 'Active', Name =&gt; 'libwww-perl' ];
-
   print $ua-&gt;request($req)-&gt;as_string;
 </pre>
 <p class="Pp">The lwp-request program (alias POST) that is distributed with the
@@ -156,15 +141,13 @@
 <p class="Pp">You should initialize your proxy setting before you start sending
     requests:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
   $ua-&gt;env_proxy; # initialize from environment variables
   # or
   $ua-&gt;proxy(ftp  =&gt; 'http://proxy.myorg.com');
   $ua-&gt;proxy(wais =&gt; 'http://proxy.myorg.com');
   $ua-&gt;no_proxy(qw(no se fi));
-
   my $req = HTTP::Request-&gt;new(GET =&gt; 'wais://xxx.com/');
   print $ua-&gt;request($req)-&gt;as_string;
 </pre>
@@ -177,14 +160,10 @@
     order to let requests through. You should be able to add the required
     header, with something like this:</p>
 <p class="Pp"></p>
-<pre>
- use LWP::UserAgent;
-
+<pre> use LWP::UserAgent;
  $ua = LWP::UserAgent-&gt;new;
  $ua-&gt;proxy(['http', 'ftp'] =&gt; 'http://username:password@proxy.myorg.com');
-
  $req = HTTP::Request-&gt;new('GET',&quot;http://www.perl.com&quot;);
-
  $res = $ua-&gt;request($req);
  print $res-&gt;decoded_content if $res-&gt;is_success;
 </pre>
@@ -199,8 +178,7 @@
 <p class="Pp">Documents protected by basic authorization can easily be accessed
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
   $req = HTTP::Request-&gt;new(GET =&gt; 'http://www.linpro.no/secret/');
   $req-&gt;authorization_basic('aas', 'mypassword');
@@ -218,14 +196,11 @@
     cookie jar itself, but if you install HTTP::CookieJar::LWP, it can be used
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   use HTTP::CookieJar::LWP;
-
   $ua = LWP::UserAgent-&gt;new(
       cookie_jar =&gt; HTTP::CookieJar::LWP-&gt;new,
   );
-
   # and then send requests just as you used to do
   $res = $ua-&gt;request(HTTP::Request-&gt;new(GET =&gt; &quot;http://no.yahoo.com/&quot;));
   print $res-&gt;status_line, &quot;\n&quot;;
@@ -242,9 +217,7 @@
 <p class="Pp">Here's an example of fetching and printing a WWW page using
   SSL:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
-
+<pre>  use LWP::UserAgent;
   my $ua = LWP::UserAgent-&gt;new;
   my $req = HTTP::Request-&gt;new(GET =&gt; 'https://www.helsinki.fi/');
   my $res = $ua-&gt;request($req);
@@ -261,24 +234,20 @@
 <p class="Pp">If you want to mirror documents from a WWW server, then try to run
     code similar to this at regular intervals:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::Simple;
-
+<pre>  use LWP::Simple;
   %mirrors = (
      'http://www.sn.no/'                       =&gt; 'sn.html',
      'http://www.perl.com/'                    =&gt; 'perl.html',
      'http://search.cpan.org/distlibwww-perl/' =&gt; 'lwp.html',
      'gopher://gopher.sn.no/'                  =&gt; 'gopher.html',
   );
-
   while (($url, $localfile) = each(%mirrors)) {
      mirror($url, $localfile);
   }
 </pre>
 <p class="Pp">Or, as a perl one-liner:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MLWP::Simple -e 'mirror(&quot;http://www.perl.com/&quot;, &quot;perl.html&quot;)';
+<pre>  perl -MLWP::Simple -e 'mirror(&quot;http://www.perl.com/&quot;, &quot;perl.html&quot;)';
 </pre>
 <p class="Pp">The document will not be transferred unless it has been
   updated.</p>
@@ -292,10 +261,8 @@
     <span class="Li">$ua</span>-&gt;<b>request()</b> argument is a file
   name):</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
-
   my $req = HTTP::Request-&gt;new(GET =&gt;
       'http://www.cpan.org/CPAN/authors/id/O/OA/OALDERS/libwww-perl-6.26.tar.gz');
   $res = $ua-&gt;request($req, &quot;libwww-perl.tar.gz&quot;);
@@ -310,11 +277,9 @@
     <span class="Li">$ua</span>-&gt;<b>request()</b> argument is a code
     reference):</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   $ua = LWP::UserAgent-&gt;new;
   $URL = 'ftp://ftp.isc.org/pub/rfc/rfc-index.txt';
-
   my $expected_length;
   my $bytes_received = 0;
   my $res =
@@ -330,7 +295,6 @@
                                   100 * $bytes_received / $expected_length;
                    }
                    print STDERR &quot;$bytes_received bytes received\n&quot;;
-
                    # XXX Should really do something with the chunk itself
                    # print $chunk;
                });

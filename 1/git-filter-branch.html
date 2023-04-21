@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-FILTER-BRANCH(1)</title>
 </head>
@@ -30,15 +31,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git filter-branch</i> [--setup &lt;command&gt;] [--subdirectory-filter &lt;directory&gt;]
+<pre><i>git filter-branch</i> [--setup &lt;command&gt;] [--subdirectory-filter &lt;directory&gt;]
         [--env-filter &lt;command&gt;] [--tree-filter &lt;command&gt;]
         [--index-filter &lt;command&gt;] [--parent-filter &lt;command&gt;]
         [--msg-filter &lt;command&gt;] [--commit-filter &lt;command&gt;]
         [--tag-name-filter &lt;command&gt;] [--prune-empty]
         [--original &lt;namespace&gt;] [-d &lt;directory&gt;] [-f | --force]
-        [--state-branch &lt;branch&gt;] [--] [&lt;rev-list options&gt;...]
-</pre>
+        [--state-branch &lt;branch&gt;] [--] [&lt;rev-list options&gt;...]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -241,9 +240,7 @@
     information or copyright violation) from all commits:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --tree-filter 'rm filename' HEAD
-</pre>
+<pre>git filter-branch --tree-filter 'rm filename' HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">However, if the file is absent from the tree of some commit, a
@@ -256,9 +253,7 @@ git filter-branch --tree-filter 'rm filename' HEAD
     matter when it entered history, so we also add <b>--ignore-unmatch</b>:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --index-filter 'git rm --cached --ignore-unmatch filename' HEAD
-</pre>
+<pre>git filter-branch --index-filter 'git rm --cached --ignore-unmatch filename' HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Now, you will get the rewritten history saved in HEAD.</p>
@@ -266,9 +261,7 @@ git filter-branch --index-filter 'git rm --cached --ignore-unmatch filename' HEA
     its project root, and discard all other history:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --subdirectory-filter foodir -- --all
-</pre>
+<pre>git filter-branch --subdirectory-filter foodir -- --all</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Thus you can, e.g., turn a library subdirectory into a repository
@@ -280,9 +273,7 @@ git filter-branch --subdirectory-filter foodir -- --all
     history behind the current history:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --parent-filter 'sed &quot;s/^\$/-p &lt;graft-id&gt;/&quot;' HEAD
-</pre>
+<pre>git filter-branch --parent-filter 'sed &quot;s/^\$/-p &lt;graft-id&gt;/&quot;' HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">(if the parent string is empty - which happens when we are dealing
@@ -291,41 +282,34 @@ git filter-branch --parent-filter 'sed &quot;s/^\$/-p &lt;graft-id&gt;/&quot;' H
     ancestors happened). If this is not the case, use:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --parent-filter \
-        'test $GIT_COMMIT = &lt;commit-id&gt; &amp;&amp; echo &quot;-p &lt;graft-id&gt;&quot; || cat' HEAD
-</pre>
+<pre>git filter-branch --parent-filter \
+        'test $GIT_COMMIT = &lt;commit-id&gt; &amp;&amp; echo &quot;-p &lt;graft-id&gt;&quot; || cat' HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">or even simpler:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git replace --graft $commit-id $graft-id
-git filter-branch $graft-id..HEAD
-</pre>
+<pre>git replace --graft $commit-id $graft-id
+git filter-branch $graft-id..HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To remove commits authored by &quot;Darl McBribe&quot; from the
     history:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --commit-filter '
+<pre>git filter-branch --commit-filter '
         if [ &quot;$GIT_AUTHOR_NAME&quot; = &quot;Darl McBribe&quot; ];
         then
                 skip_commit &quot;$@&quot;;
         else
                 git commit-tree &quot;$@&quot;;
-        fi' HEAD
-</pre>
+        fi' HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The function <i>skip_commit</i> is defined as follows:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-skip_commit()
+<pre>skip_commit()
 {
         shift;
         while [ -n &quot;$1&quot; ];
@@ -334,8 +318,7 @@ skip_commit()
                 map &quot;$1&quot;;
                 shift;
         done;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The shift magic first throws away the tree id and then the -p
@@ -352,23 +335,19 @@ skip_commit()
     svn</i> can be removed this way:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --msg-filter '
+<pre>git filter-branch --msg-filter '
         sed -e &quot;/^git-svn-id:/d&quot;
-'
-</pre>
+'</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">If you need to add <i>Acked-by</i> lines to, say, the last 10
     commits (none of which is a merge), use this command:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --msg-filter '
+<pre>git filter-branch --msg-filter '
         cat &amp;&amp;
         echo &quot;Acked-by: Bugs Bunny &lt;bunny@bugzilla.org&gt;&quot;
-' HEAD~10..HEAD
-</pre>
+' HEAD~10..HEAD</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The <b>--env-filter</b> option can be used to modify committer
@@ -377,8 +356,7 @@ git filter-branch --msg-filter '
     correction, before publishing the project, like this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --env-filter '
+<pre>git filter-branch --env-filter '
         if test &quot;$GIT_AUTHOR_EMAIL&quot; = &quot;root@localhost&quot;
         then
                 GIT_AUTHOR_EMAIL=john@example.com
@@ -387,8 +365,7 @@ git filter-branch --env-filter '
         then
                 GIT_COMMITTER_EMAIL=john@example.com
         fi
-' -- --all
-</pre>
+' -- --all</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To restrict rewriting to only part of the history, specify a
@@ -401,39 +378,32 @@ git filter-branch --env-filter '
 <pre>
      D--E--F--G--H
     /     /
-A--B-----C
-</pre>
+A--B-----C</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To rewrite only commits D,E,F,G,H, but leave A, B and C alone,
     use:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch ... C..H
-</pre>
+<pre>git filter-branch ... C..H</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To rewrite commits E,F,G,H, use one of these:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch ... C..H --not D
-git filter-branch ... D..H --not C
-</pre>
+<pre>git filter-branch ... C..H --not D
+git filter-branch ... D..H --not C</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To move the whole tree into a subdirectory, or remove it from
     there:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-git filter-branch --index-filter \
+<pre>git filter-branch --index-filter \
         'git ls-files -s | sed &quot;s-\t\&quot;*-&amp;newsubdir/-&quot; |
                 GIT_INDEX_FILE=$GIT_INDEX_FILE.new \
                         git update-index --index-info &amp;&amp;
-         mv &quot;$GIT_INDEX_FILE.new&quot; &quot;$GIT_INDEX_FILE&quot;' HEAD
-</pre>
+         mv &quot;$GIT_INDEX_FILE.new&quot; &quot;$GIT_INDEX_FILE&quot;' HEAD</pre>
 </div>
 <p class="Pp"></p>
 </section>

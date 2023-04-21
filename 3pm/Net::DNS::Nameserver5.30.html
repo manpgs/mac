@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::DNS::Nameserver(3)</title>
 </head>
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Net::DNS::Nameserver;
-
+<pre>    use Net::DNS::Nameserver;
     $nameserver = new Net::DNS::Nameserver(
         LocalAddr        =&gt; ['::1' , '127.0.0.1' ],
         LocalPort        =&gt; &quot;5353&quot;,
@@ -50,16 +49,12 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-    my $ns = new Net::DNS::Nameserver(
+<pre>    my $ns = new Net::DNS::Nameserver(
         LocalAddr       =&gt; &quot;10.1.2.3&quot;,
         LocalPort       =&gt; &quot;5353&quot;,
         ReplyHandler    =&gt; \&amp;reply_handler,
         Verbose         =&gt; 1
         );
-
-
-
     my $ns = new Net::DNS::Nameserver(
         LocalAddr       =&gt; ['::1' , '127.0.0.1' ],
         LocalPort       =&gt; &quot;5353&quot;,
@@ -72,8 +67,7 @@
     could not be created.</p>
 <p class="Pp">Attributes are:</p>
 <p class="Pp"></p>
-<pre>
-    LocalAddr           IP address on which to listen.  Defaults to INADDR_ANY.
+<pre>    LocalAddr           IP address on which to listen.  Defaults to INADDR_ANY.
     LocalPort           Port on which to listen.        Defaults to 53.
     ReplyHandler        Reference to reply-handling
                         subroutine                      Required.
@@ -100,8 +94,7 @@
     additional sections of the response, or undef to leave the query unanswered.
     Common response codes are:</p>
 <p class="Pp"></p>
-<pre>
-    NOERROR     No error
+<pre>    NOERROR     No error
     FORMERR     Format error
     SERVFAIL    Server failure
     NXDOMAIN    Non-existent domain (name doesn't exist)
@@ -117,8 +110,7 @@
 <p class="Pp">See RFC 1035 and the IANA dns-parameters file for more
     information:</p>
 <p class="Pp"></p>
-<pre>
-  ftp://ftp.rfc-editor.org/in-notes/rfc1035.txt
+<pre>  ftp://ftp.rfc-editor.org/in-notes/rfc1035.txt
   http://www.isi.edu/in-notes/iana/assignments/dns-parameters
 </pre>
 <p class="Pp">The nameserver will listen for both UDP and TCP connections. On
@@ -135,15 +127,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="main_loop"><a class="permalink" href="#main_loop">main_loop</a></h2>
-<pre>
-    $ns-&gt;main_loop;
+<pre>    $ns-&gt;main_loop;
 </pre>
 <p class="Pp">Start accepting queries. Calling main_loop never returns.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="loop_once"><a class="permalink" href="#loop_once">loop_once</a></h2>
-<pre>
-    $ns-&gt;loop_once( [TIMEOUT_IN_SECONDS] );
+<pre>    $ns-&gt;loop_once( [TIMEOUT_IN_SECONDS] );
 </pre>
 <p class="Pp">Start accepting queries, but returns. If called without a
     parameter, the call will not return until a request has been received (and
@@ -164,8 +154,7 @@
     on calling &quot;loop_once&quot; twice.</p>
 <p class="Pp">A code fragment like:</p>
 <p class="Pp"></p>
-<pre>
-    $ns-&gt;loop_once(10);
+<pre>    $ns-&gt;loop_once(10);
     while( $ns-&gt;get_open_tcp() ){
         $ns-&gt;loop_once(0);
     }
@@ -189,20 +178,15 @@
     of the peer host, so that additional filtering on its basis may be
   applied.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl
-
+<pre>    #!/usr/bin/perl
     use strict;
     use warnings;
     use Net::DNS::Nameserver;
-
     sub reply_handler {
         my ($qname, $qclass, $qtype, $peerhost,$query,$conn) = @_;
         my ($rcode, @ans, @auth, @add);
-
         print &quot;Received query from $peerhost to &quot;. $conn-&gt;{sockhost}. &quot;\n&quot;;
         $query-&gt;print;
-
         if ($qtype eq &quot;A&quot; &amp;&amp; $qname eq &quot;foo.example.com&quot; ) {
                 my ($ttl, $rdata) = (3600, &quot;10.1.2.3&quot;);
                 my $rr = new Net::DNS::RR(&quot;$qname $ttl $qclass $qtype $rdata&quot;);
@@ -210,21 +194,17 @@
                 $rcode = &quot;NOERROR&quot;;
         }elsif( $qname eq &quot;foo.example.com&quot; ) {
                 $rcode = &quot;NOERROR&quot;;
-
         }else{
                 $rcode = &quot;NXDOMAIN&quot;;
         }
-
         # mark the answer as authoritive (by setting the 'aa' flag
         return ($rcode, \@ans, \@auth, \@add, { aa =&gt; 1 });
     }
-
     my $ns = new Net::DNS::Nameserver(
         LocalPort    =&gt; 5353,
         ReplyHandler =&gt; \&amp;reply_handler,
         Verbose      =&gt; 1
         ) || die &quot;couldn't create nameserver object\n&quot;;
-
     $ns-&gt;main_loop;
 </pre>
 </section>

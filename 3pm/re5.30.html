@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>re(3pm)</title>
 </head>
@@ -28,46 +29,35 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use re 'taint';
+<pre>    use re 'taint';
     ($x) = ($^X =~ /^(.*)$/s);     # $x is tainted here
-
     $pat = '(?{ $foo = 1 })';
     use re 'eval';
     /foo${pat}bar/;                # won't fail (when not under -T
                                    # switch)
-
     {
         no re 'taint';             # the default
         ($x) = ($^X =~ /^(.*)$/s); # $x is not tainted here
-
         no re 'eval';              # the default
         /foo${pat}bar/;            # disallowed (with or without -T
                                    # switch)
     }
-
     use re 'strict';               # Raise warnings for more conditions
-
     use re '/ix';
     &quot;FOO&quot; =~ / foo /; # /ix implied
     no re '/x';
     &quot;FOO&quot; =~ /foo/; # just /i implied
-
     use re 'debug';                # output debugging info during
     /^(.*)$/s;                     # compile and run time
-
-
     use re 'debugcolor';           # same as 'debug', but with colored
                                    # output
     ...
-
     use re qw(Debug All);          # Same as &quot;use re 'debug'&quot;, but you
                                    # can use &quot;Debug&quot; with things other
                                    # than 'All'
     use re qw(Debug More);         # 'All' plus output more details
     no re qw(Debug ALL);           # Turn on (almost) all re debugging
                                    # in this scope
-
     use re qw(is_regexp regexp_pattern); # import utility functions
     my ($pat,$mods)=regexp_pattern(qr/foo/i);
     if (is_regexp($obj)) {
@@ -108,8 +98,7 @@
     <span class="Li">&quot;qr//&quot;</span>) is <i>not</i> considered variable
     interpolation. Thus:</p>
 <p class="Pp"></p>
-<pre>
-    /foo${pat}bar/
+<pre>    /foo${pat}bar/
 </pre>
 <p class="Pp"><i>is</i> allowed if <span class="Li">$pat</span> is a precompiled
     regular expression, even if <span class="Li">$pat</span> contains
@@ -134,15 +123,13 @@
     <span class="Li">&quot;&quot;strict'&quot;</span>, but not otherwise, is the
     pattern</p>
 <p class="Pp"></p>
-<pre>
- qr/\xABC/
+<pre> qr/\xABC/
 </pre>
 <p class="Pp">The <span class="Li">&quot;\x&quot;</span> construct without curly
     braces should be followed by exactly two hex digits; this one is followed by
     three. This currently evaluates as equivalent to</p>
 <p class="Pp"></p>
-<pre>
- qr/\x{AB}C/
+<pre> qr/\x{AB}C/
 </pre>
 <p class="Pp">that is, the character whose code point value is
     <span class="Li">0xAB</span>, followed by the letter
@@ -150,8 +137,7 @@
     <span class="Li">&quot;C&quot;</span> is a a hex digit, there is a
     reasonable chance that the intent was</p>
 <p class="Pp"></p>
-<pre>
- qr/\x{ABC}/
+<pre> qr/\x{ABC}/
 </pre>
 <p class="Pp">that is the single character at <span class="Li">0xABC</span>.
     Under <span class="Li">'strict'</span> it is an error to not follow
@@ -176,32 +162,31 @@
 <h2 class="Ss" id="'/flags'_mode"><a class="permalink" href="#'/flags'_mode">'/flags'
   mode</a></h2>
 <p class="Pp">When <span class="Li">&quot;use re
-    '/</span><i>flags</i><span class="Li">'&quot;</span> is specified, the given
-    <i>flags</i> are automatically added to every regular expression till the
-    end of the lexical scope. <i>flags</i> can be any combination of
-    <span class="Li">'a'</span>, <span class="Li">'aa'</span>,
-    <span class="Li">'d'</span>, <span class="Li">'i'</span>,
-    <span class="Li">'l'</span>, <span class="Li">'m'</span>,
-    <span class="Li">'n'</span>, <span class="Li">'p'</span>,
-    <span class="Li">'s'</span>, <span class="Li">'u'</span>,
-    <span class="Li">'x'</span>, and/or <span class="Li">'xx'</span>.</p>
+    '/</span><span class="Li"><i>flags</i></span><span class="Li">'&quot;</span>
+    is specified, the given <i>flags</i> are automatically added to every
+    regular expression till the end of the lexical scope. <i>flags</i> can be
+    any combination of <span class="Li">'a'</span>,
+    <span class="Li">'aa'</span>, <span class="Li">'d'</span>,
+    <span class="Li">'i'</span>, <span class="Li">'l'</span>,
+    <span class="Li">'m'</span>, <span class="Li">'n'</span>,
+    <span class="Li">'p'</span>, <span class="Li">'s'</span>,
+    <span class="Li">'u'</span>, <span class="Li">'x'</span>, and/or
+    <span class="Li">'xx'</span>.</p>
 <p class="Pp"><span class="Li">&quot;no re
-    '/</span><i>flags</i><span class="Li">'&quot;</span> will turn off the
-    effect of <span class="Li">&quot;use re
-    '/</span><i>flags</i><span class="Li">'&quot;</span> for the given
-  flags.</p>
+    '/</span><span class="Li"><i>flags</i></span><span class="Li">'&quot;</span>
+    will turn off the effect of <span class="Li">&quot;use re
+    '/</span><span class="Li"><i>flags</i></span><span class="Li">'&quot;</span>
+    for the given flags.</p>
 <p class="Pp">For example, if you want all your regular expressions to have
     /msxx on by default, simply put</p>
 <p class="Pp"></p>
-<pre>
-    use re '/msxx';
+<pre>    use re '/msxx';
 </pre>
 <p class="Pp">at the top of your code.</p>
 <p class="Pp">The character set <span class="Li">&quot;/adul&quot;</span> flags
     cancel each other out. So, in this example,</p>
 <p class="Pp"></p>
-<pre>
-    use re &quot;/u&quot;;
+<pre>    use re &quot;/u&quot;;
     &quot;ss&quot; =~ /\xdf/;
     use re &quot;/d&quot;;
     &quot;ss&quot; =~ /\xdf/;
@@ -210,8 +195,7 @@
     implicit <span class="Li">&quot;no re '/u'&quot;</span>.</p>
 <p class="Pp">Similarly,</p>
 <p class="Pp"></p>
-<pre>
-    use re &quot;/xx&quot;;   # Doubled-x
+<pre>    use re &quot;/xx&quot;;   # Doubled-x
     ...
     use re &quot;/x&quot;;    # Single x from here on
     ...
@@ -223,8 +207,7 @@
     Turning off one of these flags when it is active reverts to the behaviour
     specified by whatever other pragmata are in scope. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use feature &quot;unicode_strings&quot;;
+<pre>    use feature &quot;unicode_strings&quot;;
     no re &quot;/u&quot;; # does nothing
     use re &quot;/l&quot;;
     no re &quot;/l&quot;; # reverts to unicode_strings behaviour
@@ -332,8 +315,7 @@
   <dd>Dump offset information. This can be used to see how regops correlate to
       the pattern. Output format is
     <p class="Pp"></p>
-    <pre>
-   NODENUM:POSITION[LENGTH]
+    <pre>   NODENUM:POSITION[LENGTH]
     </pre>
     <p class="Pp">Where 1 is the position of the first char in the string. Note
         that position can be 0, or larger than the actual length of the pattern,
@@ -362,8 +344,7 @@
   <dt id="All"><a class="permalink" href="#All">All</a></dt>
   <dd>Enable DUMP and all execute options. Equivalent to:
     <p class="Pp"></p>
-    <pre>
-  use re 'debug';
+    <pre>  use re 'debug';
     </pre>
   </dd>
   <dt id="MORE"><a class="permalink" href="#MORE">MORE</a></dt>
@@ -401,8 +382,7 @@
         element containing the pattern and the second containing the modifiers
         used when the pattern was compiled.</p>
     <p class="Pp"></p>
-    <pre>
-  my ($pat, $mods) = regexp_pattern($ref);
+    <pre>  my ($pat, $mods) = regexp_pattern($ref);
     </pre>
     <p class="Pp">In scalar context it returns the same as perl would when
         stringifying a raw <span class="Li">&quot;qr//&quot;</span> with the
@@ -410,8 +390,7 @@
         this routine returns false but defined in scalar context, and the empty
         list in list context. Thus the following</p>
     <p class="Pp"></p>
-    <pre>
-    if (regexp_pattern($ref) eq '(?^i:foo)')
+    <pre>    if (regexp_pattern($ref) eq '(?^i:foo)')
     </pre>
     <p class="Pp">will be warning free regardless of what
         <span class="Li">$ref</span> actually is.</p>
@@ -431,15 +410,13 @@
         as a fixed string that can appear at any point in a range of positions
         relative to the start of the match. For example,</p>
     <p class="Pp"></p>
-    <pre>
-    my $qr = qr/here .* there/x;
+    <pre>    my $qr = qr/here .* there/x;
     my ($anchored, $floating) = regmust($qr);
     print &quot;anchored:'$anchored'\nfloating:'$floating'\n&quot;;
     </pre>
     <p class="Pp">results in</p>
     <p class="Pp"></p>
-    <pre>
-    anchored:'here'
+    <pre>    anchored:'here'
     floating:'there'
     </pre>
     <p class="Pp">Because the <span class="Li">&quot;here&quot;</span> is before

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>B::Concise(3pm)</title>
 </head>
@@ -29,9 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    perl -MO=Concise[,OPTIONS] foo.pl
-
+<pre>    perl -MO=Concise[,OPTIONS] foo.pl
     use B::Concise qw(set_style add_callback);
 </pre>
 </section>
@@ -51,8 +50,7 @@
 <p class="Pp">Here's two outputs (or 'renderings'), using the -exec and -basic
     (i.e. default) formatting conventions on the same code snippet.</p>
 <p class="Pp"></p>
-<pre>
-    % perl -MO=Concise,-exec -e '$a = $b + 42'
+<pre>    % perl -MO=Concise,-exec -e '$a = $b + 42'
     1  &lt;0&gt; enter
     2  &lt;;&gt; nextstate(main 1 -e:1) v
     3  &lt;#&gt; gvsv[*b] s
@@ -76,8 +74,7 @@
 <p class="Pp">The op-flags (ex <b>'sK/2'</b>) are described in (&quot;OP flags
     abbreviations&quot;).</p>
 <p class="Pp"></p>
-<pre>
-    % perl -MO=Concise -e '$a = $b + 42'
+<pre>    % perl -MO=Concise -e '$a = $b + 42'
     8  &lt;@&gt; leave[1 ref] vKP/REFC -&gt;(end)
     1     &lt;0&gt; enter -&gt;2
     2     &lt;;&gt; nextstate(main 1 -e:1) v -&gt;3
@@ -228,8 +225,7 @@
       nextstate OP) will be preceded by the 1st line of source code that
       generates it. For example:
     <p class="Pp"></p>
-    <pre>
-    1  &lt;0&gt; enter
+    <pre>    1  &lt;0&gt; enter
     # 1: my $i;
     2  &lt;;&gt; nextstate(main 1 junk.pl:1) v:{
     3  &lt;0&gt; padsv[$i:1,10] vM/LVINTRO
@@ -301,8 +297,7 @@
 <p class="Pp">These symbols appear before the op-name, and indicate the B::
     namespace that represents the ops in your Perl code.</p>
 <p class="Pp"></p>
-<pre>
-    0      OP (aka BASEOP)  An OP with no children
+<pre>    0      OP (aka BASEOP)  An OP with no children
     1      UNOP             An OP with one child
     +      UNOP_AUX         A UNOP with auxillary fields
     2      BINOP            An OP with two children
@@ -323,8 +318,7 @@
     behavior of each opcode in consistent ways, and are represented by 0 or more
     single characters.</p>
 <p class="Pp"></p>
-<pre>
-    v      OPf_WANT_VOID    Want nothing (void context)
+<pre>    v      OPf_WANT_VOID    Want nothing (void context)
     s      OPf_WANT_SCALAR  Want single value (scalar context)
     l      OPf_WANT_LIST    Want list of any length (list context)
                             Want is unknown
@@ -340,8 +334,7 @@
 <p class="Pp">Private flags, if any are set for an opcode, are displayed after a
     '/'</p>
 <p class="Pp"></p>
-<pre>
-    8  &lt;@&gt; leave[1 ref] vKP/REFC -&gt;(end)
+<pre>    8  &lt;@&gt; leave[1 ref] vKP/REFC -&gt;(end)
     7     &lt;2&gt; sassign vKS/2 -&gt;8
 </pre>
 <p class="Pp">They're opcode specific, and occur less often than the public
@@ -446,8 +439,7 @@
   <dd>The COP's hint flags, rendered with abbreviated names if possible. An
       empty string if this is not a COP. Here are the symbols used:
     <p class="Pp"></p>
-    <pre>
-    $ strict refs
+    <pre>    $ strict refs
     &amp; strict subs
     * strict vars
    x$ explicit use/no strict refs
@@ -469,7 +461,6 @@
     E eval
     X filetest access
     U utf-8
-
     us      use feature 'unicode_strings'
     fea=NNN feature bundle number
     </pre>
@@ -578,8 +569,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Example:_Altering_Concise_Renderings"><a class="permalink" href="#Example:_Altering_Concise_Renderings">Example:
   Altering Concise Renderings</a></h2>
-<pre>
-    use B::Concise qw(set_style add_callback);
+<pre>    use B::Concise qw(set_style add_callback);
     add_style($yourStyleName =&gt; $defaultfmt, $gotofmt, $treefmt);
     add_callback
       ( sub {
@@ -627,8 +617,7 @@
     the same order as they are added. Each subroutine is passed five
   parameters.</p>
 <p class="Pp"></p>
-<pre>
-  1. A hashref, containing the variable names and values which are
+<pre>  1. A hashref, containing the variable names and values which are
      populated into the report-line for the op
   2. the op, as a B&lt;B::OP&gt; object
   3. a reference to the format string
@@ -655,8 +644,7 @@
     STDOUT to another open filehandle, or into a string passed as a ref (unless
     you've built perl with -Uuseperlio).</p>
 <p class="Pp"></p>
-<pre>
-  my $walker = B::Concise::compile('-terse','aFuncName', \&amp;aSubRef); # 1
+<pre>  my $walker = B::Concise::compile('-terse','aFuncName', \&amp;aSubRef); # 1
   walk_output(\my $buf);
   $walker-&gt;();                          # 1 renders -terse
   set_style_standard('concise');        # 2
@@ -668,8 +656,7 @@
     subroutines supplied when it was created, and renders them using the current
     style. You can change the style afterwards in several different ways:</p>
 <p class="Pp"></p>
-<pre>
-  1. call C&lt;compile&gt;, altering style or mode/order
+<pre>  1. call C&lt;compile&gt;, altering style or mode/order
   2. call C&lt;set_style_standard&gt;
   3. call $walker, passing @new options
 </pre>

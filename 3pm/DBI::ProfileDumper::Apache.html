@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::ProfileDumper::Apache(3)</title>
 </head>
@@ -31,8 +32,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Add this line to your <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache
+<pre>  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache
 </pre>
 <p class="Pp">(If you're using mod_perl2, see &quot;When using mod_perl2&quot;
     for some additional notes.)</p>
@@ -41,8 +41,7 @@
     <i>dbi.prof.*</i> files in your Apache log directory.</p>
 <p class="Pp">Get a profiling report with dbiprof:</p>
 <p class="Pp"></p>
-<pre>
-  dbiprof /path/to/your/apache/logs/dbi.prof.*
+<pre>  dbiprof /path/to/your/apache/logs/dbi.prof.*
 </pre>
 <p class="Pp">When you're ready to perform another profiling run, delete the old
     files and start again.</p>
@@ -62,16 +61,14 @@
 <p class="Pp">The easiest way to use this module is just to set the DBI_PROFILE
     environment variable in your <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache
+<pre>  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache
 </pre>
 <p class="Pp">The DBI will look after loading and using the module when the
     first DBI handle is created.</p>
 <p class="Pp">It's also possible to use this module by setting the Profile
     attribute of any DBI handle:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{Profile} = &quot;2/DBI::ProfileDumper::Apache&quot;;
+<pre>  $dbh-&gt;{Profile} = &quot;2/DBI::ProfileDumper::Apache&quot;;
 </pre>
 <p class="Pp">See DBI::ProfileDumper for more possibilities, and DBI::Profile
     for full details of the DBI's profiling mechanism.</p>
@@ -91,8 +88,7 @@
     <span class="Li">&quot;DBI_PROFILE_APACHE_LOG_DIR&quot;</span> env var to
     change that. For example:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetEnv DBI_PROFILE_APACHE_LOG_DIR /server_root/logs
+<pre>  PerlSetEnv DBI_PROFILE_APACHE_LOG_DIR /server_root/logs
 </pre>
 <p class="Pp"><i>When using mod_perl2</i></p>
 <p class="Pp">Under mod_perl2 you'll need to either set the
@@ -100,15 +96,13 @@
     enable the mod_perl2 <span class="Li">&quot;GlobalRequest&quot;</span>
     option, like this:</p>
 <p class="Pp"></p>
-<pre>
-  PerlOptions +GlobalRequest
+<pre>  PerlOptions +GlobalRequest
 </pre>
 <p class="Pp">to the global config section you're about test with
     DBI::ProfileDumper::Apache. If you don't do one of those then you'll see
     messages in your error_log similar to:</p>
 <p class="Pp"></p>
-<pre>
-  DBI::ProfileDumper::Apache on_destroy failed: Global $r object is not available. Set:
+<pre>  DBI::ProfileDumper::Apache on_destroy failed: Global $r object is not available. Set:
     PerlOptions +GlobalRequest in httpd.conf at ..../DBI/ProfileDumper/Apache.pm line 144
 </pre>
 <p class="Pp"><i>Naming the files</i></p>
@@ -123,11 +117,8 @@
     can silence it by setting the <span class="Li">&quot;Quiet&quot;</span>
     attribute true.</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache/Quiet:1
-
+<pre>  PerlSetEnv DBI_PROFILE 2/DBI::ProfileDumper::Apache/Quiet:1
   $dbh-&gt;{Profile} = &quot;!Statement/DBI::ProfileDumper/Quiet:1&quot;;
-
   $dbh-&gt;{Profile} = DBI::ProfileDumper-&gt;new(
       Path =&gt; [ '!Statement' ]
       Quiet =&gt; 1
@@ -141,13 +132,11 @@
     data files will be produced when Apache exits and you'll see something like
     this in your error_log:</p>
 <p class="Pp"></p>
-<pre>
-  DBI::ProfileDumper::Apache writing to /usr/local/apache/logs/dbi.prof.2604.2619
+<pre>  DBI::ProfileDumper::Apache writing to /usr/local/apache/logs/dbi.prof.2604.2619
 </pre>
 <p class="Pp">Now you can use dbiprof to examine the data:</p>
 <p class="Pp"></p>
-<pre>
-  dbiprof /usr/local/apache/logs/dbi.prof.2604.*
+<pre>  dbiprof /usr/local/apache/logs/dbi.prof.2604.*
 </pre>
 <p class="Pp">By passing dbiprof a list of all generated files, dbiprof will
     automatically merge them into one result set. You can also pass dbiprof
@@ -158,8 +147,7 @@
 <p class="Pp">Once you've made some code changes, you're ready to start again.
     First, delete the old profile data files:</p>
 <p class="Pp"></p>
-<pre>
-  rm /usr/local/apache/logs/dbi.prof.*
+<pre>  rm /usr/local/apache/logs/dbi.prof.*
 </pre>
 <p class="Pp">Then restart your server and get back to work.</p>
 </section>
@@ -175,13 +163,11 @@
     Calling <span class="Li">&quot;flush_to_disk()&quot;</span> will write the
     current data to disk and free the memory it's using. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{Profile}-&gt;flush_to_disk() if $dbh-&gt;{Profile};
+<pre>  $dbh-&gt;{Profile}-&gt;flush_to_disk() if $dbh-&gt;{Profile};
 </pre>
 <p class="Pp">or, rather than flush every time, you could flush less often:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{Profile}-&gt;flush_to_disk()
+<pre>  $dbh-&gt;{Profile}-&gt;flush_to_disk()
     if $dbh-&gt;{Profile} and ++$i % 100;
 </pre>
 </section>

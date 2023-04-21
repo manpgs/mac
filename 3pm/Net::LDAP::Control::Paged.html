@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::Control::Paged(3)</title>
 </head>
@@ -29,41 +30,31 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::LDAP;
+<pre> use Net::LDAP;
  use Net::LDAP::Control::Paged;
  use Net::LDAP::Constant qw( LDAP_CONTROL_PAGED );
-
  $ldap = Net::LDAP-&gt;new( &quot;ldap.mydomain.eg&quot; );
-
  $page = Net::LDAP::Control::Paged-&gt;new( size =&gt; 100 );
-
  @args = ( base     =&gt; &quot;cn=subnets,cn=sites,cn=configuration,$BASE_DN&quot;,
            scope    =&gt; &quot;subtree&quot;,
            filter   =&gt; &quot;(objectClass=subnet)&quot;,
            callback =&gt; \&amp;process_entry, # Call this sub for each entry
            control  =&gt; [ $page ],
  );
-
  my $cookie;
  while (1) {
    # Perform search
    my $mesg = $ldap-&gt;search( @args );
-
    # Only continue on LDAP_SUCCESS
    $mesg-&gt;code  and last;
-
    # Get cookie from paged control
    my($resp)  = $mesg-&gt;control( LDAP_CONTROL_PAGED )  or last;
    $cookie    = $resp-&gt;cookie;
-
    # Only continue if cookie is nonempty (= we're not done)
    last  if (!defined($cookie) || !length($cookie));
-
    # Set cookie in paged control
    $page-&gt;cookie($cookie);
  }
-
  if (defined($cookie) &amp;&amp; length($cookie)) {
    # We had an abnormal exit, so let the server know we do not want any more
    $page-&gt;cookie($cookie);

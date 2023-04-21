@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Manual::Tooling::Plugin::ToolStarts(3)</title>
 </head>
@@ -37,34 +38,26 @@
 <section class="Sh">
 <h1 class="Sh" id="COMPLETE_CODE_UP_FRONT"><a class="permalink" href="#COMPLETE_CODE_UP_FRONT">COMPLETE
   CODE UP FRONT</a></h1>
-<pre>
-    package Test2::Plugin::MyPlugin;
-
+<pre>    package Test2::Plugin::MyPlugin;
     use Test2::API qw{
         test2_add_callback_context_init
         test2_add_callback_context_acquire
     };
-
     sub import {
         my $class = shift;
-
         # Let us know every time a tool requests a context, and give us a
         # chance to modify the parameters before we find it.
         test2_add_callback_context_acquire(sub {
             my $params_ref = shift;
-
             print &quot;A tool has requested the context\n&quot;;
         });
-
         # Callback every time a new context is created, not called if an
         # existing context is found.
         test2_add_callback_context_init(sub {
             my $ctx_ref = shift;
-
             print &quot;A new context was created\n&quot;;
         });
     }
-
     1;
 </pre>
 </section>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Tutorial(3pm)</title>
 </head>
@@ -36,8 +37,7 @@
     documentation and having your fingernails pulled out? Did you open up a test
     and read</p>
 <p class="Pp"></p>
-<pre>
-    ######## We start with some black magic
+<pre>    ######## We start with some black magic
 </pre>
 <p class="Pp">and decide that's quite enough for you?</p>
 <p class="Pp">It's ok. That's all gone now. We've done all the black magic for
@@ -47,17 +47,13 @@
   and bolts of testing.</a></h2>
 <p class="Pp">Here's the most basic test program.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     print &quot;1..1\n&quot;;
-
     print 1 + 1 == 2 ? &quot;ok 1\n&quot; : &quot;not ok 1\n&quot;;
 </pre>
 <p class="Pp">Because 1 + 1 is 2, it prints:</p>
 <p class="Pp"></p>
-<pre>
-    1..1
+<pre>    1..1
     ok 1
 </pre>
 <p class="Pp">What this says is: <span class="Li">1..1</span> &quot;I'm going to
@@ -71,11 +67,8 @@
     Fortunately, there's Test::Simple. It has one function,
     <span class="Li">&quot;ok()&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     use Test::Simple tests =&gt; 1;
-
     ok( 1 + 1 == 2 );
 </pre>
 <p class="Pp">That does the same thing as the previous code.
@@ -84,17 +77,14 @@
     <span class="Li">&quot;ok()&quot;</span> gets a true value, the test passes.
     False, it fails.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     use Test::Simple tests =&gt; 2;
     ok( 1 + 1 == 2 );
     ok( 2 + 2 == 5 );
 </pre>
 <p class="Pp">From that comes:</p>
 <p class="Pp"></p>
-<pre>
-    1..2
+<pre>    1..2
     ok 1
     not ok 2
     #     Failed test (test.pl at line 5)
@@ -120,25 +110,19 @@
     object-oriented module, and that means you start by making an object. Test
     <span class="Li">&quot;new()&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     # assume these two lines are in all subsequent examples
     use strict;
     use warnings;
-
     use Test::Simple tests =&gt; 2;
-
     use Date::ICal;
-
     my $ical = Date::ICal-&gt;new;         # create an object
     ok( defined $ical );                # check that we got something
     ok( $ical-&gt;isa('Date::ICal') );     # and it's the right class
 </pre>
 <p class="Pp">Run that and you should get:</p>
 <p class="Pp"></p>
-<pre>
-    1..2
+<pre>    1..2
     ok 1
     ok 2
 </pre>
@@ -152,16 +136,13 @@
 <p class="Pp">Each test can be given a little descriptive name as the second
     argument to <span class="Li">&quot;ok()&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::Simple tests =&gt; 2;
-
+<pre>    use Test::Simple tests =&gt; 2;
     ok( defined $ical,              'new() returned something' );
     ok( $ical-&gt;isa('Date::ICal'),   &quot;  and it's the right class&quot; );
 </pre>
 <p class="Pp">Now you'll see:</p>
 <p class="Pp"></p>
-<pre>
-    1..2
+<pre>    1..2
     ok 1 - new() returned something
     ok 2 -   and it's the right class
 </pre>
@@ -173,17 +154,12 @@
     test what the manual says it does. [3] Let's pull something out of the
     &quot;SYNOPSIS&quot; in Date::ICal and test that all its bits work.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     use Test::Simple tests =&gt; 8;
-
     use Date::ICal;
-
     $ical = Date::ICal-&gt;new( year =&gt; 1964, month =&gt; 10, day =&gt; 16,
                              hour =&gt; 16,   min   =&gt; 12, sec =&gt; 47,
                              tz   =&gt; '0530' );
-
     ok( defined $ical,            'new() returned something' );
     ok( $ical-&gt;isa('Date::ICal'), &quot;  and it's the right class&quot; );
     ok( $ical-&gt;sec   == 47,       '  sec()'   );
@@ -195,8 +171,7 @@
 </pre>
 <p class="Pp">Run that and you get:</p>
 <p class="Pp"></p>
-<pre>
-    1..8
+<pre>    1..8
     ok 1 - new() returned something
     ok 2 -   and it's the right class
     ok 3 -   sec()
@@ -224,15 +199,11 @@
     The <span class="Li">&quot;is()&quot;</span> function lets us declare that
     something is supposed to be the same as something else:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 8;
-
+<pre>    use Test::More tests =&gt; 8;
     use Date::ICal;
-
     $ical = Date::ICal-&gt;new( year =&gt; 1964, month =&gt; 10, day =&gt; 16,
                              hour =&gt; 16,   min   =&gt; 12, sec =&gt; 47,
                              tz   =&gt; '0530' );
-
     ok( defined $ical,            'new() returned something' );
     ok( $ical-&gt;isa('Date::ICal'), &quot;  and it's the right class&quot; );
     is( $ical-&gt;sec,     47,       '  sec()'   );
@@ -247,8 +218,7 @@
     12?&quot; With <span class="Li">&quot;is()&quot;</span> in place, you get
     more information:</p>
 <p class="Pp"></p>
-<pre>
-    1..8
+<pre>    1..8
     ok 1 - new() returned something
     ok 2 -   and it's the right class
     ok 3 -   sec()
@@ -266,8 +236,7 @@
     16, but we expected 17. A quick check shows that the code is working fine,
     we made a mistake when writing the tests. Change it to:</p>
 <p class="Pp"></p>
-<pre>
-    is( $ical-&gt;day,     16,       '  day()'   );
+<pre>    is( $ical-&gt;day,     16,       '  day()'   );
 </pre>
 <p class="Pp">... and everything works.</p>
 <p class="Pp">Any time you're doing a &quot;this equals that&quot; sort of test,
@@ -275,8 +244,7 @@
     test is always in scalar context, so you can test how many elements are in
     an array this way. [5]</p>
 <p class="Pp"></p>
-<pre>
-    is( @foo, 5, 'foo has 5 elements' );
+<pre>    is( @foo, 5, 'foo has 5 elements' );
 </pre>
 </section>
 <section class="Ss">
@@ -299,10 +267,8 @@
     leap years right? We could keep repeating the code above, or we could set up
     a little try/expect loop.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 32;
+<pre>    use Test::More tests =&gt; 32;
     use Date::ICal;
-
     my %ICal_Dates = (
             # An ICal string     And the year, month, day
             #                    hour, minute and second we expect.
@@ -315,14 +281,10 @@
             '18990505T232323' =&gt;    # before the MacOS epoch
                                 [ 1899,  5,  5, 23, 23, 23 ],
     );
-
-
     while( my($ical_str, $expect) = each %ICal_Dates ) {
         my $ical = Date::ICal-&gt;new( ical =&gt; $ical_str );
-
         ok( defined $ical,            &quot;new(ical =&gt; '$ical_str')&quot; );
         ok( $ical-&gt;isa('Date::ICal'), &quot;  and it's the right class&quot; );
-
         is( $ical-&gt;year,    $expect-&gt;[0],     '  year()'  );
         is( $ical-&gt;month,   $expect-&gt;[1],     '  month()' );
         is( $ical-&gt;day,     $expect-&gt;[2],     '  day()'   );
@@ -340,28 +302,21 @@
 <p class="Pp">First, we can calculate the plan dynamically using the
     <span class="Li">&quot;plan()&quot;</span> function.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More;
+<pre>    use Test::More;
     use Date::ICal;
-
     my %ICal_Dates = (
         ...same as before...
     );
-
     # For each key in the hash we're running 8 tests.
     plan tests =&gt; keys(%ICal_Dates) * 8;
-
     ...and then your tests...
 </pre>
 <p class="Pp">To be even more flexible, use
     <span class="Li">&quot;done_testing&quot;</span>. This means we're just
     running some tests, don't know how many. [6]</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More;   # instead of tests =&gt; 32
-
+<pre>    use Test::More;   # instead of tests =&gt; 32
     ... # tests here
-
     done_testing();   # reached the end safely
 </pre>
 <p class="Pp">If you don't specify a plan, Test::More expects to see
@@ -376,14 +331,12 @@
   names</a></h2>
 <p class="Pp">Take a look at the line:</p>
 <p class="Pp"></p>
-<pre>
-    ok( defined $ical,            &quot;new(ical =&gt; '$ical_str')&quot; );
+<pre>    ok( defined $ical,            &quot;new(ical =&gt; '$ical_str')&quot; );
 </pre>
 <p class="Pp">We've added more detail about what we're testing and the ICal
     string itself we're trying out to the name. So you get results like:</p>
 <p class="Pp"></p>
-<pre>
-    ok 25 - new(ical =&gt; '19971024T120000')
+<pre>    ok 25 - new(ical =&gt; '19971024T120000')
     ok 26 -   and it's the right class
     ok 27 -   year()
     ok 28 -   month()
@@ -404,27 +357,20 @@
 <p class="Pp">Poking around in the existing Date::ICal tests, I found this in
     <i>t/01sanity.t</i> [7]</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     use Test::More tests =&gt; 7;
     use Date::ICal;
-
     # Make sure epoch time is being handled sanely.
     my $t1 = Date::ICal-&gt;new( epoch =&gt; 0 );
     is( $t1-&gt;epoch, 0,          &quot;Epoch time of 0&quot; );
-
     # XXX This will only work on unix systems.
     is( $t1-&gt;ical, '19700101Z', &quot;  epoch to ical&quot; );
-
     is( $t1-&gt;year,  1970,       &quot;  year()&quot;  );
     is( $t1-&gt;month, 1,          &quot;  month()&quot; );
     is( $t1-&gt;day,   1,          &quot;  day()&quot;   );
-
     # like the tests above, but starting with ical instead of epoch
     my $t2 = Date::ICal-&gt;new( ical =&gt; '19700101Z' );
     is( $t2-&gt;ical, '19700101Z', &quot;Start of epoch in ICal notation&quot; );
-
     is( $t2-&gt;epoch, 0,          &quot;  and back to ICal&quot; );
 </pre>
 <p class="Pp">The beginning of the epoch is different on most non-Unix operating
@@ -434,28 +380,21 @@
     test while debugging the failure, we can explicitly say it's never going to
     work and skip the test.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 7;
+<pre>    use Test::More tests =&gt; 7;
     use Date::ICal;
-
     # Make sure epoch time is being handled sanely.
     my $t1 = Date::ICal-&gt;new( epoch =&gt; 0 );
     is( $t1-&gt;epoch, 0,          &quot;Epoch time of 0&quot; );
-
     SKIP: {
         skip('epoch to ICal not working on Mac OS', 6)
             if $^O eq 'MacOS';
-
         is( $t1-&gt;ical, '19700101Z', &quot;  epoch to ical&quot; );
-
         is( $t1-&gt;year,  1970,       &quot;  year()&quot;  );
         is( $t1-&gt;month, 1,          &quot;  month()&quot; );
         is( $t1-&gt;day,   1,          &quot;  day()&quot;   );
-
         # like the tests above, but starting with ical instead of epoch
         my $t2 = Date::ICal-&gt;new( ical =&gt; '19700101Z' );
         is( $t2-&gt;ical, '19700101Z', &quot;Start of epoch in ICal notation&quot; );
-
         is( $t2-&gt;epoch, 0,          &quot;  and back to ICal&quot; );
     }
 </pre>
@@ -466,8 +405,7 @@
     <span class="Li">&quot;skip()&quot;</span> prints special output that tells
     Test::Harness that the tests have been skipped.</p>
 <p class="Pp"></p>
-<pre>
-    1..7
+<pre>    1..7
     ok 1 - Epoch time of 0
     ok 2 # skip epoch to ICal not working on MacOS
     ok 3 # skip epoch to ICal not working on MacOS
@@ -484,10 +422,8 @@
 <p class="Pp">The tests are wholly and completely skipped. [10] This will
   work.</p>
 <p class="Pp"></p>
-<pre>
-    SKIP: {
+<pre>    SKIP: {
         skip(&quot;I don't wanna die!&quot;);
-
         die, die, die, die, die;
     }
 </pre>
@@ -498,11 +434,8 @@
 <p class="Pp">While thumbing through the Date::ICal man page, I came across
     this:</p>
 <p class="Pp"></p>
-<pre>
-   ical
-
+<pre>   ical
        $ical_string = $ical-&gt;ical;
-
    Retrieves, or sets, the date on the object, using any
    valid ICal date/time string.
 </pre>
@@ -510,18 +443,15 @@
     <span class="Li">&quot;ical()&quot;</span> to set the date in the Date::ICal
     test suite. So I wrote one:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 1;
+<pre>    use Test::More tests =&gt; 1;
     use Date::ICal;
-
     my $ical = Date::ICal-&gt;new;
     $ical-&gt;ical('20201231Z');
     is( $ical-&gt;ical, '20201231Z',   'Setting via ical()' );
 </pre>
 <p class="Pp">Run that. I saw:</p>
 <p class="Pp"></p>
-<pre>
-    1..1
+<pre>    1..1
     not ok 1 - Setting via ical()
     #     Failed test (- at line 6)
     #          got: '20010814T233649Z'
@@ -534,22 +464,17 @@
     will fail&quot; by wrapping it in a <span class="Li">&quot;TODO&quot;</span>
     block:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 1;
-
+<pre>    use Test::More tests =&gt; 1;
     TODO: {
         local $TODO = 'ical($ical) not yet implemented';
-
         my $ical = Date::ICal-&gt;new;
         $ical-&gt;ical('20201231Z');
-
         is( $ical-&gt;ical, '20201231Z',   'Setting via ical()' );
     }
 </pre>
 <p class="Pp">Now when you run, it's a little different:</p>
 <p class="Pp"></p>
-<pre>
-    1..1
+<pre>    1..1
     not ok 1 - Setting via ical() # TODO ical($ical) not yet implemented
     #          got: '20010822T201551Z'
     #     expected: '20201231Z'
@@ -577,9 +502,7 @@
     switches in <span class="Li">&quot;#!&quot;</span> and use them to run your
     tests.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -Tw
-
+<pre>    #!/usr/bin/perl -Tw
     ...test normally here...
 </pre>
 <p class="Pp">When you say <span class="Li">&quot;make test&quot;</span> it will

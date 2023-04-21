@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Role::Parameterized(3pm)</title>
 </head>
@@ -33,45 +34,34 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Counter;
+<pre>    package Counter;
     use MooseX::Role::Parameterized;
-
     parameter name =&gt; (
         isa      =&gt; 'Str',
         required =&gt; 1,
     );
-
     role {
         my $p = shift;
-
         my $name = $p-&gt;name;
-
         has $name =&gt; (
             is      =&gt; 'rw',
             isa     =&gt; 'Int',
             default =&gt; 0,
         );
-
         method &quot;increment_$name&quot; =&gt; sub {
             my $self = shift;
             $self-&gt;$name($self-&gt;$name + 1);
         };
-
         method &quot;reset_$name&quot; =&gt; sub {
             my $self = shift;
             $self-&gt;$name(0);
         };
     };
-
     package MyGame::Weapon;
     use Moose;
-
     with Counter =&gt; { name =&gt; 'enchantment' };
-
     package MyGame::Wand;
     use Moose;
-
     with Counter =&gt; { name =&gt; 'zapped' };
 </pre>
 </section>

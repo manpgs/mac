@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::MethodModifiers(3)</title>
 </head>
@@ -38,26 +39,18 @@
 <p class="Pp">It's probably easiest to understand this feature with a few
     examples:</p>
 <p class="Pp"></p>
-<pre>
-  package Example;
-
+<pre>  package Example;
   use Moose;
-
   sub foo {
       print &quot;    foo\n&quot;;
   }
-
   before 'foo' =&gt; sub { print &quot;about to call foo\n&quot;; };
   after 'foo'  =&gt; sub { print &quot;just called foo\n&quot;; };
-
   around 'foo' =&gt; sub {
       my $orig = shift;
       my $self = shift;
-
       print &quot;  I'm around foo\n&quot;;
-
       $self-&gt;$orig(@_);
-
       print &quot;  I'm still around foo\n&quot;;
   };
 </pre>
@@ -65,8 +58,7 @@
     <span class="Li">&quot;Example-&gt;new-&gt;foo&quot;</span> I'll get the
     following output:</p>
 <p class="Pp"></p>
-<pre>
-  about to call foo
+<pre>  about to call foo
     I'm around foo
       foo
     I'm still around foo
@@ -80,8 +72,7 @@
     around modifiers run from the last added to the first, and after modifiers
     run from first added to last:</p>
 <p class="Pp"></p>
-<pre>
-   before 2
+<pre>   before 2
     before 1
      around 2
       around 1
@@ -113,12 +104,9 @@
 <p class="Pp">Method modifiers can be used to add behavior to a method that
     Moose generates for you, such as an attribute accessor:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; ( is =&gt; 'rw' );
-
+<pre>  has 'size' =&gt; ( is =&gt; 'rw' );
   before 'size' =&gt; sub {
       my $self = shift;
-
       if (@_) {
           Carp::cluck('Someone is setting size');
       }
@@ -127,10 +115,8 @@
 <p class="Pp">Another use for the before modifier would be to do some sort of
     prechecking on a method call. For example:</p>
 <p class="Pp"></p>
-<pre>
-  before 'size' =&gt; sub {
+<pre>  before 'size' =&gt; sub {
       my $self = shift;
-
       die 'Cannot set size while the person is growing'
           if @_ &amp;&amp; $self-&gt;is_growing;
   };
@@ -154,18 +140,14 @@
     argument, <i>then</i> the object, and finally any arguments passed to the
     method.</p>
 <p class="Pp"></p>
-<pre>
-  around 'size' =&gt; sub {
+<pre>  around 'size' =&gt; sub {
       my $orig = shift;
       my $self = shift;
-
       return $self-&gt;$orig()
           unless @_;
-
       my $size = shift;
       $size = $size / 2
           if $self-&gt;likes_small_things();
-
       return $self-&gt;$orig($size);
   };
 </pre>
@@ -178,8 +160,7 @@
     <span class="Li">&quot;around&quot;</span> can also modify multiple methods
     at once. The simplest example of this is passing them as a list:</p>
 <p class="Pp"></p>
-<pre>
-  before [qw(foo bar baz)] =&gt; sub {
+<pre>  before [qw(foo bar baz)] =&gt; sub {
       warn &quot;something is being called!&quot;;
   };
 </pre>
@@ -194,8 +175,7 @@
     being modified doesn't actually matter. If the function name does matter,
     use something like this:</p>
 <p class="Pp"></p>
-<pre>
-  for my $func (qw(foo bar baz)) {
+<pre>  for my $func (qw(foo bar baz)) {
       before $func =&gt; sub {
           warn &quot;$func was called!&quot;;
       };
@@ -208,8 +188,7 @@
 <p class="Pp">In addition, you can specify a regular expression to indicate the
     methods to wrap, like so:</p>
 <p class="Pp"></p>
-<pre>
-  after qr/^command_/ =&gt; sub {
+<pre>  after qr/^command_/ =&gt; sub {
       warn &quot;got a command&quot;;
   };
 </pre>
@@ -236,8 +215,7 @@
     illustrates:</p>
 <p class="Pp">Here is the parent class:</p>
 <p class="Pp"></p>
-<pre>
-  package Superclass;
+<pre>  package Superclass;
   use Moose;
   sub rant { printf &quot;        RANTING!\n&quot; }
   before 'rant' =&gt; sub { printf &quot;    In %s before\n&quot;, __PACKAGE__ };
@@ -253,8 +231,7 @@
 </pre>
 <p class="Pp">And the child class:</p>
 <p class="Pp"></p>
-<pre>
-  package Subclass;
+<pre>  package Subclass;
   use Moose;
   extends 'Superclass';
   before 'rant' =&gt; sub { printf &quot;In %s before\n&quot;, __PACKAGE__ };
@@ -271,9 +248,7 @@
 <p class="Pp">And here's the output when we call the wrapped method
     (<span class="Li">&quot;Child-&gt;rant&quot;</span>):</p>
 <p class="Pp"></p>
-<pre>
-  % perl -MSubclass -e 'Subclass-&gt;new-&gt;rant'
-
+<pre>  % perl -MSubclass -e 'Subclass-&gt;new-&gt;rant'
   In Subclass before
     In Subclass around before calling original
       In Superclass before
@@ -297,18 +272,13 @@
     which then calls the <span class="Li">&quot;augment&quot;</span> modifier in
     the subclass:</p>
 <p class="Pp"></p>
-<pre>
-  package Document;
-
+<pre>  package Document;
   use Moose;
-
   sub as_xml {
       my $self = shift;
-
       my $xml = &quot;&lt;document&gt;\n&quot;;
       $xml .= inner();
       $xml .= &quot;&lt;/document&gt;\n&quot;;
-
       return $xml;
   }
 </pre>
@@ -316,28 +286,21 @@
     makes it possible for one or more subclasses to then augment this method
     with their own specific implementation:</p>
 <p class="Pp"></p>
-<pre>
-  package Report;
-
+<pre>  package Report;
   use Moose;
-
   extends 'Document';
-
   augment 'as_xml' =&gt; sub {
       my $self = shift;
-
       my $xml = &quot;  &lt;report&gt;\n&quot;;
       $xml .= inner();
       $xml .= &quot;  &lt;/report&gt;\n&quot;;
-
       return $xml;
   };
 </pre>
 <p class="Pp">When we call <span class="Li">&quot;as_xml&quot;</span> on a
     Report object, we get something like this:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;document&gt;
+<pre>  &lt;document&gt;
     &lt;report&gt;
     &lt;/report&gt;
   &lt;/document&gt;
@@ -346,30 +309,22 @@
     <span class="Li">&quot;Report&quot;</span>, so we can continue subclassing
     and adding more content inside the document:</p>
 <p class="Pp"></p>
-<pre>
-  package Report::IncomeAndExpenses;
-
+<pre>  package Report::IncomeAndExpenses;
   use Moose;
-
   extends 'Report';
-
   augment 'as_xml' =&gt; sub {
       my $self = shift;
-
       my $xml = '    &lt;income&gt;' . $self-&gt;income . '&lt;/income&gt;';
       $xml .= &quot;\n&quot;;
       $xml .= '    &lt;expenses&gt;' . $self-&gt;expenses . '&lt;/expenses&gt;';
       $xml .= &quot;\n&quot;;
-
       $xml .= inner() || q{};
-
       return $xml;
   };
 </pre>
 <p class="Pp">Now our report has some content:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;document&gt;
+<pre>  &lt;document&gt;
     &lt;report&gt;
       &lt;income&gt;$10&lt;/income&gt;
       &lt;expenses&gt;$8&lt;/expenses&gt;
@@ -397,18 +352,12 @@
     class, you can do this with
   <span class="Li">&quot;override&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package Employee;
-
+<pre>  package Employee;
   use Moose;
-
   extends 'Person';
-
   has 'job_title' =&gt; ( is =&gt; 'rw' );
-
   override 'display_name' =&gt; sub {
       my $self = shift;
-
       return super() . q{, } . $self-&gt;job_title();
   };
 </pre>
@@ -429,8 +378,7 @@
     functions, you must always end the modifier declaration with a
   semi-colon:</p>
 <p class="Pp"></p>
-<pre>
-  after 'foo' =&gt; sub { };
+<pre>  after 'foo' =&gt; sub { };
 </pre>
 </section>
 <section class="Sh">

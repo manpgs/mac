@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>autodie::hints(3pm)</title>
 </head>
@@ -29,31 +30,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Your::Module;
-
+<pre>    package Your::Module;
     our %DOES = ( 'autodie::hints::provider' =&gt; 1 );
-
     sub AUTODIE_HINTS {
         return {
             foo =&gt; { scalar =&gt; HINTS, list =&gt; SOME_HINTS },
             bar =&gt; { scalar =&gt; HINTS, list =&gt; MORE_HINTS },
         }
     }
-
     # Later, in your main program...
-
     use Your::Module qw(foo bar);
     use autodie      qw(:default foo bar);
-
     foo();         # succeeds or dies based on scalar hints
-
     # Alternatively, hints can be set on subroutines we've
     # imported.
-
     use autodie::hints;
     use Some::Module qw(think_positive);
-
     BEGIN {
         autodie::hints-&gt;set_hints_for(
             \&amp;think_positive,
@@ -63,7 +55,6 @@
         )
     }
     use autodie qw(think_positive);
-
     think_positive(...);    # Returns positive or dies.
 </pre>
 </section>
@@ -130,28 +121,20 @@
     <span class="Li">&quot;autodie::hints-&quot;</span><b>set_hints_for()</b>&gt;.</p>
 <p class="Pp">The most common context-specific hints are:</p>
 <p class="Pp"></p>
-<pre>
-        # Scalar failures always return undef:
+<pre>        # Scalar failures always return undef:
             {  scalar =&gt; sub { !defined($_[0]) }  }
-
         # Scalar failures return any false value [default expectation]:
             {  scalar =&gt; sub { ! $_[0] }  }
-
         # Scalar failures always return zero explicitly:
             {  scalar =&gt; sub { defined($_[0]) &amp;&amp; $_[0] eq '0' }  }
-
         # List failures always return an empty list:
             {  list =&gt; sub { !@_ }  }
-
         # List failures return () or (undef) [default expectation]:
             {  list =&gt; sub { ! @_ || @_ == 1 &amp;&amp; !defined $_[0] }  }
-
         # List failures return () or a single false value:
             {  list =&gt; sub { ! @_ || @_ == 1 &amp;&amp; !$_[0] }  }
-
         # List failures return (undef, &quot;some string&quot;)
             {  list =&gt; sub { @_ == 2 &amp;&amp; !defined $_[0] }  }
-
         # Unsuccessful foo() returns 'FAIL' or '_FAIL' in scalar context,
         #                    returns (-1) in list context...
         autodie::hints-&gt;set_hints_for(
@@ -161,7 +144,6 @@
                 list   =&gt; sub { @_ == 1 &amp;&amp; $_[0] eq -1 },
             }
         );
-
         # Unsuccessful foo() returns 0 in all contexts...
         autodie::hints-&gt;set_hints_for(
             \&amp;foo,
@@ -176,15 +158,13 @@
     <span class="Li">&quot;scalar&quot;</span> and
     <span class="Li">&quot;list&quot;</span> hints to the same value:</p>
 <p class="Pp"></p>
-<pre>
-        # Unsuccessful foo() returns 0 in all contexts...
+<pre>        # Unsuccessful foo() returns 0 in all contexts...
         autodie::hints-&gt;set_hints_for(
             \&amp;foo,
             {
                 fail =&gt; sub { @_ == 1 and defined $_[0] and $_[0] == 0 }
             }
         );
-
         # Unsuccessful think_positive() returns negative number on failure...
         autodie::hints-&gt;set_hints_for(
             \&amp;think_positive,
@@ -192,7 +172,6 @@
                 fail =&gt; sub { $_[0] &lt; 0 }
             }
         );
-
         # Unsuccessful my_system() returns non-zero on failure...
         autodie::hints-&gt;set_hints_for(
             \&amp;my_system,
@@ -212,10 +191,8 @@
     and modules loaded thereafter, thus you can move this work into a module and
     it will still work.</p>
 <p class="Pp"></p>
-<pre>
-        use Some::Module qw(foo bar);
+<pre>        use Some::Module qw(foo bar);
         use autodie::hints;
-
         autodie::hints-&gt;set_hints_for(
                 \&amp;foo,
                 {
@@ -232,8 +209,7 @@
     or a fully qualified subroutine name as the first argument. This means you
     can set hints on modules that <i>might</i> get loaded:</p>
 <p class="Pp"></p>
-<pre>
-        use autodie::hints;
+<pre>        use autodie::hints;
         autodie::hints-&gt;set_hints_for(
                 'Some::Module:bar', { fail =&gt; SCALAR_HINT, }
         );
@@ -242,14 +218,10 @@
     lot of third-party modules. You can define all your possible hints in
     one-place. This can even be in a sub-class of autodie. For example:</p>
 <p class="Pp"></p>
-<pre>
-        package my::autodie;
-
+<pre>        package my::autodie;
         use parent qw(autodie);
         use autodie::hints;
-
         autodie::hints-&gt;set_hints_for(...);
-
         1;
 </pre>
 <p class="Pp">You can now <span class="Li">&quot;use my::autodie&quot;</span>,
@@ -281,22 +253,15 @@
     <span class="Li">&quot;AUTODIE_HINTS&quot;</span> subroutine that returns a
     hash-reference containing the hints for your subroutines:</p>
 <p class="Pp"></p>
-<pre>
-        package Your::Module;
-
+<pre>        package Your::Module;
         # We can use the Class::DOES from the CPAN to declare adherence
         # to a role.
-
         use Class::DOES 'autodie::hints::provider' =&gt; 1;
-
         # Alternatively, we can declare the role in %DOES.  Note that
         # this is an autodie specific optimisation, although Class::DOES
         # can be used to promote this to a true role declaration.
-
         our %DOES = ( 'autodie::hints::provider' =&gt; 1 );
-
         # Finally, we must define the hints themselves.
-
         sub AUTODIE_HINTS {
             return {
                 foo =&gt; { scalar =&gt; HINTS, list =&gt; SOME_HINTS },
@@ -325,16 +290,12 @@
     exclamation mark indicates that <i>all</i> subroutines after it must have
     hints declared.</p>
 <p class="Pp"></p>
-<pre>
-        # foo() and bar() must have their hints defined
+<pre>        # foo() and bar() must have their hints defined
         use autodie qw( !foo !bar baz );
-
         # Everything must have hints (recommended).
         use autodie qw( ! foo bar baz );
-
         # bar() and baz() must have their hints defined
         use autodie qw( foo ! bar baz );
-
         # Enable autodie for all of Perl's supported built-ins,
         # as well as for foo(), bar() and baz().  Everything must
         # have hints.

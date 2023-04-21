@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Legacy::Debugging_BaseClassReplacement(3)</title>
 </head>
@@ -33,22 +34,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Base;
+<pre>  package MyApp::Base;
   use Moose;
-
   extends 'Moose::Object';
-
   before 'new' =&gt; sub { warn &quot;Making a new &quot; . $_[0] };
-
   no Moose;
-
   package MyApp::UseMyBase;
   use Moose ();
   use Moose::Exporter;
-
   Moose::Exporter-&gt;setup_import_methods( also =&gt; 'Moose' );
-
   sub init_meta {
       shift;
       return Moose-&gt;init_meta( @_, base_class =&gt; 'MyApp::Base' );
@@ -94,13 +88,9 @@
     <span class="Li">&quot;Moose&quot;</span>. We get all the Moose sugar plus
     our new base class.</p>
 <p class="Pp"></p>
-<pre>
-  package Foo;
-
+<pre>  package Foo;
   use MyApp::UseMyBase;
-
   has 'size' =&gt; ( is =&gt; 'rw' );
-
   no MyApp::UseMyBase;
 </pre>
 </section>

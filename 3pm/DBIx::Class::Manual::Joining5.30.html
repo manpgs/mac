@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::Joining(3)</title>
 </head>
@@ -51,11 +52,9 @@
     its tracks, You can either fetch the CD row, then make another query to
     fetch the tracks, or you can use a join. Compare:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT ID, Title, Year FROM CD WHERE Title = 'Funky CD';
+<pre>  SELECT ID, Title, Year FROM CD WHERE Title = 'Funky CD';
   # .. Extract the ID, which is 10
   SELECT Name, Artist FROM Tracks WHERE CDID = 10;
-
   SELECT cd.ID, cd.Title, cd.Year, tracks.Name, tracks.Artist FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD';
 </pre>
 <p class="Pp">So, joins are a way of extending simple select statements to
@@ -74,13 +73,11 @@
 <p class="Pp">For the CDs/Tracks example, that means writing, in
     <span class="Li">&quot;MySchema::CD&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  MySchema::CD-&gt;has_many('tracks', 'MySchema::Tracks');
+<pre>  MySchema::CD-&gt;has_many('tracks', 'MySchema::Tracks');
 </pre>
 <p class="Pp">And in <span class="Li">&quot;MySchema::Tracks&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  MySchema::Tracks-&gt;belongs_to('cd', 'MySchema::CD', 'CDID');
+<pre>  MySchema::Tracks-&gt;belongs_to('cd', 'MySchema::CD', 'CDID');
 </pre>
 <p class="Pp">There are several other types of relationships, they are more
     comprehensively described in DBIx::Class::Relationship.</p>
@@ -100,8 +97,7 @@
     specify which <span class="Li">&quot;relations&quot;</span> to also refine
     your results based on, using the join attribute, like this:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD',
       'tracks.Name' =&gt; { like =&gt; 'T%' }
     },
@@ -126,8 +122,7 @@
     <span class="Li">&quot;relationship&quot;</span> names are valid.</p>
 <p class="Pp">This slightly nonsense example will produce SQL similar to:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT cd.ID, cd.Title, cd.Year FROM CD cd JOIN Tracks tracks ON cd.ID = tracks.CDID WHERE cd.Title = 'Funky CD' AND tracks.Name LIKE 'T%' ORDER BY 'tracks.id';
+<pre>  SELECT cd.ID, cd.Title, cd.Year FROM CD cd JOIN Tracks tracks ON cd.ID = tracks.CDID WHERE cd.Title = 'Funky CD' AND tracks.Name LIKE 'T%' ORDER BY 'tracks.id';
 </pre>
 </section>
 <section class="Sh">
@@ -146,8 +141,7 @@
 <p class="Pp">To fetch entire related objects, e.g. CDs and all Track data, use
     the 'prefetch' attribute:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD',
     },
     { prefetch      =&gt; 'tracks',
@@ -157,8 +151,7 @@
 </pre>
 <p class="Pp">This will produce SQL similar to the following:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT cd.ID, cd.Title, cd.Year, tracks.id, tracks.Name, tracks.Artist FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
+<pre>  SELECT cd.ID, cd.Title, cd.Year, tracks.id, tracks.Name, tracks.Artist FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
 </pre>
 <p class="Pp">The syntax of 'prefetch' is the same as 'join' and implies the
     joining, so there is no need to use both together.</p>
@@ -170,8 +163,7 @@
     attributes can be used. For example, if the CD data is required and just the
     track name from the Tracks table:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD',
     },
     { join      =&gt; 'tracks',
@@ -183,8 +175,7 @@
 </pre>
 <p class="Pp">Which will produce the query:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT cd.ID, cd.Title, cd.Year, tracks.Name FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
+<pre>  SELECT cd.ID, cd.Title, cd.Year, tracks.Name FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
 </pre>
 <p class="Pp">Note that the '+as' does not produce an SQL 'AS' keyword in the
     output, see the DBIx::Class::Manual::FAQ for an explanation.</p>
@@ -192,16 +183,14 @@
     <span class="Li">$result</span> object will have no 'track_name'
   accessor:</p>
 <p class="Pp"></p>
-<pre>
-  while(my $result = $search_rs-&gt;next) {
+<pre>  while(my $result = $search_rs-&gt;next) {
      print $result-&gt;track_name; ## ERROR
   }
 </pre>
 <p class="Pp">Instead <span class="Li">&quot;get_column&quot;</span> must be
     used:</p>
 <p class="Pp"></p>
-<pre>
-  while(my $result = $search_rs-&gt;next) {
+<pre>  while(my $result = $search_rs-&gt;next) {
      print $result-&gt;get_column('track_name'); ## WORKS
   }
 </pre>
@@ -217,8 +206,7 @@
 <p class="Pp">To fetch an incomplete related object, supply the dotted notation
     to the '+as' attribute:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD',
     },
     { join      =&gt; 'tracks',
@@ -230,13 +218,11 @@
 </pre>
 <p class="Pp">Which will produce same query as above;</p>
 <p class="Pp"></p>
-<pre>
-  SELECT cd.ID, cd.Title, cd.Year, tracks.Name FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
+<pre>  SELECT cd.ID, cd.Title, cd.Year, tracks.Name FROM CD JOIN Tracks ON CD.ID = tracks.CDID WHERE cd.Title = 'Funky CD' ORDER BY 'tracks.id';
 </pre>
 <p class="Pp">Now you can access the result using the relationship accessor:</p>
 <p class="Pp"></p>
-<pre>
-  while(my $result = $search_rs-&gt;next) {
+<pre>  while(my $result = $search_rs-&gt;next) {
      print $result-&gt;tracks-&gt;name; ## WORKS
   }
 </pre>
@@ -261,13 +247,11 @@
     complete set of data we'll need to join to the Artist table too.</p>
 <p class="Pp">In <span class="Li">&quot;MySchema::Tracks&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  MySchema::Tracks-&gt;belongs_to('artist', 'MySchema::Artist', 'ArtistID');
+<pre>  MySchema::Tracks-&gt;belongs_to('artist', 'MySchema::Artist', 'ArtistID');
 </pre>
 <p class="Pp">The search:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD' },
     { join      =&gt; { 'tracks' =&gt; 'artist' },
     }
@@ -275,26 +259,22 @@
 </pre>
 <p class="Pp">Which is:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT me.ID, me.Title, me.Year FROM CD me JOIN Tracks tracks ON CD.ID = tracks.CDID JOIN Artists artist ON tracks.ArtistID = artist.ID WHERE me.Title = 'Funky CD';
+<pre>  SELECT me.ID, me.Title, me.Year FROM CD me JOIN Tracks tracks ON CD.ID = tracks.CDID JOIN Artists artist ON tracks.ArtistID = artist.ID WHERE me.Title = 'Funky CD';
 </pre>
 <p class="Pp">To perform joins using relations of the tables you are joining to,
     use a hashref to indicate the join depth. This can theoretically go as deep
     as you like (warning: contrived examples!):</p>
 <p class="Pp"></p>
-<pre>
-  join =&gt; { room =&gt; { table =&gt; 'leg' } }
+<pre>  join =&gt; { room =&gt; { table =&gt; 'leg' } }
 </pre>
 <p class="Pp">To join two relations at the same level, use an arrayref
   instead:</p>
 <p class="Pp"></p>
-<pre>
-  join =&gt; { room =&gt; [ 'chair', 'table' ] }
+<pre>  join =&gt; { room =&gt; [ 'chair', 'table' ] }
 </pre>
 <p class="Pp">Or combine the two:</p>
 <p class="Pp"></p>
-<pre>
-  join =&gt; { room =&gt; [ 'chair', { table =&gt; 'leg' } ] }
+<pre>  join =&gt; { room =&gt; [ 'chair', { table =&gt; 'leg' } ] }
 </pre>
 </section>
 <section class="Ss">
@@ -305,14 +285,12 @@
     aliases. This is important when you need to add grouping or ordering to your
     queries:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('CD')-&gt;search(
+<pre>  $schema-&gt;resultset('CD')-&gt;search(
     { 'Title' =&gt; 'Funky CD' },
     { join      =&gt; { 'tracks' =&gt; 'artist' },
       order_by  =&gt; [ 'tracks.Name', 'artist.Artist' ],
     }
   );
-
   SELECT me.ID, me.Title, me.Year FROM CD me JOIN Tracks tracks ON CD.ID = tracks.CDID JOIN Artists artist ON tracks.ArtistID = artist.ID WHERE me.Title = 'Funky CD' ORDER BY tracks.Name, artist.Artist;
 </pre>
 <p class="Pp">This is essential if any of your tables have columns with the same
@@ -326,8 +304,7 @@
 <p class="Pp">There is no magic to this, just do it. The table aliases will
     automatically be numbered:</p>
 <p class="Pp"></p>
-<pre>
-  join =&gt; [ 'room', 'room' ]
+<pre>  join =&gt; [ 'room', 'room' ]
 </pre>
 <p class="Pp">The aliases are: <span class="Li">&quot;room&quot;</span> and
     <span class="Li">&quot;room_2&quot;</span>.</p>

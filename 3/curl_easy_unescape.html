@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_easy_unescape(3)</title>
 </head>
@@ -44,10 +47,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<p class="Pp"><b>char *curl_easy_unescape( CURL *</b><i>curl</i><b>, const char
-    *</b><i>url</i> <b>, int </b><i>inlength</i><b>, int
-    *</b><i>outlength</i><b> );</b></p>
+<pre>#include &lt;curl/curl.h&gt;
+char *curl_easy_unescape(CURL *curl, const char *url,
+                         int inlength, int *outlength);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -64,8 +66,26 @@
     Since this is a pointer to an <i>int</i> type, it can only return a value up
     to INT_MAX so no longer string can be unescaped if the string length is
     returned in this parameter.</p>
-<p class="Pp">You must <i>curl_free(3)</i> the returned string when you're done
+<p class="Pp">Since 7.82.0, the <b>curl</b> parameter is ignored. Prior to that
+    there was per-handle character conversion support for some very old
+    operating systems such as TPF, but it was otherwise ignored.</p>
+<p class="Pp">You must <i>curl_free(3)</i> the returned string when you are done
     with it.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>CURL *curl = curl_easy_init();
+if(curl) {
+  int decodelen;
+  char *decoded = curl_easy_unescape(curl, &quot;%63%75%72%6c&quot;, 12, &amp;decodelen);
+  if(decoded) {
+    /* do not assume printf() works on the decoded data! */
+    printf(&quot;Decoded: &quot;);
+    /* ... */
+    curl_free(decoded);
+  }
+  curl_easy_cleanup(curl);
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -85,8 +105,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">July 8, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Spec::Role(3)</title>
 </head>
@@ -172,10 +173,8 @@
         the new set of methods for the composite role, while the intersection of
         these two sets are the conflicts. This can be illustrated like so:</p>
     <p class="Pp"></p>
-    <pre>
-   Role A has method set { a, b, c }
+    <pre>   Role A has method set { a, b, c }
    Role B has method set { c, d, e }
-
    The composite role (A,B) has
        method   set { a, b, d, e }
        conflict set { c }
@@ -221,17 +220,12 @@
       being &quot;required&quot; instead.
     <p class="Pp">Here is an example of this (incorrect) type of overriding.</p>
     <p class="Pp"></p>
-    <pre>
-    package Role::Foo;
+    <pre>    package Role::Foo;
     use Moose::Role;
-
     sub foo { ... }
-
     package Role::FooBar;
     use Moose::Role;
-
     with 'Role::Foo';
-
     sub foo { ... }
     sub bar { ... }
     </pre>
@@ -242,23 +236,16 @@
     <p class="Pp">Now here is an example of the (correct) type of overriding,
         only it is not overriding at all, as is explained in the text below.</p>
     <p class="Pp"></p>
-    <pre>
-    package Role::Foo;
+    <pre>    package Role::Foo;
     use Moose::Role;
-
     sub foo { ... }
-
     package Role::Bar;
     use Moose::Role;
-
     sub foo { ... }
     sub bar { ... }
-
     package Role::FooBar;
     use Moose::Role;
-
     with 'Role::Foo', 'Role::Bar';
-
     sub foo { ... }
     </pre>
     <p class="Pp">This works because the combination of Role::Foo and Role::Bar
@@ -275,17 +262,12 @@
     <p class="Pp">Now here is another example of a (correct) type of overriding,
         this time using the <i>excludes</i> option.</p>
     <p class="Pp"></p>
-    <pre>
-    package Role::Foo;
+    <pre>    package Role::Foo;
     use Moose::Role;
-
     sub foo { ... }
-
     package Role::FooBar;
     use Moose::Role;
-
     with 'Role::Foo' =&gt; { -excludes =&gt; 'foo' };
-
     sub foo { ... }
     sub bar { ... }
     </pre>

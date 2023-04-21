@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache2::Reload(3)</title>
 </head>
@@ -28,15 +29,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h1>
-<pre>
-  # Monitor and reload all modules in %INC:
+<pre>  # Monitor and reload all modules in %INC:
   # httpd.conf:
   PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
-
   # when working with protocols and connection filters
   # PerlPreConnectionHandler Apache2::Reload
-
   # Reload groups of modules:
   # httpd.conf:
   PerlModule Apache2::Reload
@@ -80,8 +78,7 @@
     <span class="Li">@INC</span>. If you still want this behavior set this
     environment variable in <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetVar ReloadByModuleName On
+<pre>  PerlSetVar ReloadByModuleName On
 </pre>
 <p class="Pp">This means, when called as a
     <span class="Li">&quot;Perl*Handler&quot;</span>,
@@ -98,14 +95,12 @@
     environment to include any non-standard 'lib' directories that you choose.
     For example, to accomplish that you can include a line:</p>
 <p class="Pp"></p>
-<pre>
-  PERL5LIB=/home/httpd/perl/extra; export PERL5LIB
+<pre>  PERL5LIB=/home/httpd/perl/extra; export PERL5LIB
 </pre>
 <p class="Pp">in the script that starts Apache. Alternatively, you can set this
     environment variable in <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetEnv PERL5LIB /home/httpd/perl/extra
+<pre>  PerlSetEnv PERL5LIB /home/httpd/perl/extra
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="Monitor_All_Modules_in__INC"><a class="permalink" href="#Monitor_All_Modules_in__INC">Monitor
@@ -114,16 +109,14 @@
     at the beginning of request's processing, simply add the following
     configuration to your <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlModule Apache2::Reload
+<pre>  PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
 </pre>
 <p class="Pp">When working with connection filters and protocol modules
     <span class="Li">&quot;Apache2::Reload&quot;</span> should be invoked in the
     pre_connection stage:</p>
 <p class="Pp"></p>
-<pre>
-  PerlPreConnectionHandler Apache2::Reload
+<pre>  PerlPreConnectionHandler Apache2::Reload
 </pre>
 <p class="Pp">See also the discussion on
     <span class="Li">&quot;PerlPreConnectionHandler&quot;</span>.</p>
@@ -135,16 +128,14 @@
     <span class="Li">&quot;Apache2::Reload&quot;</span>, add the following to
     the <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlModule Apache2::Reload
+<pre>  PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
   PerlSetVar ReloadAll Off
   # ReloadAll defaults to On
 </pre>
 <p class="Pp">Then any modules with the line:</p>
 <p class="Pp"></p>
-<pre>
-  use Apache2::Reload;
+<pre>  use Apache2::Reload;
 </pre>
 <p class="Pp">Will be reloaded when they change.</p>
 </section>
@@ -154,8 +145,7 @@
 <p class="Pp">You can also register modules explicitly in your <i>httpd.conf</i>
     file that you want to be reloaded on change:</p>
 <p class="Pp"></p>
-<pre>
-  PerlModule Apache2::Reload
+<pre>  PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
   PerlSetVar ReloadAll Off
   PerlSetVar ReloadModules &quot;My::Foo My::Bar Foo::Bar::Test&quot;
@@ -167,8 +157,7 @@
     used to register groups of files under the same namespace. For example the
     setting:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetVar ReloadModules &quot;ModPerl::* Apache2::*&quot;
+<pre>  PerlSetVar ReloadModules &quot;ModPerl::* Apache2::*&quot;
 </pre>
 <p class="Pp">will monitor all modules under the namespaces
     <span class="Li">&quot;ModPerl::&quot;</span> and
@@ -180,8 +169,7 @@
 <p class="Pp">To reload modules only in certain directories (and their
     subdirectories) add the following to the <i>httpd.conf</i>:</p>
 <p class="Pp"></p>
-<pre>
-  PerlModule Apache2::Reload
+<pre>  PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
   PerlSetVar ReloadDirectories &quot;/tmp/project1 /tmp/project2&quot;
 </pre>
@@ -189,8 +177,7 @@
     chosen directories with <span class="Li">&quot;ReloadModules&quot;</span> as
     in:</p>
 <p class="Pp"></p>
-<pre>
-  PerlModule Apache2::Reload
+<pre>  PerlModule Apache2::Reload
   PerlInitHandler Apache2::Reload
   PerlSetVar ReloadDirectories &quot;/tmp/project1 /tmp/project2&quot;
   PerlSetVar ReloadAll Off
@@ -208,15 +195,13 @@
     <span class="Li">touch(1)</span>ed, causes the reloads to be performed. For
     example if you set:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetVar ReloadTouchFile /tmp/reload_modules
+<pre>  PerlSetVar ReloadTouchFile /tmp/reload_modules
 </pre>
 <p class="Pp">and don't <span class="Li">touch(1)</span> the file
     <i>/tmp/reload_modules</i>, the reloads won't happen until you go to the
     command line and type:</p>
 <p class="Pp"></p>
-<pre>
-  % touch /tmp/reload_modules
+<pre>  % touch /tmp/reload_modules
 </pre>
 <p class="Pp">When you do that, the modules that have been changed, will be
     magically reloaded on the next request. This option works with any mode
@@ -228,8 +213,7 @@
 <p class="Pp">In some cases, it might be necessary to explicitly stop reloading
     a module.</p>
 <p class="Pp"></p>
-<pre>
-  Apache2::Reload-&gt;unregister_module('Some::Module');
+<pre>  Apache2::Reload-&gt;unregister_module('Some::Module');
 </pre>
 <p class="Pp">But be carefull, since unregistering a module in this way will
     only do so for the current interpreter. This feature should be used with
@@ -265,8 +249,7 @@
 <p class="Pp">If you aren't sure whether the modules that are supposed to be
     reloaded, are actually getting reloaded, turn the debug mode on:</p>
 <p class="Pp"></p>
-<pre>
-  PerlSetVar ReloadDebug On
+<pre>  PerlSetVar ReloadDebug On
 </pre>
 </section>
 <section class="Sh">
@@ -320,8 +303,7 @@
 <p class="Pp">Let's say that there is a module
     <span class="Li">&quot;My::Utils&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  #file:My/Utils.pm
+<pre>  #file:My/Utils.pm
   #----------------
   package My::Utils;
   BEGIN { warn __PACKAGE__ , &quot; was reloaded\n&quot; }
@@ -332,8 +314,7 @@
 </pre>
 <p class="Pp">And a registry script <i>test.pl</i>:</p>
 <p class="Pp"></p>
-<pre>
-  #file:test.pl
+<pre>  #file:test.pl
   #------------
   use My::Utils;
   print &quot;Content-type: text/plain\n\n&quot;;
@@ -342,13 +323,11 @@
 <p class="Pp">Assuming that the server is running in a single mode, we request
     the script for the first time and we get the response:</p>
 <p class="Pp"></p>
-<pre>
-  the color is white
+<pre>  the color is white
 </pre>
 <p class="Pp">Now we change <i>My/Utils.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  -  sub colour { &quot;white&quot; }
+<pre>  -  sub colour { &quot;white&quot; }
   +  sub colour { &quot;red&quot; }
 </pre>
 <p class="Pp">And issue the request again.
@@ -356,8 +335,7 @@
     see that <span class="Li">&quot;My::Utils&quot;</span> was reloaded (look in
     the <i>error_log</i> file). However the script still returns:</p>
 <p class="Pp"></p>
-<pre>
-  the color is white
+<pre>  the color is white
 </pre>
 <p class="Pp"><i>The Explanation</i></p>
 <p class="Pp">Even though <i>My/Utils.pm</i> was reloaded,
@@ -367,8 +345,7 @@
     doesn't know that the subroutine reference has been changed.</p>
 <p class="Pp">This is easy to verify. Let's change the script to be:</p>
 <p class="Pp"></p>
-<pre>
-  #file:test.pl
+<pre>  #file:test.pl
   #------------
   use My::Utils;
   print &quot;Content-type: text/plain\n\n&quot;;
@@ -379,21 +356,18 @@
 </pre>
 <p class="Pp">Issue a request, you will see something similar to:</p>
 <p class="Pp"></p>
-<pre>
-  int CODE(0x8510af8)
+<pre>  int CODE(0x8510af8)
   ext CODE(0x8510af8)
 </pre>
 <p class="Pp">As you can see both point to the same CODE reference (meaning that
     it's the same symbol). After modifying <i>My/Utils.pm</i> again:</p>
 <p class="Pp"></p>
-<pre>
-  -  sub colour { &quot;red&quot; }
+<pre>  -  sub colour { &quot;red&quot; }
   +  sub colour { &quot;blue&quot; }
 </pre>
 <p class="Pp">and calling the script on the secondnd time, we get:</p>
 <p class="Pp"></p>
-<pre>
-  int CODE(0x8510af8)
+<pre>  int CODE(0x8510af8)
   ext CODE(0x851112c)
 </pre>
 <p class="Pp">You can see that the internal CODE reference is not the same as
@@ -404,8 +378,7 @@
     an explicit <span class="Li">&quot;require()&quot;</span> +
     <span class="Li">&quot;import()&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
- - use My::Utils;
+<pre> - use My::Utils;
  + require My::Utils; My::Utils-&gt;import();
 </pre>
 <p class="Pp">now the changed functions will be reimported on every request.</p>

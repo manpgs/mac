@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Meta::Labeled_AttributeTrait(3)</title>
 </head>
@@ -33,42 +34,32 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Meta::Attribute::Trait::Labeled;
+<pre>  package MyApp::Meta::Attribute::Trait::Labeled;
   use Moose::Role;
   Moose::Util::meta_attribute_alias('Labeled');
-
   has label =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'Str',
       predicate =&gt; 'has_label',
   );
-
   package MyApp::Website;
   use Moose;
-
   has url =&gt; (
       traits =&gt; [qw/Labeled/],
       is     =&gt; 'rw',
       isa    =&gt; 'Str',
       label  =&gt; &quot;The site's URL&quot;,
   );
-
   has name =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
-
   sub dump {
       my $self = shift;
-
       my $meta = $self-&gt;meta;
-
       my $dump = '';
-
       for my $attribute ( map { $meta-&gt;get_attribute($_) }
           sort $meta-&gt;get_attribute_list ) {
-
           if (   $attribute-&gt;does('MyApp::Meta::Attribute::Trait::Labeled')
               &amp;&amp; $attribute-&gt;has_label ) {
               $dump .= $attribute-&gt;label;
@@ -76,16 +67,12 @@
           else {
               $dump .= $attribute-&gt;name;
           }
-
           my $reader = $attribute-&gt;get_read_method;
           $dump .= &quot;: &quot; . $self-&gt;$reader . &quot;\n&quot;;
       }
-
       return $dump;
   }
-
   package main;
-
   my $app = MyApp::Website-&gt;new( url =&gt; &quot;http://google.com&quot;, name =&gt; &quot;Google&quot; );
 </pre>
 </section>
@@ -108,8 +95,7 @@
     themselves. These objects have methods and attributes. Let's look at a
     concrete example.</p>
 <p class="Pp"></p>
-<pre>
-  has 'x' =&gt; ( isa =&gt; 'Int', is =&gt; 'ro' );
+<pre>  has 'x' =&gt; ( isa =&gt; 'Int', is =&gt; 'ro' );
   has 'y' =&gt; ( isa =&gt; 'Int', is =&gt; 'rw' );
 </pre>
 <p class="Pp">Internally, the metaclass for
@@ -125,8 +111,7 @@
 <p class="Pp">Once you have this meta-attribute object, you can call methods on
     it like this:</p>
 <p class="Pp"></p>
-<pre>
-  print $point-&gt;meta-&gt;get_attribute('x')-&gt;type_constraint;
+<pre>  print $point-&gt;meta-&gt;get_attribute('x')-&gt;type_constraint;
      =&gt; Int
 </pre>
 <p class="Pp">To add a label to our attributes there are two steps. First, we
@@ -152,10 +137,8 @@
 <h1 class="Sh" id="DISSECTION"><a class="permalink" href="#DISSECTION">DISSECTION</a></h1>
 <p class="Pp">We start by creating a package for our trait.</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Meta::Attribute::Trait::Labeled;
+<pre>  package MyApp::Meta::Attribute::Trait::Labeled;
   use Moose::Role;
-
   has label =&gt; (
       is        =&gt; 'rw',
       isa       =&gt; 'Str',
@@ -167,8 +150,7 @@
     Any attribute which does this trait will now have a label.</p>
 <p class="Pp">We also register our trait with Moose:</p>
 <p class="Pp"></p>
-<pre>
-  Moose::Util::meta_attribute_alias('Labeled');
+<pre>  Moose::Util::meta_attribute_alias('Labeled');
 </pre>
 <p class="Pp">This allows Moose to find our trait by the short name
     <span class="Li">&quot;Labeled&quot;</span> when passed to the
@@ -176,8 +158,7 @@
     requiring the full package name to be specified.</p>
 <p class="Pp">Finally, we pass our trait when defining an attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has url =&gt; (
+<pre>  has url =&gt; (
       traits =&gt; [qw/Labeled/],
       is     =&gt; 'rw',
       isa    =&gt; 'Str',
@@ -207,16 +188,13 @@
     the fully-qualified name.</p>
 <p class="Pp">We can access this meta-attribute and its label like this:</p>
 <p class="Pp"></p>
-<pre>
-  $website-&gt;meta-&gt;get_attribute('url')-&gt;label()
-
+<pre>  $website-&gt;meta-&gt;get_attribute('url')-&gt;label()
   MyApp::Website-&gt;meta-&gt;get_attribute('url')-&gt;label()
 </pre>
 <p class="Pp">We also have a regular attribute,
     <span class="Li">&quot;name&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  has name =&gt; (
+<pre>  has name =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
@@ -226,17 +204,12 @@
     <span class="Li">&quot;MyApp::Website&quot;</span> object. It will use an
     attribute's label if it has one.</p>
 <p class="Pp"></p>
-<pre>
-  sub dump {
+<pre>  sub dump {
       my $self = shift;
-
       my $meta = $self-&gt;meta;
-
       my $dump = '';
-
       for my $attribute ( map { $meta-&gt;get_attribute($_) }
           sort $meta-&gt;get_attribute_list ) {
-
           if (   $attribute-&gt;does('MyApp::Meta::Attribute::Trait::Labeled')
               &amp;&amp; $attribute-&gt;has_label ) {
               $dump .= $attribute-&gt;label;
@@ -251,15 +224,12 @@
     <span class="Li">&quot;required&quot;</span>. If we have a label, we use it,
     otherwise we use the attribute name:</p>
 <p class="Pp"></p>
-<pre>
-          else {
+<pre>          else {
               $dump .= $attribute-&gt;name;
           }
-
           my $reader = $attribute-&gt;get_read_method;
           $dump .= &quot;: &quot; . $self-&gt;$reader . &quot;\n&quot;;
       }
-
       return $dump;
   }
 </pre>
@@ -283,8 +253,7 @@
     implement a metaclass that expires attributes after a certain amount of
     time:</p>
 <p class="Pp"></p>
-<pre>
-   has site_cache =&gt; (
+<pre>   has site_cache =&gt; (
        traits        =&gt; ['TimedExpiry'],
        expires_after =&gt; { hours =&gt; 1 },
        refresh_with  =&gt; sub { get( $_[0]-&gt;url ) },

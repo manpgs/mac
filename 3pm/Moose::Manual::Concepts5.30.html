@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Concepts(3)</title>
 </head>
@@ -70,9 +71,7 @@
 <p class="Pp">A class is usually analogous to a category of nouns, like
     &quot;People&quot; or &quot;Users&quot;.</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Moose;
   # now it's a Moose class!
 </pre>
@@ -100,8 +99,7 @@
     example, People have first and last names. Users have passwords and last
     login datetimes.</p>
 <p class="Pp"></p>
-<pre>
-  has 'first_name' =&gt; (
+<pre>  has 'first_name' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
@@ -114,8 +112,7 @@
 <p class="Pp"><b>Methods</b> correspond to verbs, and are what your objects can
     do. For example, a User can login.</p>
 <p class="Pp"></p>
-<pre>
-  sub login { ... }
+<pre>  sub login { ... }
 </pre>
 </section>
 <section class="Ss">
@@ -143,21 +140,15 @@
 <p class="Pp">Role are somewhat like mixins or interfaces in other OO
   languages.</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   requires 'break';
-
   has 'is_broken' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Bool',
   );
-
   after 'break' =&gt; sub {
       my $self = shift;
-
       $self-&gt;is_broken(1);
   };
 </pre>
@@ -178,11 +169,9 @@
     subroutine that gets called before or after (or around, etc.) some named
     method.</p>
 <p class="Pp"></p>
-<pre>
-  before 'login' =&gt; sub {
+<pre>  before 'login' =&gt; sub {
       my $self = shift;
       my $pw   = shift;
-
       warn &quot;Called login() with $pw\n&quot;;
   };
 </pre>
@@ -323,17 +312,13 @@
     Moose::Meta::Class object, which has an introspection API that can tell you
     about the class it represents.</p>
 <p class="Pp"></p>
-<pre>
-  my $meta = User-&gt;meta();
-
+<pre>  my $meta = User-&gt;meta();
   for my $attribute ( $meta-&gt;get_all_attributes ) {
       print $attribute-&gt;name(), &quot;\n&quot;;
-
       if ( $attribute-&gt;has_type_constraint ) {
           print &quot;  type: &quot;, $attribute-&gt;type_constraint-&gt;name, &quot;\n&quot;;
       }
   }
-
   for my $method ( $meta-&gt;get_all_methods ) {
       print $method-&gt;name, &quot;\n&quot;;
   }
@@ -357,13 +342,10 @@
     &quot;your way of doing things&quot; again. Instead you'll just load your
     favorite extensions.</p>
 <p class="Pp"></p>
-<pre>
-  package MyWay::User;
-
+<pre>  package MyWay::User;
   use Moose;
   use MooseX::StrictConstructor;
   use MooseX::MyWay;
-
   has ...;
 </pre>
 </section>

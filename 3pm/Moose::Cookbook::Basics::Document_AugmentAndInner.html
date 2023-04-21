@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::Document_AugmentAndInner(3)</title>
 </head>
@@ -33,57 +34,43 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Document::Page;
+<pre>  package Document::Page;
   use Moose;
-
   has 'body' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', default =&gt; sub {''} );
-
   sub create {
       my $self = shift;
       $self-&gt;open_page;
       inner();
       $self-&gt;close_page;
   }
-
   sub append_body {
       my ( $self, $appendage ) = @_;
       $self-&gt;body( $self-&gt;body . $appendage );
   }
-
   sub open_page  { (shift)-&gt;append_body('&lt;page&gt;') }
   sub close_page { (shift)-&gt;append_body('&lt;/page&gt;') }
-
   package Document::PageWithHeadersAndFooters;
   use Moose;
-
   extends 'Document::Page';
-
   augment 'create' =&gt; sub {
       my $self = shift;
       $self-&gt;create_header;
       inner();
       $self-&gt;create_footer;
   };
-
   sub create_header { (shift)-&gt;append_body('&lt;header/&gt;') }
   sub create_footer { (shift)-&gt;append_body('&lt;footer/&gt;') }
-
   package TPSReport;
   use Moose;
-
   extends 'Document::PageWithHeadersAndFooters';
-
   augment 'create' =&gt; sub {
       my $self = shift;
       $self-&gt;create_tps_report;
       inner();
   };
-
   sub create_tps_report {
       (shift)-&gt;append_body('&lt;report type=&quot;tps&quot;/&gt;');
   }
-
   # &lt;page&gt;&lt;header/&gt;&lt;report type=&quot;tps&quot;/&gt;&lt;footer/&gt;&lt;/page&gt;
   my $report_xml = TPSReport-&gt;new-&gt;create;
 </pre>
@@ -108,8 +95,7 @@
     <span class="Li">&quot;Document::Page&quot;</span>. Its create method
     contains a call to <span class="Li">&quot;inner()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  sub create {
+<pre>  sub create {
       my $self = shift;
       $self-&gt;open_page;
       inner();
@@ -126,8 +112,7 @@
     You'll note that we can call <span class="Li">&quot;inner&quot;</span> in
     our modifier:</p>
 <p class="Pp"></p>
-<pre>
-  augment 'create' =&gt; sub {
+<pre>  augment 'create' =&gt; sub {
       my $self = shift;
       $self-&gt;create_header;
       inner();
@@ -139,8 +124,7 @@
 <p class="Pp">Finally, in the <span class="Li">&quot;TPSReport&quot;</span>
     class, the chain comes to an end:</p>
 <p class="Pp"></p>
-<pre>
-  augment 'create' =&gt; sub {
+<pre>  augment 'create' =&gt; sub {
       my $self = shift;
       $self-&gt;create_tps_report;
       inner();

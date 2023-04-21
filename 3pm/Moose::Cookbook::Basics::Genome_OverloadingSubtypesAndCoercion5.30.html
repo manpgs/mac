@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion(3)</title>
 </head>
@@ -33,35 +34,24 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Human;
-
+<pre>  package Human;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   subtype 'Sex'
       =&gt; as 'Str'
       =&gt; where { $_ =~ m{^[mf]$}s };
-
   has 'sex'    =&gt; ( is =&gt; 'ro', isa =&gt; 'Sex', required =&gt; 1 );
-
   has 'mother' =&gt; ( is =&gt; 'ro', isa =&gt; 'Human' );
   has 'father' =&gt; ( is =&gt; 'ro', isa =&gt; 'Human' );
-
   use overload '+' =&gt; \&amp;_overload_add, fallback =&gt; 1;
-
   sub _overload_add {
       my ( $one, $two ) = @_;
-
       die('Only male and female humans may create children')
           if ( $one-&gt;sex() eq $two-&gt;sex() );
-
       my ( $mother, $father )
           = ( $one-&gt;sex eq 'f' ? ( $one, $two ) : ( $two, $one ) );
-
       my $sex = 'f';
       $sex = 'm' if ( rand() &gt;= 0.5 );
-
       return Human-&gt;new(
           sex    =&gt; $sex,
           mother =&gt; $mother,
@@ -107,14 +97,10 @@
     making a class for each gene.</p>
 <section class="Ss">
 <h2 class="Ss" id="Human::Gene::bey2"><a class="permalink" href="#Human::Gene::bey2">Human::Gene::bey2</a></h2>
-<pre>
-  package Human::Gene::bey2;
-
+<pre>  package Human::Gene::bey2;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   type 'bey2_color' =&gt; where { $_ =~ m{^(?:brown|blue)$} };
-
   has 'color' =&gt; ( is =&gt; 'ro', isa =&gt; 'bey2_color' );
 </pre>
 <p class="Pp">This class is trivial. We have a type constraint for the allowed
@@ -122,14 +108,10 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Human::Gene::gey"><a class="permalink" href="#Human::Gene::gey">Human::Gene::gey</a></h2>
-<pre>
-  package Human::Gene::gey;
-
+<pre>  package Human::Gene::gey;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   type 'gey_color' =&gt; where { $_ =~ m{^(?:green|blue)$} };
-
   has 'color' =&gt; ( is =&gt; 'ro', isa =&gt; 'gey_color' );
 </pre>
 <p class="Pp">This is nearly identical to the
@@ -147,23 +129,17 @@
     <span class="Li">&quot;Human&quot;</span> can have a single
     <span class="Li">&quot;eye_color&quot;</span> attribute.</p>
 <p class="Pp"></p>
-<pre>
-  package Human::EyeColor;
-
+<pre>  package Human::EyeColor;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   coerce 'Human::Gene::bey2'
       =&gt; from 'Str'
           =&gt; via { Human::Gene::bey2-&gt;new( color =&gt; $_ ) };
-
   coerce 'Human::Gene::gey'
       =&gt; from 'Str'
           =&gt; via { Human::Gene::gey-&gt;new( color =&gt; $_ ) };
-
   has [qw( bey2_1 bey2_2 )] =&gt;
       ( is =&gt; 'ro', isa =&gt; 'Human::Gene::bey2', coerce =&gt; 1 );
-
   has [qw( gey_1 gey_2 )] =&gt;
       ( is =&gt; 'ro', isa =&gt; 'Human::Gene::gey', coerce =&gt; 1 );
 </pre>
@@ -179,18 +155,14 @@
     results from a set of genes. The <i>bey2</i> brown gene is dominant over
     both blue and green. The <i>gey</i> green gene is dominant over blue.</p>
 <p class="Pp"></p>
-<pre>
-  sub color {
+<pre>  sub color {
       my ($self) = @_;
-
       return 'brown'
           if ( $self-&gt;bey2_1-&gt;color() eq 'brown'
           or $self-&gt;bey2_2-&gt;color() eq 'brown' );
-
       return 'green'
           if ( $self-&gt;gey_1-&gt;color() eq 'green'
           or $self-&gt;gey_2-&gt;color() eq 'green' );
-
       return 'blue';
   }
 </pre>
@@ -198,25 +170,19 @@
     <span class="Li">&quot;Human::EyeColor&quot;</span> object as a string, so
     we define a string overloading for the class:</p>
 <p class="Pp"></p>
-<pre>
-  use overload '&quot;&quot;' =&gt; \&amp;color, fallback =&gt; 1;
+<pre>  use overload '&quot;&quot;' =&gt; \&amp;color, fallback =&gt; 1;
 </pre>
 <p class="Pp">Finally, we need to define overloading for addition. That way we
     can add together two <span class="Li">&quot;Human::EyeColor&quot;</span>
     objects and get a new one with a new (genetically correct) eye color.</p>
 <p class="Pp"></p>
-<pre>
-  use overload '+' =&gt; \&amp;_overload_add, fallback =&gt; 1;
-
+<pre>  use overload '+' =&gt; \&amp;_overload_add, fallback =&gt; 1;
   sub _overload_add {
       my ( $one, $two ) = @_;
-
       my $one_bey2 = 'bey2_' . _rand2();
       my $two_bey2 = 'bey2_' . _rand2();
-
       my $one_gey = 'gey_' . _rand2();
       my $two_gey = 'gey_' . _rand2();
-
       return Human::EyeColor-&gt;new(
           bey2_1 =&gt; $one-&gt;$one_bey2-&gt;color(),
           bey2_2 =&gt; $two-&gt;$two_bey2-&gt;color(),
@@ -224,7 +190,6 @@
           gey_2  =&gt; $two-&gt;$two_gey-&gt;color(),
       );
   }
-
   sub _rand2 {
       return 1 + int( rand(2) );
   }
@@ -243,14 +208,11 @@
     requires just a few changes to incorporate our new
     <span class="Li">&quot;Human::EyeColor&quot;</span> class.</p>
 <p class="Pp"></p>
-<pre>
-  use List::SomeUtils qw( zip );
-
+<pre>  use List::SomeUtils qw( zip );
   coerce 'Human::EyeColor'
       =&gt; from 'ArrayRef'
       =&gt; via { my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
                return Human::EyeColor-&gt;new( zip( @genes, @{$_} ) ); };
-
   has 'eye_color' =&gt; (
       is       =&gt; 'ro',
       isa      =&gt; 'Human::EyeColor',
@@ -263,8 +225,7 @@
     <span class="Li">&quot;Human&quot;</span> class to account for eye
   color:</p>
 <p class="Pp"></p>
-<pre>
-  return Human-&gt;new(
+<pre>  return Human-&gt;new(
       sex       =&gt; $sex,
       eye_color =&gt; ( $one-&gt;eye_color() + $two-&gt;eye_color() ),
       mother    =&gt; $mother,

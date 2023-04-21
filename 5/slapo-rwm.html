@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SLAPO-RWM(5)</title>
 </head>
@@ -134,10 +135,8 @@
     set of flags.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;rewrite context&gt; ::= &lt;rewrite rule&gt; [...]
-&lt;rewrite rule&gt; ::= &lt;pattern&gt; &lt;action&gt; [&lt;flags&gt;]
-</pre>
+<pre>&lt;rewrite context&gt; ::= &lt;rewrite rule&gt; [...]
+&lt;rewrite rule&gt; ::= &lt;pattern&gt; &lt;action&gt; [&lt;flags&gt;]</pre>
 </div>
 <p class="Pp">The underlying concept is to build a lightweight rewrite module
     for the slapd server (initially dedicated to the LDAP backend):</p>
@@ -232,10 +231,8 @@
 <p class="Pp">where &lt;name&gt; must be a legal name for the map, i.e.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;name&gt; ::= [a-z][a-z0-9]* (case insensitive)
-&lt;operator&gt; ::= `&gt;' `|' `&amp;' `&amp;&amp;' `*' `**' `$'
-</pre>
+<pre>&lt;name&gt; ::= [a-z][a-z0-9]* (case insensitive)
+&lt;operator&gt; ::= `&gt;' `|' `&amp;' `&amp;&amp;' `*' `**' `$'</pre>
 </div>
 <p class="Pp">and &lt;substitution&gt; must be a legal substitution pattern,
     with no limits on the nesting level.</p>
@@ -288,8 +285,7 @@
 <p class="Pp">client -&gt; server:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-(default)            if defined and no specific context 
+<pre>(default)            if defined and no specific context 
                      is available
 bindDN               bind
 searchDN             search
@@ -307,14 +303,12 @@ renameDN             modrdn (the old DN)
 newSuperiorDN        modrdn (the new parent DN, if any)
 newRDN               modrdn (the new relative DN)
 deleteDN             delete
-exopPasswdDN         password modify extended operation DN
-</pre>
+exopPasswdDN         password modify extended operation DN</pre>
 </div>
 <p class="Pp">server -&gt; client:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-searchEntryDN        search (only if defined; no default;
+<pre>searchEntryDN        search (only if defined; no default;
                      acts on DN of search entries)
 searchAttrDN         search AVA (only if defined; defaults
                      to searchEntryDN; acts on DN-syntax
@@ -322,8 +316,7 @@ searchAttrDN         search AVA (only if defined; defaults
 matchedDN            all ops (only if applicable; defaults
                      to searchEntryDN)
 referralDN           all ops (only if applicable; defaults
-                     to none)
-</pre>
+                     to none)</pre>
 </div>
 </section>
 <section class="Sh">
@@ -422,8 +415,7 @@ referralDN           all ops (only if applicable; defaults
 <section class="Sh">
 <h1 class="Sh" id="REWRITE_CONFIGURATION_EXAMPLES"><a class="permalink" href="#REWRITE_CONFIGURATION_EXAMPLES">REWRITE
   CONFIGURATION EXAMPLES</a></h1>
-<pre>
-# set to `off' to disable rewriting
+<pre># set to `off' to disable rewriting
 rwm-rewriteEngine on
 # the rules the &quot;suffixmassage&quot; directive implies
 rwm-rewriteEngine on
@@ -518,8 +510,7 @@ rwm-rewriteRule &quot;.*&lt;&gt;$&quot; &quot;${*prefix}uid=${*arg}${*suffix}&qu
 # the value to be rejected.
 rwm-rewriteContext searchEntryDN
 rwm-rewriteRule &quot;.+,ou=People,dc=example,dc=com$&quot; &quot;$0&quot; &quot;:@&quot;
-rwm-rewriteRule &quot;.*&quot; &quot;&quot; &quot;#&quot;
-</pre>
+rwm-rewriteRule &quot;.*&quot; &quot;&quot; &quot;#&quot;</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="MAPPING_EXAMPLES"><a class="permalink" href="#MAPPING_EXAMPLES">MAPPING
@@ -529,21 +520,17 @@ rwm-rewriteRule &quot;.*&quot; &quot;&quot; &quot;#&quot;
     attribute type `uniqueMember':</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-map objectclass groupOfNames groupOfUniqueNames
-map attribute uniqueMember member
-</pre>
+<pre>map objectclass groupOfNames groupOfUniqueNames
+map attribute uniqueMember member</pre>
 </div>
 <p class="Pp">This presents a limited attribute set from the foreign server:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-map attribute cn *
+<pre>map attribute cn *
 map attribute sn *
 map attribute manager *
 map attribute description *
-map attribute *
-</pre>
+map attribute *</pre>
 </div>
 <p class="Pp">These lines map cn, sn, manager, and description to themselves,
     and any other attribute gets &quot;removed&quot; from the object before it

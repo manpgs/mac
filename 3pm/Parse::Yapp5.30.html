@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Parse::Yapp(3)</title>
 </head>
@@ -29,20 +30,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  yapp -m MyParser grammar_file.yp
-
+<pre>  yapp -m MyParser grammar_file.yp
   ...
-
   use MyParser;
-
   $parser=new MyParser();
   $value=$parser-&gt;YYParse(yylex =&gt; \&amp;lexer_sub, yyerror =&gt; \&amp;error_sub);
-
   $nberr=$parser-&gt;YYNberr();
-
   $parser-&gt;YYData-&gt;{DATA}= [ 'Anything', 'You Want' ];
-
   $data=$parser-&gt;YYData-&gt;{DATA}[0];
 </pre>
 </section>
@@ -72,8 +66,7 @@
     <p class="Pp">Non-terminals and symbolic tokens share the same identifier
         syntax:</p>
     <p class="Pp"></p>
-    <pre>
-                [A-Za-z][A-Za-z0-9_]*
+    <pre>                [A-Za-z][A-Za-z0-9_]*
     </pre>
     <p class="Pp">String literals are enclosed in single quotes and can contain
         almost anything. They will be output to your parser file double-quoted,
@@ -95,8 +88,7 @@
     <p class="Pp">This file is divided in three sections, separated by
         <span class="Li">&quot;%%&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-        header section
+    <pre>        header section
         %%
         rules section
         %%
@@ -154,15 +146,13 @@
       <span class="Li">'|'</span> and terminated by a
       <span class="Li">';'</span>:
     <p class="Pp"></p>
-    <pre>
-    exp:    exp '+' exp
+    <pre>    exp:    exp '+' exp
         |   exp '-' exp
         ;
     </pre>
     <p class="Pp">A right hand side may be empty:</p>
     <p class="Pp"></p>
-    <pre>
-    input:  #empty
+    <pre>    input:  #empty
         |   input line
         ;
     </pre>
@@ -174,8 +164,7 @@
         rule an explicit precedence (see yacc manuals for its precise meaning)
         and optional semantic action code block (see below).</p>
     <p class="Pp"></p>
-    <pre>
-    exp:   '-' exp %prec NEG { -$_[1] }
+    <pre>    exp:   '-' exp %prec NEG { -$_[1] }
         |  exp '+' exp       { $_[1] + $_[3] }
         |  NUM
         ;
@@ -205,8 +194,7 @@
         will need to make a comment matching it <i>in th right order</i>. Sorry
         for the inconvenience.</p>
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         &quot;{ My string block }&quot;.
         &quot;\{ My other string block \}&quot;.
         qq/ My unmatched brace \} /.
@@ -228,8 +216,7 @@
         itself allows you to call parser methods. That's how the yacc macros are
         implemented:</p>
     <p class="Pp"></p>
-    <pre>
-        yyerrok is done by calling $_[0]-&gt;YYErrok
+    <pre>        yyerrok is done by calling $_[0]-&gt;YYErrok
         YYERROR is done by calling $_[0]-&gt;YYError
         YYACCEPT is done by calling $_[0]-&gt;YYAccept
         YYABORT is done by calling $_[0]-&gt;YYAbort
@@ -237,13 +224,11 @@
     <p class="Pp">All those methods explicitly return <i>undef</i>, for
         convenience.</p>
     <p class="Pp"></p>
-    <pre>
-    YYRECOVERING is done by calling $_[0]-&gt;YYRecovering
+    <pre>    YYRECOVERING is done by calling $_[0]-&gt;YYRecovering
     </pre>
     <p class="Pp">Four useful methods in error recovery sub</p>
     <p class="Pp"></p>
-    <pre>
-    $_[0]-&gt;YYCurtok
+    <pre>    $_[0]-&gt;YYCurtok
     $_[0]-&gt;YYCurval
     $_[0]-&gt;YYExpect
     $_[0]-&gt;YYLexer
@@ -263,8 +248,7 @@
     <p class="Pp">To detect such a thing in your error reporting sub, the
         following example should do the trick:</p>
     <p class="Pp"></p>
-    <pre>
-        grep { $_[0]-&gt;YYCurtok eq $_ } $_[0]-&gt;YYExpect
+    <pre>        grep { $_[0]-&gt;YYCurtok eq $_ } $_[0]-&gt;YYExpect
     and do {
         #Non-associative token used in an associative expression
     };
@@ -272,21 +256,22 @@
     <p class="Pp">Accessing semantics values on the left of your reducing rule
         is done through the method</p>
     <p class="Pp"></p>
-    <pre>
-    $_[0]-&gt;YYSemval( index )
+    <pre>    $_[0]-&gt;YYSemval( index )
     </pre>
     <p class="Pp">where index is an integer. Its value being <i>1 .. n</i>
-        returns the same values than <i></i><i>$_</i><i>[1] ..
-        </i><i>$_</i><i>[n]</i>, but <i>-n .. 0</i> returns values on the left
-        of the rule being reduced (It is related to <i>$-n .. </i><i>$0</i><i>
-        .. </i><i>$n</i><i></i> in yacc, but you cannot use
-        <i></i><i>$_</i><i>[0]</i> or <i></i><i>$_</i><i>[-n]</i> constructs in
+        returns the same values than
+        <i></i><span class="Li"><i>$_</i></span><i>[1] ..
+        </i><span class="Li"><i>$_</i></span><i>[n]</i>, but <i>-n .. 0</i>
+        returns values on the left of the rule being reduced (It is related to
+        <i>$-n .. </i><span class="Li"><i>$0</i></span><i> ..
+        </i><span class="Li"><i>$n</i></span><i></i> in yacc, but you cannot use
+        <i></i><span class="Li"><i>$_</i></span><i>[0]</i> or
+        <i></i><span class="Li"><i>$_</i></span><i>[-n]</i> constructs in
         Parse::Yapp for obvious reasons)</p>
     <p class="Pp">There is also a provision for a user data area in the parser
         object, accessed by the method:</p>
     <p class="Pp"></p>
-    <pre>
-    $_[0]-&gt;YYData
+    <pre>    $_[0]-&gt;YYData
     </pre>
     <p class="Pp">which returns a reference to an anonymous hash, which let you
         have all of your parsing data held inside the object (see the Calc.yp or
@@ -309,29 +294,27 @@
     <p class="Pp">If no action is specified for a rule, the equivalant of a
         default action is run, which returns the first parameter:</p>
     <p class="Pp"></p>
-    <pre>
-   { $_[1] }
+    <pre>   { $_[1] }
     </pre>
   </dd>
   <dt>&quot;In rule actions&quot;</dt>
   <dd>It is also possible to embed semantic actions inside of a rule:
     <p class="Pp"></p>
-    <pre>
-    typedef:    TYPE { $type = $_[1] } identlist { ... } ;
+    <pre>    typedef:    TYPE { $type = $_[1] } identlist { ... } ;
     </pre>
     <p class="Pp">When the Parse::Yapp's parser encounter such an embedded
         action, it modifies the grammar as if you wrote (although
         <span class="Li">@x</span>-1 is not a legal lhs value):</p>
     <p class="Pp"></p>
-    <pre>
-    @x-1:   /* empty */ { $type = $_[1] };
+    <pre>    @x-1:   /* empty */ { $type = $_[1] };
     typedef:    TYPE @x-1 identlist { ... } ;
     </pre>
     <p class="Pp">where <i>x</i> is a sequential number incremented for each
         &quot;in rule&quot; action, and <i>-1</i> represents the &quot;dot
         position&quot; in the rule where the action arises.</p>
-    <p class="Pp">In such actions, you can use <i></i><i>$_</i><i>[1]..$_[n]</i>
-        variables, which are the semantic values on the left of your action.</p>
+    <p class="Pp">In such actions, you can use
+        <i></i><span class="Li"><i>$_</i></span><i>[1]..$_[n]</i> variables,
+        which are the semantic values on the left of your action.</p>
     <p class="Pp">Be aware that the way Parse::Yapp modifies your grammar
         because of <i>in rule actions</i> can produce, in some cases, spurious
         conflicts that wouldn't happen otherwise.</p>
@@ -340,8 +323,7 @@
   <dd>Now that you grammar file is written, you can use yapp on it to generate
       your parser module:
     <p class="Pp"></p>
-    <pre>
-    yapp -v Calc.yp
+    <pre>    yapp -v Calc.yp
     </pre>
     <p class="Pp">will create two files <i>Calc.pm</i>, your parser module, and
         <i>Calc.output</i> a verbose output of your parser rules, conflicts,
@@ -353,8 +335,7 @@
     <p class="Pp">It is called with only one argument that is the parser object
         itself, so you can access its methods, specially the</p>
     <p class="Pp"></p>
-    <pre>
-    $_[0]-&gt;YYData
+    <pre>    $_[0]-&gt;YYData
     </pre>
     <p class="Pp">data area.</p>
     <p class="Pp">It is its duty to return the next token and value to the
@@ -365,8 +346,7 @@
         value to any complex reference, as the parsing driver never use it but
         to call semantic actions:</p>
     <p class="Pp"></p>
-    <pre>
-    ( 'NUMBER', $num )
+    <pre>    ( 'NUMBER', $num )
 or
     ( '&gt;=', '&gt;=' )
 or
@@ -375,8 +355,7 @@ or
     <p class="Pp">When the lexer reach the end of input, it must return the
         <span class="Li">''</span> empty token with an undef value:</p>
     <p class="Pp"></p>
-    <pre>
-     ( '', undef )
+    <pre>     ( '', undef )
     </pre>
     <p class="Pp">Note that your lexer should <i>never</i> return
         <span class="Li">'error'</span> as token value: for the driver, this is
@@ -400,14 +379,12 @@ or
         <span class="Li">&quot;$_[0]-&gt;YYLexer&quot;</span> may help you, as
         it returns a reference to the lexer routine, and can be called as</p>
     <p class="Pp"></p>
-    <pre>
-    ($tok,$val)=&amp;{$_[0]-&gt;Lexer}
+    <pre>    ($tok,$val)=&amp;{$_[0]-&gt;Lexer}
     </pre>
     <p class="Pp">to get the next token and semantic value from the input
         stream. To make them current for the parser, use:</p>
     <p class="Pp"></p>
-    <pre>
-    ($_[0]-&gt;YYCurtok, $_[0]-&gt;YYCurval) = ($tok, $val)
+    <pre>    ($_[0]-&gt;YYCurtok, $_[0]-&gt;YYCurval) = ($tok, $val)
     </pre>
     <p class="Pp">and know what you're doing...</p>
   </dd>
@@ -415,19 +392,16 @@ or
   <dd>Now you've got everything to do the parsing.
     <p class="Pp">First, use the parser module:</p>
     <p class="Pp"></p>
-    <pre>
-    use Calc;
+    <pre>    use Calc;
     </pre>
     <p class="Pp">Then create the parser object:</p>
     <p class="Pp"></p>
-    <pre>
-    $parser=new Calc;
+    <pre>    $parser=new Calc;
     </pre>
     <p class="Pp">Now, call the YYParse method, telling it where to find the
         lexer and error report subs:</p>
     <p class="Pp"></p>
-    <pre>
-    $result=$parser-&gt;YYParse(yylex =&gt; \&amp;Lexer,
+    <pre>    $result=$parser-&gt;YYParse(yylex =&gt; \&amp;Lexer,
                            yyerror =&gt; \&amp;ErrorReport);
     </pre>
     <p class="Pp">(assuming Lexer and ErrorReport subs have been written in your
@@ -439,8 +413,7 @@ or
     <p class="Pp">If you need to be sure the parse has been successful (in case
         your last returned semantic value <i>is</i> undef) make a call to:</p>
     <p class="Pp"></p>
-    <pre>
-    $parser-&gt;YYNberr()
+    <pre>    $parser-&gt;YYNberr()
     </pre>
     <p class="Pp">which returns the total number of time the error reporting sub
         has been called.</p>
@@ -451,14 +424,12 @@ or
   <dd>To debug your parser, you can call the YYParse method with a debug
       parameter:
     <p class="Pp"></p>
-    <pre>
-    $parser-&gt;YYParse( ... , yydebug =&gt; value, ... )
+    <pre>    $parser-&gt;YYParse( ... , yydebug =&gt; value, ... )
     </pre>
     <p class="Pp">where value is a bitfield, each bit representing a specific
         debug output:</p>
     <p class="Pp"></p>
-    <pre>
-    Bit Value    Outputs
+    <pre>    Bit Value    Outputs
     0x01         Token reading (useful for Lexer debugging)
     0x02         States information
     0x04         Driver actions (shifts, reduces, accept...)
@@ -467,8 +438,7 @@ or
     </pre>
     <p class="Pp">To have a full debugging output, use</p>
     <p class="Pp"></p>
-    <pre>
-    debug =&gt; 0x1F
+    <pre>    debug =&gt; 0x1F
     </pre>
     <p class="Pp">Debugging output is sent to STDERR, and be aware that it can
         produce <span class="Li">&quot;huge&quot;</span> outputs.</p>

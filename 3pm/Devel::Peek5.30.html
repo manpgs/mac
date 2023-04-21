@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Devel::Peek(3pm)</title>
 </head>
@@ -28,15 +29,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         Dump( $a );
         Dump( $a, 5 );
         Dump( @a );
         Dump( %h );
         DumpArray( 5, $a, $b, ... );
         mstat &quot;Point 5&quot;;
-
         use Devel::Peek ':opd=st';
 </pre>
 </section>
@@ -121,8 +120,7 @@
     to get the information contained in the output of <b>mstat()</b> into
     <span class="Li">%hash</span>. The field of this hash are</p>
 <p class="Pp"></p>
-<pre>
-  minbucket nbuckets sbrk_good sbrk_slack sbrked_remains sbrks
+<pre>  minbucket nbuckets sbrk_good sbrk_slack sbrked_remains sbrks
   start_slack topbucket topbucket_ev topbucket_odd total total_chain
   total_sbrk totfree
 </pre>
@@ -140,8 +138,7 @@
     buckets which are not used is probably meaningless.</p>
 <p class="Pp">The information in</p>
 <p class="Pp"></p>
-<pre>
- mem_size available_size minbucket nbuckets
+<pre> mem_size available_size minbucket nbuckets
 </pre>
 <p class="Pp">is the property of a particular build of perl, and does not depend
     on the current process. If you do not provide the optional argument to the
@@ -164,11 +161,9 @@
 <p class="Pp">So, if you want to collect memory info in a cycle, you may
   call</p>
 <p class="Pp"></p>
-<pre>
-  $#buf = 999;
+<pre>  $#buf = 999;
   fill_mstats($_) for @buf;
   mstats_fillhash(%report, 1);          # Static info too
-
   foreach (@buf) {
     # Do something...
     fill_mstats $_;                     # Collect statistic
@@ -197,15 +192,13 @@
 <p class="Pp">Let's begin by looking a simple scalar which is holding a
   string.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = 42; $a = &quot;hello&quot;;
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = PVIV(0xbc288) at 0xbe9a8
+<pre>        SV = PVIV(0xbc288) at 0xbe9a8
           REFCNT = 1
           FLAGS = (POK,pPOK)
           IV = 42
@@ -232,15 +225,13 @@
   simple scalar number</a></h2>
 <p class="Pp">If the scalar contains a number the raw SV will be leaner.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = 42;
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xbc818) at 0xbe9a8
+<pre>        SV = IV(0xbc818) at 0xbe9a8
           REFCNT = 1
           FLAGS = (IOK,pIOK)
           IV = 42
@@ -257,16 +248,14 @@
 <p class="Pp">If the scalar from the previous example had an extra
   reference:</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = 42;
         $b = \$a;
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xbe860) at 0xbe9a8
+<pre>        SV = IV(0xbe860) at 0xbe9a8
           REFCNT = 2
           FLAGS = (IOK,pIOK)
           IV = 42
@@ -281,16 +270,14 @@
 <p class="Pp">This shows what a reference looks like when it references a simple
     scalar.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = 42;
         $b = \$a;
         Dump $b;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xf041c) at 0xbe9a0
+<pre>        SV = IV(0xf041c) at 0xbe9a0
           REFCNT = 1
           FLAGS = (ROK)
           RV = 0xbab08
@@ -318,15 +305,13 @@
   reference to an array</a></h2>
 <p class="Pp">This shows what a reference to an array looks like.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = [42];
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xc85998) at 0xc859a8
+<pre>        SV = IV(0xc85998) at 0xc859a8
           REFCNT = 1
           FLAGS = (ROK)
           RV = 0xc70de8
@@ -351,15 +336,13 @@
 <p class="Pp">If <span class="Li">$a</span> pointed to an array of two elements
     then we would see the following.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek 'Dump';
+<pre>        use Devel::Peek 'Dump';
         $a = [42,24];
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0x158c998) at 0x158c9a8
+<pre>        SV = IV(0x158c998) at 0x158c9a8
           REFCNT = 1
           FLAGS = (ROK)
           RV = 0x1577de8
@@ -390,15 +373,13 @@
   reference to a hash</a></h2>
 <p class="Pp">The following shows the raw form of a reference to a hash.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = {hello=&gt;42};
         Dump $a;
 </pre>
 <p class="Pp">The output:</p>
 <p class="Pp"></p>
-<pre>
-    SV = IV(0x55cb50b50fb0) at 0x55cb50b50fc0
+<pre>    SV = IV(0x55cb50b50fb0) at 0x55cb50b50fc0
       REFCNT = 1
       FLAGS = (ROK)
       RV = 0x55cb50b2b758
@@ -427,8 +408,7 @@
     <span class="Li">&quot;&lt;k&quot;</span>&gt; buckets, the expected value
     is:</p>
 <p class="Pp"></p>
-<pre>
-                n + n(n-1)/2k
+<pre>                n + n(n-1)/2k
 </pre>
 </section>
 <section class="Ss">
@@ -438,8 +418,7 @@
     default, dumps up to 4 elements from a toplevel array or hash. This number
     can be increased by supplying a second argument to the function.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek;
+<pre>        use Devel::Peek;
         $a = [10,11,12,13,14];
         Dump $a;
 </pre>
@@ -447,8 +426,7 @@
     elements 10 through 13 in the above code. The following code will print all
     of the elements.</p>
 <p class="Pp"></p>
-<pre>
-        use Devel::Peek 'Dump';
+<pre>        use Devel::Peek 'Dump';
         $a = [10,11,12,13,14];
         Dump $a, 5;
 </pre>
@@ -462,8 +440,7 @@
     the output from an XSUB which uses something like the T_PTROBJ map might
     look something like this:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xf381c) at 0xc859a8
+<pre>        SV = IV(0xf381c) at 0xc859a8
           REFCNT = 1
           FLAGS = (ROK)
           RV = 0xb8ad8
@@ -485,8 +462,7 @@
 <p class="Pp">The output from an XSUB which uses something like the T_PTRREF
     map, which doesn't bless the object, might look something like this:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0xf381c) at 0xc859a8
+<pre>        SV = IV(0xf381c) at 0xc859a8
           REFCNT = 1
           FLAGS = (ROK)
           RV = 0xb8ad8
@@ -503,8 +479,7 @@
   reference to a subroutine</a></h2>
 <p class="Pp">Looks like this:</p>
 <p class="Pp"></p>
-<pre>
-        SV = IV(0x24d2dd8) at 0x24d2de8
+<pre>        SV = IV(0x24d2dd8) at 0x24d2de8
           REFCNT = 1
           FLAGS = (TEMP,ROK)
           RV = 0x24e79d8

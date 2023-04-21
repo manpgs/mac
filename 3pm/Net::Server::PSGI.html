@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::Server::PSGI(3)</title>
 </head>
@@ -30,31 +31,24 @@
 <section class="Sh">
 <h1 class="Sh" id="TEST_ONE_LINER"><a class="permalink" href="#TEST_ONE_LINER">TEST
   ONE LINER</a></h1>
-<pre>
-    perl -e 'use base qw(Net::Server::PSGI); main-&gt;run(port =&gt; 8080, ipv =&gt; &quot;*&quot;)'
+<pre>    perl -e 'use base qw(Net::Server::PSGI); main-&gt;run(port =&gt; 8080, ipv =&gt; &quot;*&quot;)'
     # runs a default echo server
 </pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use base qw(Net::Server::PSGI);
+<pre>    use base qw(Net::Server::PSGI);
     __PACKAGE__-&gt;run(app =&gt; \&amp;my_echo_handler); # will bind IPv4 port 80
-
     sub my_echo_handler {
         my $env = shift;
         my $txt = qq{&lt;form method=&quot;post&quot; action=&quot;/bam&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;foo&quot;&gt;&lt;input type=&quot;submit&quot;&gt;&lt;/form&gt;\n};
-
         require Data::Dumper;
         local $Data::Dumper::Sortkeys = 1;
-
         require CGI::PSGI;
         my $form = {};
         my $q = CGI::PSGI-&gt;new($env);
         $form-&gt;{$_} = $q-&gt;param($_) for $q-&gt;param;
-
         $txt .= &quot;&lt;pre&gt;&quot;.Data::Dumper-&gt;Dump([$env, $form], ['env', 'form']).&quot;&lt;/pre&gt;&quot;;
-
         return [200, ['Content-type', 'text/html'], [$txt]];
     }
 </pre>
@@ -79,9 +73,7 @@
     interfaces, will speak both HTTP on port 8080 as well as HTTPS on 8443, and
     will speak both IPv4, as well as IPv6 if it is available.</p>
 <p class="Pp"></p>
-<pre>
-    use base qw(Net::Server::PSGI);
-
+<pre>    use base qw(Net::Server::PSGI);
     __PACKAGE__-&gt;run(
         port  =&gt; [8080, &quot;8443/ssl&quot;],
         ipv   =&gt; '*', # IPv6 if available
@@ -119,15 +111,12 @@
       method. If that fails a reference to the psgi_echo_handler is returned as
       the default application.
     <p class="Pp"></p>
-    <pre>
-    sub find_psgi_handler {
+    <pre>    sub find_psgi_handler {
         my ($self, $env) = @_;
-
         if ($env-&gt;{'PATH_INFO'} &amp;&amp; $env-&gt;{'PATH_INFO'} =~ s{^ (/foo) (?= $ | /) }{}x) {
             $env-&gt;{'SCRIPT_NAME'} = $1;
             return \&amp;foo_app;
         }
-
         return $self-&gt;SUPER::find_psgi_handler($env);
     }
     </pre>
@@ -139,26 +128,17 @@
       <span class="Li">&quot;app&quot;</span> method may also be used to set the
       <span class="Li">&quot;app&quot;</span> configuration option.
     <p class="Pp"></p>
-    <pre>
-    package MyApp;
+    <pre>    package MyApp;
     use base qw(Net::Server::PSGI);
-
     sub default_server_type { 'Prefork' }
-
     sub my_app {
         my $env = shift;
         return [200, ['Content-type', 'text/html'], [&quot;Hello world&quot;]];
     }
-
-
     MyApp-&gt;run(app =&gt; \&amp;my_app);
-
-
     # OR
     sub app { \&amp;my_app }
     MyApp-&gt;run;
-
-
     # OR
     my $server = MyApp-&gt;new;
     $server-&gt;app(\&amp;my_app);

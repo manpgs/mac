@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Mail::SPF::Query(3)</title>
 </head>
@@ -33,14 +34,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    my $query = new Mail::SPF::Query (ip =&gt; &quot;127.0.0.1&quot;, sender=&gt;'foo@example.com', helo=&gt;&quot;somehost.example.com&quot;, trusted=&gt;0, guess=&gt;0);
+<pre>    my $query = new Mail::SPF::Query (ip =&gt; &quot;127.0.0.1&quot;, sender=&gt;'foo@example.com', helo=&gt;&quot;somehost.example.com&quot;, trusted=&gt;0, guess=&gt;0);
     my ($result,           # pass | fail | softfail | neutral | none | error | unknown [mechanism]
         $smtp_comment,     # &quot;please see http://www.openspf.org/why.html?...&quot;  when rejecting, return this string to the SMTP client
         $header_comment,   # prepend_header(&quot;Received-SPF&quot; =&gt; &quot;$result ($header_comment)&quot;)
         $spf_record,       # &quot;v=spf1 ...&quot; original SPF record for the domain
        ) = $query-&gt;result();
-
     if    ($result eq &quot;pass&quot;) { &quot;Domain is not forged. Apply RHSBL and content filters.&quot; }
     elsif ($result eq &quot;fail&quot;) { &quot;Domain is forged. Reject or save to spambox.&quot; }
 </pre>
@@ -74,8 +73,7 @@
 <p class="Pp">You can try out Mail::SPF::Query on the command line with the
     following command:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MMail::SPF::Query -le 'print for Mail::SPF::Query-&gt;new(
+<pre>    perl -MMail::SPF::Query -le 'print for Mail::SPF::Query-&gt;new(
         helo =&gt; shift, ipv4 =&gt; shift, sender =&gt; shift)-&gt;result' \
         helohost.example.com 1.2.3.4 user@example.com
 </pre>
@@ -119,12 +117,10 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="_Mail::SPF::Query"><a class="permalink" href="#_Mail::SPF::Query">&quot;Mail::SPF::Query-&gt;new()&quot;</a></h2>
-<pre>
-    my $query = eval { new Mail::SPF::Query (
+<pre>    my $query = eval { new Mail::SPF::Query (
         ip          =&gt; '127.0.0.1',
         sender      =&gt; 'foo@example.com',
         helo        =&gt; 'host.example.com',
-
         # Optional parameters:
         debug       =&gt; 1, debuglog =&gt; sub { print STDERR &quot;@_\n&quot; },
         local       =&gt; 'extra mechanisms',
@@ -139,7 +135,6 @@
         fallback    =&gt; {   'example.org' =&gt; 'v=spf1 a mx -all',
                          '*.example.org' =&gt; 'v=spf1 a mx -all' }
     ) };
-
     if ($@) { warn &quot;bad input to Mail::SPF::Query: $@&quot; }
 </pre>
 <p class="Pp">Set <span class="Li">&quot;trusted=&gt;1&quot;</span> to turned on
@@ -172,8 +167,7 @@
     The default value will direct the user to a page at www.openspf.org with the
     following message:</p>
 <p class="Pp"></p>
-<pre>
-    Please see http://www.openspf.org/why.html?sender=%{S}&amp;ip=%{I}&amp;receiver=%{R}
+<pre>    Please see http://www.openspf.org/why.html?sender=%{S}&amp;ip=%{I}&amp;receiver=%{R}
 </pre>
 <p class="Pp">Note that the string has macro substitution performed.</p>
 <p class="Pp">Set <span class="Li">&quot;sanitize&quot;</span> to 0 to get all
@@ -194,8 +188,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_$query"><a class="permalink" href="#_$query">&quot;$query-&gt;result()&quot;</a></h2>
-<pre>
-    my ($result, $smtp_comment, $header_comment, $spf_record, $detail) = $query-&gt;result();
+<pre>    my ($result, $smtp_comment, $header_comment, $spf_record, $detail) = $query-&gt;result();
 </pre>
 <p class="Pp"><span class="Li">$result</span> will be one of
     <span class="Li">&quot;pass&quot;</span>,
@@ -240,8 +233,7 @@
 <p class="Pp"><span class="Li">&quot;header_comment&quot;</span> goes into a
     <span class="Li">&quot;Received-SPF&quot;</span> header, like so:</p>
 <p class="Pp"></p>
-<pre>
-    Received-SPF: $result ($header_comment)
+<pre>    Received-SPF: $result ($header_comment)
 </pre>
 <p class="Pp"><span class="Li">&quot;spf_record&quot;</span> shows the original
     SPF record fetched for the query. If there is no SPF record, it is blank.
@@ -270,8 +262,7 @@
     a hash and future return value would go in there.</p>
 <p class="Pp">The keys of the hash are:</p>
 <p class="Pp"></p>
-<pre>
-    result
+<pre>    result
     smtp_comment
     header_comment
     header_pairs
@@ -281,8 +272,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_$query~2"><a class="permalink" href="#_$query~2">&quot;$query-&gt;result2()&quot;</a></h2>
-<pre>
-    my ($result, $smtp_comment, $header_comment, $spf_record) = $query-&gt;result2('recipient@domain', 'recipient2@domain');
+<pre>    my ($result, $smtp_comment, $header_comment, $spf_record) = $query-&gt;result2('recipient@domain', 'recipient2@domain');
 </pre>
 <p class="Pp"><span class="Li">&quot;result2()&quot;</span> does everything that
     <span class="Li">&quot;result()&quot;</span> does, but it first checks to
@@ -309,21 +299,15 @@
     to the SMTP client.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    my $query = new Mail::SPF::Query (ip =&gt; &quot;127.0.0.1&quot;,
+<pre>    my $query = new Mail::SPF::Query (ip =&gt; &quot;127.0.0.1&quot;,
                                       sender=&gt;'foo@example.com',
                                       helo=&gt;&quot;somehost.example.com&quot;);
-
     ...
-
     my ($result, $smtp_comment, $header_comment);
-
     ($result, $smtp_comment, $header_comment) = $query-&gt;result2('recip1@example.com');
     # return suitable error code based on $result eq 'fail' or not
-
     ($result, $smtp_comment, $header_comment) = $query-&gt;result2('recip2@example.org');
     # return suitable error code based on $result eq 'fail' or not
-
     ($result, $smtp_comment, $header_comment) = $query-&gt;message_result2();
     # return suitable error if $result eq 'fail'
     # prefix message with &quot;Received-SPF: $result ($header_comment)&quot;
@@ -331,8 +315,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_$query~3"><a class="permalink" href="#_$query~3">&quot;$query-&gt;message_result2()&quot;</a></h2>
-<pre>
-    my ($result, $smtp_comment, $header_comment, $spf_record) = $query-&gt;message_result2();
+<pre>    my ($result, $smtp_comment, $header_comment, $spf_record) = $query-&gt;message_result2();
 </pre>
 <p class="Pp"><span class="Li">&quot;message_result2()&quot;</span> returns an
     overall status for the message after zero or more calls to
@@ -348,16 +331,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_$query~4"><a class="permalink" href="#_$query~4">&quot;$query-&gt;best_guess()&quot;</a></h2>
-<pre>
-    my ($result, $smtp_comment, $header_comment) = $query-&gt;best_guess();
+<pre>    my ($result, $smtp_comment, $header_comment) = $query-&gt;best_guess();
 </pre>
 <p class="Pp">When a domain does not publish an SPF record, this library can
     produce an educated guess anyway.</p>
 <p class="Pp">It pretends the domain defined A, MX, and PTR mechanisms, plus a
     few others. The default set of directives is</p>
 <p class="Pp"></p>
-<pre>
-    a/24 mx/24 ptr
+<pre>    a/24 mx/24 ptr
 </pre>
 <p class="Pp">That default set will return either &quot;pass&quot; or
     &quot;neutral&quot;.</p>
@@ -371,8 +352,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_$query~5"><a class="permalink" href="#_$query~5">&quot;$query-&gt;trusted_forwarder()&quot;</a></h2>
-<pre>
-    my ($result, $smtp_comment, $header_comment) = $query-&gt;best_guess();
+<pre>    my ($result, $smtp_comment, $header_comment) = $query-&gt;best_guess();
 </pre>
 <p class="Pp">It is possible that the message is coming through a known-good
     relay like <span class="Li">&quot;acm.org&quot;</span> or
@@ -384,8 +364,7 @@
     domain is a white-list of known-good hosts that either forward mail or
     perform benign envelope sender forgery:</p>
 <p class="Pp"></p>
-<pre>
-    include:spf.trusted-forwarder.org
+<pre>    include:spf.trusted-forwarder.org
 </pre>
 <p class="Pp">This will return either &quot;pass&quot; or
   &quot;neutral&quot;.</p>

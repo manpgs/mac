@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Manual::Tooling::Nesting(3)</title>
 </head>
@@ -40,28 +41,23 @@
 <p class="Pp">Lets say you find yourself writing the same test pattern over and
     over for multiple objects:</p>
 <p class="Pp"></p>
-<pre>
-    my $obj1 = $class1-&gt;new;
+<pre>    my $obj1 = $class1-&gt;new;
     is($obj1-&gt;foo, 'foo', &quot;got foo&quot;);
     is($obj1-&gt;bar, 'bar', &quot;got bar&quot;);
-
     my $obj2 = $class1-&gt;new;
     is($obj2-&gt;foo, 'foo', &quot;got foo&quot;);
     is($obj2-&gt;bar, 'bar', &quot;got bar&quot;);
-
     ... 10x more times for classes 2-12
 </pre>
 <p class="Pp">The naive way to do this is to write a
     <span class="Li">&quot;check_class()&quot;</span> function like this:</p>
 <p class="Pp"></p>
-<pre>
-    sub check_class {
+<pre>    sub check_class {
         my $class = shift;
         my $obj = $class-&gt;new;
         is($obj-&gt;foo, 'foo', &quot;got foo&quot;);
         is($obj-&gt;bar, 'bar', &quot;got bar&quot;);
     }
-
     check_class($class1);
     check_class($class2);
     check_class($class3);
@@ -85,18 +81,13 @@
     context object at the start of your function, and release it at the end...
     yes it is that simple.</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::API qw/context/;
-
+<pre>    use Test2::API qw/context/;
     sub check_class {
         my $class = shift;
-
         my $ctx = context();
-
         my $obj = $class-&gt;new;
         is($obj-&gt;foo, 'foo', &quot;got foo&quot;);
         is($obj-&gt;bar, 'bar', &quot;got bar&quot;);
-
         $ctx-&gt;release;
     }
 </pre>
@@ -108,12 +99,9 @@
     <span class="Li">$Test::Builder::Level</span> which helped solve this
     problem:</p>
 <p class="Pp"></p>
-<pre>
-    sub check_class {
+<pre>    sub check_class {
         my $class = shift;
-
         local $Test::Builder::Level = $Test::Builder::Level + 1;
-
         my $obj = $class-&gt;new;
         is($obj-&gt;foo, 'foo', &quot;got foo&quot;);
         is($obj-&gt;bar, 'bar', &quot;got bar&quot;);

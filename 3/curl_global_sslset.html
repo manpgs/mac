@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_global_sslset(3)</title>
 </head>
@@ -44,8 +47,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<pre>
+<pre>#include &lt;curl/curl.h&gt;
 typedef struct {
   curl_sslbackend id;
   const char *name;
@@ -65,10 +67,9 @@ typedef enum {
   CURLSSLBACKEND_MESALINK = 12,
   CURLSSLBACKEND_BEARSSL = 13
 } curl_sslbackend;
-<b>CURLsslset curl_global_sslset(curl_sslbackend  id,</b>
-<b>                              const char * name,</b>
-<b>                              curl_ssl_backend *** avail );</b>
-</pre>
+CURLsslset curl_global_sslset(curl_sslbackend id,
+                              const char *name,
+                              curl_ssl_backend ***avail);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -94,10 +95,24 @@ typedef enum {
 <p class="Pp">The SSL backend can be set only once. If it has already been set,
     a subsequent attempt to change it will result in a
     <b>CURLSSLSET_TOO_LATE</b>.</p>
-<p class="Pp"><b>This function is not thread safe.</b> You must not call it when
+<p class="Pp">This function is thread-safe since libcurl 7.84.0 if
+    <i>curl_version_info(3)</i> has the CURL_VERSION_THREADSAFE feature bit set
+    (most platforms).</p>
+<p class="Pp">If this is not thread-safe, you must not call this function when
     any other thread in the program (i.e. a thread sharing the same memory) is
-    running. This doesn't just mean no other thread that is using libcurl.</p>
-<p class="Pp"></p>
+    running. This does not just mean no other thread that is using libcurl.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+  /* choose a specific backend */
+  curl_global_sslset(CURLSSLBACKEND_WOLFSSL, NULL, NULL);
+  /* list the available ones */
+  const curl_ssl_backend **list;
+  curl_global_sslset((curl_sslbackend)-1, NULL, &amp;list);
+  for(i = 0; list[i]; i++)
+    printf(&quot;SSL backend #%d: '%s' (ID: %d)\n&quot;,
+           i, list[i]-&gt;name, list[i]-&gt;id);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -126,8 +141,8 @@ typedef enum {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">June 15, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

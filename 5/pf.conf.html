@@ -60,6 +60,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PF.CONF(5)</title>
 </head>
@@ -122,10 +123,8 @@
     (&#x2018;#&#x2019;), and extend to the end of the current line.</p>
 <p class="Pp">Additional configuration files can be included with the
     <code class="Ic">include</code> keyword, for example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-include &quot;/etc/pf/sub.filter.conf&quot;
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>include &quot;/etc/pf/sub.filter.conf&quot;</pre>
 </div>
 </section>
 <section class="Sh">
@@ -136,13 +135,11 @@ include &quot;/etc/pf/sub.filter.conf&quot;
     <var class="Ar">pass</var>, <var class="Ar">in</var>,
     <var class="Ar">out</var>). Macros are not expanded inside quotes.</p>
 <p class="Pp">For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-ext_if = &quot;kue0&quot;
+<div class="Bd Pp Bd-indent Li">
+<pre>ext_if = &quot;kue0&quot;
 all_ifs = &quot;{&quot; $ext_if lo0 &quot;}&quot;
 pass out on $ext_if from any to any
-pass in  on $ext_if proto tcp from any to any port 25
-</pre>
+pass in  on $ext_if proto tcp from any to any port 25</pre>
 </div>
 </section>
 <section class="Sh">
@@ -194,12 +191,10 @@ pass in  on $ext_if proto tcp from any to any port 25
       <a class="Xr" href="../7/securelevel">securelevel(7)</a> = 2.</dd>
 </dl>
 <p class="Pp">For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-table &lt;private&gt; const { 10/8, 172.16/12, 192.168/16 }
+<div class="Bd Pp Bd-indent Li">
+<pre>table &lt;private&gt; const { 10/8, 172.16/12, 192.168/16 }
 table &lt;badhosts&gt; persist
-block on fxp0 from { &lt;private&gt;, &lt;badhosts&gt; } to any
-</pre>
+block on fxp0 from { &lt;private&gt;, &lt;badhosts&gt; } to any</pre>
 </div>
 <p class="Pp">creates a table called private, to hold RFC 1918 private network
     blocks, and a table called badhosts, which is initially empty. A filter rule
@@ -208,18 +203,14 @@ block on fxp0 from { &lt;private&gt;, &lt;badhosts&gt; } to any
     will exist even when no active filter rules reference it. Addresses may
     later be added to the badhosts table, so that traffic from these hosts can
     be blocked by using</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# pfctl -t badhosts -Tadd 204.92.77.111
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre># pfctl -t badhosts -Tadd 204.92.77.111</pre>
 </div>
 <p class="Pp">A table can also be initialized with an address list specified in
     one or more external files, using the following syntax:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-table &lt;spam&gt; persist file &quot;/etc/spammers&quot; file &quot;/etc/openrelays&quot;
-block on fxp0 from &lt;spam&gt; to any
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>table &lt;spam&gt; persist file &quot;/etc/spammers&quot; file &quot;/etc/openrelays&quot;
+block on fxp0 from &lt;spam&gt; to any</pre>
 </div>
 <p class="Pp" id="all">The files <span class="Pa">/etc/spammers</span> and
     <span class="Pa">/etc/openrelays</span> list IP addresses, one per line. Any
@@ -328,13 +319,11 @@ block on fxp0 from &lt;spam&gt; to any
         number of states created by the rule, otherwise to the total number of
         states.</p>
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set timeout tcp.first 120
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set timeout tcp.first 120
 set timeout tcp.established 86400
 set timeout { adaptive.start 6000, adaptive.end 12000 }
-set limit states 10000
-    </pre>
+set limit states 10000</pre>
     </div>
     <p class="Pp">With 9000 state table entries, the timeout values are scaled
         to 50% (tcp.first 60, tcp.established 43200).</p>
@@ -342,23 +331,17 @@ set limit states 10000
   <dt><var class="Ar">set loginterface</var></dt>
   <dd>Enable collection of packet and byte count statistics for the given
       interface or interface group. These statistics can be viewed using
-    <div class="Bd Pp Bd-indent">
-    <pre>
-# pfctl -s info
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre># pfctl -s info</pre>
     </div>
     <p class="Pp">In this example packet filter collects statistics on the
         interface named dc0:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set loginterface dc0
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set loginterface dc0</pre>
     </div>
     <p class="Pp">One can disable the loginterface using:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set loginterface none
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set loginterface none</pre>
     </div>
   </dd>
   <dt><var class="Ar">set limit</var></dt>
@@ -366,46 +349,36 @@ set loginterface none
       <a class="Xr" href="../9/pool">pool(9)</a> for an explanation of memory
       pools.
     <p class="Pp">For example,</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set limit states 20000
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set limit states 20000</pre>
     </div>
     <p class="Pp">sets the maximum number of entries in the memory pool used by
         state table entries (generated by <var class="Ar">pass</var> rules which
         do not specify <var class="Ar">no state</var>) to 20000. Using</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set limit frags 20000
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set limit frags 20000</pre>
     </div>
     <p class="Pp">sets the maximum number of entries in the memory pool used for
         fragment reassembly (generated by <var class="Ar">scrub</var> rules) to
         20000. Using</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set limit src-nodes 2000
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set limit src-nodes 2000</pre>
     </div>
     <p class="Pp">sets the maximum number of entries in the memory pool used for
         tracking source IP addresses (generated by the
         <var class="Ar">sticky-address</var> and <var class="Ar">src.track</var>
         options) to 2000. Using</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set limit tables 1000
-set limit table-entries 100000
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set limit tables 1000
+set limit table-entries 100000</pre>
     </div>
     <p class="Pp">sets limits on the memory pools used by tables. The first
         limits the number of tables that can exist to 1000. The second limits
         the overall number of addresses that can be stored in tables to
       100000.</p>
     <p class="Pp">Various limits can be combined on a single line:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set limit { states 20000, frags 20000, src-nodes 2000 }
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set limit { states 20000, frags 20000, src-nodes 2000 }</pre>
     </div>
   </dd>
   <dt><var class="Ar">set ruleset-optimization</var></dt>
@@ -461,10 +434,8 @@ set limit { states 20000, frags 20000, src-nodes 2000 }
           a busy network) and slightly increased processor utilization.</dd>
     </dl>
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set optimization aggressive
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set optimization aggressive</pre>
     </div>
   </dd>
   <dt><var class="Ar">set block-policy</var></dt>
@@ -480,10 +451,8 @@ set optimization aggressive
           dropped.</dd>
     </dl>
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set block-policy return
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set block-policy return</pre>
     </div>
   </dd>
   <dt><var class="Ar">set state-policy</var></dt>
@@ -497,10 +466,8 @@ set block-policy return
       <dd>States can match packets on any interfaces (the default).</dd>
     </dl>
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-set state-policy if-bound
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>set state-policy if-bound</pre>
     </div>
     <p class="Pp">The hostid may be specified in either decimal or
       hexadecimal.</p>
@@ -660,10 +627,8 @@ set state-policy if-bound
   </dd>
 </dl>
 <p class="Pp">For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-scrub in on $ext_if all fragment reassemble
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>scrub in on $ext_if all fragment reassemble</pre>
 </div>
 <p class="Pp">The <var class="Ar">no</var> option prefixed to a scrub rule
     causes matching packets to remain unscrubbed, much in the same way as
@@ -757,10 +722,8 @@ scrub in on $ext_if all fragment reassemble
 <p class="Pp">In the following example, the interface dc0 should queue up to 5
     Mbit/s in four second-level queues using Class Based Queueing. Those four
     queues will be shown in a later example.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-altq on dc0 cbq bandwidth 5Mb queue { std, http, mail, ssh }
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>altq on dc0 cbq bandwidth 5Mb queue { std, http, mail, ssh }</pre>
 </div>
 <p class="Pp">Once interfaces are activated for queueing using the
     <var class="Ar">altq</var> directive, a sequence of
@@ -859,9 +822,8 @@ altq on dc0 cbq bandwidth 5Mb queue { std, http, mail, ssh }
     <a class="Xr" href="../1/sftp">sftp(1)</a>. The queues may then be
     referenced by filtering rules (see
     <a class="Sx" href="#PACKET_FILTERING">PACKET FILTERING</a> below).</p>
-<div class="Bd Pp">
-<pre>
-queue std bandwidth 10% cbq(default)
+<div class="Bd Pp Li">
+<pre>queue std bandwidth 10% cbq(default)
 queue http bandwidth 60% priority 2 cbq(borrow red) \
       { employees, developers }
 queue  developers bandwidth 75% cbq(borrow)
@@ -879,8 +841,7 @@ pass out on dc0 inet proto tcp from $employeehosts to any port 80 \
 pass out on dc0 inet proto tcp from any to any port 22 \
       queue(ssh_bulk, ssh_interactive)
 pass out on dc0 inet proto tcp from any to any port 25 \
-      queue mail
-</pre>
+      queue mail</pre>
 </div>
 </section>
 <section class="Sh">
@@ -916,12 +877,10 @@ pass out on dc0 inet proto tcp from any to any port 25 \
       Although in theory any IP address can be used on the inside, it is
       strongly recommended that one of the address ranges defined by RFC 1918 be
       used. These netblocks are:
-    <div class="Bd Pp">
-    <pre>
-10.0.0.0 - 10.255.255.255 (all of net 10, i.e., 10/8)
+    <div class="Bd Pp Li">
+    <pre>10.0.0.0 - 10.255.255.255 (all of net 10, i.e., 10/8)
 172.16.0.0 - 172.31.255.255 (i.e., 172.16/12)
-192.168.0.0 - 192.168.255.255 (i.e., 192.168/16)
-    </pre>
+192.168.0.0 - 192.168.255.255 (i.e., 192.168/16)</pre>
     </div>
   </dd>
   <dt><span class="Pa">rdr</span></dt>
@@ -962,10 +921,8 @@ pass out on dc0 inet proto tcp from any to any port 25 \
     firewall itself.</p>
 <p class="Pp">Note that redirecting external incoming connections to the
     loopback address, as in</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-rdr on ne3 inet proto tcp to port smtp -&gt; 127.0.0.1 port spamd
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>rdr on ne3 inet proto tcp to port smtp -&gt; 127.0.0.1 port spamd</pre>
 </div>
 <p class="Pp">will effectively allow an external host to connect to daemons
     bound solely to the loopback address, circumventing the traditional blocking
@@ -1026,10 +983,8 @@ rdr on ne3 inet proto tcp to port smtp -&gt; 127.0.0.1 port spamd
     <p class="Pp">The simplest mechanism to block everything by default and only
         pass packets that match explicit rules is specify a first filter rule
         of:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-block all
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>block all</pre>
     </div>
   </dd>
   <dt><var class="Ar">pass</var></dt>
@@ -1050,10 +1005,8 @@ block all
     an attacker sends packets with a fake source address/port but does not know
     the connection's sequence numbers. Similarly, packet filter knows how to
     match ICMP replies to states. For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pass out inet proto icmp all icmp-type echoreq
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>pass out inet proto icmp all icmp-type echoreq</pre>
 </div>
 <p class="Pp">allows echo requests (such as those created by
     <a class="Xr" href="../8/ping">ping(8)</a>) out statefully, and matches
@@ -1207,9 +1160,8 @@ pass out inet proto icmp all icmp-type echoreq
         <span class="Pa">/etc/services</span>.</p>
     <p class="Pp">Ports and ranges of ports are specified by using these
         operators:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-=	(equal)
+    <div class="Bd Pp Bd-indent Li">
+    <pre>=	(equal)
 !=	(unequal)
 &lt;	(less than)
 &#x2264;	(less than or equal)
@@ -1217,8 +1169,7 @@ pass out inet proto icmp all icmp-type echoreq
 &#x2265;	(greater than or equal)
 :	(range including boundaries)
 &gt;&lt;	(range excluding boundaries)
-&lt;&gt;	(except range)
-    </pre>
+&lt;&gt;	(except range)</pre>
     </div>
     <p class="Pp">&#x2018;&gt;&lt;&#x2019;, &#x2018;&lt;&gt;&#x2019; and
         &#x2018;:&#x2019; are binary operators (they take two arguments). For
@@ -1240,17 +1191,15 @@ pass out inet proto icmp all icmp-type echoreq
         SYSTEM FINGERPRINTING</a> section for more information.</p>
     <p class="Pp">The host, port and OS specifications are optional, as in the
         following examples:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-pass in all
+    <div class="Bd Pp Bd-indent Li">
+    <pre>pass in all
 pass in from any to any
 pass in proto tcp from any port &#x2264; 1024 to any
 pass in proto tcp from any to any port 25
 pass in proto tcp from 10.0.0.0/8 port &gt; 1024 \
       to ! 10.1.2.3 port != ssh
 pass in proto tcp from any os &quot;OpenBSD&quot;
-pass in proto tcp from route &quot;DTAG&quot;
-    </pre>
+pass in proto tcp from route &quot;DTAG&quot;</pre>
     </div>
   </dd>
   <dt><var class="Ar">all</var></dt>
@@ -1288,11 +1237,9 @@ pass in proto tcp from route &quot;DTAG&quot;
         instance <code class="Cm">user &#x2265; 0</code> does not match
         forwarded packets. The following example allows only selected users to
         open outgoing connections:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-block out proto { tcp, udp } all
-pass  out proto { tcp, udp } all user { &lt; 1000, dhartmei }
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>block out proto { tcp, udp } all
+pass  out proto { tcp, udp } all user { &lt; 1000, dhartmei }</pre>
     </div>
   </dd>
   <dt><var class="Ar">flags</var> &#x27E8;<var class="Ar">a</var>&#x27E9;
@@ -1356,12 +1303,10 @@ pass  out proto { tcp, udp } all user { &lt; 1000, dhartmei }
       <var class="Ar">lowdelay</var>, <var class="Ar">throughput</var>,
       <var class="Ar">reliability</var>, or as either hex or decimal.
     <p class="Pp">For example, the following rules are identical:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-pass all tos lowdelay
+    <div class="Bd Pp Bd-indent Li">
+    <pre>pass all tos lowdelay
 pass all tos 0x10
-pass all tos 16
-    </pre>
+pass all tos 16</pre>
     </div>
   </dd>
   <dt><var class="Ar">allow-opts</var></dt>
@@ -1399,21 +1344,17 @@ pass all tos 16
     </dl>
     </div>
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ips = &quot;{ 1.2.3.4, 1.2.3.5 }&quot;
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ips = &quot;{ 1.2.3.4, 1.2.3.5 }&quot;
 pass in proto tcp from any to $ips \
-      port &gt; 1023 label &quot;$dstaddr:$dstport&quot;
-    </pre>
+      port &gt; 1023 label &quot;$dstaddr:$dstport&quot;</pre>
     </div>
     <p class="Pp">expands to</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-pass in inet proto tcp from any to 1.2.3.4 \
+    <div class="Bd Pp Bd-indent Li">
+    <pre>pass in inet proto tcp from any to 1.2.3.4 \
       port &gt; 1023 label &quot;1.2.3.4:&gt;1023&quot;
 pass in inet proto tcp from any to 1.2.3.5 \
-      port &gt; 1023 label &quot;1.2.3.5:&gt;1023&quot;
-    </pre>
+      port &gt; 1023 label &quot;1.2.3.5:&gt;1023&quot;</pre>
     </div>
     <p class="Pp">The macro expansion for the <var class="Ar">label</var>
         directive occurs only at configuration file parse time, not during
@@ -1428,11 +1369,9 @@ pass in inet proto tcp from any to 1.2.3.5 \
       assigned to the second one. See
       <a class="Sx" href="#QUEUEING">QUEUEING</a> for setup details.
     <p class="Pp">For example:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-pass in proto tcp to port 25 queue mail
-pass in proto tcp to port 22 queue(ssh_bulk, ssh_prio)
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>pass in proto tcp to port 25 queue mail
+pass in proto tcp to port 22 queue(ssh_bulk, ssh_prio)</pre>
     </div>
   </dd>
   <dt><var class="Ar">tag</var>
@@ -1465,10 +1404,8 @@ pass in proto tcp to port 22 queue(ssh_bulk, ssh_prio)
       between 0 and 1, bounds not included. In that case, the rule will be
       honoured using the given probability value only. For example, the
       following rule will drop 20% of incoming ICMP packets:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-block in proto icmp probability 20%
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>block in proto icmp probability 20%</pre>
     </div>
   </dd>
 </dl>
@@ -1566,12 +1503,10 @@ block in proto icmp probability 20%
 <p class="Pp">The <var class="Ar">modulate state</var> directive implicitly
     keeps state on the rule and is only applicable to TCP connections.</p>
 <p class="Pp">For instance:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-block all
+<div class="Bd Pp Bd-indent Li">
+<pre>block all
 pass out proto tcp from any to any modulate state
-pass in  proto tcp from any to any port 25 flags S/SFRA modulate state
-</pre>
+pass in  proto tcp from any to any port 25 flags S/SFRA modulate state</pre>
 </div>
 <p class="Pp">Note that modulated connections will not recover when the state
     table is lost (firewall reboot, flushing the state table, etc...). Packet
@@ -1606,10 +1541,8 @@ pass in  proto tcp from any to any port 25 flags S/SFRA modulate state
 <p class="Pp">Rules with <var class="Ar">synproxy</var> will not work if packet
     filter operates on a <a class="Xr" href="../4/bridge">bridge(4)</a>.</p>
 <p class="Pp">Example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pass in proto tcp from any to any port www synproxy state
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>pass in proto tcp from any to any port www synproxy state</pre>
 </div>
 </section>
 <section class="Sh">
@@ -1634,13 +1567,11 @@ pass in proto tcp from any to any port www synproxy state
       <a class="Sx" href="#OPTIONS">OPTIONS</a> above.</dd>
 </dl>
 <p class="Pp">Multiple options can be specified, separated by commas:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pass in proto tcp from any to any \
+<div class="Bd Pp Bd-indent Li">
+<pre>pass in proto tcp from any to any \
       port www keep state \
       (max 100, source-track rule, max-src-nodes 75, \
-      max-src-states 3, tcp.established 60, tcp.closing 5)
-</pre>
+      max-src-states 3, tcp.established 60, tcp.closing 5)</pre>
 </div>
 <p class="Pp">When the <var class="Ar">source-track</var> keyword is specified,
     the number of states per source IP is tracked.</p>
@@ -1704,12 +1635,10 @@ pass in proto tcp from any to any \
     &#x27E8;bad_hosts&#x27E9; table and have all states originating from it
     flushed. Any new packets arriving from this host will be dropped
     unconditionally by the block rule.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-block quick from &lt;bad_hosts&gt;
+<div class="Bd Pp Bd-indent Li">
+<pre>block quick from &lt;bad_hosts&gt;
 pass in on $ext_if proto tcp to $webserver port www keep state \
-	(max-src-conn-rate 100/10, overload &lt;bad_hosts&gt; flush global)
-</pre>
+	(max-src-conn-rate 100/10, overload &lt;bad_hosts&gt; flush global)</pre>
 </div>
 </section>
 <section class="Sh">
@@ -1750,15 +1679,13 @@ pass in on $ext_if proto tcp to $webserver port www keep state \
     fingerprint which will match packets for which no operating system
     fingerprint is known.</p>
 <p class="Pp">Examples:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pass  out proto tcp from any os OpenBSD
+<div class="Bd Pp Bd-indent Li">
+<pre>pass  out proto tcp from any os OpenBSD
 block out proto tcp from any os Doors
 block out proto tcp from any os &quot;Doors PT&quot;
 block out proto tcp from any os &quot;Doors PT SP3&quot;
 block out from any os &quot;unknown&quot;
-pass on lo0 proto tcp from any os &quot;OpenBSD 3.3 lo0&quot;
-</pre>
+pass on lo0 proto tcp from any os &quot;OpenBSD 3.3 lo0&quot;</pre>
 </div>
 <p class="Pp">Operating system fingerprinting is limited only to the TCP SYN
     packet. This means that it will not work on other protocols and will not
@@ -1779,33 +1706,25 @@ pass on lo0 proto tcp from any os &quot;OpenBSD 3.3 lo0&quot;
     network(s) directly connected to the specified interface(s) from entering
     the system through any other interface.</p>
 <p class="Pp">For example, the line</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-antispoof for lo0
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>antispoof for lo0</pre>
 </div>
 <p class="Pp">expands to</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-block drop in on ! lo0 inet from 127.0.0.1/8 to any
-block drop in on ! lo0 inet6 from ::1 to any
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>block drop in on ! lo0 inet from 127.0.0.1/8 to any
+block drop in on ! lo0 inet6 from ::1 to any</pre>
 </div>
 <p class="Pp">For non-loopback interfaces, there are additional rules to block
     incoming packets with a source IP address identical to the interface's
     IP(s). For example, assuming the interface wi0 had an IP address of 10.0.0.1
     and a netmask of 255.255.255.0, the line</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-antispoof for wi0 inet
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>antispoof for wi0 inet</pre>
 </div>
 <p class="Pp">expands to</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-block drop in on ! wi0 inet from 10.0.0.0/24 to any
-block drop in inet from 10.0.0.1 to any
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>block drop in on ! wi0 inet from 10.0.0.0/24 to any
+block drop in inet from 10.0.0.1 to any</pre>
 </div>
 <p class="Pp">Caveat: Rules created by the <var class="Ar">antispoof</var>
     directive interfere with packets sent over loopback interfaces to local
@@ -1838,10 +1757,8 @@ block drop in inet from 10.0.0.1 to any
     Filter rules without the <var class="Ar">fragment</var> option still apply
     to fragments, if they only specify IP header fields. For instance, the
   rule</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-pass in proto tcp from any to any port 80
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>pass in proto tcp from any to any port 80</pre>
 </div>
 <p class="Pp">never applies to a fragment, even if the fragment is part of a TCP
     packet with destination port 80, because without reassembly this information
@@ -1925,35 +1842,29 @@ pass in proto tcp from any to any port 80
     later such anchors can be manipulated through
     <a class="Xr" href="../8/pfctl">pfctl(8)</a> without reloading the main
     ruleset or other anchors. For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-ext_if = &quot;kue0&quot;
+<div class="Bd Pp Bd-indent Li">
+<pre>ext_if = &quot;kue0&quot;
 block on $ext_if all
 anchor spam
 pass out on $ext_if all
 pass in on $ext_if proto tcp from any \
-      to $ext_if port smtp
-</pre>
+      to $ext_if port smtp</pre>
 </div>
 <p class="Pp">blocks all packets on the external interface by default, then
     evaluates all rules in the <var class="Ar">anchor</var> named
     &quot;spam&quot;, and finally passes all outgoing connections and incoming
     connections to port 25.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# echo &quot;block in quick from 1.2.3.4 to any&quot; | \
-      pfctl -a spam -f -
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre># echo &quot;block in quick from 1.2.3.4 to any&quot; | \
+      pfctl -a spam -f -</pre>
 </div>
 <p class="Pp">This loads a single rule into the <var class="Ar">anchor</var>,
     which blocks all packets from a specific address.</p>
 <p class="Pp">The anchor can also be populated by adding a <var class="Ar">load
     anchor</var> rule after the <var class="Ar">anchor</var> rule:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-anchor spam
-load anchor spam from &quot;/etc/pf-spam.conf&quot;
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>anchor spam
+load anchor spam from &quot;/etc/pf-spam.conf&quot;</pre>
 </div>
 <p class="Pp">When <a class="Xr" href="../8/pfctl">pfctl(8)</a> loads
     <code class="Nm">pf.conf</code>, it will also load all the rules from the
@@ -1962,31 +1873,25 @@ load anchor spam from &quot;/etc/pf-spam.conf&quot;
     filtering parameters using the same syntax as filter rules. When parameters
     are used, the <var class="Ar">anchor</var> rule is only evaluated for
     matching packets. This allows conditional evaluation of anchors, like:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-block on $ext_if all
+<div class="Bd Pp Bd-indent Li">
+<pre>block on $ext_if all
 anchor spam proto tcp from any to any port smtp
 pass out on $ext_if all
-pass in on $ext_if proto tcp from any to $ext_if port smtp
-</pre>
+pass in on $ext_if proto tcp from any to $ext_if port smtp</pre>
 </div>
 <p class="Pp">The rules inside <var class="Ar">anchor</var> spam are only
     evaluated for <var class="Ar">tcp</var> packets with destination port 25.
     Hence,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# echo &quot;block in quick from 1.2.3.4 to any&quot; | \
-      pfctl -a spam -f -
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre># echo &quot;block in quick from 1.2.3.4 to any&quot; | \
+      pfctl -a spam -f -</pre>
 </div>
 <p class="Pp">will only block connections from 1.2.3.4 to port 25.</p>
 <p class="Pp">Anchors may end with the asterisk (&#x2018;*&#x2019;) character,
     which signifies that all anchors attached at that point should be evaluated
     in the alphabetical ordering of their anchor name. For example,</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-anchor &quot;spam/*&quot;
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>anchor &quot;spam/*&quot;</pre>
 </div>
 <p class="Pp">will evaluate each rule in each anchor attached to the
     <code class="Li">spam</code> anchor. Note that it will only evaluate anchors
@@ -1999,12 +1904,10 @@ anchor &quot;spam/*&quot;
     parent anchor of the current anchor in the path evaluation at that point
     will become the new current anchor. As an example, consider the
   following:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# echo ' anchor &quot;spam/allowed&quot; ' | pfctl -f -
+<div class="Bd Pp Bd-indent Li">
+<pre># echo ' anchor &quot;spam/allowed&quot; ' | pfctl -f -
 # echo -e ' anchor &quot;../banned&quot; \n pass' | \
-      pfctl -a spam/allowed -f -
-</pre>
+      pfctl -a spam/allowed -f -</pre>
 </div>
 <p class="Pp">Evaluation of the main ruleset will lead into the
     <code class="Li">spam/allowed</code> anchor, which will evaluate the rules
@@ -2014,16 +1917,14 @@ anchor &quot;spam/*&quot;
     inline in the ruleset within a brace ('{' '}') delimited block. Brace
     delimited blocks may contain rules or other brace-delimited blocks. When
     anchors are loaded this way the anchor name becomes optional.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-anchor &quot;external&quot; on egress {
+<div class="Bd Pp Bd-indent Li">
+<pre>anchor &quot;external&quot; on egress {
 	block
 	anchor out {
 		pass proto tcp from any to port { 25, 80, 443 }
 	}
 	pass in proto tcp to any port 22
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">Since the parser specification for anchor names is a string, any
     reference to an anchor name containing &#x2018;/&#x2019; characters will
@@ -2036,23 +1937,19 @@ anchor &quot;external&quot; on egress {
 <p class="Pp">This example maps incoming requests on port 80 to port 8080, on
     which a daemon is running (because, for example, it is not run as root, and
     therefore lacks permission to bind to port 80).</p>
-<div class="Bd Pp">
-<pre>
-# use a macro for the interface name, so it can be changed easily
+<div class="Bd Pp Li">
+<pre># use a macro for the interface name, so it can be changed easily
 ext_if = &quot;ne3&quot;
 
 # map daemon on 8080 to appear to be on 80
-rdr on $ext_if proto tcp from any to any port 80 -&gt; 127.0.0.1 port 8080
-</pre>
+rdr on $ext_if proto tcp from any to any port 80 -&gt; 127.0.0.1 port 8080</pre>
 </div>
 <p class="Pp">If the <var class="Ar">pass</var> modifier is given, packets
     matching the translation rule are passed without inspecting the filter
     rules:</p>
-<div class="Bd Pp">
-<pre>
-rdr pass on $ext_if proto tcp from any to any port 80 -&gt; 127.0.0.1 \
-      port 8080
-</pre>
+<div class="Bd Pp Li">
+<pre>rdr pass on $ext_if proto tcp from any to any port 80 -&gt; 127.0.0.1 \
+      port 8080</pre>
 </div>
 <p class="Pp">In the example below, vlan12 is configured as 192.168.168.1; the
     machine translates all packets coming from 192.168.168.0/24 to 204.92.77.111
@@ -2061,33 +1958,27 @@ rdr pass on $ext_if proto tcp from any to any port 80 -&gt; 127.0.0.1 \
     the Internet routable address 204.92.77.111 to nodes behind any interface on
     the router except for the nodes on vlan12. (Thus, 192.168.168.1 can talk to
     the 192.168.168.0/24 nodes.)</p>
-<div class="Bd Pp">
-<pre>
-nat on ! vlan12 from 192.168.168.0/24 to any -&gt; 204.92.77.111
-</pre>
+<div class="Bd Pp Li">
+<pre>nat on ! vlan12 from 192.168.168.0/24 to any -&gt; 204.92.77.111</pre>
 </div>
 <p class="Pp">In the example below, the machine sits between a fake internal
     144.19.74.* network, and a routable external IP of 204.92.77.100. The
     <var class="Ar">no nat</var> rule excludes protocol AH from being
     translated.</p>
-<div class="Bd Pp">
-<pre>
-# NO NAT
+<div class="Bd Pp Li">
+<pre># NO NAT
 no nat on $ext_if proto ah from 144.19.74.0/24 to any
-nat on $ext_if from 144.19.74.0/24 to any -&gt; 204.92.77.100
-</pre>
+nat on $ext_if from 144.19.74.0/24 to any -&gt; 204.92.77.100</pre>
 </div>
 <p class="Pp">In the example below, packets bound for one specific server, as
     well as those generated by the sysadmins are not proxied; all other
     connections are.</p>
-<div class="Bd Pp">
-<pre>
-# NO RDR
+<div class="Bd Pp Li">
+<pre># NO RDR
 no rdr on $int_if proto { tcp, udp } from any to $server port 80
 no rdr on $int_if proto { tcp, udp } from $sysadmins to any port 80
 rdr on $int_if proto { tcp, udp } from any to any port 80 -&gt; 127.0.0.1 \
-      port 80
-</pre>
+      port 80</pre>
 </div>
 <p class="Pp">This longer example uses both a NAT and a redirection. The
     external interface has the address 157.161.48.183. On localhost, we are
@@ -2096,9 +1987,8 @@ rdr on $int_if proto { tcp, udp } from any to any port 80 -&gt; 127.0.0.1 \
     <a class="Xr" href="../8/ftp-proxy">ftp-proxy(8)</a> are omitted from this
     example; see the <a class="Xr" href="../8/ftp-proxy">ftp-proxy(8)</a>
     manpage.</p>
-<div class="Bd Pp">
-<pre>
-# NAT
+<div class="Bd Pp Li">
+<pre># NAT
 # Translate outgoing packets' source addresses (any protocol).
 # In this case, any address but the gateway's external address is mapped.
 nat on $ext_if inet from ! ($ext_if) to any -&gt; ($ext_if)
@@ -2127,16 +2017,14 @@ rdr on $ext_if inet proto udp from any to ($ext_if) port 8080 \
 # RDR
 # Translate outgoing ftp control connections to send them to localhost
 # for proxying with ftp-proxy(8) running on port 8021.
-rdr on $int_if proto tcp from any to any port 21 -&gt; 127.0.0.1 port 8021
-</pre>
+rdr on $int_if proto tcp from any to any port 21 -&gt; 127.0.0.1 port 8021</pre>
 </div>
 <p class="Pp">In this example, a NAT gateway is set up to translate internal
     addresses using a pool of public addresses (192.0.2.16/28) and to redirect
     incoming web server connections to a group of web servers on the internal
     network.</p>
-<div class="Bd Pp">
-<pre>
-# NAT LOAD BALANCE
+<div class="Bd Pp Li">
+<pre># NAT LOAD BALANCE
 # Translate outgoing packets' source addresses using an address pool.
 # A given source address is always translated to the same pool address by
 # using the source-hash keyword.
@@ -2146,16 +2034,14 @@ nat on $ext_if inet from any to any -&gt; 192.0.2.16/28 source-hash
 # Translate incoming web server connections to a group of web servers on
 # the internal network.
 rdr on $ext_if proto tcp from any to any port 80 \
-      -&gt; { 10.1.2.155, 10.1.2.160, 10.1.2.161 } round-robin
-</pre>
+      -&gt; { 10.1.2.155, 10.1.2.160, 10.1.2.161 } round-robin</pre>
 </div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FILTER_EXAMPLES"><a class="permalink" href="#FILTER_EXAMPLES">FILTER
   EXAMPLES</a></h1>
-<div class="Bd">
-<pre>
-# The external interface is kue0
+<div class="Bd Li">
+<pre># The external interface is kue0
 # (157.161.48.183, the only routable address)
 # and the private network is 10.0.0.0/8, for which we are doing NAT.
 
@@ -2248,16 +2134,14 @@ rdr on $ext_if inet proto tcp from &lt;spammers&gt; to port smtp \
 	tag SPAMD -&gt; 127.0.0.1 port spamd
 
 block in on $ext_if
-pass in on $ext_if inet proto tcp tagged SPAMD
-</pre>
+pass in on $ext_if inet proto tcp tagged SPAMD</pre>
 </div>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="GRAMMAR"><a class="permalink" href="#GRAMMAR">GRAMMAR</a></h1>
 <p class="Pp">Syntax for <code class="Nm">pf.conf</code> in BNF:</p>
-<div class="Bd Pp">
-<pre>
-line           = ( option | pf-rule | nat-rule | binat-rule | rdr-rule |
+<div class="Bd Pp Li">
+<pre>line           = ( option | pf-rule | nat-rule | binat-rule | rdr-rule |
                  antispoof-rule | altq-rule | queue-rule | trans-anchors |
                  anchor-rule | anchor-close | load-anchor | table-rule |
                  include )
@@ -2453,8 +2337,7 @@ linkshare-sc   = &quot;linkshare&quot; sc-spec
 realtime-sc    = &quot;realtime&quot; sc-spec
 upperlimit-sc  = &quot;upperlimit&quot; sc-spec
 sc-spec        = ( bandwidth-spec |
-                 &quot;(&quot; bandwidth-spec number bandwidth-spec &quot;)&quot; )
-</pre>
+                 &quot;(&quot; bandwidth-spec number bandwidth-spec &quot;)&quot; )</pre>
 </div>
 </section>
 <section class="Sh">
@@ -2499,7 +2382,7 @@ sc-spec        = ( bandwidth-spec |
 <table class="foot">
   <tr>
     <td class="foot-date">February 11, 2008</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

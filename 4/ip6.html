@@ -34,6 +34,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IP6(4)</title>
 </head>
@@ -86,9 +87,8 @@
     (<a class="Xr" href="../4/bpf">bpf(4)</a>, for example) must instead be
     utilized.</p>
 <p class="Pp">The header has the following definition:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct ip6_hdr {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct ip6_hdr {
      union {
           struct ip6_hdrctl {
                u_int32_t ip6_un1_flow;	/* 20 bits of flow ID */
@@ -107,8 +107,7 @@ struct ip6_hdr {
 #define ip6_plen	ip6_ctlun.ip6_un1.ip6_un1_plen
 #define ip6_nxt		ip6_ctlun.ip6_un1.ip6_un1_nxt
 #define ip6_hlim	ip6_ctlun.ip6_un1.ip6_un1_hlim
-#define ip6_hops	ip6_ctlun.ip6_un1.ip6_un1_hlim
-</pre>
+#define ip6_hops	ip6_ctlun.ip6_un1.ip6_un1_hlim</pre>
 </div>
 <p class="Pp">All fields are in network-byte order. Any options specified (see
     <a class="Sx" href="#Options">Options</a> below) must also be specified in
@@ -123,13 +122,11 @@ struct ip6_hdr {
     specify the source and destination addresses.</p>
 <p class="Pp">The IPv6 header may be followed by any number of extension headers
     that start with the following generic definition:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct ip6_ext {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct ip6_ext {
      u_int8_t ip6e_nxt;
      u_int8_t ip6e_len;
-} __packed;
-</pre>
+} __packed;</pre>
 </div>
 </section>
 <section class="Ss">
@@ -194,13 +191,11 @@ struct ip6_ext {
     <var class="Fa">struct ipv6_mreq *</var></dt>
   <dd>Join a multicast group. A host must become a member of a multicast group
       before it can receive datagrams sent to the group.
-    <div class="Bd Pp">
-    <pre>
-struct ipv6_mreq {
+    <div class="Bd Pp Li">
+    <pre>struct ipv6_mreq {
 	struct in6_addr	ipv6mr_multiaddr;
 	unsigned int	ipv6mr_interface;
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp"><var class="Va">ipv6mr_interface</var> may be set to zeroes to
         choose the default multicast interface or to the index of a particular
@@ -239,13 +234,11 @@ struct ipv6_mreq {
       provided as ancillary data along with the payload in subsequent
       <a class="Xr" href="../2/recvmsg">recvmsg(2)</a> calls. The information is
       stored in the following structure in the ancillary data returned:
-    <div class="Bd Pp">
-    <pre>
-struct in6_pktinfo {
+    <div class="Bd Pp Li">
+    <pre>struct in6_pktinfo {
 	struct in6_addr ipi6_addr;    /* src/dst IPv6 address */
 	unsigned int    ipi6_ifindex; /* send/recv if index */
-};
-    </pre>
+};</pre>
     </div>
   </dd>
   <dt id="IPV6_HOPLIMIT"><a class="permalink" href="#IPV6_HOPLIMIT"><code class="Dv">IPV6_HOPLIMIT</code></a>
@@ -261,14 +254,12 @@ struct in6_pktinfo {
       provided as ancillary data along with the payload in subsequent
       <a class="Xr" href="../2/recvmsg">recvmsg(2)</a> calls. The option is
       stored in the following structure in the ancillary data returned:
-    <div class="Bd Pp">
-    <pre>
-struct ip6_hbh {
+    <div class="Bd Pp Li">
+    <pre>struct ip6_hbh {
 	u_int8_t ip6h_nxt;	/* next header */
 	u_int8_t ip6h_len;	/* length in units of 8 octets */
 /* followed by options */
-} __packed;
-    </pre>
+} __packed;</pre>
     </div>
     <p class="Pp" id="inet6_option_space">The
         <a class="permalink" href="#inet6_option_space"><code class="Fn">inet6_option_space</code></a>()
@@ -281,14 +272,12 @@ struct ip6_hbh {
       provided as ancillary data along with the payload in subsequent
       <a class="Xr" href="../2/recvmsg">recvmsg(2)</a> calls. The option is
       stored in the following structure in the ancillary data returned:
-    <div class="Bd Pp">
-    <pre>
-struct ip6_dest {
+    <div class="Bd Pp Li">
+    <pre>struct ip6_dest {
 	u_int8_t ip6d_nxt;	/* next header */
 	u_int8_t ip6d_len;	/* length in units of 8 octets */
 /* followed by options */
-} __packed;
-    </pre>
+} __packed;</pre>
     </div>
     <p class="Pp" id="inet6_option_space~2">The
         <a class="permalink" href="#inet6_option_space~2"><code class="Fn">inet6_option_space</code></a>()
@@ -312,16 +301,14 @@ struct ip6_dest {
       provided as ancillary data along with the payload in subsequent
       <a class="Xr" href="../2/recvmsg">recvmsg(2)</a> calls. The header is
       stored in the following structure in the ancillary data returned:
-    <div class="Bd Pp">
-    <pre>
-struct ip6_rthdr {
+    <div class="Bd Pp Li">
+    <pre>struct ip6_rthdr {
 	u_int8_t ip6r_nxt;	/* next header */
 	u_int8_t ip6r_len;	/* length in units of 8 octets */
 	u_int8_t ip6r_type;	/* routing type */
 	u_int8_t ip6r_segleft;	/* segments left */
 /* followed by routing-type-specific data */
-} __packed;
-    </pre>
+} __packed;</pre>
     </div>
     <p class="Pp" id="inet6_option_space~3">The
         <a class="permalink" href="#inet6_option_space~3"><code class="Fn">inet6_option_space</code></a>()
@@ -465,9 +452,8 @@ struct ip6_rthdr {
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">The following determines the hop limit on the next packet
     received:</p>
-<div class="Bd Pp">
-<pre>
-struct iovec iov[2];
+<div class="Bd Pp Li">
+<pre>struct iovec iov[2];
 u_char buf[BUFSIZ];
 struct cmsghdr *cm;
 struct msghdr m;
@@ -513,8 +499,7 @@ while (!found) {
 			break;
 		}
 	}
-}
-</pre>
+}</pre>
 </div>
 </section>
 <section class="Sh">
@@ -591,7 +576,7 @@ while (!found) {
 <table class="foot">
   <tr>
     <td class="foot-date">December 29, 2004</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

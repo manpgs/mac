@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Parser::Filer(3)</title>
 </head>
@@ -36,18 +37,14 @@
 <section class="Ss">
 <h2 class="Ss" id="Public_interface"><a class="permalink" href="#Public_interface">Public
   interface</a></h2>
-<pre>
-    ### Create a &quot;filer&quot; of the desired class:
+<pre>    ### Create a &quot;filer&quot; of the desired class:
     my $filer = MIME::Parser::FileInto-&gt;new($dir);
     my $filer = MIME::Parser::FileUnder-&gt;new($basedir);
     ...
-
     ### Want added security?  Don't let outsiders name your files:
     $filer-&gt;ignore_filename(1);
-
     ### Prepare for the parsing of a new top-level message:
     $filer-&gt;init_parse;
-
     ### Return the path where this message's data should be placed:
     $path = $filer-&gt;output_path($head);
 </pre>
@@ -58,8 +55,7 @@
 <p class="Pp">These methods might be overridden or ignored in some subclasses,
     so they don't all make sense in all circumstances:</p>
 <p class="Pp"></p>
-<pre>
-    ### Tweak the mapping from content-type to extension:
+<pre>    ### Tweak the mapping from content-type to extension:
     $emap = $filer-&gt;output_extension_map;
     $emap-&gt;{&quot;text/html&quot;} = &quot;.htm&quot;;
 </pre>
@@ -77,36 +73,31 @@
     parsing. You can get the Filer for a given <span class="Li">$parser</span>
     like this:</p>
 <p class="Pp"></p>
-<pre>
-    $filer = $parser-&gt;filer;
+<pre>    $filer = $parser-&gt;filer;
 </pre>
 <p class="Pp">At the beginning of each
     <span class="Li">&quot;parse()&quot;</span>, the filer's internal state is
     reset by the parser:</p>
 <p class="Pp"></p>
-<pre>
-    $parser-&gt;filer-&gt;init_parse;
+<pre>    $parser-&gt;filer-&gt;init_parse;
 </pre>
 <p class="Pp">The parser can then get a path for each entity in the message by
     handing that entity's header (a MIME::Head) to the filer and having it do
     the work, like this:</p>
 <p class="Pp"></p>
-<pre>
-    $new_file = $parser-&gt;filer-&gt;output_path($head);
+<pre>    $new_file = $parser-&gt;filer-&gt;output_path($head);
 </pre>
 <p class="Pp">Since it's nice to be able to clean up after a parse (especially a
     failed parse), the parser tells the filer when it has actually used a
   path:</p>
 <p class="Pp"></p>
-<pre>
-    $parser-&gt;filer-&gt;purgeable($new_file);
+<pre>    $parser-&gt;filer-&gt;purgeable($new_file);
 </pre>
 <p class="Pp">Then, if you want to clean up the files which were created for a
     particular parse (and also any directories that the Filer created), you
     would do this:</p>
 <p class="Pp"></p>
-<pre>
-    $parser-&gt;filer-&gt;purge;
+<pre>    $parser-&gt;filer-&gt;purge;
 </pre>
 </section>
 <section class="Ss">
@@ -119,8 +110,7 @@
     for most uses, but just in case...</p>
 <p class="Pp">The only method you have to override is <b>output_path()</b>:</p>
 <p class="Pp"></p>
-<pre>
-    $filer-&gt;output_path($head);
+<pre>    $filer-&gt;output_path($head);
 </pre>
 <p class="Pp">This method is invoked by MIME::Parser when it wants to put a
     decoded message body in an output file. The method should return a path to
@@ -135,8 +125,7 @@
     what they're named, you can use the default <b>output_path()</b> method and
     just override one of its components:</p>
 <p class="Pp"></p>
-<pre>
-    $dir  = $filer-&gt;output_dir($head);
+<pre>    $dir  = $filer-&gt;output_dir($head);
     $name = $filer-&gt;output_filename($head);
     ...
 </pre>
@@ -168,8 +157,7 @@
       not be used in generating a disk file name? It is if any of these are
       true:
     <p class="Pp"></p>
-    <pre>
-    * it is empty or entirely whitespace
+    <pre>    * it is empty or entirely whitespace
     * it contains leading or trailing whitespace
     * it is a string of dots: &quot;.&quot;, &quot;..&quot;, etc.
     * it contains characters not in the set: &quot;A&quot; - &quot;Z&quot;, &quot;a&quot; - &quot;z&quot;,
@@ -217,8 +205,7 @@
     <p class="Pp">The suffix is actually added before the first &quot;.&quot; in
         the filename is there is one; for example:</p>
     <p class="Pp"></p>
-    <pre>
-    picture.gif       archive.tar.gz      readme
+    <pre>    picture.gif       archive.tar.gz      readme
     picture-1.gif     archive-1.tar.gz    readme-1
     picture-2.gif     archive-2.tar.gz    readme-2
     ...               ...                 ...
@@ -274,8 +261,7 @@
       <b>output_filename()</b> for mapping from content-types to extensions when
       there is no default extension to use.
     <p class="Pp"></p>
-    <pre>
-    $emap = $filer-&gt;output_typemap;
+    <pre>    $emap = $filer-&gt;output_typemap;
     $emap-&gt;{'text/plain'} = '.txt';
     $emap-&gt;{'text/html'}  = '.html';
     $emap-&gt;{'text/*'}     = '.txt';
@@ -295,16 +281,13 @@
         implementers <i>really</i> should try to just override its components
         instead of the whole thing. It works basically as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    $directory = $self-&gt;output_dir($head);
-
+    <pre>    $directory = $self-&gt;output_dir($head);
     $filename = $head-&gt;recommended_filename();
     if (!$filename or
          $self-&gt;ignore_filename() or
          $self-&gt;evil_filename($filename)) {
         $filename = $self-&gt;output_filename($head);
     }
-
     return $self-&gt;find_unused_path($directory, $filename);
     </pre>
     <p class="Pp"><b>Note:</b> There are many, many, many ways you might want to
@@ -389,9 +372,7 @@
     message-specific directory until the next parse is begun, so you can do
     this:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Path;
-
+<pre>    use File::Path;
     $parser-&gt;output_under(&quot;/tmp&quot;);
     $ent = eval { $parser-&gt;parse_open($msg); };   ### parse
     if (!$ent) {         ### parse failed

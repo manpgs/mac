@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ExtUtils::Depends(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-        use ExtUtils::Depends;
+<pre>        use ExtUtils::Depends;
         $package = new ExtUtils::Depends ('pkg::name', 'base::package')
         # set the flags and libraries to compile and link the module
         $package-&gt;set_inc(&quot;-I/opt/blahblah&quot;);
@@ -44,7 +44,6 @@
         $package-&gt;install (qw/foo.h data.txt/);
         # save the info
         $package-&gt;save_config('Files.pm');
-
         WriteMakefile(
                 'NAME' =&gt; 'Mymodule',
                 $package-&gt;get_makefile_vars()
@@ -60,8 +59,7 @@
 <p class="Pp">This works as long as the base extension is loaded with the
     RTLD_GLOBAL flag (usually done with a</p>
 <p class="Pp"></p>
-<pre>
-        sub dl_load_flags {0x01}
+<pre>        sub dl_load_flags {0x01}
 </pre>
 <p class="Pp">in the main .pm file) if you need to use functions defined in the
     module.</p>
@@ -81,11 +79,8 @@
     needn't know on exactly which modules yours depends.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  Gtk2 depends on Glib
-
+<pre>  Gtk2 depends on Glib
   Gnome2::Canvas depends on Gtk2
-
   ExtUtils::Depends-&gt;new ('Gnome2::Canvas', 'Gtk2');
      this command automatically brings in all the stuff needed
      for Glib, since Gtk2 depends on it.
@@ -94,15 +89,13 @@
     class method called <span class="Li">&quot;Inline&quot;</span>, inheritable
     by your module. This allows you in your module to simply say at the top:</p>
 <p class="Pp"></p>
-<pre>
-  package Mymod;
+<pre>  package Mymod;
   use parent 'Mymod::Install::Files'; # to inherit 'Inline' method
 </pre>
 <p class="Pp">And users of <span class="Li">&quot;Mymod&quot;</span> who want to
     write inline code (using Inline) will simply be able to write:</p>
 <p class="Pp"></p>
-<pre>
-  use Inline with =&gt; 'Mymod';
+<pre>  use Inline with =&gt; 'Mymod';
 </pre>
 <p class="Pp">And all the necessary header files, defines, and libraries will be
     added for them.</p>
@@ -111,8 +104,7 @@
     return a list of any modules that <span class="Li">&quot;Mymod&quot;</span>
     depends on - you will not normally need to use this:</p>
 <p class="Pp"></p>
-<pre>
-  require Mymod::Install::Files;
+<pre>  require Mymod::Install::Files;
   @deps = Mymod::Install::Files-&gt;deps;
 </pre>
 </section>
@@ -120,16 +112,19 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <dl class="Bl-tag">
   <dt>$object = ExtUtils::Depends-&gt;new($name, @deps)</dt>
-  <dd>Create a new depends object named <i></i><i>$name</i><i></i>. Any modules
-      listed in <i></i><i>@deps</i><i></i> (which may be empty) are added as
-      dependencies and their dependency information is loaded. An exception is
-      raised if any dependency information cannot be loaded.</dd>
+  <dd>Create a new depends object named
+      <i></i><span class="Li"><i>$name</i></span><i></i>. Any modules listed in
+      <i></i><span class="Li"><i>@deps</i></span><i></i> (which may be empty)
+      are added as dependencies and their dependency information is loaded. An
+      exception is raised if any dependency information cannot be loaded.</dd>
   <dt>$depends-&gt;add_deps (@deps)</dt>
-  <dd>Add modules listed in <i></i><i>@deps</i><i></i> as dependencies.</dd>
+  <dd>Add modules listed in <i></i><span class="Li"><i>@deps</i></span><i></i>
+      as dependencies.</dd>
   <dt>(hashes) = $depends-&gt;get_deps</dt>
-  <dd>Fetch information on the dependencies of <i></i><i>$depends</i><i></i> as
-      a hash of hashes, which are dependency information indexed by module name.
-      See <span class="Li">&quot;load&quot;</span>.</dd>
+  <dd>Fetch information on the dependencies of
+      <i></i><span class="Li"><i>$depends</i></span><i></i> as a hash of hashes,
+      which are dependency information indexed by module name. See
+      <span class="Li">&quot;load&quot;</span>.</dd>
   <dt>$depends-&gt;set_inc (@newinc)</dt>
   <dd>Add strings to the includes or cflags variables.</dd>
   <dt>$depends-&gt;set_libs (@newlibs)</dt>
@@ -146,35 +141,36 @@
   <dt>$depends-&gt;add_headers (list)</dt>
   <dd>No-op, for backward compatibility.</dd>
   <dt>$depends-&gt;install (@files)</dt>
-  <dd>Install <i></i><i>@files</i><i></i> to the data directory for
-      <i></i><i>$depends</i><i></i>.
+  <dd>Install <i></i><span class="Li"><i>@files</i></span><i></i> to the data
+      directory for <i></i><span class="Li"><i>$depends</i></span><i></i>.
     <p class="Pp">This actually works by adding them to the hash of pm files
         that gets passed through WriteMakefile's PM key.</p>
   </dd>
   <dt>$depends-&gt;save_config ($filename)</dt>
-  <dd>Save the important information from <i></i><i>$depends</i><i></i> to
-      <i></i><i>$filename</i><i></i>, and set it up to be installed as
-      <i>name</i>::Install::Files.
-    <p class="Pp">Note: the actual value of <i></i><i>$filename</i><i></i> is
-        unimportant so long as it doesn't clash with any other local files. It
-        will be installed as <i>name</i>::Install::Files.</p>
+  <dd>Save the important information from
+      <i></i><span class="Li"><i>$depends</i></span><i></i> to
+      <i></i><span class="Li"><i>$filename</i></span><i></i>, and set it up to
+      be installed as <i>name</i>::Install::Files.
+    <p class="Pp">Note: the actual value of
+        <i></i><span class="Li"><i>$filename</i></span><i></i> is unimportant so
+        long as it doesn't clash with any other local files. It will be
+        installed as <i>name</i>::Install::Files.</p>
   </dd>
   <dt id="hash"><a class="permalink" href="#hash">hash =
     $depends-&gt;get_makefile_vars</a></dt>
-  <dd>Return the information in <i></i><i>$depends</i><i></i> in a format
+  <dd>Return the information in
+      <i></i><span class="Li"><i>$depends</i></span><i></i> in a format
       digestible by WriteMakefile.
     <p class="Pp">This sets at least the following keys:</p>
     <p class="Pp"></p>
-    <pre>
-        INC
+    <pre>        INC
         LIBS
         TYPEMAPS
         PM
     </pre>
     <p class="Pp">And these if there is data to fill them:</p>
     <p class="Pp"></p>
-    <pre>
-        clean
+    <pre>        clean
         OBJECT
         XS
     </pre>
@@ -205,8 +201,7 @@
     provide a module <i>name</i>::Install::Files, which on loading will
     implement the following class methods:</p>
 <p class="Pp"></p>
-<pre>
-  $hashref = name::Install::Files-&gt;Inline('C');
+<pre>  $hashref = name::Install::Files-&gt;Inline('C');
   # hash to contain any necessary TYPEMAPS (array-ref), LIBS, INC
   @deps = name::Install::Files-&gt;deps;
   # any modules on which &quot;name&quot; depends
@@ -217,10 +212,10 @@
 </div>
 <dl class="Bl-tag">
   <dt>$depends-&gt;load_deps</dt>
-  <dd>Load <i></i><i>$depends</i><i></i> dependencies, by calling
-      <span class="Li">&quot;load&quot;</span> on each dependency module. This
-      is usually done for you, and should only be needed if you want to call
-      <span class="Li">&quot;get_deps&quot;</span> after calling
+  <dd>Load <i></i><span class="Li"><i>$depends</i></span><i></i> dependencies,
+      by calling <span class="Li">&quot;load&quot;</span> on each dependency
+      module. This is usually done for you, and should only be needed if you
+      want to call <span class="Li">&quot;get_deps&quot;</span> after calling
       <span class="Li">&quot;add_deps&quot;</span> manually.</dd>
 </dl>
 </section>
@@ -259,8 +254,7 @@
     Git repo (&lt;https://git.gnome.org/browse/perl-ExtUtils-Depends/&gt;).
     Create your own copy of the Git repo with:</p>
 <p class="Pp"></p>
-<pre>
-  git clone git://git.gnome.org/perl-ExtUtils-Depends (Git protocol)
+<pre>  git clone git://git.gnome.org/perl-ExtUtils-Depends (Git protocol)
   git clone https://git.gnome.org/browse/perl-ExtUtils-Depends/ (HTTPS)
 </pre>
 </section>

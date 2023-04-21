@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::netent(3pm)</title>
 </head>
@@ -29,13 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::netent qw(:FIELDS);
+<pre> use Net::netent qw(:FIELDS);
  getnetbyname(&quot;loopback&quot;)               or die &quot;bad net&quot;;
  printf &quot;%s is %08X\n&quot;, $n_name, $n_net;
-
  use Net::netent;
-
  $n = getnetbyname(&quot;loopback&quot;)          or die &quot;bad net&quot;;
  { # there's gotta be a better way, eh?
      @bytes = unpack(&quot;C4&quot;, pack(&quot;N&quot;, $n-&gt;net));
@@ -75,42 +73,32 @@
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">The <b>getnet()</b> functions do this in the Perl core:</p>
 <p class="Pp"></p>
-<pre>
-    sv_setiv(sv, (I32)nent-&gt;n_net);
+<pre>    sv_setiv(sv, (I32)nent-&gt;n_net);
 </pre>
 <p class="Pp">The <b>gethost()</b> functions do this in the Perl core:</p>
 <p class="Pp"></p>
-<pre>
-    sv_setpvn(sv, hent-&gt;h_addr, len);
+<pre>    sv_setpvn(sv, hent-&gt;h_addr, len);
 </pre>
 <p class="Pp">That means that the address comes back in binary for the host
     functions, and as a regular perl integer for the net ones. This seems a bug,
     but here's how to deal with it:</p>
 <p class="Pp"></p>
-<pre>
- use strict;
+<pre> use strict;
  use Socket;
  use Net::netent;
-
  @ARGV = ('loopback') unless @ARGV;
-
  my($n, $net);
-
  for $net ( @ARGV ) {
-
      unless ($n = getnetbyname($net)) {
         warn &quot;$0: no such net: $net\n&quot;;
         next;
      }
-
      printf &quot;\n%s is %s%s\n&quot;, 
             $net, 
             lc($n-&gt;name) eq lc($net) ? &quot;&quot; : &quot;*really* &quot;,
             $n-&gt;name;
-
      print &quot;\taliases are &quot;, join(&quot;, &quot;, @{$n-&gt;aliases}), &quot;\n&quot;
                 if @{$n-&gt;aliases};     
-
      # this is stupid; first, why is this not in binary?
      # second, why am i going through these convolutions
      # to make it looks right
@@ -119,7 +107,6 @@
         shift @a while @a &amp;&amp; $a[0] == 0;
         printf &quot;\taddr is %s [%d.%d.%d.%d]\n&quot;, $n-&gt;net, @a;
      }
-
      if ($n = getnetbyaddr($n-&gt;net)) {
         if (lc($n-&gt;name) ne lc($net)) {
             printf &quot;\tThat addr reverses to net %s!\n&quot;, $n-&gt;name;

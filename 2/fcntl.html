@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2011 Apple Inc.  All rights reserved.
+   Copyright (c) 2011-2022 Apple Inc.  All rights reserved.
   
    @APPLE_LICENSE_HEADER_START@
   
@@ -59,6 +59,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>FCNTL(2)</title>
 </head>
@@ -215,6 +216,11 @@
       when a write fails on a pipe or socket for which there is no reader. The
       semantics of the return value match those of the <var class="Fa">arg</var>
       of <code class="Dv">F_SETNOSIGPIPE</code>.</dd>
+  <dt id="F_TRANSFEREXTENTS"><a class="permalink" href="#F_TRANSFEREXTENTS"><code class="Dv">F_TRANSFEREXTENTS</code></a></dt>
+  <dd>Transfer any extra space in the file past the logical EOF (as previously
+      allocated via <code class="Dv">F_PREALLOCATE</code>) to another file. The
+      other file is specified via a file descriptor as the lone extra argument.
+      Both descriptors must reference regular files in the same volume.</dd>
 </dl>
 <p class="Pp">The flags for the <code class="Dv">F_GETFD</code> and
     <code class="Dv">F_SETFD</code> commands are as follows:</p>
@@ -250,16 +256,14 @@
 </div>
 <p class="Pp">Several commands are available for doing advisory file locking;
     they all operate on the following structure:</p>
-<div class="Bd Pp">
-<pre>
-        struct flock {
+<div class="Bd Pp Li">
+<pre>        struct flock {
 	    off_t	l_start;    /* starting offset */
 	    off_t	l_len;	    /* len = 0 means until end of file */
 	    pid_t	l_pid;	    /* lock owner */
 	    short	l_type;	    /* lock type: read/write, etc. */
 	    short	l_whence;   /* type of l_start */
-        };
-</pre>
+        };</pre>
 </div>
 <p class="Pp">The commands available for advisory record locking are as
   follows:</p>
@@ -369,16 +373,14 @@
     <code class="Er">EDEADLK</code> error.</p>
 <p class="Pp">The <code class="Dv">F_PREALLOCATE</code> command operates on the
     following structure:</p>
-<div class="Bd Pp">
-<pre>
-        typedef struct fstore {
+<div class="Bd Pp Li">
+<pre>        typedef struct fstore {
 	    u_int32_t fst_flags;      /* IN: flags word */
 	    int       fst_posmode;    /* IN: indicates offset field */
 	    off_t     fst_offset;     /* IN: start of the region */
 	    off_t     fst_length;     /* IN: size of the region */
 	    off_t     fst_bytesalloc; /* OUT: number of bytes allocated */
-        } fstore_t;
-</pre>
+        } fstore_t;</pre>
 </div>
 <p class="Pp">The flags (fst_flags) for the
     <code class="Dv">F_PREALLOCATE</code> command are as follows:</p>
@@ -389,6 +391,10 @@
       request if <var class="Fa">fst_length</var> is very large.)</dd>
   <dt id="F_ALLOCATEALL"><a class="permalink" href="#F_ALLOCATEALL"><code class="Dv">F_ALLOCATEALL</code></a></dt>
   <dd>Allocate all requested space or no space at all.</dd>
+  <dt id="F_ALLOCATEPERSIST"><a class="permalink" href="#F_ALLOCATEPERSIST"><code class="Dv">F_ALLOCATEPERSIST</code></a></dt>
+  <dd>Allocate space that is not freed when
+      <a class="Xr" href="../2/close">close(2)</a> is called. (Note that the
+      file system may ignore this request.)</dd>
 </dl>
 </div>
 <p class="Pp">The position modes (fst_posmode) for the
@@ -406,50 +412,42 @@
 </div>
 <p class="Pp">The <code class="Dv">F_PUNCHHOLE</code> command operates on the
     following structure:</p>
-<div class="Bd Pp">
-<pre>
-        typedef struct fpunchhole {
+<div class="Bd Pp Li">
+<pre>        typedef struct fpunchhole {
             u_int32_t fp_flags;     /* unused */
             u_int32_t reserved;     /* (to maintain 8-byte alignment) */
             off_t     fp_offset;    /* IN: start of the region */
             off_t     fp_length;    /* IN: size of the region */
-        } fpunchhole_t;
-</pre>
+        } fpunchhole_t;</pre>
 </div>
 <p class="Pp">The <code class="Dv">F_RDADVISE</code> command operates on the
     following structure which holds information passed from the user to the
     system:</p>
-<div class="Bd Pp">
-<pre>
-        struct radvisory {
+<div class="Bd Pp Li">
+<pre>        struct radvisory {
            off_t   ra_offset;  /* offset into the file */
            int     ra_count;   /* size of the read     */
-        };
-</pre>
+        };</pre>
 </div>
 <p class="Pp">The <code class="Dv">F_LOG2PHYS</code> command operates on the
     following structure:</p>
-<div class="Bd Pp">
-<pre>
-        struct log2phys {
+<div class="Bd Pp Li">
+<pre>        struct log2phys {
             u_int32_t l2p_flags;        /* unused so far */
             off_t     l2p_contigbytes;  /* unused so far */
             off_t     l2p_devoffset;    /* bytes into device */
-        };
-</pre>
+        };</pre>
 </div>
 <p class="Pp">The <code class="Dv">F_LOG2PHYS_EXT</code> command operates on the
     same structure as F_LOG2PHYS but treats it as an in/out:</p>
-<div class="Bd Pp">
-<pre>
-        struct log2phys {
+<div class="Bd Pp Li">
+<pre>        struct log2phys {
             u_int32_t l2p_flags;        /* unused so far */
             off_t     l2p_contigbytes;  /* IN: number of bytes to be queried;
                                            OUT: number of contiguous bytes allocated at this position */
             off_t     l2p_devoffset;    /* IN: bytes into file;
                                            OUT: bytes into device */
-        };
-</pre>
+        };</pre>
 </div>
 <p class="Pp">If <var class="Fa">fildes</var> is a socket, then the
     <code class="Dv">F_SETNOSIGPIPE</code> and
@@ -492,11 +490,10 @@
       is already exclusive-locked by another process; or the type is an
       exclusive lock and some portion of the segment of a file to be locked is
       already shared-locked or exclusive-locked by another process.</dd>
-  <dt id="EACCESS">[<a class="permalink" href="#EACCESS"><code class="Er">EACCESS</code></a>]</dt>
-  <dd>The argument <var class="Fa">cmd</var> is either
-      <code class="Dv">F_SETSIZE</code> or
-      <code class="Dv">F_WRITEBOOTSTRAP</code> and the calling process does not
-      have root privileges.</dd>
+  <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
+  <dd>The argument <var class="Fa">cmd</var> is
+      <code class="Dv">F_SETSIZE</code> and the calling process does not have
+      root privileges.</dd>
   <dt id="EBADF">[<a class="permalink" href="#EBADF"><code class="Er">EBADF</code></a>]</dt>
   <dd><var class="Fa">Fildes</var> is not a valid open file descriptor.
     <p class="Pp">The argument <var class="Fa">cmd</var> is
@@ -516,6 +513,10 @@
         <code class="Dv">F_LOG2PHYS</code> or
         <code class="Dv">F_LOG2PHYS_EXT</code> and <var class="Fa">fildes</var>
         is not a valid file descriptor open for reading.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_TRANSFEREXTENTS</code> and either file descriptor
+        does not correspond to a valid regular file, or either file is not open
+        for writing.</p>
   </dd>
   <dt id="EDEADLK">[<a class="permalink" href="#EDEADLK"><code class="Er">EDEADLK</code></a>]</dt>
   <dd>The argument <var class="Fa">cmd</var> is
@@ -552,9 +553,14 @@
     <p class="Pp">The argument <var class="Fa">cmd</var> is
         <code class="Dv">F_PUNCHHOLE</code> and either
         <var class="Fa">fp_offset</var> or <var class="Fa">fp_length</var> are
-        negative, or both <var class="Fa">fp_offset</var> and
+        negative, or when both <var class="Fa">fp_offset</var> and
         <var class="Fa">fp_length</var> are not multiples of the file system
-        block size.</p>
+        block size, or when either <var class="Fa">fp_flags</var> or
+        <var class="Fa">reserved</var> is non-zero value.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_TRANSFEREXTENTS</code> and the additional file
+        descriptor is negative or both file descriptors reference the same
+      file.</p>
   </dd>
   <dt id="EMFILE">[<a class="permalink" href="#EMFILE"><code class="Er">EMFILE</code></a>]</dt>
   <dd><var class="Fa">Cmd</var> is <code class="Dv">F_DUPFD</code> and the
@@ -595,6 +601,12 @@
   <dt id="ESRCH">[<a class="permalink" href="#ESRCH"><code class="Er">ESRCH</code></a>]</dt>
   <dd><var class="Fa">Cmd</var> is <code class="Dv">F_SETOWN</code> and the
       process ID given as argument is not in use.</dd>
+  <dt id="ENOTSUP">[<a class="permalink" href="#ENOTSUP"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd><var class="Fa">Cmd</var> is <code class="Dv">F_TRANSFEREXTENTS</code> and
+      the given files aren't on an APFS volume.</dd>
+  <dt id="EXDEV">[<a class="permalink" href="#EXDEV"><code class="Er">EXDEV</code></a>]</dt>
+  <dd><var class="Fa">Cmd</var> is <code class="Dv">F_TRANSFEREXTENTS</code> and
+      the referenced files are not in the same volume.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -618,7 +630,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">June 17, 2021</td>
+    <td class="foot-date">August 12, 2021</td>
     <td class="foot-os">BSD 4.2</td>
   </tr>
 </table>

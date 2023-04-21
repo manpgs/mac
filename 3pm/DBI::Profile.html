@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::Profile(3)</title>
 </head>
@@ -32,15 +33,13 @@
 <p class="Pp">The easiest way to enable DBI profiling is to set the DBI_PROFILE
     environment variable to 2 and then run your code as usual:</p>
 <p class="Pp"></p>
-<pre>
-  DBI_PROFILE=2 prog.pl
+<pre>  DBI_PROFILE=2 prog.pl
 </pre>
 <p class="Pp">This will profile your program and then output a textual summary
     grouped by query when the program exits. You can also enable profiling by
     setting the Profile attribute of any DBI handle:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{Profile} = 2;
+<pre>  $dbh-&gt;{Profile} = 2;
 </pre>
 <p class="Pp">Then the summary will be printed when the handle is destroyed.</p>
 <p class="Pp">Many other values apart from are possible - see &quot;ENABLING A
@@ -63,7 +62,7 @@
   <dd>Every method call on a DBI handle passes through a single 'dispatch'
       function which manages all the common aspects of DBI method calls, such as
       handling the RaiseError attribute.</dd>
-  <dt id="Data"><a class="permalink" href="#Data">Data Collection</a></dt>
+  <dt>Data Collection</dt>
   <dd>If profiling is enabled for a handle then the dispatch code takes a
       high-resolution timestamp soon after it is entered. Then, after calling
       the appropriate method and just before returning, it takes another
@@ -71,7 +70,7 @@
       That function is passed the two timestamps plus the DBI handle and the
       name of the method that was called. That data about a single DBI method
       call is called a <i>profile sample</i>.</dd>
-  <dt id="Data~2"><a class="permalink" href="#Data~2">Data Filtering</a></dt>
+  <dt>Data Filtering</dt>
   <dd>If the method call was invoked by the DBI or by a driver then the call is
       ignored for profiling because the time spent will be accounted for by the
       original 'outermost' call for your code.
@@ -82,7 +81,7 @@
         If this was not done then it would be very easy to double count time
         spent inside the DBI.</p>
   </dd>
-  <dt id="Data~3"><a class="permalink" href="#Data~3">Data Storage Tree</a></dt>
+  <dt>Data Storage Tree</dt>
   <dd>The profile data is accumulated as 'leaves on a tree'. The 'path' through
       the branches of the tree to a particular leaf is determined dynamically
       for each sample. This is a key feature of DBI profiling.
@@ -90,14 +89,12 @@
         uses each value in the Path to step into and grow the Data tree.</p>
     <p class="Pp">For example, if the Path is</p>
     <p class="Pp"></p>
-    <pre>
-  [ 'foo', 'bar', 'baz' ]
+    <pre>  [ 'foo', 'bar', 'baz' ]
     </pre>
     <p class="Pp">then the new profile sample data will be <i>merged</i> into
         the tree at</p>
     <p class="Pp"></p>
-    <pre>
-  $h-&gt;{Profile}-&gt;{Data}-&gt;{foo}-&gt;{bar}-&gt;{baz}
+    <pre>  $h-&gt;{Profile}-&gt;{Data}-&gt;{foo}-&gt;{bar}-&gt;{baz}
     </pre>
     <p class="Pp">But it's not very useful to merge all the call data into one
         leaf node (except to get an overall 'time spent inside the DBI' total).
@@ -112,23 +109,20 @@
         corresponding entry in the Data to be the name of the method that was
         called. For example, if the Path was:</p>
     <p class="Pp"></p>
-    <pre>
-  [ 'foo', '!MethodName', 'bar' ]
+    <pre>  [ 'foo', '!MethodName', 'bar' ]
     </pre>
     <p class="Pp">and the <b>selectall_arrayref()</b> method was called, then
         the profile sample data for that call will be merged into the tree
       at:</p>
     <p class="Pp"></p>
-    <pre>
-  $h-&gt;{Profile}-&gt;{Data}-&gt;{foo}-&gt;{selectall_arrayref}-&gt;{bar}
+    <pre>  $h-&gt;{Profile}-&gt;{Data}-&gt;{foo}-&gt;{selectall_arrayref}-&gt;{bar}
     </pre>
   </dd>
   <dt id="Profile"><a class="permalink" href="#Profile">Profile Data</a></dt>
   <dd>Profile data is stored at the 'leaves' of the tree as references to an
       array of numeric values. For example:
     <p class="Pp"></p>
-    <pre>
-  [
+    <pre>  [
     106,                  # 0: count of samples at this node
     0.0312958955764771,   # 1: total duration
     0.000490069389343262, # 2: first duration
@@ -150,8 +144,7 @@
 <p class="Pp">Profiling is enabled for a handle by assigning to the Profile
     attribute. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;{Profile} = DBI::Profile-&gt;new();
+<pre>  $h-&gt;{Profile} = DBI::Profile-&gt;new();
 </pre>
 <p class="Pp">The Profile attribute holds a blessed reference to a hash object
     that contains the profile data and attributes relating to it.</p>
@@ -160,8 +153,7 @@
     DBI trace file handle (STDERR by default).</p>
 <p class="Pp">All these examples have the same effect as each other:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;{Profile} = 0;
+<pre>  $h-&gt;{Profile} = 0;
   $h-&gt;{Profile} = &quot;/DBI::Profile&quot;;
   $h-&gt;{Profile} = DBI::Profile-&gt;new();
   $h-&gt;{Profile} = {};
@@ -169,8 +161,7 @@
 </pre>
 <p class="Pp">Similarly, these examples have the same effect as each other:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;{Profile} = 6;
+<pre>  $h-&gt;{Profile} = 6;
   $h-&gt;{Profile} = &quot;6/DBI::Profile&quot;;
   $h-&gt;{Profile} = &quot;!Statement:!MethodName/DBI::Profile&quot;;
   $h-&gt;{Profile} = { Path =&gt; [ '!Statement', '!MethodName' ] };
@@ -180,15 +171,11 @@
     the reference is blessed into that class.</p>
 <p class="Pp">If a string is given then it is processed like this:</p>
 <p class="Pp"></p>
-<pre>
-    ($path, $module, $args) = split /\//, $string, 3
-
+<pre>    ($path, $module, $args) = split /\//, $string, 3
     @path = split /:/, $path
     @args = split /:/, $args
-
     eval &quot;require $module&quot; if $module
     $module ||= &quot;DBI::Profile&quot;
-
     $module-&gt;new( Path =&gt; \@Path, @args )
 </pre>
 <p class="Pp">So the first value is used to select the Path to be used (see
@@ -202,8 +189,7 @@
     values. The simplest way to explain how the values are interpreted is to
     show the code:</p>
 <p class="Pp"></p>
-<pre>
-    push @Path, &quot;DBI&quot;           if $path_elem &amp; 0x01;
+<pre>    push @Path, &quot;DBI&quot;           if $path_elem &amp; 0x01;
     push @Path, &quot;!Statement&quot;    if $path_elem &amp; 0x02;
     push @Path, &quot;!MethodName&quot;   if $path_elem &amp; 0x04;
     push @Path, &quot;!MethodClass&quot;  if $path_elem &amp; 0x08;
@@ -218,8 +204,7 @@
     that attributes can be embedded in the Data Source Name string which can be
     passed in to a script as a parameter. For example:</p>
 <p class="Pp"></p>
-<pre>
-    dbi:DriverName(Profile=&gt;2):dbname
+<pre>    dbi:DriverName(Profile=&gt;2):dbname
     dbi:DriverName(Profile=&gt;{Username}:!Statement/MyProfiler/Foo:42):dbname
 </pre>
 <p class="Pp">And also, if the <span class="Li">&quot;DBI_PROFILE&quot;</span>
@@ -235,7 +220,7 @@
     reference and if the following values don't exist it will create them as
     needed:</p>
 <section class="Ss">
-<h2 class="Ss" id="Data~4"><a class="permalink" href="#Data~4">Data</a></h2>
+<h2 class="Ss" id="Data"><a class="permalink" href="#Data">Data</a></h2>
 <p class="Pp">A reference to a hash containing the collected profile data.</p>
 </section>
 <section class="Ss">
@@ -245,8 +230,7 @@
 <p class="Pp">If the value of Path is anything other than an array reference, it
     is treated as if it was:</p>
 <p class="Pp"></p>
-<pre>
-        [ '!Statement' ]
+<pre>        [ '!Statement' ]
 </pre>
 <p class="Pp">The elements of Path array can be one of the following types:</p>
 <p class="Pp"><i>Special Constant</i></p>
@@ -271,8 +255,7 @@
     package, that the profile sample relates to. This shows you where the method
     was implemented. For example:</p>
 <p class="Pp"></p>
-<pre>
-  'DBD::_::db::selectrow_arrayref' =&gt;
+<pre>  'DBD::_::db::selectrow_arrayref' =&gt;
       0.022902s
   'DBD::mysql::db::selectrow_arrayref' =&gt;
       2.244521s / 99 = 0.022445s avg (first 0.022813s, min 0.022051s, max 0.028932s)
@@ -305,14 +288,12 @@
     current value of <b>time()</b> but with reduced precision. The value used is
     determined in this way:</p>
 <p class="Pp"></p>
-<pre>
-    int( time() / N ) * N
+<pre>    int( time() / N ) * N
 </pre>
 <p class="Pp">This is a useful way to segregate a profile into time slots. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-    [ '!Time~60', '!Statement' ]
+<pre>    [ '!Time~60', '!Statement' ]
 </pre>
 <p class="Pp"><i>Code Reference</i></p>
 <p class="Pp">The subroutine is passed the handle it was called on and the DBI
@@ -360,19 +341,16 @@
 <p class="Pp">The current accumulated profile data can be formatted and output
     using</p>
 <p class="Pp"></p>
-<pre>
-    print $h-&gt;{Profile}-&gt;format;
+<pre>    print $h-&gt;{Profile}-&gt;format;
 </pre>
 <p class="Pp">To discard the profile data and start collecting fresh data you
     can do:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;{Profile}-&gt;{Data} = undef;
+<pre>    $h-&gt;{Profile}-&gt;{Data} = undef;
 </pre>
 <p class="Pp">The default results format looks like this:</p>
 <p class="Pp"></p>
-<pre>
-  DBI::Profile: 0.001015s 42.7% (5 calls) programname @ YYYY-MM-DD HH:MM:SS
+<pre>  DBI::Profile: 0.001015s 42.7% (5 calls) programname @ YYYY-MM-DD HH:MM:SS
   '' =&gt;
       0.000024s / 2 = 0.000012s avg (first 0.000015s, min 0.000009s, max 0.000015s)
   'SELECT mode,size,name FROM table' =&gt;
@@ -397,8 +375,7 @@
     an extract of a more detailed example using both statement text and method
     name in the path:</p>
 <p class="Pp"></p>
-<pre>
-  'SELECT mode,size,name FROM table' =&gt;
+<pre>  'SELECT mode,size,name FROM table' =&gt;
       'FETCH' =&gt;
           0.000076s
       'fetchrow_hashref' =&gt;
@@ -417,16 +394,14 @@
 <p class="Pp">The default method of reporting is for the DESTROY method of the
     Profile object to format the results and write them using:</p>
 <p class="Pp"></p>
-<pre>
-    DBI-&gt;trace_msg($results, 0);  # see $ON_DESTROY_DUMP below
+<pre>    DBI-&gt;trace_msg($results, 0);  # see $ON_DESTROY_DUMP below
 </pre>
 <p class="Pp">to write them to the DBI <b>trace()</b> filehandle (which defaults
     to STDERR). To direct the DBI trace filehandle to write to a file without
     enabling tracing the <b>trace()</b> method can be called with a trace level
     of 0. For example:</p>
 <p class="Pp"></p>
-<pre>
-    DBI-&gt;trace(0, $filename);
+<pre>    DBI-&gt;trace(0, $filename);
 </pre>
 <p class="Pp">The same effect can be achieved without changing the code by
     setting the <span class="Li">&quot;DBI_TRACE&quot;</span> environment
@@ -435,8 +410,7 @@
     variable holds a code ref that's called to perform the output of the
     formatted results. The default value is:</p>
 <p class="Pp"></p>
-<pre>
-  $ON_DESTROY_DUMP = sub { DBI-&gt;trace_msg($results, 0) };
+<pre>  $ON_DESTROY_DUMP = sub { DBI-&gt;trace_msg($results, 0) };
 </pre>
 <p class="Pp">Apart from making it easy to send the dump elsewhere, it can also
     be useful as a simple way to disable dumping results.</p>
@@ -459,8 +433,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_node_path_list"><a class="permalink" href="#as_node_path_list">as_node_path_list</a></h2>
-<pre>
-  @ary = $dbh-&gt;{Profile}-&gt;as_node_path_list();
+<pre>  @ary = $dbh-&gt;{Profile}-&gt;as_node_path_list();
   @ary = $dbh-&gt;{Profile}-&gt;as_node_path_list($node, $path);
 </pre>
 <p class="Pp">Returns the collected data ($dbh-&gt;{Profile}{Data}) restructured
@@ -471,15 +444,13 @@
     node.</p>
 <p class="Pp">For example, given a data tree like this:</p>
 <p class="Pp"></p>
-<pre>
-    {key1a}{key2a}[node1]
+<pre>    {key1a}{key2a}[node1]
     {key1a}{key2b}[node2]
     {key1b}{key2a}{key3a}[node3]
 </pre>
 <p class="Pp">The <b>as_node_path_list()</b> method will return this list:</p>
 <p class="Pp"></p>
-<pre>
-    [ [node1], 'key1a', 'key2a' ]
+<pre>    [ [node1], 'key1a', 'key2a' ]
     [ [node2], 'key1a', 'key2b' ]
     [ [node3], 'key1b', 'key2a', 'key3a' ]
 </pre>
@@ -493,8 +464,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_text"><a class="permalink" href="#as_text">as_text</a></h2>
-<pre>
-  @txt = $dbh-&gt;{Profile}-&gt;as_text();
+<pre>  @txt = $dbh-&gt;{Profile}-&gt;as_text();
   $txt = $dbh-&gt;{Profile}-&gt;as_text({
       node      =&gt; undef,
       path      =&gt; [],
@@ -519,8 +489,7 @@
     sub is ignored. For example, to sort the nodes by the second level key you
     could use:</p>
 <p class="Pp"></p>
-<pre>
-  sortsub =&gt; sub { my $ary=shift; @$ary = sort { $a-&gt;[2] cmp $b-&gt;[2] } @$ary }
+<pre>  sortsub =&gt; sub { my $ary=shift; @$ary = sort { $a-&gt;[2] cmp $b-&gt;[2] } @$ary }
 </pre>
 <p class="Pp">The <span class="Li">&quot;format&quot;</span> argument is a
     <span class="Li">&quot;sprintf&quot;</span> format string that specifies the
@@ -528,8 +497,7 @@
     index mechanism to specify which of the arguments should appear where in the
     string. The arguments to sprintf are:</p>
 <p class="Pp"></p>
-<pre>
-     1:  path to node, joined with the separator
+<pre>     1:  path to node, joined with the separator
      2:  average duration (total duration/count)
          (3 thru 9 are currently unused)
     10:  count
@@ -555,17 +523,14 @@
     merge leaf node values.</p>
 <section class="Ss">
 <h2 class="Ss" id="dbi_profile_merge_nodes"><a class="permalink" href="#dbi_profile_merge_nodes">dbi_profile_merge_nodes</a></h2>
-<pre>
-  use DBI qw(dbi_profile_merge_nodes);
-
+<pre>  use DBI qw(dbi_profile_merge_nodes);
   $time_in_dbi = dbi_profile_merge_nodes(my $totals=[], @$leaves);
 </pre>
 <p class="Pp">Merges profile data node. Given a reference to a destination
     array, and zero or more references to profile data, merges the profile data
     into the destination array. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $time_in_dbi = dbi_profile_merge_nodes(
+<pre>  $time_in_dbi = dbi_profile_merge_nodes(
       my $totals=[],
       [ 10, 0.51, 0.11, 0.01, 0.22, 1023110000, 1023110010 ],
       [ 15, 0.42, 0.12, 0.02, 0.23, 1023110005, 1023110009 ],
@@ -573,8 +538,7 @@
 </pre>
 <p class="Pp"><span class="Li">$totals</span> will then contain</p>
 <p class="Pp"></p>
-<pre>
-  [ 25, 0.93, 0.11, 0.01, 0.23, 1023110000, 1023110010 ]
+<pre>  [ 25, 0.93, 0.11, 0.01, 0.23, 1023110000, 1023110010 ]
 </pre>
 <p class="Pp">and <span class="Li">$time_in_dbi</span> will be 0.93;</p>
 <p class="Pp">The second argument need not be just leaf nodes. If given a
@@ -584,8 +548,7 @@
     request, your logging code run at the end of the request (i.e. mod_perl
     LogHandler) could use:</p>
 <p class="Pp"></p>
-<pre>
-  my $time_in_dbi = 0;
+<pre>  my $time_in_dbi = 0;
   if (my $Profile = $dbh-&gt;{Profile}) { # if DBI profiling is enabled
       $time_in_dbi = dbi_profile_merge_nodes(my $total=[], $Profile-&gt;{Data});
       $Profile-&gt;{Data} = {}; # reset the profile data
@@ -606,8 +569,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Using_The_Path_Attribute"><a class="permalink" href="#Using_The_Path_Attribute">Using
   The Path Attribute</a></h2>
-<pre>
-  XXX example to be added later using a selectall_arrayref call
+<pre>  XXX example to be added later using a selectall_arrayref call
   XXX nested inside a fetch loop where the first column of the
   XXX outer loop is bound to the profile Path using
   XXX bind_column(1, \${ $dbh-&gt;{Profile}-&gt;{Path}-&gt;[0] })
@@ -621,14 +583,10 @@
 <p class="Pp">The <b>dbi_profile()</b> function can be used to add extra sample
     data into the profile data tree. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use DBI;
+<pre>    use DBI;
     use DBI::Profile (dbi_profile dbi_time);
-
     my $t1 = dbi_time(); # floating point high-resolution time
-
     ... execute code you want to profile here ...
-
     my $t2 = dbi_time();
     dbi_profile($h, $statement, $method, $t1, $t2);
 </pre>

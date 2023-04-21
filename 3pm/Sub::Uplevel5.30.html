@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sub::Uplevel(3)</title>
 </head>
@@ -33,17 +34,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Sub::Uplevel;
-
+<pre>  use Sub::Uplevel;
   sub foo {
       print join &quot; - &quot;, caller;
   }
-
   sub bar {
       uplevel 1, \&amp;foo;
   }
-
   #line 11
   bar();    # main - foo.plx - 11
 </pre>
@@ -57,8 +54,7 @@
 <dl class="Bl-tag">
   <dt id="uplevel"><a class="permalink" href="#uplevel"><b>uplevel</b></a></dt>
   <dd>
-    <pre>
-  uplevel $num_frames, \&amp;func, @args;
+    <pre>  uplevel $num_frames, \&amp;func, @args;
     </pre>
     <p class="Pp">Makes the given function think it's being executed
         <span class="Li">$num_frames</span> higher than the current stack level.
@@ -69,8 +65,7 @@
         &amp;some_func&quot;</span> but you don't immediately exit the current
         subroutine. So while you can't do this:</p>
     <p class="Pp"></p>
-    <pre>
-    sub wrapper {
+    <pre>    sub wrapper {
         print &quot;Before\n&quot;;
         goto &amp;some_func;
         print &quot;After\n&quot;;
@@ -78,8 +73,7 @@
     </pre>
     <p class="Pp">you can do this:</p>
     <p class="Pp"></p>
-    <pre>
-    sub wrapper {
+    <pre>    sub wrapper {
         print &quot;Before\n&quot;;
         my @out = uplevel 1, &amp;some_func;
         print &quot;After\n&quot;;
@@ -94,8 +88,7 @@
         the global <span class="Li">$Sub::Uplevel::CHECK_FRAMES</span> to true
         before loading Sub::Uplevel for the first time as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    #!/usr/bin/perl
+    <pre>    #!/usr/bin/perl
     
     BEGIN {
         $Sub::Uplevel::CHECK_FRAMES = 1;
@@ -112,11 +105,8 @@
 <p class="Pp">The main reason I wrote this module is so I could write wrappers
     around functions and they wouldn't be aware they've been wrapped.</p>
 <p class="Pp"></p>
-<pre>
-    use Sub::Uplevel;
-
+<pre>    use Sub::Uplevel;
     my $original_foo = \&amp;foo;
-
     *foo = sub {
         my @output = uplevel 1, $original_foo;
         print &quot;foo() returned:  @output&quot;;
@@ -147,8 +137,7 @@
     To forcibly recompile Exporter (and Exporter::Heavy) after loading
     Sub::Uplevel, use it with the &quot;:aggressive&quot; tag:</p>
 <p class="Pp"></p>
-<pre>
-    use Sub::Uplevel qw/:aggressive/;
+<pre>    use Sub::Uplevel qw/:aggressive/;
 </pre>
 <p class="Pp">The private function
     <span class="Li">&quot;Sub::Uplevel::_force_reload()&quot;</span> may be
@@ -192,8 +181,7 @@
     public review and contribution under the terms of the license.</p>
 <p class="Pp">&lt;https://github.com/Perl-Toolchain-Gang/Sub-Uplevel&gt;</p>
 <p class="Pp"></p>
-<pre>
-  git clone https://github.com/Perl-Toolchain-Gang/Sub-Uplevel.git
+<pre>  git clone https://github.com/Perl-Toolchain-Gang/Sub-Uplevel.git
 </pre>
 </section>
 </section>

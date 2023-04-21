@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual(3)</title>
 </head>
@@ -70,73 +71,54 @@
 <section class="Sh">
 <h1 class="Sh" id="AN_EXAMPLE"><a class="permalink" href="#AN_EXAMPLE">AN
   EXAMPLE</a></h1>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Moose;
-
   has 'first_name' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
-
   has 'last_name' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
-
   no Moose;
   __PACKAGE__-&gt;meta-&gt;make_immutable;
 </pre>
 <p class="Pp">This is a <i>complete and usable</i> class definition!</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use DateTime;
   use Moose;
-
   extends 'Person';
-
   has 'password' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
-
   has 'last_login' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'DateTime',
       handles =&gt; { 'date_of_last_login' =&gt; 'date' },
   );
-
   sub login {
       my $self = shift;
       my $pw   = shift;
-
       return 0 if $pw ne $self-&gt;password;
-
       $self-&gt;last_login( DateTime-&gt;now() );
-
       return 1;
   }
-
   no Moose;
   __PACKAGE__-&gt;meta-&gt;make_immutable;
 </pre>
 <p class="Pp">When ready to instantiate your class in an application, use it in
     the &quot;traditional&quot; Perl manner:</p>
 <p class="Pp"></p>
-<pre>
-  use User;
-
+<pre>  use User;
   my $user = User-&gt;new(
     first_name =&gt; 'Example',
     last_name  =&gt; 'User',
     password   =&gt; 'letmein',
   );
-
   $user-&gt;login('letmein');
-
   say $user-&gt;date_of_last_login;
 </pre>
 <p class="Pp">We'll leave the line-by-line explanation of this code to other

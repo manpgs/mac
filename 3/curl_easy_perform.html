@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_easy_perform(3)</title>
 </head>
@@ -44,19 +47,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<p class="Pp"><b>CURLcode curl_easy_perform(CURL
-    *</b><i>easy_handle</i><b>);</b></p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_perform(CURL *easy_handle);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">Invoke this function after <i>curl_easy_init(3)</i> and all the
-    <i>curl_easy_setopt(3)</i> calls are made, and will perform the transfer as
+    <i>curl_easy_setopt(3)</i> calls are made, and it performs the transfer as
     described in the options. It must be called with the same <b>easy_handle</b>
     as input as the <i>curl_easy_init(3)</i> call returned.</p>
 <p class="Pp"><i>curl_easy_perform(3)</i> performs the entire request in a
-    blocking manner and returns when done, or if it failed. For non-blocking
-    behavior, see <i>curl_multi_perform(3)</i>.</p>
+    blocking manner and returns when done, or earlier if it fails. For
+    non-blocking behavior, see <i>curl_multi_perform(3)</i>.</p>
 <p class="Pp">You can do any amount of calls to <i>curl_easy_perform(3)</i>
     while using the same <b>easy_handle</b>. If you intend to transfer more than
     one file, you are even encouraged to do so. libcurl will then attempt to
@@ -68,8 +70,28 @@
     using the same <b>easy_handle</b>. Let the function return first before
     invoking it another time. If you want parallel transfers, you must use
     several curl easy_handles.</p>
+<p class="Pp">A network transfer moves data to a peer or from a peer. An
+    application tells libcurl how to receive data by setting the
+    <i>CURLOPT_WRITEFUNCTION(3)</i> and <i>CURLOPT_WRITEDATA(3)</i> options. To
+    tell libcurl what data to send, there are a few more alternatives but two
+    common ones are <i>CURLOPT_READFUNCTION(3)</i> and
+    <i>CURLOPT_POSTFIELDS(3)</i>.</p>
 <p class="Pp">While the <b>easy_handle</b> is added to a multi handle, it cannot
     be used by <i>curl_easy_perform(3)</i>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>CURL *curl = curl_easy_init();
+if(curl) {
+  CURLcode res;
+  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
+  res = curl_easy_perform(curl);
+  curl_easy_cleanup(curl);
+}</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Always</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
@@ -81,18 +103,6 @@
     error buffer when non-zero is returned.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
-if(curl) {
-  CURLcode res;
-  curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
-  res = curl_easy_perform(curl);
-  curl_easy_cleanup(curl);
-}
-</pre>
-</section>
-<section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp"><b>curl_easy_init</b>(3), <b>curl_easy_setopt</b>(3),
@@ -102,8 +112,8 @@ if(curl) {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

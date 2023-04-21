@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SLAPD-SOCK(5)</title>
 </head>
@@ -49,12 +50,10 @@
   <dt id="extensions"><a class="permalink" href="#extensions"><b>extensions [
     binddn | peername | ssf | connid ]*</b></a></dt>
   <dd>Enables the sending of additional meta-attributes with each request.
-    <pre>
-binddn: &lt;bound DN&gt;
+    <pre>binddn: &lt;bound DN&gt;
 peername: IP=&lt;address&gt;:&lt;port&gt;
 ssf: &lt;SSF value&gt;
-connid: &lt;connection ID&gt;
-    </pre>
+connid: &lt;connection ID&gt;</pre>
   </dd>
   <dt id="socketpath"><a class="permalink" href="#socketpath"><b>socketpath
     &lt;pathname&gt;</b></a></dt>
@@ -83,52 +82,43 @@ connid: &lt;connection ID&gt;
     the addition of a newline to terminate the command parameters. The following
     commands are sent:</p>
 <div class="Bd-indent">
-<pre>
-ADD
+<pre>ADD
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 &lt;entry in LDIF format&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-BIND
+<pre>BIND
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 dn: &lt;DN&gt;
 method: &lt;method number&gt;
 credlen: &lt;length of &lt;credentials&gt;&gt;
 cred: &lt;credentials&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-COMPARE
+<pre>COMPARE
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 dn: &lt;DN&gt;
 &lt;attribute&gt;: &lt;value&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-DELETE
+<pre>DELETE
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 dn: &lt;DN&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-MODIFY
+<pre>MODIFY
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 dn: &lt;DN&gt;
@@ -137,26 +127,22 @@ dn: &lt;DN&gt;
     &lt;repeat { &lt;attribute&gt;: &lt;value&gt; }&gt;
     -
 }&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-MODRDN
+<pre>MODRDN
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 dn: &lt;DN&gt;
 newrdn: &lt;new RDN&gt;
 deleteoldrdn: &lt;0 or 1&gt;
 &lt;if new superior is specified: &quot;newSuperior: &lt;DN&gt;&quot;&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-SEARCH
+<pre>SEARCH
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
 base: &lt;base DN&gt;
@@ -167,26 +153,21 @@ timelimit: &lt;time limit&gt;
 filter: &lt;filter&gt;
 attrsonly: &lt;0 or 1&gt;
 attrs: &lt;&quot;all&quot; or space-separated attribute list&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-UNBIND
+<pre>UNBIND
 msgid: &lt;message id&gt;
 &lt;repeat { &quot;suffix:&quot; &lt;database suffix DN&gt; }&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp">The commands - except <b>unbind</b> - should output:</p>
 <div class="Bd-indent">
-<pre>
-RESULT
+<pre>RESULT
 code: &lt;integer&gt;
 matched: &lt;matched DN&gt;
-info: &lt;text&gt;
-</pre>
+info: &lt;text&gt;</pre>
 </div>
 where only RESULT is mandatory, and then close the socket. The <b>search</b>
   RESULT should be preceded by the entries in LDIF format, each entry followed
@@ -200,24 +181,20 @@ where only RESULT is mandatory, and then close the socket. The <b>search</b>
     ENTRY message, defined below. The RESULT message is similar to the one
     above, but also includes the msgid and any configured extensions:</p>
 <div class="Bd-indent">
-<pre>
-RESULT
+<pre>RESULT
 msgid: &lt;message id&gt;
 code: &lt;integer&gt;
 matched: &lt;matched DN&gt;
 info: &lt;text&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp">Typically both the msgid and the connid will be needed to match a
     result message to a request. The ENTRY message has the form</p>
 <div class="Bd-indent">
-<pre>
-ENTRY
+<pre>ENTRY
 msgid: &lt;message id&gt;
 &lt;entry in LDIF format&gt;
-&lt;blank line&gt;
-</pre>
+&lt;blank line&gt;</pre>
 </div>
 <p class="Pp"></p>
 </section>

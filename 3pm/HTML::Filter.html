@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTML::Filter(3)</title>
 </head>
@@ -36,8 +37,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- require HTML::Filter;
+<pre> require HTML::Filter;
  $p = HTML::Filter-&gt;new-&gt;parse_file(&quot;index.html&quot;);
 </pre>
 </section>
@@ -60,8 +60,7 @@
     an HTML file. This is achieved by simply overriding the comment method to do
     nothing.</p>
 <p class="Pp"></p>
-<pre>
-  package CommentStripper;
+<pre>  package CommentStripper;
   require HTML::Filter;
   @ISA=qw(HTML::Filter);
   sub comment { }  # ignore comments
@@ -71,8 +70,7 @@
     <b>end()</b> methods to count table tags and then make output not happen
     when inside a table.</p>
 <p class="Pp"></p>
-<pre>
-  package TableStripper;
+<pre>  package TableStripper;
   require HTML::Filter;
   @ISA=qw(HTML::Filter);
   sub start
@@ -81,14 +79,12 @@
      $self-&gt;{table_seen}++ if $_[0] eq &quot;table&quot;;
      $self-&gt;SUPER::start(@_);
   }
-
   sub end
   {
      my $self = shift;
      $self-&gt;SUPER::end(@_);
      $self-&gt;{table_seen}-- if $_[0] eq &quot;table&quot;;
   }
-
   sub output
   {
       my $self = shift;
@@ -100,8 +96,7 @@
 <p class="Pp">If you want to collect the parsed text internally you might want
     to do something like this:</p>
 <p class="Pp"></p>
-<pre>
-  package FilterIntoString;
+<pre>  package FilterIntoString;
   require HTML::Filter;
   @ISA=qw(HTML::Filter);
   sub output { push(@{$_[0]-&gt;{fhtml}}, $_[1]) }

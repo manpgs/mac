@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-MERGE-BASE(1)</title>
 </head>
@@ -31,13 +32,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git merge-base</i> [-a|--all] &lt;commit&gt; &lt;commit&gt;...
+<pre><i>git merge-base</i> [-a|--all] &lt;commit&gt; &lt;commit&gt;...
 <i>git merge-base</i> [-a|--all] --octopus &lt;commit&gt;...
 <i>git merge-base</i> --is-ancestor &lt;commit&gt; &lt;commit&gt;
 <i>git merge-base</i> --independent &lt;commit&gt;...
-<i>git merge-base</i> --fork-point &lt;ref&gt; [&lt;commit&gt;]
-</pre>
+<i>git merge-base</i> --fork-point &lt;ref&gt; [&lt;commit&gt;]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -101,8 +100,7 @@
 <pre>
          o---o---o---B
         /
----o---1---o---o---o---A
-</pre>
+---o---1---o---o---o---A</pre>
 </div>
 <p class="Pp">the merge base between <i>A</i> and <i>B</i> is <i>1</i>.</p>
 <p class="Pp">Given three commits <i>A</i>, <i>B</i> and <i>C</i>, <b>git
@@ -116,8 +114,7 @@
       /
      /   o---o---o---B
     /   /
----2---1---o---o---o---A
-</pre>
+---2---1---o---o---o---A</pre>
 </div>
 <p class="Pp">the result of <b>git merge-base A B C</b> is <i>1</i>. This is
     because the equivalent topology with a merge commit <i>M</i> between
@@ -129,8 +126,7 @@
       /                 \
      /   o---o---o---o---M
     /   /
----2---1---o---o---o---A
-</pre>
+---2---1---o---o---o---A</pre>
 </div>
 <p class="Pp">and the result of <b>git merge-base A M</b> is <i>1</i>. Commit
     <i>2</i> is also a common ancestor between <i>A</i> and <i>M</i>, but
@@ -143,13 +139,11 @@
     topology:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
----1---o---A
+<pre>---1---o---A
     \ /
      X
     / \
----2---o---o---B
-</pre>
+---2---o---o---B</pre>
 </div>
 <p class="Pp">both <i>1</i> and <i>2</i> are merge-bases of A and B. Neither one
     is better than the other (both are <i>best</i> merge bases). When the
@@ -161,23 +155,19 @@
     ancestor of B. You will see this idiom used often in older scripts.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-A=$(git rev-parse --verify A)
+<pre>A=$(git rev-parse --verify A)
 if test &quot;$A&quot; = &quot;$(git merge-base A B)&quot;
 then
         ... A is an ancestor of B ...
-fi
-</pre>
+fi</pre>
 </div>
 <p class="Pp">In modern git, you can say this in a more direct way:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-if git merge-base --is-ancestor A B
+<pre>if git merge-base --is-ancestor A B
 then
         ... A is an ancestor of B ...
-fi
-</pre>
+fi</pre>
 </div>
 <p class="Pp">instead.</p>
 </section>
@@ -197,8 +187,7 @@ fi
         \
          B0
           \
-           D0---D1---D (topic)
-</pre>
+           D0---D1---D (topic)</pre>
 </div>
 <p class="Pp">where <b>origin/master</b> used to point at commits B0, B1, B2 and
     now it points at B, and your <b>topic</b> branch was started on top of it
@@ -219,16 +208,12 @@ fi
 <p class="Pp">Hence</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ fork_point=$(git merge-base --fork-point origin/master topic)
-</pre>
+<pre>$ fork_point=$(git merge-base --fork-point origin/master topic)</pre>
 </div>
 <p class="Pp">will find B0, and</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git rebase --onto origin/master $fork_point topic
-</pre>
+<pre>$ git rebase --onto origin/master $fork_point topic</pre>
 </div>
 <p class="Pp">will replay D0, D1 and D on top of B to create a new history of
     this shape:</p>
@@ -241,8 +226,7 @@ $ git rebase --onto origin/master $fork_point topic
         \                   \
          B0                  D0'--D1'--D' (topic - updated)
           \
-           D0---D1---D (topic - old)
-</pre>
+           D0---D1---D (topic - old)</pre>
 </div>
 <p class="Pp">A caveat is that older reflog entries in your repository may be
     expired by <b>git gc</b>. If B0 no longer appears in the reflog of the

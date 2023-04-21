@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>YAML::PP::Schema::Include(3)</title>
 </head>
@@ -28,24 +29,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    # /path/to/file.yaml
+<pre>    # /path/to/file.yaml
     # ---
     # included: !include include/file2.yaml
-
     # /path/to/include/file2.yaml
     # ---
     # a: b
-
     my $include = YAML::PP::Schema::Include-&gt;new;
-
     my $yp = YAML::PP-&gt;new( schema =&gt; ['JSON', $include] );
     # we need the original YAML::PP object for getting the current filename
     # and for loading another file
     $include-&gt;yp($yp);
-
     my ($data) = $yp-&gt;load_file(&quot;/path/to/file.yaml&quot;);
-
     # The result will be:
     $data = {
         included =&gt; { a =&gt; 'b' }
@@ -54,25 +49,21 @@
 <p class="Pp">Allow absolute filenames and upwards
   <span class="Li">'..'</span>:</p>
 <p class="Pp"></p>
-<pre>
-    my $include = YAML::PP::Schema::Include-&gt;new(
+<pre>    my $include = YAML::PP::Schema::Include-&gt;new(
         allow_absolute =&gt; 1, # default: 0
     );
 </pre>
 <p class="Pp">Specify paths to search for includes:</p>
 <p class="Pp"></p>
-<pre>
-    my @include_paths = (&quot;/path/to/include/yaml/1&quot;, &quot;/path/to/include/yaml/2&quot;);
+<pre>    my @include_paths = (&quot;/path/to/include/yaml/1&quot;, &quot;/path/to/include/yaml/2&quot;);
     my $include = YAML::PP::Schema::Include-&gt;new(
         paths =&gt; \@include_paths,
     );
     my $yp = YAML::PP-&gt;new( schema =&gt; ['JSON', $include] );
     $include-&gt;yp($yp);
-
     # /path/to/include/yaml/1/file1.yaml
     # ---
     # a: b
-
     my $yaml = &lt;&lt;'EOM';
     - included: !include file1.yaml
     EOM
@@ -102,8 +93,7 @@
     recursively include files.</p>
 <p class="Pp">You can even reuse the same include via an alias:</p>
 <p class="Pp"></p>
-<pre>
-    ---
+<pre>    ---
     invoice:
         shipping address: &amp;address !include address.yaml
         billing address: *address
@@ -111,8 +101,7 @@
 <p class="Pp">Circular includes will be detected, and will be fatal.</p>
 <p class="Pp">It's possible to specify what to do with the included file:</p>
 <p class="Pp"></p>
-<pre>
-    my $include = YAML::PP::Schema::Include-&gt;new(
+<pre>    my $include = YAML::PP::Schema::Include-&gt;new(
         loader =&gt; sub {
             my ($yp, $filename);
             if ($filename =~ m/\.txt$/) {

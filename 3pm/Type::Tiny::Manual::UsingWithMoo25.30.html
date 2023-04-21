@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Tiny::Manual::UsingWithMoo2(3)</title>
 </head>
@@ -35,8 +36,7 @@
 <p class="Pp">So far all the examples have shown you how to work with types, but
     we haven't looked at what a type actually <i>is</i>.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Int );
+<pre>  use Types::Standard qw( Int );
   my $type = Int;
 </pre>
 <p class="Pp"><span class="Li">&quot;Int&quot;</span> in the above code is just
@@ -44,8 +44,7 @@
     It is this object that defines what the <b>Int</b> type is and is
     responsible for checking values meet its definition.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( HashRef Int );
+<pre>  use Types::Standard qw( HashRef Int );
   my $type = HashRef[Int];
 </pre>
 <p class="Pp">The <span class="Li">&quot;HashRef&quot;</span> function, if
@@ -57,8 +56,7 @@
 <p class="Pp">Like any object, you can call methods on it. The most important
     methods to know about are:</p>
 <p class="Pp"></p>
-<pre>
-  # check the value and return a boolean
+<pre>  # check the value and return a boolean
   #
   $type-&gt;check($value);
   
@@ -73,8 +71,7 @@
 </pre>
 <p class="Pp">We've already seen some other methods earlier in the tutorial.</p>
 <p class="Pp"></p>
-<pre>
-  # create a new type, same as the old type, but that has coercions
+<pre>  # create a new type, same as the old type, but that has coercions
   #
   my $new_type = $type-&gt;plus_coercions( ... );
   
@@ -86,8 +83,7 @@
 </pre>
 <p class="Pp">So now you should understand this:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( ArrayRef Dict Optional );
+<pre>  use Types::Standard qw( ArrayRef Dict Optional );
   use Types::Common::Numeric qw( PositiveInt );
   use Types::Common::String qw( NonEmptyStr );
   
@@ -109,8 +105,7 @@
 <p class="Pp">One of the most useful methods you can call on a type object is
     <span class="Li">&quot;where&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Int );
+<pre>  use Types::Standard qw( Int );
   
   has lucky_number =&gt; (
     is   =&gt; 'ro',
@@ -124,8 +119,7 @@
     <span class="Li">$_</span> variable. And like with coercions, using a string
     of code will result in better performance.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Int );
+<pre>  use Types::Standard qw( Int );
   
   has lucky_number =&gt; (
     is   =&gt; 'ro',
@@ -135,8 +129,7 @@
 <p class="Pp">Let's coerce a hashref of strings from an even-sized arrayref of
     strings:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( HashRef ArrayRef Str );
+<pre>  use Types::Standard qw( HashRef ArrayRef Str );
   
   has stringhash =&gt; (
     is   =&gt; 'ro',
@@ -157,8 +150,7 @@
 <p class="Pp">Sometimes you want to accept one thing or another thing. This is
     pretty easy with Type::Tiny.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( HashRef ArrayRef Str );
+<pre>  use Types::Standard qw( HashRef ArrayRef Str );
   
   has strings =&gt; (
     is    =&gt; 'ro',
@@ -177,8 +169,7 @@
 <h2 class="Ss" id="Intersections"><a class="permalink" href="#Intersections">Intersections</a></h2>
 <p class="Pp">Similar to a union is an intersection.</p>
 <p class="Pp"></p>
-<pre>
-  package MyAPI::Client {
+<pre>  package MyAPI::Client {
     use Moo;
     use Types::Standard qw( HasMethods InstanceOf );
   
@@ -206,8 +197,7 @@
 <p class="Pp">For any type <b>Foo</b> there is a complementary type <b>~Foo</b>
     (pronounced &quot;not Foo&quot;).</p>
 <p class="Pp"></p>
-<pre>
-  package My::Class {
+<pre>  package My::Class {
     use Moo;
     use Types::Standard qw( ArrayRef CodeRef );
     
@@ -218,8 +208,7 @@
     anything except coderefs.</p>
 <p class="Pp">If you need a number that is <i>not</i> an integer:</p>
 <p class="Pp"></p>
-<pre>
-  Num &amp; ~Int
+<pre>  Num &amp; ~Int
 </pre>
 <p class="Pp">Types::Standard includes two types which are complements of each
     other: <b>Undef</b> and <b>Defined</b>.</p>
@@ -263,8 +252,7 @@
 <h2 class="Ss" id="_with_attribute_values_"><a class="permalink" href="#_with_attribute_values_">&quot;with_attribute_values&quot;</a></h2>
 <p class="Pp">Another one that is probably best explained using an example:</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Types::Standard qw( Enum Object );
     
     has gender  =&gt; (
@@ -291,8 +279,7 @@
     unions/intersections under the same circumstances, and will also accept
     coderefs and regexps.</p>
 <p class="Pp"></p>
-<pre>
-  has father  =&gt; (
+<pre>  has father  =&gt; (
     is  =&gt; 'ro',
     isa =&gt; Object-&gt;with_attribute_values(gender =&gt; sub { $_ eq 'm' }),
   );
@@ -307,8 +294,7 @@
     wrappers around <span class="Li">&quot;where&quot;</span>. The following two
     are roughly equivalent:</p>
 <p class="Pp"></p>
-<pre>
-  my $type1 = Object-&gt;with_attribute_values(foo =&gt; Int, bar =&gt; Num);
+<pre>  my $type1 = Object-&gt;with_attribute_values(foo =&gt; Int, bar =&gt; Num);
   
   my $type2 = Object-&gt;where(sub {
     Int-&gt;check( $_-&gt;foo ) and Num-&gt;check( $_-&gt;bar )
@@ -321,8 +307,7 @@
   Variables</a></h2>
 <p class="Pp">It is possible to tie variables to a type constraint.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw(Int);
+<pre>  use Types::Standard qw(Int);
   
   tie my $n, Int, 4;
   
@@ -335,32 +320,27 @@
     it detects you're trying to tie a variable to a type.</p>
 <p class="Pp">You can also tie arrays:</p>
 <p class="Pp"></p>
-<pre>
-  tie my @numbers, Int;
+<pre>  tie my @numbers, Int;
   push @numbers, 1 .. 10;
 </pre>
 <p class="Pp">And hashes:</p>
 <p class="Pp"></p>
-<pre>
-  tie my %numbers, Int;
+<pre>  tie my %numbers, Int;
   $numbers{lucky}   = 7;
   $numbers{unlucky} = 13;
 </pre>
 <p class="Pp">Earlier in the manual, it was mentioned that there is a problem
     with code like this:</p>
 <p class="Pp"></p>
-<pre>
-  push @{ $horse-&gt;children }, $non_horse;
+<pre>  push @{ $horse-&gt;children }, $non_horse;
 </pre>
 <p class="Pp">This can be solved using tied variables.</p>
 <p class="Pp"></p>
-<pre>
-  tie @{ $horse-&gt;children }, InstanceOf[&quot;Horse&quot;];
+<pre>  tie @{ $horse-&gt;children }, InstanceOf[&quot;Horse&quot;];
 </pre>
 <p class="Pp">Here is a longer example using builders and triggers.</p>
 <p class="Pp"></p>
-<pre>
-  package Horse {
+<pre>  package Horse {
     use Moo;
     use Types::Standard qw( Str Num ArrayRef InstanceOf );
     use Type::Params qw(compile);

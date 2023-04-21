@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sub::Exporter::Util(3)</title>
 </head>
@@ -41,8 +42,7 @@
   UTILITIES</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="curry_method"><a class="permalink" href="#curry_method">curry_method</a></h2>
-<pre>
-  exports =&gt; {
+<pre>  exports =&gt; {
     some_method =&gt; curry_method,
   }
 </pre>
@@ -52,16 +52,12 @@
 <p class="Pp">A module importing the code some the above example might do
   this:</p>
 <p class="Pp"></p>
-<pre>
-  use Some::Module qw(some_method);
-
+<pre>  use Some::Module qw(some_method);
   my $x = some_method;
 </pre>
 <p class="Pp">This would be equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  use Some::Module;
-
+<pre>  use Some::Module;
   my $x = Some::Module-&gt;some_method;
 </pre>
 <p class="Pp">If Some::Module is subclassed and the subclass's import method is
@@ -72,8 +68,7 @@
     the curried method to export. This means you could export a Widget
     constructor like this:</p>
 <p class="Pp"></p>
-<pre>
-  exports =&gt; { widget =&gt; curry_method('new') }
+<pre>  exports =&gt; { widget =&gt; curry_method('new') }
 </pre>
 <p class="Pp">This utility may also be called as
     <span class="Li">&quot;curry_class&quot;</span>, for backwards
@@ -85,8 +80,7 @@
     <span class="Li">&quot;curry_method&quot;</span>, but is meant for
     generating exports that will call several methods in succession.</p>
 <p class="Pp"></p>
-<pre>
-  exports =&gt; {
+<pre>  exports =&gt; {
     reticulate =&gt; curry_chain(
       new =&gt; gather_data =&gt; analyze =&gt; [ detail =&gt; 100 ] =&gt; 'results'
     ),
@@ -96,8 +90,7 @@
     <span class="Li">&quot;reticulate&quot;</span> routine will be equivalent
     to:</p>
 <p class="Pp"></p>
-<pre>
-  Spliner-&gt;new-&gt;gather_data-&gt;analyze(detail =&gt; 100)-&gt;results;
+<pre>  Spliner-&gt;new-&gt;gather_data-&gt;analyze(detail =&gt; 100)-&gt;results;
 </pre>
 <p class="Pp">If any method returns something on which methods may not be
     called, the routine croaks.</p>
@@ -113,8 +106,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="merge_col"><a class="permalink" href="#merge_col">merge_col</a></h2>
-<pre>
-  exports =&gt; {
+<pre>  exports =&gt; {
     merge_col(defaults =&gt; {
       twiddle =&gt; \'_twiddle_gen',
       tweak   =&gt; \&amp;_tweak_gen,
@@ -130,8 +122,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="mixin_installer"><a class="permalink" href="#mixin_installer">mixin_installer</a></h2>
-<pre>
-  use Sub::Exporter -setup =&gt; {
+<pre>  use Sub::Exporter -setup =&gt; {
     installer =&gt; Sub::Exporter::Util::mixin_installer,
     exports   =&gt; [ qw(foo bar baz) ],
   };
@@ -151,19 +142,16 @@
   regex.</p>
 <p class="Pp">If you provide this configuration:</p>
 <p class="Pp"></p>
-<pre>
-  exports    =&gt; [ qw(igrep imap islurp exhausted) ],
+<pre>  exports    =&gt; [ qw(igrep imap islurp exhausted) ],
   collectors =&gt; { -like =&gt; Sub::Exporter::Util::like },
 </pre>
 <p class="Pp">A user may import from your module like this:</p>
 <p class="Pp"></p>
-<pre>
-  use Your::Iterator -like =&gt; qr/^i/; # imports igre, imap, islurp
+<pre>  use Your::Iterator -like =&gt; qr/^i/; # imports igre, imap, islurp
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  use Your::Iterator -like =&gt; [ qr/^i/ =&gt; { -prefix =&gt; 'your_' } ];
+<pre>  use Your::Iterator -like =&gt; [ qr/^i/ =&gt; { -prefix =&gt; 'your_' } ];
 </pre>
 <p class="Pp">The group-like prefix and suffix arguments are respected; other
     arguments are passed on to the generators for matching exports.</p>

@@ -35,10 +35,11 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $OpenBSD: sshd_config.5,v 1.331 2021/04/04 11:36:56 jmc Exp $
+   $OpenBSD: sshd_config.5,v 1.340 2022/03/31 17:58:44 naddy Exp $
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SSHD_CONFIG(5)</title>
 </head>
@@ -271,21 +272,22 @@
   <dt id="CASignatureAlgorithms"><a class="permalink" href="#CASignatureAlgorithms"><code class="Cm">CASignatureAlgorithms</code></a></dt>
   <dd>Specifies which algorithms are allowed for signing of certificates by
       certificate authorities (CAs). The default is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
-sk-ssh-ed25519@openssh.com,sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519,ecdsa-sha2-nistp256,
+ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
+sk-ssh-ed25519@openssh.com,
+sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
+    <p class="Pp">If the specified list begins with a &#x2018;+&#x2019;
+        character, then the specified algorithms will be appended to the default
+        set instead of replacing them. If the specified list begins with a
+        &#x2018;-&#x2019; character, then the specified algorithms (including
+        wildcards) will be removed from the default set instead of replacing
+        them.</p>
     <p class="Pp">Certificates signed using other algorithms will not be
         accepted for public key or host-based authentication.</p>
   </dd>
-  <dt id="ChallengeResponseAuthentication"><a class="permalink" href="#ChallengeResponseAuthentication"><code class="Cm">ChallengeResponseAuthentication</code></a></dt>
-  <dd>Specifies whether challenge-response authentication is allowed (e.g. via
-      PAM or through authentication styles supported in
-      <a class="Xr" href="../5/login.conf">login.conf(5)</a>) The default is
-      <code class="Cm">yes</code>.</dd>
   <dt id="ChrootDirectory"><a class="permalink" href="#ChrootDirectory"><code class="Cm">ChrootDirectory</code></a></dt>
   <dd>Specifies the pathname of a directory to
       <a class="Xr" href="../2/chroot">chroot(2)</a> to after authentication. At
@@ -345,12 +347,10 @@ rsa-sha2-512,rsa-sha2-256
       <li>chacha20-poly1305@openssh.com</li>
     </ul>
     <p class="Pp">The default is:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-chacha20-poly1305@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>chacha20-poly1305@openssh.com,
 aes128-ctr,aes192-ctr,aes256-ctr,
-aes128-gcm@openssh.com,aes256-gcm@openssh.com
-    </pre>
+aes128-gcm@openssh.com,aes256-gcm@openssh.com</pre>
     </div>
     <p class="Pp">The list of available ciphers may also be obtained using
         &quot;ssh -Q cipher&quot;.</p>
@@ -480,9 +480,8 @@ aes128-gcm@openssh.com,aes256-gcm@openssh.com
       specified list begins with a &#x2018;^&#x2019; character, then the
       specified signature algorithms will be placed at the head of the default
       set. The default for this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -490,13 +489,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">The list of available signature algorithms may also be
         obtained using &quot;ssh -Q HostbasedAcceptedAlgorithms&quot;. This was
@@ -546,9 +543,8 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="HostKeyAlgorithms"><a class="permalink" href="#HostKeyAlgorithms"><code class="Cm">HostKeyAlgorithms</code></a></dt>
   <dd>Specifies the host key signature algorithms that the server offers. The
       default for this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -556,13 +552,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">The list of available signature algorithms may also be
         obtained using &quot;ssh -Q HostKeyAlgorithms&quot;.</p>
@@ -619,11 +613,13 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       for interactive sessions and <code class="Cm">cs1</code> (Lower Effort)
       for non-interactive sessions.</dd>
   <dt id="KbdInteractiveAuthentication"><a class="permalink" href="#KbdInteractiveAuthentication"><code class="Cm">KbdInteractiveAuthentication</code></a></dt>
-  <dd>Specifies whether to allow keyboard-interactive authentication. The
-      argument to this keyword must be <code class="Cm">yes</code> or
-      <code class="Cm">no</code>. The default is to use whatever value
-      <code class="Cm">ChallengeResponseAuthentication</code> is set to (by
-      default <code class="Cm">yes</code>).</dd>
+  <dd>Specifies whether to allow keyboard-interactive authentication. All
+      authentication styles from
+      <a class="Xr" href="../5/login.conf">login.conf(5)</a> are supported. The
+      default is <code class="Cm">yes</code>. The argument to this keyword must
+      be <code class="Cm">yes</code> or <code class="Cm">no</code>.
+      <code class="Cm">ChallengeResponseAuthentication</code> is a deprecated
+      alias for this.</dd>
   <dt id="KerberosAuthentication"><a class="permalink" href="#KerberosAuthentication"><code class="Cm">KerberosAuthentication</code></a></dt>
   <dd>Specifies whether the password provided by the user for
       <code class="Cm">PasswordAuthentication</code> will be validated through
@@ -645,13 +641,13 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="KexAlgorithms"><a class="permalink" href="#KexAlgorithms"><code class="Cm">KexAlgorithms</code></a></dt>
   <dd>Specifies the available KEX (Key Exchange) algorithms. Multiple algorithms
       must be comma-separated. Alternately if the specified list begins with a
-      &#x2018;+&#x2019; character, then the specified methods will be appended
-      to the default set instead of replacing them. If the specified list begins
-      with a &#x2018;-&#x2019; character, then the specified methods (including
-      wildcards) will be removed from the default set instead of replacing them.
-      If the specified list begins with a &#x2018;^&#x2019; character, then the
-      specified methods will be placed at the head of the default set. The
-      supported algorithms are:
+      &#x2018;+&#x2019; character, then the specified algorithms will be
+      appended to the default set instead of replacing them. If the specified
+      list begins with a &#x2018;-&#x2019; character, then the specified
+      algorithms (including wildcards) will be removed from the default set
+      instead of replacing them. If the specified list begins with a
+      &#x2018;^&#x2019; character, then the specified algorithms will be placed
+      at the head of the default set. The supported algorithms are:
     <p class="Pp"></p>
     <ul class="Bl-item Bd-indent Bl-compact">
       <li>curve25519-sha256</li>
@@ -669,14 +665,13 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       <li>sntrup761x25519-sha512@openssh.com</li>
     </ul>
     <p class="Pp">The default is:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>sntrup761x25519-sha512@openssh.com,
 curve25519-sha256,curve25519-sha256@libssh.org,
 ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,
 diffie-hellman-group-exchange-sha256,
 diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,
-diffie-hellman-group14-sha256
-    </pre>
+diffie-hellman-group14-sha256</pre>
     </div>
     <p class="Pp">The list of available key exchange algorithms may also be
         obtained using &quot;ssh -Q KexAlgorithms&quot;.</p>
@@ -724,10 +719,8 @@ diffie-hellman-group14-sha256
   <dd>Specify one or more overrides to LogLevel. An override consists of a
       pattern lists that matches the source file, function and line number to
       force detailed logging for. For example, an override pattern of:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*</pre>
     </div>
     <p class="Pp" id="kex_exchange_identification">would enable detailed logging
         for line 1000 of <span class="Pa">kex.c</span>, everything in the
@@ -770,14 +763,12 @@ kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*
       <li>umac-128-etm@openssh.com</li>
     </ul>
     <p class="Pp">The default is:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-umac-64-etm@openssh.com,umac-128-etm@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>umac-64-etm@openssh.com,umac-128-etm@openssh.com,
 hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,
 hmac-sha1-etm@openssh.com,
 umac-64@openssh.com,umac-128@openssh.com,
-hmac-sha2-256,hmac-sha2-512,hmac-sha1
-    </pre>
+hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
     </div>
     <p class="Pp">The list of available MAC algorithms may also be obtained
         using &quot;ssh -Q mac&quot;.</p>
@@ -825,11 +816,14 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1
         <code class="Cm">AuthorizedPrincipalsCommand</code>,
         <code class="Cm">AuthorizedPrincipalsCommandUser</code>,
         <code class="Cm">AuthorizedPrincipalsFile</code>,
-        <code class="Cm">Banner</code>, <code class="Cm">ChrootDirectory</code>,
+        <code class="Cm">Banner</code>,
+        <code class="Cm">CASignatureAlgorithms</code>,
+        <code class="Cm">ChrootDirectory</code>,
         <code class="Cm">ClientAliveCountMax</code>,
         <code class="Cm">ClientAliveInterval</code>,
         <code class="Cm">DenyGroups</code>, <code class="Cm">DenyUsers</code>,
         <code class="Cm">DisableForwarding</code>,
+        <code class="Cm">ExposeAuthInfo</code>,
         <code class="Cm">ForceCommand</code>,
         <code class="Cm">GatewayPorts</code>,
         <code class="Cm">GSSAPIAuthentication</code>,
@@ -851,6 +845,7 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1
         <code class="Cm">PermitUserRC</code>,
         <code class="Cm">PubkeyAcceptedAlgorithms</code>,
         <code class="Cm">PubkeyAuthentication</code>,
+        <code class="Cm">PubkeyAuthOptions</code>,
         <code class="Cm">RekeyLimit</code>, <code class="Cm">RevokedKeys</code>,
         <code class="Cm">RDomain</code>, <code class="Cm">SetEnv</code>,
         <code class="Cm">StreamLocalBindMask</code>,
@@ -1035,9 +1030,8 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1
       list begins with a &#x2018;^&#x2019; character, then the specified
       algorithms will be placed at the head of the default set. The default for
       this option is:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-ssh-ed25519-cert-v01@openssh.com,
+    <div class="Bd Pp Bd-indent Li">
+    <pre>ssh-ed25519-cert-v01@openssh.com,
 ecdsa-sha2-nistp256-cert-v01@openssh.com,
 ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
@@ -1045,13 +1039,11 @@ sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
-ssh-rsa-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256,ssh-rsa
-    </pre>
+rsa-sha2-512,rsa-sha2-256</pre>
     </div>
     <p class="Pp">The list of available signature algorithms may also be
         obtained using &quot;ssh -Q PubkeyAcceptedAlgorithms&quot;.</p>
@@ -1106,7 +1098,7 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
       <a class="Xr" href="../1/ssh-keygen">ssh-keygen(1)</a>.</dd>
   <dt id="RDomain"><a class="permalink" href="#RDomain"><code class="Cm">RDomain</code></a></dt>
   <dd>Specifies an explicit routing domain that is applied after authentication
-      has completed. The user session, as well and any forwarded or listening IP
+      has completed. The user session, as well as any forwarded or listening IP
       sockets, will be bound to this
       <a class="Xr" href="../4/rdomain">rdomain(4)</a>. If the routing domain is
       set to <code class="Cm">%D</code>, then the domain in which the incoming
@@ -1208,13 +1200,13 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
   <dt id="UsePAM"><a class="permalink" href="#UsePAM"><code class="Cm">UsePAM</code></a></dt>
   <dd>Enables the Pluggable Authentication Module interface. If set to
       <code class="Cm">yes</code> this will enable PAM authentication using
-      <code class="Cm">ChallengeResponseAuthentication</code> and
+      <code class="Cm">KbdInteractiveAuthentication</code> and
       <code class="Cm">PasswordAuthentication</code> in addition to PAM account
       and session module processing for all authentication types.
-    <p class="Pp">Because PAM challenge-response authentication usually serves
+    <p class="Pp">Because PAM keyboard-interactive authentication usually serves
         an equivalent role to password authentication, you should disable either
         <code class="Cm">PasswordAuthentication</code> or
-        <code class="Cm">ChallengeResponseAuthentication.</code></p>
+        <code class="Cm">KbdInteractiveAuthentication</code>.</p>
     <p class="Pp">If <code class="Cm">UsePAM</code> is enabled, you will not be
         able to run <a class="Xr" href="../8/sshd">sshd(8)</a> as a non-root
         user. The default is <code class="Cm">no</code>.</p>
@@ -1393,8 +1385,8 @@ rsa-sha2-512,rsa-sha2-256,ssh-rsa
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">April 4, 2021</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">March 31, 2022</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

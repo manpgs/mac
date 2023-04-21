@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SLAPD-SQL(5)</title>
 </head>
@@ -377,8 +378,7 @@
   first_name varchar   pers_id integer references persons(id)
   last_name varchar    phone
   middle_name varchar
-  ...
-</pre>
+  ...</pre>
 <p class="Pp">(PHONES contains telephone numbers associated with persons). A
     person can have several numbers, then PHONES contains several records with
     corresponding pers_id, or no numbers (and no records in PHONES with such
@@ -390,21 +390,18 @@
   -------
   MUST cn
   MAY telephoneNumber $ firstName $ lastName
-  ...
-</pre>
+  ...</pre>
 <p class="Pp">To fetch all values for cn attribute given person ID, we construct
     the query:</p>
 <p class="Pp"></p>
 <pre>
   SELECT CONCAT(persons.first_name,' ',persons.last_name)
-      AS cn FROM persons WHERE persons.id=?
-</pre>
+      AS cn FROM persons WHERE persons.id=?</pre>
 <p class="Pp">for telephoneNumber we can use:</p>
 <p class="Pp"></p>
 <pre>
   SELECT phones.phone AS telephoneNumber FROM persons,phones
-      WHERE persons.id=phones.pers_id AND persons.id=?
-</pre>
+      WHERE persons.id=phones.pers_id AND persons.id=?</pre>
 <p class="Pp">If we wanted to service LDAP requests with filters like
     (telephoneNumber=123*), we would construct something like:</p>
 <p class="Pp"></p>
@@ -412,8 +409,7 @@
   SELECT ... FROM persons,phones
       WHERE persons.id=phones.pers_id
           AND persons.id=?
-          AND phones.phone like '%1%2%3%'
-</pre>
+          AND phones.phone like '%1%2%3%'</pre>
 <p class="Pp">(note how the telephoneNumber match is expanded in multiple
     wildcards to account for interspersed ininfluential chars like spaces,
     dashes and so; this occurs by design because telephoneNumber is defined
@@ -430,8 +426,7 @@
   id=1
   name=&quot;person&quot;
   keytbl=&quot;persons&quot;
-  keycol=&quot;id&quot;
-</pre>
+  keycol=&quot;id&quot;</pre>
 <p class="Pp">This table defines a mapping between objectclass (its name held in
     the &quot;name&quot; column), and a table that holds the primary key for
     corresponding entities. For instance, in our example, the person entity,
@@ -456,8 +451,7 @@
   name=&quot;telephoneNumber&quot;
   sel_expr=&quot;phones.phone&quot;
   from_tbls=&quot;persons,phones&quot;
-  join_where=&quot;phones.pers_id=persons.id&quot;
-</pre>
+  join_where=&quot;phones.pers_id=persons.id&quot;</pre>
 <p class="Pp">This table defines mappings between LDAP attributes and SQL
     queries that load their values. Note that, unlike LDAP schema, these are not
     <b>attribute types</b> - the attribute &quot;cn&quot; for &quot;person&quot;
@@ -488,8 +482,7 @@
   dn=&lt;dn you choose&gt;
   oc_map_id=...
   parent=&lt;parent record id&gt;
-  keyval=&lt;value of primary key&gt;
-</pre>
+  keyval=&lt;value of primary key&gt;</pre>
 <p class="Pp">This table defines mappings between DNs of entries in your LDAP
     tree, and values of primary keys for corresponding relational data. It has
     recursive structure (parent column references id column of the same table),
@@ -520,8 +513,7 @@
       UNION
           SELECT (2000000000+groupnummer),
               UPPER(CONCAT(CONCAT('cn=',groupnaam),',o=MyCompany,c=NL')),
-              2, 0, groupnummer FROM groups;
-</pre>
+              2, 0, groupnummer FROM groups;</pre>
 <p class="Pp"></p>
 <p class="Pp">If your RDBMS does not support <b>unions</b> in views, only one
     objectClass can be mapped in <b>ldap_entries</b>, and the baseObject cannot
@@ -547,8 +539,7 @@
      AND ldap_entries.objclass=?
      AND ldap_entries.parent=?
      AND phones.pers_id=persons.id
-     AND (phones.phone LIKE '%1%2%3%')
-</pre>
+     AND (phones.phone LIKE '%1%2%3%')</pre>
 <p class="Pp">(for ONELEVEL search) or &quot;... AND dn=?&quot; (for BASE
     search) or &quot;... AND dn LIKE '%?'&quot; (for SUBTREE)</p>
 <p class="Pp">Then, for each candidate, we load the requested attributes using
@@ -557,8 +548,7 @@
 <pre>
   SELECT phones.phone AS telephoneNumber
     FROM persons,phones
-   WHERE persons.id=? AND phones.pers_id=persons.id
-</pre>
+   WHERE persons.id=? AND phones.pers_id=persons.id</pre>
 <p class="Pp">Then, we use test_filter() from the frontend API to test the entry
     for a full LDAP search filter match (since we cannot effectively make sense
     of SYNTAX of corresponding LDAP schema attribute, we translate the filter

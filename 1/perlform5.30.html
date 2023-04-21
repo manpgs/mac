@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFORM(1)</title>
 </head>
@@ -48,8 +49,7 @@
     same. They aren't.</p>
 <p class="Pp">Output record formats are declared as follows:</p>
 <p class="Pp"></p>
-<pre>
-    format NAME =
+<pre>    format NAME =
     FORMLIST
     .
 </pre>
@@ -72,8 +72,7 @@
     extending a field to its desired width. This is the complete set of
     characters for field definitions:</p>
 <p class="Pp"></p>
-<pre>
-   @    start of regular field
+<pre>   @    start of regular field
    ^    start of special field
    &lt;    pad character for left justification
    |    pad character for centering
@@ -106,8 +105,7 @@
     special text field may be used to do rudimentary multi-line text block
     filling; see &quot;Using Fill Mode&quot; for details.</p>
 <p class="Pp"></p>
-<pre>
-   Example:
+<pre>   Example:
       format STDOUT =
       @&lt;&lt;&lt;&lt;&lt;&lt;   @||||||   @&gt;&gt;&gt;&gt;&gt;&gt;
       &quot;left&quot;,   &quot;middle&quot;, &quot;right&quot;
@@ -127,8 +125,7 @@
     undefined. If the resulting value would exceed the width specified the field
     is filled with &quot;#&quot; as overflow evidence.</p>
 <p class="Pp"></p>
-<pre>
-   Example:
+<pre>   Example:
       format STDOUT =
       @###   @.###   @##.###  @###   @###   ^####
        42,   3.1415,  undef,    0, 10000,   undef
@@ -154,8 +151,7 @@
     front of the string so that the next time the variable is referenced, more
     of the text can be printed. The variable will <i>not</i> be restored.</p>
 <p class="Pp"></p>
-<pre>
-   Example:
+<pre>   Example:
       $text = &quot;line 1\nline 2\nline 3&quot;;
       format STDOUT =
       Text: ^*
@@ -238,8 +234,7 @@
     perlfunc.</p>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
- # a report on the /etc/passwd file
+<pre> # a report on the /etc/passwd file
  format STDOUT_TOP =
                          Passwd File
  Name                Login    Office   Uid   Gid Home
@@ -249,8 +244,6 @@
  @&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; @||||||| @&lt;&lt;&lt;&lt;&lt;&lt;@&gt;&gt;&gt;&gt; @&gt;&gt;&gt;&gt; @&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  $name,              $login,  $office,$uid,$gid, $home
  .
-
-
  # a report from a bug report form
  format STDOUT_TOP =
                          Bug Reports
@@ -304,8 +297,7 @@
     per-filehandle basis, so you'll need to <b>select()</b> into a different one
     to affect them:</p>
 <p class="Pp"></p>
-<pre>
-    select((select(OUTF),
+<pre>    select((select(OUTF),
             $~ = &quot;My_Other_Format&quot;,
             $^ = &quot;My_Top_Format&quot;
            )[0]);
@@ -316,8 +308,7 @@
     not only does legibility improve, you now have an intermediary stage in the
     expression to single-step the debugger through):</p>
 <p class="Pp"></p>
-<pre>
-    $ofh = select(OUTF);
+<pre>    $ofh = select(OUTF);
     $~ = &quot;My_Other_Format&quot;;
     $^ = &quot;My_Top_Format&quot;;
     select($ofh);
@@ -325,8 +316,7 @@
 <p class="Pp">If you use the English module, you can even read the variable
     names:</p>
 <p class="Pp"></p>
-<pre>
-    use English;
+<pre>    use English;
     $ofh = select(OUTF);
     $FORMAT_NAME     = &quot;My_Other_Format&quot;;
     $FORMAT_TOP_NAME = &quot;My_Top_Format&quot;;
@@ -336,8 +326,7 @@
     FileHandle module. Now, you can access these special variables using
     lowercase method names instead:</p>
 <p class="Pp"></p>
-<pre>
-    use FileHandle;
+<pre>    use FileHandle;
     format_name     OUTF &quot;My_Other_Format&quot;;
     format_top_name OUTF &quot;My_Top_Format&quot;;
 </pre>
@@ -350,24 +339,21 @@
     fields, not caret fields), you can farm out more sophisticated processing to
     other functions, like <b>sprintf()</b> or one of your own. For example:</p>
 <p class="Pp"></p>
-<pre>
-    format Ident =
+<pre>    format Ident =
         @&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
         &amp;commify($n)
     .
 </pre>
 <p class="Pp">To get a real at or caret into the field, do this:</p>
 <p class="Pp"></p>
-<pre>
-    format Ident =
+<pre>    format Ident =
     I have an @ here.
             &quot;@&quot;
     .
 </pre>
 <p class="Pp">To center a whole line of text, do something like this:</p>
 <p class="Pp"></p>
-<pre>
-    format Ident =
+<pre>    format Ident =
     @|||||||||||||||||||||||||||||||||||||||||||||||
             &quot;Some text line&quot;
     .
@@ -377,8 +363,7 @@
     goes. The truly desperate can generate their own format on the fly, based on
     the current number of columns, and then <b>eval()</b> it:</p>
 <p class="Pp"></p>
-<pre>
-    $format  = &quot;format STDOUT = \n&quot;
+<pre>    $format  = &quot;format STDOUT = \n&quot;
              . '^' . '&lt;' x $cols . &quot;\n&quot;
              . '$entry' . &quot;\n&quot;
              . &quot;\t^&quot; . &quot;&lt;&quot; x ($cols-8) . &quot;~~\n&quot;
@@ -390,8 +375,7 @@
 </pre>
 <p class="Pp">Which would generate a format looking something like this:</p>
 <p class="Pp"></p>
-<pre>
- format STDOUT =
+<pre> format STDOUT =
  ^&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  $entry
          ^&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;~~
@@ -400,13 +384,10 @@
 </pre>
 <p class="Pp">Here's a little program that's somewhat like <b>fmt</b>(1):</p>
 <p class="Pp"></p>
-<pre>
- format =
+<pre> format =
  ^&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt; ~~
  $_
-
  .
-
  $/ = '';
  while (&lt;&gt;) {
      s/\s*\n\s*/ /g;
@@ -437,18 +418,15 @@
     <span class="Li">$ACCUMULATOR</span> variable) directly.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    $str = formline &lt;&lt;'END', 1,2,3;
+<pre>    $str = formline &lt;&lt;'END', 1,2,3;
     @&lt;&lt;&lt;  @|||  @&gt;&gt;&gt;
     END
-
     print &quot;Wow, I just stored '$^A' in the accumulator!\n&quot;;
 </pre>
 <p class="Pp">Or to make an <b>swrite()</b> subroutine, which is to
     <b>write()</b> what <b>sprintf()</b> is to <b>printf()</b>, do this:</p>
 <p class="Pp"></p>
-<pre>
-    use Carp;
+<pre>    use Carp;
     sub swrite {
         croak &quot;usage: swrite PICTURE ARGS&quot; unless @_;
         my $format = shift;
@@ -456,7 +434,6 @@
         formline($format,@_);
         return $^A;
     }
-
     $string = swrite(&lt;&lt;'END', 1, 2, 3);
  Check me out
  @&lt;&lt;&lt;  @|||  @&gt;&gt;&gt;

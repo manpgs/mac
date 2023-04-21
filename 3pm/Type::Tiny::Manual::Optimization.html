@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Tiny::Manual::Optimization(3)</title>
 </head>
@@ -93,8 +94,7 @@
   Type Constraints</a></h2>
 <p class="Pp">In the case of a type constraint like this:</p>
 <p class="Pp"></p>
-<pre>
- my $type = Int-&gt;where(sub { $_ &gt;= 0 });
+<pre> my $type = Int-&gt;where(sub { $_ &gt;= 0 });
 </pre>
 <p class="Pp">Type::Tiny will need to call one sub to verify a value meets the
     <b>Int</b> type constraint, and your coderef to check that the value is
@@ -105,19 +105,16 @@
     Perl code that checks an integer. It's something like the following. (It's
     actually more complicated, but this is close enough as an example.)</p>
 <p class="Pp"></p>
-<pre>
- $_ =~ /^-?[0-9]+$/
+<pre> $_ =~ /^-?[0-9]+$/
 </pre>
 <p class="Pp">If you provide your check as a string instead of a coderef, like
     this:</p>
 <p class="Pp"></p>
-<pre>
- my $type = Int-&gt;where(q{ $_ &gt;= 0 });
+<pre> my $type = Int-&gt;where(q{ $_ &gt;= 0 });
 </pre>
 <p class="Pp">Then Type::Tiny will be able to combine them into one string:</p>
 <p class="Pp"></p>
-<pre>
- ( $_ =~ /^-?[0-9]+$/ ) &amp;&amp; ( $_ &gt;= 0 )
+<pre> ( $_ =~ /^-?[0-9]+$/ ) &amp;&amp; ( $_ &gt;= 0 )
 </pre>
 <p class="Pp">So Type::Tiny will be able to check values in one sub call.
     Providing constraints as strings is a really simple and easy way of
@@ -128,14 +125,12 @@
     element of the array. Things could be made more efficient if Type::Tiny were
     able to directly check:</p>
 <p class="Pp"></p>
-<pre>
- ( $arrayref-&gt;[$i] =~ /^-?[0-9]+$/ ) &amp;&amp; ( $arrayref-&gt;[$i] &gt;= 0 )
+<pre> ( $arrayref-&gt;[$i] =~ /^-?[0-9]+$/ ) &amp;&amp; ( $arrayref-&gt;[$i] &gt;= 0 )
 </pre>
 <p class="Pp">This can be done by providing an inlining sub. The sub is given a
     variable name and can use that in the string of code it generates.</p>
 <p class="Pp"></p>
-<pre>
- my $type = Type::Tiny-&gt;new(
+<pre> my $type = Type::Tiny-&gt;new(
    parent  =&gt; Int,
    inlined =&gt; sub {
      my ($self, $varname) = @_;
@@ -155,8 +150,7 @@
     <span class="Li">&quot;undef&quot;</span>, Type::Tiny will fill in the blank
     with the parent type check.</p>
 <p class="Pp"></p>
-<pre>
- my $type = Type::Tiny-&gt;new(
+<pre> my $type = Type::Tiny-&gt;new(
    parent  =&gt; Int,
    inlined =&gt; sub {
      my ($self, $varname) = @_;
@@ -173,14 +167,12 @@
     greater than or equal to zero. But a non-negative integer won't ever start
     with a minus sign, so we could inline the check to something like:</p>
 <p class="Pp"></p>
-<pre>
- $_ =~ /^[0-9]+$/
+<pre> $_ =~ /^[0-9]+$/
 </pre>
 <p class="Pp">While an inlined check <i>can</i> call its parent type check, it
     is not required to.</p>
 <p class="Pp"></p>
-<pre>
- my $type = Type::Tiny-&gt;new(
+<pre> my $type = Type::Tiny-&gt;new(
    parent  =&gt; Int,
    inlined =&gt; sub {
      my ($self, $varname) = @_;
@@ -223,8 +215,7 @@
     mode&quot; based on certain environment variables.</p>
 <p class="Pp"><i>Attributes</i></p>
 <p class="Pp"></p>
-<pre>
- use Types::Standard qw( ArrayRef Num );
+<pre> use Types::Standard qw( ArrayRef Num );
  use Devel::StrictMode qw( STRICT );
  
  has numbers =&gt; (
@@ -237,8 +228,7 @@
     because it can lead to inconsistent and unpredictable behaviour.</p>
 <p class="Pp"><i>Type::Params</i></p>
 <p class="Pp"></p>
-<pre>
- use Types::Standard qw( Num Object );
+<pre> use Types::Standard qw( Num Object );
  use Type::Params qw( compile );
  use Devel::StrictMode qw( STRICT );
  
@@ -255,8 +245,7 @@
     you're using coercions, defaults, slurpies, etc.</p>
 <p class="Pp"><i>Ad-Hoc Type Checks</i></p>
 <p class="Pp"></p>
-<pre>
- ...;
+<pre> ...;
  my $x = get_some_number();
  assert_Int($x) if STRICT;
  return $x + 1;

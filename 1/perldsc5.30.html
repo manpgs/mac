@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLDSC(1)</title>
 </head>
@@ -32,8 +33,7 @@
     like this and all of a sudden, you'd have an array with three
   dimensions!</p>
 <p class="Pp"></p>
-<pre>
-    for my $x (1 .. 10) {
+<pre>    for my $x (1 .. 10) {
         for my $y (1 .. 10) {
             for my $z (1 .. 10) {
                 $AoA[$x][$y][$z] =
@@ -94,8 +94,7 @@
     as though it were a two-dimensional one. This is actually the way almost all
     C multidimensional arrays work as well.</p>
 <p class="Pp"></p>
-<pre>
-    $array[7][12]                       # array of arrays
+<pre>    $array[7][12]                       # array of arrays
     $array[7]{string}                   # array of hashes
     $hash{string}[7]                    # hash of arrays
     $hash{string}{'another string'}     # hash of hashes
@@ -104,8 +103,7 @@
     print out your array in with a simple <b>print()</b> function, you'll get
     something that doesn't look very nice, like this:</p>
 <p class="Pp"></p>
-<pre>
-    my @AoA = ( [2, 3], [4, 5, 7], [0] );
+<pre>    my @AoA = ( [2, 3], [4, 5, 7], [0] );
     print $AoA[1][2];
   7
     print @AoA;
@@ -129,8 +127,7 @@
     else taking a reference to the same memory location repeatedly. Here's the
     case where you just get the count instead of a nested array:</p>
 <p class="Pp"></p>
-<pre>
-    for my $i (1..10) {
+<pre>    for my $i (1..10) {
         my @array = somefunc($i);
         $AoA[$i] = @array;      # WRONG!
     }
@@ -140,8 +137,7 @@
     you might do well to consider being a tad more explicit about it, like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    for my $i (1..10) {
+<pre>    for my $i (1..10) {
         my @array = somefunc($i);
         $counts[$i] = scalar @array;
     }
@@ -149,10 +145,8 @@
 <p class="Pp">Here's the case of taking a reference to the same memory location
     again and again:</p>
 <p class="Pp"></p>
-<pre>
-    # Either without strict or having an outer-scope my @array;
+<pre>    # Either without strict or having an outer-scope my @array;
     # declaration.
-
     for my $i (1..10) {
         @array = somefunc($i);
         $AoA[$i] = \@array;     # WRONG!
@@ -167,21 +161,18 @@
     <span class="Li">@array</span>! It's similar to the problem demonstrated in
     the following C program:</p>
 <p class="Pp"></p>
-<pre>
-    #include &lt;pwd.h&gt;
+<pre>    #include &lt;pwd.h&gt;
     main() {
         struct passwd *getpwnam(), *rp, *dp;
         rp = getpwnam(&quot;root&quot;);
         dp = getpwnam(&quot;daemon&quot;);
-
         printf(&quot;daemon name is %s\nroot name is %s\n&quot;,
                 dp-&gt;pw_name, rp-&gt;pw_name);
     }
 </pre>
 <p class="Pp">Which will print</p>
 <p class="Pp"></p>
-<pre>
-    daemon name is daemon
+<pre>    daemon name is daemon
     root name is daemon
 </pre>
 <p class="Pp">The problem is that both <span class="Li">&quot;rp&quot;</span>
@@ -192,10 +183,8 @@
     <span class="Li">&quot;{}&quot;</span> instead. Here's the right way to do
     the preceding broken code fragments:</p>
 <p class="Pp"></p>
-<pre>
-    # Either without strict or having an outer-scope my @array;
+<pre>    # Either without strict or having an outer-scope my @array;
     # declaration.
-
     for my $i (1..10) {
         @array = somefunc($i);
         $AoA[$i] = [ @array ];
@@ -207,8 +196,7 @@
 <p class="Pp">Note that this will produce something similar, but it's much
     harder to read:</p>
 <p class="Pp"></p>
-<pre>
-    # Either without strict or having an outer-scope my @array;
+<pre>    # Either without strict or having an outer-scope my @array;
     # declaration.
     for my $i (1..10) {
         @array = 0 .. $i;
@@ -225,14 +213,12 @@
     whether it already contained a reference. If you had already populated
     <span class="Li">@AoA</span> with references, as in</p>
 <p class="Pp"></p>
-<pre>
-    $AoA[3] = \@another_array;
+<pre>    $AoA[3] = \@another_array;
 </pre>
 <p class="Pp">Then the assignment with the indirection on the left-hand-side
     would use the existing reference that was already there:</p>
 <p class="Pp"></p>
-<pre>
-    @{$AoA[3]} = @array;
+<pre>    @{$AoA[3]} = @array;
 </pre>
 <p class="Pp">Of course, this <i>would</i> have the &quot;interesting&quot;
     effect of clobbering <span class="Li">@another_array</span>. (Have you ever
@@ -247,8 +233,7 @@
 <p class="Pp">Surprisingly, the following dangerous-looking construct will
     actually work out fine:</p>
 <p class="Pp"></p>
-<pre>
-    for my $i (1..10) {
+<pre>    for my $i (1..10) {
         my @array = somefunc($i);
         $AoA[$i] = \@array;
     }
@@ -270,8 +255,7 @@
     the scenes.</p>
 <p class="Pp">In summary:</p>
 <p class="Pp"></p>
-<pre>
-    $AoA[$i] = [ @array ];     # usually best
+<pre>    $AoA[$i] = [ @array ];     # usually best
     $AoA[$i] = \@array;        # perilous; just how my() was that array?
     @{ $AoA[$i] } = @array;    # way too tricky for most programmers
 </pre>
@@ -283,8 +267,7 @@
     <span class="Li">&quot;@{$AoA[$i]}&quot;</span>, the following are actually
     the same thing:</p>
 <p class="Pp"></p>
-<pre>
-    $aref-&gt;[2][2]       # clear
+<pre>    $aref-&gt;[2][2]       # clear
     $$aref[2][2]        # confusing
 </pre>
 <p class="Pp">That's because Perl's precedence rules on its five prefix
@@ -313,21 +296,18 @@
     has some features to help you avoid its most common pitfalls. The best way
     to avoid getting confused is to start every program like this:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
+<pre>    #!/usr/bin/perl -w
     use strict;
 </pre>
 <p class="Pp">This way, you'll be forced to declare all your variables with
     <b>my()</b> and also disallow accidental &quot;symbolic dereferencing&quot;.
     Therefore if you'd done this:</p>
 <p class="Pp"></p>
-<pre>
-    my $aref = [
+<pre>    my $aref = [
         [ &quot;fred&quot;, &quot;barney&quot;, &quot;pebbles&quot;, &quot;bambam&quot;, &quot;dino&quot;, ],
         [ &quot;homer&quot;, &quot;bart&quot;, &quot;marge&quot;, &quot;maggie&quot;, ],
         [ &quot;george&quot;, &quot;jane&quot;, &quot;elroy&quot;, &quot;judy&quot;, ],
     ];
-
     print $aref[2][2];
 </pre>
 <p class="Pp">The compiler would immediately flag that as an error <i>at compile
@@ -335,8 +315,7 @@
     <span class="Li">@aref</span>, an undeclared variable, and it would thereby
     remind you to write instead:</p>
 <p class="Pp"></p>
-<pre>
-    print $aref-&gt;[2][2]
+<pre>    print $aref-&gt;[2][2]
 </pre>
 </section>
 <section class="Sh">
@@ -346,8 +325,7 @@
     assignment to <span class="Li">$AoA</span> above, here's the debugger
     output:</p>
 <p class="Pp"></p>
-<pre>
-    DB&lt;1&gt; x $AoA
+<pre>    DB&lt;1&gt; x $AoA
     $AoA = ARRAY(0x13b5a0)
        0  ARRAY(0x1f0a24)
           0  'fred'
@@ -379,8 +357,7 @@
   OF ARRAYS</a></h1>
 <section class="Ss">
 <h2 class="Ss">Declaration of an ARRAY OF ARRAYS</h2>
-<pre>
- @AoA = (
+<pre> @AoA = (
         [ &quot;fred&quot;, &quot;barney&quot; ],
         [ &quot;george&quot;, &quot;jane&quot;, &quot;elroy&quot; ],
         [ &quot;homer&quot;, &quot;marge&quot;, &quot;bart&quot; ],
@@ -389,46 +366,37 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Generation of an ARRAY OF ARRAYS</h2>
-<pre>
- # reading from file
+<pre> # reading from file
  while ( &lt;&gt; ) {
      push @AoA, [ split ];
  }
-
  # calling a function
  for $i ( 1 .. 10 ) {
      $AoA[$i] = [ somefunc($i) ];
  }
-
  # using temp vars
  for $i ( 1 .. 10 ) {
      @tmp = somefunc($i);
      $AoA[$i] = [ @tmp ];
  }
-
  # add to an existing row
  push @{ $AoA[0] }, &quot;wilma&quot;, &quot;betty&quot;;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">Access and Printing of an ARRAY OF ARRAYS</h2>
-<pre>
- # one element
+<pre> # one element
  $AoA[0][0] = &quot;Fred&quot;;
-
  # another element
  $AoA[1][1] =~ s/(\w)/\u$1/;
-
  # print the whole thing with refs
  for $aref ( @AoA ) {
      print &quot;\t [ @$aref ],\n&quot;;
  }
-
  # print the whole thing with indices
  for $i ( 0 .. $#AoA ) {
      print &quot;\t [ @{$AoA[$i]} ],\n&quot;;
  }
-
  # print the whole thing one at a time
  for $i ( 0 .. $#AoA ) {
      for $j ( 0 .. $#{ $AoA[$i] } ) {
@@ -443,8 +411,7 @@
   OF ARRAYS</a></h1>
 <section class="Ss">
 <h2 class="Ss">Declaration of a HASH OF ARRAYS</h2>
-<pre>
- %HoA = (
+<pre> %HoA = (
         flintstones        =&gt; [ &quot;fred&quot;, &quot;barney&quot; ],
         jetsons            =&gt; [ &quot;george&quot;, &quot;jane&quot;, &quot;elroy&quot; ],
         simpsons           =&gt; [ &quot;homer&quot;, &quot;marge&quot;, &quot;bart&quot; ],
@@ -453,14 +420,12 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Generation of a HASH OF ARRAYS</h2>
-<pre>
- # reading from file
+<pre> # reading from file
  # flintstones: fred barney wilma dino
  while ( &lt;&gt; ) {
      next unless s/^(.*?):\s*//;
      $HoA{$1} = [ split ];
  }
-
  # reading from file; more temps
  # flintstones: fred barney wilma dino
  while ( $line = &lt;&gt; ) {
@@ -468,36 +433,29 @@
      @fields = split ' ', $rest;
      $HoA{$who} = [ @fields ];
  }
-
  # calling a function that returns a list
  for $group ( &quot;simpsons&quot;, &quot;jetsons&quot;, &quot;flintstones&quot; ) {
      $HoA{$group} = [ get_family($group) ];
  }
-
  # likewise, but using temps
  for $group ( &quot;simpsons&quot;, &quot;jetsons&quot;, &quot;flintstones&quot; ) {
      @members = get_family($group);
      $HoA{$group} = [ @members ];
  }
-
  # append new members to an existing family
  push @{ $HoA{&quot;flintstones&quot;} }, &quot;wilma&quot;, &quot;betty&quot;;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">Access and Printing of a HASH OF ARRAYS</h2>
-<pre>
- # one element
+<pre> # one element
  $HoA{flintstones}[0] = &quot;Fred&quot;;
-
  # another element
  $HoA{simpsons}[1] =~ s/(\w)/\u$1/;
-
  # print the whole thing
  foreach $family ( keys %HoA ) {
      print &quot;$family: @{ $HoA{$family} }\n&quot;
  }
-
  # print the whole thing with indices
  foreach $family ( keys %HoA ) {
      print &quot;family: &quot;;
@@ -506,12 +464,10 @@
      }
      print &quot;\n&quot;;
  }
-
  # print the whole thing sorted by number of members
  foreach $family ( sort { @{$HoA{$b}} &lt;=&gt; @{$HoA{$a}} } keys %HoA ) {
      print &quot;$family: @{ $HoA{$family} }\n&quot;
  }
-
  # print the whole thing sorted by number of members and name
  foreach $family ( sort {
                             @{$HoA{$b}} &lt;=&gt; @{$HoA{$a}}
@@ -529,8 +485,7 @@
   OF HASHES</a></h1>
 <section class="Ss">
 <h2 class="Ss">Declaration of an ARRAY OF HASHES</h2>
-<pre>
- @AoH = (
+<pre> @AoH = (
         {
             Lead     =&gt; &quot;fred&quot;,
             Friend   =&gt; &quot;barney&quot;,
@@ -550,8 +505,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Generation of an ARRAY OF HASHES</h2>
-<pre>
- # reading from file
+<pre> # reading from file
  # format: LEAD=fred FRIEND=barney
  while ( &lt;&gt; ) {
      $rec = {};
@@ -561,26 +515,21 @@
      }
      push @AoH, $rec;
  }
-
-
  # reading from file
  # format: LEAD=fred FRIEND=barney
  # no temp
  while ( &lt;&gt; ) {
      push @AoH, { split /[\s+=]/ };
  }
-
  # calling a function  that returns a key/value pair list, like
  # &quot;lead&quot;,&quot;fred&quot;,&quot;daughter&quot;,&quot;pebbles&quot;
  while ( %fields = getnextpairset() ) {
      push @AoH, { %fields };
  }
-
  # likewise, but using no temp vars
  while (&lt;&gt;) {
      push @AoH, { parsepairs($_) };
  }
-
  # add key/value to an element
  $AoH[0]{pet} = &quot;dino&quot;;
  $AoH[2]{pet} = &quot;santa's little helper&quot;;
@@ -588,13 +537,10 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Access and Printing of an ARRAY OF HASHES</h2>
-<pre>
- # one element
+<pre> # one element
  $AoH[0]{lead} = &quot;fred&quot;;
-
  # another element
  $AoH[1]{lead} =~ s/(\w)/\u$1/;
-
  # print the whole thing with refs
  for $href ( @AoH ) {
      print &quot;{ &quot;;
@@ -603,7 +549,6 @@
      }
      print &quot;}\n&quot;;
  }
-
  # print the whole thing with indices
  for $i ( 0 .. $#AoH ) {
      print &quot;$i is { &quot;;
@@ -612,7 +557,6 @@
      }
      print &quot;}\n&quot;;
  }
-
  # print the whole thing one at a time
  for $i ( 0 .. $#AoH ) {
      for $role ( keys %{ $AoH[$i] } ) {
@@ -627,8 +571,7 @@
   OF HASHES</a></h1>
 <section class="Ss">
 <h2 class="Ss">Declaration of a HASH OF HASHES</h2>
-<pre>
- %HoH = (
+<pre> %HoH = (
         flintstones =&gt; {
                 lead      =&gt; &quot;fred&quot;,
                 pal       =&gt; &quot;barney&quot;,
@@ -648,8 +591,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Generation of a HASH OF HASHES</h2>
-<pre>
- # reading from file
+<pre> # reading from file
  # flintstones: lead=fred pal=barney wife=wilma pet=dino
  while ( &lt;&gt; ) {
      next unless s/^(.*?):\s*//;
@@ -658,8 +600,6 @@
          ($key, $value) = split /=/, $field;
          $HoH{$who}{$key} = $value;
      }
-
-
  # reading from file; more temps
  while ( &lt;&gt; ) {
      next unless s/^(.*?):\s*//;
@@ -671,24 +611,20 @@
          $rec-&gt;{$key} = $value;
      }
  }
-
  # calling a function  that returns a key,value hash
  for $group ( &quot;simpsons&quot;, &quot;jetsons&quot;, &quot;flintstones&quot; ) {
      $HoH{$group} = { get_family($group) };
  }
-
  # likewise, but using temps
  for $group ( &quot;simpsons&quot;, &quot;jetsons&quot;, &quot;flintstones&quot; ) {
      %members = get_family($group);
      $HoH{$group} = { %members };
  }
-
  # append new members to an existing family
  %new_folks = (
      wife =&gt; &quot;wilma&quot;,
      pet  =&gt; &quot;dino&quot;,
  );
-
  for $what (keys %new_folks) {
      $HoH{flintstones}{$what} = $new_folks{$what};
  }
@@ -696,13 +632,10 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Access and Printing of a HASH OF HASHES</h2>
-<pre>
- # one element
+<pre> # one element
  $HoH{flintstones}{wife} = &quot;wilma&quot;;
-
  # another element
  $HoH{simpsons}{lead} =~ s/(\w)/\u$1/;
-
  # print the whole thing
  foreach $family ( keys %HoH ) {
      print &quot;$family: { &quot;;
@@ -711,7 +644,6 @@
      }
      print &quot;}\n&quot;;
  }
-
  # print the whole thing  somewhat sorted
  foreach $family ( sort keys %HoH ) {
      print &quot;$family: { &quot;;
@@ -720,8 +652,6 @@
      }
      print &quot;}\n&quot;;
  }
-
-
  # print the whole thing sorted by number of members
  foreach $family ( sort { keys %{$HoH{$b}} &lt;=&gt; keys %{$HoH{$a}} }
                                                              keys %HoH )
@@ -732,11 +662,9 @@
      }
      print &quot;}\n&quot;;
  }
-
  # establish a sort order (rank) for each role
  $i = 0;
  for ( qw(lead wife son daughter pal pet) ) { $rank{$_} = ++$i }
-
  # now print the whole thing sorted by number of members
  foreach $family ( sort { keys %{ $HoH{$b} } &lt;=&gt; keys %{ $HoH{$a} } }
                                                              keys %HoH )
@@ -762,8 +690,7 @@
 <p class="Pp">Here's a sample showing how to create and use a record whose
     fields are of many different sorts:</p>
 <p class="Pp"></p>
-<pre>
-     $rec = {
+<pre>     $rec = {
          TEXT      =&gt; $string,
          SEQUENCE  =&gt; [ @old_values ],
          LOOKUP    =&gt; { %some_table },
@@ -771,21 +698,15 @@
          THISCODE  =&gt; sub { $_[0] ** $_[1] },
          HANDLE    =&gt; \*STDOUT,
      };
-
      print $rec-&gt;{TEXT};
-
      print $rec-&gt;{SEQUENCE}[0];
      $last = pop @ { $rec-&gt;{SEQUENCE} };
-
      print $rec-&gt;{LOOKUP}{&quot;key&quot;};
      ($first_k, $first_v) = each %{ $rec-&gt;{LOOKUP} };
-
      $answer = $rec-&gt;{THATCODE}-&gt;($arg);
      $answer = $rec-&gt;{THISCODE}-&gt;($arg1, $arg2);
-
      # careful of extra block braces on fh ref
      print { $rec-&gt;{HANDLE} } &quot;a string\n&quot;;
-
      use FileHandle;
      $rec-&gt;{HANDLE}-&gt;autoflush(1);
      $rec-&gt;{HANDLE}-&gt;print(&quot; a string\n&quot;);
@@ -793,8 +714,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Declaration of a HASH OF COMPLEX RECORDS</h2>
-<pre>
-     %TV = (
+<pre>     %TV = (
         flintstones =&gt; {
             series   =&gt; &quot;flintstones&quot;,
             nights   =&gt; [ qw(monday thursday friday) ],
@@ -804,7 +724,6 @@
                 { name =&gt; &quot;pebbles&quot;, role =&gt; &quot;kid&quot;,  age  =&gt;  4, },
             ],
         },
-
         jetsons     =&gt; {
             series   =&gt; &quot;jetsons&quot;,
             nights   =&gt; [ qw(wednesday saturday) ],
@@ -814,7 +733,6 @@
                 { name =&gt; &quot;elroy&quot;,   role =&gt; &quot;kid&quot;,  age  =&gt;  9, },
             ],
          },
-
         simpsons    =&gt; {
             series   =&gt; &quot;simpsons&quot;,
             nights   =&gt; [ qw(monday) ],
@@ -829,18 +747,15 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">Generation of a HASH OF COMPLEX RECORDS</h2>
-<pre>
-     # reading from file
+<pre>     # reading from file
      # this is most easily done by having the file itself be
      # in the raw data format as shown above.  perl is happy
      # to parse complex data structures if declared as data, so
      # sometimes it's easiest to do that
-
      # here's a piece by piece build up
      $rec = {};
      $rec-&gt;{series} = &quot;flintstones&quot;;
      $rec-&gt;{nights} = [ find_days() ];
-
      @members = ();
      # assume this file in field=value syntax
      while (&lt;&gt;) {
@@ -848,10 +763,8 @@
          push @members, { %fields };
      }
      $rec-&gt;{members} = [ @members ];
-
      # now remember the whole thing
      $TV{ $rec-&gt;{series} } = $rec;
-
      ###########################################################
      # now, you might want to make interesting extra fields that
      # include pointers back into the same data structure so if
@@ -871,19 +784,14 @@
          # REMEMBER: $rec and $TV{$family} point to same data!!
          $rec-&gt;{kids} = [ @kids ];
      }
-
      # you copied the array, but the array itself contains pointers
      # to uncopied objects. this means that if you make bart get
      # older via
-
      $TV{simpsons}{kids}[0]{age}++;
-
      # then this would also change in
      print $TV{simpsons}{members}[2]{age};
-
      # because $TV{simpsons}{kids}[0] and $TV{simpsons}{members}[2]
      # both point to the same underlying anonymous hash table
-
      # print the whole thing
      foreach $family ( keys %TV ) {
          print &quot;the $family&quot;;

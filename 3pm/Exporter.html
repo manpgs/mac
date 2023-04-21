@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Exporter(3pm)</title>
 </head>
@@ -30,24 +31,21 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">In module <i>YourModule.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package YourModule;
+<pre>  package YourModule;
   require Exporter;
   our @ISA = qw(Exporter);
   our @EXPORT_OK = qw(munge frobnicate);  # symbols to export on request
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  package YourModule;
+<pre>  package YourModule;
   use Exporter 'import'; # gives you Exporter's import() method directly
   our @EXPORT_OK = qw(munge frobnicate);  # symbols to export on request
 </pre>
 <p class="Pp">In other files which wish to use
     <span class="Li">&quot;YourModule&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  use YourModule qw(frobnicate);      # import listed symbols
+<pre>  use YourModule qw(frobnicate);      # import listed symbols
   frobnicate ($left, $right)          # calls YourModule::frobnicate
 </pre>
 <p class="Pp">Take a look at &quot;Good Practices&quot; for some variants you
@@ -80,8 +78,7 @@
     by full name with the exception that the ampersand in front of a function is
     optional, e.g.</p>
 <p class="Pp"></p>
-<pre>
-    our @EXPORT    = qw(afunc $scalar @array);   # afunc is a function
+<pre>    our @EXPORT    = qw(afunc $scalar @array);   # afunc is a function
     our @EXPORT_OK = qw(&amp;bfunc %hash *typeglob); # explicit prefix on &amp;bfunc
 </pre>
 <p class="Pp">If you are only exporting function names it is recommended to omit
@@ -105,8 +102,7 @@
     that they are 'internal' and not for public use.</p>
 <p class="Pp">(It is actually possible to get private functions by saying:</p>
 <p class="Pp"></p>
-<pre>
-  my $subref = sub { ... };
+<pre>  my $subref = sub { ... };
   $subref-&gt;(@args);            # Call it as a function
   $obj-&gt;$subref(@args);        # Use it as a method
 </pre>
@@ -154,8 +150,7 @@
     delete from the list of names to import. They are processed left to right.
     Specifications are in the form:</p>
 <p class="Pp"></p>
-<pre>
-    [!]name         This name only
+<pre>    [!]name         This name only
     [!]:DEFAULT     All names in @EXPORT
     [!]:tag         All names in $EXPORT_TAGS{tag} anonymous array
     [!]/pattern/    All names in @EXPORT and @EXPORT_OK which match
@@ -167,8 +162,7 @@
     explicitly.</p>
 <p class="Pp">e.g., <i>Module.pm</i> defines:</p>
 <p class="Pp"></p>
-<pre>
-    our @EXPORT      = qw(A1 A2 A3 A4 A5);
+<pre>    our @EXPORT      = qw(A1 A2 A3 A4 A5);
     our @EXPORT_OK   = qw(B1 B2 B3 B4 B5);
     our %EXPORT_TAGS = (T1 =&gt; [qw(A1 A2 B1 B2)], T2 =&gt; [qw(A1 A2 B3 B4)]);
 </pre>
@@ -178,13 +172,11 @@
     <span class="Li">@EXPORT</span> or <span class="Li">@EXPORT_OK</span>.</p>
 <p class="Pp">An application using Module can say something like:</p>
 <p class="Pp"></p>
-<pre>
-    use Module qw(:DEFAULT :T2 !B3 A3);
+<pre>    use Module qw(:DEFAULT :T2 !B3 A3);
 </pre>
 <p class="Pp">Other examples include:</p>
 <p class="Pp"></p>
-<pre>
-    use Socket qw(!/^[AP]F_/ !SOMAXCONN !SOL_SOCKET);
+<pre>    use Socket qw(!/^[AP]F_/ !SOMAXCONN !SOL_SOCKET);
     use POSIX  qw(:errno_h :termios_h !TCSADRAIN !/^EXIT/);
 </pre>
 <p class="Pp">Remember that most patterns (using //) will need to be anchored
@@ -201,8 +193,7 @@
     situations where you can't directly call Exporter's import method. The
     export_to_level method looks like:</p>
 <p class="Pp"></p>
-<pre>
-    MyPackage-&gt;export_to_level(
+<pre>    MyPackage-&gt;export_to_level(
         $where_to_export, $package, @what_to_export
     );
 </pre>
@@ -214,12 +205,9 @@
 <p class="Pp">For example, suppose that you have a module, A, which already has
     an import function:</p>
 <p class="Pp"></p>
-<pre>
-    package A;
-
+<pre>    package A;
     our @ISA = qw(Exporter);
     our @EXPORT_OK = qw($b);
-
     sub import
     {
         $A::b = 1;     # not a very useful import method
@@ -230,11 +218,9 @@
     method to work, via inheritance, as it stands <b>Exporter::import()</b> will
     never get called. Instead, say the following:</p>
 <p class="Pp"></p>
-<pre>
-    package A;
+<pre>    package A;
     our @ISA = qw(Exporter);
     our @EXPORT_OK = qw($b);
-
     sub import
     {
         $A::b = 1;
@@ -255,8 +241,7 @@
     other helper methods which you probably don't want. To avoid this you can
     do:</p>
 <p class="Pp"></p>
-<pre>
-  package YourModule;
+<pre>  package YourModule;
   use Exporter qw(import);
 </pre>
 <p class="Pp">which will export Exporter's own <b>import()</b> method into
@@ -297,8 +282,7 @@
     generating an error. The Exporter will call an export_fail method with a
     list of the failed symbols:</p>
 <p class="Pp"></p>
-<pre>
-  @failed_symbols = $module_name-&gt;export_fail(@failed_symbols);
+<pre>  @failed_symbols = $module_name-&gt;export_fail(@failed_symbols);
 </pre>
 <p class="Pp">If the <span class="Li">&quot;export_fail&quot;</span> method
     returns an empty list then no error is recorded and all the requested
@@ -323,9 +307,7 @@
     symbols to <span class="Li">@EXPORT</span> or
     <span class="Li">@EXPORT_OK</span>:</p>
 <p class="Pp"></p>
-<pre>
-  our %EXPORT_TAGS = (foo =&gt; [qw(aa bb cc)], bar =&gt; [qw(aa cc dd)]);
-
+<pre>  our %EXPORT_TAGS = (foo =&gt; [qw(aa bb cc)], bar =&gt; [qw(aa cc dd)]);
   Exporter::export_tags('foo');     # add aa, bb and cc to @EXPORT
   Exporter::export_ok_tags('bar');  # add aa, cc and dd to @EXPORT_OK
 </pre>
@@ -345,14 +327,11 @@
     utility &quot;:all&quot; to simplify &quot;use&quot; statements.</p>
 <p class="Pp">The simplest way to do this is:</p>
 <p class="Pp"></p>
-<pre>
- our  %EXPORT_TAGS = (foo =&gt; [qw(aa bb cc)], bar =&gt; [qw(aa cc dd)]);
-
+<pre> our  %EXPORT_TAGS = (foo =&gt; [qw(aa bb cc)], bar =&gt; [qw(aa cc dd)]);
   # add all the other &quot;:class&quot; tags to the &quot;:all&quot; class,
   # deleting duplicates
   {
     my %seen;
-
     push @{$EXPORT_TAGS{all}},
       grep {!$seen{$_}++} @{$EXPORT_TAGS{$_}} foreach keys %EXPORT_TAGS;
   }
@@ -361,12 +340,10 @@
     (but not really all) of its categories. That could be done with one small
     change:</p>
 <p class="Pp"></p>
-<pre>
-  # add some of the other &quot;:class&quot; tags to the &quot;:all&quot; class,
+<pre>  # add some of the other &quot;:class&quot; tags to the &quot;:all&quot; class,
   # deleting duplicates
   {
     my %seen;
-
     push @{$EXPORT_TAGS{all}},
       grep {!$seen{$_}++} @{$EXPORT_TAGS{$_}}
         foreach qw/html2 html3 netscape form cgi internal/;
@@ -393,11 +370,8 @@
 <p class="Pp">A workaround for this is to call the constants once in a
     <span class="Li">&quot;BEGIN&quot;</span> block:</p>
 <p class="Pp"></p>
-<pre>
-   package My ;
-
+<pre>   package My ;
    use Socket ;
-
    foo( SO_LINGER );  ## SO_LINGER NOT optimized away; called at runtime
    BEGIN { SO_LINGER }
    foo( SO_LINGER );  ## SO_LINGER optimized away at compile time.
@@ -425,16 +399,14 @@
     package variables <span class="Li">@EXPORT_OK</span>,
     <span class="Li">@EXPORT</span>, <span class="Li">@ISA</span>, etc.</p>
 <p class="Pp"></p>
-<pre>
-  our @ISA = qw(Exporter);
+<pre>  our @ISA = qw(Exporter);
   our @EXPORT_OK = qw(munge frobnicate);
 </pre>
 <p class="Pp">If backward compatibility for Perls <b>under</b> 5.6 is important,
     one must write instead a <span class="Li">&quot;use vars&quot;</span>
     statement.</p>
 <p class="Pp"></p>
-<pre>
-  use vars qw(@ISA @EXPORT_OK);
+<pre>  use vars qw(@ISA @EXPORT_OK);
   @ISA = qw(Exporter);
   @EXPORT_OK = qw(munge frobnicate);
 </pre>
@@ -451,12 +423,9 @@
     is to use <span class="Li">&quot;BEGIN&quot;</span> blocks. So the first
     part of the &quot;SYNOPSIS&quot; code could be rewritten as:</p>
 <p class="Pp"></p>
-<pre>
-  package YourModule;
-
+<pre>  package YourModule;
   use strict;
   use warnings;
-
   our (@ISA, @EXPORT_OK);
   BEGIN {
      require Exporter;
@@ -475,8 +444,7 @@
     <span class="Li">&quot;base&quot;</span> and
     <span class="Li">&quot;parent&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  use base qw(Exporter);
+<pre>  use base qw(Exporter);
   # or
   use parent qw(Exporter);
 </pre>
@@ -494,8 +462,7 @@
     to use Exporter::Easy, which is a wrapper of Exporter that allows all
     boilerplate code at a single gulp in the use statement.</p>
 <p class="Pp"></p>
-<pre>
-   use Exporter::Easy (
+<pre>   use Exporter::Easy (
        OK =&gt; [ qw(munge frobnicate) ],
    );
    # @ISA setup is automatic
@@ -518,8 +485,7 @@
     variable names. Just because <span class="Li">&quot;Exporter&quot;</span>
     lets you do that, it does not mean you should.</p>
 <p class="Pp"></p>
-<pre>
-  @EXPORT_OK = qw($svar @avar %hvar); # DON'T!
+<pre>  @EXPORT_OK = qw($svar @avar %hvar); # DON'T!
 </pre>
 <p class="Pp">Exporting variables is not a good idea. They can change under the
     hood, provoking horrible effects at-a-distance that are too hard to track
@@ -538,8 +504,7 @@
     one that fits your needs. The following is a sample list of such
   modules.</p>
 <p class="Pp"></p>
-<pre>
-    Exporter::Easy
+<pre>    Exporter::Easy
     Exporter::Lite
     Exporter::Renaming
     Exporter::Tidy

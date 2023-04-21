@@ -86,6 +86,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>namespace(n)</title>
 </head>
@@ -100,7 +101,6 @@
 <div class="manual-text">
 <br/>
 <pre>
-
 </pre>
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
@@ -111,7 +111,6 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp"><b>namespace </b>?<i>subcommand</i>? ?<i>arg ...</i>?</p>
 <pre>
-
 </pre>
 </section>
 <section class="Sh">
@@ -269,14 +268,12 @@
     <p class="Pp"></p>
     <div class="Bd-indent">
     <pre>
-<b>namespace inscope ::foo $script $x $y $z</b>
-    </pre>
+<b>namespace inscope ::foo $script $x $y $z</b></pre>
     </div>
     is equivalent to
     <div class="Bd-indent">
     <pre>
-<b>namespace eval ::foo [concat $script [list $x $y $z]]</b>
-    </pre>
+<b>namespace eval ::foo [concat $script [list $x $y $z]]</b></pre>
     </div>
     thus additional arguments will not undergo a second round of substitution,
       as is the case with <b>namespace eval</b>.</div>
@@ -383,8 +380,7 @@
       variable num
       incr num
    }
-}
-</pre>
+}</pre>
 </div>
 creates a new namespace containing the variable <b>num</b> and the procedure
   <b>bump</b>. The commands and variables in this namespace are separate from
@@ -415,8 +411,7 @@ creates a new namespace containing the variable <b>num</b> and the procedure
 }
 <b>namespace eval</b> Counter {
     rename test &quot;&quot;
-}
-</pre>
+}</pre>
 </div>
 Note that the <b>test</b> procedure is added to the <b>Counter</b> namespace,
   and later removed via the <b>rename</b> command.
@@ -445,14 +440,12 @@ Note that the <b>test</b> procedure is added to the <b>Counter</b> namespace,
 <div class="Bd-indent">
 <pre>
 Counter::bump 5
-Counter::Reset
-</pre>
+Counter::Reset</pre>
 </div>
 We could access the current count like this:
 <div class="Bd-indent">
 <pre>
-puts &quot;count = $Counter::num&quot;
-</pre>
+puts &quot;count = $Counter::num&quot;</pre>
 </div>
 When one namespace contains another, you may need more than one qualifier to
   reach its elements. If we had a namespace <b>Foo</b> that contained the
@@ -460,22 +453,19 @@ When one namespace contains another, you may need more than one qualifier to
   global namespace like this:
 <div class="Bd-indent">
 <pre>
-Foo::Counter::bump 3
-</pre>
+Foo::Counter::bump 3</pre>
 </div>
 <p class="Pp">You can also use qualified names when you create and rename
     commands. For example, you could add a procedure to the <b>Foo</b> namespace
     like this:</p>
 <div class="Bd-indent">
 <pre>
-proc Foo::Test {args} {return $args}
-</pre>
+proc Foo::Test {args} {return $args}</pre>
 </div>
 And you could move the same procedure to another namespace like this:
 <div class="Bd-indent">
 <pre>
-rename Foo::Test Bar::Test
-</pre>
+rename Foo::Test Bar::Test</pre>
 </div>
 <p class="Pp">There are a few remaining points about qualified names that we
     should cover. Namespaces have nonempty names except for the global
@@ -510,8 +500,7 @@ rename Foo::Test Bar::Test
 set traceLevel 0
 <b>namespace eval</b> Debug {
    printTrace $traceLevel
-}
-</pre>
+}</pre>
 </div>
 Tcl looks for <b>traceLevel</b> in the namespace <b>Debug</b> and then in the
   global namespace. It looks up the command <b>printTrace</b> in the same way.
@@ -526,8 +515,7 @@ set traceLevel 0
    <b>namespace eval</b> Debug {
       printTrace $traceLevel
    }
-}
-</pre>
+}</pre>
 </div>
 Here Tcl looks for <b>traceLevel</b> first in the namespace <b>Foo::Debug</b>.
   Since it is not found there, Tcl then looks for it in the global namespace.
@@ -537,14 +525,12 @@ Here Tcl looks for <b>traceLevel</b> first in the namespace <b>Foo::Debug</b>.
     question about name resolution. For example, the command:</p>
 <div class="Bd-indent">
 <pre>
-<b>namespace eval</b> Foo::Debug {<b>namespace which</b> -variable traceLevel}
-</pre>
+<b>namespace eval</b> Foo::Debug {<b>namespace which</b> -variable traceLevel}</pre>
 </div>
 returns <b>::traceLevel</b>. On the other hand, the command,
 <div class="Bd-indent">
 <pre>
-<b>namespace eval</b> Foo {<b>namespace which</b> -variable traceLevel}
-</pre>
+<b>namespace eval</b> Foo {<b>namespace which</b> -variable traceLevel}</pre>
 </div>
 returns <b>::Foo::traceLevel</b>.
 <p class="Pp">As mentioned above, namespace names are looked up differently than
@@ -576,24 +562,21 @@ returns <b>::Foo::traceLevel</b>.
 <div class="Bd-indent">
 <pre>
 Blt::graph .g -background red
-Blt::table . .g 0,0
-</pre>
+Blt::table . .g 0,0</pre>
 </div>
 If you use the <b>graph</b> and <b>table</b> commands frequently, you may want
   to access them without the <b>Blt::</b> prefix. You can do this by importing
   the commands into the current namespace, like this:
 <div class="Bd-indent">
 <pre>
-<b>namespace import</b> Blt::*
-</pre>
+<b>namespace import</b> Blt::*</pre>
 </div>
 This adds all exported commands from the <b>Blt</b> namespace into the current
   namespace context, so you can write code like this:
 <div class="Bd-indent">
 <pre>
 graph .g -background red
-table . .g 0,0
-</pre>
+table . .g 0,0</pre>
 </div>
 The <b>namespace import</b> command only imports commands from a namespace that
   that namespace exported with a <b>namespace export</b> command.
@@ -602,8 +585,7 @@ The <b>namespace import</b> command only imports commands from a namespace that
     the specific commands you need. For example, the command</p>
 <div class="Bd-indent">
 <pre>
-<b>namespace import</b> Blt::graph Blt::table
-</pre>
+<b>namespace import</b> Blt::graph Blt::table</pre>
 </div>
 imports only the <b>graph</b> and <b>table</b> commands into the current
   context.
@@ -616,15 +598,13 @@ imports only the <b>graph</b> and <b>table</b> commands into the current
     existing commands will be silently overwritten:</p>
 <div class="Bd-indent">
 <pre>
-<b>namespace import</b> -force Blt::graph Blt::table
-</pre>
+<b>namespace import</b> -force Blt::graph Blt::table</pre>
 </div>
 If for some reason, you want to stop using the imported commands, you can remove
   them with a <b>namespace forget</b> command, like this:
 <div class="Bd-indent">
 <pre>
-<b>namespace forget</b> Blt::*
-</pre>
+<b>namespace forget</b> Blt::*</pre>
 </div>
 This searches the current namespace for any commands imported from <b>Blt</b>.
   If it finds any, it removes them. Otherwise, it does nothing. After this, the
@@ -633,8 +613,7 @@ This searches the current namespace for any commands imported from <b>Blt</b>.
   this:</p>
 <div class="Bd-indent">
 <pre>
-rename Blt::graph &quot;&quot;
-</pre>
+rename Blt::graph &quot;&quot;</pre>
 </div>
 the command is automatically removed from all namespaces that import it.
 </section>
@@ -665,15 +644,13 @@ the command is automatically removed from all namespaces that import it.
          error &quot;too high!&quot;
       }
    }
-}
-</pre>
+}</pre>
 </div>
 The procedures <b>bump</b> and <b>reset</b> are exported, so they are included
   when you import from the <b>Counter</b> namespace, like this:
 <div class="Bd-indent">
 <pre>
-<b>namespace import</b> Counter::*
-</pre>
+<b>namespace import</b> Counter::*</pre>
 </div>
 However, the <b>Check</b> procedure is not exported, so it is ignored by the
   import operation.
@@ -704,15 +681,13 @@ However, the <b>Check</b> procedure is not exported, so it is ignored by the
    }
    trace add variable b write [<b>namespace code</b> theTraceCallback]
 }
-set a::b c
-</pre>
+set a::b c</pre>
 </div>
 <p class="Pp">When executed, it prints the message:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
-the value of a::b has changed to c
-</pre>
+the value of a::b has changed to c</pre>
 </div>
 </section>
 <section class="Sh">
@@ -877,8 +852,7 @@ the value of a::b has changed to c
       puts &quot;called [incr bar] times&quot;
    }
    <b>namespace export</b> grill
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">Call the command defined in the previous example in various
   ways.</p>
@@ -901,21 +875,18 @@ grill
    <b>namespace ensemble</b> create -command ::foobar
 }
 foo grill
-foobar grill
-</pre>
+foobar grill</pre>
 </div>
 <p class="Pp">Look up where the command imported in the previous example came
     from:</p>
 <div class="Bd-indent">
 <pre>
-puts &quot;grill came from [<b>namespace origin</b> grill]&quot;
-</pre>
+puts &quot;grill came from [<b>namespace origin</b> grill]&quot;</pre>
 </div>
 <p class="Pp">Remove all imported commands from the current namespace:</p>
 <div class="Bd-indent">
 <pre>
-namespace forget {*}[namespace import]
-</pre>
+namespace forget {*}[namespace import]</pre>
 </div>
 </section>
 <section class="Sh">

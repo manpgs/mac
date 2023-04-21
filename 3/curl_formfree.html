@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_formfree(3)</title>
 </head>
@@ -45,12 +48,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<p class="Pp"><b>void curl_formfree(struct curl_httppost *</b><i>form);</i></p>
+<pre>#include &lt;curl/curl.h&gt;
+void curl_formfree(struct curl_httppost *form);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">This function is deprecated. Do not use! See
+<p class="Pp">This function is deprecated. Do not use. See
     <i>curl_mime_init(3)</i> instead!</p>
 <p class="Pp">curl_formfree() is used to clean up data previously built/appended
     with <i>curl_formadd(3)</i>. This must be called when the data has been
@@ -63,6 +66,20 @@
     <i>curl_formadd(3)</i> and may be NULL.</p>
 <p class="Pp">Passing in a NULL pointer in <i>form</i> will make this function
     return immediately with no action.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+  /* Fill in a file upload field */
+  curl_formadd(&amp;formpost,
+               &amp;lastptr,
+               CURLFORM_COPYNAME, &quot;file&quot;,
+               CURLFORM_FILE, &quot;nice-image.jpg&quot;,
+               CURLFORM_END);
+  curl_easy_setopt(curl, CURLOPT_HTTPPOST, formpost);
+  curl_easy_perform(curl);
+  /* then cleanup the formpost chain */
+  curl_formfree(formpost);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -82,8 +99,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 5, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

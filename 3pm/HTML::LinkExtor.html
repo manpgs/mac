@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTML::LinkExtor(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- require HTML::LinkExtor;
+<pre> require HTML::LinkExtor;
  $p = HTML::LinkExtor-&gt;new(\&amp;cb, &quot;http://www.perl.org/&quot;);
  sub cb {
      my($tag, %links) = @_;
@@ -67,8 +67,7 @@
   <dd>Returns a list of all links found in the document. The returned values
       will be anonymous arrays with the following elements:
     <p class="Pp"></p>
-    <pre>
-  [$tag, $attr =&gt; $url1, $attr2 =&gt; $url2,...]
+    <pre>  [$tag, $attr =&gt; $url1, $attr2 =&gt; $url2,...]
     </pre>
     <p class="Pp">The <span class="Li">$p</span>-&gt;links method will also
         truncate the internal link list. This means that if the method is called
@@ -85,14 +84,11 @@
 <p class="Pp">This is an example showing how you can extract links from a
     document received using LWP:</p>
 <p class="Pp"></p>
-<pre>
-  use LWP::UserAgent;
+<pre>  use LWP::UserAgent;
   use HTML::LinkExtor;
   use URI::URL;
-
   $url = &quot;http://www.perl.org/&quot;;  # for instance
   $ua = LWP::UserAgent-&gt;new;
-
   # Set up a callback that collect image links
   my @imgs = ();
   sub callback {
@@ -100,19 +96,15 @@
      return if $tag ne 'img';  # we only look closer at &lt;img ...&gt;
      push(@imgs, values %attr);
   }
-
   # Make the parser.  Unfortunately, we don't know the base yet
   # (it might be different from $url)
   $p = HTML::LinkExtor-&gt;new(\&amp;callback);
-
   # Request document and parse it as it arrives
   $res = $ua-&gt;request(HTTP::Request-&gt;new(GET =&gt; $url),
                       sub {$p-&gt;parse($_[0])});
-
   # Expand all image URLs to absolute ones
   my $base = $res-&gt;base;
   @imgs = map { $_ = url($_, $base)-&gt;abs; } @imgs;
-
   # Print them out
   print join(&quot;\n&quot;, @imgs), &quot;\n&quot;;
 </pre>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>XML::Simple(3)</title>
 </head>
@@ -33,22 +34,15 @@
     <span class="Li">&quot;qw(:strict)&quot;</span> mode will save you a little
     pain.</p>
 <p class="Pp"></p>
-<pre>
-    use XML::Simple qw(:strict);
-
+<pre>    use XML::Simple qw(:strict);
     my $ref = XMLin([&lt;xml file or string&gt;] [, &lt;options&gt;]);
-
     my $xml = XMLout($hashref [, &lt;options&gt;]);
 </pre>
 <p class="Pp">Or the object oriented way:</p>
 <p class="Pp"></p>
-<pre>
-    require XML::Simple qw(:strict);
-
+<pre>    require XML::Simple qw(:strict);
     my $xs = XML::Simple-&gt;new([&lt;options&gt;]);
-
     my $ref = $xs-&gt;XMLin([&lt;xml file or string&gt;] [, &lt;options&gt;]);
-
     my $xml = $xs-&gt;XMLout($hashref [, &lt;options&gt;]);
 </pre>
 <p class="Pp">(or see &quot;SAX SUPPORT&quot; for 'the SAX way').</p>
@@ -77,8 +71,7 @@
 <p class="Pp">Say you have a script called <b>foo</b> and a file of
     configuration options called <b>foo.xml</b> containing the following:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;config logdir=&quot;/var/log/foo/&quot; debugfile=&quot;/tmp/foo.debug&quot;&gt;
+<pre>  &lt;config logdir=&quot;/var/log/foo/&quot; debugfile=&quot;/tmp/foo.debug&quot;&gt;
     &lt;server name=&quot;sahara&quot; osname=&quot;solaris&quot; osversion=&quot;2.6&quot;&gt;
       &lt;address&gt;10.0.0.101&lt;/address&gt;
       &lt;address&gt;10.0.1.101&lt;/address&gt;
@@ -94,9 +87,7 @@
 </pre>
 <p class="Pp">The following lines of code in <b>foo</b>:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::Simple qw(:strict);
-
+<pre>  use XML::Simple qw(:strict);
   my $config = XMLin(undef, KeyAttr =&gt; { server =&gt; 'name' }, ForceArray =&gt; [ 'server', 'address' ]);
 </pre>
 <p class="Pp">will 'slurp' the configuration options into the hashref
@@ -106,16 +97,13 @@
     location of the script). You can dump out the contents of the hashref using
     Data::Dumper:</p>
 <p class="Pp"></p>
-<pre>
-  use Data::Dumper;
-
+<pre>  use Data::Dumper;
   print Dumper($config);
 </pre>
 <p class="Pp">which will produce something like this (formatting has been
     adjusted for brevity):</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
       'logdir'        =&gt; '/var/log/foo/',
       'debugfile'     =&gt; '/tmp/foo.debug',
       'server'        =&gt; {
@@ -140,14 +128,12 @@
 <p class="Pp">Your script could then access the name of the log directory like
     this:</p>
 <p class="Pp"></p>
-<pre>
-  print $config-&gt;{logdir};
+<pre>  print $config-&gt;{logdir};
 </pre>
 <p class="Pp">similarly, the second address on the server 'kalahari' could be
     referenced as:</p>
 <p class="Pp"></p>
-<pre>
-  print $config-&gt;{server}-&gt;{kalahari}-&gt;{address}-&gt;[1];
+<pre>  print $config-&gt;{server}-&gt;{kalahari}-&gt;{address}-&gt;[1];
 </pre>
 <p class="Pp">Note: If the mapping between the output of Data::Dumper and the
     print statements above is not obvious to you, then please refer to the
@@ -206,8 +192,7 @@
       directory in the SearchPath (see &quot;OPTIONS&quot; below) or in the
       current directory if the SearchPath option is not defined. eg:
     <p class="Pp"></p>
-    <pre>
-  $ref = XMLin('/etc/params.xml');
+    <pre>  $ref = XMLin('/etc/params.xml');
     </pre>
     <p class="Pp">Note, the filename '-' can be used to parse from STDIN.</p>
   </dd>
@@ -218,23 +203,20 @@
       Note: if you wish to specify options, you must specify the value 'undef'.
       eg:
     <p class="Pp"></p>
-    <pre>
-  $ref = XMLin(undef, ForceArray =&gt; 1);
+    <pre>  $ref = XMLin(undef, ForceArray =&gt; 1);
     </pre>
   </dd>
   <dt id="A~2"><a class="permalink" href="#A~2">A string of XML</a></dt>
   <dd>A string containing XML (recognised by the presence of '&lt;' and '&gt;'
       characters) will be parsed directly. eg:
     <p class="Pp"></p>
-    <pre>
-  $ref = XMLin('&lt;opt username=&quot;bob&quot; password=&quot;flurp&quot; /&gt;');
+    <pre>  $ref = XMLin('&lt;opt username=&quot;bob&quot; password=&quot;flurp&quot; /&gt;');
     </pre>
   </dd>
   <dt id="An"><a class="permalink" href="#An">An IO::Handle object</a></dt>
   <dd>An IO::Handle object will be read to EOF and its contents parsed. eg:
     <p class="Pp"></p>
-    <pre>
-  $fh = IO::File-&gt;new('/etc/params.xml');
+    <pre>  $fh = IO::File-&gt;new('/etc/params.xml');
   $ref = XMLin($fh);
     </pre>
   </dd>
@@ -319,8 +301,7 @@
       recognised by <span class="Li">&quot;XMLout()&quot;</span>.</li>
   <li>Each option is also flagged to indicate whether it is:
     <p class="Pp"></p>
-    <pre>
- 'important'   - don't use the module until you understand this one
+    <pre> 'important'   - don't use the module until you understand this one
  'handy'       - you can skip this on the first time through
  'advanced'    - you can skip this on the second time through
  'SAX only'    - don't worry about this unless you're using SAX (or
@@ -393,18 +374,15 @@
     specify a name for the hash key to override the default 'content'. So for
     example:</p>
 <p class="Pp"></p>
-<pre>
-  XMLin('&lt;opt one=&quot;1&quot;&gt;Text&lt;/opt&gt;', ContentKey =&gt; 'text')
+<pre>  XMLin('&lt;opt one=&quot;1&quot;&gt;Text&lt;/opt&gt;', ContentKey =&gt; 'text')
 </pre>
 <p class="Pp">will parse to:</p>
 <p class="Pp"></p>
-<pre>
-  { 'one' =&gt; 1, 'text' =&gt; 'Text' }
+<pre>  { 'one' =&gt; 1, 'text' =&gt; 'Text' }
 </pre>
 <p class="Pp">instead of:</p>
 <p class="Pp"></p>
-<pre>
-  { 'one' =&gt; 1, 'content' =&gt; 'Text' }
+<pre>  { 'one' =&gt; 1, 'content' =&gt; 'Text' }
 </pre>
 <p class="Pp"><span class="Li">&quot;XMLout()&quot;</span> will also honour the
     value of this option when converting a hashref to XML.</p>
@@ -412,8 +390,7 @@
     have <span class="Li">&quot;XMLin()&quot;</span> try a little harder to
     eliminate unnecessary 'content' keys after array folding. For example:</p>
 <p class="Pp"></p>
-<pre>
-  XMLin(
+<pre>  XMLin(
     '&lt;opt&gt;&lt;item name=&quot;one&quot;&gt;First&lt;/item&gt;&lt;item name=&quot;two&quot;&gt;Second&lt;/item&gt;&lt;/opt&gt;',
     KeyAttr =&gt; {item =&gt; 'name'},
     ForceArray =&gt; [ 'item' ],
@@ -422,8 +399,7 @@
 </pre>
 <p class="Pp">will parse to:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     'item' =&gt; {
       'one' =&gt;  'First'
       'two' =&gt;  'Second'
@@ -432,8 +408,7 @@
 </pre>
 <p class="Pp">rather than this (without the '-'):</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     'item' =&gt; {
       'one' =&gt; { 'content' =&gt; 'First' }
       'two' =&gt; { 'content' =&gt; 'Second' }
@@ -460,15 +435,13 @@
     represented as arrays even when there is only one. Eg, with ForceArray
     enabled, this XML:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;name&gt;value&lt;/name&gt;
     &lt;/opt&gt;
 </pre>
 <p class="Pp">would parse to this:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'name' =&gt; [
                   'value'
                 ]
@@ -476,8 +449,7 @@
 </pre>
 <p class="Pp">instead of this (the default):</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'name' =&gt; 'value'
     }
 </pre>
@@ -503,8 +475,7 @@
     will be forced to arrays. If the list contains only a single regex, then it
     is not necessary to enclose it in an arrayref. Eg:</p>
 <p class="Pp"></p>
-<pre>
-  ForceArray =&gt; qr/_list$/
+<pre>  ForceArray =&gt; qr/_list$/
 </pre>
 </section>
 <section class="Ss">
@@ -516,21 +487,18 @@
     you to force text content to always parse to a hash value even when there
     are no attributes. So for example:</p>
 <p class="Pp"></p>
-<pre>
-  XMLin('&lt;opt&gt;&lt;x&gt;text1&lt;/x&gt;&lt;y a=&quot;2&quot;&gt;text2&lt;/y&gt;&lt;/opt&gt;', ForceContent =&gt; 1)
+<pre>  XMLin('&lt;opt&gt;&lt;x&gt;text1&lt;/x&gt;&lt;y a=&quot;2&quot;&gt;text2&lt;/y&gt;&lt;/opt&gt;', ForceContent =&gt; 1)
 </pre>
 <p class="Pp">will parse to:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     'x' =&gt; {           'content' =&gt; 'text1' },
     'y' =&gt; { 'a' =&gt; 2, 'content' =&gt; 'text2' }
   }
 </pre>
 <p class="Pp">instead of:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     'x' =&gt; 'text1',
     'y' =&gt; { 'a' =&gt; 2, 'content' =&gt; 'text2' }
   }
@@ -542,8 +510,7 @@
 <p class="Pp">You can use this option to eliminate extra levels of indirection
     in your Perl data structure. For example this XML:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;opt&gt;
+<pre>  &lt;opt&gt;
    &lt;searchpath&gt;
      &lt;dir&gt;/usr/bin&lt;/dir&gt;
      &lt;dir&gt;/usr/local/bin&lt;/dir&gt;
@@ -553,8 +520,7 @@
 </pre>
 <p class="Pp">Would normally be read into a structure like this:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     searchpath =&gt; {
                     dir =&gt; [ '/usr/bin', '/usr/local/bin', '/usr/X11/bin' ]
                   }
@@ -562,13 +528,11 @@
 </pre>
 <p class="Pp">But when read in with the appropriate value for 'GroupTags':</p>
 <p class="Pp"></p>
-<pre>
-  my $opt = XMLin($xml, GroupTags =&gt; { searchpath =&gt; 'dir' });
+<pre>  my $opt = XMLin($xml, GroupTags =&gt; { searchpath =&gt; 'dir' });
 </pre>
 <p class="Pp">It will return this simpler structure:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     searchpath =&gt; [ '/usr/bin', '/usr/local/bin', '/usr/X11/bin' ]
   }
 </pre>
@@ -609,8 +573,7 @@
     element name. Setting the 'KeepRoot' option to '1' will cause the root
     element name to be retained. So after executing this code:</p>
 <p class="Pp"></p>
-<pre>
-  $config = XMLin('&lt;config tempdir=&quot;/tmp&quot; /&gt;', KeepRoot =&gt; 1)
+<pre>  $config = XMLin('&lt;config tempdir=&quot;/tmp&quot; /&gt;', KeepRoot =&gt; 1)
 </pre>
 <p class="Pp">You'll be able to reference the tempdir as
     <span class="Li">&quot;$config-&gt;{config}-&gt;{tempdir}&quot;</span>
@@ -628,16 +591,14 @@
     hashes to arrays.</p>
 <p class="Pp">For example, this XML:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;user login=&quot;grep&quot; fullname=&quot;Gary R Epstein&quot; /&gt;
       &lt;user login=&quot;stty&quot; fullname=&quot;Simon T Tyson&quot; /&gt;
     &lt;/opt&gt;
 </pre>
 <p class="Pp">would, by default, parse to this:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'user' =&gt; [
                   {
                     'login' =&gt; 'grep',
@@ -654,8 +615,7 @@
     specify that the 'login' attribute is a key, the same XML would parse
   to:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'user' =&gt; {
                   'stty' =&gt; {
                               'fullname' =&gt; 'Simon T Tyson'
@@ -700,16 +660,14 @@
 <p class="Pp">The option 'KeyAttr =&gt; { user =&gt; &quot;+login&quot; }' will
     cause this XML:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;user login=&quot;grep&quot; fullname=&quot;Gary R Epstein&quot; /&gt;
       &lt;user login=&quot;stty&quot; fullname=&quot;Simon T Tyson&quot; /&gt;
     &lt;/opt&gt;
 </pre>
 <p class="Pp">to parse to this data structure:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'user' =&gt; {
                   'stty' =&gt; {
                               'fullname' =&gt; 'Simon T Tyson',
@@ -726,8 +684,7 @@
     copied rather than moved to the folded hash key.</p>
 <p class="Pp">A '-' prefix would produce this result:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'user' =&gt; {
                   'stty' =&gt; {
                               'fullname' =&gt; 'Simon T Tyson',
@@ -818,8 +775,9 @@
     option to 1 otherwise <span class="Li">&quot;XMLout&quot;</span> will emit
     XML which is not well formed.</p>
 <p class="Pp"><i>Note: You must have the XML::NamespaceSupport module installed
-    if you want</i> <i></i><i>&quot;XMLout()&quot;</i><i> to translate URIs back
-    to prefixes</i>.</p>
+    if you want</i>
+    <i></i><span class="Li"><i>&quot;XMLout()&quot;</i></span><i> to translate
+    URIs back to prefixes</i>.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="NumericEscape_=__0___1___2_"><a class="permalink" href="#NumericEscape_=__0___1___2_">NumericEscape
@@ -845,8 +803,7 @@
     in Perl 5.8.0 and later for output using an encoding other than UTF-8,
   eg:</p>
 <p class="Pp"></p>
-<pre>
-  open my $fh, '&gt;:encoding(iso-8859-1)', $path or die &quot;open($path): $!&quot;;
+<pre>  open my $fh, '&gt;:encoding(iso-8859-1)', $path or die &quot;open($path): $!&quot;;
   XMLout($ref, OutputFile =&gt; $fh);
 </pre>
 <p class="Pp">Note, XML::Simple does not require that the object you pass in to
@@ -924,8 +881,7 @@
 <p class="Pp">Use this option to deal elements which always have a single
     attribute and no content. Eg:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;opt&gt;
+<pre>  &lt;opt&gt;
     &lt;colour value=&quot;red&quot; /&gt;
     &lt;size   value=&quot;XXL&quot; /&gt;
   &lt;/opt&gt;
@@ -933,16 +889,14 @@
 <p class="Pp">Setting <span class="Li">&quot;ValueAttr =&gt; [ 'value'
     ]&quot;</span> will cause the above XML to parse to:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     colour =&gt; 'red',
     size   =&gt; 'XXL'
   }
 </pre>
 <p class="Pp">instead of this (the default):</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     colour =&gt; { value =&gt; 'red' },
     size   =&gt; { value =&gt; 'XXL' }
   }
@@ -989,8 +943,7 @@
     override a variable defined using the
     <span class="Li">&quot;Variables&quot;</span> option. For example:</p>
 <p class="Pp"></p>
-<pre>
-  XMLin( '&lt;opt&gt;
+<pre>  XMLin( '&lt;opt&gt;
             &lt;dir name=&quot;prefix&quot;&gt;/usr/local/apache&lt;/dir&gt;
             &lt;dir name=&quot;exec_prefix&quot;&gt;${prefix}&lt;/dir&gt;
             &lt;dir name=&quot;bindir&quot;&gt;${exec_prefix}/bin&lt;/dir&gt;
@@ -1000,8 +953,7 @@
 </pre>
 <p class="Pp">produces the following data structure:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     dir =&gt; {
              prefix      =&gt; '/usr/local/apache',
              exec_prefix =&gt; '/usr/local/apache',
@@ -1018,8 +970,7 @@
     declaration, simply set the option to '1'. The default XML declaration
   is:</p>
 <p class="Pp"></p>
-<pre>
-        &lt;?xml version='1.0' standalone='yes'?&gt;
+<pre>        &lt;?xml version='1.0' standalone='yes'?&gt;
 </pre>
 <p class="Pp">If you want some other string (for example to declare an encoding
     value), set the value of this option to the complete string you require.</p>
@@ -1045,14 +996,12 @@
 <p class="Pp">First create an XML::Simple parser object with your preferred
     defaults:</p>
 <p class="Pp"></p>
-<pre>
-  my $xs = XML::Simple-&gt;new(ForceArray =&gt; 1, KeepRoot =&gt; 1);
+<pre>  my $xs = XML::Simple-&gt;new(ForceArray =&gt; 1, KeepRoot =&gt; 1);
 </pre>
 <p class="Pp">then call <span class="Li">&quot;XMLin()&quot;</span> or
     <span class="Li">&quot;XMLout()&quot;</span> as a method of that object:</p>
 <p class="Pp"></p>
-<pre>
-  my $ref = $xs-&gt;XMLin($xml);
+<pre>  my $ref = $xs-&gt;XMLin($xml);
   my $xml = $xs-&gt;XMLout($ref);
 </pre>
 <p class="Pp">You can also specify options when you make the method calls and
@@ -1161,8 +1110,7 @@
     data structure and a filename.</p>
 <p class="Pp">You would use this caching scheme by specifying the option:</p>
 <p class="Pp"></p>
-<pre>
-  Cache =&gt; [ 'dbm' ]
+<pre>  Cache =&gt; [ 'dbm' ]
 </pre>
 </section>
 </section>
@@ -1171,8 +1119,7 @@
   MODE</a></h1>
 <p class="Pp">If you import the <b>XML::Simple</b> routines like this:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::Simple qw(:strict);
+<pre>  use XML::Simple qw(:strict);
 </pre>
 <p class="Pp">the following common mistakes will be detected and treated as
     fatal errors</p>
@@ -1231,15 +1178,12 @@
     it into a SAX pipeline using the 'Handler' option on
     <span class="Li">&quot;XMLout()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::Simple;
+<pre>  use XML::Simple;
   use Some::SAX::Filter;
   use XML::SAX::Writer;
-
   my $ref = {
                ....   # your data here
             };
-
   my $writer = XML::SAX::Writer-&gt;new();
   my $filter = Some::SAX::Filter-&gt;new(Handler =&gt; $writer);
   my $simple = XML::Simple-&gt;new(Handler =&gt; $filter);
@@ -1249,17 +1193,13 @@
     pipeline to take advantage of the simple 'tree' data structure once the
     relevant data has been isolated through filtering:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::SAX;
+<pre>  use XML::SAX;
   use Some::SAX::Filter;
   use XML::Simple;
-
   my $simple = XML::Simple-&gt;new(ForceArray =&gt; 1, KeyAttr =&gt; ['partnum']);
   my $filter = Some::SAX::Filter-&gt;new(Handler =&gt; $simple);
   my $parser = XML::SAX::ParserFactory-&gt;parser(Handler =&gt; $filter);
-
   my $ref = $parser-&gt;parse_uri('some_huge_file.xml');
-
   print $ref-&gt;{part}-&gt;{'555-1234'};
 </pre>
 <p class="Pp">You can build a filter by using an XML::Simple object as a handler
@@ -1267,25 +1207,22 @@
     resulting tree, modifies it and sends it off as SAX events to a downstream
     handler:</p>
 <p class="Pp"></p>
-<pre>
-  my $writer = XML::SAX::Writer-&gt;new();
+<pre>  my $writer = XML::SAX::Writer-&gt;new();
   my $filter = XML::Simple-&gt;new(
                  DataHandler =&gt; sub {
                                   my $simple = shift;
                                   my $data = shift;
-
                                   # Modify $data here
-
                                   $simple-&gt;XMLout($data, Handler =&gt; $writer);
                                 }
                );
   my $parser = XML::SAX::ParserFactory-&gt;parser(Handler =&gt; $filter);
-
   $parser-&gt;parse_uri($filename);
 </pre>
 <p class="Pp"><i>Note: In this last example, the 'Handler' option was specified
-    in the call to</i> <i></i><i>&quot;XMLout()&quot;</i><i> but it could also
-    have been specified in the constructor</i>.</p>
+    in the call to</i>
+    <i></i><span class="Li"><i>&quot;XMLout()&quot;</i></span><i> but it could
+    also have been specified in the constructor</i>.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
@@ -1337,8 +1274,7 @@
     arrange to call <span class="Li">&quot;XMLin()&quot;</span> in an eval block
     and look for errors in $@. eg:</p>
 <p class="Pp"></p>
-<pre>
-    my $config = eval { XMLin() };
+<pre>    my $config = eval { XMLin() };
     PopUpMessage($@) if($@);
 </pre>
 <p class="Pp">Note, there is a common misconception that use of <b>eval</b> will
@@ -1350,13 +1286,11 @@
 <p class="Pp">When <span class="Li">&quot;XMLin()&quot;</span> reads the
     following very simple piece of XML:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt username=&quot;testuser&quot; password=&quot;frodo&quot;&gt;&lt;/opt&gt;
+<pre>    &lt;opt username=&quot;testuser&quot; password=&quot;frodo&quot;&gt;&lt;/opt&gt;
 </pre>
 <p class="Pp">it returns the following data structure:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
       'username' =&gt; 'testuser',
       'password' =&gt; 'frodo'
     }
@@ -1364,21 +1298,18 @@
 <p class="Pp">The identical result could have been produced with this
     alternative XML:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt username=&quot;testuser&quot; password=&quot;frodo&quot; /&gt;
+<pre>    &lt;opt username=&quot;testuser&quot; password=&quot;frodo&quot; /&gt;
 </pre>
 <p class="Pp">Or this (although see 'ForceArray' option for variations):</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;username&gt;testuser&lt;/username&gt;
       &lt;password&gt;frodo&lt;/password&gt;
     &lt;/opt&gt;
 </pre>
 <p class="Pp">Repeated nested elements are represented as anonymous arrays:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;person firstname=&quot;Joe&quot; lastname=&quot;Smith&quot;&gt;
         &lt;email&gt;joe@smith.com&lt;/email&gt;
         &lt;email&gt;jsmith@yahoo.com&lt;/email&gt;
@@ -1387,7 +1318,6 @@
         &lt;email&gt;bob@smith.com&lt;/email&gt;
       &lt;/person&gt;
     &lt;/opt&gt;
-
     {
       'person' =&gt; [
                     {
@@ -1410,13 +1340,11 @@
     (folded) from an array into a hash keyed on the value of that attribute (see
     the <span class="Li">&quot;KeyAttr&quot;</span> option):</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;person key=&quot;jsmith&quot; firstname=&quot;Joe&quot; lastname=&quot;Smith&quot; /&gt;
       &lt;person key=&quot;tsmith&quot; firstname=&quot;Tom&quot; lastname=&quot;Smith&quot; /&gt;
       &lt;person key=&quot;jbloggs&quot; firstname=&quot;Joe&quot; lastname=&quot;Bloggs&quot; /&gt;
     &lt;/opt&gt;
-
     {
       'person' =&gt; {
                     'jbloggs' =&gt; {
@@ -1436,14 +1364,12 @@
 </pre>
 <p class="Pp">The &lt;anon&gt; tag can be used to form anonymous arrays:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;head&gt;&lt;anon&gt;Col 1&lt;/anon&gt;&lt;anon&gt;Col 2&lt;/anon&gt;&lt;anon&gt;Col 3&lt;/anon&gt;&lt;/head&gt;
       &lt;data&gt;&lt;anon&gt;R1C1&lt;/anon&gt;&lt;anon&gt;R1C2&lt;/anon&gt;&lt;anon&gt;R1C3&lt;/anon&gt;&lt;/data&gt;
       &lt;data&gt;&lt;anon&gt;R2C1&lt;/anon&gt;&lt;anon&gt;R2C2&lt;/anon&gt;&lt;anon&gt;R2C3&lt;/anon&gt;&lt;/data&gt;
       &lt;data&gt;&lt;anon&gt;R3C1&lt;/anon&gt;&lt;anon&gt;R3C2&lt;/anon&gt;&lt;anon&gt;R3C3&lt;/anon&gt;&lt;/data&gt;
     &lt;/opt&gt;
-
     {
       'head' =&gt; [
                   [ 'Col 1', 'Col 2', 'Col 3' ]
@@ -1460,13 +1386,11 @@
     anonymous array the arrayref will be returned directly rather than the usual
     hashref:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;opt&gt;
+<pre>    &lt;opt&gt;
       &lt;anon&gt;&lt;anon&gt;Col 1&lt;/anon&gt;&lt;anon&gt;Col 2&lt;/anon&gt;&lt;/anon&gt;
       &lt;anon&gt;&lt;anon&gt;R1C1&lt;/anon&gt;&lt;anon&gt;R1C2&lt;/anon&gt;&lt;/anon&gt;
       &lt;anon&gt;&lt;anon&gt;R2C1&lt;/anon&gt;&lt;anon&gt;R2C2&lt;/anon&gt;&lt;/anon&gt;
     &lt;/opt&gt;
-
     [
       [ 'Col 1', 'Col 2' ],
       [ 'R1C1', 'R1C2' ],
@@ -1479,12 +1403,10 @@
     in the 'content' key (see the <span class="Li">&quot;ContentKey&quot;</span>
     option):</p>
 <p class="Pp"></p>
-<pre>
-  &lt;opt&gt;
+<pre>  &lt;opt&gt;
     &lt;one&gt;first&lt;/one&gt;
     &lt;two attr=&quot;value&quot;&gt;second&lt;/two&gt;
   &lt;/opt&gt;
-
   {
     'one' =&gt; 'first',
     'two' =&gt; { 'attr' =&gt; 'value', 'content' =&gt; 'second' }

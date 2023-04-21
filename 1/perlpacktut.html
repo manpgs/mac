@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLPACKTUT(1)</title>
 </head>
@@ -75,15 +76,13 @@
     bytes that we'd like to inspect without assuming anything about its meaning,
     we can write</p>
 <p class="Pp"></p>
-<pre>
-   my( $hex ) = unpack( 'H*', $mem );
+<pre>   my( $hex ) = unpack( 'H*', $mem );
    print &quot;$hex\n&quot;;
 </pre>
 <p class="Pp">whereupon we might see something like this, with each pair of hex
     digits corresponding to a byte:</p>
 <p class="Pp"></p>
-<pre>
-   41204d414e204120504c414e20412043414e414c2050414e414d41
+<pre>   41204d414e204120504c414e20412043414e414c2050414e414d41
 </pre>
 <p class="Pp">What was in this chunk of memory? Numbers, characters, or a
     mixture of both? Assuming that we're on a computer where ASCII (or some
@@ -103,8 +102,7 @@
 <p class="Pp">The inverse operation - packing byte contents from a string of
     hexadecimal digits - is just as easily written. For instance:</p>
 <p class="Pp"></p>
-<pre>
-   my $s = pack( 'H2' x 10, 30..39 );
+<pre>   my $s = pack( 'H2' x 10, 30..39 );
    print &quot;$s\n&quot;;
 </pre>
 <p class="Pp">Since we feed a list of ten 2-digit hexadecimal strings to
@@ -117,8 +115,7 @@
   Text</a></h1>
 <p class="Pp">Let's suppose you've got to read in a data file like this:</p>
 <p class="Pp"></p>
-<pre>
-    Date      |Description                | Income|Expenditure
+<pre>    Date      |Description                | Income|Expenditure
     01/24/2001 Zed's Camel Emporium                    1147.99
     01/28/2001 Flea spray                                24.99
     01/29/2001 Camel rides to tourists      235.00
@@ -129,8 +126,7 @@
     never know whether a record was income or expenditure. Oops. Well, you could
     always use <span class="Li">&quot;substr&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) { 
+<pre>    while (&lt;&gt;) { 
         my $date   = substr($_,  0, 11);
         my $desc   = substr($_, 12, 27);
         my $income = substr($_, 40,  7);
@@ -145,8 +141,7 @@
     horribly unfriendly.</p>
 <p class="Pp">Or maybe we could use regular expressions:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) { 
+<pre>    while (&lt;&gt;) { 
         my($date, $desc, $income, $expend) = 
             m|(\d\d/\d\d/\d{4}) (.{27}) (.{7})(.*)|;
         ...
@@ -160,8 +155,7 @@
     when dealing with fixed-width data like the above. Let's have a look at a
     solution with <span class="Li">&quot;unpack&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) { 
+<pre>    while (&lt;&gt;) { 
         my($date, $desc, $income, $expend) = unpack(&quot;A10xA27xA7A*&quot;, $_);
         ...
     }
@@ -172,8 +166,7 @@
     include the headers, and a handy ruler so we can keep track of where we
   are.</p>
 <p class="Pp"></p>
-<pre>
-             1         2         3         4         5        
+<pre>             1         2         3         4         5        
     1234567890123456789012345678901234567890123456789012345678
     Date      |Description                | Income|Expenditure
     01/28/2001 Flea spray                                24.99
@@ -186,8 +179,7 @@
     <span class="Li">&quot;A10&quot;</span>. So if we just wanted to extract the
     dates, we could say this:</p>
 <p class="Pp"></p>
-<pre>
-    my($date) = unpack(&quot;A10&quot;, $_);
+<pre>    my($date) = unpack(&quot;A10&quot;, $_);
 </pre>
 <p class="Pp">OK, what's next? Between the date and the description is a blank
     column; we want to skip over that. The <span class="Li">&quot;x&quot;</span>
@@ -198,8 +190,7 @@
 <p class="Pp">Now we skip another character and pick up the next 7
   characters:</p>
 <p class="Pp"></p>
-<pre>
-    my($date,$description,$income) = unpack(&quot;A10xA27xA7&quot;, $_);
+<pre>    my($date,$description,$income) = unpack(&quot;A10xA27xA7&quot;, $_);
 </pre>
 <p class="Pp">Now comes the clever bit. Lines in our ledger which are just
     income and not expenditure might end at column 46. Hence, we don't want to
@@ -216,8 +207,7 @@
 </dl>
 <p class="Pp">Hence, putting it all together:</p>
 <p class="Pp"></p>
-<pre>
-    my ($date, $description, $income, $expend) =
+<pre>    my ($date, $description, $income, $expend) =
         unpack(&quot;A10xA27xA7xA*&quot;, $_);
 </pre>
 <p class="Pp">Now, that's our data parsed. I suppose what we might want to do
@@ -225,28 +215,22 @@
     of our ledger - in the same format - saying how much we've brought in and
     how much we've spent:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         my ($date, $desc, $income, $expend) =
             unpack(&quot;A10xA27xA7xA*&quot;, $_);
         $tot_income += $income;
         $tot_expend += $expend;
     }
-
     $tot_income = sprintf(&quot;%.2f&quot;, $tot_income); # Get them into 
     $tot_expend = sprintf(&quot;%.2f&quot;, $tot_expend); # &quot;financial&quot; format
-
     $date = POSIX::strftime(&quot;%m/%d/%Y&quot;, localtime); 
-
     # OK, let's go:
-
     print pack(&quot;A10xA27xA7xA*&quot;, $date, &quot;Totals&quot;,
         $tot_income, $tot_expend);
 </pre>
 <p class="Pp">Oh, hmm. That didn't quite work. Let's see what happened:</p>
 <p class="Pp"></p>
-<pre>
-    01/24/2001 Zed's Camel Emporium                     1147.99
+<pre>    01/24/2001 Zed's Camel Emporium                     1147.99
     01/28/2001 Flea spray                                 24.99
     01/29/2001 Camel rides to tourists     1235.00
     03/23/2001Totals                     1235.001172.98
@@ -255,8 +239,7 @@
     <span class="Li">&quot;x&quot;</span>, didn't we? Shouldn't it skip forward?
     Let's look at what &quot;pack&quot; in perlfunc says:</p>
 <p class="Pp"></p>
-<pre>
-    x   A null byte.
+<pre>    x   A null byte.
 </pre>
 <p class="Pp">Urgh. No wonder. There's a big difference between &quot;a null
     byte&quot;, character zero, and &quot;a space&quot;, character 32. Perl's
@@ -267,16 +250,14 @@
     characters with spaces, so we can use the additional spaces to line up our
     fields, like this:</p>
 <p class="Pp"></p>
-<pre>
-    print pack(&quot;A11 A28 A8 A*&quot;, $date, &quot;Totals&quot;,
+<pre>    print pack(&quot;A11 A28 A8 A*&quot;, $date, &quot;Totals&quot;,
         $tot_income, $tot_expend);
 </pre>
 <p class="Pp">(Note that you can put spaces in the template to make it more
     readable, but they don't translate to spaces in the output.) Here's what we
     got this time:</p>
 <p class="Pp"></p>
-<pre>
-    01/24/2001 Zed's Camel Emporium                     1147.99
+<pre>    01/24/2001 Zed's Camel Emporium                     1147.99
     01/28/2001 Flea spray                                 24.99
     01/29/2001 Camel rides to tourists     1235.00
     03/23/2001 Totals                      1235.00 1172.98
@@ -287,8 +268,7 @@
     right-justify our fields, but we can get
     <span class="Li">&quot;sprintf&quot;</span> to do it:</p>
 <p class="Pp"></p>
-<pre>
-    $tot_income = sprintf(&quot;%.2f&quot;, $tot_income); 
+<pre>    $tot_income = sprintf(&quot;%.2f&quot;, $tot_income); 
     $tot_expend = sprintf(&quot;%12.2f&quot;, $tot_expend);
     $date = POSIX::strftime(&quot;%m/%d/%Y&quot;, localtime); 
     print pack(&quot;A11 A28 A8 A*&quot;, $date, &quot;Totals&quot;,
@@ -296,8 +276,7 @@
 </pre>
 <p class="Pp">This time we get the right answer:</p>
 <p class="Pp"></p>
-<pre>
-    01/28/2001 Flea spray                                 24.99
+<pre>    01/28/2001 Flea spray                                 24.99
     01/29/2001 Camel rides to tourists     1235.00
     03/23/2001 Totals                      1235.00      1172.98
 </pre>
@@ -328,8 +307,7 @@
         <span class="Li">&quot;*&quot;</span> only means &quot;consume all of
         the current piece of data&quot;. That's to say</p>
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;A*A*&quot;, $one, $two)
+    <pre>    pack(&quot;A*A*&quot;, $one, $two)
     </pre>
     <p class="Pp">packs all of <span class="Li">$one</span> into the first
         <span class="Li">&quot;A*&quot;</span> and then all of
@@ -361,8 +339,7 @@
 <p class="Pp">So, for instance, to pack 20302 to a signed 16 bit integer in your
     computer's representation you write</p>
 <p class="Pp"></p>
-<pre>
-   my $ps = pack( 's', 20302 );
+<pre>   my $ps = pack( 's', 20302 );
 </pre>
 <p class="Pp">Again, the result is a string, now containing 2 bytes. If you
     print this string (which is, generally, not recommended) you might see
@@ -372,8 +349,7 @@
     ASCII character encoding. Unpacking <span class="Li">$ps</span> with the
     same template returns the original integer value:</p>
 <p class="Pp"></p>
-<pre>
-   my( $s ) = unpack( 's', $ps );
+<pre>   my( $s ) = unpack( 's', $ps );
 </pre>
 <p class="Pp">This is true for all numeric template codes. But don't expect
     miracles: if the packed value exceeds the allotted byte capacity, high order
@@ -413,8 +389,7 @@
     program you have to import it with <span class="Li">&quot;use
     Config&quot;</span>.)</p>
 <p class="Pp"></p>
-<pre>
-   signed unsigned  byte length in C   byte length in Perl       
+<pre>   signed unsigned  byte length in C   byte length in Perl       
      s!     S!      sizeof(short)      $Config{shortsize}
      i!     I!      sizeof(int)        $Config{intsize}
      l!     L!      sizeof(long)       $Config{longsize}
@@ -434,8 +409,7 @@
     program could run on a totally different system. As an example, assume you
     have 24 bytes containing a stack frame as it happens on an Intel 8086:</p>
 <p class="Pp"></p>
-<pre>
-      +---------+        +----+----+               +---------+
+<pre>      +---------+        +----+----+               +---------+
  TOS: |   IP    |  TOS+4:| FL | FH | FLAGS  TOS+14:|   SI    |
       +---------+        +----+----+               +---------+
       |   CS    |        | AL | AH | AX            |   DI    |
@@ -453,16 +427,14 @@
     <span class="Li">&quot;v&quot;</span>. A repeat count unpacks all 12
   shorts:</p>
 <p class="Pp"></p>
-<pre>
-   my( $ip, $cs, $flags, $ax, $bx, $cd, $dx, $si, $di, $bp, $ds, $es ) =
+<pre>   my( $ip, $cs, $flags, $ax, $bx, $cd, $dx, $si, $di, $bp, $ds, $es ) =
      unpack( 'v12', $frame );
 </pre>
 <p class="Pp">Alternatively, we could have used
     <span class="Li">&quot;C&quot;</span> to unpack the individually accessible
     byte registers FL, FH, AL, AH, etc.:</p>
 <p class="Pp"></p>
-<pre>
-   my( $fl, $fh, $al, $ah, $bl, $bh, $cl, $ch, $dl, $dh ) =
+<pre>   my( $fl, $fh, $al, $ah, $bl, $bh, $cl, $ch, $dl, $dh ) =
      unpack( 'C10', substr( $frame, 4, 10 ) );
 </pre>
 <p class="Pp">It would be nice if we could do this in one fell swoop: unpack a
@@ -470,8 +442,7 @@
     it proffers the template code <span class="Li">&quot;X&quot;</span> to back
     up one byte. Putting this all together, we may now write:</p>
 <p class="Pp"></p>
-<pre>
-   my( $ip, $cs,
+<pre>   my( $ip, $cs,
        $flags,$fl,$fh,
        $ax,$al,$ah, $bx,$bl,$bh, $cx,$cl,$ch, $dx,$dl,$dh, 
        $si, $di, $bp, $ds, $es ) =
@@ -502,13 +473,11 @@
     protocol expects you to send a message by sending the length first, followed
     by just so many bytes, you could write:</p>
 <p class="Pp"></p>
-<pre>
-   my $buf = pack( 'N', length( $msg ) ) . $msg;
+<pre>   my $buf = pack( 'N', length( $msg ) ) . $msg;
 </pre>
 <p class="Pp">or even:</p>
 <p class="Pp"></p>
-<pre>
-   my $buf = pack( 'NA*', length( $msg ), $msg );
+<pre>   my $buf = pack( 'NA*', length( $msg ), $msg );
 </pre>
 <p class="Pp">and pass <span class="Li">$buf</span> to your send routine. Some
     protocols demand that the count should include the length of the count
@@ -528,8 +497,7 @@
     big-endian 16-bit integers in a platform-independent way, you would have to
     write:</p>
 <p class="Pp"></p>
-<pre>
-   my @data = unpack 's*', pack 'S*', unpack 'n*', $buf;
+<pre>   my @data = unpack 's*', pack 'S*', unpack 'n*', $buf;
 </pre>
 <p class="Pp">This is ugly. As of Perl 5.9.2, there's a much nicer way to
     express your desire for a certain byte-order: the
@@ -539,8 +507,7 @@
     <span class="Li">&quot;&lt;&quot;</span> is the little-endian modifier.
     Using them, we could rewrite the above code as:</p>
 <p class="Pp"></p>
-<pre>
-   my @data = unpack 's&gt;*', $buf;
+<pre>   my @data = unpack 's&gt;*', $buf;
 </pre>
 <p class="Pp">As you can see, the &quot;big end&quot; of the arrow touches the
     <span class="Li">&quot;s&quot;</span>, which is a nice way to remember that
@@ -594,8 +561,7 @@
     are two ways the contents of a byte may be written as a bit string. Let's
     have a look at an annotated byte:</p>
 <p class="Pp"></p>
-<pre>
-     7 6 5 4 3 2 1 0
+<pre>     7 6 5 4 3 2 1 0
    +-----------------+
    | 1 0 0 0 1 1 0 0 |
    +-----------------+
@@ -606,8 +572,7 @@
     significant bit, others insist on &quot;00110001&quot;. Well, Perl isn't
     biased, so that's why we have two bit string codes:</p>
 <p class="Pp"></p>
-<pre>
-   $byte = pack( 'B8', '10001100' ); # start with MSB
+<pre>   $byte = pack( 'B8', '10001100' ); # start with MSB
    $byte = pack( 'b8', '00110001' ); # start with LSB
 </pre>
 <p class="Pp">It is not possible to pack or unpack bit fields - just integral
@@ -620,8 +585,7 @@
 <p class="Pp">To illustrate unpacking for bit strings, we'll decompose a simple
     status register (a &quot;-&quot; stands for a &quot;reserved&quot; bit):</p>
 <p class="Pp"></p>
-<pre>
-   +-----------------+-----------------+
+<pre>   +-----------------+-----------------+
    | S Z - A - P - C | - - - - O D I T |
    +-----------------+-----------------+
     MSB           LSB MSB           LSB
@@ -634,8 +598,7 @@
     assigned to <span class="Li">&quot;undef&quot;</span>, a convenient notation
     for &quot;I don't care where this goes&quot;.</p>
 <p class="Pp"></p>
-<pre>
-   ($carry, undef, $parity, undef, $auxcarry, undef, $zero, $sign,
+<pre>   ($carry, undef, $parity, undef, $auxcarry, undef, $zero, $sign,
     $trace, $interrupt, $direction, $overflow) =
       split( //, unpack( 'b16', $status ) );
 </pre>
@@ -659,8 +622,7 @@
     this for you, a la minute, when you select pack code
     <span class="Li">&quot;u&quot;</span> on the menu:</p>
 <p class="Pp"></p>
-<pre>
-   my $uubuf = pack( 'u', $bindat );
+<pre>   my $uubuf = pack( 'u', $bindat );
 </pre>
 <p class="Pp">A repeat count after <span class="Li">&quot;u&quot;</span> sets
     the number of bytes to put into an uuencoded line, which is the maximum of
@@ -680,8 +642,7 @@
     of <i>number</i> bits that is computed from the data value by doing sums.
     For numeric unpack codes, no big feat is achieved:</p>
 <p class="Pp"></p>
-<pre>
-    my $buf = pack( 'iii', 100, 20, 3 );
+<pre>    my $buf = pack( 'iii', 100, 20, 3 );
     print unpack( '%32i3', $buf ), &quot;\n&quot;;  # prints 123
 </pre>
 <p class="Pp">For string values, <span class="Li">&quot;%&quot;</span> returns
@@ -689,8 +650,7 @@
     <span class="Li">&quot;substr&quot;</span> and
     <span class="Li">&quot;ord&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    print unpack( '%32A*', &quot;\x01\x10&quot; ), &quot;\n&quot;;  # prints 17
+<pre>    print unpack( '%32A*', &quot;\x01\x10&quot; ), &quot;\n&quot;;  # prints 17
 </pre>
 <p class="Pp">Although the <span class="Li">&quot;%&quot;</span> code is
     documented as returning a &quot;checksum&quot;: don't put your trust in such
@@ -701,13 +661,11 @@
     simply adds bits, and this can be put to good use to count set bits
     efficiently:</p>
 <p class="Pp"></p>
-<pre>
-    my $bitcount = unpack( '%32b*', $mask );
+<pre>    my $bitcount = unpack( '%32b*', $mask );
 </pre>
 <p class="Pp">And an even parity bit can be determined like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $evenparity = unpack( '%1b*', $mask );
+<pre>    my $evenparity = unpack( '%1b*', $mask );
 </pre>
 </section>
 <section class="Ss">
@@ -735,8 +693,7 @@
     template code <span class="Li">&quot;U&quot;</span>. As an example, let's
     produce the Euro currency symbol (code number 0x20AC):</p>
 <p class="Pp"></p>
-<pre>
-   $UTF8{Euro} = pack( 'U', 0x20AC );
+<pre>   $UTF8{Euro} = pack( 'U', 0x20AC );
    # Equivalent to: $UTF8{Euro} = &quot;\x{20ac}&quot;;
 </pre>
 <p class="Pp">Inspecting <span class="Li">$UTF8{Euro}</span> shows that it
@@ -744,15 +701,13 @@
     character, number 0x20AC. The round trip can be completed with
     <span class="Li">&quot;unpack&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-   $Unicode{Euro} = unpack( 'U', $UTF8{Euro} );
+<pre>   $Unicode{Euro} = unpack( 'U', $UTF8{Euro} );
 </pre>
 <p class="Pp">Unpacking using the <span class="Li">&quot;U&quot;</span> template
     code also works on UTF-8 encoded byte strings.</p>
 <p class="Pp">Usually you'll want to pack or unpack UTF-8 strings:</p>
 <p class="Pp"></p>
-<pre>
-   # pack and unpack the Hebrew alphabet
+<pre>   # pack and unpack the Hebrew alphabet
    my $alefbet = pack( 'U*', 0x05d0..0x05ea );
    my @hebrew = unpack( 'U*', $utf );
 </pre>
@@ -776,8 +731,7 @@
     last. There is no size limit to BER encoding, but Perl won't go to
   extremes.</p>
 <p class="Pp"></p>
-<pre>
-   my $berbuf = pack( 'w*', 1, 128, 128+1, 128*128+127 );
+<pre>   my $berbuf = pack( 'w*', 1, 128, 128+1, 128*128+127 );
 </pre>
 <p class="Pp">A hex dump of <span class="Li">$berbuf</span>, with spaces
     inserted at the right places, shows 01 8100 8101 81807F. Since the last byte
@@ -796,26 +750,22 @@
     <span class="Li">&quot;unpack&quot;</span> template from the Stack Frame
     example can simply be written like this:</p>
 <p class="Pp"></p>
-<pre>
-   unpack( 'v2 (vXXCC)5 v5', $frame )
+<pre>   unpack( 'v2 (vXXCC)5 v5', $frame )
 </pre>
 <p class="Pp">Let's explore this feature a little more. We'll begin with the
     equivalent of</p>
 <p class="Pp"></p>
-<pre>
-   join( '', map( substr( $_, 0, 1 ), @str ) )
+<pre>   join( '', map( substr( $_, 0, 1 ), @str ) )
 </pre>
 <p class="Pp">which returns a string consisting of the first character from each
     string. Using pack, we can write</p>
 <p class="Pp"></p>
-<pre>
-   pack( '(A)'.@str, @str )
+<pre>   pack( '(A)'.@str, @str )
 </pre>
 <p class="Pp">or, because a repeat count <span class="Li">&quot;*&quot;</span>
     means &quot;repeat as often as required&quot;, simply</p>
 <p class="Pp"></p>
-<pre>
-   pack( '(A)*', @str )
+<pre>   pack( '(A)*', @str )
 </pre>
 <p class="Pp">(Note that the template <span class="Li">&quot;A*&quot;</span>
     would only have packed <span class="Li">$str[0]</span> in full length.)</p>
@@ -823,29 +773,25 @@
     <span class="Li">@dates</span> into a sequence of byte, byte, short integer
     we can write</p>
 <p class="Pp"></p>
-<pre>
-   $pd = pack( '(CCS)*', map( @$_, @dates ) );
+<pre>   $pd = pack( '(CCS)*', map( @$_, @dates ) );
 </pre>
 <p class="Pp">To swap pairs of characters in a string (with even length) one
     could use several techniques. First, let's use
     <span class="Li">&quot;x&quot;</span> and
     <span class="Li">&quot;X&quot;</span> to skip forward and back:</p>
 <p class="Pp"></p>
-<pre>
-   $s = pack( '(A)*', unpack( '(xAXXAx)*', $s ) );
+<pre>   $s = pack( '(A)*', unpack( '(xAXXAx)*', $s ) );
 </pre>
 <p class="Pp">We can also use <span class="Li">&quot;@&quot;</span> to jump to
     an offset, with 0 being the position where we were when the last
     <span class="Li">&quot;(&quot;</span> was encountered:</p>
 <p class="Pp"></p>
-<pre>
-   $s = pack( '(A)*', unpack( '(@1A @0A @2)*', $s ) );
+<pre>   $s = pack( '(A)*', unpack( '(@1A @0A @2)*', $s ) );
 </pre>
 <p class="Pp">Finally, there is also an entirely different approach by unpacking
     big endian shorts and packing them in the reverse byte order:</p>
 <p class="Pp"></p>
-<pre>
-   $s = pack( '(v)*', unpack( '(n)*', $s );
+<pre>   $s = pack( '(v)*', unpack( '(n)*', $s );
 </pre>
 </section>
 <section class="Sh">
@@ -862,22 +808,18 @@
     after two null terminated strings with source and destination address, a
     Short Message (to a mobile phone) is sent after a length byte:</p>
 <p class="Pp"></p>
-<pre>
-   my $msg = pack( 'Z*Z*CA*', $src, $dst, length( $sm ), $sm );
+<pre>   my $msg = pack( 'Z*Z*CA*', $src, $dst, length( $sm ), $sm );
 </pre>
 <p class="Pp">Unpacking this message can be done with the same template:</p>
 <p class="Pp"></p>
-<pre>
-   ( $src, $dst, $len, $sm ) = unpack( 'Z*Z*CA*', $msg );
+<pre>   ( $src, $dst, $len, $sm ) = unpack( 'Z*Z*CA*', $msg );
 </pre>
 <p class="Pp">There's a subtle trap lurking in the offing: Adding another field
     after the Short Message (in variable <span class="Li">$sm</span>) is all
     right when packing, but this cannot be unpacked naively:</p>
 <p class="Pp"></p>
-<pre>
-   # pack a message
+<pre>   # pack a message
    my $msg = pack( 'Z*Z*CA*C', $src, $dst, length( $sm ), $sm, $prio );
-
    # unpack fails - $prio remains undefined!
    ( $src, $dst, $len, $sm, $prio ) = unpack( 'Z*Z*CA*C', $msg );
 </pre>
@@ -886,10 +828,8 @@
     Before we let disappointment dampen the morale: Perl's got the trump card to
     make this trick too, just a little further up the sleeve. Watch this:</p>
 <p class="Pp"></p>
-<pre>
-   # pack a message: ASCIIZ, ASCIIZ, length/string, byte
+<pre>   # pack a message: ASCIIZ, ASCIIZ, length/string, byte
    my $msg = pack( 'Z* Z* C/A* C', $src, $dst, $sm, $prio );
-
    # unpack
    ( $src, $dst, $sm, $prio ) = unpack( 'Z* Z* C/A* C', $msg );
 </pre>
@@ -911,8 +851,7 @@
     codes, and even text codes such as <span class="Li">&quot;A4&quot;</span> or
     <span class="Li">&quot;Z*&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-   # pack/unpack a string preceded by its length in ASCII
+<pre>   # pack/unpack a string preceded by its length in ASCII
    my $buf = pack( 'A4/A*', &quot;Humpty-Dumpty&quot; );
    # unpack $buf: '13  Humpty-Dumpty'
    my $txt = unpack( 'A4/A*', $buf );
@@ -922,11 +861,9 @@
     to <span class="Li">&quot;unpack( 'Z* Z* C')&quot;</span> to get the length,
     then use it to make a new unpack string. For example</p>
 <p class="Pp"></p>
-<pre>
-   # pack a message: ASCIIZ, ASCIIZ, length, string, byte
+<pre>   # pack a message: ASCIIZ, ASCIIZ, length, string, byte
    # (5.005 compatible)
    my $msg = pack( 'Z* Z* C A* C', $src, $dst, length $sm, $sm, $prio );
-
    # unpack
    ( undef, undef, $len) = unpack( 'Z* Z* C', $msg );
    ($src, $dst, $sm, $prio) = unpack ( &quot;Z* Z* x A$len C&quot;, $msg );
@@ -947,8 +884,7 @@
     <span class="Li">&quot;=&quot;</span> between the name and the value,
     followed by an additional delimiting null byte. Here's how:</p>
 <p class="Pp"></p>
-<pre>
-   my $env = pack( '(A*A*Z*)' . keys( %Env ) . 'C',
+<pre>   my $env = pack( '(A*A*Z*)' . keys( %Env ) . 'C',
                    map( { ( $_, '=', $Env{$_} ) } keys( %Env ) ), 0 );
 </pre>
 <p class="Pp">Let's examine the cogs of this byte mill, one by one. There's the
@@ -968,8 +904,7 @@
     items in the buffer before we can let
     <span class="Li">&quot;unpack&quot;</span> rip it apart:</p>
 <p class="Pp"></p>
-<pre>
-   my $n = $env =~ tr/\0// - 1;
+<pre>   my $n = $env =~ tr/\0// - 1;
    my %env = map( split( /=/, $_ ), unpack( &quot;(Z*)$n&quot;, $env ) );
 </pre>
 <p class="Pp">The <span class="Li">&quot;tr&quot;</span> counts the null bytes.
@@ -985,14 +920,12 @@
     and values of a hash, preceding each with an unsigned short length count,
     and up front we store the number of pairs:</p>
 <p class="Pp"></p>
-<pre>
-   my $env = pack( 'S(S/A* S/A*)*', scalar keys( %Env ), %Env );
+<pre>   my $env = pack( 'S(S/A* S/A*)*', scalar keys( %Env ), %Env );
 </pre>
 <p class="Pp">This simplifies the reverse operation as the number of repetitions
     can be unpacked with the <span class="Li">&quot;/&quot;</span> code:</p>
 <p class="Pp"></p>
-<pre>
-   my %env = unpack( 'S/(S/A* S/A*)', $env );
+<pre>   my %env = unpack( 'S/(S/A* S/A*)', $env );
 </pre>
 <p class="Pp">Note that this is one of the rare cases where you cannot use the
     same template for <span class="Li">&quot;pack&quot;</span> and
@@ -1020,8 +953,7 @@
     <span class="Li">&quot;pack&quot;</span> call to convert everything to
     binary:</p>
 <p class="Pp"></p>
-<pre>
-   my $binrec = pack( 'H*', substr( $hexrec, 1 ) );
+<pre>   my $binrec = pack( 'H*', substr( $hexrec, 1 ) );
 </pre>
 <p class="Pp">The resulting byte sequence is most convenient for checking the
     checksum. Don't slow your program down with a for loop adding the
@@ -1030,8 +962,7 @@
     <span class="Li">&quot;%&quot;</span> is the thing to use for computing the
     8-bit sum of all bytes, which must be equal to zero:</p>
 <p class="Pp"></p>
-<pre>
-   die unless unpack( &quot;%8C*&quot;, $binrec ) == 0;
+<pre>   die unless unpack( &quot;%8C*&quot;, $binrec ) == 0;
 </pre>
 <p class="Pp">Finally, let's get those four fields. By now, you shouldn't have
     any problems with the first three fields - but how can we use the byte count
@@ -1040,8 +971,7 @@
     <span class="Li">&quot;X&quot;</span> come to the rescue, as they permit
     jumping back and forth in the string to unpack.</p>
 <p class="Pp"></p>
-<pre>
-   my( $addr, $type, $data ) = unpack( &quot;x n C X4 C x3 /a&quot;, $bin );
+<pre>   my( $addr, $type, $data ) = unpack( &quot;x n C X4 C x3 /a&quot;, $bin );
 </pre>
 <p class="Pp">Code <span class="Li">&quot;x&quot;</span> skips a byte, since we
     don't need the count yet. Code <span class="Li">&quot;n&quot;</span> takes
@@ -1084,14 +1014,12 @@
     and <span class="Li">&quot;unpack&quot;</span>, we'll compare these two C
     structures:</p>
 <p class="Pp"></p>
-<pre>
-   typedef struct {
+<pre>   typedef struct {
      char     c1;
      short    s;
      char     c2;
      long     l;
    } gappy_t;
-
    typedef struct {
      long     l;
      short    s;
@@ -1105,13 +1033,11 @@
     this further, we can draw memory maps, showing where the extra 4 bytes are
     hidden:</p>
 <p class="Pp"></p>
-<pre>
-   0           +4          +8          +12
+<pre>   0           +4          +8          +12
    +--+--+--+--+--+--+--+--+--+--+--+--+
    |c1|xx|  s  |c2|xx|xx|xx|     l     |    xx = fill byte
    +--+--+--+--+--+--+--+--+--+--+--+--+
    gappy_t
-
    0           +4          +8
    +--+--+--+--+--+--+--+--+
    |     l     |  h  |c1|c2|
@@ -1134,8 +1060,7 @@
     right by inserting template codes <span class="Li">&quot;x&quot;</span>,
     which don't take a corresponding item from the list:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( 'cxs cxxx l!', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( 'cxs cxxx l!', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">Note the <span class="Li">&quot;!&quot;</span> after
     <span class="Li">&quot;l&quot;</span>: We want to make sure that we pack a
@@ -1149,20 +1074,16 @@
     bound to be a drag. Isn't there a way we can create the template with a
     simple program? Here's a C program that does the trick:</p>
 <p class="Pp"></p>
-<pre>
-   #include &lt;stdio.h&gt;
+<pre>   #include &lt;stdio.h&gt;
    #include &lt;stddef.h&gt;
-
    typedef struct {
      char     fc1;
      short    fs;
      char     fc2;
      long     fl;
    } gappy_t;
-
    #define Pt(struct,field,tchar) \
      printf( &quot;@%d%s &quot;, offsetof(struct,field), # tchar );
-
    int main() {
      Pt( gappy_t, fc1, c  );
      Pt( gappy_t, fs,  s! );
@@ -1175,8 +1096,7 @@
     <span class="Li">&quot;pack&quot;</span> or
     <span class="Li">&quot;unpack&quot;</span> call:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( '@0c @2s! @4c @8l!', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( '@0c @2s! @4c @8l!', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">Gee, yet another template code - as if we hadn't plenty. But
     <span class="Li">&quot;@&quot;</span> saves our day by enabling us to
@@ -1193,8 +1113,7 @@
     <span class="Li">&quot;x!N&quot;</span> where N is replaced by the
     appropriate value. Here's the next version of our struct packaging:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( 'c x!2 s c x!4 l!', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( 'c x!2 s c x!4 l!', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">That's certainly better, but we still have to know how long all
     the integers are, and portability is far away. Rather than
@@ -1203,8 +1122,7 @@
     in brackets: <span class="Li">&quot;[s]&quot;</span>. So, here's the very
     best we can do:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( 'c x![s] s c x![l!] l!', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( 'c x![s] s c x![l!] l!', $c1, $s, $c2, $l );
 </pre>
 </section>
 <section class="Ss">
@@ -1216,20 +1134,17 @@
     wide and the shorts are 16 bits wide. You can then rewrite the template
   as:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( 'c x![s] s c x![l] l', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( 'c x![s] s c x![l] l', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">If the target machine is little-endian, we could write:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( 'c x![s] s&lt; c x![l] l&lt;', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( 'c x![s] s&lt; c x![l] l&lt;', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">This forces the short and the long members to be little-endian,
     and is just fine if you don't have too many struct members. But we could
     also use the byte-order modifier on a group and write the following:</p>
 <p class="Pp"></p>
-<pre>
-  my $gappy = pack( '( c x![s] s c x![l] l )&lt;', $c1, $s, $c2, $l );
+<pre>  my $gappy = pack( '( c x![s] s c x![l] l )&lt;', $c1, $s, $c2, $l );
 </pre>
 <p class="Pp">This is not as short as before, but it makes it more obvious that
     we intend to have little-endian byte-order for a whole group, not only for
@@ -1243,12 +1158,10 @@
     yet. The hydra raises another ugly head when you pack arrays of
   structures:</p>
 <p class="Pp"></p>
-<pre>
-   typedef struct {
+<pre>   typedef struct {
      short    count;
      char     glyph;
    } cell_t;
-
    typedef cell_t buffer_t[BUFLEN];
 </pre>
 <p class="Pp">Where's the catch? Padding is neither required before the first
@@ -1256,8 +1169,7 @@
     next field <span class="Li">&quot;glyph&quot;</span>, so why can't we simply
     pack like this:</p>
 <p class="Pp"></p>
-<pre>
-   # something goes wrong here:
+<pre>   # something goes wrong here:
    pack( 's!a' x @buffer,
          map{ ( $_-&gt;{count}, $_-&gt;{glyph} ) } @buffer );
 </pre>
@@ -1269,8 +1181,7 @@
     higher level where we have to consider padding <i>at the end</i> of each
     component as well. Thus the correct template is:</p>
 <p class="Pp"></p>
-<pre>
-   pack( 's!ax' x @buffer,
+<pre>   pack( 's!ax' x @buffer,
          map{ ( $_-&gt;{count}, $_-&gt;{glyph} ) } @buffer );
 </pre>
 </section>
@@ -1280,8 +1191,7 @@
 <p class="Pp">And even if you take all the above into account, ANSI still lets
     this:</p>
 <p class="Pp"></p>
-<pre>
-   typedef struct {
+<pre>   typedef struct {
      char     foo[2];
    } foo_t;
 </pre>
@@ -1304,8 +1214,7 @@
     pack a &quot;pointer to a fixed length string&quot;. Isn't this what we
     want? Let's try:</p>
 <p class="Pp"></p>
-<pre>
-    # allocate some storage and pack a pointer to it
+<pre>    # allocate some storage and pack a pointer to it
     my $memory = &quot;\x00&quot; x $size;
     my $memptr = pack( 'P', $memory );
 </pre>
@@ -1315,8 +1224,7 @@
     answer is simple: We have to obtain the numeric address from the bytes
     returned by <span class="Li">&quot;pack&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    my $ptr = unpack( 'L!', $memptr );
+<pre>    my $ptr = unpack( 'L!', $memptr );
 </pre>
 <p class="Pp">Obviously this assumes that it is possible to typecast a pointer
     to an unsigned long and vice versa, which frequently works but should not be
@@ -1324,15 +1232,13 @@
     is: How can we put it to good use? We need a call to some C function where a
     pointer is expected. The <b>read</b>(2) system call comes to mind:</p>
 <p class="Pp"></p>
-<pre>
-    ssize_t read(int fd, void *buf, size_t count);
+<pre>    ssize_t read(int fd, void *buf, size_t count);
 </pre>
 <p class="Pp">After reading perlfunc explaining how to use
     <span class="Li">&quot;syscall&quot;</span> we can write this Perl function
     copying a file to standard output:</p>
 <p class="Pp"></p>
-<pre>
-    require 'syscall.ph'; # run h2ph to generate this file
+<pre>    require 'syscall.ph'; # run h2ph to generate this file
     sub cat($){
         my $path = shift();
         my $size = -s $path;
@@ -1359,8 +1265,7 @@
     &quot;fixed length string&quot; is, so it's up to you to specify the actual
     size as an explicit length after <span class="Li">&quot;P&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-   my $mem = &quot;abcdefghijklmn&quot;;
+<pre>   my $mem = &quot;abcdefghijklmn&quot;;
    print unpack( 'P5', pack( 'P', $mem ) ); # prints &quot;abcde&quot;
 </pre>
 <p class="Pp">As a consequence, <span class="Li">&quot;pack&quot;</span> ignores
@@ -1375,8 +1280,7 @@
     starting at the address taken from the buffer, and that implies a length for
     the data item to be returned:</p>
 <p class="Pp"></p>
-<pre>
-   my $buf = pack( 'p', &quot;abc\x00efhijklmn&quot; );
+<pre>   my $buf = pack( 'p', &quot;abc\x00efhijklmn&quot; );
    print unpack( 'p', $buf );    # prints &quot;abc&quot;
 </pre>
 <p class="Pp">Albeit this is apt to be confusing: As a consequence of the length
@@ -1417,20 +1321,15 @@
     <span class="Li">&quot;pack&quot;</span> and
     <span class="Li">&quot;unpack&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    # Convert IP address for socket functions
+<pre>    # Convert IP address for socket functions
     pack( &quot;C4&quot;, split /\./, &quot;123.4.5.6&quot; ); 
-
     # Count the bits in a chunk of memory (e.g. a select vector)
     unpack( '%32b*', $mask );
-
     # Determine the endianness of your system
     $is_little_endian = unpack( 'c', pack( 's', 1 ) );
     $is_big_endian = unpack( 'xc', pack( 's', 1 ) );
-
     # Determine the number of bits in a native integer
     $bits = unpack( '%32I!', ~0 );
-
     # Prepare argument for the nanosleep system call
     my $timespec = pack( 'L!L!', $secs, $nanosecs );
 </pre>
@@ -1438,8 +1337,7 @@
     pairs of hex digits, and use <span class="Li">&quot;map&quot;</span> to
     handle the traditional spacing - 16 bytes to a line:</p>
 <p class="Pp"></p>
-<pre>
-    my $i;
+<pre>    my $i;
     print map( ++$i % 16 ? &quot;$_ &quot; : &quot;$_\n&quot;,
                unpack( 'H2' x length( $mem ), $mem ) ),
           length( $mem ) % 16 ? &quot;\n&quot; : '';
@@ -1448,13 +1346,11 @@
 <section class="Sh">
 <h1 class="Sh" id="Funnies_Section"><a class="permalink" href="#Funnies_Section">Funnies
   Section</a></h1>
-<pre>
-    # Pulling digits out of nowhere...
+<pre>    # Pulling digits out of nowhere...
     print unpack( 'C', pack( 'x' ) ),
           unpack( '%B*', pack( 'A' ) ),
           unpack( 'H', pack( 'A' ) ),
           unpack( 'A', unpack( 'C', pack( 'A' ) ) ), &quot;\n&quot;;
-
     # One for the road ;-)
     my $advice = pack( 'all u can in a van' );
 </pre>

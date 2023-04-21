@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Socket6(3)</title>
 </head>
@@ -29,25 +30,19 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Socket;
+<pre>    use Socket;
     use Socket6;
-
     @res = getaddrinfo('hishost.com', 'daytime', AF_UNSPEC, SOCK_STREAM);
     $family = -1;
     while (scalar(@res) &gt;= 5) {
         ($family, $socktype, $proto, $saddr, $canonname, @res) = @res;
-
         ($host, $port) = getnameinfo($saddr, NI_NUMERICHOST | NI_NUMERICSERV);
         print STDERR &quot;Trying to connect to $host port $port...\n&quot;;
-
         socket(Socket_Handle, $family, $socktype, $proto) || next;
         connect(Socket_Handle, $saddr) &amp;&amp; last;
-
         close(Socket_Handle);
         $family = -1;
     }
-
     if ($family != -1) {
         print STDERR &quot;connected to $host port $port\n&quot;;
     } else {
@@ -66,8 +61,7 @@
   <dt id="inet_pton"><a class="permalink" href="#inet_pton">inet_pton FAMILY,
     TEXT_ADDRESS</a></dt>
   <dd>
-    <pre>
-    This function takes an IP address in presentation (or string) format
+    <pre>    This function takes an IP address in presentation (or string) format
     and converts it into numeric (or binary) format.
     The type of IP address conversion (IPv4 versus IPv6) is controlled
     by the FAMILY argument.
@@ -76,8 +70,7 @@
   <dt id="inet_ntop"><a class="permalink" href="#inet_ntop">inet_ntop FAMILY,
     BINARY_ADDRESS</a></dt>
   <dd>
-    <pre>
-    This function takes an IP address in numeric (or binary) format
+    <pre>    This function takes an IP address in numeric (or binary) format
     and converts it into presentation (or string) format
     The type of IP address conversion (IPv4 versus IPv6) is controlled
     by the FAMILY argument.
@@ -86,8 +79,7 @@
   <dt id="pack_sockaddr_in6"><a class="permalink" href="#pack_sockaddr_in6">pack_sockaddr_in6
     PORT, ADDR</a></dt>
   <dd>
-    <pre>
-    This function takes two arguments: a port number, and a 16-octet
+    <pre>    This function takes two arguments: a port number, and a 16-octet
     IPv6 address structure (as returned by inet_pton()).
     It returns the sockaddr_in6 structure with these arguments packed
     into their correct fields, as well as the AF_INET6 family.
@@ -97,8 +89,7 @@
   <dt id="pack_sockaddr_in6_all"><a class="permalink" href="#pack_sockaddr_in6_all">pack_sockaddr_in6_all
     PORT, FLOWINFO, ADDR, SCOPEID</a></dt>
   <dd>
-    <pre>
-    This function takes four arguments: a port number, a 16-octet
+    <pre>    This function takes four arguments: a port number, a 16-octet
     IPv6 address structure (as returned by inet_pton), any
     special flow information, and any specific scope information.
     It returns a complete sockaddr_in6 structure with these arguments packed
@@ -108,8 +99,7 @@
   <dt id="unpack_sockaddr_in6"><a class="permalink" href="#unpack_sockaddr_in6">unpack_sockaddr_in6
     NAME</a></dt>
   <dd>
-    <pre>
-    This function takes a sockaddr_in6 structure (as returned by
+    <pre>    This function takes a sockaddr_in6 structure (as returned by
     pack_sockaddr_in6()) and returns a list of two elements:
     the port number and the 16-octet IP address.
     This function will croak if it determines it has not been
@@ -119,8 +109,7 @@
   <dt id="unpack_sockaddr_in6_all"><a class="permalink" href="#unpack_sockaddr_in6_all">unpack_sockaddr_in6_all
     NAME</a></dt>
   <dd>
-    <pre>
-    This function takes a sockaddr_in6 structure (as returned by
+    <pre>    This function takes a sockaddr_in6 structure (as returned by
     pack_sockaddr_in6()) and returns a list of four elements:
     the port number, the flow information, the 16-octet IP address,
     and the scope information.
@@ -134,25 +123,20 @@
   <dt id="getaddrinfo"><a class="permalink" href="#getaddrinfo">getaddrinfo
     NODENAME, SERVICENAME, [FAMILY, SOCKTYPE, PROTOCOL, FLAGS]</a></dt>
   <dd>
-    <pre>
-    This function converts node names to addresses and service names
+    <pre>    This function converts node names to addresses and service names
     to port numbers.
     If the NODENAME argument is not a false value,
     then a nodename to address lookup is performed;
     otherwise a service name to port number lookup is performed.
     At least one of NODENAME and SERVICENAME must have a true value.
-
     If the lookup is successful, a list consisting of multiples of
     five elements is returned.
     Each group of five elements consists of the address family,
     socket type, protocol, 16-octet IP address, and the canonical
     name (undef if the node name passed is already the canonical name).
-
     The arguments FAMILY, SOCKTYPE, PROTOCOL, and FLAGS are all optional.
-
     This function will croak if it determines it has not been
     passed an IPv6 structure.
-
     If the lookup is unsuccessful, the function returns a single scalar.
     This will contain the string version of that error in string context,
     and the numeric value in numeric context.
@@ -161,12 +145,9 @@
   <dt id="getnameinfo"><a class="permalink" href="#getnameinfo">getnameinfo
     NAME, [FLAGS]</a></dt>
   <dd>
-    <pre>
-    This function takes a socket address structure. If successful, it returns
+    <pre>    This function takes a socket address structure. If successful, it returns
     two strings containing the node name and service name.
-
     The optional FLAGS argument controls what kind of lookup is performed.
-
     If the lookup is unsuccessful, the function returns a single scalar.
     This will contain the string version of that error in string context,
     and the numeric value in numeric context.
@@ -175,14 +156,12 @@
   <dt id="getipnodebyname"><a class="permalink" href="#getipnodebyname">getipnodebyname
     HOST, [FAMILY, FLAGS]</a></dt>
   <dd>
-    <pre>
-    This function takes either a node name or an IP address string
+    <pre>    This function takes either a node name or an IP address string
     and performs a lookup on that name (or conversion of the string).
     It returns a list of five elements: the canonical host name,
     the address family, the length in octets of the IP addresses
     returned, a reference to a list of IP address structures, and
     a reference to a list of aliases for the host name.
-
     The arguments FAMILY and FLAGS are optional.
     Note: This function does not handle IPv6 scope identifiers,
     and should be used with care.
@@ -193,14 +172,12 @@
   <dt id="getipnodebyaddr"><a class="permalink" href="#getipnodebyaddr">getipnodebyaddr
     FAMILY, ADDRESS</a></dt>
   <dd>
-    <pre>
-    This function takes an IP address family and an IP address structure
+    <pre>    This function takes an IP address family and an IP address structure
     and performs a reverse lookup on that address.
     It returns a list of five elements: the canonical host name,
     the address family, the length in octets of the IP addresses
     returned, a reference to a list of IP address structures, and
     a reference to a list of aliases for the host name.
-
     Note: This function does not handle IPv6 scope identifiers,
     and should be used with care.
     And, this function was deprecated in RFC3493.
@@ -210,21 +187,18 @@
   <dt id="gai_strerror"><a class="permalink" href="#gai_strerror">gai_strerror
     ERROR_NUMBER</a></dt>
   <dd>
-    <pre>
-    This function returns a string corresponding to the error number
+    <pre>    This function returns a string corresponding to the error number
     passed in as an argument.
     </pre>
   </dd>
   <dt id="in6addr_any"><a class="permalink" href="#in6addr_any">in6addr_any</a></dt>
   <dd>
-    <pre>
-    This function returns the 16-octet wildcard address.
+    <pre>    This function returns the 16-octet wildcard address.
     </pre>
   </dd>
   <dt id="in6addr_loopback"><a class="permalink" href="#in6addr_loopback">in6addr_loopback</a></dt>
   <dd>
-    <pre>
-    This function returns the 16-octet loopback address.
+    <pre>    This function returns the 16-octet loopback address.
     </pre>
   </dd>
 </dl>

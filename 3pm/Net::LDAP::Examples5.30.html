@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::Examples(3)</title>
 </head>
@@ -70,45 +71,34 @@
 <h1 class="Sh" id="CODE"><a class="permalink" href="#CODE">CODE</a></h1>
 <section class="Ss">
 <h2 class="Ss">PACKAGE - Definitions</h2>
-<pre>
- use Net::LDAP;
+<pre> use Net::LDAP;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">INITIALIZING</h2>
-<pre>
- $ldap = Net::LDAP-&gt;new ( &quot;yourLDAPhost.yourCompany.com&quot; ) or die &quot;$@&quot;;
+<pre> $ldap = Net::LDAP-&gt;new ( &quot;yourLDAPhost.yourCompany.com&quot; ) or die &quot;$@&quot;;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">BINDING</h2>
-<pre>
- $mesg = $ldap-&gt;bind ( version =&gt; 3 );          # use for searches
-
+<pre> $mesg = $ldap-&gt;bind ( version =&gt; 3 );          # use for searches
  $mesg = $ldap-&gt;bind ( &quot;$userToAuthenticate&quot;,
                        password =&gt; &quot;$passwd&quot;,
                        version =&gt; 3 );          # use for changes/edits
-
  # see your LDAP administrator for information concerning the
  # user authentication setup at your site.
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">OPERATION - Generating a SEARCH</h2>
-<pre>
- sub LDAPsearch
+<pre> sub LDAPsearch
  {
    my ($ldap,$searchString,$attrs,$base) = @_;
-
    # if they don't pass a base... set it for them
-
    if (!$base ) { $base = &quot;o=mycompany, c=mycountry&quot;; }
-
    # if they don't pass an array of attributes...
    # set up something for them
-
    if (!$attrs ) { $attrs = [ 'cn','mail' ]; }
-
    my $result = $ldap-&gt;search ( base    =&gt; &quot;$base&quot;,
                                 scope   =&gt; &quot;sub&quot;,
                                 filter  =&gt; &quot;$searchString&quot;,
@@ -117,44 +107,32 @@
 </pre>
 <p class="Pp">}</p>
 <p class="Pp"></p>
-<pre>
- my @Attrs = ( );               # request all available attributes
+<pre> my @Attrs = ( );               # request all available attributes
                                 # to be returned.
-
  my $result = LDAPsearch ( $ldap, &quot;sn=*&quot;, \@Attrs );
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">PROCESSING - Displaying SEARCH Results</h2>
-<pre>
- #------------
+<pre> #------------
  #
  # Accessing the data as if in a structure
  #  i.e. Using the &quot;as_struct&quot;  method
  #
-
  my $href = $result-&gt;as_struct;
-
  # get an array of the DN names
-
  my @arrayOfDNs  = keys %$href;        # use DN hashes
-
  # process each DN using it as a key
-
  foreach ( @arrayOfDNs ) {
    print $_, &quot;\n&quot;;
    my $valref = $$href{$_};
-
    # get an array of the attribute names
    # passed for this one DN.
    my @arrayOfAttrs = sort keys %$valref; #use Attr hashes
-
    my $attrName;
    foreach $attrName (@arrayOfAttrs) {
-
      # skip any binary data: yuck!
      next if ( $attrName =~ /;binary$/ );
-
      # get the attribute value (pointer) using the
      # attribute name as the hash
      my $attrVal =  @$valref{$attrName};
@@ -167,29 +145,23 @@
  #  end of as_struct method
  #
  #--------
-
-
  #------------
  #
  # handle each of the results independently
  # ... i.e. using the walk through method
  #
  my @entries = $result-&gt;entries;
-
  my $entr;
  foreach $entr ( @entries ) {
    print &quot;DN: &quot;, $entr-&gt;dn, &quot;\n&quot;;
-
    my $attr;
    foreach $attr ( sort $entr-&gt;attributes ) {
      # skip binary we can't handle
      next if ( $attr =~ /;binary$/ );
      print &quot;  $attr : &quot;, $entr-&gt;get_value ( $attr ) ,&quot;\n&quot;;
    }
-
    print &quot;#-------------------------------\n&quot;;
  }
-
  #
  # end of walk through method
  #------------
@@ -197,8 +169,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">OPERATION - Modifying entries</h2>
-<pre>
- #
+<pre> #
  #   Modify
  #
  #  for each of the modifies below you'll need to supply
@@ -208,23 +179,16 @@
  #
  #   I would recommend doing a search (listed above)
  #   then use the dn returned to populate the $dn variable.
-
  #
  #  Do we only have one result returned from the search?
-
  if ( $result-&gt;count != 1 ) { exit; }  # Nope.. exit
-
  my $dn = $entries[0]-&gt;dn;         # yes.. get the DN
-
  #######################################
  #
  #   MODIFY using a HASH
  #
-
  my %ReplaceHash = ( keyword =&gt; &quot;x&quot;, proxy =&gt; &quot;x&quot; );
-
  my $result = LDAPmodifyUsingHash ( $ldap, $dn, \%ReplaceHash );
-
  sub LDAPmodifyUsingHash
  {
    my ($ldap, $dn, $whatToChange ) = @_;
@@ -233,17 +197,13 @@
                               );
    return $result;
  }
-
  #######################################
  #
  #   MODIFY using a ARRAY List
  #
-
  my @ReplaceArrayList = [ 'keyword', &quot;xxxxxxxxxx&quot;,
                           'proxy' , &quot;yyyyyyyyyy&quot;   ];
-
  my $result = LDAPmodifyUsingArrayList ( $ldap, $dn, \@ReplaceArrayList );
-
  sub LDAPmodifyUsingArrayList
  {
    my ($ldap, $dn, $whatToChange ) = @_;
@@ -254,17 +214,13 @@
                               );
    return $result;
  }
-
  #######################################
  #
  #   MODIFY using a ARRAY
  #
-
  my @ReplaceArray = ( 'keyword', &quot;xxxxxxxxxx&quot; ,
                       'proxy' , &quot;yyyyyyyyyy&quot;   );
-
  my $result = LDAPmodifyUsingArray ( $ldap, $dn, \@ReplaceArray );
-
  sub LDAPmodifyUsingArray
  {
    my ($ldap, $dn, $whatToChange ) = @_;
@@ -275,23 +231,19 @@
                               );
    return $result;
  }
-
  #######################################
  #
  #   MODIFY an existing record using 'Changes'
  #    (or combination of add/delete/replace)
  #
-
  my @whatToChange;
  my @ReplaceArray;
  my @DeleteArray;
  my @AddArray;
-
  push @AddArray, 'cn', &quot;me myself&quot;;
  push @ReplaceArray, 'sn', '!@#$%^&amp;*()__+Hello There';
  push @ReplaceArray, 'cn', &quot;me myself I&quot;;
  push @DeleteArray, 'cn', &quot;me myself&quot;;
-
  if ( $#ReplaceArray &gt; 0 ) {
    push @whatToChange, 'replace';
    push @whatToChange, \@ReplaceArray;
@@ -304,13 +256,10 @@
    push @whatToChange, 'add';
    push @whatToChange, \@AddArray;
  }
-
  $result = LDAPmodify ( $ldap, $dn, \@whatToChange );
-
  sub LDAPmodify
  {
    my ($ldap, $dn, $whatToChange) = @_;
-
    my $result = $ldap-&gt;modify ( $dn,
                                 changes =&gt; [
                                   @$whatToChange
@@ -322,18 +271,12 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">OPERATION - Changing the RDN</h2>
-<pre>
- my $newRDN = &quot;cn=Joseph User&quot;;
-
+<pre> my $newRDN = &quot;cn=Joseph User&quot;;
  my $result = LDAPrdnChange ( $ldap, $dn, $newRDN, &quot;archive&quot; );
-
-
  sub LDAPrdnChange
  {
    my ($ldap,$dn,$whatToChange,$action) = @_;
-
    my $branch;
-
    #
    # if the archive action is selected, move this
    # entry to another place in the directory.
@@ -341,7 +284,6 @@
    if ( $action =~ /archive/i )  {
      $branch = &quot;ou=newbranch, o=mycompany, c=mycountry&quot;;
    }
-
    #
    # use the 'deleteoldrdn' to keep from getting
    # multivalues in the NAMING attribute.
@@ -352,17 +294,13 @@
                                deleteoldrdn =&gt; '1',
                                newsuperior =&gt; $branch
                              );
-
    return $result;
-
  }
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">OPERATION - Adding a new Record</h2>
-<pre>
- my $DNbranch = &quot;ou=bailiwick, o=mycompany, c=mycountry&quot;;
-
+<pre> my $DNbranch = &quot;ou=bailiwick, o=mycompany, c=mycountry&quot;;
  #
  # check with your Directory Schema or Administrator
  # for the correct objectClass... I'm sure it'll be different
@@ -374,28 +312,23 @@
    sn =&gt; &quot;User&quot;,
    mail =&gt; 'JaneUser@mycompany.com'
  ];
-
  #
  # create the  new DN to look like this
  # &quot; cn=Jo User + uid=0000001 , ou=bailiwick, o=mycompany, c=mycountry &quot;
  #
  # NOTE: this DN  MUST be changed to meet your implementation
  #
-
  my $NewDN = &quot;@$CreateArray[2]=&quot;.
              &quot;@$CreateArray[3]+&quot;.
              &quot;@$CreateArray[4]=&quot;.
              &quot;@$CreateArray[5],&quot;.
              $DNbranch;
-
  LDAPentryCreate($ldap, $NewDN, $CreateArray);
-
  #
  # CreateArray is a reference to an anonymous array
  # you have to dereference it in the  subroutine it's
  # passed to.
  #
-
  sub LDAPentryCreate
  {
     my ($ldap, $dn, $whatToCreate) = @_;
@@ -406,14 +339,12 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">ERROR - Retrieving and Displaying ERROR information</h2>
-<pre>
- if ( $result-&gt;code ) {
+<pre> if ( $result-&gt;code ) {
    #
    # if we've got an error... record it
    #
    LDAPerror ( &quot;Searching&quot;, $result );
  }
-
  sub LDAPerror
  {
    my ($from, $mesg) = @_;
@@ -422,7 +353,6 @@
    print &quot; :&quot;,          $mesg-&gt;error_text;
    print &quot;MessageID: &quot;, $mesg-&gt;mesg_id;
    print &quot;\tDN: &quot;, $mesg-&gt;dn;
-
    #---
    # Programmer note:
    #
@@ -435,8 +365,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">UNBIND</h2>
-<pre>
- $ldap-&gt;unbind;
+<pre> $ldap-&gt;unbind;
 </pre>
 </section>
 </section>
@@ -453,8 +382,7 @@
 <p class="Pp">After a successful bind you are ready to retrieve the schema
     information. You do this by initializing a schema object.</p>
 <p class="Pp"></p>
-<pre>
- $schema = $ldap-&gt;schema ( );
+<pre> $schema = $ldap-&gt;schema ( );
 </pre>
 <p class="Pp">In this case Net::LDAP will attempt to determine the dn under
     which the schema can be found. First it will look for the attribute
@@ -464,14 +392,12 @@
 <p class="Pp">Alternatively you can specify the dn where the schema is to be
     found with</p>
 <p class="Pp"></p>
-<pre>
- $schema = $ldap-&gt;schema ( dn =&gt; $dn );
+<pre> $schema = $ldap-&gt;schema ( dn =&gt; $dn );
 </pre>
 <p class="Pp">Once we have a dn to search for, Net::LDAP will fetch the schema
     entry with</p>
 <p class="Pp"></p>
-<pre>
-  $mesg = $self-&gt;search ( base   =&gt; $dn,
+<pre>  $mesg = $self-&gt;search ( base   =&gt; $dn,
                           scope  =&gt; 'base',
                           filter =&gt; '(objectClass=subschema)',
                         );
@@ -483,24 +409,18 @@
 <p class="Pp">The following is a code snippet showing how to get and display
     information about returned attributes.</p>
 <p class="Pp"></p>
-<pre>
- #
+<pre> #
  # Get the attributes
  #
-
  @attributes = $schema-&gt;all_attributes ( );
-
  #
  # Display the attributes
  #
-
  foreach $ar ( @attributes ) {
    print &quot;attributeType: &quot;, $ar-&gt;{name}, &quot;\n&quot;;
-
    #
    # Print all the details
    #
-
    foreach $key ( keys %{$ar} ) {
      print join ( &quot;\n\t\t&quot;, &quot;\t$key:&quot;,
                   ref ( $ar-&gt;{$key} ) ? @{$ar-&gt;{$key}} : $ar-&gt;{$key}

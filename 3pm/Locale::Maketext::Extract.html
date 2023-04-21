@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Locale::Maketext::Extract(3)</title>
 </head>
@@ -33,32 +34,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    my $Ext = Locale::Maketext::Extract-&gt;new;
+<pre>    my $Ext = Locale::Maketext::Extract-&gt;new;
     $Ext-&gt;read_po('messages.po');
     $Ext-&gt;extract_file($_) for &lt;*.pl&gt;;
-
     # Set $entries_are_in_gettext_format if the .pl files above use
     # loc('%1') instead of loc('[_1]')
     $Ext-&gt;compile($entries_are_in_gettext_format);
-
     $Ext-&gt;write_po('messages.po');
-
     -----------------------------------
-
     ### Specifying parser plugins ###
-
     my $Ext = Locale::Maketext::Extract-&gt;new(
-
         # Specify which parser plugins to use
         plugins =&gt; {
-
             # Use Perl parser, process files with extension .pl .pm .cgi
             perl =&gt; [],
-
             # Use YAML parser, process all files
             yaml =&gt; ['*'],
-
             # Use TT2 parser, process files with extension .tt2 .tt .html
             # or which match the regex
             tt2  =&gt; [
@@ -67,18 +58,13 @@
                 'html',
                 qr/\.tt2?\./
             ],
-
             # Use My::Module as a parser for all files
             'My::Module' =&gt; ['*'],
-
         },
-
         # Warn if a parser can't process a file or problems loading a plugin
         warnings =&gt; 1,
-
         # List processed files
         verbose =&gt; 1,
-
     );
 </pre>
 </section>
@@ -125,11 +111,9 @@
     (plugin: tt2)</a></dt>
   <dd>Valid forms are:
     <p class="Pp"></p>
-    <pre>
-  [% | l(arg1,argn) %]string[% END %]
+    <pre>  [% | l(arg1,argn) %]string[% END %]
   [% 'string' | l(arg1,argn) %]
   [% l('string',arg1,argn) %]
-
   FILTER and | are interchangeable
   l and loc are interchangeable
   args are optional
@@ -143,14 +127,12 @@
   <dt id="YAML"><a class="permalink" href="#YAML">YAML (plugin: yaml)</a></dt>
   <dd>Valid forms are _&quot;string&quot; or _'string', eg:
     <p class="Pp"></p>
-    <pre>
-    title: _&quot;My title&quot;
+    <pre>    title: _&quot;My title&quot;
     desc:  _'My &quot;quoted&quot; string'
     </pre>
     <p class="Pp">Quotes do not have to be escaped, so you could also do:</p>
     <p class="Pp"></p>
-    <pre>
-    desc:  _&quot;My &quot;quoted&quot; string&quot;
+    <pre>    desc:  _&quot;My &quot;quoted&quot; string&quot;
     </pre>
   </dd>
   <dt id="HTML::FormFu"><a class="permalink" href="#HTML::FormFu">HTML::FormFu
@@ -173,9 +155,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="Constructor"><a class="permalink" href="#Constructor">Constructor</a></h2>
-<pre>
-    new()
-
+<pre>    new()
     new(
         plugins   =&gt; {...},
         warnings  =&gt; 1 | 0,
@@ -187,30 +167,23 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Plugins"><a class="permalink" href="#Plugins">Plugins</a></h2>
-<pre>
-    $ext-&gt;plugins({...});
+<pre>    $ext-&gt;plugins({...});
 </pre>
 <p class="Pp">Locale::Maketext::Extract uses plugins (see below for the list) to
     parse different formats.</p>
 <p class="Pp">Each plugin can also specify which file types it can parse.</p>
 <p class="Pp"></p>
-<pre>
-    # use only the YAML plugin
+<pre>    # use only the YAML plugin
     # only parse files with the default extension list defined in the plugin
     # ie .yaml .yml .conf
-
     $ext-&gt;plugins({
         yaml =&gt; [],
     })
-
-
     # use only the Perl plugin
     # parse all file types
-
     $ext-&gt;plugins({
         perl =&gt; '*'
     })
-
     $ext-&gt;plugins({
         tt2  =&gt; [
             'tt',              # matches base filename against /\.tt$/
@@ -218,16 +191,12 @@
             \&amp;my_filter,       # codref called
         ]
     })
-
     sub my_filter {
         my ($base_filename,$path_to_file) = @_;
-
         return 1 | 0;
     }
-
     # Specify your own parser
     # only parse files with the default extension list defined in the plugin
-
     $ext-&gt;plugins({
         'My::Extract::Parser'  =&gt; []
     })
@@ -277,9 +246,7 @@
     <span class="Li">&quot;verbose&quot;</span>. If no acceptable plugin was
     found, or no strings were extracted, then the file is not listed:</p>
 <p class="Pp"></p>
-<pre>
-      $ext = Locale::Extract-&gt;new( verbose =&gt; 1 | 2 | 3);
-
+<pre>      $ext = Locale::Extract-&gt;new( verbose =&gt; 1 | 2 | 3);
    OR
       xgettext.pl ... -v           # files reported
       xgettext.pl ... -v -v        # files and plugins reported
@@ -288,8 +255,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Accessors"><a class="permalink" href="#Accessors">Accessors</a></h2>
-<pre>
-    header, set_header
+<pre>    header, set_header
     lexicon, set_lexicon, msgstr, set_msgstr
     entries, set_entries, entry, add_entry, del_entry
     compiled_entries, set_compiled_entries, compiled_entry,
@@ -301,12 +267,11 @@
 <h2 class="Ss">PO File manipulation</h2>
 <p class="Pp"><i>method read_po ($file)</i></p>
 <p class="Pp"><i>method write_po ($file,
-  </i><i>$add_format_marker</i><i>?)</i></p>
+    </i><span class="Li"><i>$add_format_marker</i></span><i>?)</i></p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Extraction"><a class="permalink" href="#Extraction">Extraction</a></h2>
-<pre>
-    extract
+<pre>    extract
     extract_file
 </pre>
 </section>
@@ -331,8 +296,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Lexicon_accessors"><a class="permalink" href="#Lexicon_accessors">Lexicon
   accessors</a></h2>
-<pre>
-    msgids, has_msgid,
+<pre>    msgids, has_msgid,
     msgstr, set_msgstr
     msg_positions, msg_variables, msg_format, msg_out
 </pre>
@@ -340,8 +304,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Internal_utilities"><a class="permalink" href="#Internal_utilities">Internal
   utilities</a></h2>
-<pre>
-    _default_header
+<pre>    _default_header
     _maketext_to_gettext
     _escape
     _format
@@ -403,8 +366,7 @@
 <p class="Pp">This software is Copyright (c) 2014 by Audrey Tang.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The MIT (X11) License
+<pre>  The MIT (X11) License
 </pre>
 </section>
 </div>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::Autouse(3)</title>
 </head>
@@ -29,52 +30,36 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    ##################################################################
+<pre>    ##################################################################
     # SAFE FEATURES
-
     # Debugging (if you go that way) must be set before the first use
     BEGIN {
         $Class::Autouse::DEBUG = 1;
     }
-
     # Turn on developer mode (always load immediately)
     use Class::Autouse qw{:devel};
-
     # Load a class on method call
     use Class::Autouse;
     Class::Autouse-&gt;autouse( 'CGI' );
     print CGI-&gt;b('Wow!');
-
     # Use as a pragma
     use Class::Autouse qw{CGI};
-
     # Use a whole module tree
     Class::Autouse-&gt;autouse_recursive('Acme');
-
     # Disable module-existance check, and thus one additional 'stat'
     # per module, at autouse-time if loading modules off a remote
     # network drive such as NFS or SMB.
     # (See below for other performance optimizations.)
     use Class::Autouse qw{:nostat};
-
-
-
-
-
     ##################################################################
     # UNSAFE FEATURES
-
     # Turn on the Super Loader (load all classes on demand)
     use Class::Autouse qw{:superloader};
-
     # Autouse classes matching a given regular expression
     use Class::Autouse qr/::Test$/;
-
     # Install a class generator (instead of overriding UNIVERSAL::AUTOLOAD)
     # (See below for a detailed example)
     use Class::Autouse \&amp;my_class_generator;
-
     # Add a manual callback to UNIVERSAL::AUTOLOAD for syntactic sugar
     Class::Autouse-&gt;sugar(\&amp;my_magic);
 </pre>
@@ -115,13 +100,11 @@
 <p class="Pp">Class::Autouse can be used as a pragma, specifying a list of
     classes to load as the arguments. For example</p>
 <p class="Pp"></p>
-<pre>
-   use Class::Autouse qw{CGI Data::Manip This::That};
+<pre>   use Class::Autouse qw{CGI Data::Manip This::That};
 </pre>
 <p class="Pp">is equivalent to</p>
 <p class="Pp"></p>
-<pre>
-   use Class::Autouse;
+<pre>   use Class::Autouse;
    Class::Autouse-&gt;autouse( 'CGI'         );
    Class::Autouse-&gt;autouse( 'Data::Manip' );
    Class::Autouse-&gt;autouse( 'This::That'  );
@@ -139,8 +122,7 @@
     the <span class="Li">&quot;devel&quot;</span> method, or using :devel in any
     of the pragma arguments. For example, this would load CGI.pm immediately</p>
 <p class="Pp"></p>
-<pre>
-    use Class::Autouse qw{:devel CGI};
+<pre>    use Class::Autouse qw{:devel CGI};
 </pre>
 <p class="Pp">While developer mode is roughly equivalent to just using a normal
     use command, for a large number of modules it lets you use autoloading
@@ -158,8 +140,7 @@
 <p class="Pp">For example, the following would give you access to all the URI
     related classes installed on the machine.</p>
 <p class="Pp"></p>
-<pre>
-    Class::Autouse-&gt;autouse_recursive( 'URI' );
+<pre>    Class::Autouse-&gt;autouse_recursive( 'URI' );
 </pre>
 <p class="Pp">Please note that the loadings will only occur down a single branch
     of the include path, whichever the top class is located in.</p>
@@ -172,8 +153,7 @@
     <span class="Li">&quot;Class::Autouse&quot;</span> with the :nostat param to
     disable initial file existance checking at hook time.</p>
 <p class="Pp"></p>
-<pre>
-  # Disable autoload-time file existance checking
+<pre>  # Disable autoload-time file existance checking
   use Class::Autouse qw{:nostat};
 </pre>
 </section>
@@ -185,9 +165,7 @@
     specifying it first. Thus, the following will work and is completely
   legal.</p>
 <p class="Pp"></p>
-<pre>
-    use Class::Autouse qw{:superloader};
-
+<pre>    use Class::Autouse qw{:superloader};
     print CGI-&gt;b('Wow!');
 </pre>
 <p class="Pp">The super loader can be turned on with either the
@@ -231,8 +209,7 @@
 <p class="Pp">Any use of a class like Foo::Wrapper autogenerates that class as a
     proxy around Foo.</p>
 <p class="Pp"></p>
-<pre>
-    use Class::Autouse sub {
+<pre>    use Class::Autouse sub {
         my ($class) = @_;
         if ($class =~ /(^.*)::Wrapper/) {
             my $wrapped_class = $1;
@@ -260,12 +237,10 @@
                 };
                 return *{ $class . '::' . $method } = $delegator;
             };
-
             return 1;
         }
         return;
     };
-
     package Foo;
     sub new { my $class = shift; bless({@_},$class); }
     sub class_method { 123 }
@@ -274,8 +249,6 @@
         return $v * $self-&gt;some_property
     }
     sub some_property { shift-&gt;{some_property} }
-
-
     package main;
     my $x = Foo::Wrapper-&gt;new(
         some_property =&gt; 111,
@@ -308,8 +281,7 @@
     <b>autouse()</b>.</p>
 <p class="Pp"><i>Syntactic Sugar Example</i></p>
 <p class="Pp"></p>
-<pre>
-    use Class::Autouse;
+<pre>    use Class::Autouse;
     Class::Autouse-&gt;sugar(
         sub {
             my $caller = caller(1);
@@ -320,9 +292,7 @@
             return sub { $sentence };
         }
     );
-
     $x = trolls have big ugly hairy feet;
-
     print $x,&quot;\n&quot;;
     # trolls have big ugly hairy feet
 </pre>
@@ -387,8 +357,7 @@
     loaded, debugging will be compiled in. This debugging prints output like the
     following to STDOUT.</p>
 <p class="Pp"></p>
-<pre>
-    Class::Autouse::autouse_recursive( 'Foo' )
+<pre>    Class::Autouse::autouse_recursive( 'Foo' )
         Class::Autouse::_recursive( 'Foo', 'load' )
             Class::Autouse::load( 'Foo' )
             Class::Autouse::_children( 'Foo' )

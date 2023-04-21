@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Mail::DKIM::Algorithm::Base(3)</title>
 </head>
@@ -29,20 +30,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  my $algorithm = new Mail::DKIM::Algorithm::rsa_sha1(
+<pre>  my $algorithm = new Mail::DKIM::Algorithm::rsa_sha1(
                       Signature =&gt; $dkim_signature
                   );
-
   # add headers
   $algorithm-&gt;add_header(&quot;Subject: this is the subject\015\012&quot;);
   $algorithm-&gt;finish_header;
-
   # add body
   $algorithm-&gt;add_body(&quot;This is the body.\015\012&quot;);
   $algorithm-&gt;add_body(&quot;Another line of the body.\015\012&quot;);
   $algorithm-&gt;finish_body;
-
   # now sign or verify...
   # TODO...
 </pre>
@@ -52,8 +49,7 @@
 <p class="Pp">You should not create an object of this class directly. Instead,
     use one of the DKIM algorithm implementation classes, such as rsa_sha1:</p>
 <p class="Pp"></p>
-<pre>
-  my $algorithm = new Mail::DKIM::Algorithm::rsa_sha1(
+<pre>  my $algorithm = new Mail::DKIM::Algorithm::rsa_sha1(
                       Signature =&gt; $dkim_signature
                   );
 </pre>
@@ -63,8 +59,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>add_body()</b> - feeds part of the body into the
   algorithm/canonicalization</h2>
-<pre>
-  $algorithm-&gt;add_body(&quot;This is the body.\015\012&quot;);
+<pre>  $algorithm-&gt;add_body(&quot;This is the body.\015\012&quot;);
   $algorithm-&gt;add_body(&quot;Another line of the body.\015\012&quot;);
 </pre>
 <p class="Pp">The body should be fed one &quot;line&quot; at a time.</p>
@@ -72,8 +67,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>add_header()</b> - feeds a header field into the
   algorithm/canonicalization</h2>
-<pre>
-  $algorithm-&gt;add_header(&quot;Subject: this is the subject\015\012&quot;);
+<pre>  $algorithm-&gt;add_header(&quot;Subject: this is the subject\015\012&quot;);
 </pre>
 <p class="Pp">The header must start with the header field name and continue
     through any folded lines (including the embedded &lt;CRLF&gt; sequences). It
@@ -81,8 +75,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>finish_body()</b> - signals the end of the message body</h2>
-<pre>
-  $algorithm-&gt;finish_body
+<pre>  $algorithm-&gt;finish_body
 </pre>
 <p class="Pp">Call this method when all lines from the body have been submitted.
     After calling this method, use <b>sign()</b> or <b>verify()</b> to get the
@@ -91,29 +84,25 @@
 <section class="Ss">
 <h2 class="Ss"><b>finish_header()</b> - signals the end of the header field
   block</h2>
-<pre>
-  $algorithm-&gt;finish_header;
+<pre>  $algorithm-&gt;finish_header;
 </pre>
 <p class="Pp">Call this method when all the headers have been submitted.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>sign()</b> - generates a signature using a private key</h2>
-<pre>
-  $base64 = $algorithm-&gt;sign($private_key);
+<pre>  $base64 = $algorithm-&gt;sign($private_key);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>signature()</b> - get/set the signature worked on by this
   algorithm</h2>
-<pre>
-  my $old_signature = $algorithm-&gt;signature;
+<pre>  my $old_signature = $algorithm-&gt;signature;
   $algorithm-&gt;signature($new_signature);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>verify()</b> - verifies a signature</h2>
-<pre>
-  $result = $algorithm-&gt;verify();
+<pre>  $result = $algorithm-&gt;verify();
 </pre>
 <p class="Pp">Must be called after <b>finish_body()</b>.</p>
 <p class="Pp">The result is a true/false value: true indicates the signature

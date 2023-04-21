@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Declare(3pm)</title>
 </head>
@@ -32,16 +33,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use MooseX::Declare;
-
+<pre>    use MooseX::Declare;
     class BankAccount {
         has 'balance' =&gt; ( isa =&gt; 'Num', is =&gt; 'rw', default =&gt; 0 );
-
         method deposit (Num $amount) {
             $self-&gt;balance( $self-&gt;balance + $amount );
         }
-
         method withdraw (Num $amount) {
             my $current_balance = $self-&gt;balance();
             ( $current_balance &gt;= $amount )
@@ -49,10 +46,8 @@
             $self-&gt;balance( $current_balance - $amount );
         }
     }
-
     class CheckingAccount extends BankAccount {
         has 'overdraft_account' =&gt; ( isa =&gt; 'BankAccount', is =&gt; 'rw' );
-
         before withdraw (Num $amount) {
             my $overdraft_amount = $amount - $self-&gt;balance();
             if ( $self-&gt;overdraft_account &amp;&amp; $overdraft_amount &gt; 0 ) {
@@ -75,9 +70,7 @@
 <h1 class="Sh" id="KEYWORDS"><a class="permalink" href="#KEYWORDS">KEYWORDS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="class"><a class="permalink" href="#class">class</a></h2>
-<pre>
-    class Foo { ... }
-
+<pre>    class Foo { ... }
     my $anon_class = class { ... };
 </pre>
 <p class="Pp">Declares a new class. The class can be either named or anonymous,
@@ -92,15 +85,13 @@
 <dl class="Bl-tag">
   <dt id="extends"><a class="permalink" href="#extends">extends</a></dt>
   <dd>
-    <pre>
-    class Foo extends Bar { ... }
+    <pre>    class Foo extends Bar { ... }
     </pre>
     <p class="Pp">Sets a superclass for the class being declared.</p>
   </dd>
   <dt id="with"><a class="permalink" href="#with">with</a></dt>
   <dd>
-    <pre>
-    class Foo with Role             { ... }
+    <pre>    class Foo with Role             { ... }
     class Foo with Role1 with Role2 { ... }
     class Foo with (Role1, Role2)   { ... }
     </pre>
@@ -108,25 +99,21 @@
   </dd>
   <dt id="is"><a class="permalink" href="#is">is mutable</a></dt>
   <dd>
-    <pre>
-    class Foo is mutable { ... }
+    <pre>    class Foo is mutable { ... }
     </pre>
     <p class="Pp">Causes the class not to be made immutable after its
         definition.</p>
     <p class="Pp">Options can also be provided for anonymous classes using the
         same syntax:</p>
     <p class="Pp"></p>
-    <pre>
-    my $meta_class = class with Role;
+    <pre>    my $meta_class = class with Role;
     </pre>
   </dd>
 </dl>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="role"><a class="permalink" href="#role">role</a></h2>
-<pre>
-    role Foo { ... }
-
+<pre>    role Foo { ... }
     my $anon_role = role { ... };
 </pre>
 <p class="Pp">Declares a new role. The role can be either named or anonymous,
@@ -139,8 +126,7 @@
 <dl class="Bl-tag">
   <dt id="with~2"><a class="permalink" href="#with~2">with</a></dt>
   <dd>
-    <pre>
-    role Foo with Bar { ... }
+    <pre>    role Foo with Bar { ... }
     </pre>
     <p class="Pp">Applies a role to the role being declared.</p>
   </dd>
@@ -149,8 +135,7 @@
 <section class="Ss">
 <h2 class="Ss" id="before_/_after_/_around_/_override_/_augment"><a class="permalink" href="#before_/_after_/_around_/_override_/_augment">before
   / after / around / override / augment</a></h2>
-<pre>
-    before   foo ($x, $y, $z) { ... }
+<pre>    before   foo ($x, $y, $z) { ... }
     after    bar ($x, $y, $z) { ... }
     around   baz ($x, $y, $z) { ... }
     override moo ($x, $y, $z) { ... }
@@ -171,8 +156,7 @@
     namespace::autoclean. In those cases you can specify the
     <span class="Li">&quot;dirty&quot;</span> trait for your class or role:</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Declare;
+<pre>    use MooseX::Declare;
     class Foo is dirty { ... }
 </pre>
 <p class="Pp">This will prevent cleaning of your namespace, except for the
@@ -182,8 +166,7 @@
     you to explicitly clean all functions that were defined prior to calling
     <span class="Li">&quot;clean&quot;</span>. Here's an example:</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Declare;
+<pre>    use MooseX::Declare;
     class Foo is dirty {
         sub helper_function { ... }
         clean;
@@ -199,14 +182,12 @@
   ON IMPORTS</a></h1>
 <p class="Pp">When creating a class with MooseX::Declare like:</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Declare;
+<pre>    use MooseX::Declare;
     class Foo { ... }
 </pre>
 <p class="Pp">What actually happens is something like this:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Foo;
         use Moose;
         use namespace::autoclean;
@@ -219,8 +200,7 @@
     the class' namespace. The symbols then cannot be called from within the
     class:</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Declare;
+<pre>    use MooseX::Declare;
     use Data::Dump qw/dump/;
     class Foo {
         method dump($value) { return dump($value) } # Data::Dump::dump IS NOT in Foo::
@@ -231,14 +211,12 @@
     definition (because you have to). Make all other imports inside the class
     definition.</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Declare;
+<pre>    use MooseX::Declare;
     class Foo {
         use Data::Dump qw/dump/;
         method dump($value) { return dump($value) } # Data::Dump::dump IS in Foo::
         method pp($value)   { $self-&gt;dump($value) } # an alias for our dump method
     }
-
     Foo-&gt;new-&gt;dump($some_value);
     Foo-&gt;new-&gt;pp($some_value);
 </pre>

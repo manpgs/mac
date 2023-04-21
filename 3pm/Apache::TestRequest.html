@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::TestRequest(3)</title>
 </head>
@@ -28,13 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Apache::Test qw(ok have_lwp);
+<pre>  use Apache::Test qw(ok have_lwp);
   use Apache::TestRequest qw(GET POST);
   use Apache::Constants qw(HTTP_OK);
-
   plan tests =&gt; 1, have_lwp;
-
   my $res = GET '/test.html';
   ok $res-&gt;code == HTTP_OK, &quot;Request is ok&quot;;
 </pre>
@@ -62,13 +60,10 @@
     <span class="Li">&quot;GET&quot;</span>, you can perform a couple of tests
     using these methods like this:</p>
 <p class="Pp"></p>
-<pre>
-  use Apache::Test qw(ok have_lwp);
+<pre>  use Apache::Test qw(ok have_lwp);
   use Apache::TestRequest qw(GET POST);
   use Apache::Constants qw(HTTP_OK);
-
   plan tests =&gt; 2, have_lwp;
-
   my $uri = &quot;/test.html?foo=1&amp;bar=2&quot;;
   my $res = GET $uri;
   ok $res-&gt;code == HTTP_OK, &quot;Check that the request was OK&quot;;
@@ -79,8 +74,7 @@
     <span class="Li">&quot;Test::Builder&quot;</span> and its derivatives,
     including <span class="Li">&quot;Test::More&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  use Test::More;
+<pre>  use Test::More;
   # ...
   is $res-&gt;code, HTTP_OK, &quot;Check that the request was OK&quot;;
   is $res-&gt;content, &quot;foo =&gt; 1, bar =&gt; 2&quot;, &quot;Check its content&quot;;
@@ -108,8 +102,7 @@
     it to create a new global <span class="Li">&quot;LWP::UserAgent&quot;</span>
     Object:</p>
 <p class="Pp"></p>
-<pre>
-  Apache::TestRequest::user_agent(reset =&gt; 1, %params);
+<pre>  Apache::TestRequest::user_agent(reset =&gt; 1, %params);
 </pre>
 <p class="Pp"><span class="Li">&quot;user_agent()&quot;</span> differs from
     <span class="Li">&quot;LWP::UserAgent-&gt;new&quot;</span> in two additional
@@ -128,8 +121,7 @@
     redirects in any of its convenience functions, pass a false value to
     <span class="Li">&quot;requests_redirectable&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  Apache::TestRequest::user_agent(reset =&gt; 1,
+<pre>  Apache::TestRequest::user_agent(reset =&gt; 1,
                                   requests_redirectable =&gt; 0);
 </pre>
 <p class="Pp">If LWP is not installed, then you can still pass in an array
@@ -138,8 +130,7 @@
     array and allow redirects if the array contains more than one value or if
     there is only one value and that value is not &quot;POST&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  # Always allow redirection.
+<pre>  # Always allow redirection.
   my $redir = have_lwp() ? [qw(GET HEAD POST)] : 1;
   Apache::TestRequest::user_agent(reset =&gt; 1,
                                   requests_redirectable =&gt; $redir);
@@ -159,8 +150,7 @@
     does <b>not</b> remember cookies between requests. You can tell it to
     remember cookies between request by adding:</p>
 <p class="Pp"></p>
-<pre>
-  Apache::TestRequest::user_agent(cookie_jar =&gt; {});
+<pre>  Apache::TestRequest::user_agent(cookie_jar =&gt; {});
 </pre>
 <p class="Pp">before issuing the requests.</p>
 </section>
@@ -179,16 +169,14 @@
       prevent this behavior, pass a false value to a
       <span class="Li">&quot;redirect_ok&quot;</span> parameter:
     <p class="Pp"></p>
-    <pre>
-  my $res = GET $uri, redirect_ok =&gt; 0;
+    <pre>  my $res = GET $uri, redirect_ok =&gt; 0;
     </pre>
     <p class="Pp">Alternately, if all of your tests need to disable redirects,
         tell <span class="Li">&quot;Apache::TestRequest&quot;</span> to use an
         <span class="Li">&quot;LWP::UserAgent&quot;</span> object that disables
         redirects:</p>
     <p class="Pp"></p>
-    <pre>
-  Apache::TestRequest::user_agent( reset =&gt; 1,
+    <pre>  Apache::TestRequest::user_agent( reset =&gt; 1,
                                    requests_redirectable =&gt; 0 );
     </pre>
   </dd>
@@ -197,16 +185,14 @@
       pass the name of the certificate via the
       <span class="Li">&quot;cert&quot;</span> parameter:
     <p class="Pp"></p>
-    <pre>
-  my $res = GET $uri, cert =&gt; 'my_cert';
+    <pre>  my $res = GET $uri, cert =&gt; 'my_cert';
     </pre>
   </dd>
   <dt id="content"><a class="permalink" href="#content">content</a></dt>
   <dd>If you need to add content to your request, use the
       <span class="Li">&quot;content&quot;</span> parameter:
     <p class="Pp"></p>
-    <pre>
-  my $res = GET $uri, content =&gt; 'hello world!';
+    <pre>  my $res = GET $uri, content =&gt; 'hello world!';
     </pre>
   </dd>
   <dt id="filename"><a class="permalink" href="#filename">filename</a></dt>
@@ -220,8 +206,7 @@
   Functions</a></h2>
 <p class="Pp"><i>GET</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = GET $uri;
+<pre>  my $res = GET $uri;
 </pre>
 <p class="Pp">Sends a simple GET request to the Apache test server. Returns an
     <span class="Li">&quot;HTTP::Response&quot;</span> object.</p>
@@ -229,8 +214,7 @@
     by adding their name/value pairs after the
     <span class="Li">&quot;url&quot;</span> parameter, for example:</p>
 <p class="Pp"></p>
-<pre>
-  my $res = GET $url, 'Accept-Language' =&gt; 'de,en-us,en;q=0.5';
+<pre>  my $res = GET $url, 'Accept-Language' =&gt; 'de,en-us,en;q=0.5';
 </pre>
 <p class="Pp"><i>GET_STR</i></p>
 <p class="Pp">A shortcut function for
@@ -261,8 +245,7 @@
     the workings of <span class="Li">&quot;Test::Harness&quot;</span>.</p>
 <p class="Pp"><i>HEAD</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = HEAD $uri;
+<pre>  my $res = HEAD $uri;
 </pre>
 <p class="Pp">Sends a HEAD request to the Apache test server. Returns an
     <span class="Li">&quot;HTTP::Response&quot;</span> object.</p>
@@ -296,8 +279,7 @@
     the workings of <span class="Li">&quot;Test::Harness&quot;</span>.</p>
 <p class="Pp"><i>PUT</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = PUT $uri;
+<pre>  my $res = PUT $uri;
 </pre>
 <p class="Pp">Sends a simple PUT request to the Apache test server. Returns an
     <span class="Li">&quot;HTTP::Response&quot;</span> object.</p>
@@ -330,8 +312,7 @@
     the workings of <span class="Li">&quot;Test::Harness&quot;</span>.</p>
 <p class="Pp"><i>POST</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = POST $uri, [ arg =&gt; $val, arg2 =&gt; $val ];
+<pre>  my $res = POST $uri, [ arg =&gt; $val, arg2 =&gt; $val ];
 </pre>
 <p class="Pp">Sends a POST request to the Apache test server and returns an
     <span class="Li">&quot;HTTP::Response&quot;</span> object. An array
@@ -341,8 +322,7 @@
     reference of parameters, or after <span class="Li">$uri</span>.</p>
 <p class="Pp">To upload a chunk of data, simply use:</p>
 <p class="Pp"></p>
-<pre>
-  my $res = POST $uri, content =&gt; $data;
+<pre>  my $res = POST $uri, content =&gt; $data;
 </pre>
 <p class="Pp"><i>POST_STR</i></p>
 <p class="Pp">A shortcut function for <span class="Li">&quot;POST($uri,
@@ -373,8 +353,7 @@
     the workings of <span class="Li">&quot;Test::Harness&quot;</span>.</p>
 <p class="Pp"><i>UPLOAD</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = UPLOAD $uri, \@args, filename =&gt; $filename;
+<pre>  my $res = UPLOAD $uri, \@args, filename =&gt; $filename;
 </pre>
 <p class="Pp">Sends a request to the Apache test server that includes an
     uploaded file. Other POST parameters can be passed as a second argument as
@@ -387,8 +366,7 @@
     <span class="Li">&quot;filename&quot;</span>, and its value will be
     submitted to the Apache server as file contents:</p>
 <p class="Pp"></p>
-<pre>
-  my $res = UPLOAD $uri, undef, content =&gt; &quot;This is file content&quot;;
+<pre>  my $res = UPLOAD $uri, undef, content =&gt; &quot;This is file content&quot;;
 </pre>
 <p class="Pp">The name of the file sent to the server will simply be
     &quot;b&quot;. Note that in this case, you cannot pass other POST arguments
@@ -406,8 +384,7 @@
     request just as <span class="Li">&quot;UPLOAD_BODY&quot;</span> would.</p>
 <p class="Pp"><i>OPTIONS</i></p>
 <p class="Pp"></p>
-<pre>
-  my $res = OPTIONS $uri;
+<pre>  my $res = OPTIONS $uri;
 </pre>
 <p class="Pp">Sends an <span class="Li">&quot;OPTIONS&quot;</span> request to
     the Apache test server. Returns an
@@ -426,65 +403,55 @@
 <p class="Pp"><span class="Li">&quot;Apache::TestRequest&quot;</span> also
     includes a few helper functions to aid in the creation of urls used in the
     functions above.</p>
-<p class="Pp"><i></i><i>&quot;module2path&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;module2path&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-  $path = Apache::TestRequest::module2path($module_name);
+<pre>  $path = Apache::TestRequest::module2path($module_name);
 </pre>
 <p class="Pp">Convert a module name to a path, safe for use in the various
     request methods above. e.g. <span class="Li">&quot;::&quot;</span> can't be
     used in URLs on win32. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $path = Apache::TestRequest::module2path('Foo::Bar');
+<pre>  $path = Apache::TestRequest::module2path('Foo::Bar');
 </pre>
 <p class="Pp">returns:</p>
 <p class="Pp"></p>
-<pre>
-  /Foo__Bar
+<pre>  /Foo__Bar
 </pre>
-<p class="Pp"><i></i><i>&quot;module2url&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;module2url&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-  $url = Apache::TestRequest::module2url($module);
+<pre>  $url = Apache::TestRequest::module2url($module);
   $url = Apache::TestRequest::module2url($module, \%options);
 </pre>
 <p class="Pp">Convert a module name to a full URL including the current
     configurations <span class="Li">&quot;hostname:port&quot;</span> and sets
     <span class="Li">&quot;module&quot;</span> accordingly.</p>
 <p class="Pp"></p>
-<pre>
-  $url = Apache::TestRequest::module2url('Foo::Bar');
+<pre>  $url = Apache::TestRequest::module2url('Foo::Bar');
 </pre>
 <p class="Pp">returns:</p>
 <p class="Pp"></p>
-<pre>
-  http://$hostname:$port/Foo__Bar
+<pre>  http://$hostname:$port/Foo__Bar
 </pre>
 <p class="Pp">The default scheme used is
     <span class="Li">&quot;http&quot;</span>. You can override this by passing
     your preferred scheme into an optional second param. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $module = 'MyTestModule::TestHandler';
+<pre>  $module = 'MyTestModule::TestHandler';
   $url = Apache::TestRequest::module2url($module, {scheme =&gt; 'https'});
 </pre>
 <p class="Pp">returns:</p>
 <p class="Pp"></p>
-<pre>
-  https://$hostname:$port/MyTestModule__TestHandler
+<pre>  https://$hostname:$port/MyTestModule__TestHandler
 </pre>
 <p class="Pp">You may also override the default path with a path of your
   own:</p>
 <p class="Pp"></p>
-<pre>
-  $module = 'MyTestModule::TestHandler';
+<pre>  $module = 'MyTestModule::TestHandler';
   $url = Apache::TestRequest::module2url($module, {path =&gt; '/foo'});
 </pre>
 <p class="Pp">returns:</p>
 <p class="Pp"></p>
-<pre>
-  http://$hostname:$port/foo
+<pre>  http://$hostname:$port/foo
 </pre>
 </section>
 </section>

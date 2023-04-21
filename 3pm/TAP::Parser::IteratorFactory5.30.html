@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>TAP::Parser::IteratorFactory(3pm)</title>
 </head>
@@ -33,8 +34,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use TAP::Parser::IteratorFactory;
+<pre>  use TAP::Parser::IteratorFactory;
   my $factory = TAP::Parser::IteratorFactory-&gt;new({ %config });
   my $iterator  = $factory-&gt;make_iterator( $filename );
 </pre>
@@ -52,30 +52,27 @@
 <section class="Ss">
 <h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
   Methods</a></h2>
-<p class="Pp"><i></i><i>&quot;new&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;new&quot;</i></span><i></i></p>
 <p class="Pp">Creates a new factory class:</p>
 <p class="Pp"></p>
-<pre>
-  my $sf = TAP::Parser::IteratorFactory-&gt;new( $config );
+<pre>  my $sf = TAP::Parser::IteratorFactory-&gt;new( $config );
 </pre>
 <p class="Pp"><span class="Li">$config</span> is optional. If given, sets
     &quot;config&quot; and calls &quot;load_handlers&quot;.</p>
-<p class="Pp"><i></i><i>&quot;register_handler&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;register_handler&quot;</i></span><i></i></p>
 <p class="Pp">Registers a new TAP::Parser::SourceHandler with this factory.</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;register_handler( $handler_class );
+<pre>  __PACKAGE__-&gt;register_handler( $handler_class );
 </pre>
-<p class="Pp"><i></i><i>&quot;handlers&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;handlers&quot;</i></span><i></i></p>
 <p class="Pp">List of handlers that have been registered.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
   Methods</a></h2>
-<p class="Pp"><i></i><i>&quot;config&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;config&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
- my $cfg = $sf-&gt;config;
+<pre> my $cfg = $sf-&gt;config;
  $sf-&gt;config({ Perl =&gt; { %config } });
 </pre>
 <p class="Pp">Chaining getter/setter for the configuration of the available
@@ -83,21 +80,18 @@
     contain config to be passed onto the handlers during detection &amp;
     creation. Class names may be fully qualified or abbreviated, eg:</p>
 <p class="Pp"></p>
-<pre>
-  # these are equivalent
+<pre>  # these are equivalent
   $sf-&gt;config({ 'TAP::Parser::SourceHandler::Perl' =&gt; { %config } });
   $sf-&gt;config({ 'Perl' =&gt; { %config } });
 </pre>
-<p class="Pp"><i></i><i>&quot;load_handlers&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;load_handlers&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
- $sf-&gt;load_handlers;
+<pre> $sf-&gt;load_handlers;
 </pre>
 <p class="Pp">Loads the handler classes defined in &quot;config&quot;. For
     example, given a config:</p>
 <p class="Pp"></p>
-<pre>
-  $sf-&gt;config({
+<pre>  $sf-&gt;config({
     MySourceHandler =&gt; { some =&gt; 'config' },
   });
 </pre>
@@ -105,27 +99,24 @@
     load the <span class="Li">&quot;MySourceHandler&quot;</span> class by
     looking in <span class="Li">@INC</span> for it in this order:</p>
 <p class="Pp"></p>
-<pre>
-  TAP::Parser::SourceHandler::MySourceHandler
+<pre>  TAP::Parser::SourceHandler::MySourceHandler
   MySourceHandler
 </pre>
 <p class="Pp"><span class="Li">&quot;croak&quot;</span>s on error.</p>
-<p class="Pp"><i></i><i>&quot;make_iterator&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;make_iterator&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-  my $iterator = $src_factory-&gt;make_iterator( $source );
+<pre>  my $iterator = $src_factory-&gt;make_iterator( $source );
 </pre>
 <p class="Pp">Given a TAP::Parser::Source, finds the most suitable
     TAP::Parser::SourceHandler to use to create a TAP::Parser::Iterator (see
     &quot;detect_source&quot;). Dies on error.</p>
-<p class="Pp"><i></i><i>&quot;detect_source&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;detect_source&quot;</i></span><i></i></p>
 <p class="Pp">Given a TAP::Parser::Source, detects what kind of source it is and
     returns <i>one</i> TAP::Parser::SourceHandler (the most confident one). Dies
     on error.</p>
 <p class="Pp">The detection algorithm works something like this:</p>
 <p class="Pp"></p>
-<pre>
-  for (@registered_handlers) {
+<pre>  for (@registered_handlers) {
     # ask them how confident they are about handling this source
     $confidence{$handler} = $handler-&gt;can_handle( $source )
   }
@@ -145,19 +136,14 @@
     that).</p>
 <p class="Pp">But in case you find the need to...</p>
 <p class="Pp"></p>
-<pre>
-  package MyIteratorFactory;
-
+<pre>  package MyIteratorFactory;
   use strict;
-
   use base 'TAP::Parser::IteratorFactory';
-
   # override source detection algorithm
   sub detect_source {
     my ($self, $raw_source_ref, $meta) = @_;
     # do detective work, using $meta and whatever else...
   }
-
   1;
 </pre>
 </section>

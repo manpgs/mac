@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>dispatch_queue_create(3)</title>
 </head>
@@ -84,11 +85,9 @@
     describe the purpose of the queue and is useful during debugging and
     performance analysis. If a label is provided, it is copied. By convention,
     clients should pass a reverse DNS style label. For example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-my_queue = dispatch_queue_create(&quot;com.example.subsystem.taskXYZ&quot;,
-				 DISPATCH_QUEUE_SERIAL);
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>my_queue = dispatch_queue_create(&quot;com.example.subsystem.taskXYZ&quot;,
+				 DISPATCH_QUEUE_SERIAL);</pre>
 </div>
 <p class="Pp">The <var class="Fa">attr</var> argument specifies the type of
     queue to create and must be either
@@ -308,17 +307,15 @@ my_queue = dispatch_queue_create(&quot;com.example.subsystem.taskXYZ&quot;,
     idle state of a process.</p>
 <p class="Pp">The following example code correctly handles per-thread return
     values:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-__block int r;
+<div class="Bd Pp Bd-indent Li">
+<pre>__block int r;
 __block int e;
 dispatch_sync(queue, ^{
 	r = kill(1, 0);
 	// Copy the per-thread return value to the callee thread
 	e = errno;
 });
-printf(&quot;kill(1,0) returned %d and errno %d0, r, e);
-</pre>
+printf(&quot;kill(1,0) returned %d and errno %d0, r, e);</pre>
 </div>
 <p class="Pp">Note that in the above example <var class="Va">errno</var> is a
     per-thread variable and must be copied out explicitly as the block may be

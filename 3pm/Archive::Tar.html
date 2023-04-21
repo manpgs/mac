@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Archive::Tar(3pm)</title>
 </head>
@@ -28,21 +29,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Archive::Tar;
+<pre>    use Archive::Tar;
     my $tar = Archive::Tar-&gt;new;
-
     $tar-&gt;read('origin.tgz');
     $tar-&gt;extract();
-
     $tar-&gt;add_files('file/foo.pl', 'docs/README');
     $tar-&gt;add_data('file/baz.txt', 'This is the contents now');
-
     $tar-&gt;rename('oldname', 'new/file/name');
     $tar-&gt;chown('/', 'root');
     $tar-&gt;chown('/', 'root:root');
     $tar-&gt;chmod('/tmp', '1777');
-
     $tar-&gt;write('files.tar');                   # plain tar
     $tar-&gt;write('files.tgz', COMPRESS_GZIP);    # gzip compressed
     $tar-&gt;write('files.tbz', COMPRESS_BZIP);    # bzip2 compressed
@@ -162,9 +158,7 @@
     (including filename) the entry will be written to.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    $tar-&gt;extract_file( 'name/in/archive', 'name/i/want/to/give/it' );
-
+<pre>    $tar-&gt;extract_file( 'name/in/archive', 'name/i/want/to/give/it' );
     $tar-&gt;extract_file( $at_file_object,   'name/i/want/to/give/it' );
 </pre>
 <p class="Pp">Returns true on success, false on failure.</p>
@@ -247,10 +241,8 @@
     to be the <span class="Li">&quot;gzip&quot;</span> compression level
     (between 1 and 9), but the use of constants is preferred:</p>
 <p class="Pp"></p>
-<pre>
-  # write a gzip compressed file
+<pre>  # write a gzip compressed file
   $tar-&gt;write( 'out.tgz', COMPRESS_GZIP );
-
   # write a bzip compressed file
   $tar-&gt;write( 'out.tbz', COMPRESS_BZIP );
 </pre>
@@ -353,8 +345,7 @@
     changed externally.</p>
 <p class="Pp">To use this performance boost, set the current directory via</p>
 <p class="Pp"></p>
-<pre>
-    use Cwd;
+<pre>    use Cwd;
     $tar-&gt;setcwd( cwd() );
 </pre>
 <p class="Pp">once before calling a function like
@@ -364,8 +355,7 @@
     <span class="Li">&quot;Cwd::cwd()&quot;</span> internally.</p>
 <p class="Pp">To switch back to the default behaviour, use</p>
 <p class="Pp"></p>
-<pre>
-    $tar-&gt;setcwd( undef );
+<pre>    $tar-&gt;setcwd( undef );
 </pre>
 <p class="Pp">and <span class="Li">&quot;Archive::Tar&quot;</span> will call
     <span class="Li">&quot;Cwd::cwd()&quot;</span> internally again.</p>
@@ -389,10 +379,8 @@
     to be the <span class="Li">&quot;gzip&quot;</span> compression level
     (between 1 and 9), but the use of constants is preferred:</p>
 <p class="Pp"></p>
-<pre>
-  # write a gzip compressed file
+<pre>  # write a gzip compressed file
   Archive::Tar-&gt;create_archive( 'out.tgz', COMPRESS_GZIP, @filelist );
-
   # write a bzip compressed file
   Archive::Tar-&gt;create_archive( 'out.tbz', COMPRESS_BZIP, @filelist );
 </pre>
@@ -427,14 +415,10 @@
     <span class="Li">&quot;read()&quot;</span>.</p>
 <p class="Pp">Example usage:</p>
 <p class="Pp"></p>
-<pre>
-    my $next = Archive::Tar-&gt;iter( &quot;example.tar.gz&quot;, 1, {filter =&gt; qr/\.pm$/} );
-
+<pre>    my $next = Archive::Tar-&gt;iter( &quot;example.tar.gz&quot;, 1, {filter =&gt; qr/\.pm$/} );
     while( my $f = $next-&gt;() ) {
         print $f-&gt;name, &quot;\n&quot;;
-
         $f-&gt;extract or warn &quot;Extraction failed&quot;;
-
         # ....
     }
 </pre>
@@ -592,8 +576,7 @@
     instead of the regular <span class="Li">&quot;carp&quot;</span>. This is the
     same message you would get by doing:</p>
 <p class="Pp"></p>
-<pre>
-    $tar-&gt;error(1);
+<pre>    $tar-&gt;error(1);
 </pre>
 <p class="Pp">Defaults to <span class="Li">0</span>.</p>
 </section>
@@ -611,8 +594,7 @@
     its use is very much discouraged. Use the
     <span class="Li">&quot;error()&quot;</span> method instead:</p>
 <p class="Pp"></p>
-<pre>
-    warn $tar-&gt;error unless $tar-&gt;extract;
+<pre>    warn $tar-&gt;error unless $tar-&gt;extract;
 </pre>
 <p class="Pp">Note that in older versions of this module, the
     <span class="Li">&quot;error()&quot;</span> method would return an
@@ -674,25 +656,18 @@
 <section class="Ss">
 <h2 class="Ss" id="Tuning_the_way_"><a class="permalink" href="#Tuning_the_way_">Tuning
   the way RESOLVE_SYMLINK will works</a></h2>
-<pre>
-        You can tune the behaviour by setting the $Archive::Tar::RESOLVE_SYMLINK variable,
+<pre>        You can tune the behaviour by setting the $Archive::Tar::RESOLVE_SYMLINK variable,
         or $ENV{PERL5_AT_RESOLVE_SYMLINK} before loading the module Archive::Tar.
-
   Values can be one of the following:
-
                 none
            Disable this mechanism and failed as it was in previous version (&lt;1.88)
-
                 speed (default)
            If you prefer speed
            this will read again the whole archive using read() so all entries
            will be available
-
     memory
            If you prefer memory
-
         Limitation
-
                 It won't work for terminal, pipe or sockets or every non seekable source.
 </pre>
 </section>
@@ -784,8 +759,7 @@
         <span class="Li">&quot;foo&quot;</span> in their title, you would
       use:</p>
     <p class="Pp"></p>
-    <pre>
-    $tar-&gt;extract(
+    <pre>    $tar-&gt;extract(
         grep { $_-&gt;full_path =~ /foo/ } $tar-&gt;get_files
     );
     </pre>
@@ -812,18 +786,14 @@
     <p class="Pp">Firstly with
       <span class="Li">&quot;uncompress&quot;</span></p>
     <p class="Pp"></p>
-    <pre>
-    use Archive::Tar;
-
+    <pre>    use Archive::Tar;
     open F, &quot;uncompress -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
     </pre>
     <p class="Pp">and this with <span class="Li">&quot;gunzip&quot;</span></p>
     <p class="Pp"></p>
-    <pre>
-    use Archive::Tar;
-
+    <pre>    use Archive::Tar;
     open F, &quot;gunzip -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
@@ -832,10 +802,8 @@
         program is available, you can use this to write a
         <span class="Li">&quot;.tar.Z&quot;</span> file</p>
     <p class="Pp"></p>
-    <pre>
-    use Archive::Tar;
+    <pre>    use Archive::Tar;
     use IO::File;
-
     my $fh = new IO::File &quot;| compress -c &gt;$filename&quot;;
     my $tar = Archive::Tar-&gt;new();
     ...
@@ -852,16 +820,14 @@
       some additional steps need to be taken.
     <p class="Pp">For example, if you add a Unicode string like</p>
     <p class="Pp"></p>
-    <pre>
-    # Problem
+    <pre>    # Problem
     $tar-&gt;add_data('file.txt', &quot;Euro: \x{20AC}&quot;);
     </pre>
     <p class="Pp">then there will be a problem later when the tarfile gets
         written out to disk via
         <span class="Li">&quot;$tar-&gt;write()&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-    Wide character in print at .../Archive/Tar.pm line 1014.
+    <pre>    Wide character in print at .../Archive/Tar.pm line 1014.
     </pre>
     <p class="Pp">The data was added as a Unicode string and when writing it out
         to disk, the <span class="Li">&quot;:utf8&quot;</span> line discipline
@@ -872,11 +838,9 @@
         UTF-8-encoded bytestrings before they are handed off to
         <span class="Li">&quot;add_data()&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-    use Encode;
+    <pre>    use Encode;
     my $data = &quot;Accented character: \x{20AC}&quot;;
     $data = encode('utf8', $data);
-
     $tar-&gt;add_data('file.txt', $data);
     </pre>
     <p class="Pp">A opposite problem occurs if you extract a UTF8-encoded file
@@ -888,10 +852,8 @@
         you need to decode the UTF8-encoded content and have Perl convert it
         into a Unicode string:</p>
     <p class="Pp"></p>
-    <pre>
-    use Encode;
+    <pre>    use Encode;
     my $data = $tar-&gt;get_content();
-
     # Make it a Unicode string
     $data = decode('utf8', $data);
     </pre>
@@ -908,19 +870,16 @@
     0x00. This sometimes leads to warning messages from
     <span class="Li">&quot;Archive::Tar&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  Invalid header block at offset nnn
+<pre>  Invalid header block at offset nnn
 </pre>
 <p class="Pp">A fix for that problem is scheduled to be released in the
     following levels of AIX, all of which should be coming out in the 4th
     quarter of 2009:</p>
 <p class="Pp"></p>
-<pre>
- AIX 5.3 TL7 SP10
+<pre> AIX 5.3 TL7 SP10
  AIX 5.3 TL8 SP8
  AIX 5.3 TL9 SP5
  AIX 5.3 TL10 SP2
-
  AIX 6.1 TL0 SP11
  AIX 6.1 TL1 SP7
  AIX 6.1 TL2 SP6

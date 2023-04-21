@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::File::HowTo(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  perldoc DBD::File::HowTo
+<pre>  perldoc DBD::File::HowTo
   perldoc DBI
   perldoc DBI::DBD
   perldoc DBD::File::Developers
@@ -66,51 +66,31 @@
 <section class="Ss">
 <h2 class="Ss" id="Sample_Skeleton"><a class="permalink" href="#Sample_Skeleton">Sample
   Skeleton</a></h2>
-<pre>
-    package DBD::Foo;
-
+<pre>    package DBD::Foo;
     use strict;
     use warnings;
     use vars qw(@ISA $VERSION);
     use base qw(DBD::File);
-
     use DBI ();
-
     $VERSION = &quot;0.001&quot;;
-
     package DBD::Foo::dr;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBD::File::dr);
     $imp_data_size = 0;
-
     package DBD::Foo::db;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBD::File::db);
     $imp_data_size = 0;
-
     package DBD::Foo::st;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBD::File::st);
     $imp_data_size = 0;
-
     package DBD::Foo::Statement;
-
     use vars qw(@ISA);
-
     @ISA = qw(DBD::File::Statement);
-
     package DBD::Foo::Table;
-
     use vars qw(@ISA);
-
     @ISA = qw(DBD::File::Table);
-
     1;
 </pre>
 <p class="Pp">Tiny, eh? And all you have now is a DBD named foo which will be
@@ -127,26 +107,19 @@
     files. In principle, the only extensions required are to the table
   class:</p>
 <p class="Pp"></p>
-<pre>
-    package DBD::Foo::Table;
-
+<pre>    package DBD::Foo::Table;
     sub bootstrap_table_meta
     {
         my ( $self, $dbh, $meta, $table ) = @_;
-
         # initialize all $meta attributes which might be relevant for
         # file2table
-
         return $self-&gt;SUPER::bootstrap_table_meta($dbh, $meta, $table);
     }
-
     sub init_table_meta
     {
         my ( $self, $dbh, $meta, $table ) = @_;
-
         # called after $meta contains the results from file2table
         # initialize all missing $meta attributes
-
         $self-&gt;SUPER::init_table_meta( $dbh, $meta, $table );
     }
 </pre>
@@ -154,8 +127,7 @@
     <span class="Li">&quot;DBD::File::Table::open_file&quot;</span> doesn't open
     the files as the driver needs that, override it!</p>
 <p class="Pp"></p>
-<pre>
-    sub open_file
+<pre>    sub open_file
     {
         my ( $self, $meta, $attrs, $flags ) = @_;
         # ensure that $meta-&gt;{f_dontopen} is set
@@ -183,18 +155,13 @@
     &quot;_meta&quot;}&quot;</span> attribute which cares, so what you learned
     at this place before, is still valid.</p>
 <p class="Pp"></p>
-<pre>
-    sub init_valid_attributes
+<pre>    sub init_valid_attributes
     {
         my $dbh = $_[0];
-
         $dbh-&gt;SUPER::init_valid_attributes ();
-
         $dbh-&gt;{foo_valid_attrs} = { ... };
         $dbh-&gt;{foo_readonly_attrs} = { ...  };
-
         $dbh-&gt;{foo_meta} = &quot;foo_tables&quot;;
-
         return $dbh;
     }
 </pre>

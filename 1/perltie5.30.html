@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLTIE(1)</title>
 </head>
@@ -28,11 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- tie VARIABLE, CLASSNAME, LIST
-
+<pre> tie VARIABLE, CLASSNAME, LIST
  $object = tied VARIABLE
-
  untie VARIABLE
 </pre>
 </section>
@@ -80,8 +78,7 @@
 <p class="Pp">Let's look at each in turn, using as an example a tie class for
     scalars that allows the user to do something like:</p>
 <p class="Pp"></p>
-<pre>
-    tie $his_speed, 'Nice', getppid();
+<pre>    tie $his_speed, 'Nice', getppid();
     tie $my_speed,  'Nice', $$;
 </pre>
 <p class="Pp">And now whenever either of those variables is accessed, its
@@ -92,8 +89,7 @@
     PRIO_MAX constants from your system, as well as the <b>getpriority()</b> and
     <b>setpriority()</b> system calls. Here's the preamble of the class.</p>
 <p class="Pp"></p>
-<pre>
-    package Nice;
+<pre>    package Nice;
     use Carp;
     use BSD::Resource;
     use strict;
@@ -106,21 +102,17 @@
       a blessed reference to a new scalar (probably anonymous) that it's
       creating. For example:
     <p class="Pp"></p>
-    <pre>
- sub TIESCALAR {
+    <pre> sub TIESCALAR {
      my $class = shift;
      my $pid = shift || $$; # 0 means me
-
      if ($pid !~ /^\d+$/) {
          carp &quot;Nice::Tie::Scalar got non-numeric pid $pid&quot; if $^W;
          return undef;
      }
-
      unless (kill 0, $pid) { # EPERM or ERSCH, no doubt
          carp &quot;Nice::Tie::Scalar got bad pid $pid: $!&quot; if $^W;
          return undef;
      }
-
      return bless \$pid, $class;
  }
     </pre>
@@ -138,8 +130,7 @@
       allows the method to get at the real value stored there. In our example
       below, that real value is the process ID to which we've tied our variable.
     <p class="Pp"></p>
-    <pre>
-    sub FETCH {
+    <pre>    sub FETCH {
         my $self = shift;
         confess &quot;wrong type&quot; unless ref $self;
         croak &quot;usage error&quot; if @_;
@@ -161,27 +152,23 @@
       returning a value from STORE; the semantic of assignment returning the
       assigned value is implemented with FETCH.
     <p class="Pp"></p>
-    <pre>
- sub STORE {
+    <pre> sub STORE {
      my $self = shift;
      confess &quot;wrong type&quot; unless ref $self;
      my $new_nicety = shift;
      croak &quot;usage error&quot; if @_;
-
      if ($new_nicety &lt; PRIO_MIN) {
          carp sprintf
            &quot;WARNING: priority %d less than minimum system priority %d&quot;,
                $new_nicety, PRIO_MIN if $^W;
          $new_nicety = PRIO_MIN;
      }
-
      if ($new_nicety &gt; PRIO_MAX) {
          carp sprintf
            &quot;WARNING: priority %d greater than maximum system priority %d&quot;,
                $new_nicety, PRIO_MAX if $^W;
          $new_nicety = PRIO_MAX;
      }
-
      unless (defined setpriority(PRIO_PROCESS,
                                  $$self,
                                  $new_nicety))
@@ -205,8 +192,7 @@
       automatically--this isn't C++, you know. We'll use a DESTROY method here
       for debugging purposes only.
     <p class="Pp"></p>
-    <pre>
-    sub DESTROY {
+    <pre>    sub DESTROY {
         my $self = shift;
         confess &quot;wrong type&quot; unless ref $self;
         carp &quot;[ Nice::DESTROY pid $$self ]&quot; if $Nice::DEBUG;
@@ -240,16 +226,14 @@
     fixed size at creation. If you try to create an element larger than the
     fixed size, you'll take an exception. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use FixedElem_Array;
+<pre>    use FixedElem_Array;
     tie @array, 'FixedElem_Array', 3;
     $array[0] = 'cat';  # ok.
     $array[1] = 'dogs'; # exception, length('dogs') &gt; 3.
 </pre>
 <p class="Pp">The preamble code for the class is as follows:</p>
 <p class="Pp"></p>
-<pre>
-    package FixedElem_Array;
+<pre>    package FixedElem_Array;
     use Carp;
     use strict;
 </pre>
@@ -269,8 +253,7 @@
         returned (doubtless thinking it an ARRAY ref), they'll blow up. This
         just goes to show you that you should respect an object's privacy.</p>
     <p class="Pp"></p>
-    <pre>
-    sub TIEARRAY {
+    <pre>    sub TIEARRAY {
       my $class    = shift;
       my $elemsize = shift;
       if ( @_ || $elemsize =~ /\D/ ) {
@@ -289,8 +272,7 @@
       array is accessed (read). It takes one argument beyond its self reference:
       the index whose value we're trying to fetch.
     <p class="Pp"></p>
-    <pre>
-    sub FETCH {
+    <pre>    sub FETCH {
       my $self  = shift;
       my $index = shift;
       return $self-&gt;{ARRAY}-&gt;[$index];
@@ -317,8 +299,7 @@
         really <span class="Li">&quot;$self-&gt;{ELEMSIZE}&quot;</span> number
         of spaces so we have a little more work to do here:</p>
     <p class="Pp"></p>
-    <pre>
- sub STORE {
+    <pre> sub STORE {
    my $self = shift;
    my( $index, $value ) = @_;
    if ( length $value &gt; $self-&gt;{ELEMSIZE} ) {
@@ -338,8 +319,7 @@
       <i>this</i>. (Equivalent to
       <span class="Li">&quot;scalar(@array)&quot;</span>). For example:
     <p class="Pp"></p>
-    <pre>
-    sub FETCHSIZE {
+    <pre>    sub FETCHSIZE {
       my $self = shift;
       return scalar @{$self-&gt;{ARRAY}};
     }
@@ -356,8 +336,7 @@
         <span class="Li">&quot;$self-&gt;{ELEMSIZE}&quot;</span> number of
         spaces. Observe:</p>
     <p class="Pp"></p>
-    <pre>
-    sub STORESIZE {
+    <pre>    sub STORESIZE {
       my $self  = shift;
       my $count = shift;
       if ( $count &gt; $self-&gt;FETCHSIZE() ) {
@@ -382,8 +361,7 @@
         <span class="Li">&quot;STORESIZE&quot;</span> to fill elements as
         needed:</p>
     <p class="Pp"></p>
-    <pre>
-    sub EXTEND {   
+    <pre>    sub EXTEND {   
       my $self  = shift;
       my $count = shift;
       $self-&gt;STORESIZE( $count );
@@ -397,8 +375,7 @@
         of <span class="Li">&quot;$self-&gt;{ELEMSIZE}&quot;</span> spaces only,
         it does not exist:</p>
     <p class="Pp"></p>
-    <pre>
- sub EXISTS {
+    <pre> sub EXISTS {
    my $self  = shift;
    my $index = shift;
    return 0 if ! defined $self-&gt;{ARRAY}-&gt;[$index] ||
@@ -412,8 +389,7 @@
     <p class="Pp">In our example, a deleted item is
         <span class="Li">&quot;$self-&gt;{ELEMSIZE}&quot;</span> spaces:</p>
     <p class="Pp"></p>
-    <pre>
-    sub DELETE {
+    <pre>    sub DELETE {
       my $self  = shift;
       my $index = shift;
       return $self-&gt;STORE( $index, '' );
@@ -424,8 +400,7 @@
   <dd>Clear (remove, delete, ...) all values from the tied array associated with
       object <i>this</i>. For example:
     <p class="Pp"></p>
-    <pre>
-    sub CLEAR {
+    <pre>    sub CLEAR {
       my $self = shift;
       return $self-&gt;{ARRAY} = [];
     }
@@ -434,8 +409,7 @@
   <dt id="PUSH"><a class="permalink" href="#PUSH">PUSH this, LIST</a></dt>
   <dd>Append elements of <i>LIST</i> to the array. For example:
     <p class="Pp"></p>
-    <pre>
-    sub PUSH {  
+    <pre>    sub PUSH {  
       my $self = shift;
       my @list = @_;
       my $last = $self-&gt;FETCHSIZE();
@@ -447,8 +421,7 @@
   <dt id="POP"><a class="permalink" href="#POP">POP this</a></dt>
   <dd>Remove last element of the array and return it. For example:
     <p class="Pp"></p>
-    <pre>
-    sub POP {
+    <pre>    sub POP {
       my $self = shift;
       return pop @{$self-&gt;{ARRAY}};
     }
@@ -458,8 +431,7 @@
   <dd>Remove the first element of the array (shifting other elements down) and
       return it. For example:
     <p class="Pp"></p>
-    <pre>
-    sub SHIFT {
+    <pre>    sub SHIFT {
       my $self = shift;
       return shift @{$self-&gt;{ARRAY}};
     }
@@ -470,8 +442,7 @@
   <dd>Insert LIST elements at the beginning of the array, moving existing
       elements up to make room. For example:
     <p class="Pp"></p>
-    <pre>
-    sub UNSHIFT {
+    <pre>    sub UNSHIFT {
       my $self = shift;
       my @list = @_;
       my $size = scalar( @list );
@@ -496,8 +467,7 @@
     <p class="Pp">In our example, we'll use a little shortcut if there is a
         <i>LIST</i>:</p>
     <p class="Pp"></p>
-    <pre>
-    sub SPLICE {
+    <pre>    sub SPLICE {
       my $self   = shift;
       my $offset = shift || 0;
       my $length = shift || $self-&gt;FETCHSIZE() - $offset;
@@ -549,8 +519,7 @@
     the hash with the name of the file (minus the dot) and you get back that dot
     file's contents. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use DotFiles;
+<pre>    use DotFiles;
     tie %dot, 'DotFiles';
     if ( $dot{profile} =~ /MANPATH/ ||
          $dot{login}   =~ /MANPATH/ ||
@@ -561,8 +530,7 @@
 </pre>
 <p class="Pp">Or here's another sample of using our tied class:</p>
 <p class="Pp"></p>
-<pre>
-    tie %him, 'DotFiles', 'daemon';
+<pre>    tie %him, 'DotFiles', 'daemon';
     foreach $f ( keys %him ) {
         printf &quot;daemon dot file %s is size %d\n&quot;,
             $f, length $him{$f};
@@ -584,8 +552,7 @@
 </dl>
 <p class="Pp">Here's the start of <i>Dotfiles.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-    package DotFiles;
+<pre>    package DotFiles;
     use Carp;
     sub whowasi { (caller(1))[3] . '()' }
     my $DEBUG = 0;
@@ -604,8 +571,7 @@
       necessarily an anonymous hash) will be accessed.
     <p class="Pp">Here's the constructor:</p>
     <p class="Pp"></p>
-    <pre>
-    sub TIEHASH {
+    <pre>    sub TIEHASH {
         my $self = shift;
         my $user = shift || $&gt;;
         my $dotdir = shift || '';
@@ -614,14 +580,12 @@
         my $dir = (getpwnam($user))[7]
                 || croak &quot;@{[&amp;whowasi]}: no user $user&quot;;
         $dir .= &quot;/$dotdir&quot; if $dotdir;
-
         my $node = {
             USER    =&gt; $user,
             HOME    =&gt; $dir,
             LIST    =&gt; {},
             CLOBBER =&gt; 0,
         };
-
         opendir(DIR, $dir)
                 || croak &quot;@{[&amp;whowasi]}: can't opendir $dir: $!&quot;;
         foreach $dot ( grep /^\./ &amp;&amp; -f &quot;$dir/$_&quot;, readdir(DIR)) {
@@ -643,19 +607,16 @@
       whose value we're trying to fetch.
     <p class="Pp">Here's the fetch for our DotFiles example.</p>
     <p class="Pp"></p>
-    <pre>
-    sub FETCH {
+    <pre>    sub FETCH {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         my $dot = shift;
         my $dir = $self-&gt;{HOME};
         my $file = &quot;$dir/.$dot&quot;;
-
         unless (exists $self-&gt;{LIST}-&gt;{$dot} || -f $file) {
             carp &quot;@{[&amp;whowasi]}: no $dot file&quot; if $DEBUG;
             return undef;
         }
-
         if (defined $self-&gt;{LIST}-&gt;{$dot}) {
             return $self-&gt;{LIST}-&gt;{$dot};
         } else {
@@ -678,18 +639,15 @@
         try to overwrite the file unless they've called the <b>clobber()</b>
         method on the original object reference returned by <b>tie()</b>.</p>
     <p class="Pp"></p>
-    <pre>
-    sub STORE {
+    <pre>    sub STORE {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         my $dot = shift;
         my $value = shift;
         my $file = $self-&gt;{HOME} . &quot;/.$dot&quot;;
         my $user = $self-&gt;{USER};
-
         croak &quot;@{[&amp;whowasi]}: $file not clobberable&quot;
             unless $self-&gt;{CLOBBER};
-
         open(my $f, '&gt;', $file) || croak &quot;can't open $file: $!&quot;;
         print $f $value;
         close($f);
@@ -697,8 +655,7 @@
     </pre>
     <p class="Pp">If they wanted to clobber something, they might say:</p>
     <p class="Pp"></p>
-    <pre>
-    $ob = tie %daemon_dots, 'daemon';
+    <pre>    $ob = tie %daemon_dots, 'daemon';
     $ob-&gt;clobber(1);
     $daemon_dots{signature} = &quot;A true daemon\n&quot;;
     </pre>
@@ -706,14 +663,12 @@
         object is to use the <b>tied()</b> function, so they might alternately
         have set clobber using:</p>
     <p class="Pp"></p>
-    <pre>
-    tie %daemon_dots, 'daemon';
+    <pre>    tie %daemon_dots, 'daemon';
     tied(%daemon_dots)-&gt;clobber(1);
     </pre>
     <p class="Pp">The clobber method is simply:</p>
     <p class="Pp"></p>
-    <pre>
-    sub clobber {
+    <pre>    sub clobber {
         my $self = shift;
         $self-&gt;{CLOBBER} = @_ ? shift : 1;
     }
@@ -725,10 +680,8 @@
       typically by using the <b>delete()</b> function. Again, we'll be careful
       to check whether they really want to clobber files.
     <p class="Pp"></p>
-    <pre>
- sub DELETE   {
+    <pre> sub DELETE   {
      carp &amp;whowasi if $DEBUG;
-
      my $self = shift;
      my $dot = shift;
      my $file = $self-&gt;{HOME} . &quot;/.$dot&quot;;
@@ -753,8 +706,7 @@
         It's such a dangerous thing that they'll have to set CLOBBER to
         something higher than 1 to make it happen.</p>
     <p class="Pp"></p>
-    <pre>
- sub CLEAR    {
+    <pre> sub CLEAR    {
      carp &amp;whowasi if $DEBUG;
      my $self = shift;
      croak &quot;@{[&amp;whowasi]}: won't remove all dot files for $self-&gt;{USER}&quot;
@@ -772,8 +724,7 @@
       on a particular hash. In our example, we'll look at the
       <span class="Li">&quot;{LIST}&quot;</span> hash element for this:
     <p class="Pp"></p>
-    <pre>
-    sub EXISTS   {
+    <pre>    sub EXISTS   {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         my $dot = shift;
@@ -786,8 +737,7 @@
       the hash, such as via a <b>keys()</b>, <b>values()</b>, or <b>each()</b>
       call.
     <p class="Pp"></p>
-    <pre>
-    sub FIRSTKEY {
+    <pre>    sub FIRSTKEY {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         my $a = keys %{$self-&gt;{LIST}};  # reset each() iterator
@@ -812,8 +762,7 @@
         simple thing, but we'll have to go through the LIST field
       indirectly.</p>
     <p class="Pp"></p>
-    <pre>
-    sub NEXTKEY  {
+    <pre>    sub NEXTKEY  {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         return each %{ $self-&gt;{LIST} }
@@ -839,8 +788,7 @@
         <span class="Li">&quot;scalar&quot;</span> on the underlying hash
         referenced by <span class="Li">&quot;$self-&gt;{LIST}&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-    sub SCALAR {
+    <pre>    sub SCALAR {
         carp &amp;whowasi if $DEBUG;
         my $self = shift;
         return scalar %{ $self-&gt;{LIST} }
@@ -862,8 +810,7 @@
       don't really need it unless you're trying to add debugging or have
       auxiliary state to clean up. Here's a very simple function:
     <p class="Pp"></p>
-    <pre>
-    sub DESTROY  {
+    <pre>    sub DESTROY  {
         carp &amp;whowasi if $DEBUG;
     }
     </pre>
@@ -873,8 +820,7 @@
     return huge lists when used on large objects, like DBM files. You may prefer
     to use the <b>each()</b> function to iterate over such. Example:</p>
 <p class="Pp"></p>
-<pre>
-    # print out history file offsets
+<pre>    # print out history file offsets
     use NDBM_File;
     tie(%HIST, 'NDBM_File', '/usr/lib/news/history', 1, 0);
     while (($key,$val) = each %HIST) {
@@ -912,8 +858,7 @@
     <span class="Li">$handle</span>, not the handle inside it.</p>
 <p class="Pp">In our example we're going to create a shouting handle.</p>
 <p class="Pp"></p>
-<pre>
-    package Shout;
+<pre>    package Shout;
 </pre>
 <dl class="Bl-tag">
   <dt id="TIEHANDLE"><a class="permalink" href="#TIEHANDLE">TIEHANDLE classname,
@@ -922,16 +867,14 @@
       a blessed reference of some sort. The reference can be used to hold some
       internal information.
     <p class="Pp"></p>
-    <pre>
-    sub TIEHANDLE { print &quot;&lt;shout&gt;\n&quot;; my $i; bless \$i, shift }
+    <pre>    sub TIEHANDLE { print &quot;&lt;shout&gt;\n&quot;; my $i; bless \$i, shift }
     </pre>
   </dd>
   <dt id="WRITE"><a class="permalink" href="#WRITE">WRITE this, LIST</a></dt>
   <dd>This method will be called when the handle is written to via the
       <span class="Li">&quot;syswrite&quot;</span> function.
     <p class="Pp"></p>
-    <pre>
- sub WRITE {
+    <pre> sub WRITE {
      $r = shift;
      my($buf,$len,$offset) = @_;
      print &quot;WRITE called, \$buf=$buf, \$len=$len, \$offset=$offset&quot;;
@@ -944,8 +887,7 @@
       <span class="Li">&quot;say()&quot;</span> functions. Beyond its self
       reference it also expects the list that was passed to the print function.
     <p class="Pp"></p>
-    <pre>
-  sub PRINT { $r = shift; $$r++; print join($,,map(uc($_),@_)),$\ }
+    <pre>  sub PRINT { $r = shift; $$r++; print join($,,map(uc($_),@_)),$\ }
     </pre>
     <p class="Pp"><span class="Li">&quot;say()&quot;</span> acts just like
         <span class="Li">&quot;print()&quot;</span> except $\ will be localized
@@ -959,8 +901,7 @@
       self reference it also expects the format and list that was passed to the
       printf function.
     <p class="Pp"></p>
-    <pre>
-    sub PRINTF {
+    <pre>    sub PRINTF {
         shift;
         my $fmt = shift;
         print sprintf($fmt, @_);
@@ -972,8 +913,7 @@
       <span class="Li">&quot;read&quot;</span> or
       <span class="Li">&quot;sysread&quot;</span> functions.
     <p class="Pp"></p>
-    <pre>
- sub READ {
+    <pre> sub READ {
    my $self = shift;
    my $bufref = \$_[0];
    my(undef,$len,$offset) = @_;
@@ -996,8 +936,7 @@
         <span class="Li">&quot;undef&quot;</span> (which means &quot;slurp&quot;
         mode).</p>
     <p class="Pp"></p>
-    <pre>
-    sub READLINE {
+    <pre>    sub READLINE {
       my $r = shift;
       if (wantarray) {
         return (&quot;all remaining\n&quot;,
@@ -1013,8 +952,7 @@
   <dd>This method will be called when the
       <span class="Li">&quot;getc&quot;</span> function is called.
     <p class="Pp"></p>
-    <pre>
-    sub GETC { print &quot;Don't GETC, Get Perl&quot;; return &quot;a&quot;; }
+    <pre>    sub GETC { print &quot;Don't GETC, Get Perl&quot;; return &quot;a&quot;; }
     </pre>
   </dd>
   <dt id="EOF"><a class="permalink" href="#EOF">EOF this</a></dt>
@@ -1030,16 +968,14 @@
         <span class="Li">&quot;eof&quot;</span> is called with an empty
         parameter list, e.g. <span class="Li">&quot;eof()&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-    sub EOF { not length $stringbuf }
+    <pre>    sub EOF { not length $stringbuf }
     </pre>
   </dd>
   <dt id="CLOSE"><a class="permalink" href="#CLOSE">CLOSE this</a></dt>
   <dd>This method will be called when the handle is closed via the
       <span class="Li">&quot;close&quot;</span> function.
     <p class="Pp"></p>
-    <pre>
-    sub CLOSE { print &quot;CLOSE called.\n&quot; }
+    <pre>    sub CLOSE { print &quot;CLOSE called.\n&quot; }
     </pre>
   </dd>
   <dt id="UNTIE~4"><a class="permalink" href="#UNTIE~4">UNTIE this</a></dt>
@@ -1053,15 +989,13 @@
       handle is about to be destroyed. This is useful for debugging and possibly
       cleaning up.
     <p class="Pp"></p>
-    <pre>
-    sub DESTROY { print &quot;&lt;/shout&gt;\n&quot; }
+    <pre>    sub DESTROY { print &quot;&lt;/shout&gt;\n&quot; }
     </pre>
   </dd>
 </dl>
 <p class="Pp">Here's how to use our little example:</p>
 <p class="Pp"></p>
-<pre>
-    tie(*FOO,'Shout');
+<pre>    tie(*FOO,'Shout');
     print FOO &quot;hello\n&quot;;
     $a = 4; $b = 6;
     print FOO $a, &quot; plus &quot;, $b, &quot; equals &quot;, $a + $b, &quot;\n&quot;;
@@ -1084,28 +1018,22 @@
     tie; all it does is use a file to keep a log of the values assigned to a
     scalar.</p>
 <p class="Pp"></p>
-<pre>
-    package Remember;
-
+<pre>    package Remember;
     use strict;
     use warnings;
     use IO::File;
-
     sub TIESCALAR {
         my $class = shift;
         my $filename = shift;
         my $handle = IO::File-&gt;new( &quot;&gt; $filename&quot; )
                          or die &quot;Cannot open $filename: $!\n&quot;;
-
         print $handle &quot;The Start\n&quot;;
         bless {FH =&gt; $handle, Value =&gt; 0}, $class;
     }
-
     sub FETCH {
         my $self = shift;
         return $self-&gt;{Value};
     }
-
     sub STORE {
         my $self = shift;
         my $value = shift;
@@ -1113,22 +1041,18 @@
         print $handle &quot;$value\n&quot;;
         $self-&gt;{Value} = $value;
     }
-
     sub DESTROY {
         my $self = shift;
         my $handle = $self-&gt;{FH};
         print $handle &quot;The End\n&quot;;
         close $handle;
     }
-
     1;
 </pre>
 <p class="Pp">Here is an example that makes use of this tie:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use Remember;
-
     my $fred;
     tie $fred, 'Remember', 'myfile.txt';
     $fred = 1;
@@ -1139,8 +1063,7 @@
 </pre>
 <p class="Pp">This is the output when it is executed:</p>
 <p class="Pp"></p>
-<pre>
-    The Start
+<pre>    The Start
     1
     4
     5
@@ -1151,8 +1074,7 @@
     extra method to the Remember class to allow comments to be included in the
     file; say, something like this:</p>
 <p class="Pp"></p>
-<pre>
-    sub comment {
+<pre>    sub comment {
         my $self = shift;
         my $text = shift;
         my $handle = $self-&gt;{FH};
@@ -1163,10 +1085,8 @@
     <span class="Li">&quot;comment&quot;</span> method (which requires the tied
     object):</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use Remember;
-
     my ($fred, $x);
     $x = tie $fred, 'Remember', 'myfile.txt';
     $fred = 1;
@@ -1199,15 +1119,13 @@
     <span class="Li">&quot;-w&quot;</span> flag, Perl prints this warning
     message:</p>
 <p class="Pp"></p>
-<pre>
-    untie attempted while 1 inner references still exist
+<pre>    untie attempted while 1 inner references still exist
 </pre>
 <p class="Pp">To get the script to work properly and silence the warning make
     sure there are no valid references to the tied object <i>before</i>
     <b>untie()</b> is called:</p>
 <p class="Pp"></p>
-<pre>
-    undef $x;
+<pre>    undef $x;
     untie $fred;
 </pre>
 <p class="Pp">Now that UNTIE exists the class designer can decide which parts of
@@ -1222,8 +1140,7 @@
     and can issue its own warning if appropriate. e.g. to replicate the no UNTIE
     case this method can be used:</p>
 <p class="Pp"></p>
-<pre>
- sub UNTIE
+<pre> sub UNTIE
  {
   my ($obj,$count) = @_;
   carp &quot;untie attempted while $count inner references still exist&quot;

@@ -12,11 +12,7 @@
    2. Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-   3. All advertising materials mentioning features or use of this software
-      must display the following acknowledgement:
-  	This product includes software developed by the University of
-  	California, Berkeley and its contributors.
-   4. Neither the name of the University nor the names of its contributors
+   3. Neither the name of the University nor the names of its contributors
       may be used to endorse or promote products derived from this software
       without specific prior written permission.
   
@@ -33,10 +29,11 @@
    SUCH DAMAGE.
   
   	@(#)mail.1	8.8 (Berkeley) 4/28/95
-   $FreeBSD: src/usr.bin/mail/mail.1,v 1.45 2004/05/19 09:51:31 ru Exp $
+   $FreeBSD$
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MAIL(1)</title>
 </head>
@@ -59,7 +56,7 @@
 <table class="Nm">
   <tr>
     <td><code class="Nm">mail</code></td>
-    <td>[<code class="Fl">-EiInv</code>] [<code class="Fl">-s</code>
+    <td>[<code class="Fl">-dEiInv</code>] [<code class="Fl">-s</code>
       <var class="Ar">subject</var>] [<code class="Fl">-c</code>
       <var class="Ar">cc-addr</var>] [<code class="Fl">-b</code>
       <var class="Ar">bcc-addr</var>] [<code class="Fl">-F</code>]
@@ -70,7 +67,7 @@
 <table class="Nm">
   <tr>
     <td><code class="Nm">mail</code></td>
-    <td>[<code class="Fl">-EHiInNv</code>] [<code class="Fl">-F</code>]
+    <td>[<code class="Fl">-dEHiInNv</code>] [<code class="Fl">-F</code>]
       <code class="Fl">-f</code> [<var class="Ar">name</var>]</td>
   </tr>
 </table>
@@ -78,7 +75,7 @@
 <table class="Nm">
   <tr>
     <td><code class="Nm">mail</code></td>
-    <td>[<code class="Fl">-EHiInNv</code>] [<code class="Fl">-F</code>]
+    <td>[<code class="Fl">-dEHiInNv</code>] [<code class="Fl">-F</code>]
       [<code class="Fl">-u</code> <var class="Ar">user</var>]</td>
   </tr>
 </table>
@@ -86,8 +83,8 @@
 <table class="Nm">
   <tr>
     <td><code class="Nm">mail</code></td>
-    <td><code class="Fl">-e</code> [<code class="Fl">-f</code>
-      <var class="Ar">name</var>]</td>
+    <td>[<code class="Fl">-d</code>] <code class="Fl">-e</code>
+      [<code class="Fl">-f</code> <var class="Ar">name</var>]</td>
   </tr>
 </table>
 <br/>
@@ -108,12 +105,15 @@
   <dt id="v"><a class="permalink" href="#v"><code class="Fl">-v</code></a></dt>
   <dd>Verbose mode. The details of delivery are displayed on the user's
       terminal.</dd>
+  <dt id="d"><a class="permalink" href="#d"><code class="Fl">-d</code></a></dt>
+  <dd>Debugging mode. See the <var class="Va">debug</var> mail option for
+      details.</dd>
   <dt id="e"><a class="permalink" href="#e"><code class="Fl">-e</code></a></dt>
   <dd>Test for the presence of mail in the (by default, system) mailbox. An exit
       status of 0 is returned if it has mail; otherwise, an exit status of 1 is
       returned.</dd>
   <dt id="H"><a class="permalink" href="#H"><code class="Fl">-H</code></a></dt>
-  <dd>Write a header summary only.</dd>
+  <dd>Write a header summary only, then exit.</dd>
   <dt id="E"><a class="permalink" href="#E"><code class="Fl">-E</code></a></dt>
   <dd>Do not send messages with an empty body. This is useful for piping errors
       from <a class="Xr" href="../8/cron">cron(8)</a> scripts.</dd>
@@ -156,7 +156,8 @@
       the login-name portion of the address found first on the
       &#x201C;<code class="Li">To:</code>&#x201D; line in the mail header.
       Overrides the <var class="Va">record</var> variable, if set.</dd>
-  <dt id="u"><a class="permalink" href="#u"><code class="Fl">-u</code></a></dt>
+  <dt id="u"><a class="permalink" href="#u"><code class="Fl">-u</code></a>
+    <var class="Ar">user</var></dt>
   <dd>Is equivalent to:
     <p class="Pp"></p>
     <div class="Bd Bd-indent"><code class="Li">mail -f
@@ -309,8 +310,6 @@
 <section class="Ss">
 <h2 class="Ss" id="Network_Mail_(ARPA,_UUCP,_Berknet)"><a class="permalink" href="#Network_Mail_(ARPA,_UUCP,_Berknet)">Network
   Mail (ARPA, UUCP, Berknet)</a></h2>
-<p class="Pp">See <a class="Xr" href="../7/mailaddr">mailaddr(7)</a> for a
-    description of network addresses.</p>
 <p class="Pp">The <code class="Nm">mail</code> utility has a number of options
     which can be set in the <span class="Pa">.mailrc</span> file to alter its
     behavior; thus &#x201C;<code class="Li">set askcc</code>&#x201D; enables the
@@ -702,116 +701,118 @@
     environment variable of the same name. The available options include the
     following:</p>
 <dl class="Bl-tag">
-  <dt><var class="Va">append</var></dt>
+  <dt id="append"><var class="Va">append</var></dt>
   <dd>Causes messages saved in <span class="Pa">mbox</span> to be appended to
       the end rather than prepended. This should always be set (preferably in
       one of the system-wide <span class="Pa">mail.rc</span> files). Default is
       <var class="Va">noappend</var>.</dd>
-  <dt><var class="Va">ask</var>, <var class="Va">asksub</var></dt>
+  <dt id="ask"><var class="Va">ask</var>, <var class="Va">asksub</var></dt>
   <dd>Causes <code class="Nm">mail</code> to prompt you for the subject of each
       message you send. If you respond with simply a newline, no subject field
       will be sent. Default is <var class="Va">asksub</var>.</dd>
-  <dt><var class="Va">askbcc</var></dt>
+  <dt id="askbcc"><var class="Va">askbcc</var></dt>
   <dd>Causes you to be prompted for additional blind carbon copy recipients at
       the end of each message. Responding with a newline indicates your
       satisfaction with the current list. Default is
       <var class="Va">noaskbcc</var>.</dd>
-  <dt><var class="Va">askcc</var></dt>
+  <dt id="askcc"><var class="Va">askcc</var></dt>
   <dd>Causes you to be prompted for additional carbon copy recipients at the end
       of each message. Responding with a newline indicates your satisfaction
       with the current list. Default is <var class="Va">noaskcc</var>.</dd>
-  <dt><var class="Va">autoinc</var></dt>
+  <dt id="autoinc"><var class="Va">autoinc</var></dt>
   <dd>Causes new mail to be automatically incorporated when it arrives. Setting
       this is similar to issuing the <code class="Ic">inc</code> command at each
       prompt, except that the current message is not reset when new mail
       arrives. Default is <var class="Va">noautoinc</var>.</dd>
-  <dt><var class="Va">autoprint</var></dt>
+  <dt id="autoprint"><var class="Va">autoprint</var></dt>
   <dd>Causes the <code class="Ic">delete</code> command to behave like
       <code class="Ic">dp</code>; thus, after deleting a message, the next one
       will be typed automatically. Default is
     <var class="Va">noautoprint</var>.</dd>
-  <dt><var class="Va">crt</var></dt>
+  <dt id="crt"><var class="Va">crt</var></dt>
   <dd>The valued option <var class="Va">crt</var> is used as a threshold to
       determine how long a message must be before <code class="Ev">PAGER</code>
       is used to read it. If <var class="Va">crt</var> is set without a value,
       then the height of the terminal screen stored in the system is used to
       compute the threshold (see <a class="Xr" href="../1/stty">stty(1)</a>).
       Default is <var class="Va">nocrt</var>.</dd>
-  <dt><var class="Va">debug</var></dt>
+  <dt id="debug"><var class="Va">debug</var></dt>
   <dd>Setting the binary option <var class="Va">debug</var> is the same as
       specifying <code class="Fl">-d</code> on the command line and causes
       <code class="Nm">mail</code> to output all sorts of information useful for
-      debugging <code class="Nm">mail</code>. Default is
-      <var class="Va">nodebug</var>.</dd>
-  <dt><var class="Va">dot</var></dt>
+      debugging <code class="Nm">mail</code>. In case
+      <code class="Nm">mail</code> is invoked in this mode to send mail, all
+      preparations will be performed and reported about, but the mail will not
+      be actually sent. Default is <var class="Va">nodebug</var>.</dd>
+  <dt id="dot"><var class="Va">dot</var></dt>
   <dd>The binary option <var class="Va">dot</var> causes
       <code class="Nm">mail</code> to interpret a period alone on a line as the
       terminator of a message you are sending. Default is
       <var class="Va">nodot</var>.</dd>
-  <dt><var class="Va">escape</var></dt>
+  <dt id="escape"><var class="Va">escape</var></dt>
   <dd>If defined, the first character of this option gives the character to use
       in place of &#x2018;<code class="Li">~</code>&#x2019; to denote
     escapes.</dd>
-  <dt><var class="Va">expandaddr</var></dt>
+  <dt id="expandaddr"><var class="Va">expandaddr</var></dt>
   <dd>Causes <code class="Nm">mail</code> to expand message recipient addresses,
       as explained in the section
       <a class="Sx" href="#Recipient_address_specifications">Recipient address
       specifications</a>.</dd>
-  <dt><var class="Va">flipr</var></dt>
+  <dt id="flipr"><var class="Va">flipr</var></dt>
   <dd>Reverses the sense of <code class="Ic">reply</code> and
       <code class="Ic">Reply</code> commands. Default is
       <var class="Va">noflipr</var>.</dd>
-  <dt><var class="Va">folder</var></dt>
+  <dt id="folder~2"><var class="Va">folder</var></dt>
   <dd>The name of the directory to use for storing folders of messages. If this
       name begins with a &#x2018;<code class="Li">/</code>&#x2019;,
       <code class="Nm">mail</code> considers it to be an absolute pathname;
       otherwise, the folder directory is found relative to your home
     directory.</dd>
-  <dt><var class="Va">header</var></dt>
+  <dt id="header"><var class="Va">header</var></dt>
   <dd>If defined, initially display message headers when reading mail or editing
       a mail folder. Default is <var class="Va">header</var>. This option can be
       disabled by giving the <code class="Fl">-N</code> flag on the command
       line.</dd>
-  <dt><var class="Va">hold</var></dt>
+  <dt id="hold~2"><var class="Va">hold</var></dt>
   <dd>This option is used to hold messages in the system mailbox by default.
       Default is <var class="Va">nohold</var>.</dd>
-  <dt><var class="Va">ignore</var></dt>
+  <dt id="ignore~2"><var class="Va">ignore</var></dt>
   <dd>Causes interrupt signals from your terminal to be ignored and echoed as
       <code class="Li">@</code>'s. Default is
     <var class="Va">noignore</var>.</dd>
-  <dt><var class="Va">ignoreeof</var></dt>
+  <dt id="ignoreeof"><var class="Va">ignoreeof</var></dt>
   <dd>An option related to <var class="Va">dot</var> is
       <var class="Va">ignoreeof</var> which makes <code class="Nm">mail</code>
       refuse to accept a &#x27E8;<code class="Li">control-D</code>&#x27E9; as
       the end of a message. <var class="Ar">Ignoreeof</var> also applies to
       <code class="Nm">mail</code> command mode. Default is
       <var class="Va">noignoreeof</var>.</dd>
-  <dt><var class="Va">indentprefix</var></dt>
+  <dt id="indentprefix"><var class="Va">indentprefix</var></dt>
   <dd>String used by the <code class="Ic">~m</code> tilde escape for indenting
       messages, in place of the normal tab character
       (<code class="Li">^I</code>). Be sure to quote the value if it contains
       spaces or tabs.</dd>
-  <dt><var class="Va">metoo</var></dt>
+  <dt id="metoo"><var class="Va">metoo</var></dt>
   <dd>Usually, when a group is expanded that contains the sender, the sender is
       removed from the expansion. Setting this option causes the sender to be
       included in the group. Default is <var class="Va">nometoo</var>.</dd>
-  <dt><var class="Va">quiet</var></dt>
+  <dt id="quiet"><var class="Va">quiet</var></dt>
   <dd>Suppresses the printing of the version when first invoked. Default is
       <var class="Va">noquiet</var>.</dd>
-  <dt><var class="Va">record</var></dt>
+  <dt id="record"><var class="Va">record</var></dt>
   <dd>If defined, gives the pathname of the file used to record all outgoing
       mail. If not defined, outgoing mail is not saved. Default is
       <var class="Va">norecord</var>.</dd>
-  <dt><var class="Va">Replyall</var></dt>
+  <dt id="Replyall"><var class="Va">Replyall</var></dt>
   <dd>Reverses the sense of <code class="Ic">reply</code> and
       <code class="Ic">Reply</code> commands. Default is
       <var class="Va">noReplyall</var>.</dd>
-  <dt><var class="Va">save</var></dt>
+  <dt id="save~2"><var class="Va">save</var></dt>
   <dd>If this option is set, and you abort a message with two RUBOUT (erase or
       delete), <code class="Nm">mail</code> will copy the partial letter to the
       file <span class="Pa">dead.letter</span> in your home directory. Default
       is <var class="Va">save</var>.</dd>
-  <dt><var class="Va">searchheaders</var></dt>
+  <dt id="searchheaders"><var class="Va">searchheaders</var></dt>
   <dd>If this option is set, then a message-list specifier in the form
       &#x201C;<code class="Li">/</code><var class="Ar">x</var>:<var class="Ar">y</var>&#x201D;
       will expand to all messages containing the substring
@@ -829,11 +830,11 @@
       used to limit the search for <var class="Ar">y</var> to just the
       &#x201C;<code class="Li">To:</code>&#x201D; field. Default is
       <var class="Va">nosearchheaders</var>.</dd>
-  <dt><var class="Va">toplines</var></dt>
+  <dt id="toplines"><var class="Va">toplines</var></dt>
   <dd>If defined, gives the number of lines of a message to be printed out with
       the <code class="Ic">top</code> command; normally, the first five lines
       are printed.</dd>
-  <dt><var class="Va">verbose</var></dt>
+  <dt id="verbose"><var class="Va">verbose</var></dt>
   <dd>Setting the option <var class="Va">verbose</var> is the same as using the
       <code class="Fl">-v</code> flag on the command line. When
       <code class="Nm">mail</code> runs in verbose mode, the actual delivery of
@@ -870,7 +871,7 @@
   <dt id="PAGER"><a class="permalink" href="#PAGER"><code class="Ev">PAGER</code></a></dt>
   <dd>Pathname of the program to use in the <code class="Ic">more</code> command
       or when <var class="Va">crt</var> variable is set. The default paginator
-      <a class="Xr" href="../1/more">more(1)</a> is used if this option is not
+      <a class="Xr" href="../1/less">less(1)</a> is used if this option is not
       defined.</dd>
   <dt id="REPLYTO"><a class="permalink" href="#REPLYTO"><code class="Ev">REPLYTO</code></a></dt>
   <dd>If set, will be used to initialize the Reply-To field for outgoing
@@ -879,6 +880,8 @@
   <dd>Pathname of the shell to use in the <code class="Ic">!</code> command and
       the <code class="Ic">~!</code> escape. A default shell is used if this
       option is not defined.</dd>
+  <dt id="TMPDIR"><a class="permalink" href="#TMPDIR"><code class="Ev">TMPDIR</code></a></dt>
+  <dd>Pathname of the directory used for creating temporary files.</dd>
   <dt id="VISUAL"><a class="permalink" href="#VISUAL"><code class="Ev">VISUAL</code></a></dt>
   <dd>Pathname of the text editor to use in the <code class="Ic">visual</code>
       command and <code class="Ic">~v</code> escape.</dd>
@@ -919,10 +922,7 @@
     <a class="Xr" href="../1/newaliases">newaliases(1)</a>,
     <a class="Xr" href="../1/vacation">vacation(1)</a>,
     <a class="Xr" href="../5/aliases">aliases(5)</a>,
-    <a class="Xr" href="../7/mailaddr">mailaddr(7)</a>,
     <a class="Xr" href="../8/sendmail">sendmail(8)</a></p>
-<p class="Pp"><cite class="Rs"><span class="RsT">The Mail Reference
-    Manual</span>.</cite></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
@@ -943,8 +943,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">February 29, 2004</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">August 8, 2018</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

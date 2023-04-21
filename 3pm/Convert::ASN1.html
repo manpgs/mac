@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Convert::ASN1(3)</title>
 </head>
@@ -32,26 +33,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSYS"><a class="permalink" href="#SYNOPSYS">SYNOPSYS</a></h1>
-<pre>
-  use Convert::ASN1;
-
+<pre>  use Convert::ASN1;
   $asn = Convert::ASN1-&gt;new;
   $asn-&gt;prepare(q&lt;
-
     [APPLICATION 7] SEQUENCE {
       int INTEGER,
       str OCTET STRING
     }
-
   &gt;);
-
   $pdu = $asn-&gt;encode( int =&gt; 7, str =&gt; &quot;string&quot;);
-
   $out = $asn-&gt;decode($pdu);
   print $out-&gt;{int},&quot; &quot;,$out-&gt;{str},&quot;\n&quot;;
-
   use Convert::ASN1 qw(:io);
-
   $peer   = asn_recv($sock,$buffer,0);
   $nbytes = asn_read($fh, $buffer);
   $nbytes = asn_send($sock, $buffer, $peer);
@@ -270,8 +263,7 @@
       <span class="Li">&quot;asn_get&quot;</span> will use two entries in the
       hash element of the GLOB to use as its buffer:
     <p class="Pp"></p>
-    <pre>
-  asn_buffer - input buffer
+    <pre>  asn_buffer - input buffer
   asn_need   - number of bytes needed for the next element, if known
     </pre>
     <p class="Pp">Returns an element or undef if there was an error.</p>
@@ -404,11 +396,9 @@
     is used with these names as an index and the element value as the hash
     value.</p>
 <p class="Pp"></p>
-<pre>
-  # ASN.1
+<pre>  # ASN.1
   int INTEGER,
   str OCTET STRING
-
   # Perl
   { int =&gt; 5, str =&gt; &quot;text&quot; }
 </pre>
@@ -416,14 +406,12 @@
     namespace will be a hash reference which will be the namespce for the
     elements with that element.</p>
 <p class="Pp"></p>
-<pre>
-  # ASN.1
+<pre>  # ASN.1
   int INTEGER,
   seq SEQUENCE {
     str OCTET STRING,
     bool BOOLEAN
   }
-
   # Perl
   { int =&gt; 5, seq =&gt; { str =&gt; &quot;text&quot;, bool =&gt; 1}}
 </pre>
@@ -434,21 +422,17 @@
     &quot;SEQUENCE OF SEQUENCE { ... }&quot; the array will contain hash
     references which will be used as namespaces</p>
 <p class="Pp"></p>
-<pre>
-  # ASN.1
+<pre>  # ASN.1
   int INTEGER,
   str SEQUENCE OF OCTET STRING
-
   # Perl
   { int =&gt; 5, str =&gt; [ &quot;text1&quot;, &quot;text2&quot;]}
-
   # ASN.1
   int INTEGER,
   str SEQUENCE OF SEQUENCE {
     type OCTET STRING,
     value INTEGER
   }
-
   # Perl
   { int =&gt; 5, str =&gt; [
     { type =&gt; &quot;abc&quot;, value =&gt; 4 },
@@ -459,12 +443,10 @@
     inline in your PDU, you can coerce it into the ASN.1 spec by defining the
     value as ANY in the schema, and then pass the pre encoded value inline.</p>
 <p class="Pp"></p>
-<pre>
-  # ASN.1
+<pre>  # ASN.1
   int INTEGER,
   str OCTET STRING,
   pre ANY
-
   # Perl
   { int =&gt; 5, str =&gt; &quot;text&quot;, pre=&gt;&quot;\x03\x03\x00\x0a\x05&quot; }
 </pre>

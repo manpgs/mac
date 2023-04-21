@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Getopt(3pm)</title>
 </head>
@@ -33,26 +34,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  ## In your class
+<pre>  ## In your class
   package My::App;
   use Moose;
-
   with 'MooseX::Getopt';
-
   has 'out' =&gt; (is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1);
   has 'in'  =&gt; (is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1);
-
   # ... rest of the class here
-
   ## in your script
   #!/usr/bin/perl
-
   use My::App;
-
   my $app = My::App-&gt;new_with_options();
   # ... rest of the script here
-
   ## on the command line
   % perl my_app_script.pl -in file.input -out file.dump
 </pre>
@@ -83,8 +76,7 @@
     attribute). You can add descriptions for each option by including a
     <b>documentation</b> option for each attribute to document.</p>
 <p class="Pp"></p>
-<pre>
-  -?
+<pre>  -?
   --?
   -h
   --help
@@ -170,10 +162,8 @@
     to MooseX::Getopt::Meta::Attribute. If you don't want your accessors to have
     the leading underscore in their name, you can do this:</p>
 <p class="Pp"></p>
-<pre>
-  # for read/write attributes
+<pre>  # for read/write attributes
   has '_foo' =&gt; (accessor =&gt; 'foo', ...);
-
   # or for read-only attributes
   has '_bar' =&gt; (reader =&gt; 'bar', ...);
 </pre>
@@ -198,15 +188,13 @@
   <dd>A <i>Bool</i> type constraint is set up as a boolean option with
       Getopt::Long. So that this attribute description:
     <p class="Pp"></p>
-    <pre>
-  has 'verbose' =&gt; (is =&gt; 'rw', isa =&gt; 'Bool');
+    <pre>  has 'verbose' =&gt; (is =&gt; 'rw', isa =&gt; 'Bool');
     </pre>
     <p class="Pp">would translate into
         <span class="Li">&quot;verbose!&quot;</span> as a Getopt::Long option
         descriptor, which would enable the following command line options:</p>
     <p class="Pp"></p>
-    <pre>
-  % my_script.pl --verbose
+    <pre>  % my_script.pl --verbose
   % my_script.pl --noverbose
     </pre>
   </dd>
@@ -220,8 +208,7 @@
   <dd>An <i>ArrayRef</i> type constraint is set up as a multiple value option in
       Getopt::Long. So that this attribute description:
     <p class="Pp"></p>
-    <pre>
-  has 'include' =&gt; (
+    <pre>  has 'include' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'ArrayRef',
       default =&gt; sub { [] }
@@ -231,16 +218,14 @@
         <span class="Li">&quot;includes=s@&quot;</span> as a Getopt::Long option
         descriptor, which would enable the following command line options:</p>
     <p class="Pp"></p>
-    <pre>
-  % my_script.pl --include /usr/lib --include /usr/local/lib
+    <pre>  % my_script.pl --include /usr/lib --include /usr/local/lib
     </pre>
   </dd>
   <dt id="HashRef"><a class="permalink" href="#HashRef"><i>HashRef</i></a></dt>
   <dd>A <i>HashRef</i> type constraint is set up as a hash value option in
       Getopt::Long. So that this attribute description:
     <p class="Pp"></p>
-    <pre>
-  has 'define' =&gt; (
+    <pre>  has 'define' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'HashRef',
       default =&gt; sub { {} }
@@ -250,8 +235,7 @@
         <span class="Li">&quot;define=s%&quot;</span> as a Getopt::Long option
         descriptor, which would enable the following command line options:</p>
     <p class="Pp"></p>
-    <pre>
-  % my_script.pl --define os=linux --define vendor=debian
+    <pre>  % my_script.pl --define os=linux --define vendor=debian
     </pre>
   </dd>
 </dl>
@@ -263,23 +247,20 @@
     mappings if you need them. The process is fairly simple (but a little
     verbose maybe). First you create a custom subtype, like so:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'ArrayOfInts'
+<pre>  subtype 'ArrayOfInts'
       =&gt; as 'ArrayRef'
       =&gt; where { scalar (grep { looks_like_number($_) } @$_)  };
 </pre>
 <p class="Pp">Then you register the mapping, like so:</p>
 <p class="Pp"></p>
-<pre>
-  MooseX::Getopt::OptionTypeMap-&gt;add_option_type_to_map(
+<pre>  MooseX::Getopt::OptionTypeMap-&gt;add_option_type_to_map(
       'ArrayOfInts' =&gt; '=i@'
   );
 </pre>
 <p class="Pp">Now any attribute declarations using this type constraint will get
     the custom option spec. So that, this:</p>
 <p class="Pp"></p>
-<pre>
-  has 'nums' =&gt; (
+<pre>  has 'nums' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'ArrayOfInts',
       default =&gt; sub { [0] }
@@ -287,8 +268,7 @@
 </pre>
 <p class="Pp">Will translate to the following on the command line:</p>
 <p class="Pp"></p>
-<pre>
-  % my_script.pl --nums 5 --nums 88 --nums 199
+<pre>  % my_script.pl --nums 5 --nums 88 --nums 199
 </pre>
 <p class="Pp">This example is fairly trivial, but more complex validations are
     easily possible with a little creativity. The trick is balancing the type

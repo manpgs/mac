@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-BUNDLE(1)</title>
 </head>
@@ -30,13 +31,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git bundle</i> create [-q | --quiet | --progress | --all-progress] [--all-progress-implied]
+<pre><i>git bundle</i> create [-q | --quiet | --progress | --all-progress] [--all-progress-implied]
                     [--version=&lt;version&gt;] &lt;file&gt; &lt;git-rev-list-args&gt;
 <i>git bundle</i> verify [-q | --quiet] &lt;file&gt;
 <i>git bundle</i> list-heads &lt;file&gt; [&lt;refname&gt;...]
-<i>git bundle</i> unbundle [--progress] &lt;file&gt; [&lt;refname&gt;...]
-</pre>
+<i>git bundle</i> unbundle [--progress] &lt;file&gt; [&lt;refname&gt;...]</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -164,34 +163,28 @@
     &quot;master&quot; and &quot;next&quot; branch):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create master.bundle master
+<pre>$ git bundle create master.bundle master
 $ echo master | git bundle create master.bundle --stdin
 $ git bundle create master-and-next.bundle master next
-$ (echo master; echo next) | git bundle create master-and-next.bundle --stdin
-</pre>
+$ (echo master; echo next) | git bundle create master-and-next.bundle --stdin</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">And so are these (and the same but omitted <b>--stdin</b>
     examples):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create recent-master.bundle master~10..master
-$ git bundle create recent-updates.bundle master~10..master next~5..next
-</pre>
+<pre>$ git bundle create recent-master.bundle master~10..master
+$ git bundle create recent-updates.bundle master~10..master next~5..next</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">A revision name or a range whose right-hand-side cannot be
     resolved to a reference is not accepted:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create HEAD.bundle $(git rev-parse HEAD)
+<pre>$ git bundle create HEAD.bundle $(git rev-parse HEAD)
 fatal: Refusing to create empty bundle.
 $ git bundle create master-yesterday.bundle master~10..master~5
-fatal: Refusing to create empty bundle.
-</pre>
+fatal: Refusing to create empty bundle.</pre>
 </div>
 <p class="Pp"></p>
 </section>
@@ -208,9 +201,7 @@ fatal: Refusing to create empty bundle.
     obtain a full history that leads to the revision <b>new</b>:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create full.bundle new
-</pre>
+<pre>$ git bundle create full.bundle new</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">A revision range such as <b>old..new</b> will produce a bundle
@@ -218,9 +209,7 @@ $ git bundle create full.bundle new
     from it) to exist for the bundle to be &quot;unbundle&quot;-able:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create full.bundle old..new
-</pre>
+<pre>$ git bundle create full.bundle old..new</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">A self-contained bundle without any prerequisites can be extracted
@@ -251,11 +240,9 @@ $ git bundle create full.bundle old..new
     repository with an incremental bundle:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-machineA$ cd R1
+<pre>machineA$ cd R1
 machineA$ git bundle create file.bundle master
-machineA$ git tag -f lastR2bundle master
-</pre>
+machineA$ git tag -f lastR2bundle master</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Then you transfer file.bundle to the target machine B. Because
@@ -263,9 +250,7 @@ machineA$ git tag -f lastR2bundle master
     create a new repository on machine B by cloning from it:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-machineB$ git clone -b master /home/me/tmp/file.bundle R2
-</pre>
+<pre>machineB$ git clone -b master /home/me/tmp/file.bundle R2</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">This will define a remote called &quot;origin&quot; in the
@@ -273,11 +258,9 @@ machineB$ git clone -b master /home/me/tmp/file.bundle R2
     $GIT_DIR/config file in R2 will have an entry like this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-[remote &quot;origin&quot;]
+<pre>[remote &quot;origin&quot;]
     url = /home/me/tmp/file.bundle
-    fetch = refs/heads/*:refs/remotes/origin/*
-</pre>
+    fetch = refs/heads/*:refs/remotes/origin/*</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">To update the resulting mine.git repository, you can fetch or pull
@@ -287,21 +270,17 @@ machineB$ git clone -b master /home/me/tmp/file.bundle R2
     an incremental bundle to update the other repository:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-machineA$ cd R1
+<pre>machineA$ cd R1
 machineA$ git bundle create file.bundle lastR2bundle..master
-machineA$ git tag -f lastR2bundle master
-</pre>
+machineA$ git tag -f lastR2bundle master</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You then transfer the bundle to the other machine to replace
     /home/me/tmp/file.bundle, and pull from it.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-machineB$ cd R2
-machineB$ git pull
-</pre>
+<pre>machineB$ cd R2
+machineB$ git pull</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">If you know up to what commit the intended recipient repository
@@ -313,34 +292,26 @@ machineB$ git pull
 <p class="Pp">You can use a tag that is present in both:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create mybundle v1.0.0..master
-</pre>
+<pre>$ git bundle create mybundle v1.0.0..master</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You can use a prerequisite based on time:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create mybundle --since=10.days master
-</pre>
+<pre>$ git bundle create mybundle --since=10.days master</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You can use the number of commits:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle create mybundle -10 master
-</pre>
+<pre>$ git bundle create mybundle -10 master</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You can run <b>git-bundle verify</b> to see if you can extract
     from a bundle that was created with a prerequisite:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git bundle verify mybundle
-</pre>
+<pre>$ git bundle verify mybundle</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">This will list what commits you must have in order to extract from
@@ -350,17 +321,13 @@ $ git bundle verify mybundle
     example, map references when fetching:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git fetch mybundle master:localRef
-</pre>
+<pre>$ git fetch mybundle master:localRef</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">You can also see what references it offers:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ git ls-remote mybundle
-</pre>
+<pre>$ git ls-remote mybundle</pre>
 </div>
 <p class="Pp"></p>
 </section>

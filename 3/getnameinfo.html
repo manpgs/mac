@@ -23,6 +23,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GETNAMEINFO(3)</title>
 </head>
@@ -135,9 +136,8 @@
 <p class="Pp">The following code tries to get a numeric host name, and service
     name, for a given socket address. Observe that there is no hardcoded
     reference to a particular address family.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct sockaddr *sa;	/* input */
+<div class="Bd Pp Bd-indent Li">
+<pre>struct sockaddr *sa;	/* input */
 char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
 if (getnameinfo(sa, sa-&gt;sa_len, hbuf, sizeof(hbuf), sbuf,
@@ -145,14 +145,12 @@ if (getnameinfo(sa, sa-&gt;sa_len, hbuf, sizeof(hbuf), sbuf,
 	errx(1, &quot;could not get numeric hostname&quot;);
 	/*NOTREACHED*/
 }
-printf(&quot;host=%s, serv=%s\n&quot;, hbuf, sbuf);
-</pre>
+printf(&quot;host=%s, serv=%s\n&quot;, hbuf, sbuf);</pre>
 </div>
 <p class="Pp">The following version checks if the socket address has a reverse
     address mapping:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct sockaddr *sa;	/* input */
+<div class="Bd Pp Bd-indent Li">
+<pre>struct sockaddr *sa;	/* input */
 char hbuf[NI_MAXHOST];
 
 if (getnameinfo(sa, sa-&gt;sa_len, hbuf, sizeof(hbuf), NULL, 0,
@@ -160,8 +158,7 @@ if (getnameinfo(sa, sa-&gt;sa_len, hbuf, sizeof(hbuf), NULL, 0,
 	errx(1, &quot;could not resolve hostname&quot;);
 	/*NOTREACHED*/
 }
-printf(&quot;host=%s\n&quot;, hbuf);
-</pre>
+printf(&quot;host=%s\n&quot;, hbuf);</pre>
 </div>
 </section>
 <section class="Sh">
@@ -212,10 +209,8 @@ printf(&quot;host=%s\n&quot;, hbuf);
     (like <a class="Xr" href="../3/inet_ntop">inet_ntop(3)</a>), or is the
     result of a DNS reverse lookup. Because of this, malicious parties could set
     up a PTR record as follows:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-1.0.0.127.in-addr.arpa. IN PTR  10.1.1.1
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>1.0.0.127.in-addr.arpa. IN PTR  10.1.1.1</pre>
 </div>
 <p class="Pp">and trick the caller of <code class="Fn">getnameinfo</code>() into
     believing that <var class="Fa">sa</var> is <code class="Li">10.1.1.1</code>
@@ -224,9 +219,8 @@ printf(&quot;host=%s\n&quot;, hbuf);
     <code class="Dv">NI_NAMEREQD</code> is recommended when the result of
     <code class="Fn">getnameinfo</code>() is used for access control
   purposes:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct sockaddr *sa;
+<div class="Bd Pp Bd-indent Li">
+<pre>struct sockaddr *sa;
 socklen_t salen;
 char addr[NI_MAXHOST];
 struct addrinfo hints, *res;
@@ -249,15 +243,14 @@ if (error == 0) {
 	/* addr is numeric string */
 	error = getnameinfo(sa, salen, addr, sizeof(addr),
 	    NULL, 0, NI_NUMERICHOST);
-}
-</pre>
+}</pre>
 </div>
 </section>
 </div>
 <table class="foot">
   <tr>
     <td class="foot-date">February 28, 2007</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

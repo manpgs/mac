@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLLOCALE(1)</title>
 </head>
@@ -197,7 +198,7 @@
 <p class="Pp">The operations that are affected by locale are:</p>
 <dl class="Bl-tag">
   <dt id="Not"><a class="permalink" href="#Not"><b>Not within the scope of
-    </b><b>&quot;use locale&quot;</b><b></b></a></dt>
+    </b><span class="Li"><b>&quot;use locale&quot;</b></span><b></b></a></dt>
   <dd>Only certain operations (all originating outside Perl) should be affected,
       as follows:</dd>
 </dl>
@@ -238,7 +239,8 @@
 </div>
 <dl class="Bl-tag">
   <dt id="Lingering"><a class="permalink" href="#Lingering"><b>Lingering effects
-    of </b><b>&quot;use&#x00A0;locale&quot;</b><b></b></a></dt>
+    of
+    </b><span class="Li"><b>&quot;use&#x00A0;locale&quot;</b></span><b></b></a></dt>
   <dd>Certain Perl operations that are set-up within the scope of a
       <span class="Li">&quot;use locale&quot;</span> retain that effect even
       outside the scope. These include:</dd>
@@ -264,7 +266,8 @@
 </div>
 <dl class="Bl-tag">
   <dt id="Under"><a class="permalink" href="#Under"><b>Under
-    </b><b>&quot;&quot;use locale&quot;;&quot;</b><b></b></a></dt>
+    </b><span class="Li"><b>&quot;&quot;use
+    locale&quot;;&quot;</b></span><b></b></a></dt>
   <dd></dd>
 </dl>
 <div class="Bd-indent">
@@ -330,8 +333,7 @@
     particular instance of the pragma by adding parameters to it. For
   example,</p>
 <p class="Pp"></p>
-<pre>
- use locale qw(:ctype :numeric);
+<pre> use locale qw(:ctype :numeric);
 </pre>
 <p class="Pp">enables locale awareness within its scope of only those operations
     (listed above) that are affected by
@@ -347,8 +349,7 @@
     <span class="Li">&quot;:characters&quot;</span> (described below).</p>
 <p class="Pp">Thus you can say</p>
 <p class="Pp"></p>
-<pre>
- use locale ':messages';
+<pre> use locale ':messages';
 </pre>
 <p class="Pp">and only $! and $^E will be locale aware. Everything else is
     unaffected.</p>
@@ -362,8 +363,7 @@
 <p class="Pp">You can also easily say to use all categories but one, by either,
     for example,</p>
 <p class="Pp"></p>
-<pre>
- use locale ':!ctype';
+<pre> use locale ':!ctype';
  use locale ':not_ctype';
 </pre>
 <p class="Pp">both of which mean to enable locale awarness of all categories but
@@ -373,8 +373,7 @@
 <p class="Pp">Prior to v5.22 only one form of the pragma with arguments is
     available:</p>
 <p class="Pp"></p>
-<pre>
- use locale ':not_characters';
+<pre> use locale ':not_characters';
 </pre>
 <p class="Pp">(and you have to say <span class="Li">&quot;not_&quot;</span>; you
     can't use the bang <span class="Li">&quot;!&quot;</span> form). This pseudo
@@ -383,8 +382,7 @@
     <span class="Li">&quot;:ctype&quot;</span>. Hence, in the negated form, it
     is nearly the same thing as saying</p>
 <p class="Pp"></p>
-<pre>
- use locale qw(:messages :monetary :numeric :time);
+<pre> use locale qw(:messages :monetary :numeric :time);
 </pre>
 <p class="Pp">We use the term &quot;nearly&quot;, because
     <span class="Li">&quot;:not_characters&quot;</span> also turns on
@@ -413,29 +411,23 @@
 <p class="Pp">You can switch locales as often as you wish at run time with the
     <span class="Li">&quot;POSIX::setlocale()&quot;</span> function:</p>
 <p class="Pp"></p>
-<pre>
-        # Import locale-handling tool set from POSIX module.
+<pre>        # Import locale-handling tool set from POSIX module.
         # This example uses: setlocale -- the function call
         #                    LC_CTYPE -- explained below
         # (Showing the testing for success/failure of operations is
         # omitted in these examples to avoid distracting from the main
         # point)
-
         use POSIX qw(locale_h);
         use locale;
         my $old_locale;
-
         # query and save the old locale
         $old_locale = setlocale(LC_CTYPE);
-
         setlocale(LC_CTYPE, &quot;fr_CA.ISO8859-1&quot;);
         # LC_CTYPE now in locale &quot;French, Canada, codeset ISO 8859-1&quot;
-
         setlocale(LC_CTYPE, &quot;&quot;);
         # LC_CTYPE now reset to the default defined by the
         # LC_ALL/LC_CTYPE/LANG environment variables, or to the system
         # default.  See below for documentation.
-
         # restore the old locale
         setlocale(LC_CTYPE, $old_locale);
 </pre>
@@ -490,8 +482,7 @@
 <p class="Pp">You can force the thread-safe locale operations to always be used
     (if available) by recompiling perl with</p>
 <p class="Pp"></p>
-<pre>
- -Accflags='-DUSE_THREAD_SAFE_LOCALE'
+<pre> -Accflags='-DUSE_THREAD_SAFE_LOCALE'
 </pre>
 <p class="Pp">added to your call to <i>Configure</i>.</p>
 <p class="Pp">For further information about the categories, consult
@@ -554,23 +545,16 @@
     (search for the <i>SEE ALSO</i> section). If that fails, try the following
     command lines:</p>
 <p class="Pp"></p>
-<pre>
-        locale -a
-
+<pre>        locale -a
         nlsinfo
-
         ls /usr/lib/nls/loc
-
         ls /usr/lib/locale
-
         ls /usr/lib/nls
-
         ls /usr/share/locale
 </pre>
 <p class="Pp">and see whether they list something resembling these</p>
 <p class="Pp"></p>
-<pre>
-        en_US.ISO8859-1     de_DE.ISO8859-1     ru_RU.ISO8859-5
+<pre>        en_US.ISO8859-1     de_DE.ISO8859-1     ru_RU.ISO8859-5
         en_US.iso88591      de_DE.iso88591      ru_RU.iso88595
         en_US               de_DE               ru_RU
         en                  de                  ru
@@ -611,8 +595,7 @@
 <p class="Pp">You may encounter the following warning message at Perl
   startup:</p>
 <p class="Pp"></p>
-<pre>
-        perl: warning: Setting locale failed.
+<pre>        perl: warning: Setting locale failed.
         perl: warning: Please check that your locale settings:
                 LC_ALL = &quot;En_US&quot;,
                 LANG = (unset)
@@ -639,8 +622,7 @@
     <span class="Li">&quot;PERL_DEBUG_FULL_TEST&quot;</span> to 1 will cause it
     to output detailed results. For example, on Linux, you could say</p>
 <p class="Pp"></p>
-<pre>
- PERL_DEBUG_FULL_TEST=1 ./perl -T -Ilib lib/locale.t &gt; locale.log 2&gt;&amp;1
+<pre> PERL_DEBUG_FULL_TEST=1 ./perl -T -Ilib lib/locale.t &gt; locale.log 2&gt;&amp;1
 </pre>
 <p class="Pp">Besides many other tests, it will test every locale it finds on
     your system to see if they conform to the POSIX standard. If any have
@@ -678,8 +660,7 @@
     Consult your local documentation for the exact details. For Bourne-like
     shells (<b>sh</b>, <b>ksh</b>, <b>bash</b>, <b>zsh</b>):</p>
 <p class="Pp"></p>
-<pre>
-        LC_ALL=en_US.ISO8859-1
+<pre>        LC_ALL=en_US.ISO8859-1
         export LC_ALL
 </pre>
 <p class="Pp">This assumes that we saw the locale &quot;en_US.ISO8859-1&quot;
@@ -687,14 +668,12 @@
     above faulty locale &quot;En_US&quot;--and in Cshish shells (<b>csh</b>,
     <b>tcsh</b>)</p>
 <p class="Pp"></p>
-<pre>
-        setenv LC_ALL en_US.ISO8859-1
+<pre>        setenv LC_ALL en_US.ISO8859-1
 </pre>
 <p class="Pp">or if you have the &quot;env&quot; application you can do (in any
     shell)</p>
 <p class="Pp"></p>
-<pre>
-        env LC_ALL=en_US.ISO8859-1 perl ...
+<pre>        env LC_ALL=en_US.ISO8859-1 perl ...
 </pre>
 <p class="Pp">If you do not know what shell you have, consult your local
     helpdesk or the equivalent.</p>
@@ -726,8 +705,7 @@
   fixing your system's locale configuration</a></h2>
 <p class="Pp">This is when you see something like:</p>
 <p class="Pp"></p>
-<pre>
-        perl: warning: Please check that your locale settings:
+<pre>        perl: warning: Please check that your locale settings:
                 LC_ALL = &quot;En_US&quot;,
                 LANG = (unset)
             are supported and installed on your system.
@@ -765,12 +743,9 @@
     <span class="Li">&quot;POSIX::setlocale()&quot;</span> with a single
     parameter--see &quot;The setlocale function&quot;.)</p>
 <p class="Pp"></p>
-<pre>
-        use POSIX qw(locale_h);
-
+<pre>        use POSIX qw(locale_h);
         # Get a reference to a hash of locale-dependent info
         $locale_values = localeconv();
-
         # Output sorted list of the values
         for (sort keys %$locale_values) {
             printf &quot;%-20s = %s\n&quot;, $_, $locale_values-&gt;{$_}
@@ -791,16 +766,12 @@
     command-line parameters as integers correctly formatted in the current
     locale:</p>
 <p class="Pp"></p>
-<pre>
-    use POSIX qw(locale_h);
-
+<pre>    use POSIX qw(locale_h);
     # Get some of locale's numeric formatting parameters
     my ($thousands_sep, $grouping) =
             @{localeconv()}{'thousands_sep', 'grouping'};
-
     # Apply defaults if values are missing
     $thousands_sep = ',' unless $thousands_sep;
-
     # grouping and mon_grouping are packed lists
     # of small integers (characters) telling the
     # grouping (thousand_seps and mon_thousand_seps
@@ -817,7 +788,6 @@
     } else {
         @grouping = (3);
     }
-
     # Format command line params for current locale
     for (@ARGV) {
         $_ = int;    # Chop non-integer part
@@ -844,19 +814,15 @@
     two more constants for the affirmative and negative answers for a yes/no
     question in the current locale.</p>
 <p class="Pp"></p>
-<pre>
-    use I18N::Langinfo qw(langinfo ABDAY_1 YESSTR NOSTR);
-
+<pre>    use I18N::Langinfo qw(langinfo ABDAY_1 YESSTR NOSTR);
     my ($abday_1, $yesstr, $nostr)
                 = map { langinfo } qw(ABDAY_1 YESSTR NOSTR);
-
     print &quot;$abday_1? [$yesstr/$nostr] &quot;;
 </pre>
 <p class="Pp">In other words, in the &quot;C&quot; (or English) locale the above
     will probably print something like:</p>
 <p class="Pp"></p>
-<pre>
-    Sun? [yes/no]
+<pre>    Sun? [yes/no]
 </pre>
 <p class="Pp">See I18N::Langinfo for more information.</p>
 </section>
@@ -882,8 +848,7 @@
 <p class="Pp">The following collations all make sense and you may meet any of
     them if you <span class="Li">&quot;use locale&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-        A B C D E a b c d e
+<pre>        A B C D E a b c d e
         A a B b C c D d E e
         a A b B c C d D e E
         a b c d e A B C D E
@@ -891,15 +856,13 @@
 <p class="Pp">Here is a code snippet to tell what &quot;word&quot; characters
     are in the current locale, in that locale's order:</p>
 <p class="Pp"></p>
-<pre>
-        use locale;
+<pre>        use locale;
         print +(sort grep /\w/, map { chr } 0..255), &quot;\n&quot;;
 </pre>
 <p class="Pp">Compare this with the characters that you see and their order if
     you state explicitly that the locale should be ignored:</p>
 <p class="Pp"></p>
-<pre>
-        no locale;
+<pre>        no locale;
         print +(sort grep /\w/, map { chr } 0..255), &quot;\n&quot;;
 </pre>
 <p class="Pp">This machine-native collation (which is what you get unless
@@ -915,8 +878,7 @@
     <span class="Li">&quot;POSIX::strcoll()&quot;</span> if you don't want this
     fall-back:</p>
 <p class="Pp"></p>
-<pre>
-        use POSIX qw(strcoll);
+<pre>        use POSIX qw(strcoll);
         $equal_in_locale =
             !strcoll(&quot;space and case ignored&quot;, &quot;SpaceAndCaseIgnored&quot;);
 </pre>
@@ -951,8 +913,7 @@
     <span class="Li">&quot;POSIX::strxfrm()&quot;</span> in conjunction with
     <span class="Li">&quot;eq&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-        use POSIX qw(strxfrm);
+<pre>        use POSIX qw(strxfrm);
         $xfrm_string = strxfrm(&quot;Mixed-case string&quot;);
         print &quot;locale collation ignores spaces\n&quot;
             if $xfrm_string eq strxfrm(&quot;Mixed-casestring&quot;);
@@ -1094,20 +1055,13 @@
     separation and so on. (See &quot;The localeconv function&quot; if you care
     about these things.)</p>
 <p class="Pp"></p>
-<pre>
- use POSIX qw(strtod setlocale LC_NUMERIC);
+<pre> use POSIX qw(strtod setlocale LC_NUMERIC);
  use locale;
-
  setlocale LC_NUMERIC, &quot;&quot;;
-
  $n = 5/2;   # Assign numeric 2.5 to $n
-
  $a = &quot; $n&quot;; # Locale-dependent conversion to string
-
  print &quot;half five is $n\n&quot;;       # Locale-dependent output
-
  printf &quot;half five is %g\n&quot;, $n;  # Locale-dependent output
-
  print &quot;DECIMAL POINT IS COMMA\n&quot;
           if $n == (strtod(&quot;2,5&quot;))[0]; # Locale-dependent conversion
 </pre>
@@ -1143,8 +1097,7 @@
     &quot;janvier&quot;. Here's how to get a list of long month names in the
     current locale:</p>
 <p class="Pp"></p>
-<pre>
-        use POSIX qw(strftime);
+<pre>        use POSIX qw(strftime);
         for (0..11) {
             $long_month_name[$_] =
                 strftime(&quot;%B&quot;, 0, 0, 0, 1, $_, 96);
@@ -1312,13 +1265,10 @@
     the command line may not be used to name an output file when taint checks
     are enabled.</p>
 <p class="Pp"></p>
-<pre>
-        #/usr/local/bin/perl -T
+<pre>        #/usr/local/bin/perl -T
         # Run with taint checking
-
         # Command line sanity check omitted...
         $tainted_output_file = shift;
-
         open(F, &quot;&gt;$tainted_output_file&quot;)
             or warn &quot;Open of $tainted_output_file failed: $!\n&quot;;
 </pre>
@@ -1327,26 +1277,20 @@
     ignores locale information--runs, creating the file named on its command
     line if it can.</p>
 <p class="Pp"></p>
-<pre>
-        #/usr/local/bin/perl -T
-
+<pre>        #/usr/local/bin/perl -T
         $tainted_output_file = shift;
         $tainted_output_file =~ m%[\w/]+%;
         $untainted_output_file = $&amp;;
-
         open(F, &quot;&gt;$untainted_output_file&quot;)
             or warn &quot;Open of $untainted_output_file failed: $!\n&quot;;
 </pre>
 <p class="Pp">Compare this with a similar but locale-aware program:</p>
 <p class="Pp"></p>
-<pre>
-        #/usr/local/bin/perl -T
-
+<pre>        #/usr/local/bin/perl -T
         $tainted_output_file = shift;
         use locale;
         $tainted_output_file =~ m%[\w/]+%;
         $localized_output_file = $&amp;;
-
         open(F, &quot;&gt;$localized_output_file&quot;)
             or warn &quot;Open of $localized_output_file failed: $!\n&quot;;
 </pre>
@@ -1450,15 +1394,14 @@
       locale environment variable. If it is set, it is used as the last resort
       after the overall <span class="Li">&quot;LC_ALL&quot;</span> and the
       category-specific
-      <span class="Li">&quot;LC_</span><i>foo</i><span class="Li">&quot;</span>.</dd>
+      <span class="Li">&quot;LC_</span><span class="Li"><i>foo</i></span><span class="Li">&quot;</span>.</dd>
 </dl>
 <section class="Ss">
 <h2 class="Ss" id="Examples"><a class="permalink" href="#Examples">Examples</a></h2>
 <p class="Pp">The <span class="Li">&quot;LC_NUMERIC&quot;</span> controls the
     numeric output:</p>
 <p class="Pp"></p>
-<pre>
-   use locale;
+<pre>   use locale;
    use POSIX qw(locale_h); # Imports setlocale() and the LC_ constants.
    setlocale(LC_NUMERIC, &quot;fr_FR&quot;) or die &quot;Pardon&quot;;
    printf &quot;%g\n&quot;, 1.23; # If the &quot;fr_FR&quot; succeeded, probably shows 1,23.
@@ -1466,8 +1409,7 @@
 <p class="Pp">and also how strings are parsed by
     <span class="Li">&quot;POSIX::strtod()&quot;</span> as numbers:</p>
 <p class="Pp"></p>
-<pre>
-   use locale;
+<pre>   use locale;
    use POSIX qw(locale_h strtod);
    setlocale(LC_NUMERIC, &quot;de_DE&quot;) or die &quot;Entschuldigung&quot;;
    my $x = strtod(&quot;2,34&quot;) + 5;
@@ -1485,8 +1427,7 @@
     <span class="Li">&quot;LC_NUMERIC&quot;</span> is set to have this be a
     comma instead, the parsing will be confused, perhaps silently.</p>
 <p class="Pp"></p>
-<pre>
- use locale;
+<pre> use locale;
  use POSIX qw(locale_h);
  setlocale(LC_NUMERIC, &quot;fr_FR&quot;) or die &quot;Pardon&quot;;
  my $a = 1.2;
@@ -1497,8 +1438,7 @@
     in that locale, the comma is the decimal point character. The
     <span class="Li">&quot;eval&quot;</span> thus expands to:</p>
 <p class="Pp"></p>
-<pre>
- eval &quot;1,2 + 1.5&quot;
+<pre> eval &quot;1,2 + 1.5&quot;
 </pre>
 <p class="Pp">and the result is not what you likely expected. No warnings are
     generated. If you do string <span class="Li">&quot;eval&quot;</span>'s
@@ -1506,15 +1446,13 @@
     you should instead change the <span class="Li">&quot;eval&quot;</span> line
     to do something like:</p>
 <p class="Pp"></p>
-<pre>
- print eval &quot;no locale; $a + 1.5&quot;;
+<pre> print eval &quot;no locale; $a + 1.5&quot;;
 </pre>
 <p class="Pp">This prints <span class="Li">2.7</span>.</p>
 <p class="Pp">You could also exclude
     <span class="Li">&quot;LC_NUMERIC&quot;</span>, if you don't need it, by</p>
 <p class="Pp"></p>
-<pre>
- use locale ':!numeric';
+<pre> use locale ':!numeric';
 </pre>
 </section>
 <section class="Ss">
@@ -1570,15 +1508,13 @@
 <p class="Pp">The Unicode CLDR project extracts the POSIX portion of many of its
     locales, available at</p>
 <p class="Pp"></p>
-<pre>
-  http://unicode.org/Public/cldr/2.0.1/
+<pre>  http://unicode.org/Public/cldr/2.0.1/
 </pre>
 <p class="Pp">(Newer versions of CLDR require you to compute the POSIX data
     yourself. See &lt;http://unicode.org/Public/cldr/latest/&gt;.)</p>
 <p class="Pp">There is a large collection of locale definitions at:</p>
 <p class="Pp"></p>
-<pre>
-  http://std.dkuug.dk/i18n/WG15-collection/locales/
+<pre>  http://std.dkuug.dk/i18n/WG15-collection/locales/
 </pre>
 <p class="Pp">You should be aware that it is unsupported, and is not claimed to
     be fit for any purpose. If your system allows installation of arbitrary
@@ -1617,8 +1553,7 @@
     and Sorting&quot;).</p>
 <p class="Pp">If you have Perl v5.16 or v5.18 and can't upgrade, you can use</p>
 <p class="Pp"></p>
-<pre>
-    use locale ':not_characters';
+<pre>    use locale ':not_characters';
 </pre>
 <p class="Pp">When this form of the pragma is used, only the non-character
     portions of locales are used by Perl, for example
@@ -1627,8 +1562,7 @@
     platform's native character set (ASCII or EBCDIC) plus Unicode). For data in
     files, this can conveniently be done by also specifying</p>
 <p class="Pp"></p>
-<pre>
-    use open ':locale';
+<pre>    use open ':locale';
 </pre>
 <p class="Pp">This pragma arranges for all inputs from files to be translated
     into Unicode from the current locale as specified in the environment (see

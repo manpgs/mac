@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Event(3pm)</title>
 </head>
@@ -33,47 +34,35 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Test2::Event::MyEvent;
+<pre>    package Test2::Event::MyEvent;
     use strict;
     use warnings;
-
     # This will make our class an event subclass (required)
     use base 'Test2::Event';
-
     # Add some accessors (optional)
     # You are not obligated to use HashBase, you can use any object tool you
     # want, or roll your own accessors.
     use Test2::Util::HashBase qw/foo bar baz/;
-
     # Use this if you want the legacy API to be written for you, for this to
     # work you will need to implement a facet_data() method.
     use Test2::Util::Facets2Legacy;
-
     # Chance to initialize some defaults
     sub init {
         my $self = shift;
         # no other args in @_
-
         $self-&gt;set_foo('xxx') unless defined $self-&gt;foo;
-
         ...
     }
-
     # This is the new way for events to convey data to the Test2 system
     sub facet_data {
         my $self = shift;
-
         # Get common facets such as 'about', 'trace' 'amnesty', and 'meta'
         my $facet_data = $self-&gt;common_facet_data();
-
         # Are you making an assertion?
         $facet_data-&gt;{assert} = {pass =&gt; 1, details =&gt; 'my assertion'};
         ...
-
         return $facet_data;
     }
-
     1;
 </pre>
 </section>

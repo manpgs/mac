@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MPSRayIntersector(3)</title>
 </head>
@@ -115,12 +116,10 @@
     raytracer with a Metal device. Then, configure the properties of the
     raytracer:</p>
 <p class="Pp"></p>
-<pre>
-id &lt;MTLDevice&gt; device = MTLCreateSystemDefaultDevice();
+<pre>id &lt;MTLDevice&gt; device = MTLCreateSystemDefaultDevice();
 id &lt;MTLCommandQueue&gt; commandQueue = [device newCommandQueue];
 MPSRayIntersector *raytracer = [[MPSRayIntersector alloc] initWithDevice:device];
-// Configure raytracer properties
-</pre>
+// Configure raytracer properties</pre>
 <p class="Pp">Before scheduling intersection tests, an
     <b>MPSAccelerationStructure</b> must be created. The acceleration structure
     is built over geometry and is used to accelerate intersection testing. For
@@ -129,20 +128,16 @@ MPSRayIntersector *raytracer = [[MPSRayIntersector alloc] initWithDevice:device]
     properties of the acceleration structure. For example, triangle acceleration
     structures require a vertex buffer and a triangle count:</p>
 <p class="Pp"></p>
-<pre>
-MPSTriangleAccelerationStructure *accelerationStructure = 
+<pre>MPSTriangleAccelerationStructure *accelerationStructure = 
     [[MPSTriangleAccelerationStructure alloc] initWithDevice:device];
 accelerationStructure.vertexBuffer = vertexBuffer;
-accelerationStructure.triangleCount = triangleCount;
-</pre>
+accelerationStructure.triangleCount = triangleCount;</pre>
 <p class="Pp">Acceleration structures must be built at least once before they
     are used for intersection testing, and must be rebuilt when the geometry
     changes. Rebuilding an acceleration structure is a time consuming operation,
     so an asynchronous version of this method is also available.</p>
 <p class="Pp"></p>
-<pre>
-[accelerationStructure rebuild];
-</pre>
+<pre>[accelerationStructure rebuild];</pre>
 <p class="Pp">The raytracer is then used to schedule intersection tests into an
     MTLCommandBuffer. Rays are provided in batches through a Metal buffer, and
     intersection results are returned through another Metal buffer in the same
@@ -158,16 +153,14 @@ accelerationStructure.triangleCount = triangleCount;
     ignored by the intersector.</p>
 <p class="Pp">If the rays were generated on the CPU:</p>
 <p class="Pp"></p>
-<pre>
-typedef MPSRayOriginDirection Ray;
+<pre>typedef MPSRayOriginDirection Ray;
 // Create a buffer to hold the rays
 id &lt;MTLBuffer&gt; rayBuffer = [device newBufferWithLength:sizeof(Ray) * rayCount options:0];
 // Copy the rays into the ray buffer
 memcpy(rayBuffer.contents, rays, sizeof(Ray) * rayCount);
 // Create a buffer to hold the intersections
 id &lt;MTLBuffer&gt; intersectionBuffer = [device newBufferWithLength:sizeof(Intersection) * rayCount
-                                                        options:0];
-</pre>
+                                                        options:0];</pre>
 <p class="Pp">It can be useful to prevent certain rays from participating in
     intersection testing. For example: rays which have bounced out of the scene
     in previous intersection tests. It may be more efficient to do this by
@@ -184,8 +177,7 @@ id &lt;MTLBuffer&gt; intersectionBuffer = [device newBufferWithLength:sizeof(Int
     visible from another point for, e.g., shadow rays or ambient occlusion rays
     and is typically much faster than the 'nearest' intersection type.</p>
 <p class="Pp"></p>
-<pre>
-id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
+<pre>id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
 [raytracer encodeIntersectionToCommandBuffer:commandBuffer
                             intersectionType:MPSIntersectionTypeNearest
                                    rayBuffer:rayBuffer
@@ -194,8 +186,7 @@ id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
                     intersectionBufferOffset:0
                                     rayCount:rayCount
                        accelerationStructure:accelerationStructure];
-[commandBuffer commit];
-</pre>
+[commandBuffer commit];</pre>
 <p class="Pp">The intersection results are not available until the command
     buffer has finished executing on the GPU. It is not safe for the CPU to
     write or read the contents of the ray buffer, intersection buffer, vertex
@@ -204,14 +195,10 @@ id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
     block the CPU until the GPU has finished executing. Then retrieve the
     intersection results from the intersection buffer:</p>
 <p class="Pp"></p>
-<pre>
-typedef MPSIntersectionDistancePrimitiveIndexCoordinates Intersection;
-</pre>
+<pre>typedef MPSIntersectionDistancePrimitiveIndexCoordinates Intersection;</pre>
 <p class="Pp"></p>
-<pre>
-[commandBuffer waitUntilCompleted];
-Intersection *intersections = (Intersection *)intersectionBuffer.contents;
-</pre>
+<pre>[commandBuffer waitUntilCompleted];
+Intersection *intersections = (Intersection *)intersectionBuffer.contents;</pre>
 <p class="Pp">There are also several choices of intersection data type
     controlled by the intersectionDataType property. The default intersection
     data type is <b>MPSIntersectionDistancePrimitiveIndexCoordinates</b>, which
@@ -243,8 +230,7 @@ Intersection *intersections = (Intersection *)intersectionBuffer.contents;
     executing, the CPU and GPU can advance to the next range of the buffer. This
     method can be implemented using a completion handler and a semaphore:</p>
 <p class="Pp"></p>
-<pre>
-#define MAX_ASYNC_OPERATIONS 3
+<pre>#define MAX_ASYNC_OPERATIONS 3
 // Initialization:
 // Create a semaphore with the maximum number of asynchronous operations in flight
 dispatch_semaphore_t asyncOperationSemaphore = dispatch_semaphore_create(MAX_ASYNC_OPERATIONS);
@@ -285,8 +271,7 @@ id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
     dispatch_semaphore_signal(asyncOperationSemaphore);
 }];
 // Commit the command buffer to allow the GPU to start executing
-[commandBuffer commit];
-</pre>
+[commandBuffer commit];</pre>
 <p class="Pp">GPU Driven Raytracing: Pipelining CPU and GPU work with
     asynchronous raytracing is better than allowing the CPU and GPU block each
     other, but it is even better to produce rays and consume intersections
@@ -305,8 +290,7 @@ id &lt;MTLCommandBuffer&gt; commandBuffer = [commandQueue commandBuffer];
     to double or triple buffer the ray or intersection buffers, which saves
     memory.</p>
 <p class="Pp"></p>
-<pre>
-id &lt;MTLBuffer&gt; rayBuffer =
+<pre>id &lt;MTLBuffer&gt; rayBuffer =
     [device newBufferWithLength:sizeof(Ray) * rayCount
                         options:MTLResourceStorageModePrivate];
 id &lt;MTLBuffer&gt; intersectionBuffer =
@@ -339,8 +323,7 @@ encoder = [commandBuffer computeCommandEncoder];
 [encoder dispatchThreads:MTLSizeMake(rayCount, 1, 1)
    threadsPerThreadgroup:MTLSizeMake(64, 1, 1)];
 [encoder endEncoding];
-[commandBuffer commit];
-</pre>
+[commandBuffer commit];</pre>
 <p class="Pp">Note that the intersection consumption kernel can in turn produce
     new rays that can be passed back to the <b>MPSRayIntersector</b>. This
     technique can be used to implement iterative techniques such as progressive
@@ -358,8 +341,7 @@ encoder = [commandBuffer computeCommandEncoder];
     maximum distance of a ray to a negative number indicates that the ray has
     become inactive and causes the raytracer to ignore the ray.</p>
 <p class="Pp"></p>
-<pre>
-[raytracer encodeIntersectionToCommandBuffer:commandBuffer
+<pre>[raytracer encodeIntersectionToCommandBuffer:commandBuffer
                             intersectionType:MPSIntersectionTypeNearest
                                    rayBuffer:rayBuffer
                              rayBufferOffset:0
@@ -367,8 +349,7 @@ encoder = [commandBuffer computeCommandEncoder];
                     intersectionBufferOffset:0
                               rayCountBuffer:rayCountBuffer
                         rayCountBufferOffset:0
-                       accelerationStructure:accelerationStructure];
-</pre>
+                       accelerationStructure:accelerationStructure];</pre>
 <p class="Pp">Multi-GPU Raytracing: to implement multi-GPU raytracing, create
     the <b>MPSRayIntersector</b> and <b>MPSAccelerationStructure</b> objects
     first with one Metal device and copy them to the other Metal device(s). The
@@ -385,8 +366,7 @@ encoder = [commandBuffer computeCommandEncoder];
     building them from scratch.</p>
 <p class="Pp">Performance Guidelines:</p>
 <p class="Pp"></p>
-<pre>
-- For vertex buffers, ray buffers, intersection buffers, etc., use private or managed
+<pre>- For vertex buffers, ray buffers, intersection buffers, etc., use private or managed
   buffers rather than shared buffers when possible on discrete memory GPU architectures as
   they are much faster than fetching data over the PCIe bus. If the CPU only writes once
   to a ray buffer once and reads once from the intersection buffer, then a shared buffer may

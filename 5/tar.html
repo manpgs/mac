@@ -30,6 +30,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>TAR(5)</title>
 </head>
@@ -83,9 +84,8 @@
     the earliest widely-used version of the tar program.</p>
 <p class="Pp">The header record for an old-style <code class="Nm">tar</code>
     archive consists of the following:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct header_old_tar {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct header_old_tar {
 	char name[100];
 	char mode[8];
 	char uid[8];
@@ -96,33 +96,32 @@ struct header_old_tar {
 	char linkflag[1];
 	char linkname[100];
 	char pad[255];
-};
-</pre>
+};</pre>
 </div>
 All unused bytes in the header record are filled with nulls.
 <dl class="Bl-tag">
-  <dt><var class="Va">name</var></dt>
+  <dt id="name"><var class="Va">name</var></dt>
   <dd>Pathname, stored as a null-terminated string. Early tar implementations
       only stored regular files (including hardlinks to those files). One common
       early convention used a trailing &quot;/&quot; character to indicate a
       directory name, allowing directory permissions and owner information to be
       archived and restored.</dd>
-  <dt><var class="Va">mode</var></dt>
+  <dt id="mode"><var class="Va">mode</var></dt>
   <dd>File mode, stored as an octal number in ASCII.</dd>
-  <dt><var class="Va">uid</var>, <var class="Va">gid</var></dt>
+  <dt id="uid"><var class="Va">uid</var>, <var class="Va">gid</var></dt>
   <dd>User id and group id of owner, as octal numbers in ASCII.</dd>
-  <dt><var class="Va">size</var></dt>
+  <dt id="size"><var class="Va">size</var></dt>
   <dd>Size of file, as octal number in ASCII. For regular files only, this
       indicates the amount of data that follows the header. In particular, this
       field was ignored by early tar implementations when extracting hardlinks.
       Modern writers should always store a zero length for hardlink
     entries.</dd>
-  <dt><var class="Va">mtime</var></dt>
+  <dt id="mtime"><var class="Va">mtime</var></dt>
   <dd>Modification time of file, as an octal number in ASCII. This indicates the
       number of seconds since the start of the epoch, 00:00:00 UTC January 1,
       1970. Note that negative values should be avoided here, as they are
       handled inconsistently.</dd>
-  <dt><var class="Va">checksum</var></dt>
+  <dt id="checksum"><var class="Va">checksum</var></dt>
   <dd>Header checksum, stored as an octal number in ASCII. To compute the
       checksum, set the checksum field to all spaces, then sum all bytes in the
       header using unsigned arithmetic. This field should be stored as six octal
@@ -131,7 +130,8 @@ All unused bytes in the header record are filled with nulls.
       which can cause interoperability problems when transferring archives
       between systems. Modern robust readers compute the checksum both ways and
       accept the header if either computation matches.</dd>
-  <dt><var class="Va">linkflag</var>, <var class="Va">linkname</var></dt>
+  <dt id="linkflag"><var class="Va">linkflag</var>,
+    <var class="Va">linkname</var></dt>
   <dd>In order to preserve hardlinks and conserve tape, a file with multiple
       links is only written to the archive the first time it is encountered. The
       next time it is encountered, the <var class="Va">linkflag</var> is set to
@@ -179,9 +179,8 @@ All unused bytes in the header record are filled with nulls.
     &#x201C;ustar&#x201D; format, after the magic value used in the header. (The
     name is an acronym for &#x201C;Unix Standard TAR&#x201D;.) It extends the
     historic format with new fields:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct header_posix_ustar {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct header_posix_ustar {
 	char name[100];
 	char mode[8];
 	char uid[8];
@@ -199,11 +198,10 @@ struct header_posix_ustar {
 	char devminor[8];
 	char prefix[155];
 	char pad[12];
-};
-</pre>
+};</pre>
 </div>
 <dl class="Bl-tag">
-  <dt><var class="Va">typeflag</var></dt>
+  <dt id="typeflag"><var class="Va">typeflag</var></dt>
   <dd>Type of entry. POSIX extended the earlier <var class="Va">linkflag</var>
       field with several new type values:
     <dl class="Bl-tag Bl-compact">
@@ -240,20 +238,21 @@ struct header_posix_ustar {
       directory, for use by operating systems that pre-allocate directory space.
       For all other types, it should be set to zero by writers and ignored by
       readers.</dd>
-  <dt><var class="Va">magic</var></dt>
+  <dt id="magic"><var class="Va">magic</var></dt>
   <dd>Contains the magic value &#x201C;ustar&#x201D; followed by a NUL byte to
       indicate that this is a POSIX standard archive. Full compliance requires
       the uname and gname fields be properly set.</dd>
-  <dt><var class="Va">version</var></dt>
+  <dt id="version"><var class="Va">version</var></dt>
   <dd>Version. This should be &#x201C;00&#x201D; (two copies of the ASCII digit
       zero) for POSIX standard archives.</dd>
-  <dt><var class="Va">uname</var>, <var class="Va">gname</var></dt>
+  <dt id="uname"><var class="Va">uname</var>, <var class="Va">gname</var></dt>
   <dd>User and group names, as null-terminated ASCII strings. These should be
       used in preference to the uid/gid values when they are set and the
       corresponding names exist on the system.</dd>
-  <dt><var class="Va">devmajor</var>, <var class="Va">devminor</var></dt>
+  <dt id="devmajor"><var class="Va">devmajor</var>,
+    <var class="Va">devminor</var></dt>
   <dd>Major and minor numbers for character device or block device entry.</dd>
-  <dt><var class="Va">name</var>, <var class="Va">prefix</var></dt>
+  <dt id="name~2"><var class="Va">name</var>, <var class="Va">prefix</var></dt>
   <dd>If the pathname is too long to fit in the 100 bytes provided by the
       standard format, it can be split at any <span class="Pa">/</span>
       character with the first portion going into the prefix field. If the
@@ -354,7 +353,7 @@ Keys in all lowercase are standard keys. Vendors can add their own keys by
       generally not be used as it is the default when this key is not specified.
       In particular, this flag should not be used as a general mechanism to
       allow filenames to be stored in arbitrary encodings.</dd>
-  <dt id="uname"><a class="permalink" href="#uname"><code class="Cm">uname</code></a>,
+  <dt id="uname~2"><a class="permalink" href="#uname~2"><code class="Cm">uname</code></a>,
     <code class="Cm">uid</code>, <code class="Cm">gname</code>,
     <code class="Cm">gid</code></dt>
   <dd>User name, group name, and numeric UID and GID values. The user name and
@@ -369,7 +368,7 @@ Keys in all lowercase are standard keys. Vendors can add their own keys by
   <dt id="realtime.*"><a class="permalink" href="#realtime.*"><code class="Cm">realtime.*</code></a>,
     <code class="Cm">security.*</code></dt>
   <dd>These keys are reserved and may be used for future standardization.</dd>
-  <dt id="size"><a class="permalink" href="#size"><code class="Cm">size</code></a></dt>
+  <dt id="size~2"><a class="permalink" href="#size~2"><code class="Cm">size</code></a></dt>
   <dd>The size of the file. Note that there is no length limit on this field,
       allowing conforming archives to store files much larger than the historic
       8GB limit.</dd>
@@ -455,9 +454,8 @@ Keys in all lowercase are standard keys. Vendors can add their own keys by
     entry). As a result, GNU tar archives are not POSIX compatible, although
     more lenient POSIX-compliant readers can successfully extract most GNU tar
     archives.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct header_gnu_tar {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct header_gnu_tar {
 	char name[100];
 	char mode[8];
 	char uid[8];
@@ -485,11 +483,10 @@ struct header_gnu_tar {
 	char isextended[1];
 	char realsize[12];
 	char pad[17];
-};
-</pre>
+};</pre>
 </div>
 <dl class="Bl-tag">
-  <dt><var class="Va">typeflag</var></dt>
+  <dt id="typeflag~2"><var class="Va">typeflag</var></dt>
   <dd>GNU tar uses the following special entry types, in addition to those
       defined by POSIX:
     <dl class="Bl-tag">
@@ -558,17 +555,17 @@ struct header_gnu_tar {
           extraction.</dd>
     </dl>
   </dd>
-  <dt><var class="Va">magic</var></dt>
+  <dt id="magic~2"><var class="Va">magic</var></dt>
   <dd>The magic field holds the five characters &#x201C;ustar&#x201D; followed
       by a space. Note that POSIX ustar archives have a trailing null.</dd>
-  <dt><var class="Va">version</var></dt>
+  <dt id="version~2"><var class="Va">version</var></dt>
   <dd>The version field holds a space character followed by a null. Note that
       POSIX ustar archives use two copies of the ASCII digit
     &#x201C;0&#x201D;.</dd>
-  <dt><var class="Va">atime</var>, <var class="Va">ctime</var></dt>
+  <dt id="atime~2"><var class="Va">atime</var>, <var class="Va">ctime</var></dt>
   <dd>The time the file was last accessed and the time of last change of file
       information, stored in octal as with <var class="Va">mtime</var>.</dd>
-  <dt><var class="Va">longnames</var></dt>
+  <dt id="longnames"><var class="Va">longnames</var></dt>
   <dd>This field is apparently no longer used.</dd>
   <dt>Sparse <var class="Va">offset /</var> <var class="Va">numbytes</var></dt>
   <dd>Each such structure specifies a single fragment of a sparse file. The two
@@ -576,24 +573,22 @@ struct header_gnu_tar {
       multiple of 512 bytes in the archive. On extraction, the list of fragments
       is collected from the header (including any extension headers), and the
       data is then read and written to the file at appropriate offsets.</dd>
-  <dt><var class="Va">isextended</var></dt>
+  <dt id="isextended"><var class="Va">isextended</var></dt>
   <dd>If this is set to non-zero, the header will be followed by additional
       &#x201C;sparse header&#x201D; records. Each such record contains
       information about as many as 21 additional sparse blocks as shown here:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-struct gnu_sparse_header {
+    <div class="Bd Pp Bd-indent Li">
+    <pre>struct gnu_sparse_header {
 	struct {
 		char offset[12];
 		char numbytes[12];
 	} sparse[21];
 	char    isextended[1];
 	char    padding[7];
-};
-    </pre>
+};</pre>
     </div>
   </dd>
-  <dt><var class="Va">realsize</var></dt>
+  <dt id="realsize"><var class="Va">realsize</var></dt>
   <dd>A binary representation of the file's complete size, with a much larger
       range than the POSIX file size. In particular, with
       <code class="Cm">M</code> type files, the current entry is only a portion
@@ -796,7 +791,7 @@ struct gnu_sparse_header {
 <table class="foot">
   <tr>
     <td class="foot-date">December 27, 2016</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

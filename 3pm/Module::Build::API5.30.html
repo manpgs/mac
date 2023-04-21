@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Module::Build::API(3)</title>
 </head>
@@ -49,11 +50,9 @@
         question during <span class="Li">&quot;perl Build.PL&quot;</span>, then
         use their answer during a regression test:</p>
     <p class="Pp"></p>
-    <pre>
-  # In Build.PL:
+    <pre>  # In Build.PL:
   my $color = $build-&gt;prompt(&quot;What is your favorite color?&quot;);
   $build-&gt;notes(color =&gt; $color);
-
   # In t/colortest.t:
   use Module::Build;
   my $build = Module::Build-&gt;current;
@@ -112,8 +111,7 @@
         either MySQL or PostgreSQL databases, you might use
         <span class="Li">&quot;auto_features&quot;</span> like this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      ...other stuff here...
      auto_features =&gt; {
@@ -315,8 +313,7 @@
         currently recognized by PAUSE is 'TRIAL', which indicates that the
         distribution should not be indexed. For example:</p>
     <p class="Pp"></p>
-    <pre>
-  Foo-Bar-1.23-TRIAL.tar.gz
+    <pre>  Foo-Bar-1.23-TRIAL.tar.gz
     </pre>
     <p class="Pp">This will automatically do the &quot;right thing&quot;
         depending on <span class="Li">&quot;dist_version&quot;</span> and
@@ -347,8 +344,7 @@
         <span class="Li">&quot;CPAN.pm&quot;</span>. It involves finding the
         first line that matches the regular expression</p>
     <p class="Pp"></p>
-    <pre>
-   /([\$*])(([\w\:\']*)\bVERSION)\b.*\=/
+    <pre>   /([\$*])(([\w\:\']*)\bVERSION)\b.*\=/
     </pre>
     <p class="Pp"><b>eval()</b>-ing that line, then checking the value of the
         <span class="Li">$VERSION</span> variable. Quite ugly, really, but all
@@ -382,8 +378,7 @@
         compiler and linker phases when compiling/linking C code. For example,
         to tell the compiler that your code is C++, you might do:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      module_name          =&gt; 'Foo::Bar',
      extra_compiler_flags =&gt; ['-x', 'c++'],
@@ -392,8 +387,7 @@
     <p class="Pp">To link your XS code against glib you might write something
         like:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      module_name          =&gt; 'Foo::Bar',
      dynamic_config       =&gt; 1,
@@ -453,8 +447,7 @@
     in the hash returned by <span class="Li">&quot;args()&quot;</span>. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  my $loud = 0;
+<pre>  my $loud = 0;
   my $build = Module::Build-&gt;new
     (
      module_name =&gt; 'Foo::Bar',
@@ -464,7 +457,6 @@
                      Quantity =&gt; { type  =&gt; '+'    },
                     }
     );
-
   print STDERR &quot;HEY, ARE YOU LISTENING??\n&quot; if $loud;
   print &quot;We'll use the &quot;, $build-&gt;args('Dbd'), &quot; DBI driver\n&quot;;
   print &quot;Are you sure you want that many?\n&quot;
@@ -472,8 +464,7 @@
 </pre>
 <p class="Pp">The arguments for such a specification can be called like so:</p>
 <p class="Pp"></p>
-<pre>
-  perl Build.PL --Loud --Dbd=DBD::pg --Quantity --Quantity --Quantity
+<pre>  perl Build.PL --Loud --Dbd=DBD::pg --Quantity --Quantity --Quantity
 </pre>
 <p class="Pp"><b>WARNING:</b> Any option specifications that conflict with
     Module::Build's own options (defined by its properties) will throw an
@@ -494,8 +485,7 @@
     <p class="Pp">You can set paths for individual installable elements by using
         the <span class="Li">&quot;install_path&quot;</span> parameter:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      ...other stuff here...
      install_path =&gt; {
@@ -658,8 +648,7 @@
         <span class="Li">&quot;.PL&quot;</span> files as hash keys, and the
         file(s) they generate as hash values, like so:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      module_name =&gt; 'Foo::Bar',
      ...
@@ -673,8 +662,7 @@
         if they create multiple files, you can indicate that so that
         Module::Build can properly handle these created files:</p>
     <p class="Pp"></p>
-    <pre>
-  PL_files =&gt; {
+    <pre>  PL_files =&gt; {
                'lib/Foo/Bar.pm.PL' =&gt; 'lib/Foo/Bar.pm',
                'lib/something.PL'  =&gt; ['/lib/something', '/lib/else'],
                'lib/funny.PL'      =&gt; [],
@@ -682,13 +670,10 @@
     </pre>
     <p class="Pp">Here's an example of a simple PL file.</p>
     <p class="Pp"></p>
-    <pre>
-    my $output_file = shift;
+    <pre>    my $output_file = shift;
     open my $fh, &quot;&gt;&quot;, $output_file or die &quot;Can't open $output_file: $!&quot;;
-
     print $fh &lt;&lt;'END';
     #!/usr/bin/perl
-
     print &quot;Hello, world!\n&quot;;
     END
     </pre>
@@ -710,8 +695,7 @@
         file at the top level of the distribution, you could specify your layout
         in your <span class="Li">&quot;Build.PL&quot;</span> like this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $build = Module::Build-&gt;new
+    <pre>  my $build = Module::Build-&gt;new
     (
      module_name =&gt; 'Foo::Bar',
      ...
@@ -824,8 +808,7 @@
         directory name or an arrayref of directory names containing files to be
         installed in the distribution-level share directory.</p>
     <p class="Pp"></p>
-    <pre>
-  share_dir =&gt; 'share'
+    <pre>  share_dir =&gt; 'share'
     </pre>
     <p class="Pp">Alternatively, if
         <span class="Li">&quot;share_dir&quot;</span> is a hashref, it may have
@@ -833,8 +816,7 @@
         <span class="Li">&quot;module&quot;</span> keys providing full
         flexibility in defining how share directories should be installed.</p>
     <p class="Pp"></p>
-    <pre>
-  share_dir =&gt; {
+    <pre>  share_dir =&gt; {
     dist =&gt; [ 'examples', 'more_examples' ],
     module =&gt; {
       Foo::Templates =&gt; ['share/html', 'share/text'],
@@ -951,8 +933,7 @@
   <dt id="add_property"><a class="permalink" href="#add_property">add_property</a></dt>
   <dd>[version 0.31]
     <p class="Pp"></p>
-    <pre>
-  package 'My::Build';
+    <pre>  package 'My::Build';
   use base 'Module::Build';
   __PACKAGE__-&gt;add_property( 'pedantic' );
   __PACKAGE__-&gt;add_property( answer =&gt; 42 );
@@ -986,8 +967,7 @@
       be used. If you need the default to be a code reference, just use a code
       reference to return it, e.g.:
     <p class="Pp"></p>
-    <pre>
-      default =&gt; sub { sub { ... } },
+    <pre>      default =&gt; sub { sub { ... } },
     </pre>
   </dd>
   <dt>&quot;check&quot;</dt>
@@ -1005,31 +985,27 @@
     the Module::Build class, and an accessor will be built to allow the property
     to be get or set on the build object.</p>
 <p class="Pp"></p>
-<pre>
-  print $build-&gt;pedantic, $/;
+<pre>  print $build-&gt;pedantic, $/;
   $build-&gt;pedantic(0);
 </pre>
 <p class="Pp">If the default value is a hash reference, this generates a
     special-case accessor method, wherein individual key/value pairs may be set
     or fetched:</p>
 <p class="Pp"></p>
-<pre>
-  print &quot;stuff{foo} is: &quot;, $build-&gt;stuff( 'foo' ), $/;
+<pre>  print &quot;stuff{foo} is: &quot;, $build-&gt;stuff( 'foo' ), $/;
   $build-&gt;stuff( foo =&gt; 'bar' );
   print $build-&gt;stuff( 'foo' ), $/; # Outputs &quot;bar&quot;
 </pre>
 <p class="Pp">Of course, you can still set the entire hash reference at once, as
     well:</p>
 <p class="Pp"></p>
-<pre>
-  $build-&gt;stuff( { foo =&gt; 'bar', baz =&gt; 'yo' } );
+<pre>  $build-&gt;stuff( { foo =&gt; 'bar', baz =&gt; 'yo' } );
 </pre>
 <p class="Pp">In either case, if a <span class="Li">&quot;check&quot;</span> has
     been specified for the property, it will be applied to the entire hash. So
     the check code reference should look something like:</p>
 <p class="Pp"></p>
-<pre>
-      check =&gt; sub {
+<pre>      check =&gt; sub {
             return 1 if defined $_ &amp;&amp; exists $_-&gt;{foo};
             shift-&gt;property_error(qq{Property &quot;stuff&quot; needs &quot;foo&quot;});
             return 0;
@@ -1076,8 +1052,7 @@
   <dt id="args()"><a class="permalink" href="#args()"><b>args()</b></a></dt>
   <dd>[version 0.26]
     <p class="Pp"></p>
-    <pre>
-  my $args_href = $build-&gt;args;
+    <pre>  my $args_href = $build-&gt;args;
   my %args = $build-&gt;args;
   my $arg_value = $build-&gt;args($key);
   $build-&gt;args($key, $value);
@@ -1144,8 +1119,7 @@
         version checking.</p>
     <p class="Pp">The returned hash reference has the following structure:</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
    ok =&gt; $whether_the_dependency_is_satisfied,
    have =&gt; $version_already_installed,
    need =&gt; $version_requested, # Same as incoming $version argument
@@ -1178,8 +1152,7 @@
         of <span class="Li">$module</span> installed on the system. This allows
         you to do the following:</p>
     <p class="Pp"></p>
-    <pre>
-  my $installed = $build-&gt;check_installed_version('DBI', '1.15');
+    <pre>  my $installed = $build-&gt;check_installed_version('DBI', '1.15');
   if ($installed) {
     print &quot;Congratulations, version $installed of DBI is installed.\n&quot;;
   } else {
@@ -1373,8 +1346,7 @@
     <p class="Pp">Custom options that have not been registered must be passed in
         as a hash reference in a key named &quot;args&quot;:</p>
     <p class="Pp"></p>
-    <pre>
-  $build-&gt;dispatch('foo', verbose =&gt; 1, args =&gt; { my_option =&gt; 'value' });
+    <pre>  $build-&gt;dispatch('foo', verbose =&gt; 1, args =&gt; { my_option =&gt; 'value' });
     </pre>
     <p class="Pp">This method is intended to be used to programmatically invoke
         build actions, e.g. by applications controlling Module::Build-based
@@ -1672,10 +1644,8 @@
         used to create a YAML datastream. It is provided for authors to override
         or customize the fields of <i>META.yml</i>. E.g.</p>
     <p class="Pp"></p>
-    <pre>
-  package My::Builder;
+    <pre>  package My::Builder;
   use base 'Module::Build';
-
   sub get_metadata {
     my $self, @args = @_;
     my $data = $self-&gt;SUPER::get_metadata(@args);
@@ -1730,8 +1700,7 @@
         values of those are hash references indicating some information about
         the failure. For example:</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
    have =&gt; '0.42',
    need =&gt; '0.59',
    message =&gt; 'Version 0.42 is installed, but we need version 0.59',
@@ -1739,8 +1708,7 @@
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
    have =&gt; '&lt;none&gt;',
    need =&gt; '0.59',
    message =&gt; 'Prerequisite Foo isn't installed',
@@ -1753,13 +1721,10 @@
         message.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
-  # Check a required dependency on Foo::Bar
+    <pre>  # Check a required dependency on Foo::Bar
   if ( $build-&gt;prereq_failures-&gt;{requires}{Foo::Bar} ) { ...
-
   # Check whether there were any failures
   if ( $build-&gt;prereq_failures ) { ...
-
   # Show messages for all failures
   my $failures = $build-&gt;prereq_failures;
   while (my ($type, $list) = each %$failures) {
@@ -1842,13 +1807,10 @@
         returned.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
- # All the *.pm files in lib/
+    <pre> # All the *.pm files in lib/
  $m-&gt;rscan_dir('lib', qr/\.pm$/)
-
  # All the files in blib/ that aren't *.html files
  $m-&gt;rscan_dir('blib', sub {-f $_ and not /\.html$/});
-
  # All the files in t/
  $m-&gt;rscan_dir('t');
     </pre>
@@ -2121,7 +2083,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

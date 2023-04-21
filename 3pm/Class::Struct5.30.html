@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::Struct(3pm)</title>
 </head>
@@ -28,48 +29,38 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Class::Struct;
+<pre>    use Class::Struct;
             # declare struct, based on array:
     struct( CLASS_NAME =&gt; [ ELEMENT_NAME =&gt; ELEMENT_TYPE, ... ]);
             # declare struct, based on hash:
     struct( CLASS_NAME =&gt; { ELEMENT_NAME =&gt; ELEMENT_TYPE, ... });
-
     package CLASS_NAME;
     use Class::Struct;
             # declare struct, based on array, implicit class name:
     struct( ELEMENT_NAME =&gt; ELEMENT_TYPE, ... );
-
     # Declare struct at compile time
     use Class::Struct CLASS_NAME =&gt; [ELEMENT_NAME =&gt; ELEMENT_TYPE, ...];
     use Class::Struct CLASS_NAME =&gt; {ELEMENT_NAME =&gt; ELEMENT_TYPE, ...};
-
     # declare struct at compile time, based on array, implicit
     # class name:
     package CLASS_NAME;
     use Class::Struct ELEMENT_NAME =&gt; ELEMENT_TYPE, ... ;
-
     package Myobj;
     use Class::Struct;
             # declare struct with four types of elements:
     struct( s =&gt; '$', a =&gt; '@', h =&gt; '%', c =&gt; 'My_Other_Class' );
-
     $obj = new Myobj;               # constructor
-
                                     # scalar type accessor:
     $element_value = $obj-&gt;s;           # element value
     $obj-&gt;s('new value');               # assign to element
-
                                     # array type accessor:
     $ary_ref = $obj-&gt;a;                 # reference to whole array
     $ary_element_value = $obj-&gt;a(2);    # array element value
     $obj-&gt;a(2, 'new value');            # assign to array element
-
                                     # hash type accessor:
     $hash_ref = $obj-&gt;h;                # reference to whole hash
     $hash_element_value = $obj-&gt;h('x'); # hash element value
     $obj-&gt;h('x', 'new value');          # assign to hash element
-
                                     # class type accessor:
     $element_value = $obj-&gt;c;           # object reference
     $obj-&gt;c-&gt;method(...);               # call method of object
@@ -96,8 +87,7 @@
 <p class="Pp">The <span class="Li">&quot;struct&quot;</span> function has three
     forms of parameter-list.</p>
 <p class="Pp"></p>
-<pre>
-    struct( CLASS_NAME =&gt; [ ELEMENT_LIST ]);
+<pre>    struct( CLASS_NAME =&gt; [ ELEMENT_LIST ]);
     struct( CLASS_NAME =&gt; { ELEMENT_LIST });
     struct( ELEMENT_LIST );
 </pre>
@@ -121,8 +111,7 @@
     <span class="Li">&quot;struct&quot;</span>.</p>
 <p class="Pp">The <i>ELEMENT_LIST</i> has the form</p>
 <p class="Pp"></p>
-<pre>
-    NAME =&gt; TYPE, ...
+<pre>    NAME =&gt; TYPE, ...
 </pre>
 <p class="Pp">Each name-type pair declares one element of the struct. Each
     element name will be defined as an accessor method unless a method by that
@@ -238,23 +227,18 @@
       <span class="Li">&quot;Rusage&quot;</span> has two elements, each of which
       is of type <span class="Li">&quot;Timeval&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-    use Class::Struct;
-
+    <pre>    use Class::Struct;
     struct( Rusage =&gt; {
         ru_utime =&gt; 'Timeval',  # user time used
         ru_stime =&gt; 'Timeval',  # system time used
     });
-
     struct( Timeval =&gt; [
         tv_secs  =&gt; '$',        # seconds
         tv_usecs =&gt; '$',        # microseconds
     ]);
-
     # create an object:
     my $t = Rusage-&gt;new(ru_utime=&gt;Timeval-&gt;new(),
         ru_stime=&gt;Timeval-&gt;new());
-
     # $t-&gt;ru_utime and $t-&gt;ru_stime are objects of type Timeval.
     # set $t-&gt;ru_utime to 100.0 sec and $t-&gt;ru_stime to 5.0 sec.
     $t-&gt;ru_utime-&gt;tv_secs(100);
@@ -270,13 +254,10 @@
       nonnegative, so we redefine the <span class="Li">&quot;count&quot;</span>
       accessor accordingly.
     <p class="Pp"></p>
-    <pre>
-    package MyObj;
+    <pre>    package MyObj;
     use Class::Struct;
-
     # declare the struct
     struct ( 'MyObj', { count =&gt; '$', stuff =&gt; '%' } );
-
     # override the default accessor method for 'count'
     sub count {
         my $self = shift;
@@ -287,15 +268,12 @@
         }
         return $self-&gt;{'MyObj::count'};
     }
-
     package main;
     $x = new MyObj;
     print &quot;\$x-&gt;count(5) = &quot;, $x-&gt;count(5), &quot;\n&quot;;
                             # prints '$x-&gt;count(5) = 5'
-
     print &quot;\$x-&gt;count = &quot;, $x-&gt;count, &quot;\n&quot;;
                             # prints '$x-&gt;count = 5'
-
     print &quot;\$x-&gt;count(-5) = &quot;, $x-&gt;count(-5), &quot;\n&quot;;
                             # dies due to negative argument!
     </pre>
@@ -310,15 +288,12 @@
         as an object of that class, or as a reference to a hash of initializers
         that are passed on to the nested struct's constructor.</p>
     <p class="Pp"></p>
-    <pre>
-    use Class::Struct;
-
+    <pre>    use Class::Struct;
     struct Breed =&gt;
     {
         name  =&gt; '$',
         cross =&gt; '$',
     };
-
     struct Cat =&gt;
     [
         name     =&gt; '$',
@@ -326,15 +301,12 @@
         markings =&gt; '%',
         breed    =&gt; 'Breed',
     ];
-
-
     my $cat = Cat-&gt;new( name =&gt; 'Socks',
                kittens  =&gt; ['Monica', 'Kenneth'],
                markings =&gt; { socks=&gt;1, blaze=&gt;&quot;white&quot; },
                breed    =&gt; Breed-&gt;new(name=&gt;'short-hair', cross=&gt;1),
           or:  breed    =&gt; {name=&gt;'short-hair', cross=&gt;1},
                       );
-
     print &quot;Once a cat called &quot;, $cat-&gt;name, &quot;\n&quot;;
     print &quot;(which was a &quot;, $cat-&gt;breed-&gt;name, &quot;)\n&quot;;
     print &quot;had 2 kittens: &quot;, join(' and ', @{$cat-&gt;kittens}), &quot;\n&quot;;
@@ -347,8 +319,7 @@
   and Modification History</a></h1>
 <p class="Pp">Modified by Damian Conway, 2001-09-10, v0.62.</p>
 <p class="Pp"></p>
-<pre>
-   Modified implicit construction of nested objects.
+<pre>   Modified implicit construction of nested objects.
    Now will also take an object ref instead of requiring a hash ref.
    Also default initializes nested object attributes to undef, rather
    than calling object constructor without args
@@ -362,20 +333,15 @@
 </pre>
 <p class="Pp">Modified by Casey West, 2000-11-08, v0.59.</p>
 <p class="Pp"></p>
-<pre>
-    Added the ability for compile time class creation.
+<pre>    Added the ability for compile time class creation.
 </pre>
 <p class="Pp">Modified by Damian Conway, 1999-03-05, v0.58.</p>
 <p class="Pp"></p>
-<pre>
-    Added handling of hash-like arg list to class ctor.
-
+<pre>    Added handling of hash-like arg list to class ctor.
     Changed to two-argument blessing in ctor to support
     derivation from created classes.
-
     Added classname prefixes to keys in hash-based classes
     (refer to &quot;Perl Cookbook&quot;, Recipe 13.12 for rationale).
-
     Corrected behaviour of accessors for '*@' and '*%' struct
     elements.  Package now implements documented behaviour when
     returning a reference to an entire hash or array element.
@@ -385,8 +351,7 @@
 <p class="Pp">Renamed to <span class="Li">&quot;Class::Struct&quot;</span> and
     modified by Jim Miner, 1997-04-02.</p>
 <p class="Pp"></p>
-<pre>
-    members() function removed.
+<pre>    members() function removed.
     Documentation corrected and extended.
     Use of struct() in a subclass prohibited.
     User definition of accessor allowed.
@@ -398,8 +363,7 @@
 <p class="Pp">Originally <span class="Li">&quot;Class::Template&quot;</span> by
     Dean Roehrich.</p>
 <p class="Pp"></p>
-<pre>
-    # Template.pm   --- struct/member template builder
+<pre>    # Template.pm   --- struct/member template builder
     #   12mar95
     #   Dean Roehrich
     #

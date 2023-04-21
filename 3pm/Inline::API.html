@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline::API(3)</title>
 </head>
@@ -29,12 +30,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    #!/usr/bin/perl
-
+<pre>    #!/usr/bin/perl
     use Inline Foo;
     say_it('foo');  # Use Foo to print &quot;Hello, Foo&quot;
-
     __Foo__
     foo-sub say_it {
         foo-my $foo = foo-shift;
@@ -83,14 +81,12 @@
     We'll call it <span class="Li">&quot;Inline::Foo&quot;</span>. Here is the
     entire (working) implementation.</p>
 <p class="Pp"></p>
-<pre>
-    package Inline::Foo;
+<pre>    package Inline::Foo;
     use strict;
     $Inline::Foo::VERSION = '0.01';
     @Inline::Foo::ISA = qw(Inline);
     require Inline;
     use Carp;
-
     #===========================================================
     # Register Foo as an Inline Language Support Module (ILSM)
     #===========================================================
@@ -102,7 +98,6 @@
             suffix =&gt; 'foo',
            };
     }
-
     #===========================================================
     # Error messages
     #===========================================================
@@ -110,11 +105,9 @@
         my ($key) = @_;
         &quot;'$key' is not a valid config option for Inline::Foo\n&quot;;
     }
-
     sub usage_config_bar {
         &quot;Invalid value for Inline::Foo config option BAR&quot;;
     }
-
     #===========================================================
     # Validate the Foo Config Options
     #===========================================================
@@ -137,7 +130,6 @@
         croak usage_config($key);
         }
     }
-
     #===========================================================
     # Parse and compile Foo code
     #===========================================================
@@ -161,7 +153,6 @@
         print FOO_OBJ $code;
         close \*FOO_OBJ;
     }
-
     #===========================================================
     # Only needed for interpreted languages
     #===========================================================
@@ -175,7 +166,6 @@
         eval &quot;package $o-&gt;{API}{pkg};\n$code&quot;;
         croak &quot;Unable to load Foo module $obj:\n$@&quot; if $@;
     }
-
     #===========================================================
     # Return a small report about the Foo code.
     #===========================================================
@@ -189,7 +179,6 @@
     END
         return $text;
     }
-
     1;
 </pre>
 <p class="Pp">Except for <span class="Li">&quot;load()&quot;</span>, the
@@ -199,8 +188,7 @@
   <li><span class="Li">&quot;Inline::Foo&quot;</span> must be a subclass of
       Inline. This is accomplished with:
     <p class="Pp"></p>
-    <pre>
-    @Inline::Foo::ISA = qw(Inline);
+    <pre>    @Inline::Foo::ISA = qw(Inline);
     </pre>
   </li>
   <li>The line '<span class="Li">&quot;require Inline;&quot;</span>' is not
@@ -209,8 +197,7 @@
     work.</li>
   <li>Remember, it is not valid for a user to say:
     <p class="Pp"></p>
-    <pre>
-    use Inline::Foo;
+    <pre>    use Inline::Foo;
     </pre>
     <p class="Pp"><span class="Li">&quot;Inline.pm&quot;</span> will detect such
         usage for you in its <span class="Li">&quot;import&quot;</span> method,
@@ -245,8 +232,7 @@
     detect new ILSM-s that have been installed on a given system. Here is an
     example of the has ref you would return for Foo:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         language =&gt; 'Foo',
         aliases =&gt; ['foo'],
         type =&gt; 'interpreted',

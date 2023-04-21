@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pod::Simple::Search(3pm)</title>
 </head>
@@ -28,12 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Pod::Simple::Search;
+<pre>  use Pod::Simple::Search;
   my $name2path = Pod::Simple::Search-&gt;new-&gt;limit_glob('LWP::*')-&gt;survey;
   print &quot;Looky see what I found: &quot;,
     join(' ', sort keys %$name2path), &quot;\n&quot;;
-
   print &quot;LWPUA docs = &quot;,
     Pod::Simple::Search-&gt;new-&gt;find('LWP::UserAgent') || &quot;?&quot;,
     &quot;\n&quot;;
@@ -56,8 +55,7 @@
 <p class="Pp">This class provides the one constructor, called
     <span class="Li">&quot;new&quot;</span>. It takes no parameters:</p>
 <p class="Pp"></p>
-<pre>
-  use Pod::Simple::Search;
+<pre>  use Pod::Simple::Search;
   my $search = Pod::Simple::Search-&gt;new;
 </pre>
 </section>
@@ -69,19 +67,17 @@
     searches are carried out.</p>
 <p class="Pp">Note that each of these return <span class="Li">$self</span> when
     you call them as
-    <span class="Li">&quot;$self-&gt;</span><i>whatever(value)</i><span class="Li">&quot;</span>.
+    <span class="Li">&quot;$self-&gt;</span><span class="Li"><i>whatever(value)</i></span><span class="Li">&quot;</span>.
     That's so that you can chain together set-attribute calls like this:</p>
 <p class="Pp"></p>
-<pre>
-  my $name2path =
+<pre>  my $name2path =
     Pod::Simple::Search-&gt;new
     -&gt; inc(0) -&gt; verbose(1) -&gt; callback(\&amp;blab)
     -&gt;survey(@there);
 </pre>
 <p class="Pp">...which works exactly as if you'd done this:</p>
 <p class="Pp"></p>
-<pre>
-  my $search = Pod::Simple::Search-&gt;new;
+<pre>  my $search = Pod::Simple::Search-&gt;new;
   $search-&gt;inc(0);
   $search-&gt;verbose(1);
   $search-&gt;callback(\&amp;blab);
@@ -90,13 +86,14 @@
 <dl class="Bl-tag">
   <dt>$search-&gt;inc( <i>true-or-false</i> );</dt>
   <dd>This attribute, if set to a true value, means that searches should
-      implicitly add perl's <i></i><i>@INC</i><i></i> paths. This automatically
-      considers paths specified in the
+      implicitly add perl's <i></i><span class="Li"><i>@INC</i></span><i></i>
+      paths. This automatically considers paths specified in the
       <span class="Li">&quot;PERL5LIB&quot;</span> environment as this is
-      prepended to <i></i><i>@INC</i><i></i> by the Perl interpreter itself.
-      This attribute's default value is <b>TRUE</b>. If you want to search only
-      specific directories, set <span class="Li">$self</span>-&gt;<b>inc</b>(0)
-      before calling <span class="Li">$inc</span>-&gt;survey or
+      prepended to <i></i><span class="Li"><i>@INC</i></span><i></i> by the Perl
+      interpreter itself. This attribute's default value is <b>TRUE</b>. If you
+      want to search only specific directories, set
+      <span class="Li">$self</span>-&gt;<b>inc</b>(0) before calling
+      <span class="Li">$inc</span>-&gt;survey or
       <span class="Li">$inc</span>-&gt;find.</dd>
   <dt>$search-&gt;verbose( <i>nonnegative-number</i> );</dt>
   <dd>This attribute, if set to a nonzero positive value, will make searches
@@ -195,10 +192,8 @@
         <span class="Li">&quot;done&quot;</span> methods are called like
       this:</p>
     <p class="Pp"></p>
-    <pre>
-  # Every time a file is being scanned for pod:
+    <pre>  # Every time a file is being scanned for pod:
   $progress-&gt;reach($count, &quot;Scanning $file&quot;);   ++$count;
-
   # And then at the end of the search:
   $progress-&gt;done(&quot;Noted $count Pod files total&quot;);
     </pre>
@@ -255,20 +250,22 @@
     <span class="Li">&quot;survey&quot;</span> saves its results in its
     <span class="Li">&quot;name2path&quot;</span> and
     <span class="Li">&quot;path2name&quot;</span> attributes.</p>
-<p class="Pp">E.g., when searching in <i></i><i>$HOME</i><i>/perl5lib</i>, the
-    file <i></i><i>$HOME</i><i>/perl5lib/MyModule.pm</i> would get the POD name
-    <i>MyModule</i>, whereas
-    <i></i><i>$HOME</i><i>/perl5lib/Myclass/Subclass.pm</i> would be
-    <i>Myclass::Subclass</i>. The name information can be used for POD
+<p class="Pp">E.g., when searching in
+    <i></i><span class="Li"><i>$HOME</i></span><i>/perl5lib</i>, the file
+    <i></i><span class="Li"><i>$HOME</i></span><i>/perl5lib/MyModule.pm</i>
+    would get the POD name <i>MyModule</i>, whereas
+    <i></i><span class="Li"><i>$HOME</i></span><i>/perl5lib/Myclass/Subclass.pm</i>
+    would be <i>Myclass::Subclass</i>. The name information can be used for POD
     translators.</p>
 <p class="Pp">Only text files containing at least one valid POD command are
     found.</p>
 <p class="Pp">In verbose mode, a warning is printed if shadows are found (i.e.,
     more than one POD file with the same POD name is found, e.g. <i>CPAN.pm</i>
     in different directories). This usually indicates duplicate occurrences of
-    modules in the <i></i><i>@INC</i><i></i> search path, which is occasionally
-    inadvertent (but is often simply a case of a user's path dir having a more
-    recent version than the system's general path dirs in general.)</p>
+    modules in the <i></i><span class="Li"><i>@INC</i></span><i></i> search
+    path, which is occasionally inadvertent (but is often simply a case of a
+    user's path dir having a more recent version than the system's general path
+    dirs in general.)</p>
 <p class="Pp">The options to this argument is a list of either directories that
     are searched recursively, or files. (Usually you wouldn't specify files, but
     just dirs.) Or you can just specify an empty-list, as in
@@ -316,8 +313,8 @@
     <span class="Li">&quot;inc&quot;</span> attributes influence the behavior of
     this search; notably, <span class="Li">&quot;inc&quot;</span>, if true, adds
     <span class="Li">@INC</span> <i>and also</i>
-    <i></i><i>$Config::Config</i><i>{'scriptdir'}</i> to the list of directories
-    to search.</p>
+    <i></i><span class="Li"><i>$Config::Config</i></span><i>{'scriptdir'}</i> to
+    the list of directories to search.</p>
 <p class="Pp">It is common to simply say <span class="Li">&quot;$filename =
     Pod::Simple::Search-&gt; new</span>
     <span class="Li">-&gt;find(&quot;perlvar&quot;)&quot;</span> so that just

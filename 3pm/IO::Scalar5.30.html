@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Scalar(3)</title>
 </head>
@@ -30,36 +31,29 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Perform I/O on strings, using the basic OO interface...</p>
 <p class="Pp"></p>
-<pre>
-    use 5.005;
+<pre>    use 5.005;
     use IO::Scalar;
     $data = &quot;My message:\n&quot;;
-
     ### Open a handle on a string, and append to it:
     $SH = new IO::Scalar \$data;
     $SH-&gt;print(&quot;Hello&quot;);
     $SH-&gt;print(&quot;, world!\nBye now!\n&quot;);
     print &quot;The string is now: &quot;, $data, &quot;\n&quot;;
-
     ### Open a handle on a string, read it line-by-line, then close it:
     $SH = new IO::Scalar \$data;
     while (defined($_ = $SH-&gt;getline)) {
         print &quot;Got line: $_&quot;;
     }
     $SH-&gt;close;
-
     ### Open a handle on a string, and slurp in all the lines:
     $SH = new IO::Scalar \$data;
     print &quot;All lines:\n&quot;, $SH-&gt;getlines;
-
     ### Get the current position (either of two ways):
     $pos = $SH-&gt;getpos;
     $offset = $SH-&gt;tell;
-
     ### Set the current position (either of two ways):
     $SH-&gt;setpos($pos);
     $SH-&gt;seek($offset, 0);
-
     ### Open an anonymous temporary scalar:
     $SH = new IO::Scalar;
     $SH-&gt;print(&quot;Hi there!&quot;);
@@ -69,34 +63,27 @@
     invisible <b>tie()</b>, the following now works out of the box, just as it
     does with IO::Handle:</p>
 <p class="Pp"></p>
-<pre>
-    use 5.005;
+<pre>    use 5.005;
     use IO::Scalar;
     $data = &quot;My message:\n&quot;;
-
     ### Open a handle on a string, and append to it:
     $SH = new IO::Scalar \$data;
     print $SH &quot;Hello&quot;;
     print $SH &quot;, world!\nBye now!\n&quot;;
     print &quot;The string is now: &quot;, $data, &quot;\n&quot;;
-
     ### Open a handle on a string, read it line-by-line, then close it:
     $SH = new IO::Scalar \$data;
     while (&lt;$SH&gt;) {
         print &quot;Got line: $_&quot;;
     }
     close $SH;
-
     ### Open a handle on a string, and slurp in all the lines:
     $SH = new IO::Scalar \$data;
     print &quot;All lines:\n&quot;, &lt;$SH&gt;;
-
     ### Get the current position (WARNING: requires 5.6):
     $offset = tell $SH;
-
     ### Set the current position (WARNING: requires 5.6):
     seek $SH, $offset, 0;
-
     ### Open an anonymous temporary scalar:
     $SH = new IO::Scalar;
     print $SH &quot;Hi there!&quot;;
@@ -105,15 +92,12 @@
 <p class="Pp">And for you folks with 1.x code out there: the old <b>tie()</b>
     style still works, though this is <i>unnecessary and deprecated</i>:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Scalar;
-
+<pre>    use IO::Scalar;
     ### Writing to a scalar...
     my $s;
     tie *OUT, 'IO::Scalar', \$s;
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
     print &quot;String is now: $s\n&quot;
-
     ### Reading and writing an anonymous scalar...
     tie *OUT, 'IO::Scalar';
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
@@ -124,8 +108,7 @@
 </pre>
 <p class="Pp">Stringification works, too!</p>
 <p class="Pp"></p>
-<pre>
-    my $SH = new IO::Scalar \$data;
+<pre>    my $SH = new IO::Scalar \$data;
     print $SH &quot;Hello, &quot;;
     print $SH &quot;world!&quot;;
     print &quot;I printed: $SH\n&quot;;
@@ -142,24 +125,21 @@
     version).</p>
 <p class="Pp">Basically, this:</p>
 <p class="Pp"></p>
-<pre>
-    my $s;
+<pre>    my $s;
     $SH = new IO::Scalar \$s;
     $SH-&gt;print(&quot;Hel&quot;, &quot;lo, &quot;);         ### OO style
     $SH-&gt;print(&quot;world!\n&quot;);            ### ditto
 </pre>
 <p class="Pp">Or this:</p>
 <p class="Pp"></p>
-<pre>
-    my $s;
+<pre>    my $s;
     $SH = tie *OUT, 'IO::Scalar', \$s;
     print OUT &quot;Hel&quot;, &quot;lo, &quot;;           ### non-OO style
     print OUT &quot;world!\n&quot;;              ### ditto
 </pre>
 <p class="Pp">Causes <span class="Li">$s</span> to be set to:</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Hello, world!\n&quot;
+<pre>    &quot;Hello, world!\n&quot;
 </pre>
 </section>
 <section class="Sh">
@@ -269,15 +249,13 @@
     <span class="Li">$^W</span> or <span class="Li">&quot;perl -w&quot;</span>),
     and you see something like this...</p>
 <p class="Pp"></p>
-<pre>
-    attempt to seek on unopened filehandle
+<pre>    attempt to seek on unopened filehandle
 </pre>
 <p class="Pp">...then you are probably trying to use one of these functions on
     an IO::Scalar with an old Perl. The remedy is to simply use the OO version;
     e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    $SH-&gt;seek(0,0);    ### GOOD: will work on any 5.005
+<pre>    $SH-&gt;seek(0,0);    ### GOOD: will work on any 5.005
     seek($SH,0,0);     ### WARNING: will only work on 5.005_57 and beyond
 </pre>
 </section>

@@ -5,6 +5,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>XATTR_NAME_WITH_FLAGS(3)</title>
 </head>
@@ -113,6 +114,9 @@
   <dt id="XATTR_OPERATION_INTENT_SYNC"><a class="permalink" href="#XATTR_OPERATION_INTENT_SYNC"><code class="Dv">XATTR_OPERATION_INTENT_SYNC</code></a></dt>
   <dd>Indicates that the intent is to sync the object to a service like iCloud
       Drive.</dd>
+  <dt id="XATTR_OPERATION_INTENT_BACKUP"><a class="permalink" href="#XATTR_OPERATION_INTENT_BACKUP"><code class="Dv">XATTR_OPERATION_INTENT_BACKUP</code></a></dt>
+  <dd>Indicates that the intent is to backup the object to a service like Time
+      Machine.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -137,7 +141,12 @@
   <dd>This indicates that the extended attribute should be copied when the file
       is synced on services like iCloud Drive. Sync services may enforce
       additional restrictions on the acceptable size and number of extended
-      attributes.</dd>
+      attributes. (Note that when used with
+      <code class="Dv">XATTR_FLAG_CONTENT_DEPENDENT,</code> this may generate
+      conflicts when the file is synced.)</dd>
+  <dt id="XATTR_FLAG_ONLY_BACKUP"><a class="permalink" href="#XATTR_FLAG_ONLY_BACKUP"><code class="Dv">XATTR_FLAG_ONLY_BACKUP</code></a></dt>
+  <dd>This indicates that the extended attribute should only be copied during
+      backup on services like Time Machine.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -146,15 +155,13 @@
     attribute name and an operation intent, will return whether or not the
     extended attribute should be copied. (This essentially does what
     <code class="Fn">xattr_preserve_for_intent</code>() does.)</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-int
+<div class="Bd Pp Bd-indent Li">
+<pre>int
 ShouldCopyEA(const char *eaName, xattr_operation_intent_t intent)
 {
 	xattr_flags_t flags = xattr_flags_from_name(eaName);
 	return xattr_intent_with_flags(intent, flags);
-}
-</pre>
+}</pre>
 </div>
 </section>
 <section class="Sh">
@@ -164,8 +171,8 @@ ShouldCopyEA(const char *eaName, xattr_operation_intent_t intent)
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">October 9, 2018</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">February 8, 2022</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

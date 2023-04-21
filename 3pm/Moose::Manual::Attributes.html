@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Attributes(3)</title>
 </head>
@@ -54,11 +55,8 @@
 <p class="Pp">Use the <span class="Li">&quot;has&quot;</span> function to
     declare an attribute:</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Moose;
-
   has 'first_name' =&gt; ( is =&gt; 'rw' );
 </pre>
 <p class="Pp">This says that all <span class="Li">&quot;Person&quot;</span>
@@ -106,8 +104,7 @@
     handy when you'd like an attribute to be publicly readable, but only
     privately settable. For example:</p>
 <p class="Pp"></p>
-<pre>
-  has 'weight' =&gt; (
+<pre>  has 'weight' =&gt; (
       is     =&gt; 'ro',
       writer =&gt; '_set_weight',
   );
@@ -125,8 +122,7 @@
     <span class="Li">&quot;reader&quot;</span> and
     <span class="Li">&quot;writer&quot;</span> methods:</p>
 <p class="Pp"></p>
-<pre>
-  has 'weight' =&gt; (
+<pre>  has 'weight' =&gt; (
       is     =&gt; 'rw',
       reader =&gt; 'get_weight',
       writer =&gt; 'set_weight',
@@ -154,34 +150,25 @@
 <p class="Pp">Here's some code to illustrate the relationship between an
     accessor, predicate, and clearer method.</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Moose;
-
   has 'ssn' =&gt; (
       is        =&gt; 'rw',
       clearer   =&gt; 'clear_ssn',
       predicate =&gt; 'has_ssn',
   );
-
   ...
-
   my $person = Person-&gt;new();
   $person-&gt;has_ssn; # false
-
   $person-&gt;ssn(undef);
   $person-&gt;ssn; # returns undef
   $person-&gt;has_ssn; # true
-
   $person-&gt;clear_ssn;
   $person-&gt;ssn; # returns undef
   $person-&gt;has_ssn; # false
-
   $person-&gt;ssn('123-45-6789');
   $person-&gt;ssn; # returns '123-45-6789'
   $person-&gt;has_ssn; # true
-
   my $person2 = Person-&gt;new( ssn =&gt; '111-22-3333');
   $person2-&gt;has_ssn; # true
 </pre>
@@ -197,8 +184,7 @@
     required, simply set the <span class="Li">&quot;required&quot;</span> option
     to true:</p>
 <p class="Pp"></p>
-<pre>
-  has 'name' =&gt; (
+<pre>  has 'name' =&gt; (
       is       =&gt; 'ro',
       required =&gt; 1,
   );
@@ -226,8 +212,7 @@
 <p class="Pp">In the simplest form, you simply provide a non-reference scalar
     value for the <span class="Li">&quot;default&quot;</span> option:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is        =&gt; 'ro',
       default   =&gt; 'medium',
       predicate =&gt; 'has_size',
@@ -236,8 +221,7 @@
 <p class="Pp">If the size attribute is not provided to the constructor, then it
     ends up being set to <span class="Li">&quot;medium&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $person = Person-&gt;new();
+<pre>  my $person = Person-&gt;new();
   $person-&gt;size; # medium
   $person-&gt;has_size; # true
 </pre>
@@ -245,8 +229,7 @@
     <span class="Li">&quot;default&quot;</span>. This reference will be called
     as a method on the object.</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is =&gt; 'ro',
       default =&gt;
           sub { ( 'small', 'medium', 'large' )[ int( rand 3 ) ] },
@@ -259,12 +242,10 @@
     subroutine reference, it is called as a method on the object, with no
     additional parameters:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is      =&gt; 'ro',
       default =&gt; sub {
           my $self = shift;
-
           return $self-&gt;height &gt; 200 ? 'large' : 'average';
       },
   );
@@ -277,8 +258,7 @@
 <p class="Pp">If you want to use a reference of any sort as the default value,
     you must return it from a subroutine.</p>
 <p class="Pp"></p>
-<pre>
-  has 'mapping' =&gt; (
+<pre>  has 'mapping' =&gt; (
       is      =&gt; 'ro',
       default =&gt; sub { {} },
   );
@@ -286,8 +266,7 @@
 <p class="Pp">This is necessary because otherwise Perl would instantiate the
     reference exactly once, and it would be shared by all objects:</p>
 <p class="Pp"></p>
-<pre>
-  has 'mapping' =&gt; (
+<pre>  has 'mapping' =&gt; (
       is      =&gt; 'ro',
       default =&gt; {}, # wrong!
   );
@@ -301,13 +280,11 @@
 <p class="Pp">As an alternative to using a subroutine reference, you can supply
     a <span class="Li">&quot;builder&quot;</span> method for your attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is        =&gt; 'ro',
       builder   =&gt; '_build_size',
       predicate =&gt; 'has_size',
   );
-
   sub _build_size {
       return ( 'small', 'medium', 'large' )[ int( rand 3 ) ];
   }
@@ -330,12 +307,9 @@
 <p class="Pp">If we subclass our <span class="Li">&quot;Person&quot;</span>
     class, we can override <span class="Li">&quot;_build_size&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package Lilliputian;
-
+<pre>  package Lilliputian;
   use Moose;
   extends 'Person';
-
   sub _build_size { return 'small' }
 </pre>
 <p class="Pp"><i>Builders work well with roles</i></p>
@@ -343,23 +317,17 @@
     For example, a role could provide an attribute but require that the
     consuming class provide the <span class="Li">&quot;builder&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package HasSize;
+<pre>  package HasSize;
   use Moose::Role;
-
   requires '_build_size';
-
   has 'size' =&gt; (
       is      =&gt; 'ro',
       lazy    =&gt; 1,
       builder =&gt; '_build_size',
   );
-
   package Lilliputian;
   use Moose;
-
   with 'HasSize';
-
   sub _build_size { return 'small' }
 </pre>
 <p class="Pp">Roles are covered in Moose::Manual::Roles.</p>
@@ -369,8 +337,7 @@
 <p class="Pp">Moose lets you defer attribute population by making an attribute
     <span class="Li">&quot;lazy&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is      =&gt; 'ro',
       lazy    =&gt; 1,
       builder =&gt; '_build_size',
@@ -392,7 +359,8 @@
 <p class="Pp">We recommend that you make any attribute with a builder or
     non-trivial default <span class="Li">&quot;lazy&quot;</span> as a matter of
     course.</p>
-<p class="Pp"><i>Lazy defaults and </i><i>$_</i><i></i></p>
+<p class="Pp"><i>Lazy defaults and
+  </i><span class="Li"><i>$_</i></span><i></i></p>
 <p class="Pp">Please note that a lazy default or builder can be called anywhere,
     even inside a <span class="Li">&quot;map&quot;</span> or
     <span class="Li">&quot;grep&quot;</span>. This means that if your default
@@ -410,8 +378,7 @@
 <p class="Pp">You can do either of these things with the
     <span class="Li">&quot;init_arg&quot;</span> option:</p>
 <p class="Pp"></p>
-<pre>
-  has 'bigness' =&gt; (
+<pre>  has 'bigness' =&gt; (
       is       =&gt; 'ro',
       init_arg =&gt; 'size',
   );
@@ -421,8 +388,7 @@
 <p class="Pp">Even more useful is the ability to disable setting an attribute
     via the constructor. This is particularly handy for private attributes:</p>
 <p class="Pp"></p>
-<pre>
-  has '_genetic_code' =&gt; (
+<pre>  has '_genetic_code' =&gt; (
       is       =&gt; 'ro',
       lazy     =&gt; 1,
       builder  =&gt; '_build_genetic_code',
@@ -441,12 +407,10 @@
     will call <span class="Li">&quot;Scalar::Util::weaken&quot;</span> whenever
     the attribute is set:</p>
 <p class="Pp"></p>
-<pre>
-  has 'parent' =&gt; (
+<pre>  has 'parent' =&gt; (
       is       =&gt; 'rw',
       weak_ref =&gt; 1,
   );
-
   $node-&gt;parent($parent_node);
 </pre>
 <p class="Pp">This is very useful when you're building objects that may contain
@@ -465,21 +429,16 @@
 <p class="Pp">A <span class="Li">&quot;trigger&quot;</span> is a subroutine that
     is called whenever the attribute is set:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is      =&gt; 'rw',
       trigger =&gt; \&amp;_size_set,
   );
-
   sub _size_set {
       my ( $self, $size, $old_size ) = @_;
-
       my $msg = $self-&gt;name;
-
       if ( @_ &gt; 2 ) {
           $msg .= &quot; - old size was $old_size&quot;;
       }
-
       $msg .= &quot; - size is now $size&quot;;
       warn $msg;
   }
@@ -504,8 +463,7 @@
   types</a></h2>
 <p class="Pp">Attributes can be restricted to only accept certain types:</p>
 <p class="Pp"></p>
-<pre>
-  has 'first_name' =&gt; (
+<pre>  has 'first_name' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Str',
   );
@@ -515,8 +473,7 @@
 <p class="Pp">Moose also provides a shortcut for specifying that an attribute
     only accepts objects that do a certain role:</p>
 <p class="Pp"></p>
-<pre>
-  has 'weapon' =&gt; (
+<pre>  has 'weapon' =&gt; (
       is   =&gt; 'rw',
       does =&gt; 'MyApp::Weapon',
   );
@@ -529,8 +486,7 @@
 <p class="Pp">An attribute can define methods which simply delegate to its
     value:</p>
 <p class="Pp"></p>
-<pre>
-  has 'hair_color' =&gt; (
+<pre>  has 'hair_color' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'Graphics::Color::RGB',
       handles =&gt; { hair_color_hex =&gt; 'as_hex_string' },
@@ -552,9 +508,7 @@
   metaclasses.</p>
 <p class="Pp">You can apply one or more traits to an attribute:</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::MetaDescription;
-
+<pre>  use MooseX::MetaDescription;
   has 'size' =&gt; (
       is          =&gt; 'ro',
       traits      =&gt; ['MooseX::MetaDescription::Meta::Trait'],
@@ -583,8 +537,7 @@
     <span class="Li">&quot;map()&quot;</span>,
     <span class="Li">&quot;count()&quot;</span>, and more.</p>
 <p class="Pp"></p>
-<pre>
-  has 'options' =&gt; (
+<pre>  has 'options' =&gt; (
       traits  =&gt; ['Array'],
       is      =&gt; 'ro',
       isa     =&gt; 'ArrayRef[Str]',
@@ -611,13 +564,9 @@
 <p class="Pp">To change some aspects of an attribute, you simply prepend a plus
     sign (<span class="Li">&quot;+&quot;</span>) to its name:</p>
 <p class="Pp"></p>
-<pre>
-  package LazyPerson;
-
+<pre>  package LazyPerson;
   use Moose;
-
   extends 'Person';
-
   has '+first_name' =&gt; (
       lazy    =&gt; 1,
       default =&gt; 'Bill',
@@ -647,18 +596,14 @@
 <p class="Pp">If you have a number of attributes that differ only by name, you
     can declare them all at once:</p>
 <p class="Pp"></p>
-<pre>
-  package Point;
-
+<pre>  package Point;
   use Moose;
-
   has [ 'x', 'y' ] =&gt; ( is =&gt; 'ro', isa =&gt; 'Int' );
 </pre>
 <p class="Pp">Also, because <span class="Li">&quot;has&quot;</span> is just a
     function call, you can call it in a loop:</p>
 <p class="Pp"></p>
-<pre>
-  for my $name ( qw( x y ) ) {
+<pre>  for my $name ( qw( x y ) ) {
       my $builder = '_build_' . $name;
       has $name =&gt; ( is =&gt; 'ro', isa =&gt; 'Int', builder =&gt; $builder );
   }
@@ -684,8 +629,7 @@
 <p class="Pp">You can provide a piece of documentation as a string for an
     attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has 'first_name' =&gt; (
+<pre>  has 'first_name' =&gt; (
       is            =&gt; 'rw',
       documentation =&gt; q{The person's first (personal) name},
   );
@@ -701,8 +645,7 @@
     dereference the value when it is returned from the reader method <i>in list
     context</i>:</p>
 <p class="Pp"></p>
-<pre>
-  my %map = $object-&gt;mapping;
+<pre>  my %map = $object-&gt;mapping;
 </pre>
 <p class="Pp">This option only works if your attribute is explicitly typed as an
     <span class="Li">&quot;ArrayRef&quot;</span> or

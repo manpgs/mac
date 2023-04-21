@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLHACKTUT(1)</title>
 </head>
@@ -73,8 +74,7 @@
     still at the start of the string. So, here's where
     <span class="Li">&quot;pat&quot;</span> is set up:</p>
 <p class="Pp"></p>
-<pre>
-    STRLEN fromlen;
+<pre>    STRLEN fromlen;
     char *pat = SvPVx(*++MARK, fromlen);
     char *patend = pat + fromlen;
     I32 len;
@@ -83,8 +83,7 @@
 </pre>
 <p class="Pp">We'll have another string pointer in there:</p>
 <p class="Pp"></p>
-<pre>
-    STRLEN fromlen;
+<pre>    STRLEN fromlen;
     char *pat = SvPVx(*++MARK, fromlen);
     char *patend = pat + fromlen;
  +  char *patcopy;
@@ -96,8 +95,7 @@
     <span class="Li">&quot;patcopy&quot;</span> to be the start of
     <span class="Li">&quot;pat&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    items = SP - MARK;
+<pre>    items = SP - MARK;
     MARK++;
     SvPVCLEAR(cat);
  +  patcopy = pat;
@@ -108,8 +106,7 @@
     <span class="Li">&quot;UTF8&quot;</span> flag for the output SV,
     <span class="Li">&quot;cat&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
- +  if (datumtype == 'U' &amp;&amp; pat==patcopy+1)
+<pre> +  if (datumtype == 'U' &amp;&amp; pat==patcopy+1)
  +      SvUTF8_on(cat);
     if (datumtype == '#') {
         while (pat &lt; patend &amp;&amp; *pat != '\n')
@@ -126,14 +123,12 @@
     In this case, we have to advance <span class="Li">&quot;patcopy&quot;</span>
     along with <span class="Li">&quot;pat&quot;</span> when we see spaces:</p>
 <p class="Pp"></p>
-<pre>
-    if (isSPACE(datumtype))
+<pre>    if (isSPACE(datumtype))
         continue;
 </pre>
 <p class="Pp">needs to become</p>
 <p class="Pp"></p>
-<pre>
-    if (isSPACE(datumtype)) {
+<pre>    if (isSPACE(datumtype)) {
         patcopy++;
         continue;
     }
@@ -155,50 +150,43 @@
 <p class="Pp">t/op/pack.t has a sensible <b>ok()</b> function, but if it didn't
     we could use the one from t/test.pl.</p>
 <p class="Pp"></p>
-<pre>
- require './test.pl';
+<pre> require './test.pl';
  plan( tests =&gt; 159 );
 </pre>
 <p class="Pp">so instead of this:</p>
 <p class="Pp"></p>
-<pre>
- print 'not ' unless &quot;1.20.300.4000&quot; eq sprintf &quot;%vd&quot;,
+<pre> print 'not ' unless &quot;1.20.300.4000&quot; eq sprintf &quot;%vd&quot;,
                                                pack(&quot;U*&quot;,1,20,300,4000);
  print &quot;ok $test\n&quot;; $test++;
 </pre>
 <p class="Pp">we can write the more sensible (see Test::More for a full
     explanation of <b>is()</b> and other testing functions).</p>
 <p class="Pp"></p>
-<pre>
- is( &quot;1.20.300.4000&quot;, sprintf &quot;%vd&quot;, pack(&quot;U*&quot;,1,20,300,4000),
+<pre> is( &quot;1.20.300.4000&quot;, sprintf &quot;%vd&quot;, pack(&quot;U*&quot;,1,20,300,4000),
                                        &quot;U* produces Unicode&quot; );
 </pre>
 <p class="Pp">Now we'll test that we got that space-at-the-beginning business
     right:</p>
 <p class="Pp"></p>
-<pre>
- is( &quot;1.20.300.4000&quot;, sprintf &quot;%vd&quot;, pack(&quot;  U*&quot;,1,20,300,4000),
+<pre> is( &quot;1.20.300.4000&quot;, sprintf &quot;%vd&quot;, pack(&quot;  U*&quot;,1,20,300,4000),
                                      &quot;  with spaces at the beginning&quot; );
 </pre>
 <p class="Pp">And finally we'll test that we don't make Unicode strings if
     <span class="Li">&quot;U&quot;</span> is <b>not</b> the first active
   format:</p>
 <p class="Pp"></p>
-<pre>
- isnt( v1.20.300.4000, sprintf &quot;%vd&quot;, pack(&quot;C0U*&quot;,1,20,300,4000),
+<pre> isnt( v1.20.300.4000, sprintf &quot;%vd&quot;, pack(&quot;C0U*&quot;,1,20,300,4000),
                                        &quot;U* not first isn't Unicode&quot; );
 </pre>
 <p class="Pp">Mustn't forget to change the number of tests which appears at the
     top, or else the automated tester will get confused. This will either look
     like this:</p>
 <p class="Pp"></p>
-<pre>
- print &quot;1..156\n&quot;;
+<pre> print &quot;1..156\n&quot;;
 </pre>
 <p class="Pp">or this:</p>
 <p class="Pp"></p>
-<pre>
- plan( tests =&gt; 156 );
+<pre> plan( tests =&gt; 156 );
 </pre>
 <p class="Pp">We now compile up Perl, and run it through the test suite. Our new
     tests pass, hooray!</p>
@@ -212,9 +200,7 @@
     we'll insert this text in the description of
     <span class="Li">&quot;pack&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
- =item *
-
+<pre> =item *
  If the pattern begins with a C&lt;U&gt;, the resulting string will be treated
  as UTF-8-encoded Unicode. You can force UTF-8 encoding on in a string
  with an initial C&lt;U0&gt;, and the bytes that follow will be interpreted as

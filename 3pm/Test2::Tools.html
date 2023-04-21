@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Tools(3)</title>
 </head>
@@ -58,39 +59,29 @@
   DO I WRITE A 'TOOLS' MODULE?</a></h1>
 <p class="Pp">It is very easy to write tools:</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::Tools::Mine
+<pre>    package Test2::Tools::Mine
     use strict;
     use warnings;
-
     # All tools should use the context() function.
     use Test2::API qw/context/;
-
     our @EXPORTS = qw/ok plan/;
     use base 'Exporter';
-
     sub ok($;$) {
         my ($bool, $name) = @_;
-
         # All tool functions should start by grabbing a context
         my $ctx = context();
-
         # The context is the primary interface for generating events
         $ctx-&gt;ok($bool, $name);
-
         # When you are done you release the context
         $ctx-&gt;release;
-
         return $bool ? 1 : 0;
     }
-
     sub plan {
         my ($max) = @_;
         my $ctx = context();
         $ctx-&gt;plan($max);
         $ctx-&gt;release;
     }
-
     1;
 </pre>
 <p class="Pp">See Test2::API::Context for documentation on what the

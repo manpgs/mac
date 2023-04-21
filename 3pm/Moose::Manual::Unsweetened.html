@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Unsweetened(3)</title>
 </head>
@@ -43,41 +44,32 @@
   AND ATTRIBUTES</a></h1>
 <p class="Pp">First, we define two very small classes the Moose way.</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use DateTime;
   use DateTime::Format::Natural;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   has name =&gt; (
       is       =&gt; 'rw',
       isa      =&gt; 'Str',
       required =&gt; 1,
   );
-
   # Moose doesn't know about non-Moose-based classes.
   class_type 'DateTime';
-
   my $en_parser = DateTime::Format::Natural-&gt;new(
       lang      =&gt; 'en',
       time_zone =&gt; 'UTC',
   );
-
   coerce 'DateTime'
       =&gt; from 'Str'
       =&gt; via { $en_parser-&gt;parse_datetime($_) };
-
   has birth_date =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'DateTime',
       coerce  =&gt; 1,
       handles =&gt; { birth_year =&gt; 'year' },
   );
-
   enum 'ShirtSize' =&gt; [qw( s m l xl xxl )];
-
   has shirt_size =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'ShirtSize',
@@ -88,20 +80,15 @@
     define an enum type to validate t-shirt sizes because we don't want to end
     up with something like &quot;blue&quot; for the shirt size!</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use Email::Valid;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   extends 'Person';
-
   subtype 'Email'
       =&gt; as 'Str'
       =&gt; where { Email::Valid-&gt;address($_) }
       =&gt; message { &quot;$_ is not a valid email address&quot; };
-
   has email_address =&gt; (
       is       =&gt; 'rw',
       isa      =&gt; 'Email',
@@ -114,129 +101,91 @@
     Perl 5. For the sake of argument, we won't use any base classes or any
     helpers like <span class="Li">&quot;Class::Accessor&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use strict;
   use warnings;
-
   use Carp qw( confess );
   use DateTime;
   use DateTime::Format::Natural;
-
   sub new {
       my $class = shift;
       my %p = ref $_[0] ? %{ $_[0] } : @_;
-
       exists $p{name}
           or confess 'name is a required attribute';
       $class-&gt;_validate_name( $p{name} );
-
       exists $p{birth_date}
           or confess 'birth_date is a required attribute';
-
       $p{birth_date} = $class-&gt;_coerce_birth_date( $p{birth_date} );
       $class-&gt;_validate_birth_date( $p{birth_date} );
-
       $p{shirt_size} = 'l'
           unless exists $p{shirt_size};
-
       $class-&gt;_validate_shirt_size( $p{shirt_size} );
-
       return bless \%p, $class;
   }
-
   sub _validate_name {
       shift;
       my $name = shift;
-
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-
       defined $name
           or confess 'name must be a string';
   }
-
   {
       my $en_parser = DateTime::Format::Natural-&gt;new(
           lang      =&gt; 'en',
           time_zone =&gt; 'UTC',
       );
-
       sub _coerce_birth_date {
           shift;
           my $date = shift;
-
           return $date unless defined $date &amp;&amp; ! ref $date;
-
           my $dt = $en_parser-&gt;parse_datetime($date);
-
           return $dt ? $dt : undef;
       }
   }
-
   sub _validate_birth_date {
       shift;
       my $birth_date = shift;
-
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-
       $birth_date-&gt;isa('DateTime')
           or confess 'birth_date must be a DateTime object';
   }
-
   sub _validate_shirt_size {
       shift;
       my $shirt_size = shift;
-
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-
       defined $shirt_size
           or confess 'shirt_size cannot be undef';
-
       my %sizes = map { $_ =&gt; 1 } qw( s m l xl xxl );
-
       $sizes{$shirt_size}
           or confess &quot;$shirt_size is not a valid shirt size (s, m, l, xl, xxl)&quot;;
   }
-
   sub name {
       my $self = shift;
-
       if (@_) {
           $self-&gt;_validate_name( $_[0] );
           $self-&gt;{name} = $_[0];
       }
-
       return $self-&gt;{name};
   }
-
   sub birth_date {
       my $self = shift;
-
       if (@_) {
           my $date = $self-&gt;_coerce_birth_date( $_[0] );
           $self-&gt;_validate_birth_date( $date );
-
           $self-&gt;{birth_date} = $date;
       }
-
       return $self-&gt;{birth_date};
   }
-
   sub birth_year {
       my $self = shift;
-
       return $self-&gt;birth_date-&gt;year;
   }
-
   sub shirt_size {
       my $self = shift;
-
       if (@_) {
           $self-&gt;_validate_shirt_size( $_[0] );
           $self-&gt;{shirt_size} = $_[0];
       }
-
       return $self-&gt;{shirt_size};
   }
 </pre>
@@ -260,54 +209,38 @@
     point of the example. Moose saves you a lot of work!)</p>
 <p class="Pp">Now let's see User:</p>
 <p class="Pp"></p>
-<pre>
-  package User;
-
+<pre>  package User;
   use strict;
   use warnings;
-
   use Carp qw( confess );
   use Email::Valid;
   use Scalar::Util qw( blessed );
-
   use parent 'Person';
-
   sub new {
       my $class = shift;
       my %p = ref $_[0] ? %{ $_[0] } : @_;
-
       exists $p{email_address}
           or confess 'email_address is a required attribute';
       $class-&gt;_validate_email_address( $p{email_address} );
-
       my $self = $class-&gt;SUPER::new(%p);
-
       $self-&gt;{email_address} = $p{email_address};
-
       return $self;
   }
-
   sub _validate_email_address {
       shift;
       my $email_address = shift;
-
       local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-
       defined $email_address
           or confess 'email_address must be a string';
-
       Email::Valid-&gt;address($email_address)
           or confess &quot;$email_address is not a valid email address&quot;;
   }
-
   sub email_address {
       my $self = shift;
-
       if (@_) {
           $self-&gt;_validate_email_address( $_[0] );
           $self-&gt;{email_address} = $_[0];
       }
-
       return $self-&gt;{email_address};
   }
 </pre>
@@ -316,9 +249,7 @@
     do much. We could probably simplify this by defining some sort of
     &quot;attribute and validation&quot; hash, like this:</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   my %Attr = (
       name =&gt; {
           required =&gt; 1,

@@ -36,6 +36,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GETOPT_LONG(3)</title>
 </head>
@@ -121,15 +122,13 @@
     <a class="permalink" href="#getopt_long~3"><code class="Fn">getopt_long</code></a>()
     call requires a structure to be initialized describing the long options. The
     structure is:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-struct option {
+<div class="Bd Pp Bd-indent Li">
+<pre>struct option {
 	char *name;
 	int has_arg;
 	int *flag;
 	int val;
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">The <var class="Va">name</var> field should contain the option
     name without the leading double dash.</p>
@@ -180,11 +179,30 @@ struct option {
     short option. If <var class="Fa">flag</var> is not
     <code class="Dv">NULL</code>, these functions return 0 and store
     <var class="Fa">val</var> in the location pointed to by
-    <var class="Fa">flag</var>. These functions return
-    &#x2018;<code class="Li">:</code>&#x2019; if there was a missing option
-    argument, &#x2018;<code class="Li">?</code>&#x2019; if the user specified an
-    unknown or ambiguous option, and -1 when the argument list has been
-    exhausted.</p>
+    <var class="Fa">flag</var>.</p>
+<p class="Pp">These functions return &#x2018;<code class="Li">:</code>&#x2019;
+    if there was a missing option argument and error messages are suppressed,
+    &#x2018;<code class="Li">?</code>&#x2019; if the user specified an unknown
+    or ambiguous option, and -1 when the argument list has been exhausted. The
+    default behavior when a missing option argument is encountered is to write
+    an error and return &#x2018;<code class="Li">?</code>&#x2019;. Specifying
+    &#x2018;<code class="Li">:</code>&#x2019; in <var class="Fa">optstr</var>
+    will cause the error message to be suppressed and
+    &#x2018;<code class="Li">:</code>&#x2019; to be returned instead.</p>
+<p class="Pp">In addition to &#x2018;<code class="Li">:</code>&#x2019;, a
+    leading &#x2018;<code class="Li">+</code>&#x2019; or
+    &#x2018;<code class="Li">-</code>&#x2019; in <var class="Fa">optstr</var>
+    also has special meaning. If either of these are specified, they must appear
+    before &#x2018;<code class="Li">:</code>&#x2019;.</p>
+<p class="Pp">A leading &#x2018;<code class="Li">+</code>&#x2019; indicates that
+    processing should be halted at the first non-option argument, matching the
+    default behavior of <a class="Xr" href="../3/getopt">getopt(3)</a>. The
+    default behavior without &#x2018;<code class="Li">+</code>&#x2019; is to
+    permute non-option arguments to the end of <var class="Fa">argv</var>.</p>
+<p class="Pp">A leading &#x2018;<code class="Li">-</code>&#x2019; indicates that
+    all non-option arguments should be treated as if they are arguments to a
+    literal &#x2018;<code class="Li">1</code>&#x2019; flag (i.e., the function
+    call will return the value 1, rather than the char literal '1').</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
@@ -198,9 +216,8 @@ struct option {
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<div class="Bd">
-<pre>
-int bflag, ch, fd;
+<div class="Bd Li">
+<pre>int bflag, ch, fd;
 int daggerset;
 
 /* options descriptor */
@@ -232,8 +249,7 @@ while ((ch = getopt_long(argc, argv, &quot;bf:&quot;, longopts, NULL)) != -1) {
 	}
 }
 argc -= optind;
-argv += optind;
-</pre>
+argv += optind;</pre>
 </div>
 </section>
 <section class="Sh">
@@ -316,8 +332,8 @@ argv += optind;
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 25, 2011</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">May 2, 2018</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

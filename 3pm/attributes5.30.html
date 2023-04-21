@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>attributes(3pm)</title>
 </head>
@@ -28,14 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  sub foo : method ;
+<pre>  sub foo : method ;
   my ($x,@y,%z) : Bent = 1;
   my $s = sub : method { ... };
-
   use attributes ();    # optional, to get subroutine declarations
   my @attrlist = attributes::get(\&amp;foo);
-
   use attributes 'get'; # import the attributes::get subroutine
   my @attrlist = get \&amp;foo;
 </pre>
@@ -50,14 +48,12 @@
     list to this module. In particular, the first example above is equivalent to
     the following:</p>
 <p class="Pp"></p>
-<pre>
-    use attributes __PACKAGE__, \&amp;foo, 'method';
+<pre>    use attributes __PACKAGE__, \&amp;foo, 'method';
 </pre>
 <p class="Pp">The second example in the synopsis does something equivalent to
     this:</p>
 <p class="Pp"></p>
-<pre>
-    use attributes ();
+<pre>    use attributes ();
     my ($x,@y,%z);
     attributes::-&gt;import(__PACKAGE__, \$x, 'Bent');
     attributes::-&gt;import(__PACKAGE__, \@y, 'Bent');
@@ -82,8 +78,7 @@
     component of the <span class="Li">&quot;my&quot;</span> before those
     attributes will get applied. For example:</p>
 <p class="Pp"></p>
-<pre>
-    my $x : Bent = 42 if 0;
+<pre>    my $x : Bent = 42 if 0;
 </pre>
 <p class="Pp">will neither assign 42 to <span class="Li">$x</span> <i>nor</i>
     will it apply the <span class="Li">&quot;Bent&quot;</span> attribute to the
@@ -99,13 +94,11 @@
   &quot;import&quot; does</a></h2>
 <p class="Pp">In the description it is mentioned that</p>
 <p class="Pp"></p>
-<pre>
-  sub foo : method;
+<pre>  sub foo : method;
 </pre>
 <p class="Pp">is equivalent to</p>
 <p class="Pp"></p>
-<pre>
-  use attributes __PACKAGE__, \&amp;foo, 'method';
+<pre>  use attributes __PACKAGE__, \&amp;foo, 'method';
 </pre>
 <p class="Pp">As you might know this calls the
     <span class="Li">&quot;import&quot;</span> function of
@@ -113,8 +106,7 @@
     parameters: 'attributes', the caller's package name, the reference to the
     code and 'method'.</p>
 <p class="Pp"></p>
-<pre>
-  attributes-&gt;import( __PACKAGE__, \&amp;foo, 'method' );
+<pre>  attributes-&gt;import( __PACKAGE__, \&amp;foo, 'method' );
 </pre>
 <p class="Pp">So you want to know what
     <span class="Li">&quot;import&quot;</span> actually does?</p>
@@ -128,8 +120,7 @@
     this method is called to check if you have used a &quot;bad attribute&quot;.
     The subroutine call in this example would look like</p>
 <p class="Pp"></p>
-<pre>
-  MODIFY_CODE_ATTRIBUTES( 'main', \&amp;foo, 'method' );
+<pre>  MODIFY_CODE_ATTRIBUTES( 'main', \&amp;foo, 'method' );
 </pre>
 <p class="Pp"><span class="Li">&quot;MODIFY_&lt;reftype&gt;_ATTRIBUTES&quot;</span>
     has to return a list of all &quot;bad attributes&quot;. If there are any bad
@@ -197,7 +188,7 @@
       invalid arguments, it uses <b>die()</b> (via Carp::croak) to raise a fatal
       exception. If it can find an appropriate package name for a class method
       lookup, it will include the results from a
-      <span class="Li">&quot;FETCH_</span><i>type</i><span class="Li">_ATTRIBUTES&quot;</span>
+      <span class="Li">&quot;FETCH_</span><span class="Li"><i>type</i></span><span class="Li">_ATTRIBUTES&quot;</span>
       call in its return list, as described in &quot;Package-specific Attribute
       Handling&quot; below. Otherwise, only built-in attributes will be
       returned.</dd>
@@ -280,8 +271,7 @@
   <span class="Li">&quot;q()&quot;</span>.</p>
 <p class="Pp">Some examples of syntactically valid attribute lists:</p>
 <p class="Pp"></p>
-<pre>
-    switch(10,foo(7,3))  :  expensive
+<pre>    switch(10,foo(7,3))  :  expensive
     Ugly('\(&quot;) :Bad
     _5x5
     lvalue method
@@ -289,8 +279,7 @@
 <p class="Pp">Some examples of syntactically invalid attribute lists (with
     annotation):</p>
 <p class="Pp"></p>
-<pre>
-    switch(10,foo()             # ()-string not balanced
+<pre>    switch(10,foo()             # ()-string not balanced
     Ugly('(')                   # ()-string not balanced
     5x5                         # &quot;5x5&quot; not a valid identifier
     Y2::north                   # &quot;Y2::north&quot; not a simple identifier
@@ -329,75 +318,63 @@
   <dt>1.</dt>
   <dd>Code:
     <p class="Pp"></p>
-    <pre>
-    package Canine;
+    <pre>    package Canine;
     package Dog;
     my Canine $spot : Watchful ;
     </pre>
     <p class="Pp">Effect:</p>
     <p class="Pp"></p>
-    <pre>
-    use attributes ();
+    <pre>    use attributes ();
     attributes::-&gt;import(Canine =&gt; \$spot, &quot;Watchful&quot;);
     </pre>
   </dd>
   <dt>2.</dt>
   <dd>Code:
     <p class="Pp"></p>
-    <pre>
-    package Felis;
+    <pre>    package Felis;
     my $cat : Nervous;
     </pre>
     <p class="Pp">Effect:</p>
     <p class="Pp"></p>
-    <pre>
-    use attributes ();
+    <pre>    use attributes ();
     attributes::-&gt;import(Felis =&gt; \$cat, &quot;Nervous&quot;);
     </pre>
   </dd>
   <dt>3.</dt>
   <dd>Code:
     <p class="Pp"></p>
-    <pre>
-    package X;
+    <pre>    package X;
     sub foo : lvalue ;
     </pre>
     <p class="Pp">Effect:</p>
     <p class="Pp"></p>
-    <pre>
-    use attributes X =&gt; \&amp;foo, &quot;lvalue&quot;;
+    <pre>    use attributes X =&gt; \&amp;foo, &quot;lvalue&quot;;
     </pre>
   </dd>
   <dt>4.</dt>
   <dd>Code:
     <p class="Pp"></p>
-    <pre>
-    package X;
+    <pre>    package X;
     sub Y::x : lvalue { 1 }
     </pre>
     <p class="Pp">Effect:</p>
     <p class="Pp"></p>
-    <pre>
-    use attributes Y =&gt; \&amp;Y::x, &quot;lvalue&quot;;
+    <pre>    use attributes Y =&gt; \&amp;Y::x, &quot;lvalue&quot;;
     </pre>
   </dd>
   <dt>5.</dt>
   <dd>Code:
     <p class="Pp"></p>
-    <pre>
-    package X;
+    <pre>    package X;
     sub foo { 1 }
-
     package Y;
     BEGIN { *bar = \&amp;X::foo; }
-
     package Z;
     sub Y::bar : lvalue ;
     </pre>
     <p class="Pp">Effect:</p>
     <p class="Pp"></p>
-    <pre>
-    use attributes X =&gt; \&amp;X::foo, &quot;lvalue&quot;;
+    <pre>    use attributes X =&gt; \&amp;X::foo, &quot;lvalue&quot;;
     </pre>
   </dd>
 </dl>
@@ -411,16 +388,12 @@
 <dl class="Bl-tag">
   <dt>1.</dt>
   <dd>
-    <pre>
-    sub MODIFY_CODE_ATTRIBUTES {
+    <pre>    sub MODIFY_CODE_ATTRIBUTES {
        my ($class,$code,@attrs) = @_;
-
        my $allowed = 'MyAttribute';
        my @bad = grep { $_ ne $allowed } @attrs;
-
        return @bad;
     }
-
     sub foo : MyAttribute {
        print &quot;foo\n&quot;;
     }
@@ -433,16 +406,12 @@
   </dd>
   <dt>2.</dt>
   <dd>
-    <pre>
-  sub MODIFY_CODE_ATTRIBUTES {
+    <pre>  sub MODIFY_CODE_ATTRIBUTES {
      my ($class,$code,@attrs) = @_;
-
      my $allowed = 'MyAttribute';
      my @bad = grep{ $_ ne $allowed }@attrs;
-
      return @bad;
   }
-
   sub foo : MyAttribute Test {
      print &quot;foo\n&quot;;
   }

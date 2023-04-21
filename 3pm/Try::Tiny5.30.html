@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Try::Tiny(3)</title>
 </head>
@@ -36,8 +37,7 @@
     and <span class="Li">&quot;catch&quot;</span> to expect and handle
     exceptional conditions, avoiding quirks in Perl and common mistakes:</p>
 <p class="Pp"></p>
-<pre>
-  # handle errors with a catch handler
+<pre>  # handle errors with a catch handler
   try {
     die &quot;foo&quot;;
   } catch {
@@ -49,8 +49,7 @@
     conditions. Obviously, this is an extreme measure not to be undertaken
     lightly:</p>
 <p class="Pp"></p>
-<pre>
-  # just silence errors
+<pre>  # just silence errors
   try {
     die &quot;foo&quot;;
   };
@@ -85,18 +84,15 @@
     the empty list in list context. The following examples all assign
     <span class="Li">&quot;bar&quot;</span> to <span class="Li">$x</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $x = try { die &quot;foo&quot; } catch { &quot;bar&quot; };
+<pre>  my $x = try { die &quot;foo&quot; } catch { &quot;bar&quot; };
   my $x = try { die &quot;foo&quot; } || &quot;bar&quot;;
   my $x = (try { die &quot;foo&quot; }) // &quot;bar&quot;;
-
   my $x = eval { die &quot;foo&quot; } || &quot;bar&quot;;
 </pre>
 <p class="Pp">You can add <span class="Li">&quot;finally&quot;</span> blocks,
     yielding the following:</p>
 <p class="Pp"></p>
-<pre>
-  my $x;
+<pre>  my $x;
   try { die 'foo' } finally { $x = 'bar' };
   try { die 'foo' } catch { warn &quot;Got a die: $_&quot; } finally { $x = 'bar' };
 </pre>
@@ -152,8 +148,7 @@
         as <span class="Li">&quot;Try::Tiny::Catch&quot;</span> which allows try
         to decode correctly what to do with this code reference.</p>
     <p class="Pp"></p>
-    <pre>
-  catch { ... }
+    <pre>  catch { ... }
     </pre>
     <p class="Pp">Inside the <span class="Li">&quot;catch&quot;</span> block the
         caught error is stored in <span class="Li">$_</span>, while previous
@@ -164,28 +159,24 @@
     <p class="Pp">For code that captures <span class="Li">$@</span> when
         throwing new errors (i.e. Class::Throwable), you'll need to do:</p>
     <p class="Pp"></p>
-    <pre>
-  local $@ = $_;
+    <pre>  local $@ = $_;
     </pre>
   </dd>
   <dt id="finally"><a class="permalink" href="#finally">finally
     (&amp;;@)</a></dt>
   <dd>
-    <pre>
-  try     { ... }
+    <pre>  try     { ... }
   catch   { ... }
   finally { ... };
     </pre>
     <p class="Pp">Or</p>
     <p class="Pp"></p>
-    <pre>
-  try     { ... }
+    <pre>  try     { ... }
   finally { ... };
     </pre>
     <p class="Pp">Or even</p>
     <p class="Pp"></p>
-    <pre>
-  try     { ... }
+    <pre>  try     { ... }
   finally { ... }
   catch   { ... };
     </pre>
@@ -207,8 +198,7 @@
         were no errors.) In other words, the following code does just what you
         would expect:</p>
     <p class="Pp"></p>
-    <pre>
-  try {
+    <pre>  try {
     die_sometimes();
   } catch {
     # ...code run in case of error
@@ -221,12 +211,13 @@
   };
     </pre>
     <p class="Pp"><b>You must always do your own error handling in the
-        </b><b>&quot;finally&quot;</b><b> block</b>.
+        </b><span class="Li"><b>&quot;finally&quot;</b></span><b> block</b>.
         <span class="Li">&quot;Try::Tiny&quot;</span> will not do anything about
         handling possible errors coming from code located in these blocks.</p>
-    <p class="Pp">Furthermore <b>exceptions in </b><b>&quot;finally&quot;</b><b>
-        blocks are not trappable and are unable</b> <b>to influence the
-        execution of your program</b>. This is due to limitation of
+    <p class="Pp">Furthermore <b>exceptions in
+        </b><span class="Li"><b>&quot;finally&quot;</b></span><b> blocks are not
+        trappable and are unable</b> <b>to influence the execution of your
+        program</b>. This is due to limitation of
         <span class="Li">&quot;DESTROY&quot;</span>-based scope guards, which
         <span class="Li">&quot;finally&quot;</span> is implemented on top of.
         This may change in a future version of Try::Tiny.</p>
@@ -267,8 +258,7 @@
 <p class="Pp">Inside an <span class="Li">&quot;eval&quot;</span> block,
     <span class="Li">&quot;die&quot;</span> behaves sort of like:</p>
 <p class="Pp"></p>
-<pre>
-  sub die {
+<pre>  sub die {
     $@ = $_[0];
     return_undef_from_eval();
   }
@@ -278,13 +268,11 @@
     be discarded (printing &quot;Something's wrong&quot; instead).</p>
 <p class="Pp">The workaround is very ugly:</p>
 <p class="Pp"></p>
-<pre>
-  my $error = do {
+<pre>  my $error = do {
     local $@;
     eval { ... };
     $@;
   };
-
   ...
   die $error;
 </pre>
@@ -294,8 +282,7 @@
   might not be a true value</a></h2>
 <p class="Pp">This code is wrong:</p>
 <p class="Pp"></p>
-<pre>
-  if ( $@ ) {
+<pre>  if ( $@ ) {
     ...
   }
 </pre>
@@ -304,19 +291,14 @@
     object that evaluates to false, but that's asking for trouble anyway.</p>
 <p class="Pp">The classic failure mode (fixed in Perl 5.14.0) is:</p>
 <p class="Pp"></p>
-<pre>
-  sub Object::DESTROY {
+<pre>  sub Object::DESTROY {
     eval { ... }
   }
-
   eval {
     my $obj = Object-&gt;new;
-
     die &quot;foo&quot;;
   };
-
   if ( $@ ) {
-
   }
 </pre>
 <p class="Pp">In this case since
@@ -334,10 +316,8 @@
     that doesn't localize, we can at least be sure the
     <span class="Li">&quot;eval&quot;</span> was aborted due to an error:</p>
 <p class="Pp"></p>
-<pre>
-  my $failed = not eval {
+<pre>  my $failed = not eval {
     ...
-
     return 1;
   };
 </pre>
@@ -362,8 +342,7 @@
     <span class="Li">&quot;CATCH&quot;</span> blocks. You can use it to
     concisely match errors:</p>
 <p class="Pp"></p>
-<pre>
-  try {
+<pre>  try {
     require Foo;
   } catch {
     when (/^Can't locate .*?\.pm in \@INC/) { } # ignore
@@ -381,16 +360,14 @@
       <span class="Li">&quot;$_[1] = &quot;foo&quot;&quot;</span>), you need to
       pass <span class="Li">@_</span> by reference:
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
     my ( $self, @args ) = @_;
     try { $self-&gt;bar(@args) }
   }
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-  sub bar_in_place {
+    <pre>  sub bar_in_place {
     my $self = shift;
     my $args = \@_;
     try { $_ = $self-&gt;bar($_) for @$args }
@@ -402,28 +379,24 @@
       (note that this is also how <span class="Li">&quot;eval&quot;</span>
       works, but not how TryCatch works):
     <p class="Pp"></p>
-    <pre>
-  sub parent_sub {
+    <pre>  sub parent_sub {
     try {
       die;
     }
     catch {
       return;
     };
-
     say &quot;this text WILL be displayed, even though an exception is thrown&quot;;
   }
     </pre>
     <p class="Pp">Instead, you should capture the return value:</p>
     <p class="Pp"></p>
-    <pre>
-  sub parent_sub {
+    <pre>  sub parent_sub {
     my $success = try {
       die;
       1;
     };
     return unless $success;
-
     say &quot;This text WILL NEVER appear!&quot;;
   }
   # OR
@@ -437,7 +410,6 @@
       return undef; #see note
     };
     return unless $success;
-
     say &quot;This text WILL NEVER appear!&quot;;
   }
     </pre>
@@ -465,15 +437,12 @@
       success, be sure to return a false value from the
       <span class="Li">&quot;catch&quot;</span> block:
     <p class="Pp"></p>
-    <pre>
-  my $obj = try {
+    <pre>  my $obj = try {
     MightFail-&gt;new;
   } catch {
     ...
-
     return; # avoid returning a true value;
   };
-
   return unless $obj;
     </pre>
   </li>
@@ -492,8 +461,7 @@
         <span class="Li">&quot;given&quot;</span> form uses a lexical
         <span class="Li">$_</span>, creating some confusing behavior:</p>
     <p class="Pp"></p>
-    <pre>
-  given ($foo) {
+    <pre>  given ($foo) {
     when (...) {
       try {
         ...
@@ -604,8 +572,7 @@
     (Yuval Kogman).</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The MIT (X11) License
+<pre>  The MIT (X11) License
 </pre>
 </section>
 </div>

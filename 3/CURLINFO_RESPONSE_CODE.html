@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLINFO_RESPONSE_CODE(3)</title>
 </head>
@@ -44,27 +47,25 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_RESPONSE_CODE,
-    long *codep);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_getinfo(CURL *handle, CURLINFO_RESPONSE_CODE, long *codep);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">Pass a pointer to a long to receive the last received HTTP, FTP or
-    SMTP response code. This option was previously known as CURLINFO_HTTP_CODE
-    in libcurl 7.10.7 and earlier. The stored value will be zero if no server
-    response code has been received. Note that a proxy's CONNECT response should
-    be read with <i>CURLINFO_HTTP_CONNECTCODE(3)</i> and not this.</p>
-<p class="Pp">Support for SMTP responses added in 7.25.0.</p>
+<p class="Pp">Pass a pointer to a long to receive the last received HTTP, FTP,
+    SMTP or LDAP (openldap only) response code. This option was previously known
+    as CURLINFO_HTTP_CODE in libcurl 7.10.7 and earlier. The stored value will
+    be zero if no server response code has been received. Note that a proxy's
+    CONNECT response should be read with <i>CURLINFO_HTTP_CONNECTCODE(3)</i> and
+    not this.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="PROTOCOLS"><a class="permalink" href="#PROTOCOLS">PROTOCOLS</a></h1>
-<p class="Pp">HTTP, FTP and SMTP</p>
+<p class="Pp">HTTP, FTP, SMTP and LDAP</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 if(curl) {
   CURLcode res;
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
@@ -74,12 +75,12 @@ if(curl) {
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &amp;response_code);
   }
   curl_easy_cleanup(curl);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
-<p class="Pp">Added in 7.10.8. CURLINFO_HTTP_CODE was added in 7.4.1.</p>
+<p class="Pp">Added in 7.10.8. CURLINFO_HTTP_CODE was added in 7.4.1. Support
+    for SMTP responses added in 7.25.0, for OpenLDAP in 7.81.0.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
@@ -96,8 +97,8 @@ if(curl) {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2020, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_global_init(3)</title>
 </head>
@@ -40,12 +43,12 @@
 <p class="Pp"></p>
 <section class="Sh">
 <h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp">curl_global_init - Global libcurl initialisation</p>
+<p class="Pp">curl_global_init - Global libcurl initialization</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<p class="Pp"><b>CURLcode curl_global_init(long </b><i>flags</i><b>);</b></p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_global_init(long flags);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -58,12 +61,15 @@
     have the same effect as one call.</p>
 <p class="Pp">The flags option is a bit pattern that tells libcurl exactly what
     features to init, as described below. Set the desired bits by ORing the
-    values together. In normal operation, you must specify CURL_GLOBAL_ALL.
-    Don't use any other value unless you are familiar with it and mean to
-    control internal operations of libcurl.</p>
-<p class="Pp"><b>This function is not thread safe.</b> You must not call it when
+    values together. In normal operation, you must specify CURL_GLOBAL_ALL. Do
+    not use any other value unless you are familiar with it and mean to control
+    internal operations of libcurl.</p>
+<p class="Pp">This function is thread-safe since libcurl 7.84.0 if
+    <i>curl_version_info(3)</i> has the CURL_VERSION_THREADSAFE feature bit set
+    (most platforms).</p>
+<p class="Pp">If this is not thread-safe, you must not call this function when
     any other thread in the program (i.e. a thread sharing the same memory) is
-    running. This doesn't just mean no other thread that is using libcurl.
+    running. This does not just mean no other thread that is using libcurl.
     Because <i>curl_global_init(3)</i> calls functions of other libraries that
     are similarly thread unsafe, it could conflict with any other thread that
     uses these other libraries.</p>
@@ -115,6 +121,17 @@
 </dl>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+ curl_global_init(CURL_GLOBAL_DEFAULT);
+ /* use libcurl, then before exiting... */
+ curl_global_cleanup();</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.8</p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
   VALUE</a></h1>
 <p class="Pp">If this function returns non-zero, something went wrong and you
@@ -130,8 +147,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">June 15, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

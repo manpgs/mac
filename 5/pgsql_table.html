@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PGSQL_TABLE(5)</title>
 </head>
@@ -21,10 +22,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<b>postmap -q &quot;</b><i>string</i><b>&quot; pgsql:/etc/postfix/</b><i>filename</i>
-<b>postmap -q - pgsql:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i>
-</pre>
+<pre><b>postmap -q &quot;</b><i>string</i><b>&quot; pgsql:/etc/postfix/</b><i>filename</i>
+<b>postmap -q - pgsql:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i></pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -36,16 +35,14 @@
     databases. In order to use PostgreSQL lookups, define a PostgreSQL source as
     a lookup table in main.cf, for example:</p>
 <pre>
-    alias_maps = pgsql:/etc/pgsql-aliases.cf
-</pre>
+    alias_maps = pgsql:/etc/pgsql-aliases.cf</pre>
 <p class="Pp">The file /etc/postfix/pgsql-aliases.cf has the same format as the
     Postfix main.cf file, and can specify the parameters described below.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LIST_MEMBERSHIP"><a class="permalink" href="#LIST_MEMBERSHIP">LIST
   MEMBERSHIP</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">When using SQL to store lists such as $mynetworks, $mydestination,
     $relay_domains, $local_recipient_maps, etc., it is important to understand
     that the table must store each list member as a separate key. The table
@@ -60,8 +57,7 @@
 <section class="Sh">
 <h1 class="Sh" id="PGSQL_PARAMETERS"><a class="permalink" href="#PGSQL_PARAMETERS">PGSQL
   PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <dl class="Bl-tag">
   <dt id="hosts"><a class="permalink" href="#hosts"><b>hosts</b></a></dt>
   <dd>The hosts that Postfix will try to connect to and query from. Specify
@@ -69,8 +65,7 @@
       (default). Example:
     <pre>
     hosts = host1.some.domain host2.some.domain:port
-    hosts = unix:/file/name
-    </pre>
+    hosts = unix:/file/name</pre>
     <p class="Pp">The hosts are tried in random order, with all connections over
         UNIX domain sockets being tried before those over TCP. The connections
         are automatically closed after being idle for about 1 minute, and are
@@ -86,21 +81,18 @@
   <dd>The user name and password to log into the pgsql server. Example:
     <pre>
     user = someone
-    password = some_password
-    </pre>
+    password = some_password</pre>
   </dd>
   <dt id="dbname"><a class="permalink" href="#dbname"><b>dbname</b></a></dt>
   <dd>The database name on the servers. Example:
     <pre>
-    dbname = customer_database
-    </pre>
+    dbname = customer_database</pre>
   </dd>
   <dt id="query"><a class="permalink" href="#query"><b>query</b></a></dt>
   <dd>The SQL query template used to search the database, where <b>%s</b> is a
       substitute for the address Postfix is trying to resolve, e.g.
     <pre>
-    query = SELECT replacement FROM aliases WHERE mailbox = '%s'
-    </pre>
+    query = SELECT replacement FROM aliases WHERE mailbox = '%s'</pre>
     <p class="Pp">This parameter supports the following '%' expansions:</p>
   </dd>
 </dl>
@@ -203,8 +195,7 @@
       lookups and &quot;@domain&quot; lookups are not performed. This can
       significantly reduce the query load on the PostgreSQL server.
     <pre>
-    domain = postfix.org, hash:/etc/postfix/searchdomains
-    </pre>
+    domain = postfix.org, hash:/etc/postfix/searchdomains</pre>
     <p class="Pp">It is best not to use SQL to store the domains eligible for
         SQL lookups.</p>
     <p class="Pp">This parameter is available with Postfix 2.2 and later.</p>
@@ -223,8 +214,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OBSOLETE_MAIN.CF_PARAMETERS"><a class="permalink" href="#OBSOLETE_MAIN.CF_PARAMETERS">OBSOLETE
   MAIN.CF PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">For compatibility with other Postfix lookup tables, PostgreSQL
     parameters can also be defined in main.cf. In order to do that, specify as
     PostgreSQL source a name that doesn't begin with a slash or a dot. The
@@ -240,8 +230,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OBSOLETE_QUERY_INTERFACES"><a class="permalink" href="#OBSOLETE_QUERY_INTERFACES">OBSOLETE
   QUERY INTERFACES</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">This section describes query interfaces that are deprecated as of
     Postfix 2.2. Please migrate to the new <b>query</b> interface as the old
     interfaces are slated to be phased out.</p>
@@ -249,12 +238,10 @@
   <dt id="select_function"><a class="permalink" href="#select_function"><b>select_function</b></a></dt>
   <dd>This parameter specifies a database function name. Example:
     <pre>
-    select_function = my_lookup_user_alias
-    </pre>
+    select_function = my_lookup_user_alias</pre>
     <p class="Pp">This is equivalent to:</p>
     <pre>
-    query = SELECT my_lookup_user_alias('%s')
-    </pre>
+    query = SELECT my_lookup_user_alias('%s')</pre>
     <p class="Pp">This parameter overrides the legacy table-related fields
         (described below). With Postfix versions prior to 2.2, it also overrides
         the <b>query</b> parameter. Starting with Postfix 2.2, the <b>query</b>
@@ -270,8 +257,7 @@
     SELECT [<b>select_field</b>]
     FROM [<b>table</b>]
     WHERE [<b>where_field</b>] = '%s'
-          [<b>additional_conditions</b>]
-</pre>
+          [<b>additional_conditions</b>]</pre>
 <p class="Pp">The specifier %s is replaced with each lookup by the lookup key
     and is escaped so if it contains single quotes or other odd characters, it
     will not cause a parse error, or worse, a security problem.</p>
@@ -283,68 +269,56 @@
   <dt id="select_field"><a class="permalink" href="#select_field"><b>select_field</b></a></dt>
   <dd>The SQL &quot;select&quot; parameter. Example:
     <pre>
-    <b>select_field</b> = forw_addr
-    </pre>
+    <b>select_field</b> = forw_addr</pre>
   </dd>
   <dt id="table"><a class="permalink" href="#table"><b>table</b></a></dt>
   <dd>The SQL &quot;select .. from&quot; table name. Example:
     <pre>
-    <b>table</b> = mxaliases
-    </pre>
+    <b>table</b> = mxaliases</pre>
   </dd>
   <dt id="where_field"><a class="permalink" href="#where_field"><b>where_field</b></a></dt>
   <dd>The SQL &quot;select .. where&quot; parameter. Example:
     <pre>
-    <b>where_field</b> = alias
-    </pre>
+    <b>where_field</b> = alias</pre>
   </dd>
   <dt id="additional_conditions"><a class="permalink" href="#additional_conditions"><b>additional_conditions</b></a></dt>
   <dd>Additional conditions to the SQL query. Example:
     <pre>
-    <b>additional_conditions</b> = AND status = 'paid'
-    </pre>
+    <b>additional_conditions</b> = AND status = 'paid'</pre>
   </dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<pre>
-postmap(1), Postfix lookup table manager
+<pre>postmap(1), Postfix lookup table manager
 postconf(5), configuration parameters
 ldap_table(5), LDAP lookup tables
 mysql_table(5), MySQL lookup tables
-sqlite_table(5), SQLite lookup tables
-</pre>
+sqlite_table(5), SQLite lookup tables</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="README_FILES"><a class="permalink" href="#README_FILES">README
   FILES</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">Use &quot;<b>postconf readme_directory</b>&quot; or
     &quot;<b>postconf html_directory</b>&quot; to locate this information.</p>
-<pre>
-DATABASE_README, Postfix lookup table overview
-PGSQL_README, Postfix PostgreSQL client guide
-</pre>
+<pre>DATABASE_README, Postfix lookup table overview
+PGSQL_README, Postfix PostgreSQL client guide</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">The Secure Mailer license must be distributed with this
   software.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<br/>
 <p class="Pp">PgSQL support was introduced with Postfix version 2.1.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR(S)"><a class="permalink" href="#AUTHOR(S)">AUTHOR(S)</a></h1>
-<pre>
-Based on the MySQL client by:
+<pre>Based on the MySQL client by:
 Scott Cotton, Joshua Marcus
 IC Group, Inc.
 Ported to PostgreSQL by:
@@ -353,8 +327,7 @@ Further enhanced by:
 Liviu Daia
 Institute of Mathematics of the Romanian Academy
 P.O. BOX 1-764
-RO-014700 Bucharest, ROMANIA
-</pre>
+RO-014700 Bucharest, ROMANIA</pre>
 </section>
 </div>
 <table class="foot">

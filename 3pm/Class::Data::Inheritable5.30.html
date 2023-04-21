@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::Data::Inheritable(3)</title>
 </head>
@@ -28,16 +29,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Stuff;
+<pre>  package Stuff;
   use base qw(Class::Data::Inheritable);
-
   # Set up DataFile as inheritable class data.
   Stuff-&gt;mk_classdata('DataFile');
-
   # Declare the location of the data file for this class.
   Stuff-&gt;DataFile('/etc/stuff/data');
-
   # Or, all in one shot:
   Stuff-&gt;mk_classdata(DataFile =&gt; '/etc/stuff/data');
 </pre>
@@ -50,23 +47,20 @@
     your subclasses and can be overriden.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  Pere::Ubu-&gt;mk_classdata('Suitcase');
+<pre>  Pere::Ubu-&gt;mk_classdata('Suitcase');
 </pre>
 <p class="Pp">will generate the method <b>Suitcase()</b> in the class
   Pere::Ubu.</p>
 <p class="Pp">This new method can be used to get and set a piece of class
   data.</p>
 <p class="Pp"></p>
-<pre>
-  Pere::Ubu-&gt;Suitcase('Red');
+<pre>  Pere::Ubu-&gt;Suitcase('Red');
   $suitcase = Pere::Ubu-&gt;Suitcase;
 </pre>
 <p class="Pp">The interesting part happens when a class inherits from
   Pere::Ubu:</p>
 <p class="Pp"></p>
-<pre>
-  package Raygun;
+<pre>  package Raygun;
   use base qw(Pere::Ubu);
   
   # Raygun's suitcase is Red.
@@ -78,23 +72,20 @@
     using <b>Suitcase()</b> to set a new value) it will continue to use whatever
     is set in Pere::Ubu and inherit further changes:</p>
 <p class="Pp"></p>
-<pre>
-  # Both Raygun's and Pere::Ubu's suitcases are now Blue
+<pre>  # Both Raygun's and Pere::Ubu's suitcases are now Blue
   Pere::Ubu-&gt;Suitcase('Blue');
 </pre>
 <p class="Pp">However, should Raygun decide to set its own <b>Suitcase()</b> it
     has now &quot;overridden&quot; Pere::Ubu and is on its own, just like if it
     had overriden a method:</p>
 <p class="Pp"></p>
-<pre>
-  # Raygun has an orange suitcase, Pere::Ubu's is still Blue.
+<pre>  # Raygun has an orange suitcase, Pere::Ubu's is still Blue.
   Raygun-&gt;Suitcase('Orange');
 </pre>
 <p class="Pp">Now that Raygun has overridden Pere::Ubu futher changes by
     Pere::Ubu no longer effect Raygun.</p>
 <p class="Pp"></p>
-<pre>
-  # Raygun still has an orange suitcase, but Pere::Ubu is using Samsonite.
+<pre>  # Raygun still has an orange suitcase, but Pere::Ubu is using Samsonite.
   Pere::Ubu-&gt;Suitcase('Samsonite');
 </pre>
 </section>
@@ -102,8 +93,7 @@
 <h1 class="Sh" id="Methods"><a class="permalink" href="#Methods">Methods</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="mk_classdata"><a class="permalink" href="#mk_classdata">mk_classdata</a></h2>
-<pre>
-  Class-&gt;mk_classdata($data_accessor_name);
+<pre>  Class-&gt;mk_classdata($data_accessor_name);
   Class-&gt;mk_classdata($data_accessor_name =&gt; $value);
 </pre>
 <p class="Pp">This is a class method used to declare new class data accessors. A
@@ -117,11 +107,9 @@
     single accessor yet still get the benefits of inheritable class data. For
     example.</p>
 <p class="Pp"></p>
-<pre>
-  sub Suitcase {
+<pre>  sub Suitcase {
       my($self) = shift;
       warn &quot;Fashion tragedy&quot; if @_ and $_[0] eq 'Plaid';
-
       $self-&gt;_Suitcase_accessor(@_);
   }
 </pre>

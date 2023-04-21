@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTML::Element::traverse(3)</title>
 </head>
@@ -34,8 +35,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # $element-&gt;traverse is unnecessary and obscure.
+<pre>  # $element-&gt;traverse is unnecessary and obscure.
   #   Don't use it in new code.
 </pre>
 </section>
@@ -58,8 +58,7 @@
 <p class="Pp">You can use the <span class="Li">&quot;traverse&quot;</span>
     method:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     my $counter = 'x0000';
     $start_node-&gt;traverse(
       [ # Callbacks;
@@ -80,8 +79,7 @@
     the calling format for <span class="Li">&quot;traverse&quot;</span>) by
     writing a sub that traverses the tree by just calling itself:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     my $counter = 'x0000';
     sub give_id {
       my $x = $_[0];
@@ -119,8 +117,7 @@
     <span class="Li">$h</span>. &quot;Visiting&quot; means that the callback
     routine is called, with these arguments:</p>
 <p class="Pp"></p>
-<pre>
-    $_[0] : the node (element or text segment),
+<pre>    $_[0] : the node (element or text segment),
     $_[1] : a startflag, and
     $_[2] : the depth
 </pre>
@@ -137,8 +134,7 @@
     nodes are visited, we will also pass two extra arguments to the
   callback:</p>
 <p class="Pp"></p>
-<pre>
-    $_[3] : the element that's the parent
+<pre>    $_[3] : the element that's the parent
              of this text node
     $_[4] : the index of this text node
              in its parent's content list
@@ -146,24 +142,20 @@
 <p class="Pp">Note that you can specify that the pre-order routine can be a
     different routine from the post-order one:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;traverse( [\&amp;pre_callback,\&amp;post_callback], ...);
+<pre>    $h-&gt;traverse( [\&amp;pre_callback,\&amp;post_callback], ...);
 </pre>
 <p class="Pp">You can also specify that no post-order calls are to be made, by
     providing a false value as the post-order routine:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;traverse([ \&amp;pre_callback,0 ], ...);
+<pre>    $h-&gt;traverse([ \&amp;pre_callback,0 ], ...);
 </pre>
 <p class="Pp">And similarly for suppressing pre-order callbacks:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;traverse([ 0,\&amp;post_callback ], ...);
+<pre>    $h-&gt;traverse([ 0,\&amp;post_callback ], ...);
 </pre>
 <p class="Pp">Note that these two syntaxes specify the same operation:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;traverse([\&amp;foo,\&amp;foo], ...);
+<pre>    $h-&gt;traverse([\&amp;foo,\&amp;foo], ...);
     $h-&gt;traverse( \&amp;foo       , ...);
 </pre>
 <p class="Pp">The return values from calls to your pre- or post-order routines
@@ -224,8 +216,7 @@
     Computer Programs</i> too much, maybe you even want a recursive lambda. Go
     ahead:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     my $counter = 'x0000';
     my $give_id;
     $give_id = sub {
@@ -248,8 +239,7 @@
     undefine <span class="Li">$give_id</span>, above; and why I could achieved
     the same effect with any of:</p>
 <p class="Pp"></p>
-<pre>
-    $give_id = 'I like pie!';
+<pre>    $give_id = 'I like pie!';
    # or...
     $give_id = [];
    # or even;
@@ -257,8 +247,7 @@
 </pre>
 <p class="Pp">But not:</p>
 <p class="Pp"></p>
-<pre>
-    $give_id = sub { print &quot;I'm $give_id and I like pie!\n&quot; };
+<pre>    $give_id = sub { print &quot;I'm $give_id and I like pie!\n&quot; };
    # nor...
     $give_id = \$give_id;
    # nor...
@@ -271,16 +260,13 @@
 <p class="Pp">Note that you may at times see an iterative implementation of
     pre-order traversal, like so:</p>
 <p class="Pp"></p>
-<pre>
-   {
+<pre>   {
      my @to_do = ($tree); # start-node
      while(@to_do) {
        my $this = shift @to_do;
-
        # &quot;Visit&quot; the node:
        $this-&gt;attr('id', $counter++)
         unless defined $this-&gt;attr('id');
-
        unshift @to_do, grep ref $_, $this-&gt;content_list;
         # Put children on the stack -- they'll be visited next
      }
@@ -306,8 +292,7 @@
     behavior can be implemented either with using non-local returning with
     <span class="Li">&quot;eval&quot;</span>/<span class="Li">&quot;die&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $died_on; # if you need to know where...
+<pre>  my $died_on; # if you need to know where...
   sub thing {
     ... visits $_[0]...
     ... maybe set $died_on to $_[0] and die &quot;ABORT_TRAV&quot; ...
@@ -325,8 +310,7 @@
 </pre>
 <p class="Pp">or you can just do it with flags:</p>
 <p class="Pp"></p>
-<pre>
-  my($abort_flag, $died_on);
+<pre>  my($abort_flag, $died_on);
   sub thing {
     ... visits $_[0]...
     ... maybe set $abort_flag = 1; $died_on = $_[0]; return;
@@ -337,7 +321,6 @@
     ...any post-order visiting $_[0]...
     return;
   }
-
   $abort_flag = $died_on = undef;
   thing($node);
   ...if defined $abort_flag, it died on $died_on
@@ -380,7 +363,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

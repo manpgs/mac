@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::FAQ(3)</title>
 </head>
@@ -67,8 +68,7 @@
     cost, but the runtime speed increase (especially in object construction) is
     pretty significant. This can be done with the following code:</p>
 <p class="Pp"></p>
-<pre>
-  MyClass-&gt;meta-&gt;make_immutable();
+<pre>  MyClass-&gt;meta-&gt;make_immutable();
 </pre>
 </section>
 <section class="Ss">
@@ -116,8 +116,7 @@
     <span class="Li">&quot;reader&quot;</span> and
     <span class="Li">&quot;writer&quot;</span> attribute options:</p>
 <p class="Pp"></p>
-<pre>
-  has 'bar' =&gt; (
+<pre>  has 'bar' =&gt; (
       isa    =&gt; 'Baz',
       reader =&gt; 'get_bar',
       writer =&gt; 'set_bar',
@@ -129,8 +128,7 @@
     for your classes, please see MooseX::FollowPBP. This extension will allow
     you to write:</p>
 <p class="Pp"></p>
-<pre>
-  has 'bar' =&gt; (
+<pre>  has 'bar' =&gt; (
       isa =&gt; 'Baz',
       is  =&gt; 'rw',
   );
@@ -153,13 +151,10 @@
 <p class="Pp">If you only need to inflate, then we suggest using coercions. Here
     is some basic sample code for inflating a DateTime object:</p>
 <p class="Pp"></p>
-<pre>
-  class_type 'DateTime';
-
+<pre>  class_type 'DateTime';
   coerce 'DateTime'
       =&gt; from 'Str'
       =&gt; via { DateTime::Format::MySQL-&gt;parse_datetime($_) };
-
   has 'timestamp' =&gt; (is =&gt; 'rw', isa =&gt; 'DateTime', coerce =&gt; 1);
 </pre>
 <p class="Pp">This creates a custom type for DateTime objects, then attaches a
@@ -177,17 +172,13 @@
     practice is to add an <span class="Li">&quot;around&quot;</span> modifier to
     your accessor:</p>
 <p class="Pp"></p>
-<pre>
-  # a timestamp which stores as
+<pre>  # a timestamp which stores as
   # seconds from the epoch
   has 'timestamp' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
-
   around 'timestamp' =&gt; sub {
       my $next = shift;
       my $self = shift;
-
       return $self-&gt;$next unless @_;
-
       # assume we get a DateTime object ...
       my $timestamp = shift;
       return $self-&gt;$next( $timestamp-&gt;epoch );
@@ -204,8 +195,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Method_Modifiers"><a class="permalink" href="#Method_Modifiers">Method
   Modifiers</a></h2>
-<p class="Pp"><i>How can I affect the values in </i><i>@_</i><i> using
-    </i><i>&quot;before&quot;</i><i>?</i></p>
+<p class="Pp"><i>How can I affect the values in
+    </i><span class="Li"><i>@_</i></span><i> using
+    </i><span class="Li"><i>&quot;before&quot;</i></span><i>?</i></p>
 <p class="Pp">You can't, actually: <span class="Li">&quot;before&quot;</span>
     only runs before the main method, and it cannot easily affect the method's
     execution.</p>
@@ -221,16 +213,16 @@
 <p class="Pp">Alternatively, the MooseX::Mangle extension provides the
     <span class="Li">&quot;mangle_args&quot;</span> function, which does allow
     you to affect <span class="Li">@_</span>.</p>
-<p class="Pp"><i>Can I use </i><i>&quot;before&quot;</i><i> to stop execution of
-    a method?</i></p>
+<p class="Pp"><i>Can I use
+    </i><span class="Li"><i>&quot;before&quot;</i></span><i> to stop execution
+    of a method?</i></p>
 <p class="Pp">Yes, but only if you throw an exception. If this is too drastic a
     measure then we suggest using <span class="Li">&quot;around&quot;</span>
     instead. The <span class="Li">&quot;around&quot;</span> method modifier is
     the only modifier which can gracefully prevent execution of the main method.
     Here is an example:</p>
 <p class="Pp"></p>
-<pre>
-    around 'baz' =&gt; sub {
+<pre>    around 'baz' =&gt; sub {
         my $next = shift;
         my ($self, %options) = @_;
         unless ($options-&gt;{bar} eq 'foo') {
@@ -245,7 +237,7 @@
     <span class="Li">&quot;guard&quot;</span> function, which will conditionally
     prevent execution of the original method.</p>
 <p class="Pp"><i>Why can't I see return values in an
-    </i><i>&quot;after&quot;</i><i> modifier?</i></p>
+    </i><span class="Li"><i>&quot;after&quot;</i></span><i> modifier?</i></p>
 <p class="Pp">As with the <span class="Li">&quot;before&quot;</span> modifier,
     the <span class="Li">&quot;after&quot;</span> modifier is simply called
     <i>after</i> the main method. It is passed the original contents of
@@ -256,8 +248,7 @@
     <span class="Li">&quot;around&quot;</span> modifier instead. Here is some
     sample code:</p>
 <p class="Pp"></p>
-<pre>
-  around 'foo' =&gt; sub {
+<pre>  around 'foo' =&gt; sub {
       my $next = shift;
       my ($self, @args) = @_;
       my @rv = $next-&gt;($self, @args);
@@ -277,8 +268,7 @@
 <p class="Pp">Use the <span class="Li">&quot;message&quot;</span> option when
     building the subtype:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'NaturalLessThanTen'
+<pre>  subtype 'NaturalLessThanTen'
       =&gt; as 'Natural'
       =&gt; where { $_ &lt; 10 }
       =&gt; message { &quot;This number ($_) is not less than ten!&quot; };
@@ -298,8 +288,7 @@
     the original constraint passed. This has caused some edge cases to fail
     where people were doing something like</p>
 <p class="Pp"></p>
-<pre>
-    subtype 'Address', as 'Str';
+<pre>    subtype 'Address', as 'Str';
     coerce 'Address', from 'Str', via { get_address($_) };
 </pre>
 <p class="Pp">This is not what they intended, because the type constraint
@@ -308,8 +297,7 @@
     solution is to provide a <span class="Li">&quot;where&quot;</span> clause
     that properly restricts the type constraint:</p>
 <p class="Pp"></p>
-<pre>
-    subtype 'Address', as 'Str', where { looks_like_address($_) };
+<pre>    subtype 'Address', as 'Str', where { looks_like_address($_) };
 </pre>
 <p class="Pp">This will allow the coercion to apply only to strings that fail to
     look like an Address.</p>
@@ -342,10 +330,8 @@
     have a separate attribute initializer which is required for the role. Here
     is an example of how to do this:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Role;
+<pre>  package My::Role;
   use Moose::Role;
-
   has 'height' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'Int',
@@ -355,7 +341,6 @@
           $self-&gt;init_height;
       }
   );
-
   requires 'init_height';
 </pre>
 <p class="Pp">In this example, the role will not compose successfully unless the
@@ -382,11 +367,9 @@
     attribute. &quot;Required Attributes&quot; in Moose::Manual::Roles provides
     an example:</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
+<pre>  package Breakable;
   use Moose::Role;
   requires 'stress';
-
   package Car;
   use Moose;
   has 'stress' =&gt; ( is  =&gt; 'rw', isa =&gt; 'Int' );
@@ -397,8 +380,7 @@
     <span class="Li">&quot;stress&quot;</span> attribute, you would see an error
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  'Breakable' requires the method 'stress' to be implemented by 'Car' at...
+<pre>  'Breakable' requires the method 'stress' to be implemented by 'Car' at...
 </pre>
 </section>
 <section class="Ss">
@@ -413,14 +395,12 @@
     <span class="Li">&quot;BEGIN&quot;</span> block so that the attribute
     handlers will be available at compile time, like this:</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN { extends qw/Foo/ }
+<pre>  BEGIN { extends qw/Foo/ }
 </pre>
 <p class="Pp">Note that we're talking about Perl's subroutine attributes here,
     not Moose attributes:</p>
 <p class="Pp"></p>
-<pre>
-  sub foo : Bar(27) { ... }
+<pre>  sub foo : Bar(27) { ... }
 </pre>
 </section>
 </section>

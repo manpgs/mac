@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Algorithm::C3(3)</title>
 </head>
@@ -29,9 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Algorithm::C3;
-
+<pre>  use Algorithm::C3;
   # merging a classic diamond
   # inheritance graph like this:
   #
@@ -40,7 +39,6 @@
   # &lt;B&gt;   &lt;C&gt;
   #   \   /
   #    &lt;D&gt;
-
   my @merged = Algorithm::C3::merge(
       'D',
       sub {
@@ -50,7 +48,6 @@
           @{$_[0] . '::ISA'};
       }
   );
-
   print join &quot;, &quot; =&gt; @merged; # prints D, B, C, A
 </pre>
 </section>
@@ -83,8 +80,7 @@
     essentially means that no class will appear before any of it's subclasses.
     Take the classic diamond inheritance pattern for instance:</p>
 <p class="Pp"></p>
-<pre>
-     &lt;A&gt;
+<pre>     &lt;A&gt;
     /   \
   &lt;B&gt;   &lt;C&gt;
     \   /
@@ -102,7 +98,8 @@
 <h1 class="Sh" id="FUNCTION"><a class="permalink" href="#FUNCTION">FUNCTION</a></h1>
 <dl class="Bl-tag">
   <dt id="merge"><a class="permalink" href="#merge"><b>merge ($root,
-    </b><b>$func_to_fetch_parent</b><b>, </b><b>$cache</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$func_to_fetch_parent</b></span><b>,
+    </b><span class="Li"><b>$cache</b></span><b>)</b></a></dt>
   <dd>This takes a <span class="Li">$root</span> node, which can be anything
       really it is up to you. Then it takes a
       <span class="Li">$func_to_fetch_parent</span> which can be either a CODE
@@ -110,15 +107,12 @@
       method name to be called on all the items being linearized. An example of
       how this might look is below:
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
       package A;
-
       sub supers {
           no strict 'refs';
           @{$_[0] . '::ISA'};
       }
-
       package C;
       our @ISA = ('A');
       package B;
@@ -126,7 +120,6 @@
       package D;
       our @ISA = ('B', 'C');
   }
-
   print join &quot;, &quot; =&gt; Algorithm::C3::merge('D', 'supers');
     </pre>
     <p class="Pp">The purpose of <span class="Li">$func_to_fetch_parent</span>
@@ -142,8 +135,7 @@
         during all of these calls, you can and should reuse the same shared
         cache hash for all of the calls. Example:</p>
     <p class="Pp"></p>
-    <pre>
-  sub do_some_merging {
+    <pre>  sub do_some_merging {
       my %merge_cache;
       my @foo_mro = Algorithm::C3::Merge('Foo', \&amp;get_supers, \%merge_cache);
       my @bar_mro = Algorithm::C3::Merge('Bar', \&amp;get_supers, \%merge_cache);
@@ -161,8 +153,7 @@
 <p class="Pp">I use <b>Devel::Cover</b> to test the code coverage of my tests,
     below is the <b>Devel::Cover</b> report on this module's test suite.</p>
 <p class="Pp"></p>
-<pre>
- ------------------------ ------ ------ ------ ------ ------ ------ ------
+<pre> ------------------------ ------ ------ ------ ------ ------ ------ ------
  File                       stmt   bran   cond    sub    pod   time  total
  ------------------------ ------ ------ ------ ------ ------ ------ ------
  Algorithm/C3.pm           100.0  100.0  100.0  100.0  100.0  100.0  100.0

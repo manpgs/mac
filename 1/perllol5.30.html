@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLLOL(1)</title>
 </head>
@@ -39,9 +40,7 @@
     <span class="Li">@AoA</span> that you can get at with two subscripts, like
     <span class="Li">$AoA[3][2]</span>. Here's a declaration of the array:</p>
 <p class="Pp"></p>
-<pre>
-    use 5.010;  # so we can use say()
-
+<pre>    use 5.010;  # so we can use say()
     # assign to our array, an array of array references
     @AoA = (
            [ &quot;fred&quot;, &quot;barney&quot;, &quot;pebbles&quot;, &quot;bambam&quot;, &quot;dino&quot;, ],
@@ -57,8 +56,7 @@
     <i>not</i> to be an <span class="Li">@AoA</span>, but rather just a
     reference to it, you could do something more like this:</p>
 <p class="Pp"></p>
-<pre>
-    # assign a reference to array of array references
+<pre>    # assign a reference to array of array references
     $ref_to_AoA = [
         [ &quot;fred&quot;, &quot;barney&quot;, &quot;pebbles&quot;, &quot;bambam&quot;, &quot;dino&quot;, ],
         [ &quot;george&quot;, &quot;jane&quot;, &quot;elroy&quot;, &quot;judy&quot;, ],
@@ -75,14 +73,12 @@
     <span class="Li">$AoA[2]</span> is not an array, but an array ref. So how
     come you can write these:</p>
 <p class="Pp"></p>
-<pre>
-    $AoA[2][2]
+<pre>    $AoA[2][2]
     $ref_to_AoA-&gt;[2][2]
 </pre>
 <p class="Pp">instead of having to write these:</p>
 <p class="Pp"></p>
-<pre>
-    $AoA[2]-&gt;[2]
+<pre>    $AoA[2]-&gt;[2]
     $ref_to_AoA-&gt;[2]-&gt;[2]
 </pre>
 <p class="Pp">Well, that's because the rule is that on adjacent brackets only
@@ -103,24 +99,21 @@
     <span class="Li">@AoA</span> array containing all these, here's the right
     way to do that:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         @tmp = split;
         push @AoA, [ @tmp ];
     }
 </pre>
 <p class="Pp">You might also have loaded that from a function:</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 1 .. 10 ) {
+<pre>    for $i ( 1 .. 10 ) {
         $AoA[$i] = [ somefunc($i) ];
     }
 </pre>
 <p class="Pp">Or you might have had a temporary variable sitting around with the
     array in it.</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 1 .. 10 ) {
+<pre>    for $i ( 1 .. 10 ) {
         @tmp = somefunc($i);
         $AoA[$i] = [ @tmp ];
     }
@@ -129,8 +122,7 @@
     ]&quot;</span> array reference constructor. That's because this wouldn't
     work:</p>
 <p class="Pp"></p>
-<pre>
-    $AoA[$i] = @tmp;   # WRONG!
+<pre>    $AoA[$i] = @tmp;   # WRONG!
 </pre>
 <p class="Pp">The reason that doesn't do what you want is because assigning a
     named array like that to a scalar is taking an array in scalar context,
@@ -140,8 +132,7 @@
     strict&quot;</span> (and if you aren't, why in the world aren't you?),
     you'll have to add some declarations to make it happy:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     my(@AoA, @tmp);
     while (&lt;&gt;) {
         @tmp = split;
@@ -151,16 +142,14 @@
 <p class="Pp">Of course, you don't need the temporary array to have a name at
     all:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         push @AoA, [ split ];
     }
 </pre>
 <p class="Pp">You also don't have to use <b>push()</b>. You could just make a
     direct assignment if you knew where you wanted to put it:</p>
 <p class="Pp"></p>
-<pre>
-    my (@AoA, $i, $line);
+<pre>    my (@AoA, $i, $line);
     for $i ( 0 .. 10 ) {
         $line = &lt;&gt;;
         $AoA[$i] = [ split &quot; &quot;, $line ];
@@ -168,8 +157,7 @@
 </pre>
 <p class="Pp">or even just</p>
 <p class="Pp"></p>
-<pre>
-    my (@AoA, $i);
+<pre>    my (@AoA, $i);
     for $i ( 0 .. 10 ) {
         $AoA[$i] = [ split &quot; &quot;, &lt;&gt; ];
     }
@@ -178,8 +166,7 @@
     potentially return lists in scalar context without explicitly stating such.
     This would be clearer to the casual reader:</p>
 <p class="Pp"></p>
-<pre>
-    my (@AoA, $i);
+<pre>    my (@AoA, $i);
     for $i ( 0 .. 10 ) {
         $AoA[$i] = [ split &quot; &quot;, scalar(&lt;&gt;) ];
     }
@@ -188,21 +175,18 @@
     variable as a reference to an array, you'd have to do something like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         push @$ref_to_AoA, [ split ];
     }
 </pre>
 <p class="Pp">Now you can add new rows. What about adding new columns? If you're
     dealing with just matrices, it's often easiest to use simple assignment:</p>
 <p class="Pp"></p>
-<pre>
-    for $x (1 .. 10) {
+<pre>    for $x (1 .. 10) {
         for $y (1 .. 10) {
             $AoA[$x][$y] = func($x, $y);
         }
     }
-
     for $x ( 3, 7, 9 ) {
         $AoA[$x][20] += func2($x);
     }
@@ -213,8 +197,7 @@
 <p class="Pp">If you wanted just to append to a row, you'd have to do something
     a bit funnier looking:</p>
 <p class="Pp"></p>
-<pre>
-    # add new columns to an existing row
+<pre>    # add new columns to an existing row
     push @{ $AoA[0] }, &quot;wilma&quot;, &quot;betty&quot;;   # explicit deref
 </pre>
 </section>
@@ -224,35 +207,30 @@
 <p class="Pp">Now it's time to print your data structure out. How are you going
     to do that? Well, if you want only one of the elements, it's trivial:</p>
 <p class="Pp"></p>
-<pre>
-    print $AoA[0][0];
+<pre>    print $AoA[0][0];
 </pre>
 <p class="Pp">If you want to print the whole thing, though, you can't say</p>
 <p class="Pp"></p>
-<pre>
-    print @AoA;         # WRONG
+<pre>    print @AoA;         # WRONG
 </pre>
 <p class="Pp">because you'll get just references listed, and perl will never
     automatically dereference things for you. Instead, you have to roll yourself
     a loop or two. This prints the whole structure, using the shell-style
     <b>for()</b> construct to loop across the outer set of subscripts.</p>
 <p class="Pp"></p>
-<pre>
-    for $aref ( @AoA ) {
+<pre>    for $aref ( @AoA ) {
         say &quot;\t [ @$aref ],&quot;;
     }
 </pre>
 <p class="Pp">If you wanted to keep track of subscripts, you might do this:</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 0 .. $#AoA ) {
+<pre>    for $i ( 0 .. $#AoA ) {
         say &quot;\t elt $i is [ @{$AoA[$i]} ],&quot;;
     }
 </pre>
 <p class="Pp">or maybe even this. Notice the inner loop.</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 0 .. $#AoA ) {
+<pre>    for $i ( 0 .. $#AoA ) {
         for $j ( 0 .. $#{$AoA[$i]} ) {
             say &quot;elt $i $j is $AoA[$i][$j]&quot;;
         }
@@ -261,8 +239,7 @@
 <p class="Pp">As you can see, it's getting a bit complicated. That's why
     sometimes is easier to take a temporary on your way through:</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 0 .. $#AoA ) {
+<pre>    for $i ( 0 .. $#AoA ) {
         $aref = $AoA[$i];
         for $j ( 0 .. $#{$aref} ) {
             say &quot;elt $i $j is $AoA[$i][$j]&quot;;
@@ -271,8 +248,7 @@
 </pre>
 <p class="Pp">Hmm... that's still a bit ugly. How about this:</p>
 <p class="Pp"></p>
-<pre>
-    for $i ( 0 .. $#AoA ) {
+<pre>    for $i ( 0 .. $#AoA ) {
         $aref = $AoA[$i];
         $n = @$aref - 1;
         for $j ( 0 .. $n ) {
@@ -285,9 +261,7 @@
     modules. The former is what the Perl debugger uses, while the latter
     generates parsable Perl code. For example:</p>
 <p class="Pp"></p>
-<pre>
- use v5.14;     # using the + prototype, new to v5.14
-
+<pre> use v5.14;     # using the + prototype, new to v5.14
  sub show(+) {
         require Dumpvalue;
         state $prettily = new Dumpvalue::
@@ -299,7 +273,6 @@
                         ;
         dumpValue $prettily @_;
  }
-
  # Assign a list of array references to an array.
  my @AoA = (
            [ &quot;fred&quot;, &quot;barney&quot; ],
@@ -311,16 +284,14 @@
 </pre>
 <p class="Pp">will print out:</p>
 <p class="Pp"></p>
-<pre>
-    0  0..3  &quot;fred&quot; &quot;barney&quot; &quot;wilma&quot; &quot;betty&quot;
+<pre>    0  0..3  &quot;fred&quot; &quot;barney&quot; &quot;wilma&quot; &quot;betty&quot;
     1  0..2  &quot;george&quot; &quot;jane&quot; &quot;elroy&quot;
     2  0..2  &quot;homer&quot; &quot;marge&quot; &quot;bart&quot;
 </pre>
 <p class="Pp">Whereas if you comment out the two lines I said you might wish to,
     then it shows it to you this way instead:</p>
 <p class="Pp"></p>
-<pre>
-    0  ARRAY(0x8031d0)
+<pre>    0  ARRAY(0x8031d0)
        0  &quot;fred&quot;
        1  &quot;barney&quot;
        2  &quot;wilma&quot;
@@ -344,8 +315,7 @@
 <p class="Pp">Here's how to do one operation using a loop. We'll assume an
     <span class="Li">@AoA</span> variable as before.</p>
 <p class="Pp"></p>
-<pre>
-    @part = ();
+<pre>    @part = ();
     $x = 4;
     for ($y = 7; $y &lt; 13; $y++) {
         push @part, $AoA[$x][$y];
@@ -353,13 +323,11 @@
 </pre>
 <p class="Pp">That same loop could be replaced with a slice operation:</p>
 <p class="Pp"></p>
-<pre>
-    @part = @{$AoA[4]}[7..12];
+<pre>    @part = @{$AoA[4]}[7..12];
 </pre>
 <p class="Pp">or spaced out a bit:</p>
 <p class="Pp"></p>
-<pre>
-    @part = @{ $AoA[4] } [ 7..12 ];
+<pre>    @part = @{ $AoA[4] } [ 7..12 ];
 </pre>
 <p class="Pp">But as you might well imagine, this can get pretty rough on the
     reader.</p>
@@ -368,8 +336,7 @@
     <span class="Li">$y</span> run from 7 to 12? Hmm... here's the simple
   way:</p>
 <p class="Pp"></p>
-<pre>
-    @newAoA = ();
+<pre>    @newAoA = ();
     for ($startx = $x = 4; $x &lt;= 8; $x++) {
         for ($starty = $y = 7; $y &lt;= 12; $y++) {
             $newAoA[$x - $startx][$y - $starty] = $AoA[$x][$y];
@@ -378,28 +345,24 @@
 </pre>
 <p class="Pp">We can reduce some of the looping through slices</p>
 <p class="Pp"></p>
-<pre>
-    for ($x = 4; $x &lt;= 8; $x++) {
+<pre>    for ($x = 4; $x &lt;= 8; $x++) {
         push @newAoA, [ @{ $AoA[$x] } [ 7..12 ] ];
     }
 </pre>
 <p class="Pp">If you were into Schwartzian Transforms, you would probably have
     selected map for that</p>
 <p class="Pp"></p>
-<pre>
-    @newAoA = map { [ @{ $AoA[$_] } [ 7..12 ] ] } 4 .. 8;
+<pre>    @newAoA = map { [ @{ $AoA[$_] } [ 7..12 ] ] } 4 .. 8;
 </pre>
 <p class="Pp">Although if your manager accused you of seeking job security (or
     rapid insecurity) through inscrutable code, it would be hard to argue. :-)
     If I were you, I'd put that in a function:</p>
 <p class="Pp"></p>
-<pre>
-    @newAoA = splice_2D( \@AoA, 4 =&gt; 8, 7 =&gt; 12 );
+<pre>    @newAoA = splice_2D( \@AoA, 4 =&gt; 8, 7 =&gt; 12 );
     sub splice_2D {
         my $lrr = shift;        # ref to array of array refs!
         my ($x_lo, $x_hi,
             $y_lo, $y_hi) = @_;
-
         return map {
             [ @{ $lrr-&gt;[$_] } [ $y_lo .. $y_hi ] ]
         } $x_lo .. $x_hi;

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::Spec::Mac(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- require File::Spec::Mac; # Done internally by File::Spec if needed
+<pre> require File::Spec::Mac; # Done internally by File::Spec if needed
 </pre>
 </section>
 <section class="Sh">
@@ -64,15 +64,13 @@
         name, since it contains a punctuation character &quot;:&quot;).</p>
     <p class="Pp">So, beside calls like</p>
     <p class="Pp"></p>
-    <pre>
-    catdir(&quot;a&quot;) = &quot;:a:&quot;
+    <pre>    catdir(&quot;a&quot;) = &quot;:a:&quot;
     catdir(&quot;a&quot;,&quot;b&quot;) = &quot;:a:b:&quot;
     catdir() = &quot;&quot;                    (special case)
     </pre>
     <p class="Pp">calls like the following</p>
     <p class="Pp"></p>
-    <pre>
-    catdir(&quot;:a:&quot;) = &quot;:a:&quot;
+    <pre>    catdir(&quot;:a:&quot;) = &quot;:a:&quot;
     catdir(&quot;:a&quot;,&quot;b&quot;) = &quot;:a:b:&quot;
     catdir(&quot;:a:&quot;,&quot;b&quot;) = &quot;:a:b:&quot;
     catdir(&quot;:a:&quot;,&quot;:b:&quot;) = &quot;:a:b:&quot;
@@ -103,8 +101,7 @@
       number of directories to climb up is handled correctly, not removing
       leading or trailing colons when necessary. E.g.
     <p class="Pp"></p>
-    <pre>
-    catdir(&quot;:::a&quot;,&quot;::b&quot;,&quot;c&quot;)    = &quot;:::a::b:c:&quot;
+    <pre>    catdir(&quot;:::a&quot;,&quot;::b&quot;,&quot;c&quot;)    = &quot;:::a::b:c:&quot;
     catdir(&quot;:::a::&quot;,&quot;::b&quot;,&quot;c&quot;)  = &quot;:::a:::b:c:&quot;
     </pre>
   </dd>
@@ -118,8 +115,7 @@
       ). Likewise, a &quot;::&quot; is handled like a &quot;..&quot; (updir),
       and a &quot;:::&quot; is handled like a &quot;../..&quot; etc. E.g.
     <p class="Pp"></p>
-    <pre>
-    catdir(&quot;a&quot;,&quot;:&quot;,&quot;:&quot;,&quot;b&quot;)   = &quot;:a:b:&quot;
+    <pre>    catdir(&quot;a&quot;,&quot;:&quot;,&quot;:&quot;,&quot;b&quot;)   = &quot;:a:b:&quot;
     catdir(&quot;a&quot;,&quot;:&quot;,&quot;::&quot;,&quot;:b&quot;) = &quot;:a::b:&quot;
     </pre>
   </dd>
@@ -133,9 +129,7 @@
       passing<span class="Li">&quot;File::Spec-&gt;rootdir()&quot;</span> as the
       first argument, i.e.
     <p class="Pp"></p>
-    <pre>
-    catdir(&quot;&quot;,&quot;a&quot;,&quot;b&quot;)          is the same as
-
+    <pre>    catdir(&quot;&quot;,&quot;a&quot;,&quot;b&quot;)          is the same as
     catdir(rootdir(),&quot;a&quot;,&quot;b&quot;).
     </pre>
     <p class="Pp">This is true on Unix, where
@@ -153,8 +147,7 @@
       go beyond &quot;root&quot;. Generally, these cases are handled like their
       Unix counterparts:
     <p class="Pp"></p>
-    <pre>
- Unix:
+    <pre> Unix:
     Unix-&gt;catdir(&quot;&quot;,&quot;&quot;)                 =  &quot;/&quot;
     Unix-&gt;catdir(&quot;&quot;,&quot;.&quot;)                =  &quot;/&quot;
     Unix-&gt;catdir(&quot;&quot;,&quot;..&quot;)               =  &quot;/&quot;        # can't go
@@ -189,14 +182,12 @@
     to use <span class="Li">&quot;catpath()&quot;</span> to concatenate
     <i>volume names</i> and <i>directory</i> <i>paths</i>. E.g.</p>
 <p class="Pp"></p>
-<pre>
-    $dir      = File::Spec-&gt;catdir(&quot;tmp&quot;,&quot;sources&quot;);
+<pre>    $dir      = File::Spec-&gt;catdir(&quot;tmp&quot;,&quot;sources&quot;);
     $abs_path = File::Spec-&gt;catpath(&quot;MacintoshHD:&quot;, $dir,&quot;&quot;);
 </pre>
 <p class="Pp">yields</p>
 <p class="Pp"></p>
-<pre>
-    &quot;MacintoshHD:tmp:sources:&quot; .
+<pre>    &quot;MacintoshHD:tmp:sources:&quot; .
 </pre>
 </div>
 <dl class="Bl-tag">
@@ -217,14 +208,12 @@
         concatenation of the directory portions (if any), the following with
         regard to relative and absolute paths is true:</p>
     <p class="Pp"></p>
-    <pre>
-    catfile(&quot;&quot;)     = &quot;&quot;
+    <pre>    catfile(&quot;&quot;)     = &quot;&quot;
     catfile(&quot;file&quot;) = &quot;file&quot;
     </pre>
     <p class="Pp">but</p>
     <p class="Pp"></p>
-    <pre>
-    catfile(&quot;&quot;,&quot;&quot;)        = rootdir()         # (e.g. &quot;HD:&quot;)
+    <pre>    catfile(&quot;&quot;,&quot;&quot;)        = rootdir()         # (e.g. &quot;HD:&quot;)
     catfile(&quot;&quot;,&quot;file&quot;)    = rootdir() . file  # (e.g. &quot;HD:file&quot;)
     catfile(&quot;HD:&quot;,&quot;file&quot;) = &quot;HD:file&quot;
     </pre>
@@ -234,9 +223,7 @@
     <p class="Pp">Note that the leading &quot;:&quot; is removed from the
         filename, so that</p>
     <p class="Pp"></p>
-    <pre>
-    catfile(&quot;a&quot;,&quot;b&quot;,&quot;file&quot;)  = &quot;:a:b:file&quot;    and
-
+    <pre>    catfile(&quot;a&quot;,&quot;b&quot;,&quot;file&quot;)  = &quot;:a:b:file&quot;    and
     catfile(&quot;a&quot;,&quot;b&quot;,&quot;:file&quot;) = &quot;:a:b:file&quot;
     </pre>
     <p class="Pp">give the same answer.</p>
@@ -273,8 +260,7 @@
       this does no longer consult the local filesystem.
     <p class="Pp">E.g.</p>
     <p class="Pp"></p>
-    <pre>
-    File::Spec-&gt;file_name_is_absolute(&quot;a&quot;);         # false (relative)
+    <pre>    File::Spec-&gt;file_name_is_absolute(&quot;a&quot;);         # false (relative)
     File::Spec-&gt;file_name_is_absolute(&quot;:a:b:&quot;);     # false (relative)
     File::Spec-&gt;file_name_is_absolute(&quot;MacintoshHD:&quot;);
                                                     # true (absolute)
@@ -288,8 +274,7 @@
       split, as is done in :lib:ExtUtils:MM_Mac.pm.</dd>
   <dt id="splitpath"><a class="permalink" href="#splitpath">splitpath</a></dt>
   <dd>
-    <pre>
-    ($volume,$directories,$file) = File::Spec-&gt;splitpath( $path );
+    <pre>    ($volume,$directories,$file) = File::Spec-&gt;splitpath( $path );
     ($volume,$directories,$file) = File::Spec-&gt;splitpath( $path,
                                                           $no_file );
     </pre>
@@ -310,8 +295,7 @@
   <dt id="splitdir"><a class="permalink" href="#splitdir">splitdir</a></dt>
   <dd>The opposite of <span class="Li">&quot;catdir()&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-    @dirs = File::Spec-&gt;splitdir( $directories );
+    <pre>    @dirs = File::Spec-&gt;splitdir( $directories );
     </pre>
     <p class="Pp"><span class="Li">$directories</span> should be only the
         directory portion of the path on systems that have the concept of a
@@ -326,30 +310,25 @@
         directory name after it.</p>
     <p class="Pp">Hence, on Mac OS, both</p>
     <p class="Pp"></p>
-    <pre>
-    File::Spec-&gt;splitdir( &quot;:a:b::c:&quot; );    and
+    <pre>    File::Spec-&gt;splitdir( &quot;:a:b::c:&quot; );    and
     File::Spec-&gt;splitdir( &quot;:a:b::c&quot; );
     </pre>
     <p class="Pp">yield:</p>
     <p class="Pp"></p>
-    <pre>
-    ( &quot;a&quot;, &quot;b&quot;, &quot;::&quot;, &quot;c&quot;)
+    <pre>    ( &quot;a&quot;, &quot;b&quot;, &quot;::&quot;, &quot;c&quot;)
     </pre>
     <p class="Pp">while</p>
     <p class="Pp"></p>
-    <pre>
-    File::Spec-&gt;splitdir( &quot;:a:b::c::&quot; );
+    <pre>    File::Spec-&gt;splitdir( &quot;:a:b::c::&quot; );
     </pre>
     <p class="Pp">yields:</p>
     <p class="Pp"></p>
-    <pre>
-    ( &quot;a&quot;, &quot;b&quot;, &quot;::&quot;, &quot;c&quot;, &quot;::&quot;)
+    <pre>    ( &quot;a&quot;, &quot;b&quot;, &quot;::&quot;, &quot;c&quot;, &quot;::&quot;)
     </pre>
   </dd>
   <dt id="catpath"><a class="permalink" href="#catpath">catpath</a></dt>
   <dd>
-    <pre>
-    $path = File::Spec-&gt;catpath($volume,$directory,$file);
+    <pre>    $path = File::Spec-&gt;catpath($volume,$directory,$file);
     </pre>
     <p class="Pp">Takes volume, directory and file portions and returns an
         entire path. On Mac OS, <span class="Li">$volume</span>,
@@ -368,8 +347,7 @@
   <dd>Takes a destination path and an optional base path and returns a relative
       path from the base path to the destination path:
     <p class="Pp"></p>
-    <pre>
-    $rel_path = File::Spec-&gt;abs2rel( $path ) ;
+    <pre>    $rel_path = File::Spec-&gt;abs2rel( $path ) ;
     $rel_path = File::Spec-&gt;abs2rel( $path, $base ) ;
     </pre>
     <p class="Pp">Note that both paths are assumed to have a notation that
@@ -399,8 +377,7 @@
   <dt id="rel2abs"><a class="permalink" href="#rel2abs">rel2abs</a></dt>
   <dd>Converts a relative path to an absolute path:
     <p class="Pp"></p>
-    <pre>
-    $abs_path = File::Spec-&gt;rel2abs( $path ) ;
+    <pre>    $abs_path = File::Spec-&gt;rel2abs( $path ) ;
     $abs_path = File::Spec-&gt;rel2abs( $path, $base ) ;
     </pre>
     <p class="Pp">Note that both paths are assumed to have a notation that

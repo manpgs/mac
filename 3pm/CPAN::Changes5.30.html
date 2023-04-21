@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CPAN::Changes(3)</title>
 </head>
@@ -28,10 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    # Load from file
+<pre>    # Load from file
     my $changes = CPAN::Changes-&gt;load( 'Changes' );
-
     # Create a new Changes file
     $changes = CPAN::Changes-&gt;new(
         preamble =&gt; 'Revision history for perl module Foo::Bar'
@@ -41,7 +40,6 @@
         version =&gt; '0.01',
         date    =&gt; '2009-07-06',
     } );
-
     $changes-&gt;serialize;
 </pre>
 </section>
@@ -99,8 +97,7 @@
     Each release may be either a regular hashref, or a CPAN::Changes::Release
     object.</p>
 <p class="Pp"></p>
-<pre>
-    # Hashref argument
+<pre>    # Hashref argument
     $changes-&gt;releases( { version =&gt; '0.01', date =&gt; '2009-07-06' } );
     
     # Release object argument
@@ -155,15 +152,11 @@
     of a distribution using Dist::Zilla and Dist::Zilla::Plugin::NextRelease
     would look like:</p>
 <p class="Pp"></p>
-<pre>
-    Revision history for Foo-Bar
-
+<pre>    Revision history for Foo-Bar
     {{$NEXT}}
         - Add the 'frobuscate' method.
-
     1.0.0     2010-11-30
         - Convert all comments to Esperanto.
-
     0.0.1     2010-09-29
         - Original version unleashed on an unsuspecting world
 </pre>
@@ -175,13 +168,11 @@
     considered the latest release, regardless of its timestamp.</p>
 <p class="Pp">To continue with our example:</p>
 <p class="Pp"></p>
-<pre>
-    # recognizes {{$NEXT}} as a version
+<pre>    # recognizes {{$NEXT}} as a version
     my $changes = CPAN::Changes-&gt;load( 
         'Changes',
         next_token =&gt; qr/{{\$NEXT}}/,
     );
-
     my @releases = $changes-&gt;releases;
     print $releases[-1]-&gt;version;       # prints '{{$NEXT}}'
 </pre>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Params::Check(3pm)</title>
 </head>
@@ -28,13 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Params::Check qw[check allow last_error];
-
+<pre>    use Params::Check qw[check allow last_error];
     sub fill_personal_info {
         my %hash = @_;
         my $x;
-
         my $tmpl = {
             firstname   =&gt; { required   =&gt; 1, defined =&gt; 1 },
             lastname    =&gt; { required   =&gt; 1, store =&gt; \$x },
@@ -45,7 +43,6 @@
             age         =&gt; { default    =&gt; 21,
                              allow      =&gt; qr/^\d+$/,
                            },
-
             phone       =&gt; { allow =&gt; [ sub { return 1 if /$valid_re/ },
                                         '1-800-PERL' ]
                            },
@@ -54,16 +51,12 @@
                            },
             employer    =&gt; { default =&gt; 'NSA', no_override =&gt; 1 },
         };
-
         ### check() returns a hashref of parsed args on success ###
         my $parsed_args = check( $tmpl, \%hash, $VERBOSE )
                             or die qw[Could not parse arguments!];
-
         ... other code here ...
     }
-
     my $ok = allow( $colour, [qw|blue green yellow|] );
-
     my $error = Params::Check::last_error();
 </pre>
 </section>
@@ -87,7 +80,7 @@
     discuss below:</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">Template</h1>
+<h1 class="Sh" id="Template"><a class="permalink" href="#Template">Template</a></h1>
 <p class="Pp">As you can see in the synopsis, based on your template, the
     arguments provided will be validated.</p>
 <p class="Pp">The template can take a different set of rules per key that is
@@ -128,14 +121,12 @@
   <dd>This allows you to pass a reference to a scalar, in which the data will be
       stored:
     <p class="Pp"></p>
-    <pre>
-    my $x;
+    <pre>    my $x;
     my $args = check(foo =&gt; { default =&gt; 1, store =&gt; \$x }, $input);
     </pre>
     <p class="Pp">This is basically shorthand for saying:</p>
     <p class="Pp"></p>
-    <pre>
-    my $args = check( { foo =&gt; { default =&gt; 1 }, $input );
+    <pre>    my $args = check( { foo =&gt; { default =&gt; 1 }, $input );
     my $x    = $args-&gt;{foo};
     </pre>
     <p class="Pp">You can alter the global variable
@@ -160,14 +151,13 @@
 <p class="Pp">This function is not exported by default, so you'll have to ask
     for it via:</p>
 <p class="Pp"></p>
-<pre>
-    use Params::Check qw[check];
+<pre>    use Params::Check qw[check];
 </pre>
 <p class="Pp">or use its fully qualified name instead.</p>
 <p class="Pp"><span class="Li">&quot;check&quot;</span> takes a list of
     arguments, as follows:</p>
 <dl class="Bl-tag">
-  <dt id="Template"><a class="permalink" href="#Template">Template</a></dt>
+  <dt id="Template~2"><a class="permalink" href="#Template~2">Template</a></dt>
   <dd>This is a hash reference which contains a template as explained in the
       <span class="Li">&quot;SYNOPSIS&quot;</span> and
       <span class="Li">&quot;Template&quot;</span> section.</dd>
@@ -187,8 +177,7 @@
     succeeds.</p>
 <p class="Pp">So a typical call to check would look like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $parsed = check( \%template, \%arguments, $VERBOSE )
+<pre>    my $parsed = check( \%template, \%arguments, $VERBOSE )
                     or warn q[Arguments could not be parsed!];
 </pre>
 <p class="Pp">A lot of the behaviour of
@@ -269,8 +258,7 @@
 <h2 class="Ss" id="$Params::Check::STRIP_LEADING_DASHES"><a class="permalink" href="#$Params::Check::STRIP_LEADING_DASHES">$Params::Check::STRIP_LEADING_DASHES</a></h2>
 <p class="Pp">If you set this flag, all keys passed in the following manner:</p>
 <p class="Pp"></p>
-<pre>
-    function( -key =&gt; 'val' );
+<pre>    function( -key =&gt; 'val' );
 </pre>
 <p class="Pp">will have their leading dashes stripped.</p>
 </section>
@@ -330,16 +318,12 @@
     <span class="Li">&quot;Params::Check::check()&quot;</span>.</p>
 <p class="Pp">Example wrapper function, using a custom stacktrace:</p>
 <p class="Pp"></p>
-<pre>
-    sub check {
+<pre>    sub check {
         my ($template, $args_in) = @_;
-
         local $Params::Check::WARNINGS_FATAL = 1;
         local $Params::Check::CALLER_DEPTH = $Params::Check::CALLER_DEPTH + 1;
         my $args_out = Params::Check::check($template, $args_in);
-
         my_stacktrace(Params::Check::last_error) unless $args_out;
-
         return $args_out;
     }
 </pre>

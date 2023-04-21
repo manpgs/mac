@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Time::Piece(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Time::Piece;
+<pre>    use Time::Piece;
     
     my $t = localtime;
     print &quot;Time is $t\n&quot;;
@@ -59,8 +59,7 @@
     it's a copy constructor. The following methods are available on the
   object:</p>
 <p class="Pp"></p>
-<pre>
-    $t-&gt;sec                 # also available as $t-&gt;second
+<pre>    $t-&gt;sec                 # also available as $t-&gt;second
     $t-&gt;min                 # also available as $t-&gt;minute
     $t-&gt;hour                # 24 hour
     $t-&gt;mday                # also available as $t-&gt;day_of_month
@@ -80,11 +79,9 @@
     $t-&gt;fullday             # Tuesday
     $t-&gt;yday                # also available as $t-&gt;day_of_year, 0 = Jan 01
     $t-&gt;isdst               # also available as $t-&gt;daylight_savings
-
     $t-&gt;hms                 # 12:34:56
     $t-&gt;hms(&quot;.&quot;)            # 12.34.56
     $t-&gt;time                # same as $t-&gt;hms
-
     $t-&gt;ymd                 # 2000-02-29
     $t-&gt;date                # same as $t-&gt;ymd
     $t-&gt;mdy                 # 02-29-2000
@@ -94,23 +91,17 @@
     $t-&gt;datetime            # 2000-02-29T12:34:56 (ISO 8601)
     $t-&gt;cdate               # Tue Feb 29 12:34:56 2000
     &quot;$t&quot;                    # same as $t-&gt;cdate
-
     $t-&gt;epoch               # seconds since the epoch
     $t-&gt;tzoffset            # timezone offset in a Time::Seconds object
-
     $t-&gt;julian_day          # number of days since Julian period began
     $t-&gt;mjd                 # modified Julian date (JD-2400000.5 days)
-
     $t-&gt;week                # week number (ISO 8601)
-
     $t-&gt;is_leap_year        # true if it's a leap year
     $t-&gt;month_last_day      # 28-31
-
     $t-&gt;time_separator($s)  # set the default separator (default &quot;:&quot;)
     $t-&gt;date_separator($s)  # set the default separator (default &quot;-&quot;)
     $t-&gt;day_list(@days)     # set the default weekdays
     $t-&gt;mon_list(@days)     # set the default months
-
     $t-&gt;strftime(FORMAT)    # same as POSIX::strftime (without the overhead
                             # of the full POSIX extension)
     $t-&gt;strftime()          # &quot;Tue, 29 Feb 2000 12:34:56 GMT&quot;
@@ -133,25 +124,20 @@
     locales. Note that this is a global override and will affect all Time::Piece
     instances.</p>
 <p class="Pp"></p>
-<pre>
-  my @days = qw( Dimanche Lundi Merdi Mercredi Jeudi Vendredi Samedi );
-
+<pre>  my @days = qw( Dimanche Lundi Merdi Mercredi Jeudi Vendredi Samedi );
   my $french_day = localtime-&gt;day(@days);
 </pre>
 <p class="Pp">These settings can be overridden globally too:</p>
 <p class="Pp"></p>
-<pre>
-  Time::Piece::day_list(@days);
+<pre>  Time::Piece::day_list(@days);
 </pre>
 <p class="Pp">Or for months:</p>
 <p class="Pp"></p>
-<pre>
-  Time::Piece::mon_list(@months);
+<pre>  Time::Piece::mon_list(@months);
 </pre>
 <p class="Pp">And locally for months:</p>
 <p class="Pp"></p>
-<pre>
-  print localtime-&gt;month(@months);
+<pre>  print localtime-&gt;month(@months);
 </pre>
 <p class="Pp">Or to populate with your current system locale call:
   <br/>
@@ -163,8 +149,7 @@
 <p class="Pp">It's possible to use simple addition and subtraction of
   objects:</p>
 <p class="Pp"></p>
-<pre>
-    use Time::Seconds;
+<pre>    use Time::Seconds;
     
     my $seconds = $t1 - $t2;
     $t1 += ONE_DAY; # add 1 day (constant from Time::Seconds)
@@ -172,8 +157,7 @@
 <p class="Pp">The following are valid ($t1 and <span class="Li">$t2</span> are
     Time::Piece objects):</p>
 <p class="Pp"></p>
-<pre>
-    $t1 - $t2; # returns Time::Seconds object
+<pre>    $t1 - $t2; # returns Time::Seconds object
     $t1 - 42; # returns Time::Piece object
     $t1 + 533; # returns Time::Piece object
 </pre>
@@ -186,8 +170,7 @@
 <p class="Pp">In addition to adding seconds, there are two APIs for adding
     months and years:</p>
 <p class="Pp"></p>
-<pre>
-    $t = $t-&gt;add_months(6);
+<pre>    $t = $t-&gt;add_months(6);
     $t = $t-&gt;add_years(5);
 </pre>
 <p class="Pp">The months and years can be negative for subtractions. Note that
@@ -204,8 +187,7 @@
     returns a copy of the object but with the time truncated to the start of the
     supplied unit.</p>
 <p class="Pp"></p>
-<pre>
-    $t = $t-&gt;truncate(to =&gt; 'day');
+<pre>    $t = $t-&gt;truncate(to =&gt; 'day');
 </pre>
 <p class="Pp">This example will set the time to midnight on the same date which
     <span class="Li">$t</span> had previously. Allowed values for the
@@ -227,24 +209,24 @@
     FreeBSD), allowing you incredibly flexible date parsing routines. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  my $t = Time::Piece-&gt;strptime(&quot;Sunday 3rd Nov, 1943&quot;,
+<pre>  my $t = Time::Piece-&gt;strptime(&quot;Sunday 3rd Nov, 1943&quot;,
                                 &quot;%A %drd %b, %Y&quot;);
   
   print $t-&gt;strftime(&quot;%a, %d %b %Y&quot;);
 </pre>
 <p class="Pp">Outputs:</p>
 <p class="Pp"></p>
-<pre>
-  Wed, 03 Nov 1943
+<pre>  Wed, 03 Nov 1943
 </pre>
 <p class="Pp">(see, it's even smart enough to fix my obvious date bug)</p>
 <p class="Pp">For more information see &quot;man strptime&quot;, which should be
     on all unix systems.</p>
 <p class="Pp">Alternatively look here:
     &lt;http://www.unix.com/man-page/FreeBSD/3/strftime/&gt;</p>
-<p class="Pp"><i>CAVEAT </i><i>%A</i><i>, </i><i>%a</i><i>, </i><i>%B</i><i>,
-    </i><i>%b</i><i>, and friends</i></p>
+<p class="Pp"><i>CAVEAT </i><span class="Li"><i>%A</i></span><i>,
+    </i><span class="Li"><i>%a</i></span><i>,
+    </i><span class="Li"><i>%B</i></span><i>,
+    </i><span class="Li"><i>%b</i></span><i>, and friends</i></p>
 <p class="Pp">Time::Piece::strptime by default can only parse American English
     date names. Meanwhile, Time::Piece-&gt;<b>strftime()</b> will return date
     names that use the current configured system locale. This means dates
@@ -255,24 +237,20 @@
     this is a global override and will affect all Time::Piece instances.</p>
 <p class="Pp">For instance with a German locale:</p>
 <p class="Pp"></p>
-<pre>
-    localtime-&gt;day_list();
+<pre>    localtime-&gt;day_list();
 </pre>
 <p class="Pp">Returns</p>
 <p class="Pp"></p>
-<pre>
-    ( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' )
+<pre>    ( 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' )
 </pre>
 <p class="Pp">While:</p>
 <p class="Pp"></p>
-<pre>
-    Time::Piece-&gt;use_locale();
+<pre>    Time::Piece-&gt;use_locale();
     localtime-&gt;day_list();
 </pre>
 <p class="Pp">Returns</p>
 <p class="Pp"></p>
-<pre>
-    ( 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' )
+<pre>    ( 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' )
 </pre>
 </section>
 <section class="Ss">
@@ -298,8 +276,7 @@
 <p class="Pp">Finally, it's possible to override localtime and gmtime
     everywhere, by including the ':override' tag in the import list:</p>
 <p class="Pp"></p>
-<pre>
-    use Time::Piece ':override';
+<pre>    use Time::Piece ':override';
 </pre>
 </section>
 </section>

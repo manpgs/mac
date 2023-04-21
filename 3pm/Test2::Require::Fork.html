@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Require::Fork(3)</title>
 </head>
@@ -36,9 +37,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Require::Fork;
-
+<pre>    use Test2::Require::Fork;
     ... Code that forks ...
 </pre>
 </section>
@@ -47,20 +46,15 @@
 <p class="Pp">Checking if the current system supports forking is not simple.
     Here is an example of how to do it:</p>
 <p class="Pp"></p>
-<pre>
-    use Config;
-
+<pre>    use Config;
     sub CAN_FORK {
         return 1 if $Config{d_fork};
-
         # Some platforms use ithreads to mimic forking
         return 0 unless $^O eq 'MSWin32' || $^O eq 'NetWare';
         return 0 unless $Config{useithreads};
         return 0 unless $Config{ccflags} =~ /-DPERL_IMPLICIT_SYS/;
-
         # Threads are not reliable before 5.008001
         return 0 unless $] &gt;= 5.008001;
-
         # Devel::Cover currently breaks with threads
         return 0 if $INC{'Devel/Cover.pm'};
         return 1;

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moo(3)</title>
 </head>
@@ -28,49 +29,38 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Cat::Food;
-
+<pre>  package Cat::Food;
   use Moo;
   use strictures 2;
   use namespace::clean;
-
   sub feed_lion {
     my $self = shift;
     my $amount = shift || 1;
-
     $self-&gt;pounds( $self-&gt;pounds - $amount );
   }
-
   has taste =&gt; (
     is =&gt; 'ro',
   );
-
   has brand =&gt; (
     is  =&gt; 'ro',
     isa =&gt; sub {
       die &quot;Only SWEET-TREATZ supported!&quot; unless $_[0] eq 'SWEET-TREATZ'
     },
   );
-
   has pounds =&gt; (
     is  =&gt; 'rw',
     isa =&gt; sub { die &quot;$_[0] is too much cat food!&quot; unless $_[0] &lt; 15 },
   );
-
   1;
 </pre>
 <p class="Pp">And elsewhere:</p>
 <p class="Pp"></p>
-<pre>
-  my $full = Cat::Food-&gt;new(
+<pre>  my $full = Cat::Food-&gt;new(
       taste  =&gt; 'DELICIOUS.',
       brand  =&gt; 'SWEET-TREATZ',
       pounds =&gt; 10,
   );
-
   $full-&gt;feed_lion;
-
   say $full-&gt;pounds;
 </pre>
 </section>
@@ -146,8 +136,7 @@
     metaclasses like Moo does.</p>
 <p class="Pp">If you need to disable the metaclass creation, add:</p>
 <p class="Pp"></p>
-<pre>
-  no Moo::sification;
+<pre>  no Moo::sification;
 </pre>
 <p class="Pp">to your code before Moose is loaded, but bear in mind that this
     switch is global and turns the mechanism off entirely so don't put this in
@@ -187,13 +176,11 @@
 <p class="Pp">Moo provides several methods to any class using it.</p>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-  Foo::Bar-&gt;new( attr1 =&gt; 3 );
+<pre>  Foo::Bar-&gt;new( attr1 =&gt; 3 );
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  Foo::Bar-&gt;new({ attr1 =&gt; 3 });
+<pre>  Foo::Bar-&gt;new({ attr1 =&gt; 3 });
 </pre>
 <p class="Pp">The constructor for the class. By default it will accept
     attributes either as a hashref, or a list of key value pairs. This can be
@@ -201,8 +188,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="does"><a class="permalink" href="#does">does</a></h2>
-<pre>
-  if ($foo-&gt;does('Some::Role1')) {
+<pre>  if ($foo-&gt;does('Some::Role1')) {
     ...
   }
 </pre>
@@ -210,8 +196,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">DOES</h2>
-<pre>
-  if ($foo-&gt;DOES('Some::Role1') || $foo-&gt;DOES('Some::Class1')) {
+<pre>  if ($foo-&gt;DOES('Some::Role1') || $foo-&gt;DOES('Some::Class1')) {
     ...
   }
 </pre>
@@ -220,8 +205,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="meta"><a class="permalink" href="#meta">meta</a></h2>
-<pre>
-  my $meta = Foo::Bar-&gt;meta;
+<pre>  my $meta = Foo::Bar-&gt;meta;
   my @methods = $meta-&gt;get_method_list;
 </pre>
 <p class="Pp">Returns an object that will behave as if it is a Moose metaclass
@@ -244,16 +228,12 @@
     <span class="Li">&quot;DESTROY&quot;</span> yourself.</p>
 <section class="Ss">
 <h2 class="Ss">BUILDARGS</h2>
-<pre>
-  around BUILDARGS =&gt; sub {
+<pre>  around BUILDARGS =&gt; sub {
     my ( $orig, $class, @args ) = @_;
-
     return { attr1 =&gt; $args[0] }
       if @args == 1 &amp;&amp; !ref $args[0];
-
     return $class-&gt;$orig(@args);
   };
-
   Foo::Bar-&gt;new( 3 );
 </pre>
 <p class="Pp">This class method is used to transform the arguments to
@@ -269,8 +249,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">FOREIGNBUILDARGS</h2>
-<pre>
-  sub FOREIGNBUILDARGS {
+<pre>  sub FOREIGNBUILDARGS {
     my ( $class, $options ) = @_;
     return $options-&gt;{foo};
   }
@@ -283,8 +262,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">BUILD</h2>
-<pre>
-  sub BUILD {
+<pre>  sub BUILD {
     my ($self, $args) = @_;
     die &quot;foo and bar cannot be used at the same time&quot;
       if exists $args-&gt;{foo} &amp;&amp; exists $args-&gt;{bar};
@@ -299,8 +277,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">DEMOLISH</h2>
-<pre>
-  sub DEMOLISH {
+<pre>  sub DEMOLISH {
     my ($self, $in_global_destruction) = @_;
     ...
   }
@@ -325,8 +302,7 @@
   SUBROUTINES</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="extends"><a class="permalink" href="#extends">extends</a></h2>
-<pre>
-  extends 'Parent::Class';
+<pre>  extends 'Parent::Class';
 </pre>
 <p class="Pp">Declares a base class. Multiple superclasses can be passed for
     multiple inheritance but please consider using roles instead. The class will
@@ -337,13 +313,11 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="with"><a class="permalink" href="#with">with</a></h2>
-<pre>
-  with 'Some::Role1';
+<pre>  with 'Some::Role1';
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  with 'Some::Role1', 'Some::Role2';
+<pre>  with 'Some::Role1', 'Some::Role2';
 </pre>
 <p class="Pp">Composes one or more Moo::Role (or Role::Tiny) roles into the
     current class. An error will be raised if these roles cannot be composed
@@ -353,20 +327,17 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="has"><a class="permalink" href="#has">has</a></h2>
-<pre>
-  has attr =&gt; (
+<pre>  has attr =&gt; (
     is =&gt; 'ro',
   );
 </pre>
 <p class="Pp">Declares an attribute for the class.</p>
 <p class="Pp"></p>
-<pre>
-  package Foo;
+<pre>  package Foo;
   use Moo;
   has 'attr' =&gt; (
     is =&gt; 'ro'
   );
-
   package Bar;
   use Moo;
   extends 'Foo';
@@ -377,8 +348,7 @@
 <p class="Pp">Using the <span class="Li">&quot;+&quot;</span> notation, it's
     possible to override an attribute.</p>
 <p class="Pp"></p>
-<pre>
-  has [qw(attr1 attr2 attr3)] =&gt; (
+<pre>  has [qw(attr1 attr2 attr3)] =&gt; (
     is =&gt; 'ro',
   );
 </pre>
@@ -429,8 +399,7 @@
       does not include a basic type system, so instead of doing
       <span class="Li">&quot;isa =&gt; 'Num'&quot;</span>, one should do
     <p class="Pp"></p>
-    <pre>
-  use Scalar::Util qw(looks_like_number);
+    <pre>  use Scalar::Util qw(looks_like_number);
   ...
   isa =&gt; sub {
     die &quot;$_[0] is not a number!&quot; unless looks_like_number $_[0]
@@ -455,8 +424,7 @@
         (rather than the default behaviour of creating an anonymous type),
       set:</p>
     <p class="Pp"></p>
-    <pre>
-  $Moo::HandleMoose::TYPE_MAP{$isa_coderef} = sub {
+    <pre>  $Moo::HandleMoose::TYPE_MAP{$isa_coderef} = sub {
     require MooseX::Types::Something;
     return MooseX::Types::Something::TypeName();
   };
@@ -469,8 +437,7 @@
   <dd>Takes a coderef which is meant to coerce the attribute. The basic idea is
       to do something like the following:
     <p class="Pp"></p>
-    <pre>
- coerce =&gt; sub {
+    <pre> coerce =&gt; sub {
    $_[0] % 2 ? $_[0] : $_[0] + 1
  },
     </pre>
@@ -490,21 +457,18 @@
   <dt>&quot;handles&quot;</dt>
   <dd>Takes a string
     <p class="Pp"></p>
-    <pre>
-  handles =&gt; 'RobotRole'
+    <pre>  handles =&gt; 'RobotRole'
     </pre>
     <p class="Pp">Where <span class="Li">&quot;RobotRole&quot;</span> is a role
         that defines an interface which becomes the list of methods to
       handle.</p>
     <p class="Pp">Takes a list of methods</p>
     <p class="Pp"></p>
-    <pre>
-  handles =&gt; [ qw( one two ) ]
+    <pre>  handles =&gt; [ qw( one two ) ]
     </pre>
     <p class="Pp">Takes a hashref</p>
     <p class="Pp"></p>
-    <pre>
-  handles =&gt; {
+    <pre>  handles =&gt; {
     un =&gt; 'one',
   }
     </pre>
@@ -550,13 +514,11 @@
   <dd>Takes a method name which will be called to create the attribute -
       functions exactly like default except that instead of calling
     <p class="Pp"></p>
-    <pre>
-  $default-&gt;($self);
+    <pre>  $default-&gt;($self);
     </pre>
     <p class="Pp">Moo will call</p>
     <p class="Pp"></p>
-    <pre>
-  $self-&gt;$builder;
+    <pre>  $self-&gt;$builder;
     </pre>
     <p class="Pp">The following features come from
       MooseX::AttributeShortcuts:</p>
@@ -617,24 +579,21 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="before"><a class="permalink" href="#before">before</a></h2>
-<pre>
-  before foo =&gt; sub { ... };
+<pre>  before foo =&gt; sub { ... };
 </pre>
 <p class="Pp">See &quot;before method(s) =&gt; sub { ... };&quot; in
     Class::Method::Modifiers for full documentation.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="around"><a class="permalink" href="#around">around</a></h2>
-<pre>
-  around foo =&gt; sub { ... };
+<pre>  around foo =&gt; sub { ... };
 </pre>
 <p class="Pp">See &quot;around method(s) =&gt; sub { ... };&quot; in
     Class::Method::Modifiers for full documentation.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="after"><a class="permalink" href="#after">after</a></h2>
-<pre>
-  after foo =&gt; sub { ... };
+<pre>  after foo =&gt; sub { ... };
 </pre>
 <p class="Pp">See &quot;after method(s) =&gt; sub { ... };&quot; in
     Class::Method::Modifiers for full documentation.</p>
@@ -648,12 +607,9 @@
     option that is Sub::Quote aware can take advantage of this.</p>
 <p class="Pp">To do this, you can write</p>
 <p class="Pp"></p>
-<pre>
-  use Sub::Quote;
-
+<pre>  use Sub::Quote;
   use Moo;
   use namespace::clean;
-
   has foo =&gt; (
     is =&gt; 'ro',
     isa =&gt; quote_sub(q{ die &quot;Not &lt;3&quot; unless $_[0] &lt; 3 })
@@ -661,24 +617,21 @@
 </pre>
 <p class="Pp">which will be inlined as</p>
 <p class="Pp"></p>
-<pre>
-  do {
+<pre>  do {
     local @_ = ($_[0]-&gt;{foo});
     die &quot;Not &lt;3&quot; unless $_[0] &lt; 3;
   }
 </pre>
 <p class="Pp">or to avoid localizing <span class="Li">@_</span>,</p>
 <p class="Pp"></p>
-<pre>
-  has foo =&gt; (
+<pre>  has foo =&gt; (
     is =&gt; 'ro',
     isa =&gt; quote_sub(q{ my ($val) = @_; die &quot;Not &lt;3&quot; unless $val &lt; 3 })
   );
 </pre>
 <p class="Pp">which will be inlined as</p>
 <p class="Pp"></p>
-<pre>
-  do {
+<pre>  do {
     my ($val) = ($_[0]-&gt;{foo});
     die &quot;Not &lt;3&quot; unless $val &lt; 3;
   }
@@ -696,29 +649,22 @@
     before namespace::clean will be scrubbed. Anything imported or declared
     after will be still be available.</p>
 <p class="Pp"></p>
-<pre>
-  package Record;
-
+<pre>  package Record;
   use Digest::MD5 qw(md5_hex);
-
   use Moo;
   use namespace::clean;
-
   has name =&gt; (is =&gt; 'ro', required =&gt; 1);
   has id =&gt; (is =&gt; 'lazy');
   sub _build_id {
     my ($self) = @_;
     return md5_hex($self-&gt;name);
   }
-
   1;
 </pre>
 <p class="Pp">For example if you were to import these subroutines after
     namespace::clean like this</p>
 <p class="Pp"></p>
-<pre>
-  use namespace::clean;
-
+<pre>  use namespace::clean;
   use Digest::MD5 qw(md5_hex);
   use Moo;
 </pre>
@@ -751,8 +697,7 @@
     successor to MooseX::Types and provides a similar API, so that you can
   write</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw(Int);
+<pre>  use Types::Standard qw(Int);
   has days_to_live =&gt; (is =&gt; 'ro', isa =&gt; Int);
 </pre>
 </section>
@@ -770,13 +715,11 @@
     <span class="Li">&quot;augment&quot;</span> - the author considers augment
     to be a bad idea, and override can be translated:</p>
 <p class="Pp"></p>
-<pre>
-  override foo =&gt; sub {
+<pre>  override foo =&gt; sub {
     ...
     super();
     ...
   };
-
   around foo =&gt; sub {
     my ($orig, $self) = (shift, shift);
     ...
@@ -819,25 +762,20 @@
     in the Moose module MooseX::AttributeShortcuts as of its version 0.009+. So
     if you:</p>
 <p class="Pp"></p>
-<pre>
-  package MyClass;
+<pre>  package MyClass;
   use Moo;
   use strictures 2;
 </pre>
 <p class="Pp">The nearest Moose invocation would be:</p>
 <p class="Pp"></p>
-<pre>
-  package MyClass;
-
+<pre>  package MyClass;
   use Moose;
   use warnings FATAL =&gt; &quot;all&quot;;
   use MooseX::AttributeShortcuts;
 </pre>
 <p class="Pp">or, if you're inheriting from a non-Moose class,</p>
 <p class="Pp"></p>
-<pre>
-  package MyClass;
-
+<pre>  package MyClass;
   use Moose;
   use MooseX::NonMoose;
   use warnings FATAL =&gt; &quot;all&quot;;
@@ -850,8 +788,7 @@
     need Moose - Moo is small because it explicitly does not provide a
     metaprotocol. However, if you load Moose, then</p>
 <p class="Pp"></p>
-<pre>
-  Class::MOP::class_of($moo_class_or_role)
+<pre>  Class::MOP::class_of($moo_class_or_role)
 </pre>
 <p class="Pp">will return an appropriate metaclass pre-populated by Moo.</p>
 </section>
@@ -859,8 +796,7 @@
 <h2 class="Ss">IMMUTABILITY</h2>
 <p class="Pp">Finally, Moose requires you to call</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;meta-&gt;make_immutable;
+<pre>  __PACKAGE__-&gt;meta-&gt;make_immutable;
 </pre>
 <p class="Pp">at the end of your class to get an inlined (i.e. not horribly
     slow) constructor. Moo does it automatically the first time -&gt;new is

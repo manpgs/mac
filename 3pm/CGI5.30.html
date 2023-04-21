@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CGI(3)</title>
 </head>
@@ -28,44 +29,33 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use CGI;
-
         # create a CGI object (query) for use
     my $q = CGI-&gt;new;
-
     # Process an HTTP request
     my @values  = $q-&gt;multi_param('form_field');
     my $value   = $q-&gt;param('param_name');
-
     my $fh      = $q-&gt;upload('file_field');
-
     my $riddle  = $q-&gt;cookie('riddle_name');
     my %answers = $q-&gt;cookie('answers');
-
     # Prepare various HTTP responses
     print $q-&gt;header();
     print $q-&gt;header('application/json');
-
     my $cookie1 = $q-&gt;cookie(
         -name  =&gt; 'riddle_name',
         -value =&gt; &quot;The Sphynx's Question&quot;
     );
-
     my $cookie2 = $q-&gt;cookie(
         -name  =&gt; 'answers',
         -value =&gt; \%answers
     );
-
     print $q-&gt;header(
         -type    =&gt; 'image/gif',
         -expires =&gt; '+3d',
         -cookie  =&gt; [ $cookie1,$cookie2 ]
     );
-
     print $q-&gt;redirect('http://somewhere.else/in/movie/land');
 </pre>
 </section>
@@ -146,14 +136,10 @@
     script and restore it later.</p>
 <p class="Pp">For example, using the object oriented style:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/env perl
-
+<pre>    #!/usr/bin/env perl
     use strict;
     use warnings;
-
     use CGI;                             # load CGI routines
-
     my $q = CGI-&gt;new;                    # create new CGI object
     print $q-&gt;header;                    # create the HTTP header
 </pre>
@@ -165,12 +151,9 @@
     functions into our name space (usually the &quot;standard&quot; functions),
     and we don't need to create the CGI object.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/env perl
-
+<pre>    #!/usr/bin/env perl
     use strict;
     use warnings;
-
     use CGI qw/:standard/;           # load standard CGI routines
     print header();                  # create the HTTP header
 </pre>
@@ -184,8 +167,7 @@
     as 20 optional ones! To simplify this interface, all routines use a named
     argument calling style that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    print $q-&gt;header(
+<pre>    print $q-&gt;header(
         -type    =&gt; 'image/gif',
         -expires =&gt; '+3d',
     );
@@ -200,8 +182,7 @@
     argument name. <b>header()</b> happens to be one of these routines. In this
     case, the single argument is the document type.</p>
 <p class="Pp"></p>
-<pre>
-    print $q-&gt;header('text/html');
+<pre>    print $q-&gt;header('text/html');
 </pre>
 <p class="Pp">Other such routines are documented below.</p>
 <p class="Pp">Sometimes named arguments expect a scalar, sometimes a reference
@@ -210,12 +191,10 @@
     example, the <b>param()</b> routine is used to set a CGI parameter to a
     single or a multi-valued value. The two cases are shown below:</p>
 <p class="Pp"></p>
-<pre>
-    $q-&gt;param(
+<pre>    $q-&gt;param(
         -name  =&gt; 'veggie',
         -value =&gt; 'tomato',
     );
-
     $q-&gt;param(
         -name  =&gt; 'veggie',
         -value =&gt; [ qw/tomato tomahto potato potahto/ ],
@@ -225,8 +204,7 @@
     it doesn't recognize. For example, you can produce non-standard HTTP header
     fields by providing them as named arguments:</p>
 <p class="Pp"></p>
-<pre>
-    print $q-&gt;header(
+<pre>    print $q-&gt;header(
         -type            =&gt; 'text/html',
         -cost            =&gt; 'Three smackers',
         -annoyance_level =&gt; 'high',
@@ -235,8 +213,7 @@
 </pre>
 <p class="Pp">This will produce the following nonstandard HTTP header:</p>
 <p class="Pp"></p>
-<pre>
-    HTTP/1.0 200 OK
+<pre>    HTTP/1.0 200 OK
     Cost: Three smackers
     Annoyance-level: high
     Complaints-to: bit bucket
@@ -248,8 +225,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Creating_a_new_query_object_(object-oriented_style)"><a class="permalink" href="#Creating_a_new_query_object_(object-oriented_style)">Creating
   a new query object (object-oriented style)</a></h2>
-<pre>
-    my $q = CGI-&gt;new;
+<pre>    my $q = CGI-&gt;new;
 </pre>
 <p class="Pp">This will parse the input (from POST, GET and DELETE methods) and
     store it into a perl5 object called <span class="Li">$q</span>. Note that
@@ -262,8 +238,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Creating_a_new_query_object_from_an_input_file"><a class="permalink" href="#Creating_a_new_query_object_from_an_input_file">Creating
   a new query object from an input file</a></h2>
-<pre>
-    my $q = CGI-&gt;new( $input_filehandle );
+<pre>    my $q = CGI-&gt;new( $input_filehandle );
 </pre>
 <p class="Pp">If you provide a file handle to the <b>new()</b> method, it will
     read parameters from the file (or STDIN, or whatever). The file can be in
@@ -280,16 +255,14 @@
     <b></b><b>restore_parameters()</b><b></b>. This will (re)initialize the
     default CGI object from the indicated file handle.</p>
 <p class="Pp"></p>
-<pre>
-    open( my $in_fh,'&lt;',&quot;test.in&quot;) || die &quot;Couldn't open test.in for read: $!&quot;;
+<pre>    open( my $in_fh,'&lt;',&quot;test.in&quot;) || die &quot;Couldn't open test.in for read: $!&quot;;
     restore_parameters( $in_fh );
     close( $in_fh );
 </pre>
 <p class="Pp">You can also initialize the query object from a hash
   reference:</p>
 <p class="Pp"></p>
-<pre>
-    my $q = CGI-&gt;new( {
+<pre>    my $q = CGI-&gt;new( {
         'dinosaur' =&gt; 'barney',
         'song'     =&gt; 'I love you',
         'friends'  =&gt; [ qw/ Jessica George Nancy / ]
@@ -297,33 +270,27 @@
 </pre>
 <p class="Pp">or from a properly formatted, URL-escaped query string:</p>
 <p class="Pp"></p>
-<pre>
-    my $q = CGI-&gt;new('dinosaur=barney&amp;color=purple');
+<pre>    my $q = CGI-&gt;new('dinosaur=barney&amp;color=purple');
 </pre>
 <p class="Pp">or from a previously existing CGI object (currently this clones
     the parameter list, but none of the other object-specific fields, such as
     autoescaping):</p>
 <p class="Pp"></p>
-<pre>
-    my $old_query = CGI-&gt;new;
+<pre>    my $old_query = CGI-&gt;new;
     my $new_query = CGI-&gt;new($old_query);
 </pre>
 <p class="Pp">To create an empty query, initialize it from an empty string or
     hash:</p>
 <p class="Pp"></p>
-<pre>
-    my $empty_query = CGI-&gt;new(&quot;&quot;);
-
+<pre>    my $empty_query = CGI-&gt;new(&quot;&quot;);
        -or-
-
     my $empty_query = CGI-&gt;new({});
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Fetching_a_list_of_keywords_from_the_query"><a class="permalink" href="#Fetching_a_list_of_keywords_from_the_query">Fetching
   a list of keywords from the query</a></h2>
-<pre>
-    my @keywords = $q-&gt;keywords
+<pre>    my @keywords = $q-&gt;keywords
 </pre>
 <p class="Pp">If the script was invoked as the result of an ISINDEX search, the
     parsed keywords can be obtained as an array using the <b>keywords()</b>
@@ -332,9 +299,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Fetching_the_names_of_all_the_parameters_passed_to_your_script"><a class="permalink" href="#Fetching_the_names_of_all_the_parameters_passed_to_your_script">Fetching
   the names of all the parameters passed to your script</a></h2>
-<pre>
-    my @names = $q-&gt;multi_param
-
+<pre>    my @names = $q-&gt;multi_param
     my @names = $q-&gt;param
 </pre>
 <p class="Pp">If the script was invoked with a parameter list (e.g.
@@ -352,15 +317,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Fetching_the_value_or_values_of_a_single_named_parameter"><a class="permalink" href="#Fetching_the_value_or_values_of_a_single_named_parameter">Fetching
   the value or values of a single named parameter</a></h2>
-<pre>
-    my @values = $q-&gt;multi_param('foo');
-
+<pre>    my @values = $q-&gt;multi_param('foo');
         -or-
-
     my $value = $q-&gt;param('foo');
-
         -or-
-
     my @values = $q-&gt;param('foo'); # list context, discouraged and will raise
                                    # a warning (use -&gt;multi_param instead)
 </pre>
@@ -379,8 +339,7 @@
     param will be evaluated in list context and thus possibly inject extra keys
     and values into the hash:</p>
 <p class="Pp"></p>
-<pre>
-    my %user_info = (
+<pre>    my %user_info = (
         id   =&gt; 1,
         name =&gt; $q-&gt;param('name'),
     );
@@ -388,8 +347,7 @@
 <p class="Pp">The fix for the above is to force scalar context on the call to
     -&gt;param by prefixing it with &quot;scalar&quot;</p>
 <p class="Pp"></p>
-<pre>
-    name =&gt; scalar $q-&gt;param('name'),
+<pre>    name =&gt; scalar $q-&gt;param('name'),
 </pre>
 <p class="Pp">If you call <b>param()</b> in list context with an argument a
     warning will be raised by CGI.pm, you can disable this warning by setting
@@ -403,8 +361,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Setting_the_value(s)_of_a_named_parameter"><a class="permalink" href="#Setting_the_value(s)_of_a_named_parameter">Setting
   the value(s) of a named parameter</a></h2>
-<pre>
-    $q-&gt;param('foo','an','array','of','values');
+<pre>    $q-&gt;param('foo','an','array','of','values');
 </pre>
 <p class="Pp">This sets the value for the named parameter 'foo' to an array of
     values. This is one way to change the value of a field AFTER the script has
@@ -412,14 +369,11 @@
 <p class="Pp"><b>param()</b> also recognizes a named parameter style of calling
     described in more detail later:</p>
 <p class="Pp"></p>
-<pre>
-    $q-&gt;param(
+<pre>    $q-&gt;param(
         -name   =&gt; 'foo',
         -values =&gt; ['an','array','of','values'],
     );
-
                 -or-
-
     $q-&gt;param(
         -name  =&gt; 'foo',
         -value =&gt; 'the value',
@@ -429,8 +383,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Appending_additional_values_to_a_named_parameter"><a class="permalink" href="#Appending_additional_values_to_a_named_parameter">Appending
   additional values to a named parameter</a></h2>
-<pre>
-    $q-&gt;append(
+<pre>    $q-&gt;append(
         -name   =&gt;'foo',
         -values =&gt;['yet','more','values'],
     );
@@ -443,8 +396,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Importing_all_parameters_into_a_namespace"><a class="permalink" href="#Importing_all_parameters_into_a_namespace">Importing
   all parameters into a namespace</a></h2>
-<pre>
-    $q-&gt;import_names('R');
+<pre>    $q-&gt;import_names('R');
 </pre>
 <p class="Pp">This creates a series of variables in the 'R' namespace. For
     example, <span class="Li">$R::foo</span>, <span class="Li">@R:foo</span>.
@@ -462,8 +414,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Deleting_a_parameter_completely"><a class="permalink" href="#Deleting_a_parameter_completely">Deleting
   a parameter completely</a></h2>
-<pre>
-    $q-&gt;delete('foo','bar','baz');
+<pre>    $q-&gt;delete('foo','bar','baz');
 </pre>
 <p class="Pp">This completely clears a list of parameters. It sometimes useful
     for resetting parameters that you don't want passed down between script
@@ -475,8 +426,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Deleting_all_parameters"><a class="permalink" href="#Deleting_all_parameters">Deleting
   all parameters</a></h2>
-<pre>
-    $q-&gt;delete_all();
+<pre>    $q-&gt;delete_all();
 </pre>
 <p class="Pp">This clears the CGI object completely. It might be useful to
     ensure that all the defaults are taken when you create a fill-out form.</p>
@@ -491,15 +441,12 @@
     be returned as-is in a parameter named POSTDATA. To retrieve it, use code
     like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $data = $q-&gt;param('POSTDATA');
+<pre>    my $data = $q-&gt;param('POSTDATA');
 </pre>
 <p class="Pp">Likewise if PUTed and PATCHed data can be retrieved with code like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    my $data = $q-&gt;param('PUTDATA');
-
+<pre>    my $data = $q-&gt;param('PUTDATA');
     my $data = $q-&gt;param('PATCHDATA');
 </pre>
 <p class="Pp">(If you don't know what the preceding means, worry not. It only
@@ -511,8 +458,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Direct_access_to_the_parameter_list"><a class="permalink" href="#Direct_access_to_the_parameter_list">Direct
   access to the parameter list</a></h2>
-<pre>
-    $q-&gt;param_fetch('address')-&gt;[1] = '1313 Mockingbird Lane';
+<pre>    $q-&gt;param_fetch('address')-&gt;[1] = '1313 Mockingbird Lane';
     unshift @{$q-&gt;param_fetch(-name=&gt;'address')},'George Munster';
 </pre>
 <p class="Pp">If you need access to the parameter list in a way that isn't
@@ -527,12 +473,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Fetching_the_parameter_list_as_a_hash"><a class="permalink" href="#Fetching_the_parameter_list_as_a_hash">Fetching
   the parameter list as a hash</a></h2>
-<pre>
-    my $params = $q-&gt;Vars;
+<pre>    my $params = $q-&gt;Vars;
     print $params-&gt;{'address'};
     my @foo = split(&quot;\0&quot;,$params-&gt;{'foo'});
     my %params = $q-&gt;Vars;
-
     use CGI ':cgi-lib';
     my $params = Vars();
 </pre>
@@ -558,8 +502,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Saving_the_state_of_the_script_to_a_file"><a class="permalink" href="#Saving_the_state_of_the_script_to_a_file">Saving
   the state of the script to a file</a></h2>
-<pre>
-    $q-&gt;save(\*FILEHANDLE)
+<pre>    $q-&gt;save(\*FILEHANDLE)
 </pre>
 <p class="Pp">This will write the current state of the form to the provided
     filehandle. You can read it back in by providing a filehandle to the
@@ -567,8 +510,7 @@
     whatever.</p>
 <p class="Pp">The format of the saved file is:</p>
 <p class="Pp"></p>
-<pre>
-    NAME1=VALUE1
+<pre>    NAME1=VALUE1
     NAME1=VALUE1'
     NAME2=VALUE2
     NAME3=VALUE3
@@ -582,11 +524,9 @@
     books, or to keep a history of users' queries. Here's a short example of
     creating multiple session records:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use CGI;
-
     open (my $out_fh,'&gt;&gt;','test.out') || die &quot;Can't open test.out: $!&quot;;
     my $records = 5;
     for ( 0 .. $records ) {
@@ -595,7 +535,6 @@
         $q-&gt;save( $out_fh );
     }
     close( $out_fh );
-
     # reopen for reading
     open (my $in_fh,'&lt;','test.out') || die &quot;Can't open test.out: $!&quot;;
     while (!eof($in_fh)) {
@@ -622,8 +561,7 @@
     incorporate the error text into a page, or use it as the value of the HTTP
     status:</p>
 <p class="Pp"></p>
-<pre>
-    if ( my $error = $q-&gt;cgi_error ) {
+<pre>    if ( my $error = $q-&gt;cgi_error ) {
         print $q-&gt;header( -status =&gt; $error );
         print &quot;Error: $error&quot;;
         exit 0;
@@ -641,10 +579,8 @@
     There is a small overhead associated with this importation, but it isn't
     much.</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use CGI qw/ list of methods /;
 </pre>
 <p class="Pp">The listed methods will be imported into the current package; you
@@ -652,10 +588,8 @@
     shows how to import the <b></b><b>param()</b><b></b> and
     <b></b><b>header()</b><b></b> methods, and then use them directly:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use CGI qw/ param header /;
     print header('text/plain');
     my $zipcode = param('zipcode');
@@ -688,8 +622,7 @@
     example, the following use statement imports the cgi set of functions and
     enables debugging mode (pragma -debug):</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warninigs;
     use CGI qw/ :cgi -debug /;
 </pre>
@@ -709,13 +642,10 @@
         fields are expected to return utf-8 strings and convert them using code
         like this:</p>
     <p class="Pp"></p>
-    <pre>
-    use strict;
+    <pre>    use strict;
     use warnings;
-
     use CGI;
     use Encode qw/ decode /;
-
     my $cgi   = CGI-&gt;new;
     my $param = $cgi-&gt;param('foo');
     $param    = decode( 'UTF-8',$param );
@@ -738,8 +668,7 @@
   <dd>Separate the name=value pairs in CGI parameter query strings with
       semicolons rather than ampersands. For example:
     <p class="Pp"></p>
-    <pre>
-    ?name=fred;age=24;favorite_color=3
+    <pre>    ?name=fred;age=24;favorite_color=3
     </pre>
     <p class="Pp">Semicolon-delimited query strings are always accepted, and
         will be emitted by <b>self_url()</b> and <b>query_string()</b>.
@@ -753,8 +682,7 @@
       CGI.pm script from the command line, and you don't want it to read CGI
       parameters from the command line or STDIN, then use this pragma:
     <p class="Pp"></p>
-    <pre>
-   use CGI qw/ -no_debug :standard /;
+    <pre>   use CGI qw/ -no_debug :standard /;
     </pre>
   </dd>
   <dt id="debug"><a class="permalink" href="#debug">-debug</a></dt>
@@ -786,26 +714,16 @@
     and whether to cache the document. The header can also be manipulated for
     special purposes, such as server push and pay per view pages.</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use CGI;
-
     my $cgi = CGI-&gt;new;
-
     print $cgi-&gt;header;
-
         -or-
-
     print $cgi-&gt;header('image/gif');
-
         -or-
-
     print $cgi-&gt;header('text/html','204 No response');
-
         -or-
-
     print $cgi-&gt;header(
         -type       =&gt; 'image/gif',
         -nph        =&gt; 1,
@@ -831,8 +749,7 @@
     into header fields, allowing you to specify any HTTP header you desire.
     Internal underscores will be turned into hyphens:</p>
 <p class="Pp"></p>
-<pre>
-    print $cgi-&gt;header( -Content_length =&gt; 3002 );
+<pre>    print $cgi-&gt;header( -Content_length =&gt; 3002 );
 </pre>
 <p class="Pp">Most browsers will not cache the output from CGI scripts. Every
     time the browser reloads the page, the script is invoked anew. You can
@@ -842,8 +759,7 @@
     expiration date. The following forms are all valid for the -expires
   field:</p>
 <p class="Pp"></p>
-<pre>
-    +30s                                  30 seconds from now
+<pre>    +30s                                  30 seconds from now
     +10m                                  ten minutes from now
     +1h                                   one hour from now
     -1d                                   yesterday (i.e. &quot;ASAP!&quot;)
@@ -866,8 +782,7 @@
     effect, this sets the <b>charset()</b> method as well. <b>Note</b> that the
     default being ISO-8859-1 may not make sense for all content types, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    Content-Type: image/gif; charset=ISO-8859-1
+<pre>    Content-Type: image/gif; charset=ISO-8859-1
 </pre>
 <p class="Pp">In the above case you need to pass -charset =&gt; '' to prevent
     the default being used.</p>
@@ -880,21 +795,18 @@
     header. The parameter can be an arrayref or a space-delimited string of P3P
     tags. For example:</p>
 <p class="Pp"></p>
-<pre>
-    print $cgi-&gt;header( -p3p =&gt; [ qw/ CAO DSP LAW CURa / ] );
+<pre>    print $cgi-&gt;header( -p3p =&gt; [ qw/ CAO DSP LAW CURa / ] );
     print $cgi-&gt;header( -p3p =&gt; 'CAO DSP LAW CURa' );
 </pre>
 <p class="Pp">In either case, the outgoing header will be formatted as:</p>
 <p class="Pp"></p>
-<pre>
-    P3P: policyref=&quot;/w3c/p3p.xml&quot; cp=&quot;CAO DSP LAW CURa&quot;
+<pre>    P3P: policyref=&quot;/w3c/p3p.xml&quot; cp=&quot;CAO DSP LAW CURa&quot;
 </pre>
 <p class="Pp">CGI.pm will accept valid multi-line headers when each line is
     separated with a CRLF value (&quot;\r\n&quot; on most platforms) followed by
     at least one space. For example:</p>
 <p class="Pp"></p>
-<pre>
-    print $cgi-&gt;header( -ingredients =&gt; &quot;ham\r\n\seggs\r\n\sbacon&quot; );
+<pre>    print $cgi-&gt;header( -ingredients =&gt; &quot;ham\r\n\seggs\r\n\sbacon&quot; );
 </pre>
 <p class="Pp">Invalid multi-line header input will trigger in an exception. When
     multi-line headers are received, CGI.pm will always output them back as a
@@ -904,8 +816,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Generating_a_redirection_header"><a class="permalink" href="#Generating_a_redirection_header">Generating
   a redirection header</a></h2>
-<pre>
-    print $q-&gt;redirect( 'http://somewhere.else/in/movie/land' );
+<pre>    print $q-&gt;redirect( 'http://somewhere.else/in/movie/land' );
 </pre>
 <p class="Pp">Sometimes you don't want to produce a document yourself, but
     simply redirect the browser elsewhere, perhaps choosing a URL based on the
@@ -919,8 +830,7 @@
     what you want or expect them to do.</p>
 <p class="Pp">You can also use named arguments:</p>
 <p class="Pp"></p>
-<pre>
-    print $q-&gt;redirect(
+<pre>    print $q-&gt;redirect(
         -uri    =&gt; 'http://somewhere.else/in/movie/land',
         -nph    =&gt; 1,
         -status =&gt; '301 Moved Permanently'
@@ -943,8 +853,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Creating_a_self-referencing_url_that_preserves_state_information"><a class="permalink" href="#Creating_a_self-referencing_url_that_preserves_state_information">Creating
   a self-referencing url that preserves state information</a></h2>
-<pre>
-    my $myself = $q-&gt;self_url;
+<pre>    my $myself = $q-&gt;self_url;
     print qq(&lt;a href=&quot;$myself&quot;&gt;I'm talking to myself.&lt;/a&gt;);
 </pre>
 <p class="Pp"><b>self_url()</b> will return a URL, that, when selected, will
@@ -953,8 +862,7 @@
     anchors but you don't want to disrupt the current contents of the form(s).
     Something like this will do the trick:</p>
 <p class="Pp"></p>
-<pre>
-     my $myself = $q-&gt;self_url;
+<pre>     my $myself = $q-&gt;self_url;
      print &quot;&lt;a href=\&quot;$myself#table1\&quot;&gt;See table 1&lt;/a&gt;&quot;;
      print &quot;&lt;a href=\&quot;$myself#table2\&quot;&gt;See table 2&lt;/a&gt;&quot;;
      print &quot;&lt;a href=\&quot;$myself#yourself\&quot;&gt;See for yourself&lt;/a&gt;&quot;;
@@ -964,8 +872,7 @@
 <p class="Pp">You can also retrieve a query string representation of the current
     object state with <b>query_string()</b>:</p>
 <p class="Pp"></p>
-<pre>
-    my $the_string = $q-&gt;query_string();
+<pre>    my $the_string = $q-&gt;query_string();
 </pre>
 <p class="Pp">The behavior of calling query_string is currently undefined when
     the HTTP method is something other than GET.</p>
@@ -975,8 +882,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Obtaining_the_script's_url"><a class="permalink" href="#Obtaining_the_script's_url">Obtaining
   the script's url</a></h2>
-<pre>
-    my $full_url      = url();
+<pre>    my $full_url      = url();
     my $full_url      = url( -full =&gt;1 );  # alternative syntax
     my $relative_url  = url( -relative =&gt; 1 );
     my $absolute_url  = url( -absolute =&gt;1 );
@@ -988,24 +894,21 @@
     of formats. Called without any arguments, it returns the full form of the
     URL, including host name and port number</p>
 <p class="Pp"></p>
-<pre>
-    http://your.host.com/path/to/script.cgi
+<pre>    http://your.host.com/path/to/script.cgi
 </pre>
 <p class="Pp">You can modify this format with the following named arguments:</p>
 <dl class="Bl-tag">
   <dt id="absolute"><a class="permalink" href="#absolute"><b>-absolute</b></a></dt>
   <dd>If true, produce an absolute URL, e.g.
     <p class="Pp"></p>
-    <pre>
-    /path/to/script.cgi
+    <pre>    /path/to/script.cgi
     </pre>
   </dd>
   <dt id="relative"><a class="permalink" href="#relative"><b>-relative</b></a></dt>
   <dd>Produce a relative URL. This is useful if you want to re-invoke your
       script with different parameters. For example:
     <p class="Pp"></p>
-    <pre>
-    script.cgi
+    <pre>    script.cgi
     </pre>
   </dd>
   <dt id="full"><a class="permalink" href="#full"><b>-full</b></a></dt>
@@ -1035,8 +938,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Mixing_post_and_url_parameters"><a class="permalink" href="#Mixing_post_and_url_parameters">Mixing
   post and url parameters</a></h2>
-<pre>
-    my $color = url_param('color');
+<pre>    my $color = url_param('color');
 </pre>
 <p class="Pp">It is possible for a script to receive CGI parameters in the URL
     as well as in the fill-out form by creating a form that POSTs to a URL
@@ -1061,9 +963,7 @@
 <p class="Pp">When the form is processed, you can retrieve an IO::File
     compatible handle for a file upload field like this:</p>
 <p class="Pp"></p>
-<pre>
-    use autodie;
-
+<pre>    use autodie;
     # undef may be returned if it's not a valid file handle
     if ( my $io_handle = $q-&gt;upload('field_name') ) {
         open ( my $out_file,'&gt;&gt;','/usr/local/web/users/feedback' );
@@ -1078,8 +978,7 @@
 <p class="Pp">If you want the entered file name for the file, you can just call
     <b>param()</b>:</p>
 <p class="Pp"></p>
-<pre>
-    my $filename = $q-&gt;param('field_name');
+<pre>    my $filename = $q-&gt;param('field_name');
 </pre>
 <p class="Pp">Different browsers will return slightly different things for the
     name. Some browsers return the filename only. Others return the full path to
@@ -1093,8 +992,7 @@
     <b>uploadInfo()</b>. It returns a reference to a hash containing all the
     document headers.</p>
 <p class="Pp"></p>
-<pre>
-    my $filehandle = $q-&gt;upload( 'uploaded_file' );
+<pre>    my $filehandle = $q-&gt;upload( 'uploaded_file' );
     my $type       = $q-&gt;uploadInfo( $filehandle )-&gt;{'Content-Type'};
     if ( $type ne 'text/html' ) {
         die &quot;HTML FILES ONLY!&quot;;
@@ -1118,8 +1016,7 @@
     the temp file for a file upload by passing the file name to the
     <b>tmpFileName()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-    my $filehandle  = $q-&gt;upload( 'uploaded_file' );
+<pre>    my $filehandle  = $q-&gt;upload( 'uploaded_file' );
     my $tmpfilename = $q-&gt;tmpFileName( $filehandle );
 </pre>
 <p class="Pp">As with -&gt;uploadInfo, using the reference returned by
@@ -1164,8 +1061,7 @@
     message is designed so that you can incorporate it into a status code to be
     sent to the browser. Example:</p>
 <p class="Pp"></p>
-<pre>
-    my $file = $q-&gt;upload( 'uploaded_file' );
+<pre>    my $file = $q-&gt;upload( 'uploaded_file' );
     if ( !$file &amp;&amp; $q-&gt;cgi_error ) {
         print $q-&gt;header( -status =&gt; $q-&gt;cgi_error );
         exit 0;
@@ -1180,9 +1076,7 @@
     Apache::Request, with the exception that the first argument to the callback
     is an Apache::Upload object, here it's the remote filename.</p>
 <p class="Pp"></p>
-<pre>
-    my $q = CGI-&gt;new( \&amp;hook [,$data [,$use_tempfile]] );
-
+<pre>    my $q = CGI-&gt;new( \&amp;hook [,$data [,$use_tempfile]] );
     sub hook {
         my ( $filename, $buffer, $bytes_read, $data ) = @_;
         print &quot;Read $bytes_read bytes of $filename\n&quot;;
@@ -1201,8 +1095,7 @@
     <b>CGI::upload_hook()</b> method before calling <b>param()</b> or any other
     CGI functions:</p>
 <p class="Pp"></p>
-<pre>
-    CGI::upload_hook( \&amp;hook [,$data [,$use_tempfile]] );
+<pre>    CGI::upload_hook( \&amp;hook [,$data [,$use_tempfile]] );
 </pre>
 <p class="Pp">This method is not exported by default. You will have to import it
     explicitly if you wish to use it without the CGI:: prefix.</p>
@@ -1279,8 +1172,7 @@
 <p class="Pp">The interface to HTTP cookies is the <b></b><b>cookie()</b><b></b>
     method:</p>
 <p class="Pp"></p>
-<pre>
-    my $cookie = $q-&gt;cookie(
+<pre>    my $cookie = $q-&gt;cookie(
         -name    =&gt; 'sessionID',
         -value   =&gt; 'xyzzy',
         -expires =&gt; '+1h',
@@ -1288,7 +1180,6 @@
         -domain  =&gt; '.capricorn.org',
         -secure  =&gt; 1
     );
-
     print $q-&gt;header( -cookie =&gt; $cookie );
 </pre>
 <p class="Pp"><b></b><b>cookie()</b><b></b> creates a new cookie. Its parameters
@@ -1304,8 +1195,7 @@
       even hash reference. For example, you can store an entire hash into a
       cookie this way:
     <p class="Pp"></p>
-    <pre>
-    my $cookie = $q-&gt;cookie(
+    <pre>    my $cookie = $q-&gt;cookie(
         -name  =&gt; 'family information',
         -value =&gt; \%childrens_ages
     );
@@ -1321,8 +1211,7 @@
   <dd>The optional expiration date for this cookie. The format is as described
       in the section on the <b></b><b>header()</b><b></b> method:
     <p class="Pp"></p>
-    <pre>
-    &quot;+1h&quot;  one hour from now
+    <pre>    &quot;+1h&quot;  one hour from now
     </pre>
   </dd>
   <dt id="secure"><a class="permalink" href="#secure"><b>-secure</b></a></dt>
@@ -1333,12 +1222,9 @@
     the HTTP header within the string returned by the <b>header()</b>
   method:</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
-
     use CGI;
-
     my $q      = CGI-&gt;new;
     my $cookie = ...
     print $q-&gt;header( -cookie =&gt; $cookie );
@@ -1346,25 +1232,21 @@
 <p class="Pp">To create multiple cookies, give <b>header()</b> an array
     reference:</p>
 <p class="Pp"></p>
-<pre>
-    my $cookie1 = $q-&gt;cookie(
+<pre>    my $cookie1 = $q-&gt;cookie(
         -name  =&gt; 'riddle_name',
         -value =&gt; &quot;The Sphynx's Question&quot;
     );
-
     my $cookie2 = $q-&gt;cookie(
         -name  =&gt; 'answers',
         -value =&gt; \%answers
     );
-
     print $q-&gt;header( -cookie =&gt; [ $cookie1,$cookie2 ] );
 </pre>
 <p class="Pp">To retrieve a cookie, request it by name by calling
     <b>cookie()</b> method without the <b>-value</b> parameter. This example
     uses the object-oriented form:</p>
 <p class="Pp"></p>
-<pre>
-    my $riddle  = $q-&gt;cookie('riddle_name');
+<pre>    my $riddle  = $q-&gt;cookie('riddle_name');
     my %answers = $q-&gt;cookie('answers');
 </pre>
 <p class="Pp">Cookies created with a single scalar value, such as the
@@ -1376,8 +1258,7 @@
     However, it's simple to turn a CGI parameter into a cookie, and
   vice-versa:</p>
 <p class="Pp"></p>
-<pre>
-    # turn a CGI parameter into a cookie
+<pre>    # turn a CGI parameter into a cookie
     my $c = cookie( -name =&gt; 'answers',-value =&gt; [$q-&gt;param('answers')] );
     # vice-versa
     $q-&gt;param( -name =&gt; 'answers',-value =&gt; [ $q-&gt;cookie('answers')] );
@@ -1385,8 +1266,7 @@
 <p class="Pp">If you call <b>cookie()</b> without any parameters, it will return
     a list of the names of all cookies passed to your script:</p>
 <p class="Pp"></p>
-<pre>
-    my @cookies = $q-&gt;cookie();
+<pre>    my @cookies = $q-&gt;cookie();
 </pre>
 <p class="Pp">See the <b>cookie.cgi</b> example script for some ideas on how to
     use cookies effectively.</p>
@@ -1399,23 +1279,19 @@
     about tricking your script into reading from environment variables). You can
     pass keywords like this:</p>
 <p class="Pp"></p>
-<pre>
-    your_script.pl keyword1 keyword2 keyword3
+<pre>    your_script.pl keyword1 keyword2 keyword3
 </pre>
 <p class="Pp">or this:</p>
 <p class="Pp"></p>
-<pre>
-   your_script.pl keyword1+keyword2+keyword3
+<pre>   your_script.pl keyword1+keyword2+keyword3
 </pre>
 <p class="Pp">or this:</p>
 <p class="Pp"></p>
-<pre>
-    your_script.pl name1=value1 name2=value2
+<pre>    your_script.pl name1=value1 name2=value2
 </pre>
 <p class="Pp">or this:</p>
 <p class="Pp"></p>
-<pre>
-    your_script.pl name1=value1&amp;name2=value2
+<pre>    your_script.pl name1=value1&amp;name2=value2
 </pre>
 <p class="Pp">To turn off this feature, use the -no_debug pragma.</p>
 <p class="Pp">To test the POST method, you may enable full debugging with the
@@ -1425,15 +1301,13 @@
     characters in the familiar shell manner, letting you place spaces and other
     funny characters in your parameter=value pairs:</p>
 <p class="Pp"></p>
-<pre>
-    your_script.pl &quot;name1='I am a long value'&quot; &quot;name2=two\ words&quot;
+<pre>    your_script.pl &quot;name1='I am a long value'&quot; &quot;name2=two\ words&quot;
 </pre>
 <p class="Pp">Finally, you can set the path info for the script by prefixing the
     first name/value parameter with the path followed by a question mark
   (?):</p>
 <p class="Pp"></p>
-<pre>
-    your_script.pl /your/path/here?name1=value1&amp;name2=value2
+<pre>    your_script.pl /your/path/here?name1=value1&amp;name2=value2
 </pre>
 </section>
 <section class="Sh">
@@ -1549,11 +1423,8 @@
       significant.
     <p class="Pp">For example, all three of these examples are equivalent:</p>
     <p class="Pp"></p>
-    <pre>
-    my $requested_language = $q-&gt;http('Accept-language');
-
+    <pre>    my $requested_language = $q-&gt;http('Accept-language');
     my $requested_language = $q-&gt;http('Accept_language');
-
     my $requested_language = $q-&gt;http('HTTP_ACCEPT_LANGUAGE');
     </pre>
   </dd>
@@ -1589,8 +1460,7 @@
   <dd>Simply add the &quot;-nph&quot; pragma to the list of symbols to be
       imported into your script:
     <p class="Pp"></p>
-    <pre>
-    use CGI qw(:standard -nph)
+    <pre>    use CGI qw(:standard -nph)
     </pre>
   </dd>
   <dt id="By"><a class="permalink" href="#By">By calling the
@@ -1598,8 +1468,7 @@
   <dd>Call <b></b><b>nph()</b><b></b> with a non-zero parameter at any point
       after using CGI.pm in your program.
     <p class="Pp"></p>
-    <pre>
-    CGI-&gt;nph(1)
+    <pre>    CGI-&gt;nph(1)
     </pre>
   </dd>
   <dt id="By~2"><a class="permalink" href="#By~2">By using <b>-nph</b>
@@ -1607,8 +1476,7 @@
   <dd>in the <b></b><b>header()</b><b></b> and <b></b><b>redirect()</b><b></b>
       statements:
     <p class="Pp"></p>
-    <pre>
-    print header(-nph=&gt;1);
+    <pre>    print header(-nph=&gt;1);
     </pre>
   </dd>
 </dl>
@@ -1624,14 +1492,10 @@
     buffering problems.</p>
 <p class="Pp">Here is a simple script that demonstrates server push:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/env perl
-
+<pre>    #!/usr/bin/env perl
     use strict;
     use warnings;
-
     use CGI qw/:push -nph/;
-
     $| = 1;
     print multipart_init( -boundary=&gt;'----here we go!' );
     for (0 .. 4) {
@@ -1656,8 +1520,7 @@
 <dl class="Bl-tag">
   <dt id="multipart_init()"><a class="permalink" href="#multipart_init()"><b>multipart_init()</b></a></dt>
   <dd>
-    <pre>
-    multipart_init( -boundary =&gt; $boundary, -charset =&gt; $charset );
+    <pre>    multipart_init( -boundary =&gt; $boundary, -charset =&gt; $charset );
     </pre>
     <p class="Pp">Initialize the multipart system. The -boundary argument
         specifies what MIME boundary string to use to separate parts of the
@@ -1668,8 +1531,7 @@
   </dd>
   <dt id="multipart_start()"><a class="permalink" href="#multipart_start()"><b>multipart_start()</b></a></dt>
   <dd>
-    <pre>
-    multipart_start( -type =&gt; $type, -charset =&gt; $charset );
+    <pre>    multipart_start( -type =&gt; $type, -charset =&gt; $charset );
     </pre>
     <p class="Pp">Start a new part of the multipart document using the specified
         MIME type and charset. If not specified, text/html ISO-8859-1 is
@@ -1677,8 +1539,7 @@
   </dd>
   <dt id="multipart_end()"><a class="permalink" href="#multipart_end()"><b>multipart_end()</b></a></dt>
   <dd>
-    <pre>
-    multipart_end()
+    <pre>    multipart_end()
     </pre>
     <p class="Pp">End a part. You must remember to call <b>multipart_end()</b>
         once for each <b>multipart_start()</b>, except at the end of the last
@@ -1687,8 +1548,7 @@
   </dd>
   <dt id="multipart_final()"><a class="permalink" href="#multipart_final()"><b>multipart_final()</b></a></dt>
   <dd>
-    <pre>
-    multipart_final()
+    <pre>    multipart_final()
     </pre>
     <p class="Pp">End all parts. You should call <b>multipart_final()</b> rather
         than <b>multipart_end()</b> at the end of the last part of the multipart
@@ -1723,28 +1583,24 @@
     service attacks, but you must activate them before you can use them. These
     take the form of two global variables in the CGI name space:</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$CGI::POST_MAX</b><b></b></dt>
+  <dt><b></b><span class="Li"><b>$CGI::POST_MAX</b></span><b></b></dt>
   <dd>If set to a non-negative integer, this variable puts a ceiling on the size
       of POSTings, in bytes. If CGI.pm detects a POST that is greater than the
       ceiling, it will immediately exit with an error message. This value will
       affect both ordinary POSTs and multipart POSTs, meaning that it limits the
       maximum size of file uploads as well. You should set this to a reasonably
       high value, such as 10 megabytes.</dd>
-  <dt><b></b><b>$CGI::DISABLE_UPLOADS</b><b></b></dt>
+  <dt><b></b><span class="Li"><b>$CGI::DISABLE_UPLOADS</b></span><b></b></dt>
   <dd>If set to a non-zero value, this will disable file uploads completely.
       Other fill-out form values will work as usual.</dd>
 </dl>
 <p class="Pp">To use these variables, set the variable at the top of the script,
     right after the &quot;use&quot; statement:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/env perl
-
+<pre>    #!/usr/bin/env perl
     use strict;
     use warnings;
-
     use CGI;
-
     $CGI::POST_MAX = 1024 * 1024 * 10;  # max 10MB posts
     $CGI::DISABLE_UPLOADS = 1;          # no uploads
 </pre>
@@ -1761,8 +1617,7 @@
     is designed to be returned to the browser as the CGI script's status code.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-    my $uploaded_file = $q-&gt;param('upload');
+<pre>    my $uploaded_file = $q-&gt;param('upload');
     if ( !$uploaded_file &amp;&amp; $q-&gt;cgi_error() ) {
         print $q-&gt;header( -status =&gt; $q-&gt;cgi_error() );
         exit 0;
@@ -1780,15 +1635,13 @@
     simple:</p>
 <p class="Pp">OLD VERSION</p>
 <p class="Pp"></p>
-<pre>
-    require &quot;cgi-lib.pl&quot;;
+<pre>    require &quot;cgi-lib.pl&quot;;
     &amp;ReadParse;
     print &quot;The value of the antique is $in{antique}.\n&quot;;
 </pre>
 <p class="Pp">NEW VERSION</p>
 <p class="Pp"></p>
-<pre>
-    use CGI;
+<pre>    use CGI;
     CGI::ReadParse();
     print &quot;The value of the antique is $in{antique}.\n&quot;;
 </pre>
@@ -1801,8 +1654,7 @@
 <p class="Pp">Once you use ReadParse, you can retrieve the query object itself
     this way:</p>
 <p class="Pp"></p>
-<pre>
-    my $q = $in{CGI};
+<pre>    my $q = $in{CGI};
 </pre>
 <p class="Pp">This allows you to start using the more interesting features of
     CGI.pm without rewriting your old scripts from scratch.</p>
@@ -1810,8 +1662,7 @@
     import both the <span class="Li">&quot;:cgi-lib&quot;</span> and
     <span class="Li">&quot;:standard&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-    use CGI qw(:cgi-lib :standard);
+<pre>    use CGI qw(:cgi-lib :standard);
     &amp;ReadParse;
     print &quot;The price of your purchase is $in{price}.\n&quot;;
     print textfield(-name=&gt;'price', -default=&gt;'$1.99');
@@ -1822,8 +1673,7 @@
 <p class="Pp">In compatibility mode, the following cgi-lib.pl functions are
     available for your use:</p>
 <p class="Pp"></p>
-<pre>
-    ReadParse()
+<pre>    ReadParse()
     PrintHeader()
     SplitParam()
     MethGet()

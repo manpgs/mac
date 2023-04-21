@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::TestRunPHP(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Apache::TestRunPHP;
+<pre>  use Apache::TestRunPHP;
   Apache::TestRunPHP-&gt;new-&gt;run(@ARGV);
 </pre>
 </section>
@@ -56,12 +56,9 @@
     following lines (in addition to the standard
     <span class="Li">&quot;Makefile.PL&quot;</span> parts):</p>
 <p class="Pp"></p>
-<pre>
-  use Apache::TestMM qw(test clean);
+<pre>  use Apache::TestMM qw(test clean);
   use Apache::TestRunPHP ();
-
   Apache::TestMM::filter_args();
-
   Apache::TestRunPHP-&gt;generate_script();
 </pre>
 <p class="Pp"><span class="Li">&quot;generate_script()&quot;</span> will create
@@ -74,8 +71,7 @@
     <span class="Li">&quot;httpd&quot;</span> installation you would invoke
     <span class="Li">&quot;Makefile.PL&quot;</span> as follows</p>
 <p class="Pp"></p>
-<pre>
-  $ perl Makefile.PL -httpd /my/local/apache/bin/httpd
+<pre>  $ perl Makefile.PL -httpd /my/local/apache/bin/httpd
 </pre>
 <p class="Pp">and <span class="Li">&quot;/my/local/apache/bin/httpd&quot;</span>
     will be propagated throughout the rest of the process. note that PHP needs
@@ -98,8 +94,7 @@
 <p class="Pp"><span class="Li">&quot;Apache::TestRunPHP&quot;</span> will look
     for PHP test scripts in that match the following pattern</p>
 <p class="Pp"></p>
-<pre>
-  t/response/TestFoo/bar.php
+<pre>  t/response/TestFoo/bar.php
 </pre>
 <p class="Pp">where <span class="Li">&quot;Foo&quot;</span> and
     <span class="Li">&quot;bar&quot;</span> can be anything you like, and
@@ -116,8 +111,7 @@
 <p class="Pp">what does <span class="Li">&quot;bar.php&quot;</span> look like?
     here is an example:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;?php
+<pre>  &lt;?php
     print &quot;1..1\n&quot;;
     print &quot;ok 1\n&quot;
   ?&gt;
@@ -134,30 +128,24 @@
     useless, so <span class="Li">&quot;Apache::Test&quot;</span> provides PHP
     testers with something much better. here is a much better example:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;?php
+<pre>  &lt;?php
     # import the Test::More emulation layer
     # see
     #   http://search.cpan.org/dist/Test-Simple/lib/Test/More.pm
     # for Perl's documentation - these functions should behave
     # in the same way
     require 'test-more.php';
-
     # plan() the number of tests
     plan(6);
-
     # call ok() for each test you plan
     ok ('foo' == 'foo', 'foo is equal to foo');
     ok ('foo' != 'foo', 'foo is not equal to foo');
-
     # ok() can be other things as well
     is ('bar', 'bar', 'bar is bar');
     is ('baz', 'bar', 'baz is baz');
     isnt ('bar', 'beer', 'bar is not beer');
     like ('bar', '/ar$/', 'bar matches ar$');
-
     diag(&quot;printing some debugging information&quot;);
-
     # whoops! one too many tests.  I wonder what will happen...
     is ('biff', 'biff', 'baz is a baz');
   ?&gt;
@@ -182,8 +170,7 @@
     the tests in verbose mode (eg <span class="Li">&quot;make test
     TEST_VERBOSE=1&quot;</span>):</p>
 <p class="Pp"></p>
-<pre>
-  t/php/bar....1..6
+<pre>  t/php/bar....1..6
   ok 1 - foo is equal to foo
   not ok 2 - foo is not equal to foo
   #     Failed test (/src/devel/perl-php-test/t/response/TestFoo/bar.php at line 13)

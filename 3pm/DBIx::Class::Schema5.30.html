@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Schema(3)</title>
 </head>
@@ -28,19 +29,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Library::Schema;
+<pre>  package Library::Schema;
   use base qw/DBIx::Class::Schema/;
-
   # load all Result classes in Library/Schema/Result/
   __PACKAGE__-&gt;load_namespaces();
-
   package Library::Schema::Result::CD;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;load_components(qw/InflateColumn::DateTime/); # for example
   __PACKAGE__-&gt;table('cd');
-
   # Elsewhere in your code:
   my $schema1 = Library::Schema-&gt;connect(
     $dsn,
@@ -48,9 +44,7 @@
     $password,
     { AutoCommit =&gt; 1 },
   );
-
   my $schema2 = Library::Schema-&gt;connect($coderef_returning_dbh);
-
   # fetch objects using Library::Schema::Result::DVD
   my $resultset = $schema1-&gt;resultset('DVD')-&gt;search( ... );
   my @dvd_objects = $schema2-&gt;resultset('DVD')-&gt;search( ... );
@@ -76,10 +70,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema;
+<pre>  package MyApp::Schema;
   __PACKAGE__-&gt;load_namespaces();
-
   __PACKAGE__-&gt;load_namespaces(
      result_namespace =&gt; 'Res',
      resultset_namespace =&gt; 'RSet',
@@ -115,24 +107,20 @@
 <p class="Pp">You will be warned if ResultSet classes are discovered for which
     there are no matching Result classes like this:</p>
 <p class="Pp"></p>
-<pre>
-  load_namespaces found ResultSet class $classname with no corresponding Result class
+<pre>  load_namespaces found ResultSet class $classname with no corresponding Result class
 </pre>
 <p class="Pp">If a ResultSource instance is found to already have a ResultSet
     class set using resultset_class to some other class, you will be warned like
     this:</p>
 <p class="Pp"></p>
-<pre>
-  We found ResultSet class '$rs_class' for '$result_class', but it seems
+<pre>  We found ResultSet class '$rs_class' for '$result_class', but it seems
   that you had already set '$result_class' to use '$rs_set' instead
 </pre>
 <p class="Pp"><i>Examples</i></p>
 <p class="Pp"></p>
-<pre>
-  # load My::Schema::Result::CD, My::Schema::Result::Artist,
+<pre>  # load My::Schema::Result::CD, My::Schema::Result::Artist,
   #    My::Schema::ResultSet::CD, etc...
   My::Schema-&gt;load_namespaces;
-
   # Override everything to use ugly names.
   # In this example, if there is a My::Schema::Res::Foo, but no matching
   #   My::Schema::RSets::Foo, then Foo will have its
@@ -142,7 +130,6 @@
     resultset_namespace =&gt; 'RSets',
     default_resultset_class =&gt; 'RSetBase',
   );
-
   # Put things in other namespaces
   My::Schema-&gt;load_namespaces(
     result_namespace =&gt; '+Some::Place::Results',
@@ -154,8 +141,7 @@
     same result (or resultset) class exists in multiple namespaces, later
     entries in the list of namespaces will override earlier ones.</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema-&gt;load_namespaces(
+<pre>  My::Schema-&gt;load_namespaces(
     # My::Schema::Results_C::Foo takes precedence over My::Schema::Results_B::Foo :
     result_namespace =&gt; [ 'Results_A', 'Results_B', 'Results_C' ],
     resultset_namespace =&gt; [ '+Some::Place::RSets', 'RSets' ],
@@ -186,17 +172,14 @@
 <p class="Pp">If any classes found do not appear to be Result class files, you
     will get the following warning:</p>
 <p class="Pp"></p>
-<pre>
-   Failed to load $comp_class. Can't find source_name method. Is
+<pre>   Failed to load $comp_class. Can't find source_name method. Is
    $comp_class really a full DBIC result class? Fix it, move it elsewhere,
    or make your load_classes call more specific.
 </pre>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema-&gt;load_classes(); # loads My::Schema::CD, My::Schema::Artist,
+<pre>  My::Schema-&gt;load_classes(); # loads My::Schema::CD, My::Schema::Artist,
                               # etc. (anything under the My::Schema namespace)
-
   # loads My::Schema::CD, My::Schema::Artist, Other::Namespace::Producer but
   # not Other::Namespace::LinerNotes nor My::Schema::Track
   My::Schema-&gt;load_classes(qw/ CD Artist #Track /, {
@@ -253,13 +236,11 @@
     control flow.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-   package My::Schema;
+<pre>   package My::Schema;
    use base qw/DBIx::Class::Schema/;
    use My::ExceptionClass;
    __PACKAGE__-&gt;exception_action(sub { My::ExceptionClass-&gt;throw(@_) });
    __PACKAGE__-&gt;load_classes;
-
    # or:
    my $schema_obj = My::Schema-&gt;connect( .... );
    $schema_obj-&gt;exception_action(sub { My::ExceptionClass-&gt;throw(@_) });
@@ -339,8 +320,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('DVD');
+<pre>  my $rs = $schema-&gt;resultset('DVD');
 </pre>
 <p class="Pp">Returns the DBIx::Class::ResultSet object for the registered
     source name.</p>
@@ -353,8 +333,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my @source_names = $schema-&gt;sources;
+<pre>  my @source_names = $schema-&gt;sources;
 </pre>
 <p class="Pp">Lists names of all the sources registered on this Schema
   object.</p>
@@ -370,8 +349,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $source = $schema-&gt;source('Book');
+<pre>  my $source = $schema-&gt;source('Book');
 </pre>
 <p class="Pp">Returns the DBIx::Class::ResultSource object for the registered
     source name.</p>
@@ -387,8 +365,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $class = $schema-&gt;class('CD');
+<pre>  my $class = $schema-&gt;class('CD');
 </pre>
 <p class="Pp">Retrieves the Result class name for the given source name.</p>
 </section>
@@ -447,8 +424,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="storage"><a class="permalink" href="#storage">storage</a></h2>
-<pre>
-  my $storage = $schema-&gt;storage;
+<pre>  my $storage = $schema-&gt;storage;
 </pre>
 <p class="Pp">Returns the DBIx::Class::Storage object for this Schema. Grab this
     if you want to turn on SQL statement debugging at runtime, or set the quote
@@ -468,8 +444,7 @@
 <p class="Pp">A convenience shortcut to &quot;populate&quot; in
     DBIx::Class::ResultSet. Equivalent to:</p>
 <p class="Pp"></p>
-<pre>
- $schema-&gt;resultset($source_name)-&gt;populate([...]);
+<pre> $schema-&gt;resultset($source_name)-&gt;populate([...]);
 </pre>
 <dl class="Bl-tag">
   <dt id="NOTE"><a class="permalink" href="#NOTE">NOTE</a></dt>
@@ -524,15 +499,13 @@
 <p class="Pp">For example, for a schema with My::Schema::CD and
     My::Schema::Artist classes,</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;compose_namespace('My::DB', 'Base::Class');
+<pre>  $schema-&gt;compose_namespace('My::DB', 'Base::Class');
   print join (', ', @My::DB::CD::ISA) . &quot;\n&quot;;
   print join (', ', @My::DB::Artist::ISA) .&quot;\n&quot;;
 </pre>
 <p class="Pp">will produce the output</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::CD, Base::Class
+<pre>  My::Schema::CD, Base::Class
   My::Schema::Artist, Base::Class
 </pre>
 </section>
@@ -648,8 +621,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $filename = $table-&gt;ddl_filename($type, $version, $dir, $preversion)
+<pre>  my $filename = $table-&gt;ddl_filename($type, $version, $dir, $preversion)
 </pre>
 <p class="Pp">This method is called by
     <span class="Li">&quot;create_ddl_dir&quot;</span> to compose a file name
@@ -659,18 +631,13 @@
 <p class="Pp">You may override this method in your schema if you wish to use a
     different format.</p>
 <p class="Pp"></p>
-<pre>
- WARNING
-
+<pre> WARNING
  Prior to DBIx::Class version 0.08100 this method had a different signature:
-
     my $filename = $table-&gt;ddl_filename($type, $dir, $version, $preversion)
-
  In recent versions variables $dir and $version were reversed in order to
  bring the signature in line with other Schema/Storage methods. If you
  really need to maintain backward compatibility, you can do the following
  in any overriding methods:
-
     ($dir, $version) = ($version, $dir) if ($DBIx::Class::VERSION &lt; 0.08100);
 </pre>
 </section>
@@ -721,8 +688,7 @@
 <p class="Pp">Registers a class which isa DBIx::Class::ResultSourceProxy.
     Equivalent to calling:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;register_source($source_name, $component_class-&gt;result_source_instance);
+<pre>  $schema-&gt;register_source($source_name, $component_class-&gt;result_source_instance);
 </pre>
 </section>
 <section class="Ss">

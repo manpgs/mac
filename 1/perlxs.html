@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLXS(1)</title>
 </head>
@@ -103,14 +104,12 @@
     parameter and the second is an output parameter. The function also returns a
     status value.</p>
 <p class="Pp"></p>
-<pre>
-        bool_t rpcb_gettime(const char *host, time_t *timep);
+<pre>        bool_t rpcb_gettime(const char *host, time_t *timep);
 </pre>
 <p class="Pp">From C this function will be called with the following
   statements.</p>
 <p class="Pp"></p>
-<pre>
-     #include &lt;rpc/rpc.h&gt;
+<pre>     #include &lt;rpc/rpc.h&gt;
      bool_t status;
      time_t timep;
      status = rpcb_gettime( &quot;localhost&quot;, &amp;timep );
@@ -120,8 +119,7 @@
     code. The <span class="Li">$status</span> and <span class="Li">$timep</span>
     variables will contain the output of the function.</p>
 <p class="Pp"></p>
-<pre>
-     use RPC;
+<pre>     use RPC;
      $status = rpcb_gettime( &quot;localhost&quot;, $timep );
 </pre>
 <p class="Pp">The following XS file shows an XS subroutine, or XSUB, which
@@ -138,15 +136,12 @@
     fetch the interpreter context more efficiently, see perlguts for
   details.</p>
 <p class="Pp"></p>
-<pre>
-     #define PERL_NO_GET_CONTEXT
+<pre>     #define PERL_NO_GET_CONTEXT
      #include &quot;EXTERN.h&quot;
      #include &quot;perl.h&quot;
      #include &quot;XSUB.h&quot;
      #include &lt;rpc/rpc.h&gt;
-
      MODULE = RPC  PACKAGE = RPC
-
      bool_t
      rpcb_gettime(host,timep)
           char *host
@@ -163,14 +158,11 @@
     <span class="Li">&quot;use&quot;</span> command as shown earlier. Perl
     modules are explained in more detail later in this document.</p>
 <p class="Pp"></p>
-<pre>
-     package RPC;
-
+<pre>     package RPC;
      require Exporter;
      require DynaLoader;
      @ISA = qw(Exporter DynaLoader);
      @EXPORT = qw( rpcb_gettime );
-
      bootstrap RPC;
      1;
 </pre>
@@ -193,37 +185,32 @@
     function called <b>sin()</b>. The XSUB will imitate the C function which
     takes a single argument and returns a single value.</p>
 <p class="Pp"></p>
-<pre>
-     double
+<pre>     double
      sin(x)
        double x
 </pre>
 <p class="Pp">Optionally, one can merge the description of types and the list of
     argument names, rewriting this as</p>
 <p class="Pp"></p>
-<pre>
-     double
+<pre>     double
      sin(double x)
 </pre>
 <p class="Pp">This makes this XSUB look similar to an ANSI C declaration. An
     optional semicolon is allowed after the argument list, as in</p>
 <p class="Pp"></p>
-<pre>
-     double
+<pre>     double
      sin(double x);
 </pre>
 <p class="Pp">Parameters with C pointer types can have different semantic: C
     functions with similar declarations</p>
 <p class="Pp"></p>
-<pre>
-     bool string_looks_as_a_number(char *s);
+<pre>     bool string_looks_as_a_number(char *s);
      bool make_char_uppercase(char *c);
 </pre>
 <p class="Pp">are used in absolutely incompatible manner. Parameters to these
     functions could be described <b>xsubpp</b> like this:</p>
 <p class="Pp"></p>
-<pre>
-     char *  s
+<pre>     char *  s
      char    &amp;c
 </pre>
 <p class="Pp">Both these XS declarations correspond to the
@@ -237,9 +224,7 @@
 <p class="Pp">The function name and the return type must be placed on separate
     lines and should be flush left-adjusted.</p>
 <p class="Pp"></p>
-<pre>
-  INCORRECT                        CORRECT
-
+<pre>  INCORRECT                        CORRECT
   double sin(x)                    double
     double x                       sin(x)
                                      double x
@@ -249,9 +234,7 @@
     left-adjusted. Most examples in this document will indent the body for
     better readability.</p>
 <p class="Pp"></p>
-<pre>
-  CORRECT
-
+<pre>  CORRECT
   double
   sin(x)
   double x
@@ -329,14 +312,12 @@
     <span class="Li">&quot;SV *&quot;</span>. Thus, the following two XSUBs are
     more or less equivalent:</p>
 <p class="Pp"></p>
-<pre>
-  void
+<pre>  void
   alpha()
       PPCODE:
           ST(0) = newSVpv(&quot;Hello World&quot;,0);
           sv_2mortal(ST(0));
           XSRETURN(1);
-
   SV *
   beta()
       CODE:
@@ -350,8 +331,7 @@
     or <span class="Li">&quot;HV *&quot;</span> as a return value. You
     <i>should</i> be able to write:</p>
 <p class="Pp"></p>
-<pre>
-  AV *
+<pre>  AV *
   array()
       CODE:
           RETVAL = newAV();
@@ -371,16 +351,14 @@
     of these types with a version that has proper handling of refcounts. In your
     <span class="Li">&quot;TYPEMAP&quot;</span> section, do</p>
 <p class="Pp"></p>
-<pre>
-  AV*   T_AVREF_REFCOUNT_FIXED
+<pre>  AV*   T_AVREF_REFCOUNT_FIXED
 </pre>
 <p class="Pp">to get the repaired variant. For backward compatibility with older
     versions of perl, you can instead decrement the reference count manually
     when you're returning one of the aforementioned types using
     <span class="Li">&quot;sv_2mortal&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  AV *
+<pre>  AV *
   array()
       CODE:
           RETVAL = newAV();
@@ -406,8 +384,7 @@
 <p class="Pp">The following example will start the XS code and will place all
     functions in a package named RPC.</p>
 <p class="Pp"></p>
-<pre>
-     MODULE = RPC
+<pre>     MODULE = RPC
 </pre>
 </section>
 <section class="Ss">
@@ -416,17 +393,11 @@
     packages the PACKAGE keyword should be used. This keyword is used with the
     MODULE keyword and must follow immediately after it when used.</p>
 <p class="Pp"></p>
-<pre>
-     MODULE = RPC  PACKAGE = RPC
-
+<pre>     MODULE = RPC  PACKAGE = RPC
      [ XS code in package RPC ]
-
      MODULE = RPC  PACKAGE = RPCB
-
      [ XS code in package RPCB ]
-
      MODULE = RPC  PACKAGE = RPC
-
      [ XS code in package RPC ]
 </pre>
 <p class="Pp">The same package name can be used more than once, allowing for
@@ -446,9 +417,7 @@
 <p class="Pp">This keyword should follow the PACKAGE keyword when used. If
     PACKAGE is not used then PREFIX should follow the MODULE keyword.</p>
 <p class="Pp"></p>
-<pre>
-     MODULE = RPC  PREFIX = rpc_
-
+<pre>     MODULE = RPC  PREFIX = rpc_
      MODULE = RPC  PACKAGE = RPCB  PREFIX = rpcb_
 </pre>
 </section>
@@ -470,8 +439,7 @@
     been modified within the function and the programmer would like the update
     to be seen by Perl.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -481,8 +449,7 @@
 <p class="Pp">The OUTPUT: keyword will also allow an output parameter to be
     mapped to a matching piece of code rather than to a typemap.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -518,8 +485,7 @@
     more Perl-like, especially when the C return value is just an error
     condition indicator. For example,</p>
 <p class="Pp"></p>
-<pre>
-  NO_OUTPUT int
+<pre>  NO_OUTPUT int
   delete_file(char *name)
     POSTCALL:
       if (RETVAL != 0)
@@ -537,13 +503,11 @@
 <p class="Pp">The following XSUB is for a C function which requires special
     handling of its parameters. The Perl usage is given first.</p>
 <p class="Pp"></p>
-<pre>
-     $status = rpcb_gettime( &quot;localhost&quot;, $timep );
+<pre>     $status = rpcb_gettime( &quot;localhost&quot;, $timep );
 </pre>
 <p class="Pp">The XSUB follows.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           char *host
           time_t timep
@@ -561,8 +525,7 @@
     CODE: keyword above, this keyword does not affect the way the compiler
     handles RETVAL.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -574,8 +537,7 @@
 <p class="Pp">Another use for the INIT: section is to check for preconditions
     before making a call to the C function:</p>
 <p class="Pp"></p>
-<pre>
-    long long
+<pre>    long long
     lldiv(a,b)
         long long a
         long long b
@@ -599,8 +561,7 @@
     <b>rpcb_gettime()</b> function. This function uses the timep variable only
     as an output variable and does not care about its initial contents.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep = NO_INIT
@@ -617,8 +578,7 @@
     embedded typemaps may overwrite previous definitions of TYPEMAP, INPUT, and
     OUTPUT stanzas. The syntax for embedded typemaps is</p>
 <p class="Pp"></p>
-<pre>
-      TYPEMAP: &lt;&lt;HERE
+<pre>      TYPEMAP: &lt;&lt;HERE
       ... your typemap code here ...
       HERE
 </pre>
@@ -650,8 +610,7 @@
     The variables <span class="Li">$var</span>, <span class="Li">$arg</span>,
     and <span class="Li">$type</span> can be used as in typemaps.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           char *host = (char *)SvPV_nolen($arg);
           time_t &amp;timep = 0;
@@ -677,8 +636,7 @@
     information from one initialization is needed in another initialization.</p>
 <p class="Pp">Here's a truly obscure example:</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(host,timep)
           time_t &amp;timep; /* \$v{timep}=@{[$v{timep}=$arg]} */
           char *host + SvOK($v{timep}) ? SvPV_nolen($arg) : NULL;
@@ -710,17 +668,14 @@
     correct order. This XSUB can be called from Perl with either of the
     following statements:</p>
 <p class="Pp"></p>
-<pre>
-     $status = rpcb_gettime( $timep, $host );
-
+<pre>     $status = rpcb_gettime( $timep, $host );
      $status = rpcb_gettime( $timep );
 </pre>
 <p class="Pp">The XSUB will look like the code which follows. A CODE: block is
     used to call the real <b>rpcb_gettime()</b> function with the parameters in
     the correct order for that function.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep,host=&quot;localhost&quot;)
           char *host
           time_t timep = NO_INIT
@@ -751,8 +706,7 @@
 <p class="Pp">The following examples are equivalent, but if the code is using
     complex typemaps then the first example is safer.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep)
           time_t timep = NO_INIT
         PREINIT:
@@ -767,8 +721,7 @@
     C code as the PREINIT: keyword. Another correct, but error-prone
   example:</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep)
           time_t timep = NO_INIT
         CODE:
@@ -781,8 +734,7 @@
 <p class="Pp">Another way to declare <span class="Li">&quot;host&quot;</span> is
     to use a C block in the CODE: section:</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep)
           time_t timep = NO_INIT
         CODE:
@@ -798,8 +750,7 @@
     entries are processed is very handy in the cases when typemap conversions
     manipulate some global state:</p>
 <p class="Pp"></p>
-<pre>
-    MyObject
+<pre>    MyObject
     mutate(o)
         PREINIT:
             MyState st = global_state;
@@ -820,8 +771,7 @@
     parameter list of a subroutine. Thus the above code for <b>mutate()</b> can
     be rewritten as</p>
 <p class="Pp"></p>
-<pre>
-    MyObject
+<pre>    MyObject
     mutate(o)
           MyState st = global_state;
           MyObject o;
@@ -830,8 +780,7 @@
 </pre>
 <p class="Pp">and the code for <b>rpcb_gettime()</b> can be rewritten as</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep)
           time_t timep = NO_INIT
           char *host = &quot;localhost&quot;;
@@ -852,13 +801,11 @@
     automatically enabled for that XSUB.</p>
 <p class="Pp">To enable scoping:</p>
 <p class="Pp"></p>
-<pre>
-    SCOPE: ENABLE
+<pre>    SCOPE: ENABLE
 </pre>
 <p class="Pp">To disable scoping:</p>
 <p class="Pp"></p>
-<pre>
-    SCOPE: DISABLE
+<pre>    SCOPE: DISABLE
 </pre>
 </section>
 <section class="Ss">
@@ -872,8 +819,7 @@
     <span class="Li">&quot;timep&quot;</span> can be evaluated late, after a
     PREINIT.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
         PREINIT:
@@ -889,8 +835,7 @@
 </pre>
 <p class="Pp">The next example shows each input parameter evaluated late.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
         PREINIT:
           time_t tt;
@@ -911,8 +856,7 @@
 <p class="Pp">Since INPUT sections allow declaration of C variables which do not
     appear in the parameter list of a subroutine, this may be shortened to:</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           time_t tt;
           char *host;
@@ -971,8 +915,7 @@
     function.</p>
 <p class="Pp">For example, an XSUB</p>
 <p class="Pp"></p>
-<pre>
-  void
+<pre>  void
   day_month(OUTLIST day, IN unix_time, OUTLIST month)
     int day
     int unix_time
@@ -980,20 +923,17 @@
 </pre>
 <p class="Pp">should be used from Perl as</p>
 <p class="Pp"></p>
-<pre>
-  my ($day, $month) = day_month(time);
+<pre>  my ($day, $month) = day_month(time);
 </pre>
 <p class="Pp">The C signature of the corresponding function should be</p>
 <p class="Pp"></p>
-<pre>
-  void day_month(int *day, int unix_time, int *month);
+<pre>  void day_month(int *day, int unix_time, int *month);
 </pre>
 <p class="Pp">The
     <span class="Li">&quot;IN&quot;</span>/<span class="Li">&quot;OUTLIST&quot;</span>/<span class="Li">&quot;IN_OUTLIST&quot;</span>/<span class="Li">&quot;IN_OUT&quot;</span>/<span class="Li">&quot;OUT&quot;</span>
     keywords can be mixed with ANSI-style declarations, as in</p>
 <p class="Pp"></p>
-<pre>
-  void
+<pre>  void
   day_month(OUTLIST int day, int unix_time, OUTLIST int month)
 </pre>
 <p class="Pp">(here the optional <span class="Li">&quot;IN&quot;</span> keyword
@@ -1014,13 +954,11 @@
     (and not being given to the C function - which gets some garbage instead).
     For example, the same C function as above can be interfaced with as</p>
 <p class="Pp"></p>
-<pre>
-  void day_month(OUT int day, int unix_time, OUT int month);
+<pre>  void day_month(OUT int day, int unix_time, OUT int month);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  void
+<pre>  void
   day_month(day, unix_time, month)
       int &amp;day = NO_INIT
       int  unix_time
@@ -1032,8 +970,7 @@
 <p class="Pp">However, the generated Perl function is called in very C-ish
     style:</p>
 <p class="Pp"></p>
-<pre>
-  my ($day, $month);
+<pre>  my ($day, $month);
   day_month($day, time, $month);
 </pre>
 </section>
@@ -1047,8 +984,7 @@
     This argument must be omitted when the generated Perl function is called.
     E.g.,</p>
 <p class="Pp"></p>
-<pre>
-  void
+<pre>  void
   dump_chars(char *s, short l)
   {
     short n = 0;
@@ -1057,9 +993,7 @@
         n++;
     }
   }
-
   MODULE = x            PACKAGE = x
-
   void dump_chars(char *s, short length(s))
 </pre>
 <p class="Pp">should be called as
@@ -1082,15 +1016,12 @@
     a variable number of parameters. Perl should be able to call this XSUB with
     either of the following statements.</p>
 <p class="Pp"></p>
-<pre>
-     $status = rpcb_gettime( $timep, $host );
-
+<pre>     $status = rpcb_gettime( $timep, $host );
      $status = rpcb_gettime( $timep );
 </pre>
 <p class="Pp">The XS code, with ellipsis, follows.</p>
 <p class="Pp"></p>
-<pre>
-     bool_t
+<pre>     bool_t
      rpcb_gettime(timep, ...)
           time_t timep = NO_INIT
         PREINIT:
@@ -1113,20 +1044,17 @@
     argument to the called C function without any change.</p>
 <p class="Pp">For example, suppose that a C function is declared as</p>
 <p class="Pp"></p>
-<pre>
-    symbolic nth_derivative(int n, symbolic function, int flags);
+<pre>    symbolic nth_derivative(int n, symbolic function, int flags);
 </pre>
 <p class="Pp">and that the default flags are kept in a global C variable
     <span class="Li">&quot;default_flags&quot;</span>. Suppose that you want to
     create an interface which is called as</p>
 <p class="Pp"></p>
-<pre>
-    $second_deriv = $function-&gt;nth_derivative(2);
+<pre>    $second_deriv = $function-&gt;nth_derivative(2);
 </pre>
 <p class="Pp">To do this, declare the XSUB as</p>
 <p class="Pp"></p>
-<pre>
-    symbolic
+<pre>    symbolic
     nth_derivative(function, n)
         symbolic        function
         int             n
@@ -1167,8 +1095,7 @@
     and will return its two output values, timep and status, to Perl as a single
     list.</p>
 <p class="Pp"></p>
-<pre>
-     void
+<pre>     void
      rpcb_gettime(host)
           char *host
         PREINIT:
@@ -1196,8 +1123,7 @@
 <p class="Pp">Now the <b>rpcb_gettime()</b> function can be used from Perl with
     the following statement.</p>
 <p class="Pp"></p>
-<pre>
-     ($status, $timep) = rpcb_gettime(&quot;localhost&quot;);
+<pre>     ($status, $timep) = rpcb_gettime(&quot;localhost&quot;);
 </pre>
 <p class="Pp">When handling output parameters with a PPCODE section, be sure to
     handle 'set' magic properly. See perlguts for details about 'set' magic.</p>
@@ -1214,8 +1140,7 @@
     <span class="Li">$timep</span> will either be undef or it will be a valid
     time.</p>
 <p class="Pp"></p>
-<pre>
-     $timep = rpcb_gettime( &quot;localhost&quot; );
+<pre>     $timep = rpcb_gettime( &quot;localhost&quot; );
 </pre>
 <p class="Pp">The following XSUB uses the <span class="Li">&quot;SV
     *&quot;</span> return type as a mnemonic only, and uses a CODE: block to
@@ -1223,8 +1148,7 @@
     code. The <b>sv_newmortal()</b> call will initialize the return value to
     undef, making that the default return value.</p>
 <p class="Pp"></p>
-<pre>
-     SV *
+<pre>     SV *
      rpcb_gettime(host)
           char *  host
         PREINIT:
@@ -1238,8 +1162,7 @@
 <p class="Pp">The next example demonstrates how one would place an explicit
     undef in the return value, should the need arise.</p>
 <p class="Pp"></p>
-<pre>
-     SV *
+<pre>     SV *
      rpcb_gettime(host)
           char *  host
         PREINIT:
@@ -1257,8 +1180,7 @@
 <p class="Pp">To return an empty list one must use a PPCODE: block and then not
     push return values on the stack.</p>
 <p class="Pp"></p>
-<pre>
-     void
+<pre>     void
      rpcb_gettime(host)
           char *host
         PREINIT:
@@ -1280,8 +1202,7 @@
 <p class="Pp">Since <span class="Li">&quot;XSRETURN_*&quot;</span> macros can be
     used with CODE blocks as well, one can rewrite this example as:</p>
 <p class="Pp"></p>
-<pre>
-     int
+<pre>     int
      rpcb_gettime(host)
           char *host
         PREINIT:
@@ -1296,8 +1217,7 @@
 <p class="Pp">In fact, one can put this check into a POSTCALL: section as well.
     Together with PREINIT: simplifications, this leads to:</p>
 <p class="Pp"></p>
-<pre>
-     int
+<pre>     int
      rpcb_gettime(host)
           char *host
           time_t  timep;
@@ -1313,8 +1233,7 @@
     which contains the following statement will compile with only <b>xsubpp</b>
     version 1.922 or greater:</p>
 <p class="Pp"></p>
-<pre>
-        REQUIRE: 1.922
+<pre>        REQUIRE: 1.922
 </pre>
 </section>
 <section class="Ss">
@@ -1348,8 +1267,7 @@
     and should appear on a line by itself. The first blank line after the
     keyword will terminate the code block.</p>
 <p class="Pp"></p>
-<pre>
-     BOOT:
+<pre>     BOOT:
      # The following message will be printed when the
      # bootstrap function executes.
      printf(&quot;Hello from the bootstrap!\n&quot;);
@@ -1365,13 +1283,11 @@
     its version matches the version of the PM module.</p>
 <p class="Pp">To enable version checking:</p>
 <p class="Pp"></p>
-<pre>
-    VERSIONCHECK: ENABLE
+<pre>    VERSIONCHECK: ENABLE
 </pre>
 <p class="Pp">To disable version checking:</p>
 <p class="Pp"></p>
-<pre>
-    VERSIONCHECK: DISABLE
+<pre>    VERSIONCHECK: DISABLE
 </pre>
 <p class="Pp">Note that if the version of the PM module is an NV (a floating
     point number), it will be stringified with a possible loss of precision
@@ -1391,18 +1307,15 @@
     for different parts of the module. Note that <b>xsubpp</b> will nag you if
     you don't explicitly enable or disable prototypes, with:</p>
 <p class="Pp"></p>
-<pre>
-    Please specify prototyping behavior for Foo.xs (see perlxs manual)
+<pre>    Please specify prototyping behavior for Foo.xs (see perlxs manual)
 </pre>
 <p class="Pp">To enable prototypes:</p>
 <p class="Pp"></p>
-<pre>
-    PROTOTYPES: ENABLE
+<pre>    PROTOTYPES: ENABLE
 </pre>
 <p class="Pp">To disable prototypes:</p>
 <p class="Pp"></p>
-<pre>
-    PROTOTYPES: DISABLE
+<pre>    PROTOTYPES: DISABLE
 </pre>
 </section>
 <section class="Ss">
@@ -1413,8 +1326,7 @@
     only the current XSUB. Consult &quot;Prototypes&quot; in perlsub for
     information about Perl prototypes.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(timep, ...)
           time_t timep = NO_INIT
         PROTOTYPE: $;$
@@ -1431,8 +1343,7 @@
 <p class="Pp">If the prototypes are enabled, you can disable it locally for a
     given XSUB as in the following example:</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     rpcb_gettime_noproto()
         PROTOTYPE: DISABLE
     ...
@@ -1451,8 +1362,7 @@
     <span class="Li">&quot;FOO::gettime()&quot;</span> and
     <span class="Li">&quot;BAR::getit()&quot;</span> for this function.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -1488,8 +1398,7 @@
 <p class="Pp">To use the OVERLOAD: keyword, create an XS function which takes
     three input parameters (or use the C-style '...' definition) like this:</p>
 <p class="Pp"></p>
-<pre>
-    SV *
+<pre>    SV *
     cmp (lobj, robj, swap)
     My_Module_obj    lobj
     My_Module_obj    robj
@@ -1513,9 +1422,7 @@
     Perl autogenerates missing overloaded operators, you can set the FALLBACK
     keyword in the module header section, like this:</p>
 <p class="Pp"></p>
-<pre>
-    MODULE = RPC  PACKAGE = RPC
-
+<pre>    MODULE = RPC  PACKAGE = RPC
     FALLBACK: TRUE
     ...
 </pre>
@@ -1535,13 +1442,11 @@
     <b>divide()</b>, <b>add()</b>, <b>subtract()</b> all having the
   signature:</p>
 <p class="Pp"></p>
-<pre>
-    symbolic f(symbolic, symbolic);
+<pre>    symbolic f(symbolic, symbolic);
 </pre>
 <p class="Pp">you can make them all to use the same XSUB using this:</p>
 <p class="Pp"></p>
-<pre>
-    symbolic
+<pre>    symbolic
     interface_s_ss(arg1, arg2)
         symbolic        arg1
         symbolic        arg2
@@ -1556,8 +1461,7 @@
     shares the same XSUB) knows which C function it should call. Additionally,
     one can attach an extra function <b>remainder()</b> at runtime by using</p>
 <p class="Pp"></p>
-<pre>
-    CV *mycv = newXSproto(&quot;Symbolic::remainder&quot;,
+<pre>    CV *mycv = newXSproto(&quot;Symbolic::remainder&quot;,
                           XS_Symbolic_interface_s_ss, __FILE__, &quot;$$&quot;);
     XSINTERFACE_FUNC_SET(mycv, remainder);
 </pre>
@@ -1589,16 +1493,14 @@
     <span class="Li">&quot;add_off&quot;</span>,
     <span class="Li">&quot;subtract_off&quot;</span>. Then one can use</p>
 <p class="Pp"></p>
-<pre>
-    #define XSINTERFACE_FUNC_BYOFFSET(ret,cv,f) \
+<pre>    #define XSINTERFACE_FUNC_BYOFFSET(ret,cv,f) \
         ((XSINTERFACE_CVT_ANON(ret))fp[CvXSUBANY(cv).any_i32])
     #define XSINTERFACE_FUNC_BYOFFSET_set(cv,f) \
         CvXSUBANY(cv).any_i32 = CAT2( f, _off )
 </pre>
 <p class="Pp">in C section,</p>
 <p class="Pp"></p>
-<pre>
-    symbolic
+<pre>    symbolic
     interface_s_ss(arg1, arg2)
         symbolic        arg1
         symbolic        arg2
@@ -1619,8 +1521,7 @@
 <p class="Pp">The file <i>Rpcb1.xsh</i> contains our
     <span class="Li">&quot;rpcb_gettime()&quot;</span> function:</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -1629,8 +1530,7 @@
 </pre>
 <p class="Pp">The XS module can use INCLUDE: to pull that file into it.</p>
 <p class="Pp"></p>
-<pre>
-    INCLUDE: Rpcb1.xsh
+<pre>    INCLUDE: Rpcb1.xsh
 </pre>
 <p class="Pp">If the parameters to the INCLUDE: keyword are followed by a pipe
     (<span class="Li">&quot;|&quot;</span>) then the compiler will interpret the
@@ -1638,8 +1538,7 @@
     <span class="Li">&quot;INCLUDE_COMMAND:&quot;</span> directive, as
     documented below.</p>
 <p class="Pp"></p>
-<pre>
-    INCLUDE: cat Rpcb1.xsh |
+<pre>    INCLUDE: cat Rpcb1.xsh |
 </pre>
 <p class="Pp">Do not use this to run perl: <span class="Li">&quot;INCLUDE: perl
     |&quot;</span> will run the perl that happens to be the first in your path
@@ -1655,9 +1554,7 @@
     same perl interpreter that is running
     <span class="Li">&quot;xsubpp&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    INCLUDE_COMMAND: cat Rpcb1.xsh
-
+<pre>    INCLUDE_COMMAND: cat Rpcb1.xsh
     INCLUDE_COMMAND: $^X -e ...
 </pre>
 </section>
@@ -1683,8 +1580,7 @@
     <span class="Li">&quot;x_gettime()&quot;</span> its parameters are reversed,
     <span class="Li">&quot;(time_t *timep, char *host)&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    long
+<pre>    long
     rpcb_gettime(a,b)
       CASE: ix == 1
         ALIAS:
@@ -1709,9 +1605,7 @@
 <p class="Pp">That function can be called with either of the following
     statements. Note the different argument lists.</p>
 <p class="Pp"></p>
-<pre>
-        $status = rpcb_gettime( $host, $timep );
-
+<pre>        $status = rpcb_gettime( $host, $timep );
         $status = x_gettime( $timep, $host );
 </pre>
 </section>
@@ -1723,15 +1617,13 @@
     they are <span class="Li">&quot;static&quot;</span> functions. If you
     include</p>
 <p class="Pp"></p>
-<pre>
-  EXPORT_XSUB_SYMBOLS: ENABLE
+<pre>  EXPORT_XSUB_SYMBOLS: ENABLE
 </pre>
 <p class="Pp">in your XS code, the XSUBs following this line will not be
     declared <span class="Li">&quot;static&quot;</span>. You can later disable
     this with</p>
 <p class="Pp"></p>
-<pre>
-  EXPORT_XSUB_SYMBOLS: DISABLE
+<pre>  EXPORT_XSUB_SYMBOLS: DISABLE
 </pre>
 <p class="Pp">which, again, is the default that you should probably never
     change. You cannot use this keyword on versions of perl before 5.16 to make
@@ -1761,8 +1653,7 @@
     <span class="Li">&quot;time_t*&quot;</span> rather than
     <span class="Li">&quot;time_t&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
           time_t timep
@@ -1778,8 +1669,7 @@
     the function call looks like <span class="Li">&quot;rpcb_gettime(host,
     &amp;timep)&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    bool_t
+<pre>    bool_t
     rpcb_gettime(host,timep)
           char *host
           time_t &amp;timep
@@ -1812,15 +1702,13 @@
 <p class="Pp">If you use preprocessor directives to choose one of two versions
     of a function, use</p>
 <p class="Pp"></p>
-<pre>
-    #if ... version1
+<pre>    #if ... version1
     #else /* ... version2  */
     #endif
 </pre>
 <p class="Pp">and not</p>
 <p class="Pp"></p>
-<pre>
-    #if ... version1
+<pre>    #if ... version1
     #endif
     #if ... version2
     #endif
@@ -1847,14 +1735,12 @@
     be called using the THIS-&gt;<b>method()</b> syntax.</p>
 <p class="Pp">The next examples will use the following C++ class.</p>
 <p class="Pp"></p>
-<pre>
-     class color {
+<pre>     class color {
           public:
           color();
           ~color();
           int blue();
           void set_blue( int );
-
           private:
           int c_blue;
      };
@@ -1863,10 +1749,8 @@
     defined with the class name but the parameter for the object (THIS, or
     &quot;self&quot;) is implicit and is not listed.</p>
 <p class="Pp"></p>
-<pre>
-     int
+<pre>     int
      color::blue()
-
      void
      color::set_blue( val )
           int val
@@ -1877,16 +1761,13 @@
     performed on this object. So in the C++ code the <b>blue()</b> and
     <b>set_blue()</b> methods will be called as this:</p>
 <p class="Pp"></p>
-<pre>
-     RETVAL = THIS-&gt;blue();
-
+<pre>     RETVAL = THIS-&gt;blue();
      THIS-&gt;set_blue( val );
 </pre>
 <p class="Pp">You could also write a single get/set method using an optional
     argument:</p>
 <p class="Pp"></p>
-<pre>
-     int
+<pre>     int
      color::blue( val = NO_INIT )
          int val
          PROTOTYPE $;$
@@ -1902,15 +1783,12 @@
     <span class="Li">&quot;THIS&quot;</span> will be given as its parameter. The
     generated C++ code for</p>
 <p class="Pp"></p>
-<pre>
-     void
+<pre>     void
      color::DESTROY()
 </pre>
 <p class="Pp">will look like this:</p>
 <p class="Pp"></p>
-<pre>
-     color *THIS = ...;  // Initialized as in typemap
-
+<pre>     color *THIS = ...;  // Initialized as in typemap
      delete THIS;
 </pre>
 <p class="Pp">If the function's name is <b>new</b> then the C++
@@ -1919,29 +1797,24 @@
     in a variable called <span class="Li">&quot;CLASS&quot;</span>, to be given
     as the first argument.</p>
 <p class="Pp"></p>
-<pre>
-     color *
+<pre>     color *
      color::new()
 </pre>
 <p class="Pp">The generated C++ code will call
     <span class="Li">&quot;new&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-     RETVAL = new color();
+<pre>     RETVAL = new color();
 </pre>
 <p class="Pp">The following is an example of a typemap that could be used for
     this C++ example.</p>
 <p class="Pp"></p>
-<pre>
-    TYPEMAP
+<pre>    TYPEMAP
     color *  O_OBJECT
-
     OUTPUT
     # The Perl object is blessed into 'CLASS', which should be a
     # char* having the name of the package for the blessing.
     O_OBJECT
         sv_setref_pv( $arg, CLASS, (void*)$var );
-
     INPUT
     O_OBJECT
         if( sv_isobject($arg) &amp;&amp; (SvTYPE(SvRV($arg)) == SVt_PVMG) )
@@ -1978,8 +1851,7 @@
     return value, you may want to create a special typedef to handle this
     situation. Put</p>
 <p class="Pp"></p>
-<pre>
-  typedef int negative_is_failure;
+<pre>  typedef int negative_is_failure;
 </pre>
 <p class="Pp">near the beginning of XS file, and create an OUTPUT typemap entry
     for <span class="Li">&quot;negative_is_failure&quot;</span> which converts
@@ -2031,8 +1903,7 @@
     XSUB function whose name ends with the word <b>DESTROY</b>. XS destructors
     can be used to free memory which may have been malloc'd by another XSUB.</p>
 <p class="Pp"></p>
-<pre>
-     struct netconfig *getnetconfigent(const char *netid);
+<pre>     struct netconfig *getnetconfigent(const char *netid);
 </pre>
 <p class="Pp">A <span class="Li">&quot;typedef&quot;</span> will be created for
     <span class="Li">&quot;struct netconfig&quot;</span>. The Perl object will
@@ -2043,17 +1914,12 @@
     keyword will be used to trim the name to the word DESTROY as Perl will
     expect.</p>
 <p class="Pp"></p>
-<pre>
-     typedef struct netconfig Netconfig;
-
+<pre>     typedef struct netconfig Netconfig;
      MODULE = RPC  PACKAGE = RPC
-
      Netconfig *
      getnetconfigent(netid)
           char *netid
-
      MODULE = RPC  PACKAGE = NetconfigPtr  PREFIX = rpcb_
-
      void
      rpcb_DESTROY(netconf)
           Netconfig *netconf
@@ -2065,14 +1931,12 @@
     perlxstypemap for more information about adding new typemaps for an
     extension.</p>
 <p class="Pp"></p>
-<pre>
-     TYPEMAP
+<pre>     TYPEMAP
      Netconfig *  T_PTROBJ
 </pre>
 <p class="Pp">This example will be used with the following Perl statements.</p>
 <p class="Pp"></p>
-<pre>
-     use RPC;
+<pre>     use RPC;
      $netconf = getnetconfigent(&quot;udp&quot;);
 </pre>
 <p class="Pp">When Perl destroys the object referenced by
@@ -2099,25 +1963,18 @@
   h2xs).</p>
 <p class="Pp">Below is an example module that makes use of the macros.</p>
 <p class="Pp"></p>
-<pre>
-    #define PERL_NO_GET_CONTEXT
+<pre>    #define PERL_NO_GET_CONTEXT
     #include &quot;EXTERN.h&quot;
     #include &quot;perl.h&quot;
     #include &quot;XSUB.h&quot;
-
     /* Global Data */
-
     #define MY_CXT_KEY &quot;BlindMice::_guts&quot; XS_VERSION
-
     typedef struct {
         int count;
         char name[3][100];
     } my_cxt_t;
-
     START_MY_CXT
-
     MODULE = BlindMice           PACKAGE = BlindMice
-
     BOOT:
     {
         MY_CXT_INIT;
@@ -2126,7 +1983,6 @@
         strcpy(MY_CXT.name[1], &quot;None&quot;);
         strcpy(MY_CXT.name[2], &quot;None&quot;);
     }
-
     int
     newMouse(char * name)
         PREINIT:
@@ -2142,7 +1998,6 @@
           }
         OUTPUT:
           RETVAL
-
     char *
     get_mouse_name(index)
           int index
@@ -2155,7 +2010,6 @@
             RETVAL = MY_CXT.name[index - 1];
         OUTPUT:
           RETVAL
-
     void
     CLONE(...)
         CODE:
@@ -2169,8 +2023,7 @@
       string that consists of the module name, the string &quot;::_guts&quot;
       and the module version number.
     <p class="Pp"></p>
-    <pre>
-    #define MY_CXT_KEY &quot;MyModule::_guts&quot; XS_VERSION
+    <pre>    #define MY_CXT_KEY &quot;MyModule::_guts&quot; XS_VERSION
     </pre>
   </dd>
   <dt id="typedef"><a class="permalink" href="#typedef">typedef
@@ -2183,8 +2036,7 @@
         <span class="Li">&quot;my_cxt_t&quot;</span> that is a structure that
         contains all the data that needs to be interpreter-local.</p>
     <p class="Pp"></p>
-    <pre>
-    typedef struct {
+    <pre>    typedef struct {
         int some_value;
     } my_cxt_t;
     </pre>
@@ -2208,16 +2060,14 @@
       <span class="Li">&quot;my_cxt_t&quot;</span> struct. For example, if
       <span class="Li">&quot;my_cxt_t&quot;</span> is
     <p class="Pp"></p>
-    <pre>
-    typedef struct {
+    <pre>    typedef struct {
         int index;
     } my_cxt_t;
     </pre>
     <p class="Pp">then use this to access the
         <span class="Li">&quot;index&quot;</span> member</p>
     <p class="Pp"></p>
-    <pre>
-    dMY_CXT;
+    <pre>    dMY_CXT;
     MY_CXT.index = 2;
     </pre>
   </dd>
@@ -2228,13 +2078,11 @@
       <span class="Li">&quot;aMY_CXT&quot;</span>/<span class="Li">&quot;pMY_CXT&quot;</span>
       macros, eg
     <p class="Pp"></p>
-    <pre>
-    void sub1() {
+    <pre>    void sub1() {
         dMY_CXT;
         MY_CXT.index = 1;
         sub2(aMY_CXT);
     }
-
     void sub2(pMY_CXT) {
         MY_CXT.index = 2;
     }
@@ -2279,8 +2127,7 @@
     When compiling XS code outside of the Perl core, the wrapping does not take
     place before Perl 5.28. Starting in that release you can</p>
 <p class="Pp"></p>
-<pre>
- #define PERL_REENTRANT
+<pre> #define PERL_REENTRANT
 </pre>
 <p class="Pp">in your code to enable the wrapping. It is advisable to do so if
     you are using such functions, as intermixing the
@@ -2299,18 +2146,13 @@
 <p class="Pp">File <span class="Li">&quot;RPC.xs&quot;</span>: Interface to some
     ONC+ RPC bind library functions.</p>
 <p class="Pp"></p>
-<pre>
-     #define PERL_NO_GET_CONTEXT
+<pre>     #define PERL_NO_GET_CONTEXT
      #include &quot;EXTERN.h&quot;
      #include &quot;perl.h&quot;
      #include &quot;XSUB.h&quot;
-
      #include &lt;rpc/rpc.h&gt;
-
      typedef struct netconfig Netconfig;
-
      MODULE = RPC  PACKAGE = RPC
-
      SV *
      rpcb_gettime(host=&quot;localhost&quot;)
           char *host
@@ -2320,13 +2162,10 @@
           ST(0) = sv_newmortal();
           if( rpcb_gettime( host, &amp;timep ) )
                sv_setnv( ST(0), (double)timep );
-
      Netconfig *
      getnetconfigent(netid=&quot;udp&quot;)
           char *netid
-
      MODULE = RPC  PACKAGE = NetconfigPtr  PREFIX = rpcb_
-
      void
      rpcb_DESTROY(netconf)
           Netconfig *netconf
@@ -2337,35 +2176,28 @@
 <p class="Pp">File <span class="Li">&quot;typemap&quot;</span>: Custom typemap
     for RPC.xs. (cf. perlxstypemap)</p>
 <p class="Pp"></p>
-<pre>
-     TYPEMAP
+<pre>     TYPEMAP
      Netconfig *  T_PTROBJ
 </pre>
 <p class="Pp">File <span class="Li">&quot;RPC.pm&quot;</span>: Perl module for
     the RPC extension.</p>
 <p class="Pp"></p>
-<pre>
-     package RPC;
-
+<pre>     package RPC;
      require Exporter;
      require DynaLoader;
      @ISA = qw(Exporter DynaLoader);
      @EXPORT = qw(rpcb_gettime getnetconfigent);
-
      bootstrap RPC;
      1;
 </pre>
 <p class="Pp">File <span class="Li">&quot;rpctest.pl&quot;</span>: Perl test
     program for the RPC extension.</p>
 <p class="Pp"></p>
-<pre>
-     use RPC;
-
+<pre>     use RPC;
      $netconf = getnetconfigent();
      $a = rpcb_gettime();
      print &quot;time = $a\n&quot;;
      print &quot;netconf = $netconf\n&quot;;
-
      $netconf = getnetconfigent(&quot;tcp&quot;);
      $a = rpcb_gettime(&quot;poplar&quot;);
      print &quot;time = $a\n&quot;;
@@ -2500,8 +2332,7 @@
         But now you have to be aware of them in case your module is called in a
         multi-threaded application. The known ones are</p>
     <p class="Pp"></p>
-    <pre>
- asctime()
+    <pre> asctime()
  ctime()
  gcvt() [POSIX.1-2001 only (function removed in POSIX.1-2008)]
  getdate()
@@ -2514,8 +2345,7 @@
         application, and for others there are thread-safe versions of these
         already implemented:</p>
     <p class="Pp"></p>
-    <pre>
- asctime_r()
+    <pre> asctime_r()
  ctime_r()
  Perl_langinfo()
     </pre>
@@ -2523,15 +2353,13 @@
         automatically used, starting in Perl 5.28, if you compile your code,
         with</p>
     <p class="Pp"></p>
-    <pre>
- #define PERL_REENTRANT
+    <pre> #define PERL_REENTRANT
     </pre>
     <p class="Pp">See also &quot;Perl_langinfo&quot; in perlapi. You can use the
         methods given in perlcall, to get the best available locale-safe
         versions of these</p>
     <p class="Pp"></p>
-    <pre>
- POSIX::localeconv()
+    <pre> POSIX::localeconv()
  POSIX::wcstombs()
  POSIX::wctomb()
     </pre>
@@ -2570,8 +2398,7 @@
         to avoid most of these problems. Prior to this, you need a pure Perl
         statement that does this:</p>
     <p class="Pp"></p>
-    <pre>
- POSIX::setlocale(LC_ALL, POSIX::setlocale(LC_ALL));
+    <pre> POSIX::setlocale(LC_ALL, POSIX::setlocale(LC_ALL));
     </pre>
     <p class="Pp">or use the methods given in perlcall.</p>
   </dd>

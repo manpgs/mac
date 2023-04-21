@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::TestUtil(3)</title>
 </head>
@@ -28,10 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Apache::Test;
+<pre>  use Apache::Test;
   use Apache::TestUtil;
-
   ok t_cmp(&quot;foo&quot;, &quot;foo&quot;, &quot;sanity check&quot;);
   t_write_file(&quot;filename&quot;, @content);
   my $fh = t_open_file($filename);
@@ -55,39 +54,36 @@
 <dl class="Bl-tag">
   <dt id="t_cmp()"><a class="permalink" href="#t_cmp()"><b>t_cmp()</b></a></dt>
   <dd>
-    <pre>
-  t_cmp($received, $expected, $comment);
+    <pre>  t_cmp($received, $expected, $comment);
     </pre>
     <p class="Pp"><b>t_cmp()</b> prints the values of
-        <i></i><i>$comment</i><i></i>, <i></i><i>$expected</i><i></i> and
-        <i></i><i>$received</i><i></i>. e.g.:</p>
+        <i></i><span class="Li"><i>$comment</i></span><i></i>,
+        <i></i><span class="Li"><i>$expected</i></span><i></i> and
+        <i></i><span class="Li"><i>$received</i></span><i></i>. e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-  t_cmp(1, 1, &quot;1 == 1?&quot;);
+    <pre>  t_cmp(1, 1, &quot;1 == 1?&quot;);
     </pre>
     <p class="Pp">prints:</p>
     <p class="Pp"></p>
-    <pre>
-  # testing : 1 == 1?
+    <pre>  # testing : 1 == 1?
   # expected: 1
   # received: 1
     </pre>
     <p class="Pp">then it returns the result of comparison of the
-        <i></i><i>$expected</i><i></i> and the <i></i><i>$received</i><i></i>
-        variables. Usually, the return value of this function is fed directly to
-        the <b>ok()</b> function, like this:</p>
+        <i></i><span class="Li"><i>$expected</i></span><i></i> and the
+        <i></i><span class="Li"><i>$received</i></span><i></i> variables.
+        Usually, the return value of this function is fed directly to the
+        <b>ok()</b> function, like this:</p>
     <p class="Pp"></p>
-    <pre>
-  ok t_cmp(1, 1, &quot;1 == 1?&quot;);
+    <pre>  ok t_cmp(1, 1, &quot;1 == 1?&quot;);
     </pre>
-    <p class="Pp">the third argument (<i></i><i>$comment</i><i></i>) is
-        optional, mostly useful for telling what the comparison is trying to
-      do.</p>
+    <p class="Pp">the third argument
+        (<i></i><span class="Li"><i>$comment</i></span><i></i>) is optional,
+        mostly useful for telling what the comparison is trying to do.</p>
     <p class="Pp">It is valid to use <span class="Li">&quot;undef&quot;</span>
         as an expected value. Therefore:</p>
     <p class="Pp"></p>
-    <pre>
-  my $foo;
+    <pre>  my $foo;
   t_cmp(undef, $foo, &quot;undef == undef?&quot;);
     </pre>
     <p class="Pp">will return a <i>true</i> value.</p>
@@ -96,8 +92,7 @@
         references. The datastructures can be deeply nested. For example you can
         compare:</p>
     <p class="Pp"></p>
-    <pre>
-  t_cmp({1 =&gt; [2..3,{5..8}], 4 =&gt; [5..6]},
+    <pre>  t_cmp({1 =&gt; [2..3,{5..8}], 4 =&gt; [5..6]},
         {1 =&gt; [2..3,{5..8}], 4 =&gt; [5..6]},
         &quot;hash of array of hashes&quot;);
     </pre>
@@ -105,13 +100,11 @@
         a regex. Use the <span class="Li">&quot;qr//&quot;</span> function in
         the second argument. For example:</p>
     <p class="Pp"></p>
-    <pre>
-  t_cmp(&quot;abcd&quot;, qr/^abc/, &quot;regex compare&quot;);
+    <pre>  t_cmp(&quot;abcd&quot;, qr/^abc/, &quot;regex compare&quot;);
     </pre>
     <p class="Pp">will do:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;abcd&quot; =~ /^abc/;
+    <pre>  &quot;abcd&quot; =~ /^abc/;
     </pre>
     <p class="Pp">This function is exported by default.</p>
   </dd>
@@ -126,8 +119,7 @@
   </dd>
   <dt id="t_debug()"><a class="permalink" href="#t_debug()"><b>t_debug()</b></a></dt>
   <dd>
-    <pre>
-  t_debug(&quot;testing feature foo&quot;);
+    <pre>  t_debug(&quot;testing feature foo&quot;);
   t_debug(&quot;test&quot;, [1..3], 5, {a=&gt;[1..5]});
     </pre>
     <p class="Pp"><b>t_debug()</b> prints out any datastructure while prepending
@@ -143,12 +135,9 @@
         <b>t_write_file()</b>. for example, from a server-side test you would
         probably need to redirect it to STDERR:</p>
     <p class="Pp"></p>
-    <pre>
-  sub handler {
+    <pre>  sub handler {
     plan $r, tests =&gt; 1;
-
     local $Apache::TestUtil::DEBUG_OUTPUT = \*STDERR;
-
     t_write_file('/tmp/foo', 'bar');
     ...
   }
@@ -162,27 +151,27 @@
   </dd>
   <dt id="t_write_test_lib()"><a class="permalink" href="#t_write_test_lib()"><b>t_write_test_lib()</b></a></dt>
   <dd>
-    <pre>
-  t_write_test_lib($filename, @lines)
+    <pre>  t_write_test_lib($filename, @lines)
     </pre>
     <p class="Pp"><b>t_write_test_lib()</b> creates a new file at
-        <i></i><i>$filename</i><i></i> or overwrites the existing file with the
-        content passed in <i></i><i>@lines</i><i></i>. The file is created in a
-        temporary directory which is added to <span class="Li">@INC</span> at
-        test configuration time. It is intended to be used for creating
+        <i></i><span class="Li"><i>$filename</i></span><i></i> or overwrites the
+        existing file with the content passed in
+        <i></i><span class="Li"><i>@lines</i></span><i></i>. The file is created
+        in a temporary directory which is added to <span class="Li">@INC</span>
+        at test configuration time. It is intended to be used for creating
         temporary packages for testing which can be modified at run time, see
         the Apache::Reload unit tests for an example.</p>
   </dd>
   <dt id="t_write_file()"><a class="permalink" href="#t_write_file()"><b>t_write_file()</b></a></dt>
   <dd>
-    <pre>
-  t_write_file($filename, @lines);
+    <pre>  t_write_file($filename, @lines);
     </pre>
     <p class="Pp"><b>t_write_file()</b> creates a new file at
-        <i></i><i>$filename</i><i></i> or overwrites the existing file with the
-        content passed in <i></i><i>@lines</i><i></i>. If only the
-        <i></i><i>$filename</i><i></i> is passed, an empty file will be
-      created.</p>
+        <i></i><span class="Li"><i>$filename</i></span><i></i> or overwrites the
+        existing file with the content passed in
+        <i></i><span class="Li"><i>@lines</i></span><i></i>. If only the
+        <i></i><span class="Li"><i>$filename</i></span><i></i> is passed, an
+        empty file will be created.</p>
     <p class="Pp">If parent directories of <span class="Li">$filename</span>
         don't exist they will be automagically created.</p>
     <p class="Pp">The generated file will be automatically deleted at the end of
@@ -191,8 +180,7 @@
   </dd>
   <dt id="t_append_file()"><a class="permalink" href="#t_append_file()"><b>t_append_file()</b></a></dt>
   <dd>
-    <pre>
-  t_append_file($filename, @lines);
+    <pre>  t_append_file($filename, @lines);
     </pre>
     <p class="Pp"><b>t_append_file()</b> is similar to <b>t_write_file()</b>,
         but it doesn't clobber existing files and appends
@@ -207,8 +195,7 @@
   </dd>
   <dt id="t_write_shell_script()"><a class="permalink" href="#t_write_shell_script()"><b>t_write_shell_script()</b></a></dt>
   <dd>
-    <pre>
-  Apache::TestUtil::t_write_shell_script($filename, @lines);
+    <pre>  Apache::TestUtil::t_write_shell_script($filename, @lines);
     </pre>
     <p class="Pp">Similar to <b>t_write_file()</b> but creates a portable
         shell/batch script. The created filename is constructed from
@@ -219,20 +206,18 @@
   </dd>
   <dt id="t_write_perl_script()"><a class="permalink" href="#t_write_perl_script()"><b>t_write_perl_script()</b></a></dt>
   <dd>
-    <pre>
-  Apache::TestUtil::t_write_perl_script($filename, @lines);
+    <pre>  Apache::TestUtil::t_write_perl_script($filename, @lines);
     </pre>
     <p class="Pp">Similar to <b>t_write_file()</b> but creates a executable Perl
         script with correctly set shebang line.</p>
   </dd>
   <dt id="t_open_file()"><a class="permalink" href="#t_open_file()"><b>t_open_file()</b></a></dt>
   <dd>
-    <pre>
-  my $fh = t_open_file($filename);
+    <pre>  my $fh = t_open_file($filename);
     </pre>
     <p class="Pp"><b>t_open_file()</b> opens a file
-        <i></i><i>$filename</i><i></i> for writing and returns the file handle
-        to the opened file.</p>
+        <i></i><span class="Li"><i>$filename</i></span><i></i> for writing and
+        returns the file handle to the opened file.</p>
     <p class="Pp">If parent directories of <span class="Li">$filename</span>
         don't exist they will be automagically created.</p>
     <p class="Pp">The generated file will be automatically deleted at the end of
@@ -241,12 +226,11 @@
   </dd>
   <dt id="t_mkdir()"><a class="permalink" href="#t_mkdir()"><b>t_mkdir()</b></a></dt>
   <dd>
-    <pre>
-  t_mkdir($dirname);
+    <pre>  t_mkdir($dirname);
     </pre>
     <p class="Pp"><b>t_mkdir()</b> creates a directory
-        <i></i><i>$dirname</i><i></i>. The operation will fail if the parent
-        directory doesn't exist.</p>
+        <i></i><span class="Li"><i>$dirname</i></span><i></i>. The operation
+        will fail if the parent directory doesn't exist.</p>
     <p class="Pp">If parent directories of <span class="Li">$dirname</span>
         don't exist they will be automagically created.</p>
     <p class="Pp">The generated directory will be automatically deleted at the
@@ -255,17 +239,15 @@
   </dd>
   <dt id="t_rmtree()"><a class="permalink" href="#t_rmtree()"><b>t_rmtree()</b></a></dt>
   <dd>
-    <pre>
-  t_rmtree(@dirs);
+    <pre>  t_rmtree(@dirs);
     </pre>
     <p class="Pp"><b>t_rmtree()</b> deletes the whole directories trees passed
-        in <i></i><i>@dirs</i><i></i>.</p>
+        in <i></i><span class="Li"><i>@dirs</i></span><i></i>.</p>
     <p class="Pp">This function is exported by default.</p>
   </dd>
   <dt id="t_chown()"><a class="permalink" href="#t_chown()"><b>t_chown()</b></a></dt>
   <dd>
-    <pre>
-  Apache::TestUtil::t_chown($file);
+    <pre>  Apache::TestUtil::t_chown($file);
     </pre>
     <p class="Pp">Change ownership of <span class="Li">$file</span> to the
         test's <i>User</i>/<i>Group</i>. This function is noop on platforms
@@ -273,8 +255,7 @@
   </dd>
   <dt id="t_is_equal()"><a class="permalink" href="#t_is_equal()"><b>t_is_equal()</b></a></dt>
   <dd>
-    <pre>
-  t_is_equal($a, $b);
+    <pre>  t_is_equal($a, $b);
     </pre>
     <p class="Pp"><b>t_is_equal()</b> compares any two datastructures and
         returns 1 if they are exactly the same, otherwise 0. The datastructures
@@ -284,8 +265,7 @@
         comparison <span class="Li">&quot;$a =~ $b&quot;</span> is performed.
         For example:</p>
     <p class="Pp"></p>
-    <pre>
-  t_is_equal($server_version, qr{^Apache});
+    <pre>  t_is_equal($server_version, qr{^Apache});
     </pre>
     <p class="Pp">If comparing non-scalars make sure to pass the references to
         the datastructures.</p>
@@ -301,8 +281,7 @@
     <p class="Pp">For example if a handler is about to generate a run-time
         error, this function can be used as:</p>
     <p class="Pp"></p>
-    <pre>
-  use Apache::TestUtil;
+    <pre>  use Apache::TestUtil;
   ...
   sub handler {
       my $r = shift;
@@ -314,27 +293,23 @@
     <p class="Pp">After running this handler the <i>error_log</i> file will
         include:</p>
     <p class="Pp"></p>
-    <pre>
-  *** The following error entry is expected and harmless ***
+    <pre>  *** The following error entry is expected and harmless ***
   [Tue Apr 01 14:00:21 2003] [error] failed because ...
     </pre>
     <p class="Pp">When more than one entry is expected, an optional numerical
         argument, indicating how many entries to expect, can be passed. For
         example:</p>
     <p class="Pp"></p>
-    <pre>
-  t_server_log_error_is_expected(2);
+    <pre>  t_server_log_error_is_expected(2);
     </pre>
     <p class="Pp">will generate:</p>
     <p class="Pp"></p>
-    <pre>
-  *** The following 2 error entries are expected and harmless ***
+    <pre>  *** The following 2 error entries are expected and harmless ***
     </pre>
     <p class="Pp">If the error is generated at compile time, the logging must be
         done in the BEGIN block at the very beginning of the file:</p>
     <p class="Pp"></p>
-    <pre>
-  BEGIN {
+    <pre>  BEGIN {
       use Apache::TestUtil;
       t_server_log_error_is_expected();
   }
@@ -343,8 +318,7 @@
     <p class="Pp">After attempting to run this handler the <i>error_log</i> file
         will include:</p>
     <p class="Pp"></p>
-    <pre>
-  *** The following error entry is expected and harmless ***
+    <pre>  *** The following error entry is expected and harmless ***
   [Tue Apr 01 14:04:49 2003] [error] Can't locate &quot;DOES_NOT_exist.pm&quot;
   in @INC (@INC contains: ...
     </pre>
@@ -372,13 +346,10 @@
     <p class="Pp">For example the following client script fails to find the
         handler:</p>
     <p class="Pp"></p>
-    <pre>
-  use Apache::Test;
+    <pre>  use Apache::Test;
   use Apache::TestUtil;
   use Apache::TestRequest qw(GET);
-
   plan tests =&gt; 1;
-
   t_client_log_error_is_expected();
   my $url = &quot;/error_document/cannot_be_found&quot;;
   my $res = GET($url);
@@ -387,8 +358,7 @@
     <p class="Pp">After running this test the <i>error_log</i> file will include
         an entry similar to the following snippet:</p>
     <p class="Pp"></p>
-    <pre>
-  *** The following error entry is expected and harmless ***
+    <pre>  *** The following error entry is expected and harmless ***
   [Tue Apr 01 14:02:55 2003] [error] [client 127.0.0.1]
   File does not exist: /tmp/test/t/htdocs/error
     </pre>
@@ -396,13 +366,11 @@
         argument, indicating how many entries to expect, can be passed. For
         example:</p>
     <p class="Pp"></p>
-    <pre>
-  t_client_log_error_is_expected(2);
+    <pre>  t_client_log_error_is_expected(2);
     </pre>
     <p class="Pp">will generate:</p>
     <p class="Pp"></p>
-    <pre>
-  *** The following 2 error entries are expected and harmless ***
+    <pre>  *** The following 2 error entries are expected and harmless ***
     </pre>
     <p class="Pp">This function is exported by default.</p>
   </dd>
@@ -439,8 +407,7 @@
       It is likely, that you should proceed this with a call to one of the
       t_*<b>_is_expected()</b> functions.
     <p class="Pp"></p>
-    <pre>
-  t_start_error_log_watch();
+    <pre>  t_start_error_log_watch();
   do_it;
   ok grep {...} t_finish_error_log_watch();
     </pre>
@@ -450,16 +417,14 @@
         manually. In such cases the following sequence in the test file may
         help:</p>
     <p class="Pp"></p>
-    <pre>
-  t_start_error_log_watch();
+    <pre>  t_start_error_log_watch();
   GET '/this/or/that';
   t_debug t_finish_error_log_watch();
     </pre>
   </dd>
   <dt id="t_start_file_watch()"><a class="permalink" href="#t_start_file_watch()"><b>t_start_file_watch()</b></a></dt>
   <dd>
-    <pre>
-  Apache::TestUtil::t_start_file_watch('access_log');
+    <pre>  Apache::TestUtil::t_start_file_watch('access_log');
     </pre>
     <p class="Pp">This function is similar to
         <span class="Li">&quot;t_start_error_log_watch()&quot;</span> but allows
@@ -481,11 +446,9 @@
   <dt id="t_read_file_watch()"><a class="permalink" href="#t_read_file_watch()"><b>t_read_file_watch()</b>,
     <b>t_finish_file_watch()</b></a></dt>
   <dd>
-    <pre>
-  local $/ = &quot;\n&quot;;
+    <pre>  local $/ = &quot;\n&quot;;
   $line1=Apache::TestUtil::t_read_file_watch('access_log');
   $line2=Apache::TestUtil::t_read_file_watch('access_log');
-
   @lines=Apache::TestUtil::t_finish_file_watch('access_log');
     </pre>
     <p class="Pp">This pair of functions reads the file opened by
@@ -498,8 +461,7 @@
         <span class="Li">&quot;t_finish_error_log_watch&quot;</span>. So, if the
         file has for example a fixed record length use this:</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
     local $/=\$record_length;
     @lines=t_finish_file_watch($name);
   }
@@ -507,8 +469,7 @@
   </dd>
   <dt id="t_file_watch_for()"><a class="permalink" href="#t_file_watch_for()"><b>t_file_watch_for()</b></a></dt>
   <dd>
-    <pre>
-  @lines=Apache::TestUtil::t_file_watch_for('access_log',
+    <pre>  @lines=Apache::TestUtil::t_file_watch_for('access_log',
                                             qr/condition/,
                                             $timeout);
     </pre>
@@ -531,8 +492,7 @@
         point, for example to check for messages that are written in a
         PerlCleanupHandler or a PerlLogHandler.</p>
     <p class="Pp"></p>
-    <pre>
- ok t_file_watch_for 'access_log', qr/expected log entry/, 2;
+    <pre> ok t_file_watch_for 'access_log', qr/expected log entry/, 2;
     </pre>
     <p class="Pp">This call reads the
         <span class="Li">&quot;access_log&quot;</span> and waits for maximum 2

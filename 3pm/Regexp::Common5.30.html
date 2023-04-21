@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Regexp::Common(3)</title>
 </head>
@@ -29,11 +30,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- # STANDARD USAGE 
-
+<pre> # STANDARD USAGE 
  use Regexp::Common;
-
  while (&lt;&gt;) {
      /$RE{num}{real}/               and print q{a number};
      /$RE{quoted}/                  and print q{a ['&quot;`] quoted string};
@@ -41,12 +39,8 @@
      /$RE{balanced}{-parens=&gt;'()'}/ and print q{balanced parentheses};
      /$RE{profanity}/               and print q{a #*@%-ing word};
  }
-
-
  # SUBROUTINE-BASED INTERFACE
-
  use Regexp::Common 'RE_ALL';
-
  while (&lt;&gt;) {
      $_ =~ RE_num_real()              and print q{a number};
      $_ =~ RE_quoted()                and print q{a ['&quot;`] quoted string};
@@ -54,28 +48,16 @@
      $_ =~ RE_balanced(-parens=&gt;'()'} and print q{balanced parentheses};
      $_ =~ RE_profanity()             and print q{a #*@%-ing word};
  }
-
-
  # IN-LINE MATCHING...
-
  if ( $RE{num}{int}-&gt;matches($text) ) {...}
-
-
  # ...AND SUBSTITUTION
-
  my $cropped = $RE{ws}{crop}-&gt;subs($uncropped);
-
-
  # ROLL-YOUR-OWN PATTERNS
-
  use Regexp::Common 'pattern';
-
  pattern name   =&gt; ['name', 'mine'],
          create =&gt; '(?i:J[.]?\s+A[.]?\s+Perl-Hacker)',
          ;
-
  my $name_matcher = $RE{name}{mine};
-
  pattern name    =&gt; [ 'lineof', '-char=_' ],
          create  =&gt; sub {
                         my $flags = shift;
@@ -91,11 +73,8 @@
                         $_[1] =~ s/^$self-&gt;{flags}{-char}+$//g;
                    },
          ;
-
  my $asterisks = $RE{lineof}{-char=&gt;'*'};
-
  # DECIDING WHICH PATTERNS TO LOAD.
-
  use Regexp::Common qw /comment number/;  # Comment and number patterns.
  use Regexp::Common qw /no_defaults/;     # Don't load any patterns.
  use Regexp::Common qw /!delimited/;      # All, but delimited patterns.
@@ -116,13 +95,11 @@
     successive key being an identifier. For example, to access the pattern that
     matches real numbers, you specify:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{num}{real}
+<pre>        $RE{num}{real}
 </pre>
 <p class="Pp">and to access the pattern that matches integers:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{num}{int}
+<pre>        $RE{num}{int}
 </pre>
 <p class="Pp">Deeper layers of the hash are used to specify <i>flags</i>:
     arguments that modify the resulting pattern in some way. The keys used to
@@ -131,37 +108,31 @@
     access the pattern that matches base-2 real numbers with embedded commas
     separating groups of three digits (e.g. 10,101,110.110101101):</p>
 <p class="Pp"></p>
-<pre>
-        $RE{num}{real}{-base =&gt; 2}{-sep =&gt; ','}{-group =&gt; 3}
+<pre>        $RE{num}{real}{-base =&gt; 2}{-sep =&gt; ','}{-group =&gt; 3}
 </pre>
 <p class="Pp">Through the magic of Perl, these flag layers may be specified in
     any order (and even interspersed through the identifier keys!) so you could
     get the same pattern with:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{num}{real}{-sep =&gt; ','}{-group =&gt; 3}{-base =&gt; 2}
+<pre>        $RE{num}{real}{-sep =&gt; ','}{-group =&gt; 3}{-base =&gt; 2}
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{num}{-base =&gt; 2}{real}{-group =&gt; 3}{-sep =&gt; ','}
+<pre>        $RE{num}{-base =&gt; 2}{real}{-group =&gt; 3}{-sep =&gt; ','}
 </pre>
 <p class="Pp">or even:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{-base =&gt; 2}{-group =&gt; 3}{-sep =&gt; ','}{num}{real}
+<pre>        $RE{-base =&gt; 2}{-group =&gt; 3}{-sep =&gt; ','}{num}{real}
 </pre>
 <p class="Pp">etc.</p>
 <p class="Pp">Note, however, that the relative order of amongst the identifier
     keys <i>is</i> significant. That is:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{list}{set}
+<pre>        $RE{list}{set}
 </pre>
 <p class="Pp">would not be the same as:</p>
 <p class="Pp"></p>
-<pre>
-        $RE{set}{list}
+<pre>        $RE{set}{list}
 </pre>
 </section>
 <section class="Ss">
@@ -187,8 +158,7 @@
       no value) then any significant substrings that the pattern matches are
       captured. For example:
     <p class="Pp"></p>
-    <pre>
-        if ($str =~ $RE{num}{real}{-keep}) {
+    <pre>        if ($str =~ $RE{num}{real}{-keep}) {
                 $number   = $1;
                 $whole    = $3;
                 $decimals = $5;
@@ -217,13 +187,11 @@
 <p class="Pp">The patterns returned from <span class="Li">%RE</span> are
     objects, so rather than writing:</p>
 <p class="Pp"></p>
-<pre>
-        if ($str =~ /$RE{some}{pattern}/ ) {...}
+<pre>        if ($str =~ /$RE{some}{pattern}/ ) {...}
 </pre>
 <p class="Pp">you can write:</p>
 <p class="Pp"></p>
-<pre>
-        if ( $RE{some}{pattern}-&gt;matches($str) ) {...}
+<pre>        if ( $RE{some}{pattern}-&gt;matches($str) ) {...}
 </pre>
 <p class="Pp">For matching this would seem to have no great advantage apart from
     readability (but see below).</p>
@@ -231,19 +199,16 @@
     you want to perform a substitution on a string without changing the
     original. Most people use this:</p>
 <p class="Pp"></p>
-<pre>
-        $changed = $original;
+<pre>        $changed = $original;
         $changed =~ s/$RE{some}{pattern}/$replacement/;
 </pre>
 <p class="Pp">The more adept use:</p>
 <p class="Pp"></p>
-<pre>
-        ($changed = $original) =~ s/$RE{some}{pattern}/$replacement/;
+<pre>        ($changed = $original) =~ s/$RE{some}{pattern}/$replacement/;
 </pre>
 <p class="Pp">Regexp::Common allows you do write this:</p>
 <p class="Pp"></p>
-<pre>
-        $changed = $RE{some}{pattern}-&gt;subs($original=&gt;$replacement);
+<pre>        $changed = $RE{some}{pattern}-&gt;subs($original=&gt;$replacement);
 </pre>
 <p class="Pp">Apart from reducing precedence-angst, this approach has the added
     advantages that the substitution behaviour can be optimized from the regular
@@ -251,20 +216,17 @@
     &quot;Adding new regular expressions&quot;).</p>
 <p class="Pp">For example, in the implementation of this substitution:</p>
 <p class="Pp"></p>
-<pre>
-        $cropped = $RE{ws}{crop}-&gt;subs($uncropped);
+<pre>        $cropped = $RE{ws}{crop}-&gt;subs($uncropped);
 </pre>
 <p class="Pp">the default empty string is provided automatically, and the
     substitution is optimized to use:</p>
 <p class="Pp"></p>
-<pre>
-        $uncropped =~ s/^\s+//;
+<pre>        $uncropped =~ s/^\s+//;
         $uncropped =~ s/\s+$//;
 </pre>
 <p class="Pp">rather than:</p>
 <p class="Pp"></p>
-<pre>
-        $uncropped =~ s/^\s+|\s+$//g;
+<pre>        $uncropped =~ s/^\s+|\s+$//g;
 </pre>
 </section>
 <section class="Ss">
@@ -274,9 +236,7 @@
     be effortlessly interpolated, and because it also allows them to be
     &quot;curried&quot;. For example:</p>
 <p class="Pp"></p>
-<pre>
-        my $num = $RE{num}{int};
-
+<pre>        my $num = $RE{num}{int};
         my $commad     = $num-&gt;{-sep=&gt;','}{-group=&gt;3};
         my $duodecimal = $num-&gt;{-base=&gt;12};
 </pre>
@@ -292,13 +252,9 @@
     keys that locate the same pattern in <span class="Li">%RE</span>. Flags are
     passed to the subroutine in its argument list. Thus:</p>
 <p class="Pp"></p>
-<pre>
-        use Regexp::Common qw( RE_ws_crop RE_num_real RE_profanity );
-
+<pre>        use Regexp::Common qw( RE_ws_crop RE_num_real RE_profanity );
         $str =~ RE_ws_crop() and die &quot;Surrounded by whitespace&quot;;
-
         $str =~ RE_num_real(-base=&gt;8, -sep=&gt;&quot; &quot;) or next;
-
         $offensive = RE_profanity(-keep);
         $str =~ s/$offensive/$bad{$1}++; &quot;&lt;expletive deleted&gt;&quot;/ge;
 </pre>
@@ -310,14 +266,12 @@
 <p class="Pp">It is also possible to export subroutines for all available
     patterns like so:</p>
 <p class="Pp"></p>
-<pre>
-        use Regexp::Common 'RE_ALL';
+<pre>        use Regexp::Common 'RE_ALL';
 </pre>
 <p class="Pp">Or you can export all subroutines with a common prefix of keys
     like so:</p>
 <p class="Pp"></p>
-<pre>
-        use Regexp::Common 'RE_num_ALL';
+<pre>        use Regexp::Common 'RE_num_ALL';
 </pre>
 <p class="Pp">which will export <span class="Li">&quot;RE_num_int&quot;</span>
     and <span class="Li">&quot;RE_num_real&quot;</span> (and if you have create
@@ -338,8 +292,7 @@
   <dd>A required argument that specifies the name of the pattern, and any flags
       it may take, via a reference to a list of strings. For example:
     <p class="Pp"></p>
-    <pre>
-         pattern name =&gt; [qw( line of -char )],
+    <pre>         pattern name =&gt; [qw( line of -char )],
                  # other args here
                  ;
     </pre>
@@ -349,8 +302,7 @@
         then used whenever the flag is specified without an explicit value (but
         not when the flag is omitted). For example:</p>
     <p class="Pp"></p>
-    <pre>
-         pattern name =&gt; [qw( line of -char=_ )],
+    <pre>         pattern name =&gt; [qw( line of -char=_ )],
                  # default char is '_'
                  # other args here
                  ;
@@ -360,16 +312,14 @@
   <dd>A required argument that specifies either a string that is to be returned
       as the pattern:
     <p class="Pp"></p>
-    <pre>
-        pattern name    =&gt; [qw( line of underscores )],
+    <pre>        pattern name    =&gt; [qw( line of underscores )],
                 create  =&gt; q/(?:^_+$)/
                 ;
     </pre>
     <p class="Pp">or a reference to a subroutine that will be called to create
         the pattern:</p>
     <p class="Pp"></p>
-    <pre>
-        pattern name    =&gt; [qw( line of -char=_ )],
+    <pre>        pattern name    =&gt; [qw( line of -char=_ )],
                 create  =&gt; sub {
                                 my ($self, $flags) = @_;
                                 my $char = quotemeta $flags-&gt;{-char};
@@ -405,8 +355,7 @@
     <p class="Pp">It should return the same types of values as a
         <span class="Li">&quot;m/.../&quot;</span> does.</p>
     <p class="Pp"></p>
-    <pre>
-     pattern name    =&gt; [qw( line of -char )],
+    <pre>     pattern name    =&gt; [qw( line of -char )],
              create  =&gt; sub {...},
              match   =&gt; sub {
                              my ($self, $str) = @_;
@@ -428,8 +377,7 @@
         <span class="Li">&quot;s/.../.../&quot;</span> does.</p>
     <p class="Pp">For example:</p>
     <p class="Pp"></p>
-    <pre>
-     pattern name    =&gt; [ 'lineof', '-char=_' ],
+    <pre>     pattern name    =&gt; [ 'lineof', '-char=_' ],
              create  =&gt; sub {...},
              subs    =&gt; sub {
                           my ($self, $str, $ignore_replacement) = @_;
@@ -461,8 +409,7 @@
     <span class="Li">&quot;pattern()&quot;</span> subroutine.</p>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
- use Regexp::Common qw /comment number/;  # Comment and number patterns.
+<pre> use Regexp::Common qw /comment number/;  # Comment and number patterns.
  use Regexp::Common qw /no_defaults/;     # Don't load any patterns.
  use Regexp::Common qw /!delimited/;      # All, but delimited patterns.
 </pre>
@@ -470,8 +417,7 @@
     module <span class="Li">&quot;Regexp::Common::my_patterns&quot;</span> that
     makes patterns available, you can have it made available with</p>
 <p class="Pp"></p>
-<pre>
- use Regexp::Common qw /my_patterns/;
+<pre> use Regexp::Common qw /my_patterns/;
 </pre>
 <p class="Pp">Note that the default patterns will still be made available - only
     if you use <i>no_defaults</i>, or mention one of the default sets
@@ -515,8 +461,7 @@
 <p class="Pp">Future releases of the module will also provide patterns for the
     following:</p>
 <p class="Pp"></p>
-<pre>
-        * email addresses 
+<pre>        * email addresses 
         * HTML/XML tags
         * more numerical matchers,
         * mail headers (including multiline ones),
@@ -555,13 +500,13 @@
       returns the pattern string.</dd>
   <dt>&quot;Base must be between 1 and 36&quot;</dt>
   <dd>The
-      <span class="Li">$RE{num}{real}{-base=&gt;'</span><i>N</i><span class="Li">'}</span>
+      <span class="Li">$RE{num}{real}{-base=&gt;'</span><span class="Li"><i>N</i></span><span class="Li">'}</span>
       pattern uses the characters [0-9A-Z] to represent the digits of various
       bases. Hence it only produces regular expressions for bases up to
       hexatricensimal.</dd>
   <dt>&quot;Must specify delimiter in $RE{delimited}&quot;</dt>
   <dd>The pattern has no default delimiter. You need to write:
-      <span class="Li">$RE{delimited}{-delim=&gt;</span><i>X</i><span class="Li">'}</span>
+      <span class="Li">$RE{delimited}{-delim=&gt;</span><span class="Li"><i>X</i></span><span class="Li">'}</span>
       for some character <i>X</i></dd>
 </dl>
 </section>
@@ -608,8 +553,7 @@
       by design, and not a bug. If you want the pattern to be anchored, use
       something like:
     <p class="Pp"></p>
-    <pre>
- my $integer = $RE {num} {int};
+    <pre> my $integer = $RE {num} {int};
  $subj =~ /^$integer$/ and print &quot;Matches!\n&quot;;
     </pre>
   </dd>
@@ -623,8 +567,7 @@
 <p class="Pp">This module is free software, and maybe used under any of the
     following licenses:</p>
 <p class="Pp"></p>
-<pre>
- 1) The Perl Artistic License.     See the file COPYRIGHT.AL.
+<pre> 1) The Perl Artistic License.     See the file COPYRIGHT.AL.
  2) The Perl Artistic License 2.0. See the file COPYRIGHT.AL2.
  3) The BSD License.               See the file COPYRIGHT.BSD.
  4) The MIT License.               See the file COPYRIGHT.MIT.

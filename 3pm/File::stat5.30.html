@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::stat(3pm)</title>
 </head>
@@ -29,22 +30,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use File::stat;
+<pre> use File::stat;
  $st = stat($file) or die &quot;No $file: $!&quot;;
  if ( ($st-&gt;mode &amp; 0111) &amp;&amp; $st-&gt;nlink &gt; 1) ) {
      print &quot;$file is executable with lotsa links\n&quot;;
  } 
-
  if ( -x $st ) {
      print &quot;$file is executable\n&quot;;
  }
-
  use Fcntl &quot;S_IRUSR&quot;;
  if ( $st-&gt;cando(S_IRUSR, 1) ) {
      print &quot;My effective uid can read $file\n&quot;;
  }
-
  use File::stat qw(:FIELDS);
  stat($file) or die &quot;No $file: $!&quot;;
  if ( ($st_mode &amp; 0111) &amp;&amp; ($st_nlink &gt; 1) ) {
@@ -66,8 +63,7 @@
     <span class="Li">&quot;-x&quot;</span>, and so on) on it. It also provides a
     <span class="Li">&quot;-&gt;cando&quot;</span> method, called like</p>
 <p class="Pp"></p>
-<pre>
- $st-&gt;cando( ACCESS, EFFECTIVE )
+<pre> $st-&gt;cando( ACCESS, EFFECTIVE )
 </pre>
 <p class="Pp">where <i>ACCESS</i> is one of
     <span class="Li">&quot;S_IRUSR&quot;</span>,
@@ -106,15 +102,13 @@
     trying to do so leads into strange errors. The workaround is for
     <span class="Li">$_</span> to be explicit</p>
 <p class="Pp"></p>
-<pre>
-    my $stat_obj = stat $_;
+<pre>    my $stat_obj = stat $_;
 </pre>
 <p class="Pp">and for <span class="Li">&quot;_&quot;</span> to explicitly
     populate the object using the unexported and undocumented <b>populate()</b>
     function with <b>CORE::stat()</b>:</p>
 <p class="Pp"></p>
-<pre>
-    my $stat_obj = File::stat::populate(CORE::stat(_));
+<pre>    my $stat_obj = File::stat::populate(CORE::stat(_));
 </pre>
 </section>
 <section class="Sh">
@@ -131,8 +125,7 @@
 <h1 class="Sh" id="WARNINGS"><a class="permalink" href="#WARNINGS">WARNINGS</a></h1>
 <p class="Pp">These can all be disabled with</p>
 <p class="Pp"></p>
-<pre>
-    no warnings &quot;File::stat&quot;;
+<pre>    no warnings &quot;File::stat&quot;;
 </pre>
 <dl class="Bl-tag">
   <dt id="File::stat"><a class="permalink" href="#File::stat">File::stat ignores

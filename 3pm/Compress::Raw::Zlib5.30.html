@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Compress::Raw::Zlib(3pm)</title>
 </head>
@@ -29,9 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Compress::Raw::Zlib ;
-
+<pre>    use Compress::Raw::Zlib ;
     ($d, $status) = new Compress::Raw::Zlib::Deflate( [OPT] ) ;
     $status = $d-&gt;deflate($input, $output) ;
     $status = $d-&gt;flush($output [, $flush_type]) ;
@@ -47,7 +46,6 @@
     $d-&gt;get_Strategy();
     $d-&gt;get_Level();
     $d-&gt;get_BufSize();
-
     ($i, $status) = new Compress::Raw::Zlib::Inflate( [OPT] ) ;
     $status = $i-&gt;inflate($input, $output [, $eof]) ;
     $status = $i-&gt;inflateSync($input) ;
@@ -59,13 +57,10 @@
     $i-&gt;total_out() ;
     $i-&gt;msg() ;
     $d-&gt;get_BufSize();
-
     $crc = adler32($buffer [,$crc]) ;
     $crc = crc32($buffer [,$crc]) ;
-
     $crc = crc32_combine($crc1, $crc2, $len2);
     $adler = adler32_combine($adler1, $adler2, $len2);
-
     my $version = Compress::Raw::Zlib::zlib_version();
     my $flags = Compress::Raw::Zlib::zlibCompileFlags();
 </pre>
@@ -82,7 +77,7 @@
     compression using the <i>deflate</i> interface provided by zlib.</p>
 <p class="Pp">Here is a definition of the interface available:</p>
 <section class="Ss">
-<h2 class="Ss"><b>($d, </b><b>$status</b><b>) = new
+<h2 class="Ss"><b>($d, </b><span class="Li"><b>$status</b></span><b>) = new
   Compress::Raw::Zlib::Deflate( [OPT] ) </b></h2>
 <p class="Pp">Initialises a deflation object.</p>
 <p class="Pp">If you are familiar with the <i>zlib</i> library, it combines the
@@ -199,14 +194,14 @@
     parameter list to override the default buffer size and compression level.
     All other options will take their default values.</p>
 <p class="Pp"></p>
-<pre>
-    my $d = new Compress::Raw::Zlib::Deflate ( -Bufsize =&gt; 300,
+<pre>    my $d = new Compress::Raw::Zlib::Deflate ( -Bufsize =&gt; 300,
                                                -Level   =&gt; Z_BEST_SPEED ) ;
 </pre>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> = </b><b>$d</b><b>-&gt;deflate($input,
-  </b><b>$output</b><b>)</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$d</b></span><b>-&gt;deflate($input,
+  </b><span class="Li"><b>$output</b></span><b>)</b></h2>
 <p class="Pp">Deflates the contents of <span class="Li">$input</span> and writes
     the compressed data to <span class="Li">$output</span>.</p>
 <p class="Pp">The <span class="Li">$input</span> and
@@ -230,8 +225,9 @@
     <span class="Li">&quot;Z_OK&quot;</span>, the deflate has succeeded.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> = </b><b>$d</b><b>-&gt;flush($output [,
-  </b><b>$flush_type</b><b>]) </b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$d</b></span><b>-&gt;flush($output [,
+  </b><span class="Li"><b>$flush_type</b></span><b>]) </b></h2>
 <p class="Pp">Typically used to finish the deflation. Any pending output will be
     written to <span class="Li">$output</span>.</p>
 <p class="Pp">Returns <span class="Li">&quot;Z_OK&quot;</span> if
@@ -258,8 +254,8 @@
     compressed data is written to it.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> = </b><b>$d</b><b>-&gt;deflateReset()
-  </b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$d</b></span><b>-&gt;deflateReset() </b></h2>
 <p class="Pp">This method will reset the deflation object
     <span class="Li">$d</span>. It can be used when you are compressing multiple
     data streams and want to use the same object to compress each of them. It
@@ -271,8 +267,8 @@
   successful.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> =
-  </b><b>$d</b><b>-&gt;deflateParams([OPT])</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$d</b></span><b>-&gt;deflateParams([OPT])</b></h2>
 <p class="Pp">Change settings for the deflate object
   <span class="Li">$d</span>.</p>
 <p class="Pp">The list of the valid options is shown below. Options not
@@ -298,9 +294,11 @@
 </dl>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> =
-  </b><b>$d</b><b>-&gt;deflateTune($good_length, </b><b>$max_lazy</b><b>,
-  </b><b>$nice_length</b><b>, </b><b>$max_chain</b><b>)</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$d</b></span><b>-&gt;deflateTune($good_length,
+  </b><span class="Li"><b>$max_lazy</b></span><b>,
+  </b><span class="Li"><b>$nice_length</b></span><b>,
+  </b><span class="Li"><b>$max_chain</b></span><b>)</b></h2>
 <p class="Pp">Tune the internal settings for the deflate object
     <span class="Li">$d</span>. This option is only available if you are running
     zlib 1.2.2.3 or better.</p>
@@ -308,47 +306,47 @@
     fly <span class="Li">&quot;deflateTune&quot;</span>.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;dict_adler()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;dict_adler()</b></h2>
 <p class="Pp">Returns the adler32 value for the dictionary.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;crc32()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;crc32()</b></h2>
 <p class="Pp">Returns the crc32 value for the uncompressed data to date.</p>
 <p class="Pp">If the <span class="Li">&quot;CRC32&quot;</span> option is not
     enabled in the constructor for this object, this method will always return
     0;</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;adler32()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;adler32()</b></h2>
 <p class="Pp">Returns the adler32 value for the uncompressed data to date.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;msg()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;msg()</b></h2>
 <p class="Pp">Returns the last error message generated by zlib.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;total_in()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;total_in()</b></h2>
 <p class="Pp">Returns the total number of bytes uncompressed bytes input to
     deflate.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;total_out()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;total_out()</b></h2>
 <p class="Pp">Returns the total number of compressed bytes output from
   deflate.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;get_Strategy()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;get_Strategy()</b></h2>
 <p class="Pp">Returns the deflation strategy currently used. Valid values are
     <span class="Li">&quot;Z_DEFAULT_STRATEGY&quot;</span>,
     <span class="Li">&quot;Z_FILTERED&quot;</span> and
     <span class="Li">&quot;Z_HUFFMAN_ONLY&quot;</span>.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;get_Level()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;get_Level()</b></h2>
 <p class="Pp">Returns the compression level being used.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;get_BufSize()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;get_BufSize()</b></h2>
 <p class="Pp">Returns the buffer size used to carry out the compression.</p>
 </section>
 <section class="Ss">
@@ -357,17 +355,13 @@
     <span class="Li">&quot;deflate&quot;</span>. It simply reads standard input,
     deflates it and writes it to standard output.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
-
     use Compress::Raw::Zlib ;
-
     binmode STDIN;
     binmode STDOUT;
     my $x = new Compress::Raw::Zlib::Deflate
        or die &quot;Cannot create a deflation stream\n&quot; ;
-
     my ($output, $status) ;
     while (&lt;&gt;)
     {
@@ -394,7 +388,7 @@
     uncompression using the <i>inflate</i> interface provided by zlib.</p>
 <p class="Pp">Here is a definition of the interface:</p>
 <section class="Ss">
-<h2 class="Ss"><b> ($i, </b><b>$status</b><b>) = new
+<h2 class="Ss"><b> ($i, </b><span class="Li"><b>$status</b></span><b>) = new
   Compress::Raw::Zlib::Inflate( [OPT] ) </b></h2>
 <p class="Pp">Initialises an inflation object.</p>
 <p class="Pp">In a list context it returns the inflation object,
@@ -502,13 +496,13 @@
 <p class="Pp">Here is an example of using an optional parameter to override the
     default buffer size.</p>
 <p class="Pp"></p>
-<pre>
-    my ($i, $status) = new Compress::Raw::Zlib::Inflate( -Bufsize =&gt; 300 ) ;
+<pre>    my ($i, $status) = new Compress::Raw::Zlib::Inflate( -Bufsize =&gt; 300 ) ;
 </pre>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b> </b><b>$status</b><b> = </b><b>$i</b><b>-&gt;inflate($input,
-  </b><b>$output</b><b> [,$eof]) </b></h2>
+<h2 class="Ss"><b> </b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$i</b></span><b>-&gt;inflate($input,
+  </b><span class="Li"><b>$output</b></span><b> [,$eof]) </b></h2>
 <p class="Pp">Inflates the complete contents of <span class="Li">$input</span>
     and writes the uncompressed data to <span class="Li">$output</span>. The
     <span class="Li">$input</span> and <span class="Li">$output</span>
@@ -568,8 +562,8 @@
     you want, but it won't be used behind the scenes.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> =
-  </b><b>$i</b><b>-&gt;inflateSync($input)</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$i</b></span><b>-&gt;inflateSync($input)</b></h2>
 <p class="Pp">This method can be used to attempt to recover good data from a
     compressed data stream that is partially corrupt. It scans
     <span class="Li">$input</span> until it reaches either a <i>full flush
@@ -591,8 +585,8 @@
     <span class="Li">&quot;Z_FULL_FLUSH&quot;</span>.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$status</b><b> = </b><b>$i</b><b>-&gt;inflateReset()
-  </b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$status</b></span><b> =
+  </b><span class="Li"><b>$i</b></span><b>-&gt;inflateReset() </b></h2>
 <p class="Pp">This method will reset the inflation object
     <span class="Li">$i</span>. It can be used when you are uncompressing
     multiple data streams and want to use the same object to uncompress each of
@@ -601,39 +595,39 @@
   successful.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;dict_adler()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;dict_adler()</b></h2>
 <p class="Pp">Returns the adler32 value for the dictionary.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;crc32()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;crc32()</b></h2>
 <p class="Pp">Returns the crc32 value for the uncompressed data to date.</p>
 <p class="Pp">If the <span class="Li">&quot;CRC32&quot;</span> option is not
     enabled in the constructor for this object, this method will always return
     0;</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;adler32()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;adler32()</b></h2>
 <p class="Pp">Returns the adler32 value for the uncompressed data to date.</p>
 <p class="Pp">If the <span class="Li">&quot;ADLER32&quot;</span> option is not
     enabled in the constructor for this object, this method will always return
     0;</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;msg()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;msg()</b></h2>
 <p class="Pp">Returns the last error message generated by zlib.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;total_in()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;total_in()</b></h2>
 <p class="Pp">Returns the total number of bytes compressed bytes input to
     inflate.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$i</b><b>-&gt;total_out()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$i</b></span><b>-&gt;total_out()</b></h2>
 <p class="Pp">Returns the total number of uncompressed bytes output from
     inflate.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$d</b><b>-&gt;get_BufSize()</b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$d</b></span><b>-&gt;get_BufSize()</b></h2>
 <p class="Pp">Returns the buffer size used to carry out the decompression.</p>
 </section>
 <section class="Ss">
@@ -641,8 +635,7 @@
 <p class="Pp">Here is an example of using
     <span class="Li">&quot;inflate&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     
     use Compress::Raw::Zlib;
@@ -678,8 +671,7 @@
     <span class="Li">&quot;ConsumeInput&quot;</span> set as well - this makes
     the code below much simpler.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     
     use Compress::Raw::Zlib;
@@ -692,16 +684,13 @@
     binmode STDOUT;
     
     my ($output, $status) ;
-
   OUTER:
     while (read(STDIN, $input, 4096))
     {
         do
         {
             $status = $x-&gt;inflate($input, $output) ;
-
             print $output ;
-
             last OUTER
                 unless $status == Z_OK || $status == Z_BUF_ERROR ;
         }
@@ -721,8 +710,7 @@
     has been reversed. This allows both running checksums and one off
     calculations to be done.</p>
 <p class="Pp"></p>
-<pre>
-    $crc = adler32($buffer [,$crc]) ;
+<pre>    $crc = adler32($buffer [,$crc]) ;
     $crc = crc32($buffer [,$crc]) ;
 </pre>
 <p class="Pp">The buffer parameters can either be a scalar or a scalar
@@ -732,8 +720,7 @@
 <p class="Pp">If you have built this module with zlib 1.2.3 or better, two more
     CRC-related functions are available.</p>
 <p class="Pp"></p>
-<pre>
-    $crc = crc32_combine($crc1, $crc2, $len2);
+<pre>    $crc = crc32_combine($crc1, $crc2, $len2);
     $adler = adler32_combine($adler1, $adler2, $len2);
 </pre>
 <p class="Pp">These functions allow checksums to be merged. Refer to the
@@ -773,8 +760,7 @@
     dealt with. So if you are reading from an input source and uncompressing as
     you go the code will look something like this</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     
     use Compress::Raw::Zlib;
@@ -839,8 +825,7 @@
 <p class="Pp">Below is typical code that shows how to use
     <span class="Li">&quot;LimitOutput&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     
     use Compress::Raw::Zlib;
@@ -853,16 +838,13 @@
     binmode STDOUT;
     
     my ($output, $status) ;
-
   OUTER:
     while (read(STDIN, $input, 4096))
     {
         do
         {
             $status = $x-&gt;inflate($input, $output) ;
-
             print $output ;
-
             last OUTER
                 unless $status == Z_OK || $status == Z_BUF_ERROR ;
         }
@@ -916,8 +898,7 @@
 <p class="Pp">If you have the <span class="Li">&quot;uncompress&quot;</span>
     program available, you can use this to read compressed files</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;uncompress -c $filename |&quot;;
+<pre>    open F, &quot;uncompress -c $filename |&quot;;
     while (&lt;F&gt;)
     {
         ...
@@ -926,8 +907,7 @@
     <span class="Li">&quot;gunzip&quot;</span> program available, you can use
     this to read compressed files</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;gunzip -c $filename |&quot;;
+<pre>    open F, &quot;gunzip -c $filename |&quot;;
     while (&lt;F&gt;)
     {
         ...
@@ -935,8 +915,7 @@
 <p class="Pp">and this to write compress files, if you have the
     <span class="Li">&quot;compress&quot;</span> program available</p>
 <p class="Pp"></p>
-<pre>
-    open F, &quot;| compress -c $filename &quot;;
+<pre>    open F, &quot;| compress -c $filename &quot;;
     print F &quot;data&quot;;
     ...
     close F ;
@@ -953,22 +932,18 @@
     <span class="Li">&quot;.tar.Z&quot;</span> files.</p>
 <p class="Pp">Firstly with <span class="Li">&quot;uncompress&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
-
     open F, &quot;uncompress -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
 </pre>
 <p class="Pp">and this with <span class="Li">&quot;gunzip&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
-
     open F, &quot;gunzip -c $filename |&quot;;
     my $tar = Archive::Tar-&gt;new(*F);
     ...
@@ -977,12 +952,10 @@
     program is available, you can use this to write a
     <span class="Li">&quot;.tar.Z&quot;</span> file</p>
 <p class="Pp"></p>
-<pre>
-    use strict;
+<pre>    use strict;
     use warnings;
     use Archive::Tar;
     use IO::File;
-
     my $fh = new IO::File &quot;| compress -c &gt;$filename&quot;;
     my $tar = Archive::Tar-&gt;new();
     ...

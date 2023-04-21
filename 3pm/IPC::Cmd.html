@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IPC::Cmd(3pm)</title>
 </head>
@@ -28,15 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use IPC::Cmd qw[can_run run run_forked];
-
+<pre>    use IPC::Cmd qw[can_run run run_forked];
     my $full_path = can_run('wget') or warn 'wget is not installed!';
-
     ### commands can be arrayrefs or strings ###
     my $cmd = &quot;$full_path -b theregister.co.uk&quot;;
     my $cmd = [$full_path, '-b', 'theregister.co.uk'];
-
     ### in scalar context ###
     my $buffer;
     if( scalar run( command =&gt; $cmd,
@@ -46,29 +43,23 @@
     ) {
         print &quot;fetched webpage successfully: $buffer\n&quot;;
     }
-
-
     ### in list context ###
     my( $success, $error_message, $full_buf, $stdout_buf, $stderr_buf ) =
             run( command =&gt; $cmd, verbose =&gt; 0 );
-
     if( $success ) {
         print &quot;this is what the command printed:\n&quot;;
         print join &quot;&quot;, @$full_buf;
     }
-
     ### run_forked example ###
     my $result = run_forked(&quot;$full_path -q -O - theregister.co.uk&quot;, {'timeout' =&gt; 20});
     if ($result-&gt;{'exit_code'} eq 0 &amp;&amp; !$result-&gt;{'timeout'}) {
         print &quot;this is what wget returned:\n&quot;;
         print $result-&gt;{'stdout'};
     }
-
     ### check for features
     print &quot;IPC::Open3 available: &quot;  . IPC::Cmd-&gt;can_use_ipc_open3;
     print &quot;IPC::Run available: &quot;    . IPC::Cmd-&gt;can_use_ipc_run;
     print &quot;Can capture buffer: &quot;    . IPC::Cmd-&gt;can_capture_buffer;
-
     ### don't have IPC::Cmd be verbose, ie don't print to stdout or
     ### stderr when running commands -- default is '0'
     $IPC::Cmd::VERBOSE = 0;
@@ -260,8 +251,7 @@
       finish or fail). It is useful to stop running external process before it
       ends by itself, e.g.
     <p class="Pp"></p>
-    <pre>
-  my $r = run_forked(&quot;some external command&quot;, {
+    <pre>  my $r = run_forked(&quot;some external command&quot;, {
           'wait_loop_callback' =&gt; sub {
           if (condition) {
               kill(1, $$);
@@ -325,8 +315,7 @@
     <span class="Li">&quot;&quot;&quot;</span> (double quote).</p>
 <p class="Pp">You can use it as follows:</p>
 <p class="Pp"></p>
-<pre>
-  use IPC::Cmd qw[run QUOTE];
+<pre>  use IPC::Cmd qw[run QUOTE];
   my $cmd = q[echo ] . QUOTE . q[foo bar] . QUOTE;
 </pre>
 <p class="Pp">This makes sure that <span class="Li">&quot;foo bar&quot;</span>
@@ -444,23 +433,19 @@
         an error.</p>
     <p class="Pp">Example: The following code</p>
     <p class="Pp"></p>
-    <pre>
-    gzip -cdf foo.tar.gz | tar -xf -
+    <pre>    gzip -cdf foo.tar.gz | tar -xf -
     </pre>
     <p class="Pp">should either be passed as</p>
     <p class="Pp"></p>
-    <pre>
-    &quot;gzip -cdf foo.tar.gz | tar -xf -&quot;
+    <pre>    &quot;gzip -cdf foo.tar.gz | tar -xf -&quot;
     </pre>
     <p class="Pp">or as</p>
     <p class="Pp"></p>
-    <pre>
-    ['gzip', '-cdf', 'foo.tar.gz', '|', 'tar', '-xf', '-']
+    <pre>    ['gzip', '-cdf', 'foo.tar.gz', '|', 'tar', '-xf', '-']
     </pre>
     <p class="Pp">But take care not to pass it as, for example</p>
     <p class="Pp"></p>
-    <pre>
-    ['gzip -cdf foo.tar.gz', '|', 'tar -xf -']
+    <pre>    ['gzip -cdf foo.tar.gz', '|', 'tar -xf -']
     </pre>
     <p class="Pp">Since this will lead to issues as described above.</p>
   </dd>
@@ -473,8 +458,7 @@
   <dd>Neither IPC::Run nor IPC::Open3 can interleave STDOUT and STDERR. For
       short bursts of output from a program, e.g. this sample,
     <p class="Pp"></p>
-    <pre>
-    for ( 1..4 ) {
+    <pre>    for ( 1..4 ) {
         $_ % 2 ? print STDOUT $_ : print STDERR $_;
     }
     </pre>
@@ -482,8 +466,7 @@
         STDERR, meaning the output looks like '13' on STDOUT and '24' on STDERR,
         instead of</p>
     <p class="Pp"></p>
-    <pre>
-    1
+    <pre>    1
     2
     3
     4

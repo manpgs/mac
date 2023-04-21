@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLXSTUT(1)</title>
 </head>
@@ -71,8 +72,7 @@
     earliest opportunity to perform version checks. One can put something like
     this in <i>Makefile.PL</i> for this purpose:</p>
 <p class="Pp"></p>
-<pre>
-    eval { require 5.007 }
+<pre>    eval { require 5.007 }
         or die &lt;&lt;EOD;
     ############
     ### This module uses frobnication framework which is not available
@@ -116,8 +116,7 @@
     function to retrieve the context.</p>
 <p class="Pp">For improved performance, include:</p>
 <p class="Pp"></p>
-<pre>
-  #define PERL_NO_GET_CONTEXT
+<pre>  #define PERL_NO_GET_CONTEXT
 </pre>
 <p class="Pp">as shown below.</p>
 <p class="Pp">For more details, see perlguts.</p>
@@ -139,8 +138,7 @@
     in the Mytest directory.</p>
 <p class="Pp">The file Makefile.PL should look something like this:</p>
 <p class="Pp"></p>
-<pre>
-    use ExtUtils::MakeMaker;
+<pre>    use ExtUtils::MakeMaker;
     # See lib/ExtUtils/MakeMaker.pm for details of how to influence
     # the contents of the Makefile that is written.
     WriteMakefile(
@@ -153,33 +151,21 @@
 </pre>
 <p class="Pp">The file Mytest.pm should start with something like this:</p>
 <p class="Pp"></p>
-<pre>
-    package Mytest;
-
+<pre>    package Mytest;
     use 5.008008;
     use strict;
     use warnings;
-
     require Exporter;
-
     our @ISA = qw(Exporter);
     our %EXPORT_TAGS = ( 'all' =&gt; [ qw(
-
     ) ] );
-
     our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
     our @EXPORT = qw(
-
     );
-
     our $VERSION = '0.01';
-
     require XSLoader;
     XSLoader::load('Mytest', $VERSION);
-
     # Preloaded methods go here.
-
     1;
     __END__
     # Below is the stub of documentation for your module. You better
@@ -189,20 +175,16 @@
     documentation for the extension.</p>
 <p class="Pp">Finally, the Mytest.xs file should look something like this:</p>
 <p class="Pp"></p>
-<pre>
-    #define PERL_NO_GET_CONTEXT
+<pre>    #define PERL_NO_GET_CONTEXT
     #include &quot;EXTERN.h&quot;
     #include &quot;perl.h&quot;
     #include &quot;XSUB.h&quot;
-
     #include &quot;ppport.h&quot;
-
     MODULE = Mytest             PACKAGE = Mytest
 </pre>
 <p class="Pp">Let's edit the .xs file by adding this to the end of the file:</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     hello()
         CODE:
             printf(&quot;Hello, world!\n&quot;);
@@ -214,8 +196,7 @@
     Makefile.PL&quot;</span>&quot;. This will create a real Makefile, which make
     needs. Its output looks something like:</p>
 <p class="Pp"></p>
-<pre>
-    % perl Makefile.PL
+<pre>    % perl Makefile.PL
     Checking if your kit is complete...
     Looks good
     Writing Makefile for Mytest
@@ -225,8 +206,7 @@
     this (some long lines have been shortened for clarity and some extraneous
     lines have been deleted):</p>
 <p class="Pp"></p>
-<pre>
- % make
+<pre> % make
  cp lib/Mytest.pm blib/lib/Mytest.pm
  perl xsubpp  -typemap typemap  Mytest.xs &gt; Mytest.xsc &amp;&amp; \
  mv Mytest.xsc Mytest.c
@@ -236,7 +216,6 @@
  chmod 644 Mytest.bs
  rm -f blib/arch/auto/Mytest/Mytest.so
  cc -shared -L/usr/local/lib Mytest.o -o blib/arch/auto/Mytest/Mytest.so
-
  chmod 755 blib/arch/auto/Mytest/Mytest.so
  cp Mytest.bs blib/arch/auto/Mytest/Mytest.bs
  chmod 644 blib/arch/auto/Mytest/Mytest.bs
@@ -250,21 +229,16 @@
     for this example only, we'll create our own test script. Create a file
     called hello that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    #! /opt/perl5/bin/perl
-
+<pre>    #! /opt/perl5/bin/perl
     use ExtUtils::testlib;
-
     use Mytest;
-
     Mytest::hello();
 </pre>
 <p class="Pp">Now we make the script executable (<span class="Li">&quot;chmod +x
     hello&quot;</span>), run the script and we should see the following
   output:</p>
 <p class="Pp"></p>
-<pre>
-    % ./hello
+<pre>    % ./hello
     Hello, world!
     %
 </pre>
@@ -276,8 +250,7 @@
     the number is odd.</p>
 <p class="Pp">Add the following to the end of Mytest.xs:</p>
 <p class="Pp"></p>
-<pre>
-    int
+<pre>    int
     is_even(input)
             int input
         CODE:
@@ -300,16 +273,12 @@
     of tests to confirm the behavior of the extension, printing &quot;ok&quot;
     when the test is correct, &quot;not ok&quot; when it is not.</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 4;
+<pre>    use Test::More tests =&gt; 4;
     BEGIN { use_ok('Mytest') };
-
     #########################
-
     # Insert your test code below, the Test::More module is use()ed here
     # so read its man page ( perldoc Test::More ) for help writing this
     # test script.
-
     is(&amp;Mytest::is_even(0), 1);
     is(&amp;Mytest::is_even(1), 0);
     is(&amp;Mytest::is_even(2), 1);
@@ -318,8 +287,7 @@
     &quot;<span class="Li">&quot;make test&quot;</span>&quot;. You should see
     output that looks something like this:</p>
 <p class="Pp"></p>
-<pre>
- %make test
+<pre> %make test
  PERL_DL_NONLAZY=1 /usr/bin/perl &quot;-MExtUtils::Command::MM&quot; &quot;-e&quot;
  &quot;test_harness(0, 'blib/lib', 'blib/arch')&quot; t/*.t
  t/Mytest....ok
@@ -415,8 +383,7 @@
     that value, and set the <i>argument</i> to the rounded value.</p>
 <p class="Pp">Add the following to the end of Mytest.xs:</p>
 <p class="Pp"></p>
-<pre>
-        void
+<pre>        void
         round(arg)
                 double  arg
             CODE:
@@ -433,14 +400,12 @@
 <p class="Pp">Edit the Makefile.PL file so that the corresponding line looks
     like this:</p>
 <p class="Pp"></p>
-<pre>
-        'LIBS'      =&gt; ['-lm'],   # e.g., '-lm'
+<pre>        'LIBS'      =&gt; ['-lm'],   # e.g., '-lm'
 </pre>
 <p class="Pp">Generate the Makefile and run make. Change the test number in
     Mytest.t to &quot;9&quot; and add the following tests:</p>
 <p class="Pp"></p>
-<pre>
-        $i = -1.5; &amp;Mytest::round($i); is( $i, -2.0 );
+<pre>        $i = -1.5; &amp;Mytest::round($i); is( $i, -2.0 );
         $i = -1.1; &amp;Mytest::round($i); is( $i, -1.0 );
         $i = 0.0; &amp;Mytest::round($i);  is( $i,  0.0 );
         $i = 0.5; &amp;Mytest::round($i);  is( $i,  1.0 );
@@ -453,8 +418,7 @@
     literal. To see what happens, temporarily add the following line to
     Mytest.t:</p>
 <p class="Pp"></p>
-<pre>
-        &amp;Mytest::round(3);
+<pre>        &amp;Mytest::round(3);
 </pre>
 <p class="Pp">Run &quot;<span class="Li">&quot;make test&quot;</span>&quot; and
     notice that Perl dies with a fatal error. Perl won't let you change the
@@ -513,8 +477,7 @@
 <p class="Pp">Let's take a look at a portion of the .c file created for our
     extension. The file name is Mytest.c:</p>
 <p class="Pp"></p>
-<pre>
-        XS(XS_Mytest_round)
+<pre>        XS(XS_Mytest_round)
         {
             dXSARGS;
             if (items != 1)
@@ -572,17 +535,13 @@
 <p class="Pp">In the mylib directory, create a file mylib.h that looks like
     this:</p>
 <p class="Pp"></p>
-<pre>
-        #define TESTVAL 4
-
+<pre>        #define TESTVAL 4
         extern double   foo(int, long, const char*);
 </pre>
 <p class="Pp">Also create a file mylib.c that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-        #include &lt;stdlib.h&gt;
+<pre>        #include &lt;stdlib.h&gt;
         #include &quot;./mylib.h&quot;
-
         double
         foo(int a, long b, const char *c)
         {
@@ -591,28 +550,21 @@
 </pre>
 <p class="Pp">And finally create a file Makefile.PL that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-        use ExtUtils::MakeMaker;
+<pre>        use ExtUtils::MakeMaker;
         $Verbose = 1;
         WriteMakefile(
             NAME   =&gt; 'Mytest2::mylib',
             SKIP   =&gt; [qw(all static static_lib dynamic dynamic_lib)],
             clean  =&gt; {'FILES' =&gt; 'libmylib$(LIB_EXT)'},
         );
-
-
         sub MY::top_targets {
                 '
         all :: static
-
         pure_all :: static
-
         static ::       libmylib$(LIB_EXT)
-
         libmylib$(LIB_EXT): $(O_FILES)
                 $(AR) cr libmylib$(LIB_EXT) $(O_FILES)
                 $(RANLIB) libmylib$(LIB_EXT)
-
         ';
         }
 </pre>
@@ -623,8 +575,7 @@
 <p class="Pp">We will now create the main top-level Mytest2 files. Change to the
     directory above Mytest2 and run the following command:</p>
 <p class="Pp"></p>
-<pre>
-        % h2xs -O -n Mytest2 ./Mytest2/mylib/mylib.h
+<pre>        % h2xs -O -n Mytest2 ./Mytest2/mylib/mylib.h
 </pre>
 <p class="Pp">This will print out a warning about overwriting Mytest2, but
     that's okay. Our files are stored in Mytest2/mylib, and will be
@@ -634,8 +585,7 @@
     will be generating a library in it. Let's add the argument MYEXTLIB to the
     WriteMakefile call so that it looks like this:</p>
 <p class="Pp"></p>
-<pre>
-        WriteMakefile(
+<pre>        WriteMakefile(
             'NAME'      =&gt; 'Mytest2',
             'VERSION_FROM' =&gt; 'Mytest2.pm', # finds $VERSION
             'LIBS'      =&gt; [''],   # e.g., '-lm'
@@ -648,8 +598,7 @@
     pre-existing subroutine). Remember to use a tab character to indent the line
     beginning with &quot;cd&quot;!</p>
 <p class="Pp"></p>
-<pre>
-        sub MY::postamble {
+<pre>        sub MY::postamble {
         '
         $(MYEXTLIB): mylib/Makefile
                 cd mylib &amp;&amp; $(MAKE) $(PASSTHRU)
@@ -660,8 +609,7 @@
     the contents of our extension. The single line that says &quot;mylib&quot;
     should be replaced by the following three lines:</p>
 <p class="Pp"></p>
-<pre>
-        mylib/Makefile.PL
+<pre>        mylib/Makefile.PL
         mylib/mylib.c
         mylib/mylib.h
 </pre>
@@ -670,14 +618,12 @@
     <span class="Li">@EXPORT_OK</span>. Finally, in the .xs file, edit the
     #include line to read:</p>
 <p class="Pp"></p>
-<pre>
-        #include &quot;mylib/mylib.h&quot;
+<pre>        #include &quot;mylib/mylib.h&quot;
 </pre>
 <p class="Pp">And also add the following function definition to the end of the
     .xs file:</p>
 <p class="Pp"></p>
-<pre>
-        double
+<pre>        double
         foo(a,b,c)
                 int             a
                 long            b
@@ -690,8 +636,7 @@
     *&quot;</span> type. Include a new TYPEMAP section in your XS code before
     the above function:</p>
 <p class="Pp"></p>
-<pre>
-        TYPEMAP: &lt;&lt;END
+<pre>        TYPEMAP: &lt;&lt;END
         const char *    T_PV
         END
 </pre>
@@ -701,8 +646,7 @@
 <p class="Pp">Now edit the Mytest2.t script and change the number of tests to
     &quot;4&quot;, and add the following lines to the end of the script:</p>
 <p class="Pp"></p>
-<pre>
-        is( &amp;Mytest2::foo(1, 2, &quot;Hello, world!&quot;), 7 );
+<pre>        is( &amp;Mytest2::foo(1, 2, &quot;Hello, world!&quot;), 7 );
         is( &amp;Mytest2::foo(1, 2, &quot;0.0&quot;), 7 );
         ok( abs(&amp;Mytest2::foo(0, 0, &quot;-3.4&quot;) - 0.6) &lt;= 0.01 );
 </pre>
@@ -761,8 +705,7 @@
     To understand the meaning of these elements, pay attention to the line which
     reads</p>
 <p class="Pp"></p>
-<pre>
-        MODULE = Mytest2                PACKAGE = Mytest2
+<pre>        MODULE = Mytest2                PACKAGE = Mytest2
 </pre>
 <p class="Pp">Anything before this line is plain C code which describes which
     headers to include, and defines some convenience functions. No translations
@@ -793,8 +736,7 @@
 <p class="Pp">In &quot;EXAMPLE 4&quot; the second part of .xs file contained the
     following description of an XSUB:</p>
 <p class="Pp"></p>
-<pre>
-        double
+<pre>        double
         foo(a,b,c)
                 int             a
                 long            b
@@ -808,8 +750,7 @@
     <b>foo()</b>. To understand what is going on here, one can add a CODE
     section to this XSUB:</p>
 <p class="Pp"></p>
-<pre>
-        double
+<pre>        double
         foo(a,b,c)
                 int             a
                 long            b
@@ -825,14 +766,14 @@
     of the description of XSUB. What about
     <span class="Li">&quot;OUTPUT:&quot;</span> section? In fact, that is
     absolutely the same! The <span class="Li">&quot;OUTPUT:&quot;</span> section
-    can be removed as well, <i>as far as </i><i>&quot;CODE:&quot;</i><i> section
-    or </i><i>&quot;PPCODE:&quot;</i><i> section</i> is not specified:
-    <b>xsubpp</b> can see that it needs to generate a function call section, and
-    will autogenerate the OUTPUT section too. Thus one can shortcut the XSUB to
-    become:</p>
+    can be removed as well, <i>as far as
+    </i><span class="Li"><i>&quot;CODE:&quot;</i></span><i> section or
+    </i><span class="Li"><i>&quot;PPCODE:&quot;</i></span><i> section</i> is not
+    specified: <b>xsubpp</b> can see that it needs to generate a function call
+    section, and will autogenerate the OUTPUT section too. Thus one can shortcut
+    the XSUB to become:</p>
 <p class="Pp"></p>
-<pre>
-        double
+<pre>        double
         foo(a,b,c)
                 int             a
                 long            b
@@ -840,8 +781,7 @@
 </pre>
 <p class="Pp">Can we do the same with an XSUB</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         is_even(input)
                 int     input
             CODE:
@@ -855,8 +795,7 @@
     place for this definition is in the first part of .xs file. In fact a C
     function</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         is_even(int arg)
         {
                 return (arg % 2 == 0);
@@ -865,14 +804,12 @@
 <p class="Pp">is probably overkill for this. Something as simple as a
     <span class="Li">&quot;#define&quot;</span> will do too:</p>
 <p class="Pp"></p>
-<pre>
-        #define is_even(arg)    ((arg) % 2 == 0)
+<pre>        #define is_even(arg)    ((arg) % 2 == 0)
 </pre>
 <p class="Pp">After having this in the first part of .xs file, the &quot;Perl
     glue&quot; part becomes as simple as</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         is_even(input)
                 int     input
 </pre>
@@ -902,8 +839,7 @@
     the &quot;arguments&quot;, the actual argument of this C function would be a
     pointer to the data. Thus two C functions with declarations</p>
 <p class="Pp"></p>
-<pre>
-        int string_length(char *s);
+<pre>        int string_length(char *s);
         int upper_case_char(char *cp);
 </pre>
 <p class="Pp">may have completely different semantics: the first one may inspect
@@ -919,19 +855,16 @@
     passed to a library function by its address. The above two function may be
     XSUB-ified as</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         string_length(s)
                 char *  s
-
         int
         upper_case_char(cp)
                 char    &amp;cp
 </pre>
 <p class="Pp">For example, consider:</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         foo(a,b)
                 char    &amp;a
                 char *  b
@@ -943,14 +876,12 @@
     passed into the function foo. The actual call to the function foo that
     <b>xsubpp</b> generates would look like this:</p>
 <p class="Pp"></p>
-<pre>
-        foo(&amp;a, b);
+<pre>        foo(&amp;a, b);
 </pre>
 <p class="Pp"><b>xsubpp</b> will parse the following function argument lists
     identically:</p>
 <p class="Pp"></p>
-<pre>
-        char    &amp;a
+<pre>        char    &amp;a
         char&amp;a
         char    &amp; a
 </pre>
@@ -985,8 +916,7 @@
     for Example 3. The code for the <b>round()</b> XSUB routine contains lines
     that look like this:</p>
 <p class="Pp"></p>
-<pre>
-        double  arg = (double)SvNV(ST(0));
+<pre>        double  arg = (double)SvNV(ST(0));
         /* Round the contents of the variable arg */
         sv_setnv(ST(0), (double)arg);
 </pre>
@@ -1062,14 +992,12 @@
 <p class="Pp">Return to the Mytest directory and add the following code to the
     end of Mytest.xs:</p>
 <p class="Pp"></p>
-<pre>
-        void
+<pre>        void
         statfs(path)
                 char *  path
             INIT:
                 int i;
                 struct statfs buf;
-
             PPCODE:
                 i = statfs(path, &amp;buf);
                 if (i == 0) {
@@ -1087,14 +1015,12 @@
 <p class="Pp">You'll also need to add the following code to the top of the .xs
     file, just after the include of &quot;XSUB.h&quot;:</p>
 <p class="Pp"></p>
-<pre>
-        #include &lt;sys/vfs.h&gt;
+<pre>        #include &lt;sys/vfs.h&gt;
 </pre>
 <p class="Pp">Also add the following code segment to Mytest.t while incrementing
     the &quot;9&quot; tests to &quot;11&quot;:</p>
 <p class="Pp"></p>
-<pre>
-        @a = &amp;Mytest::statfs(&quot;/blech&quot;);
+<pre>        @a = &amp;Mytest::statfs(&quot;/blech&quot;);
         ok( scalar(@a) == 1 &amp;&amp; $a[0] == 2 );
         @a = &amp;Mytest::statfs(&quot;/&quot;);
         is( scalar(@a), 7 );
@@ -1142,8 +1068,7 @@
       macros, but <span class="Li">&quot;PUSHs&quot;</span> macros, and would
       pre-extend the stack before pushing the return values:
     <p class="Pp"></p>
-    <pre>
-        EXTEND(SP, 7);
+    <pre>        EXTEND(SP, 7);
     </pre>
     <p class="Pp">The tradeoff is that one needs to calculate the number of
         return values in advance (though overextending the stack will not
@@ -1167,8 +1092,7 @@
 <p class="Pp">Return to the Mytest directory and add the following code to the
     end of Mytest.xs:</p>
 <p class="Pp"></p>
-<pre>
-    SV *
+<pre>    SV *
     multi_statfs(paths)
             SV * paths
         INIT:
@@ -1176,7 +1100,6 @@
             SSize_t numpaths = 0, n;
             int i;
             struct statfs buf;
-
             SvGETMAGIC(paths);
             if ((!SvROK(paths))
                 || (SvTYPE(SvRV(paths)) != SVt_PVAV)
@@ -1190,15 +1113,12 @@
                 HV * rh;
                 STRLEN l;
                 char * fn = SvPV(*av_fetch((AV *)SvRV(paths), n, 0), l);
-
                 i = statfs(fn, &amp;buf);
                 if (i != 0) {
                     av_push(results, newSVnv(errno));
                     continue;
                 }
-
                 rh = (HV *)sv_2mortal((SV *)newHV());
-
                 hv_store(rh, &quot;f_bavail&quot;, 8, newSVnv(buf.f_bavail), 0);
                 hv_store(rh, &quot;f_bfree&quot;,  7, newSVnv(buf.f_bfree),  0);
                 hv_store(rh, &quot;f_blocks&quot;, 8, newSVnv(buf.f_blocks), 0);
@@ -1206,7 +1126,6 @@
                 hv_store(rh, &quot;f_ffree&quot;,  7, newSVnv(buf.f_ffree),  0);
                 hv_store(rh, &quot;f_files&quot;,  7, newSVnv(buf.f_files),  0);
                 hv_store(rh, &quot;f_type&quot;,   6, newSVnv(buf.f_type),   0);
-
                 av_push(results, newRV_inc((SV *)rh));
             }
             RETVAL = newRV_inc((SV *)results);
@@ -1216,8 +1135,7 @@
 <p class="Pp">And add the following code to Mytest.t, while incrementing the
     &quot;11&quot; tests to &quot;13&quot;:</p>
 <p class="Pp"></p>
-<pre>
-        $results = Mytest::multi_statfs([ '/', '/blech' ]);
+<pre>        $results = Mytest::multi_statfs([ '/', '/blech' ]);
         ok( ref $results-&gt;[0] );
         ok( ! ref $results-&gt;[1] );
 </pre>
@@ -1265,8 +1183,7 @@
         performance win) to pre-extend the return array before pushing data into
         it, since we know how many elements we will return:</p>
     <p class="Pp"></p>
-    <pre>
-        av_extend(results, numpaths);
+    <pre>        av_extend(results, numpaths);
     </pre>
   </li>
   <li>We are performing only one hash operation in this function, which is
@@ -1303,15 +1220,12 @@
     standard C library function <span class="Li">&quot;fputs()&quot;</span>.
     This is all we need:</p>
 <p class="Pp"></p>
-<pre>
-        #define PERLIO_NOT_STDIO 0
+<pre>        #define PERLIO_NOT_STDIO 0
         #define PERL_NO_GET_CONTEXT
         #include &quot;EXTERN.h&quot;
         #include &quot;perl.h&quot;
         #include &quot;XSUB.h&quot;
-
         #include &lt;stdio.h&gt;
-
         int
         fputs(s, stream)
                 char *          s
@@ -1348,15 +1262,13 @@
 <p class="Pp">In the C part of the XS file (above the first MODULE line) you
     have</p>
 <p class="Pp"></p>
-<pre>
-        #define OutputStream    PerlIO *
+<pre>        #define OutputStream    PerlIO *
     or
         typedef PerlIO *        OutputStream;
 </pre>
 <p class="Pp">And this is the XS code:</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         perlioputs(s, stream)
                 char *          s
                 OutputStream    stream
@@ -1374,8 +1286,7 @@
     have to ask the perlio system for a stdio <span class="Li">&quot;FILE
     *&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-        int
+<pre>        int
         perliofputs(s, stream)
                 char *          s
                 OutputStream    stream
@@ -1415,8 +1326,7 @@
       Example 1 will not function properly. You need to change the &quot;use
       lib&quot; line to read:
     <p class="Pp"></p>
-    <pre>
-        use lib './blib';
+    <pre>        use lib './blib';
     </pre>
   </li>
   <li>In versions of 5.002 prior to version 5.002b1h, the test.pl file was not
@@ -1424,15 +1334,13 @@
       test&quot; to run the test script. You will need to add the following line
       before the &quot;use extension&quot; statement:
     <p class="Pp"></p>
-    <pre>
-        use lib './blib';
+    <pre>        use lib './blib';
     </pre>
   </li>
   <li>In versions 5.000 and 5.001, instead of using the above line, you will
       need to use the following line:
     <p class="Pp"></p>
-    <pre>
-        BEGIN { unshift(@INC, &quot;./blib&quot;) }
+    <pre>        BEGIN { unshift(@INC, &quot;./blib&quot;) }
     </pre>
   </li>
   <li>This document assumes that the executable named &quot;perl&quot; is Perl

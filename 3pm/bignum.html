@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>bignum(3pm)</title>
 </head>
@@ -28,19 +29,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use bignum;
-
+<pre>  use bignum;
   $x = 2 + 4.5,&quot;\n&quot;;                    # BigFloat 6.5
   print 2 ** 512 * 0.1,&quot;\n&quot;;            # really is what you think it is
   print inf * inf,&quot;\n&quot;;                 # prints inf
   print NaN * 3,&quot;\n&quot;;                   # prints NaN
-
   {
     no bignum;
     print 2 ** 256,&quot;\n&quot;;                # a normal Perl scalar now
   }
-
   # for older Perls, import into current package:
   use bignum qw/hex oct/;
   print hex(&quot;0x1234567890123490&quot;),&quot;\n&quot;;
@@ -54,8 +51,7 @@
     BigFloats, respectively.</p>
 <p class="Pp">If you do</p>
 <p class="Pp"></p>
-<pre>
-        use bignum;
+<pre>        use bignum;
 </pre>
 <p class="Pp">at the top of your script, Math::BigFloat and Math::BigInt will be
     loaded and any constant number will be converted to an object
@@ -63,23 +59,20 @@
     1234).</p>
 <p class="Pp">So, the following line:</p>
 <p class="Pp"></p>
-<pre>
-        $x = 1234;
+<pre>        $x = 1234;
 </pre>
 <p class="Pp">creates actually a Math::BigInt and stores a reference to in
     <span class="Li">$x</span>. This happens transparently and behind your back,
     so to speak.</p>
 <p class="Pp">You can see this with the following:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print ref(1234)'
+<pre>        perl -Mbignum -le 'print ref(1234)'
 </pre>
 <p class="Pp">Don't worry if it says Math::BigInt::Lite, bignum and friends will
     use Lite if it is installed since it is faster for some operations. It will
     be automatically upgraded to BigInt whenever necessary:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print ref(2**255)'
+<pre>        perl -Mbignum -le 'print ref(2**255)'
 </pre>
 <p class="Pp">This also means it is a bad idea to check for some specific
     package, since the actual contents of <span class="Li">$x</span> might be
@@ -89,15 +82,13 @@
 <p class="Pp">Since Math::BigInt and BigFloat also overload the normal math
     operations, the following line will still work:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print ref(1234+1234)'
+<pre>        perl -Mbignum -le 'print ref(1234+1234)'
 </pre>
 <p class="Pp">Since numbers are actually objects, you can call all the usual
     methods from BigInt/BigFloat on them. This even works to some extent on
     expressions:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le '$x = 1234; print $x-&gt;bdec()'
+<pre>        perl -Mbignum -le '$x = 1234; print $x-&gt;bdec()'
         perl -Mbignum -le 'print 1234-&gt;copy()-&gt;binc();'
         perl -Mbignum -le 'print 1234-&gt;copy()-&gt;binc-&gt;badd(6);'
         perl -Mbignum -le 'print +(1234)-&gt;copy()-&gt;binc()'
@@ -106,15 +97,13 @@
     starts with '(' hence the <span class="Li">&quot;+&quot;</span>)</p>
 <p class="Pp">You can even chain the operations together as usual:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print 1234-&gt;copy()-&gt;binc-&gt;badd(6);'
+<pre>        perl -Mbignum -le 'print 1234-&gt;copy()-&gt;binc-&gt;badd(6);'
         1241
 </pre>
 <p class="Pp">Under bignum (or bigint or bigrat), Perl will &quot;upgrade&quot;
     the numbers appropriately. This means that:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print 1234+4.5'
+<pre>        perl -Mbignum -le 'print 1234+4.5'
         1238.5
 </pre>
 <p class="Pp">will work correctly. These mixed cases don't do always work when
@@ -124,23 +113,20 @@
     <span class="Li">&quot;use integer;&quot;</span>, try
     <span class="Li">&quot;use bigint;&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbigint -le 'print 1234.5+4.5'
+<pre>        perl -Mbigint -le 'print 1234.5+4.5'
         1238
 </pre>
 <p class="Pp">There is also <span class="Li">&quot;use bigrat;&quot;</span>
     which gives you big rationals:</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbigrat -le 'print 1234+4.1'
+<pre>        perl -Mbigrat -le 'print 1234+4.1'
         12381/10
 </pre>
 <p class="Pp">The entire upgrading/downgrading is still experimental and might
     not work as you expect or may even have bugs. You might get errors like
     this:</p>
 <p class="Pp"></p>
-<pre>
-        Can't use an undefined value as an ARRAY reference at
+<pre>        Can't use an undefined value as an ARRAY reference at
         /usr/local/lib/perl5/5.8.0/Math/BigInt/Calc.pm line 864
 </pre>
 <p class="Pp">This means somewhere a routine got a BigFloat/Lite but expected a
@@ -152,15 +138,13 @@
     <span class="Li">&quot;use bignum;&quot;</span> and this is slower than
     keeping them as Perl scalars:</p>
 <p class="Pp"></p>
-<pre>
-    perl -Mbignum -le 'for ($i = 0; $i &lt; 10; $i++) { print ref($i); }'
+<pre>    perl -Mbignum -le 'for ($i = 0; $i &lt; 10; $i++) { print ref($i); }'
 </pre>
 <p class="Pp">Please note the following does not work as expected (prints
     nothing), since overloading of '..' is not yet possible in Perl (as of
     v5.8.0):</p>
 <p class="Pp"></p>
-<pre>
-    perl -Mbignum -le 'for (1..2) { print ref($_); }'
+<pre>    perl -Mbignum -le 'for (1..2) { print ref($_); }'
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="Options"><a class="permalink" href="#Options">Options</a></h2>
@@ -173,8 +157,7 @@
       greater than or equal to zero. See Math::BigInt's <b>bround()</b> function
       for details.
     <p class="Pp"></p>
-    <pre>
-        perl -Mbignum=a,50 -le 'print sqrt(20)'
+    <pre>        perl -Mbignum=a,50 -le 'print sqrt(20)'
     </pre>
     <p class="Pp">Note that setting precision and accuracy at the same time is
         not possible.</p>
@@ -186,8 +169,7 @@
       round to integer. See Math::BigInt's <b>bfround()</b> function for
       details.
     <p class="Pp"></p>
-    <pre>
-        perl -Mbignum=p,-50 -le 'print sqrt(20)'
+    <pre>        perl -Mbignum=p,-50 -le 'print sqrt(20)'
     </pre>
     <p class="Pp">Note that setting precision and accuracy at the same time is
         not possible.</p>
@@ -198,14 +180,12 @@
   <dt id="l"><a class="permalink" href="#l">l or lib</a></dt>
   <dd>Load a different math lib, see &quot;Math Library&quot;.
     <p class="Pp"></p>
-    <pre>
-        perl -Mbignum=l,GMP -e 'print 2 ** 512'
+    <pre>        perl -Mbignum=l,GMP -e 'print 2 ** 512'
     </pre>
     <p class="Pp">Currently there is no way to specify more than one library on
         the command line. This means the following does not work:</p>
     <p class="Pp"></p>
-    <pre>
-        perl -Mbignum=l,GMP,Pari -e 'print 2 ** 512'
+    <pre>        perl -Mbignum=l,GMP,Pari -e 'print 2 ** 512'
     </pre>
     <p class="Pp">This will be hopefully fixed soon ;)</p>
   </dd>
@@ -224,8 +204,7 @@
   <dt id="v"><a class="permalink" href="#v">v or version</a></dt>
   <dd>This prints out the name and version of all modules used and then exits.
     <p class="Pp"></p>
-    <pre>
-        perl -Mbignum=v
+    <pre>        perl -Mbignum=v
     </pre>
   </dd>
 </dl>
@@ -245,39 +224,32 @@
 <p class="Pp">But a warning is in order. When using the following to make a copy
     of a number, only a shallow copy will be made.</p>
 <p class="Pp"></p>
-<pre>
-        $x = 9; $y = $x;
+<pre>        $x = 9; $y = $x;
         $x = $y = 7;
 </pre>
 <p class="Pp">If you want to make a real copy, use the following:</p>
 <p class="Pp"></p>
-<pre>
-        $y = $x-&gt;copy();
+<pre>        $y = $x-&gt;copy();
 </pre>
 <p class="Pp">Using the copy or the original with overloaded math is okay, e.g.
     the following work:</p>
 <p class="Pp"></p>
-<pre>
-        $x = 9; $y = $x;
+<pre>        $x = 9; $y = $x;
         print $x + 1, &quot; &quot;, $y,&quot;\n&quot;;     # prints 10 9
 </pre>
 <p class="Pp">but calling any method that modifies the number directly will
     result in <b>both</b> the original and the copy being destroyed:</p>
 <p class="Pp"></p>
-<pre>
-        $x = 9; $y = $x;
+<pre>        $x = 9; $y = $x;
         print $x-&gt;badd(1), &quot; &quot;, $y,&quot;\n&quot;;        # prints 10 10
-
         $x = 9; $y = $x;
         print $x-&gt;binc(1), &quot; &quot;, $y,&quot;\n&quot;;        # prints 10 10
-
         $x = 9; $y = $x;
         print $x-&gt;bmul(2), &quot; &quot;, $y,&quot;\n&quot;;        # prints 18 18
 </pre>
 <p class="Pp">Using methods that do not modify, but test the contents works:</p>
 <p class="Pp"></p>
-<pre>
-        $x = 9; $y = $x;
+<pre>        $x = 9; $y = $x;
         $z = 9 if $x-&gt;is_zero();                # works fine
 </pre>
 <p class="Pp">See the documentation about the copy constructor and
@@ -294,42 +266,36 @@
       properly.</dd>
   <dt id="e"><a class="permalink" href="#e">e</a></dt>
   <dd>
-    <pre>
-        # perl -Mbignum=e -wle 'print e'
+    <pre>        # perl -Mbignum=e -wle 'print e'
     </pre>
     <p class="Pp">Returns Euler's number <span class="Li">&quot;e&quot;</span>,
         aka <b>exp</b>(1).</p>
   </dd>
   <dt id="PI"><a class="permalink" href="#PI"><b>PI()</b></a></dt>
   <dd>
-    <pre>
-        # perl -Mbignum=PI -wle 'print PI'
+    <pre>        # perl -Mbignum=PI -wle 'print PI'
     </pre>
     <p class="Pp">Returns PI.</p>
   </dd>
   <dt id="bexp()"><a class="permalink" href="#bexp()"><b>bexp()</b></a></dt>
   <dd>
-    <pre>
-        bexp($power,$accuracy);
+    <pre>        bexp($power,$accuracy);
     </pre>
     <p class="Pp">Returns Euler's number <span class="Li">&quot;e&quot;</span>
         raised to the appropriate power, to the wanted accuracy.</p>
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-        # perl -Mbignum=bexp -wle 'print bexp(1,80)'
+    <pre>        # perl -Mbignum=bexp -wle 'print bexp(1,80)'
     </pre>
   </dd>
   <dt id="bpi()"><a class="permalink" href="#bpi()"><b>bpi()</b></a></dt>
   <dd>
-    <pre>
-        bpi($accuracy);
+    <pre>        bpi($accuracy);
     </pre>
     <p class="Pp">Returns PI to the wanted accuracy.</p>
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-        # perl -Mbignum=bpi -wle 'print bpi(80)'
+    <pre>        # perl -Mbignum=bpi -wle 'print bpi(80)'
     </pre>
   </dd>
   <dt id="upgrade()"><a class="permalink" href="#upgrade()"><b>upgrade()</b></a></dt>
@@ -337,9 +303,7 @@
       <span class="Li">$Math::BigInt::upgrade</span>.</dd>
   <dt id="in_effect()"><a class="permalink" href="#in_effect()"><b>in_effect()</b></a></dt>
   <dd>
-    <pre>
-        use bignum;
-
+    <pre>        use bignum;
         print &quot;in effect\n&quot; if bignum::in_effect;       # true
         {
           no bignum;
@@ -359,20 +323,17 @@
 <p class="Pp">Math with the numbers is done (by default) by a module called
     Math::BigInt::Calc. This is equivalent to saying:</p>
 <p class="Pp"></p>
-<pre>
-        use bignum lib =&gt; 'Calc';
+<pre>        use bignum lib =&gt; 'Calc';
 </pre>
 <p class="Pp">You can change this by using:</p>
 <p class="Pp"></p>
-<pre>
-        use bignum lib =&gt; 'GMP';
+<pre>        use bignum lib =&gt; 'GMP';
 </pre>
 <p class="Pp">The following would first try to find Math::BigInt::Foo, then
     Math::BigInt::Bar, and when this also fails, revert to
   Math::BigInt::Calc:</p>
 <p class="Pp"></p>
-<pre>
-        use bignum lib =&gt; 'Foo,Math::BigInt::Bar';
+<pre>        use bignum lib =&gt; 'Foo,Math::BigInt::Bar';
 </pre>
 <p class="Pp">Please see respective module documentation for further
   details.</p>
@@ -381,14 +342,12 @@
     the default libraries. To suppress this warning, use
     <span class="Li">&quot;try&quot;</span> instead:</p>
 <p class="Pp"></p>
-<pre>
-        use bignum try =&gt; 'GMP';
+<pre>        use bignum try =&gt; 'GMP';
 </pre>
 <p class="Pp">If you want the code to die instead of falling back, use
     <span class="Li">&quot;only&quot;</span> instead:</p>
 <p class="Pp"></p>
-<pre>
-        use bignum only =&gt; 'GMP';
+<pre>        use bignum only =&gt; 'GMP';
 </pre>
 </section>
 <section class="Ss">
@@ -426,8 +385,7 @@
         string literals will be performed using Perl's built-in operators.</p>
     <p class="Pp">For example:</p>
     <p class="Pp"></p>
-    <pre>
-    use bignum;
+    <pre>    use bignum;
     my $x = &quot;900000000000000009&quot;;
     my $y = &quot;900000000000000007&quot;;
     print $x - $y;
@@ -439,8 +397,7 @@
         <span class="Li">&quot;BigFloat&quot;</span> objects, use a literal
         number in the expression:</p>
     <p class="Pp"></p>
-    <pre>
-    print +(0+$x) - $y;
+    <pre>    print +(0+$x) - $y;
     </pre>
   </dd>
   <dt id="in_effect()~2"><a class="permalink" href="#in_effect()~2"><b>in_effect()</b></a></dt>
@@ -453,9 +410,7 @@
       then it will be global and cannot be disabled inside a scope with &quot;no
       bigint&quot;:
     <p class="Pp"></p>
-    <pre>
-        use bigint qw/hex oct/;
-
+    <pre>        use bigint qw/hex oct/;
         print hex(&quot;0x1234567890123456&quot;);
         {
                 no bigint;
@@ -466,9 +421,7 @@
         constant.</p>
     <p class="Pp">Compare this to:</p>
     <p class="Pp"></p>
-    <pre>
-        use bigint;
-
+    <pre>        use bigint;
         # will warn only under older than v5.9.4
         print hex(&quot;0x1234567890123456&quot;);
     </pre>
@@ -483,8 +436,7 @@
     of the family, who runs the shop, and orders the others to do the work.</p>
 <p class="Pp">The following modules are currently used by bignum:</p>
 <p class="Pp"></p>
-<pre>
-        Math::BigInt::Lite      (for speed, and only if it is loadable)
+<pre>        Math::BigInt::Lite      (for speed, and only if it is loadable)
         Math::BigInt
         Math::BigFloat
 </pre>
@@ -493,8 +445,7 @@
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">Some cool command line examples to impress the Python crowd ;)</p>
 <p class="Pp"></p>
-<pre>
-        perl -Mbignum -le 'print sqrt(33)'
+<pre>        perl -Mbignum -le 'print sqrt(33)'
         perl -Mbignum -le 'print 2*255'
         perl -Mbignum -le 'print 4.5+2*255'
         perl -Mbignum -le 'print 3/7 + 5/7 + 8/3'
@@ -520,8 +471,7 @@
 <p class="Pp">You can find documentation for this module with the perldoc
     command.</p>
 <p class="Pp"></p>
-<pre>
-    perldoc bignum
+<pre>    perldoc bignum
 </pre>
 <p class="Pp">You can also look for information at:</p>
 <ul class="Bl-bullet">

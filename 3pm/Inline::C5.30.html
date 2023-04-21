@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline::C(3)</title>
 </head>
@@ -48,13 +49,11 @@
     module for using <span class="Li">&quot;Inline.pm&quot;</span> with C. So
     the usage is always:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline C =&gt; ...;
+<pre>    use Inline C =&gt; ...;
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    bind Inline C =&gt; ...;
+<pre>    bind Inline C =&gt; ...;
 </pre>
 </section>
 <section class="Sh">
@@ -70,8 +69,7 @@
 <p class="Pp">Inline looks for ANSI/prototype style function definitions. They
     must be of the form:</p>
 <p class="Pp"></p>
-<pre>
-    return-type function-name ( type-name-pairs ) { ... }
+<pre>    return-type function-name ( type-name-pairs ) { ... }
 </pre>
 <p class="Pp">The most common types are:
     <span class="Li">&quot;int&quot;</span>,
@@ -86,8 +84,7 @@
 <p class="Pp">A return type of <span class="Li">&quot;void&quot;</span> may also
     be used. The following are examples of valid function definitions.</p>
 <p class="Pp"></p>
-<pre>
-    int Foo(double num, char* str) {
+<pre>    int Foo(double num, char* str) {
     void Foo(double num, char* str) {
     void Foo(SV*, ...) {
     long Foo(int i, int j, ...) {
@@ -99,8 +96,7 @@
 </pre>
 <p class="Pp">The following definitions would not be recognized:</p>
 <p class="Pp"></p>
-<pre>
-    Foo(int i) {               # no return type
+<pre>    Foo(int i) {               # no return type
     int Foo(float f) {         # no (default) typemap for float
     int Foo(num, str) double num; char* str; {
 </pre>
@@ -122,8 +118,7 @@
   <dd>Specifies extra statements to automatically included. They will be added
       onto the defaults. A newline char will be automatically added.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; auto_include =&gt; '#include &quot;yourheader.h&quot;';
+    <pre>    use Inline C =&gt; config =&gt; auto_include =&gt; '#include &quot;yourheader.h&quot;';
     </pre>
   </dd>
   <dt>&quot;autowrap&quot;</dt>
@@ -152,8 +147,7 @@
       could instead use <span class="Li">&quot;ccflagsex&quot;</span> (see
       below) or, if Config.pm has already been loaded:
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; Config =&gt; ccflags =&gt; $Config{ccflags} . &quot; -DXTRA -DTOO&quot;;
+    <pre>    use Inline C =&gt; Config =&gt; ccflags =&gt; $Config{ccflags} . &quot; -DXTRA -DTOO&quot;;
     </pre>
   </dd>
   <dt>&quot;ccflagsex&quot;</dt>
@@ -161,8 +155,7 @@
       <span class="Li">$Config</span>{ccflags} followed by a space, followed by
       the specified value:
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; ccflagsex =&gt; &quot;-DXTRA -DTOO&quot;;
+    <pre>    use Inline C =&gt; config =&gt; ccflagsex =&gt; &quot;-DXTRA -DTOO&quot;;
     </pre>
   </dd>
   <dt>&quot;cppflags&quot;</dt>
@@ -172,8 +165,7 @@
     <span class="Li">&quot;cpp&quot;</span> C preprocessor by
     <span class="Li">&quot;Preprocess()&quot;</span> in Inline::Filters.</p>
 <p class="Pp"></p>
-<pre>
-    use Inline C =&gt; &lt;&lt;'END',
+<pre>    use Inline C =&gt; &lt;&lt;'END',
         CPPFLAGS =&gt; ' -DPREPROCESSOR_DEFINE',
         FILTERS =&gt; 'Preprocess';
     use Inline C =&gt; &lt;&lt;'END',
@@ -192,8 +184,7 @@
         pre-expanding <span class="Li">&quot;#include&quot;</span> statements or
         whatever else you please. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; DATA =&gt;
+    <pre>    use Inline C =&gt; DATA =&gt;
                filters =&gt; [Strip_POD =&gt; \&amp;MyFilter =&gt; Preprocess ];
     </pre>
     <p class="Pp">Filters are invoked in the order specified. See
@@ -204,8 +195,7 @@
         the filter. For example, consider a
         <span class="Li">&quot;filters&quot;</span> parameter like this:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; DATA =&gt; filters =&gt; [ [ Ragel =&gt; '-G2' ] ];
+    <pre>    use Inline C =&gt; DATA =&gt; filters =&gt; [ [ Ragel =&gt; '-G2' ] ];
     </pre>
     <p class="Pp">In order for Inline::C to process this filter, it will attempt
         to require the module Inline::Filters::Ragel and will then call the
@@ -217,8 +207,7 @@
   <dd>Specifies an include path to use. Corresponds to the MakeMaker parameter.
       Expects a fully qualified path.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; inc =&gt; '-I/inc/path';
+    <pre>    use Inline C =&gt; config =&gt; inc =&gt; '-I/inc/path';
     </pre>
   </dd>
   <dt>&quot;ld&quot;</dt>
@@ -238,13 +227,11 @@
       with the <span class="Li">&quot;-L&quot;</span> switch if the library is
       in a location where it won't be found automatically.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; libs =&gt; '-lyourlib';
+    <pre>    use Inline C =&gt; config =&gt; libs =&gt; '-lyourlib';
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; libs =&gt; '-L/your/path -lyourlib';
+    <pre>    use Inline C =&gt; config =&gt; libs =&gt; '-L/your/path -lyourlib';
     </pre>
   </dd>
   <dt>&quot;make&quot;</dt>
@@ -253,8 +240,7 @@
   <dd>Specifies a user compiled object that should be linked in. Corresponds to
       the MakeMaker parameter. Expects a fully qualified path.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; myextlib =&gt; '/your/path/yourmodule.so';
+    <pre>    use Inline C =&gt; config =&gt; myextlib =&gt; '/your/path/yourmodule.so';
     </pre>
   </dd>
   <dt>&quot;optimize&quot;</dt>
@@ -269,8 +255,7 @@
       library API-s, and binding to the original names in Perl. Also useful when
       names conflict with Perl internals. Corresponds to the XS parameter.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; prefix =&gt; 'ZLIB_';
+    <pre>    use Inline C =&gt; config =&gt; prefix =&gt; 'ZLIB_';
     </pre>
   </dd>
   <dt>&quot;pre_head&quot;</dt>
@@ -284,8 +269,7 @@
       user). If the specified value identifies a file, the contents of that file
       will be inserted, otherwise the specified value is inserted.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; pre_head =&gt; $code_or_filename;
+    <pre>    use Inline C =&gt; config =&gt; pre_head =&gt; $code_or_filename;
     </pre>
   </dd>
   <dt>&quot;prototype&quot;</dt>
@@ -294,8 +278,7 @@
       set the PROTOTYPE of the 'foo' function to '$', and disable prototyping
       for the 'bar' function.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; prototype =&gt; {foo =&gt; '$', bar =&gt; 'DISABLE'}
+    <pre>    use Inline C =&gt; config =&gt; prototype =&gt; {foo =&gt; '$', bar =&gt; 'DISABLE'}
     </pre>
   </dd>
   <dt>&quot;prototypes&quot;</dt>
@@ -303,8 +286,7 @@
       'ENABLE' or 'DISABLE'. (Contrary to XS, default value is 'DISABLE'). See
       the perlxs documentation for both 'PROTOTYPES' and 'PROTOTYPE'.
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; prototypes =&gt; 'ENABLE';
+    <pre>    use Inline C =&gt; config =&gt; prototypes =&gt; 'ENABLE';
     </pre>
   </dd>
   <dt>&quot;typemaps&quot;</dt>
@@ -313,8 +295,7 @@
       Specify either a fully qualified path or a path relative to the cwd (ie
       relative to what the cwd is at the time the script is loaded).
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; typemaps =&gt; '/your/path/typemap';
+    <pre>    use Inline C =&gt; config =&gt; typemaps =&gt; '/your/path/typemap';
     </pre>
   </dd>
   <dt>&quot;using&quot;</dt>
@@ -326,8 +307,7 @@
         Inline::C::Parser::Pegex and Inline::C::Parser::RegExp modules that ship
         with Inline::C.</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; config =&gt; using =&gt; '::Parser::Pegex';
+    <pre>    use Inline C =&gt; config =&gt; using =&gt; '::Parser::Pegex';
     </pre>
     <p class="Pp">Note that the following old options are deprecated, but still
         work at this time:</p>
@@ -408,8 +388,7 @@
 <p class="Pp">When you write Inline C, the following lines are automatically
     prepended to your code (by default):</p>
 <p class="Pp"></p>
-<pre>
-    #include &quot;EXTERN.h&quot;
+<pre>    #include &quot;EXTERN.h&quot;
     #include &quot;perl.h&quot;
     #include &quot;XSUB.h&quot;
     #include &quot;INLINE.h&quot;
@@ -456,8 +435,7 @@
   <dd>A special macro to indicate that you really don't want to return anything.
       Same as:
     <p class="Pp"></p>
-    <pre>
-    Inline_Stack_Return(0);
+    <pre>    Inline_Stack_Return(0);
     </pre>
     <p class="Pp">Please note that this macro actually <b>returns</b> from your
         function.</p>
@@ -466,8 +444,7 @@
 <p class="Pp">Each of these macros is available in 3 different styles to suit
     your coding tastes. The following macros are equivalent.</p>
 <p class="Pp"></p>
-<pre>
-    Inline_Stack_Vars
+<pre>    Inline_Stack_Vars
     inline_stack_vars
     INLINE_STACK_VARS
 </pre>
@@ -503,8 +480,7 @@
       onto the <b>Stack</b> yourself. There are a few Inline macros that make
       this easy. Code something like this:
     <p class="Pp"></p>
-    <pre>
-    int i, max; SV* my_sv[10];
+    <pre>    int i, max; SV* my_sv[10];
     Inline_Stack_Vars;
     Inline_Stack_Reset;
     for (i = 0; i &lt; max; i++)
@@ -525,8 +501,7 @@
   <dd>In this category you have an unfixed number of arguments. This means that
       you'll have to pop values off the <b>Stack</b> yourself. Do it like this:
     <p class="Pp"></p>
-    <pre>
-    int i;
+    <pre>    int i;
     Inline_Stack_Vars;
     for (i = 0; i &lt; Inline_Stack_Items; i++)
       handle_sv(Inline_Stack_Item(i));
@@ -557,8 +532,7 @@
     header file which gets included by default, automatically loads the standard
     C header files for you.</p>
 <p class="Pp"></p>
-<pre>
-    use Inline 'C';
+<pre>    use Inline 'C';
     greet('Ingy');
     greet(42);
     __END__
@@ -585,8 +559,7 @@
     surprise when we try to greet <span class="Li">42</span>. The program
     segfaults, a common occurrence when delving into the guts of Perl.</p>
 <p class="Pp"></p>
-<pre>
-    use Inline 'C';
+<pre>    use Inline 'C';
     greet('Ingy');
     greet(42);
     __END__
@@ -607,8 +580,7 @@
     length, we can just put <span class="Li">&quot;PL_na&quot;</span> there,
     which is a special variable designed for that purpose.</p>
 <p class="Pp"></p>
-<pre>
-    use Inline 'C';
+<pre>    use Inline 'C';
     greet('Ingy');
     greet(42);
     __END__

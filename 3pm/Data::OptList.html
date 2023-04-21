@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Data::OptList(3)</title>
 </head>
@@ -33,9 +34,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Data::OptList;
-
+<pre>  use Data::OptList;
   my $options = Data::OptList::mkopt([
     qw(key1 key2 key3 key4),
     key5 =&gt; { ... },
@@ -47,8 +46,7 @@
 </pre>
 <p class="Pp">...is the same thing, more or less, as:</p>
 <p class="Pp"></p>
-<pre>
-  my $options = [
+<pre>  my $options = [
     [ key1 =&gt; undef,        ],
     [ key2 =&gt; undef,        ],
     [ key3 =&gt; undef,        ],
@@ -67,8 +65,7 @@
     one entry for a name, you have to use a list of pairs. Even then, this is
     really boring to write:</p>
 <p class="Pp"></p>
-<pre>
-  $values = [
+<pre>  $values = [
     foo =&gt; undef,
     bar =&gt; undef,
     baz =&gt; undef,
@@ -78,8 +75,7 @@
 <p class="Pp">Just look at all those undefs! Don't worry, we can get rid of
     those:</p>
 <p class="Pp"></p>
-<pre>
-  $values = [
+<pre>  $values = [
     map { $_ =&gt; undef } qw(foo bar baz),
     xyz =&gt; { ... },
   ];
@@ -91,8 +87,7 @@
     wanted.</p>
 <p class="Pp">With Data::OptList, you can do this instead:</p>
 <p class="Pp"></p>
-<pre>
-  $values = Data::OptList::mkopt([
+<pre>  $values = Data::OptList::mkopt([
     qw(foo bar baz),
     xyz =&gt; { ... },
   ]);
@@ -104,13 +99,11 @@
 <h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="mkopt"><a class="permalink" href="#mkopt">mkopt</a></h2>
-<pre>
-  my $opt_list = Data::OptList::mkopt($input, \%arg);
+<pre>  my $opt_list = Data::OptList::mkopt($input, \%arg);
 </pre>
 <p class="Pp">Valid arguments are:</p>
 <p class="Pp"></p>
-<pre>
-  moniker        - a word used in errors to describe the opt list; encouraged
+<pre>  moniker        - a word used in errors to describe the opt list; encouraged
   require_unique - if true, no name may appear more than once
   must_be        - types to which opt list values are limited (described below)
   name_test      - a coderef used to test whether a value can be a name
@@ -121,13 +114,11 @@
 <p class="Pp">Positional parameters may be used for compatibility with the old
     <span class="Li">&quot;mkopt&quot;</span> interface:</p>
 <p class="Pp"></p>
-<pre>
-  my $opt_list = Data::OptList::mkopt($input, $moniker, $req_uni, $must_be);
+<pre>  my $opt_list = Data::OptList::mkopt($input, $moniker, $req_uni, $must_be);
 </pre>
 <p class="Pp">Valid values for <span class="Li">$input</span>:</p>
 <p class="Pp"></p>
-<pre>
- undef    -&gt; []
+<pre> undef    -&gt; []
  hashref  -&gt; [ [ key1 =&gt; value1 ] ... ] # non-ref values become undef
  arrayref -&gt; every name followed by a non-name becomes a pair: [ name =&gt; ref ]
              every name followed by undef becomes a pair: [ name =&gt; undef ]
@@ -152,19 +143,16 @@
     value is an object of the kind.</p>
 <p class="Pp">In other words:</p>
 <p class="Pp"></p>
-<pre>
-  [ qw(SCALAR HASH Object::Known) ]
+<pre>  [ qw(SCALAR HASH Object::Known) ]
 </pre>
 <p class="Pp">Means:</p>
 <p class="Pp"></p>
-<pre>
-  _SCALAR0($value) or _HASH($value) or _INSTANCE($value, 'Object::Known')
+<pre>  _SCALAR0($value) or _HASH($value) or _INSTANCE($value, 'Object::Known')
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="mkopt_hash"><a class="permalink" href="#mkopt_hash">mkopt_hash</a></h2>
-<pre>
-  my $opt_hash = Data::OptList::mkopt_hash($input, $moniker, $must_be);
+<pre>  my $opt_hash = Data::OptList::mkopt_hash($input, $moniker, $must_be);
 </pre>
 <p class="Pp">Given valid <span class="Li">&quot;mkopt&quot;</span> input, this
     routine returns a reference to a hash. It will throw an exception if any

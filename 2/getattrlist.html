@@ -21,6 +21,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GETATTRLIST(2)</title>
 </head>
@@ -115,9 +116,8 @@
     determines what attributes are returned by the function. You are responsible
     for filling out all fields of this structure before calling the
   function.</p>
-<div class="Bd Pp">
-<pre>
-typedef u_int32_t attrgroup_t;
+<div class="Bd Pp Li">
+<pre>typedef u_int32_t attrgroup_t;
 
 struct attrlist {
     u_short     bitmapcount; /* number of attr. bit sets in list */
@@ -128,8 +128,7 @@ struct attrlist {
     attrgroup_t fileattr;    /* file attribute group */
     attrgroup_t forkattr;    /* fork attribute group */
 };
-#define ATTR_BIT_MAP_COUNT 5
-</pre>
+#define ATTR_BIT_MAP_COUNT 5</pre>
 </div>
 <p class="Pp">The fields of the <var class="Vt">attrlist</var> structure are
     defined as follows.</p>
@@ -236,13 +235,11 @@ struct attrlist {
 <p class="Pp">If the attribute is of variable length, it is represented in the
     list by an <var class="Vt">attrreference</var> structure, as defined by
     &#x27E8;<span class="Pa">sys/attr.h</span>&#x27E9; (shown below).</p>
-<div class="Bd Pp">
-<pre>
-typedef struct attrreference {
+<div class="Bd Pp Li">
+<pre>typedef struct attrreference {
     int32_t        attr_dataoffset;
     u_int32_t      attr_length;
-} attrreference_t;
-</pre>
+} attrreference_t;</pre>
 </div>
 <p class="Pp">This structure contains a 'pointer' to the variable length
     attribute data. The <var class="Fa">attr_length</var> field is the length of
@@ -846,9 +843,8 @@ typedef struct attrreference {
     <code class="Dv">ATTR_VOL_CAPABILITIES</code> attribute returns a
     <var class="Vt">vol_capabilities_attr_t</var> structure (shown below) that
     indicates which features are supported by the volume.</p>
-<div class="Bd Pp">
-<pre>
-typedef u_int32_t vol_capabilities_set_t[4];
+<div class="Bd Pp Li">
+<pre>typedef u_int32_t vol_capabilities_set_t[4];
 
 #define VOL_CAPABILITIES_FORMAT     0
 #define VOL_CAPABILITIES_INTERFACES 1
@@ -858,8 +854,7 @@ typedef u_int32_t vol_capabilities_set_t[4];
 typedef struct vol_capabilities_attr {
     vol_capabilities_set_t capabilities;
     vol_capabilities_set_t valid;
-} vol_capabilities_attr_t;
-</pre>
+} vol_capabilities_attr_t;</pre>
 </div>
 <p class="Pp">The structure contains two fields,
     <var class="Fa">capabilities</var> and <var class="Fa">valid</var>. Each
@@ -1114,9 +1109,8 @@ typedef struct vol_capabilities_attr {
     information is returned by the <code class="Dv">ATTR_VOL_ATTRIBUTES</code>
     attribute, which returns a <var class="Vt">vol_attributes_attr_t</var>
     structure (shown below).</p>
-<div class="Bd Pp">
-<pre>
-typedef struct attribute_set {
+<div class="Bd Pp Li">
+<pre>typedef struct attribute_set {
     attrgroup_t commonattr; /* common attribute group */
     attrgroup_t volattr;    /* volume attribute group */
     attrgroup_t dirattr;    /* directory attribute group */
@@ -1127,8 +1121,7 @@ typedef struct attribute_set {
 typedef struct vol_attributes_attr {
     attribute_set_t validattr;
     attribute_set_t nativeattr;
-} vol_attributes_attr_t;
-</pre>
+} vol_attributes_attr_t;</pre>
 </div>
 <p class="Pp">The <var class="Fa">validattr</var> field consists of a number of
     bit sets that indicate whether an attribute is supported by the volume
@@ -1268,9 +1261,8 @@ typedef struct vol_attributes_attr {
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">The following code prints the file type and creator of a file,
     assuming that the volume supports the required attributes.</p>
-<div class="Bd Pp">
-<pre>
-#include &lt;assert.h&gt;
+<div class="Bd Pp Li">
+<pre>#include &lt;assert.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 #include &lt;sys/attr.h&gt;
@@ -1324,14 +1316,12 @@ static int FInfoDemo(const char *path)
     }
 
     return err;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">The following code is an alternative implementation that uses
     nested structures to group the related attributes.</p>
-<div class="Bd Pp">
-<pre>
-#include &lt;assert.h&gt;
+<div class="Bd Pp Li">
+<pre>#include &lt;assert.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;string.h&gt;
@@ -1397,15 +1387,13 @@ static int FInfo2Demo(const char *path)
     }
 
     return err;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">The following example shows how to deal with variable length
     attributes. It assumes that the volume specified by
     <var class="Fa">path</var> supports the necessary attributes.</p>
-<div class="Bd Pp">
-<pre>
-#include &lt;assert.h&gt;
+<div class="Bd Pp Li">
+<pre>#include &lt;assert.h&gt;
 #include &lt;stdio.h&gt;
 #include &lt;stddef.h&gt;
 #include &lt;string.h&gt;
@@ -1471,15 +1459,13 @@ static int VolDemo(const char *path)
     }
 
     return err;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">The following sample demonstrates the need to use packing and
     alignment controls; without the attribute, in 64-bit code, the fields of the
     structure are not placed at the locations that the kernel expects.</p>
-<div class="Bd Pp">
-<pre>
-#include &lt;stdio.h&gt;
+<div class="Bd Pp Li">
+<pre>#include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
 #include &lt;unistd.h&gt;
 #include &lt;string.h&gt;
@@ -1518,8 +1504,7 @@ main(int argc, char **argv)
 		printf(&quot;%s:  Modification time = %s&quot;, argv[i], ctime(&amp;myStat.st_modtime.tv_sec));
 	}
 	return 0;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">
   <br/>
@@ -1527,9 +1512,8 @@ main(int argc, char **argv)
     ATTR_CMN_OBJID
   <br/>
    are valid to use on the file system specified by path.</p>
-<div class="Bd Pp">
-<pre>
-int getLinkIDInfo(const char *path, bool *cmnExtLinkIDValid, bool *cmnObjIDValid)
+<div class="Bd Pp Li">
+<pre>int getLinkIDInfo(const char *path, bool *cmnExtLinkIDValid, bool *cmnObjIDValid)
 {
     int result;
     struct statfs statfsBuf;
@@ -1572,8 +1556,7 @@ int getLinkIDInfo(const char *path, bool *cmnExtLinkIDValid, bool *cmnObjIDValid
         *cmnExtLinkIDValid = *cmnObjIDValid = false;
     }
     return result;
-}
-</pre>
+}</pre>
 </div>
 </section>
 <section class="Sh">

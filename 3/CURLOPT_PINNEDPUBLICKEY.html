@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2019, 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_PINNEDPUBLICKEY(3)</title>
 </head>
@@ -44,9 +47,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PINNEDPUBLICKEY,
-    char *pinnedpubkey);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_PINNEDPUBLICKEY,
+                          char *pinnedpubkey);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -75,8 +78,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 if(curl) {
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
   curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, &quot;/etc/publickey.der&quot;);
@@ -85,23 +87,21 @@ if(curl) {
   */
   /* Perform the request */
   curl_easy_perform(curl);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="PUBLIC_KEY_EXTRACTION"><a class="permalink" href="#PUBLIC_KEY_EXTRACTION">PUBLIC
   KEY EXTRACTION</a></h1>
 <p class="Pp">If you do not have the server's public key file you can extract it
     from the server's certificate.</p>
-<pre>
-# retrieve the server's certificate if you don't already have it
+<pre># retrieve the server's certificate if you do not already have it
 #
 # be sure to examine the certificate to see if it is what you expected
 #
 # Windows-specific:
 # - Use NUL instead of /dev/null.
 # - OpenSSL may wait for input instead of disconnecting. Hit enter.
-# - If you don't have sed, then just copy the certificate into a file:
+# - If you do not have sed, then just copy the certificate into a file:
 #   Lines from -----BEGIN CERTIFICATE----- to -----END CERTIFICATE-----.
 #
 openssl s_client -servername www.example.com -connect www.example.com:443 &lt; /dev/null | sed -n &quot;/-----BEGIN/,/-----END/p&quot; &gt; www.example.com.pem
@@ -110,15 +110,12 @@ openssl x509 -in www.example.com.pem -pubkey -noout &gt; www.example.com.pubkey.
 # convert public key from pem to der
 openssl asn1parse -noout -inform pem -in www.example.com.pubkey.pem -out www.example.com.pubkey.der
 # sha256 hash and base64 encode der to string for use
-openssl dgst -sha256 -binary www.example.com.pubkey.der | openssl base64
-</pre>
+openssl dgst -sha256 -binary www.example.com.pubkey.der | openssl base64</pre>
 <p class="Pp">The public key in PEM format contains a header, base64 data and a
     footer:</p>
-<pre>
------BEGIN PUBLIC KEY-----
+<pre>-----BEGIN PUBLIC KEY-----
 [BASE 64 DATA]
------END PUBLIC KEY-----
-</pre>
+-----END PUBLIC KEY-----</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -172,8 +169,8 @@ openssl dgst -sha256 -binary www.example.com.pubkey.der | openssl base64
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 8, 2021</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Text::Balanced(3pm)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Text::Balanced qw (
+<pre> use Text::Balanced qw (
                         extract_delimited
                         extract_bracketed
                         extract_quotelike
@@ -41,50 +41,30 @@
                         gen_delimited_pat
                         gen_extract_tagged
                        );
-
  # Extract the initial substring of $text that is delimited by
  # two (unescaped) instances of the first character in $delim.
-
         ($extracted, $remainder) = extract_delimited($text,$delim);
-
-
  # Extract the initial substring of $text that is bracketed
  # with a delimiter(s) specified by $delim (where the string
  # in $delim contains one or more of '(){}[]&lt;&gt;').
-
         ($extracted, $remainder) = extract_bracketed($text,$delim);
-
-
  # Extract the initial substring of $text that is bounded by
  # an XML tag.
-
         ($extracted, $remainder) = extract_tagged($text);
-
-
  # Extract the initial substring of $text that is bounded by
  # a C&lt;BEGIN&gt;...C&lt;END&gt; pair. Don't allow nested C&lt;BEGIN&gt; tags
-
         ($extracted, $remainder) =
                 extract_tagged($text,&quot;BEGIN&quot;,&quot;END&quot;,undef,{bad=&gt;[&quot;BEGIN&quot;]});
-
-
  # Extract the initial substring of $text that represents a
  # Perl &quot;quote or quote-like operation&quot;
-
         ($extracted, $remainder) = extract_quotelike($text);
-
-
  # Extract the initial substring of $text that represents a block
  # of Perl code, bracketed by any of character(s) specified by $delim
  # (where the string $delim contains one or more of '(){}[]&lt;&gt;').
-
         ($extracted, $remainder) = extract_codeblock($text,$delim);
-
-
  # Extract the initial substrings of $text that would be extracted by
  # one or more sequential applications of the specified functions
  # or regular expressions
-
         @extracted = extract_multiple($text,
                                       [ \&amp;extract_bracketed,
                                         \&amp;extract_quotelike,
@@ -97,8 +77,7 @@
     # that matches a substring delimited by any of the specified characters #
     (in this case: any type of quote or a slash)</p>
 <p class="Pp"></p>
-<pre>
-        $patstring = gen_delimited_pat(q{'&quot;`/});
+<pre>        $patstring = gen_delimited_pat(q{'&quot;`/});
 </pre>
 <p class="Pp"># Generate a reference to an anonymous sub that is just like
     extract_tagged # but pre-compiled and optimized for a specific pair of tags,
@@ -106,9 +85,7 @@
     better performance on # repeated calls, so it only works under Perl 5.005 or
     later.</p>
 <p class="Pp"></p>
-<pre>
-        $extract_head = gen_extract_tagged('&lt;HEAD&gt;','&lt;/HEAD&gt;');
-
+<pre>        $extract_head = gen_extract_tagged('&lt;HEAD&gt;','&lt;/HEAD&gt;');
         ($extracted, $remainder) = $extract_head-&gt;($text);
 </pre>
 </section>
@@ -153,8 +130,7 @@
     context the various subroutines can be used much like regular expressions.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-        while ( $next = (extract_quotelike($text))[0] )
+<pre>        while ( $next = (extract_quotelike($text))[0] )
         {
                 # process next quote-like (in $next)
         }
@@ -168,8 +144,7 @@
     processes each quote-like operation, but actually removes them from
     <span class="Li">$text:</span></p>
 <p class="Pp"></p>
-<pre>
-        while ( $next = extract_quotelike($text) )
+<pre>        while ( $next = extract_quotelike($text) )
         {
                 # process next quote-like (in $next)
         }
@@ -201,15 +176,13 @@
     substring from the start of a string. For example, to extract a single-quote
     delimited string, the following code is typically used:</p>
 <p class="Pp"></p>
-<pre>
-        ($remainder = $text) =~ s/\A('(\\.|[^'])*')//s;
+<pre>        ($remainder = $text) =~ s/\A('(\\.|[^'])*')//s;
         $extracted = $1;
 </pre>
 <p class="Pp">but with <span class="Li">&quot;extract_delimited&quot;</span> it
     can be simplified to:</p>
 <p class="Pp"></p>
-<pre>
-        ($extracted,$remainder) = extract_delimited($text, &quot;'&quot;);
+<pre>        ($extracted,$remainder) = extract_delimited($text, &quot;'&quot;);
 </pre>
 <p class="Pp"><span class="Li">&quot;extract_delimited&quot;</span> takes up to
     four scalars (the input text, the delimiters, a prefix pattern to be
@@ -239,43 +212,32 @@
     from the beginning of the first argument.</p>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
-        # Remove a single-quoted substring from the very beginning of $text:
-
+<pre>        # Remove a single-quoted substring from the very beginning of $text:
                 $substring = extract_delimited($text, &quot;'&quot;, '');
-
         # Remove a single-quoted Pascalish substring (i.e. one in which
         # doubling the quote character escapes it) from the very
         # beginning of $text:
-
                 $substring = extract_delimited($text, &quot;'&quot;, '', &quot;'&quot;);
-
         # Extract a single- or double- quoted substring from the
         # beginning of $text, optionally after some whitespace
         # (note the list context to protect $text from modification):
-
                 ($substring) = extract_delimited $text, q{&quot;'};
-
         # Delete the substring delimited by the first '/' in $text:
-
                 $text = join '', (extract_delimited($text,'/','[^/]*')[2,1];
 </pre>
 <p class="Pp">Note that this last example is <i>not</i> the same as deleting the
     first quote-like pattern. For instance, if <span class="Li">$text</span>
     contained the string:</p>
 <p class="Pp"></p>
-<pre>
-        &quot;if ('./cmd' =~ m/$UNIXCMD/s) { $cmd = $1; }&quot;
+<pre>        &quot;if ('./cmd' =~ m/$UNIXCMD/s) { $cmd = $1; }&quot;
 </pre>
 <p class="Pp">then after the deletion it would contain:</p>
 <p class="Pp"></p>
-<pre>
-        &quot;if ('.$UNIXCMD/s) { $cmd = $1; }&quot;
+<pre>        &quot;if ('.$UNIXCMD/s) { $cmd = $1; }&quot;
 </pre>
 <p class="Pp">not:</p>
 <p class="Pp"></p>
-<pre>
-        &quot;if ('./cmd' =~ ms) { $cmd = $1; }&quot;
+<pre>        &quot;if ('./cmd' =~ ms) { $cmd = $1; }&quot;
 </pre>
 <p class="Pp">See &quot;extract_quotelike&quot; for a (partial) solution to this
     problem.</p>
@@ -308,19 +270,16 @@
     (&quot;non-delimiter&quot;) bracket in the substring is ignored.</p>
 <p class="Pp">For example, given the string:</p>
 <p class="Pp"></p>
-<pre>
-        $text = &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot;;
+<pre>        $text = &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot;;
 </pre>
 <p class="Pp">then a call to
     <span class="Li">&quot;extract_bracketed&quot;</span> in a list context:</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '{}' );
+<pre>        @result = extract_bracketed( $text, '{}' );
 </pre>
 <p class="Pp">would return:</p>
 <p class="Pp"></p>
-<pre>
-        ( &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot; , &quot;&quot; , &quot;&quot; )
+<pre>        ( &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot; , &quot;&quot; , &quot;&quot; )
 </pre>
 <p class="Pp">since both sets of <span class="Li">'{..}'</span> brackets are
     properly nested and evenly balanced. (In a scalar context just the first
@@ -328,20 +287,17 @@
     <span class="Li">$text</span> would be replaced by an empty string.)</p>
 <p class="Pp">Likewise the call in:</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '{[' );
+<pre>        @result = extract_bracketed( $text, '{[' );
 </pre>
 <p class="Pp">would return the same result, since all sets of both types of
     specified delimiter brackets are correctly nested and balanced.</p>
 <p class="Pp">However, the call in:</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '{([&lt;' );
+<pre>        @result = extract_bracketed( $text, '{([&lt;' );
 </pre>
 <p class="Pp">would fail, returning:</p>
 <p class="Pp"></p>
-<pre>
-        ( undef , &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot;  );
+<pre>        ( undef , &quot;{ an '[irregularly :-(] {} parenthesized &gt;:-)' string }&quot;  );
 </pre>
 <p class="Pp">because the embedded pairs of <span class="Li">'(..)'</span>s and
     <span class="Li">'[..]'</span>s are &quot;cross-nested&quot; and the
@@ -355,29 +311,24 @@
     the delimiter specification, then that type of quote will be correctly
     handled. for example, if <span class="Li">$text</span> is:</p>
 <p class="Pp"></p>
-<pre>
-        $text = '&lt;A HREF=&quot;&gt;&gt;&gt;&gt;&quot;&gt;link&lt;/A&gt;';
+<pre>        $text = '&lt;A HREF=&quot;&gt;&gt;&gt;&gt;&quot;&gt;link&lt;/A&gt;';
 </pre>
 <p class="Pp">then</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '&lt;&quot;&gt;' );
+<pre>        @result = extract_bracketed( $text, '&lt;&quot;&gt;' );
 </pre>
 <p class="Pp">returns:</p>
 <p class="Pp"></p>
-<pre>
-        ( '&lt;A HREF=&quot;&gt;&gt;&gt;&gt;&quot;&gt;', 'link&lt;/A&gt;', &quot;&quot; )
+<pre>        ( '&lt;A HREF=&quot;&gt;&gt;&gt;&gt;&quot;&gt;', 'link&lt;/A&gt;', &quot;&quot; )
 </pre>
 <p class="Pp">as expected. Without the specification of
     <span class="Li">&quot;&quot;&quot;</span> as an embedded quoter:</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '&lt;&gt;' );
+<pre>        @result = extract_bracketed( $text, '&lt;&gt;' );
 </pre>
 <p class="Pp">the result would be:</p>
 <p class="Pp"></p>
-<pre>
-        ( '&lt;A HREF=&quot;&gt;', '&gt;&gt;&gt;&quot;&gt;link&lt;/A&gt;', &quot;&quot; )
+<pre>        ( '&lt;A HREF=&quot;&gt;', '&gt;&gt;&gt;&quot;&gt;link&lt;/A&gt;', &quot;&quot; )
 </pre>
 <p class="Pp">In addition to the quote delimiters
     <span class="Li">&quot;'&quot;</span>,
@@ -386,13 +337,11 @@
     q{string}, qq{string}, etc) can be specified by including the letter 'q' as
     a delimiter. Hence:</p>
 <p class="Pp"></p>
-<pre>
-        @result = extract_bracketed( $text, '&lt;q&gt;' );
+<pre>        @result = extract_bracketed( $text, '&lt;q&gt;' );
 </pre>
 <p class="Pp">would correctly match something like this:</p>
 <p class="Pp"></p>
-<pre>
-        $text = '&lt;leftop: conj /and/ conj&gt;';
+<pre>        $text = '&lt;leftop: conj /and/ conj&gt;';
 </pre>
 <p class="Pp">See also: <span class="Li">&quot;extract_quotelike&quot;</span>
     and <span class="Li">&quot;extract_codeblock&quot;</span>.</p>
@@ -470,8 +419,7 @@
     <p class="Pp">For example, to extract an HTML link (which should not contain
         nested links) use:</p>
     <p class="Pp"></p>
-    <pre>
-        extract_tagged($text, '&lt;A&gt;', '&lt;/A&gt;', undef, {reject =&gt; ['&lt;A&gt;']} );
+    <pre>        extract_tagged($text, '&lt;A&gt;', '&lt;/A&gt;', undef, {reject =&gt; ['&lt;A&gt;']} );
     </pre>
   </dd>
   <dt>&quot;ignore =&gt; $listref&quot;</dt>
@@ -481,8 +429,7 @@
     <p class="Pp">For example, to extract an arbitrary XML tag, but ignore
         &quot;empty&quot; elements:</p>
     <p class="Pp"></p>
-    <pre>
-        extract_tagged($text, undef, undef, undef, {ignore =&gt; ['&lt;[^&gt;]*/&gt;']} );
+    <pre>        extract_tagged($text, undef, undef, undef, {ignore =&gt; ['&lt;[^&gt;]*/&gt;']} );
     </pre>
     <p class="Pp">(also see &quot;gen_delimited_pat&quot; below).</p>
   </dd>
@@ -505,24 +452,18 @@
         &quot;/endpara&quot; tag or until another &quot;/para&quot; tag is
         encountered:</p>
     <p class="Pp"></p>
-    <pre>
-        $text = &quot;/para line 1\n\nline 3\n/para line 4&quot;;
-
+    <pre>        $text = &quot;/para line 1\n\nline 3\n/para line 4&quot;;
         extract_tagged($text, '/para', '/endpara', undef,
                                 {reject =&gt; '/para', fail =&gt; MAX );
-
         # EXTRACTED: &quot;/para line 1\n\nline 3\n&quot;
     </pre>
     <p class="Pp">Suppose instead, that if no matching &quot;/endpara&quot; tag
         is found, the &quot;/para&quot; tag refers only to the immediately
         following paragraph:</p>
     <p class="Pp"></p>
-    <pre>
-        $text = &quot;/para line 1\n\nline 3\n/para line 4&quot;;
-
+    <pre>        $text = &quot;/para line 1\n\nline 3\n/para line 4&quot;;
         extract_tagged($text, '/para', '/endpara', undef,
                         {reject =&gt; '/para', fail =&gt; MAX );
-
         # EXTRACTED: &quot;/para line 1\n&quot;
     </pre>
     <p class="Pp">Note that the specified
@@ -586,8 +527,7 @@
     <span class="Li">&quot;extract_tagged&quot;</span> is exactly equivalent
   to:</p>
 <p class="Pp"></p>
-<pre>
-        sub extract_tagged
+<pre>        sub extract_tagged
         {
                 my $text = shift;
                 $extractor = gen_extract_tagged(@_);
@@ -611,13 +551,10 @@
     embedded balanced bracket delimiters (for the quotelike operators), and
     trailing modifiers are all caught. For example, in:</p>
 <p class="Pp"></p>
-<pre>
-        extract_quotelike 'q # an octothorpe: \# (not the end of the q!) #'
+<pre>        extract_quotelike 'q # an octothorpe: \# (not the end of the q!) #'
         
         extract_quotelike '  &quot;You said, \&quot;Use sed\&quot;.&quot;  '
-
         extract_quotelike ' s{([A-Z]{1,8}\.[A-Z]{3})} /\L$1\E/; '
-
         extract_quotelike ' tr/\\\/\\\\/\\\//ds; '
 </pre>
 <p class="Pp">the full Perl quotelike operations are all extracted
@@ -626,8 +563,7 @@
     containing the current pattern delimiter will cause the regex to be
     immediately terminated. In other words:</p>
 <p class="Pp"></p>
-<pre>
-        'm /
+<pre>        'm /
                 (?i)            # CASE INSENSITIVE
                 [a-z_]          # LEADING ALPHABETIC/UNDERSCORE
                 [a-z0-9]*       # FOLLOWED BY ANY NUMBER OF ALPHANUMERICS
@@ -635,8 +571,7 @@
 </pre>
 <p class="Pp">will be extracted as if it were:</p>
 <p class="Pp"></p>
-<pre>
-        'm /
+<pre>        'm /
                 (?i)            # CASE INSENSITIVE
                 [a-z_]          # LEADING ALPHABETIC/'
 </pre>
@@ -688,19 +623,12 @@
     removed.</p>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
-        # Remove the first quotelike literal that appears in text
-
+<pre>        # Remove the first quotelike literal that appears in text
                 $quotelike = extract_quotelike($text,'.*?');
-
         # Replace one or more leading whitespace-separated quotelike
         # literals in $_ with &quot;&lt;QLL&gt;&quot;
-
                 do { $_ = join '&lt;QLL&gt;', (extract_quotelike)[2,1] } until $@;
-
-
         # Isolate the search pattern in a quotelike operation from $text
-
                 ($op,$pat) = (extract_quotelike $text)[3,5];
                 if ($op =~ /[ms]/)
                 {
@@ -722,8 +650,7 @@
     rarely a contiguous substring. For example, a typical piece of code using
     here document might look like this:</p>
 <p class="Pp"></p>
-<pre>
-        &lt;&lt;'EOMSG' || die;
+<pre>        &lt;&lt;'EOMSG' || die;
         This is the message.
         EOMSG
         exit;
@@ -770,8 +697,7 @@
     <span class="Li">&quot;extract_quotelike&quot;</span> silently rearranges
     the string to an equivalent piece of Perl:</p>
 <p class="Pp"></p>
-<pre>
-        &lt;&lt;'EOMSG'
+<pre>        &lt;&lt;'EOMSG'
         This is the message.
         EOMSG
         || die;
@@ -785,8 +711,7 @@
     <span class="Li">&quot;extract_quotelike&quot;</span> does so), you can pass
     the input variable as an interpolated literal:</p>
 <p class="Pp"></p>
-<pre>
-        $quotelike = extract_quotelike(&quot;$var&quot;);
+<pre>        $quotelike = extract_quotelike(&quot;$var&quot;);
 </pre>
 </section>
 <section class="Ss">
@@ -834,17 +759,13 @@
 </dl>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
-        # Find a while loop in the text
-
+<pre>        # Find a while loop in the text
                 if ($text =~ s/.*?while\s*\{/{/)
                 {
                         $loop = &quot;while &quot; . extract_codeblock($text);
                 }
-
         # Remove the first round-bracketed list (which may include
         # round- or curly-bracketed code blocks or quotelike operators)
-
                 extract_codeblock $text, &quot;(){}&quot;, '[^(]*';
 </pre>
 <p class="Pp">The ability to specify a different outermost delimiter bracket is
@@ -853,8 +774,7 @@
     specified using a <span class="Li">&quot;&lt;defer:...&gt;&quot;</span>
     directive. For example:</p>
 <p class="Pp"></p>
-<pre>
-        sentence: subject verb object
+<pre>        sentence: subject verb object
                         &lt;defer: {$::theVerb = $item{verb}} &gt;
 </pre>
 <p class="Pp">Parse::RecDescent uses
@@ -864,13 +784,11 @@
     a problem.</p>
 <p class="Pp">A deferred action like this:</p>
 <p class="Pp"></p>
-<pre>
-                        &lt;defer: {if ($count&gt;10) {$count--}} &gt;
+<pre>                        &lt;defer: {if ($count&gt;10) {$count--}} &gt;
 </pre>
 <p class="Pp">will be incorrectly parsed as:</p>
 <p class="Pp"></p>
-<pre>
-                        &lt;defer: {if ($count&gt;
+<pre>                        &lt;defer: {if ($count&gt;
 </pre>
 <p class="Pp">because the &quot;less than&quot; operator is interpreted as a
     closing delimiter.</p>
@@ -912,8 +830,7 @@
       used to split the string. If this argument is omitted (or
       <span class="Li">&quot;undef&quot;</span>) the list:
     <p class="Pp"></p>
-    <pre>
-        [
+    <pre>        [
                 sub { extract_variable($_[0], '') },
                 sub { extract_quotelike($_[0],'') },
                 sub { extract_codeblock($_[0],'{}','') },
@@ -974,8 +891,7 @@
 <p class="Pp">For example, the following extracts substrings that are valid Perl
     variables:</p>
 <p class="Pp"></p>
-<pre>
-        @fields = extract_multiple($text,
+<pre>        @fields = extract_multiple($text,
                                    [ sub { extract_variable($_[0]) } ],
                                    undef, 1);
 </pre>
@@ -984,8 +900,7 @@
     parts are also blessed to identify them (the &quot;anything else&quot; is
     unblessed):</p>
 <p class="Pp"></p>
-<pre>
-        @fields = extract_multiple($text,
+<pre>        @fields = extract_multiple($text,
                    [
                         { Delim =&gt; sub { extract_delimited($_[0],q{'&quot;}) } },
                         { Brack =&gt; sub { extract_bracketed($_[0],'{}') } },
@@ -994,8 +909,7 @@
 <p class="Pp">This call extracts the next single substring that is a valid Perl
     quotelike operator (and removes it from <span class="Li">$text</span>):</p>
 <p class="Pp"></p>
-<pre>
-        $quotelike = extract_multiple($text,
+<pre>        $quotelike = extract_multiple($text,
                                       [
                                         sub { extract_quotelike($_[0]) },
                                       ], undef, 1);
@@ -1003,8 +917,7 @@
 <p class="Pp">Finally, here is yet another way to do comma-separated value
     parsing:</p>
 <p class="Pp"></p>
-<pre>
-        @fields = extract_multiple($csv_text,
+<pre>        @fields = extract_multiple($csv_text,
                                   [
                                         sub { extract_delimited($_[0],q{'&quot;}) },
                                         qr/([^,]+)(.*)/,
@@ -1029,13 +942,11 @@
    &gt; builds a Friedl-style optimized regex that matches a string delimited by
     any one of the characters in the single argument. For example:</p>
 <p class="Pp"></p>
-<pre>
-        gen_delimited_pat(q{'&quot;})
+<pre>        gen_delimited_pat(q{'&quot;})
 </pre>
 <p class="Pp">returns the regex:</p>
 <p class="Pp"></p>
-<pre>
-        (?:\&quot;(?:\\\&quot;|(?!\&quot;).)*\&quot;|\'(?:\\\'|(?!\').)*\')
+<pre>        (?:\&quot;(?:\\\&quot;|(?!\&quot;).)*\&quot;|\'(?:\\\'|(?!\').)*\')
 </pre>
 <p class="Pp">Note that the specified delimiters are automatically
   quotemeta'd.</p>
@@ -1045,9 +956,7 @@
     For example, to properly ignore &quot;empty&quot; XML elements (which might
     contain quoted strings):</p>
 <p class="Pp"></p>
-<pre>
-        my $empty_tag = '&lt;(' . gen_delimited_pat(q{'&quot;}) . '|.)+/&gt;';
-
+<pre>        my $empty_tag = '&lt;(' . gen_delimited_pat(q{'&quot;}) . '|.)+/&gt;';
         extract_tagged($text, undef, undef, undef, {ignore =&gt; [$empty_tag]} );
 </pre>
 <p class="Pp"><span class="Li">&quot;gen_delimited_pat&quot;</span> may also be
@@ -1056,15 +965,13 @@
     to match a Pascal-style string (where ' is the delimiter and '' is a literal
     ' within the string):</p>
 <p class="Pp"></p>
-<pre>
-        gen_delimited_pat(q{'},q{'});
+<pre>        gen_delimited_pat(q{'},q{'});
 </pre>
 <p class="Pp">Different escape characters can be specified for different
     delimiters. For example, to specify that '/' is the escape for single quotes
     and '%' is the escape for double quotes:</p>
 <p class="Pp"></p>
-<pre>
-        gen_delimited_pat(q{'&quot;},q{/%});
+<pre>        gen_delimited_pat(q{'&quot;},q{/%});
 </pre>
 <p class="Pp">If more delimiters than escape chars are specified, the last
     escape char is used for the remaining delimiters. If no escape char is

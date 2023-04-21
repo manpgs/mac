@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Encode(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Encode qw(decode encode);
+<pre>    use Encode qw(decode encode);
     $characters = decode('UTF-8', $octets,     Encode::FB_CROAK);
     $octets     = encode('UTF-8', $characters, Encode::FB_CROAK);
 </pre>
@@ -73,10 +73,10 @@
 <p class="Pp">The repertoire of characters that Perl can represent is a superset
     of those defined by the Unicode Consortium. On most platforms the ordinal
     values of a character as returned by
-    <span class="Li">&quot;ord(</span><i>S</i><span class="Li">)&quot;</span> is
-    the <i>Unicode</i> <i>codepoint</i> for that character. The exceptions are
-    platforms where the legacy encoding is some variant of EBCDIC rather than a
-    superset of ASCII; see perlebcdic.</p>
+    <span class="Li">&quot;ord(</span><span class="Li"><i>S</i></span><span class="Li">)&quot;</span>
+    is the <i>Unicode</i> <i>codepoint</i> for that character. The exceptions
+    are platforms where the legacy encoding is some variant of EBCDIC rather
+    than a superset of ASCII; see perlebcdic.</p>
 <p class="Pp">During recent history, data is moved around a computer in 8-bit
     chunks, often called &quot;bytes&quot; but also known as &quot;octets&quot;
     in standards documents. Perl is widely used to manipulate data of many
@@ -111,8 +111,7 @@
   methods</a></h2>
 <p class="Pp"><i>encode</i></p>
 <p class="Pp"></p>
-<pre>
-  $octets  = encode(ENCODING, STRING[, CHECK])
+<pre>  $octets  = encode(ENCODING, STRING[, CHECK])
 </pre>
 <p class="Pp">Encodes the scalar value <i>STRING</i> from Perl's internal form
     into <i>ENCODING</i> and returns a sequence of octets. <i>ENCODING</i> can
@@ -125,8 +124,7 @@
 <p class="Pp">For example, to convert a string from Perl's internal format into
     ISO-8859-1, also known as Latin1:</p>
 <p class="Pp"></p>
-<pre>
-  $octets = encode(&quot;iso-8859-1&quot;, $string);
+<pre>  $octets = encode(&quot;iso-8859-1&quot;, $string);
 </pre>
 <p class="Pp"><b>CAVEAT</b>: When you run <span class="Li">&quot;$octets =
     encode(&quot;UTF-8&quot;, $string)&quot;</span>, then
@@ -143,8 +141,7 @@
     alias for <span class="Li">&quot;encode&quot;</span>.</p>
 <p class="Pp"><i>decode</i></p>
 <p class="Pp"></p>
-<pre>
-  $string = decode(ENCODING, OCTETS[, CHECK])
+<pre>  $string = decode(ENCODING, OCTETS[, CHECK])
 </pre>
 <p class="Pp">This function returns the string that results from decoding the
     scalar value <i>OCTETS</i>, assumed to be a sequence of octets in
@@ -158,8 +155,7 @@
 <p class="Pp">For example, to convert ISO-8859-1 data into a string in Perl's
     internal format:</p>
 <p class="Pp"></p>
-<pre>
-  $string = decode(&quot;iso-8859-1&quot;, $octets);
+<pre>  $string = decode(&quot;iso-8859-1&quot;, $octets);
 </pre>
 <p class="Pp"><b>CAVEAT</b>: When you run <span class="Li">&quot;$string =
     decode(&quot;UTF-8&quot;, $octets)&quot;</span>, then
@@ -174,21 +170,18 @@
     alias for <span class="Li">&quot;decode&quot;</span>.</p>
 <p class="Pp"><i>find_encoding</i></p>
 <p class="Pp"></p>
-<pre>
-  [$obj =] find_encoding(ENCODING)
+<pre>  [$obj =] find_encoding(ENCODING)
 </pre>
 <p class="Pp">Returns the <i>encoding object</i> corresponding to
     <i>ENCODING</i>. Returns <span class="Li">&quot;undef&quot;</span> if no
     matching <i>ENCODING</i> is find. The returned object is what does the
     actual encoding or decoding.</p>
 <p class="Pp"></p>
-<pre>
-  $string = decode($name, $bytes);
+<pre>  $string = decode($name, $bytes);
 </pre>
 <p class="Pp">is in fact</p>
 <p class="Pp"></p>
-<pre>
-    $string = do {
+<pre>    $string = do {
         $obj = find_encoding($name);
         croak qq(encoding &quot;$name&quot; not found) unless ref $obj;
         $obj-&gt;decode($bytes);
@@ -197,8 +190,7 @@
 <p class="Pp">with more error checking.</p>
 <p class="Pp">You can therefore save time by reusing this object as follows;</p>
 <p class="Pp"></p>
-<pre>
-    my $enc = find_encoding(&quot;iso-8859-1&quot;);
+<pre>    my $enc = find_encoding(&quot;iso-8859-1&quot;);
     while(&lt;&gt;) {
         my $string = $enc-&gt;decode($_);
         ... # now do something with $string;
@@ -209,14 +201,12 @@
     <span class="Li">&quot;name()&quot;</span> returns the canonical name of the
     encoding object.</p>
 <p class="Pp"></p>
-<pre>
-  find_encoding(&quot;latin1&quot;)-&gt;name; # iso-8859-1
+<pre>  find_encoding(&quot;latin1&quot;)-&gt;name; # iso-8859-1
 </pre>
 <p class="Pp">See Encode::Encoding for details.</p>
 <p class="Pp"><i>find_mime_encoding</i></p>
 <p class="Pp"></p>
-<pre>
-  [$obj =] find_mime_encoding(MIME_ENCODING)
+<pre>  [$obj =] find_mime_encoding(MIME_ENCODING)
 </pre>
 <p class="Pp">Returns the <i>encoding object</i> corresponding to
     <i>MIME_ENCODING</i>. Acts same as
@@ -226,29 +216,25 @@
     <span class="Li">&quot;find_encoding()&quot;</span> canonical names and
     aliases are not used when searching for object.</p>
 <p class="Pp"></p>
-<pre>
-    find_mime_encoding(&quot;utf8&quot;); # returns undef because &quot;utf8&quot; is not valid I&lt;MIME_ENCODING&gt;
+<pre>    find_mime_encoding(&quot;utf8&quot;); # returns undef because &quot;utf8&quot; is not valid I&lt;MIME_ENCODING&gt;
     find_mime_encoding(&quot;utf-8&quot;); # returns encode object &quot;utf-8-strict&quot;
     find_mime_encoding(&quot;UTF-8&quot;); # same as &quot;utf-8&quot; because I&lt;MIME_ENCODING&gt; is case insensitive
     find_mime_encoding(&quot;utf-8-strict&quot;); returns undef because &quot;utf-8-strict&quot; is not valid I&lt;MIME_ENCODING&gt;
 </pre>
 <p class="Pp"><i>from_to</i></p>
 <p class="Pp"></p>
-<pre>
-  [$length =] from_to($octets, FROM_ENC, TO_ENC [, CHECK])
+<pre>  [$length =] from_to($octets, FROM_ENC, TO_ENC [, CHECK])
 </pre>
 <p class="Pp">Converts <i>in-place</i> data between two encodings. The data in
     <span class="Li">$octets</span> must be encoded as octets and <i>not</i> as
     characters in Perl's internal format. For example, to convert ISO-8859-1
     data into Microsoft's CP1250 encoding:</p>
 <p class="Pp"></p>
-<pre>
-  from_to($octets, &quot;iso-8859-1&quot;, &quot;cp1250&quot;);
+<pre>  from_to($octets, &quot;iso-8859-1&quot;, &quot;cp1250&quot;);
 </pre>
 <p class="Pp">and to convert it back:</p>
 <p class="Pp"></p>
-<pre>
-  from_to($octets, &quot;cp1250&quot;, &quot;iso-8859-1&quot;);
+<pre>  from_to($octets, &quot;cp1250&quot;, &quot;iso-8859-1&quot;);
 </pre>
 <p class="Pp">Because the conversion happens in place, the data to be converted
     cannot be a string constant: it must be a scalar variable.</p>
@@ -258,40 +244,34 @@
 <p class="Pp"><b>CAVEAT</b>: The following operations may look the same, but are
     not:</p>
 <p class="Pp"></p>
-<pre>
-  from_to($data, &quot;iso-8859-1&quot;, &quot;UTF-8&quot;); #1
+<pre>  from_to($data, &quot;iso-8859-1&quot;, &quot;UTF-8&quot;); #1
   $data = decode(&quot;iso-8859-1&quot;, $data);  #2
 </pre>
 <p class="Pp">Both #1 and #2 make <span class="Li">$data</span> consist of a
     completely valid UTF-8 string, but only #2 turns the UTF8 flag on. #1 is
     equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  $data = encode(&quot;UTF-8&quot;, decode(&quot;iso-8859-1&quot;, $data));
+<pre>  $data = encode(&quot;UTF-8&quot;, decode(&quot;iso-8859-1&quot;, $data));
 </pre>
 <p class="Pp">See &quot;The UTF8 flag&quot; below.</p>
 <p class="Pp">Also note that:</p>
 <p class="Pp"></p>
-<pre>
-  from_to($octets, $from, $to, $check);
+<pre>  from_to($octets, $from, $to, $check);
 </pre>
 <p class="Pp">is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  $octets = encode($to, decode($from, $octets), $check);
+<pre>  $octets = encode($to, decode($from, $octets), $check);
 </pre>
 <p class="Pp">Yes, it does <i>not</i> respect the <span class="Li">$check</span>
     during decoding. It is deliberately done that way. If you need minute
     control, use <span class="Li">&quot;decode&quot;</span> followed by
     <span class="Li">&quot;encode&quot;</span> as follows:</p>
 <p class="Pp"></p>
-<pre>
-  $octets = encode($to, decode($from, $octets, $check_from), $check_to);
+<pre>  $octets = encode($to, decode($from, $octets, $check_from), $check_to);
 </pre>
 <p class="Pp"><i>encode_utf8</i></p>
 <p class="Pp"></p>
-<pre>
-  $octets = encode_utf8($string);
+<pre>  $octets = encode_utf8($string);
 </pre>
 <p class="Pp">Equivalent to <span class="Li">&quot;$octets =
     encode(&quot;utf8&quot;, $string)&quot;</span>. The characters in
@@ -305,8 +285,7 @@
     encode(&quot;UTF-8&quot;, $string)&quot;</span>.</p>
 <p class="Pp"><i>decode_utf8</i></p>
 <p class="Pp"></p>
-<pre>
-  $string = decode_utf8($octets [, CHECK]);
+<pre>  $string = decode_utf8($octets [, CHECK]);
 </pre>
 <p class="Pp">Equivalent to <span class="Li">&quot;$string =
     decode(&quot;utf8&quot;, $octets [, CHECK])&quot;</span>. The sequence of
@@ -320,35 +299,32 @@
     representation! For strictly valid UTF-8 <span class="Li">$string</span>
     representation use <span class="Li">&quot;$string =
     decode(&quot;UTF-8&quot;, $octets [, CHECK])&quot;</span>.</p>
-<p class="Pp"><b>CAVEAT</b>: the input <i></i><i>$octets</i><i></i> might be
-    modified in-place depending on what is set in CHECK. See
-    &quot;LEAVE_SRC&quot; if you want your inputs to be left unchanged.</p>
+<p class="Pp"><b>CAVEAT</b>: the input
+    <i></i><span class="Li"><i>$octets</i></span><i></i> might be modified
+    in-place depending on what is set in CHECK. See &quot;LEAVE_SRC&quot; if you
+    want your inputs to be left unchanged.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Listing_available_encodings"><a class="permalink" href="#Listing_available_encodings">Listing
   available encodings</a></h2>
-<pre>
-  use Encode;
+<pre>  use Encode;
   @list = Encode-&gt;encodings();
 </pre>
 <p class="Pp">Returns a list of canonical names of available encodings that have
     already been loaded. To get a list of all available encodings including
     those that have not yet been loaded, say:</p>
 <p class="Pp"></p>
-<pre>
-  @all_encodings = Encode-&gt;encodings(&quot;:all&quot;);
+<pre>  @all_encodings = Encode-&gt;encodings(&quot;:all&quot;);
 </pre>
 <p class="Pp">Or you can give the name of a specific module:</p>
 <p class="Pp"></p>
-<pre>
-  @with_jp = Encode-&gt;encodings(&quot;Encode::JP&quot;);
+<pre>  @with_jp = Encode-&gt;encodings(&quot;Encode::JP&quot;);
 </pre>
 <p class="Pp">When &quot;<span class="Li">&quot;::&quot;</span>&quot; is not in
     the name, &quot;<span class="Li">&quot;Encode::&quot;</span>&quot; is
     assumed.</p>
 <p class="Pp"></p>
-<pre>
-  @ebcdic = Encode-&gt;encodings(&quot;EBCDIC&quot;);
+<pre>  @ebcdic = Encode-&gt;encodings(&quot;EBCDIC&quot;);
 </pre>
 <p class="Pp">To find out in detail which encodings are supported by this
     package, see Encode::Supported.</p>
@@ -358,8 +334,7 @@
   Aliases</a></h2>
 <p class="Pp">To add a new alias to a given encoding, use:</p>
 <p class="Pp"></p>
-<pre>
-  use Encode;
+<pre>  use Encode;
   use Encode::Alias;
   define_alias(NEWNAME =&gt; ENCODING);
 </pre>
@@ -370,8 +345,7 @@
     <span class="Li">&quot;resolve_alias()&quot;</span>, which returns the
     canonical name thereof. For example:</p>
 <p class="Pp"></p>
-<pre>
-  Encode::resolve_alias(&quot;latin1&quot;) eq &quot;iso-8859-1&quot; # true
+<pre>  Encode::resolve_alias(&quot;latin1&quot;) eq &quot;iso-8859-1&quot; # true
   Encode::resolve_alias(&quot;iso-8859-12&quot;)   # false; nonexistent
   Encode::resolve_alias($name) eq $name  # true if $name is canonical
 </pre>
@@ -386,15 +360,14 @@
 <p class="Pp">The canonical name of a given encoding does not necessarily agree
     with IANA Character Set Registry, commonly seen as
     <span class="Li">&quot;Content-Type:</span> <span class="Li">text/plain;
-    charset=</span><i>WHATEVER</i><span class="Li">&quot;</span>. For most
-    cases, the canonical name works, but sometimes it does not, most notably
-    with &quot;utf-8-strict&quot;.</p>
+    charset=</span><span class="Li"><i>WHATEVER</i></span><span class="Li">&quot;</span>.
+    For most cases, the canonical name works, but sometimes it does not, most
+    notably with &quot;utf-8-strict&quot;.</p>
 <p class="Pp">As of <span class="Li">&quot;Encode&quot;</span> version 2.21, a
     new method <span class="Li">&quot;mime_name()&quot;</span> is therefore
     added.</p>
 <p class="Pp"></p>
-<pre>
-  use Encode;
+<pre>  use Encode;
   my $enc = find_encoding(&quot;UTF-8&quot;);
   warn $enc-&gt;name;      # utf-8-strict
   warn $enc-&gt;mime_name; # UTF-8
@@ -411,8 +384,7 @@
     directly via a filehandle. The following two examples are fully identical in
     functionality:</p>
 <p class="Pp"></p>
-<pre>
-  ### Version 1 via PerlIO
+<pre>  ### Version 1 via PerlIO
     open(INPUT,  &quot;&lt; :encoding(shiftjis)&quot;, $infile)
         || die &quot;Can't open &lt; $infile for reading: $!&quot;;
     open(OUTPUT, &quot;&gt; :encoding(euc-jp)&quot;,  $outfile)
@@ -422,13 +394,11 @@
     }
     close(INPUT)   || die &quot;can't close $infile: $!&quot;;
     close(OUTPUT)  || die &quot;can't close $outfile: $!&quot;;
-
   ### Version 2 via from_to()
     open(INPUT,  &quot;&lt; :raw&quot;, $infile)
         || die &quot;Can't open &lt; $infile for reading: $!&quot;;
     open(OUTPUT, &quot;&gt; :raw&quot;,  $outfile)
         || die &quot;Can't open &gt; $output for writing: $!&quot;;
-
     while (&lt;INPUT&gt;) {
         from_to($_, &quot;shiftjis&quot;, &quot;euc-jp&quot;, 1);  # switch encoding
         print OUTPUT;   # emit raw (but properly encoded) data
@@ -445,10 +415,8 @@
     <span class="Li">&quot;PerlIO&quot;</span> by invoking the
     <span class="Li">&quot;perlio_ok&quot;</span> method on it:</p>
 <p class="Pp"></p>
-<pre>
-  Encode::perlio_ok(&quot;hz&quot;);             # false
+<pre>  Encode::perlio_ok(&quot;hz&quot;);             # false
   find_encoding(&quot;euc-cn&quot;)-&gt;perlio_ok;  # true wherever PerlIO is available
-
   use Encode qw(perlio_ok);            # imported upon request
   perlio_ok(&quot;euc-jp&quot;)
 </pre>
@@ -478,8 +446,7 @@
   <i>CHECK</i> values</a></h2>
 <p class="Pp"><i>FB_DEFAULT</i></p>
 <p class="Pp"></p>
-<pre>
-  I&lt;CHECK&gt; = Encode::FB_DEFAULT ( == 0)
+<pre>  I&lt;CHECK&gt; = Encode::FB_DEFAULT ( == 0)
 </pre>
 <p class="Pp">If <i>CHECK</i> is 0, encoding and decoding replace any malformed
     character with a <i>substitution character</i>. When you encode,
@@ -489,8 +456,7 @@
     is given.</p>
 <p class="Pp"><i>FB_CROAK</i></p>
 <p class="Pp"></p>
-<pre>
-  I&lt;CHECK&gt; = Encode::FB_CROAK ( == 1)
+<pre>  I&lt;CHECK&gt; = Encode::FB_CROAK ( == 1)
 </pre>
 <p class="Pp">If <i>CHECK</i> is 1, methods immediately die with an error
     message. Therefore, when <i>CHECK</i> is 1, you should trap exceptions with
@@ -498,8 +464,7 @@
     <span class="Li">&quot;die&quot;</span>.</p>
 <p class="Pp"><i>FB_QUIET</i></p>
 <p class="Pp"></p>
-<pre>
-  I&lt;CHECK&gt; = Encode::FB_QUIET
+<pre>  I&lt;CHECK&gt; = Encode::FB_QUIET
 </pre>
 <p class="Pp">If <i>CHECK</i> is set to
     <span class="Li">&quot;Encode::FB_QUIET&quot;</span>, encoding and decoding
@@ -511,8 +476,7 @@
     sequences, (that is, you are reading with a fixed-width buffer). Here's some
     sample code to do exactly that:</p>
 <p class="Pp"></p>
-<pre>
-    my($buffer, $string) = (&quot;&quot;, &quot;&quot;);
+<pre>    my($buffer, $string) = (&quot;&quot;, &quot;&quot;);
     while (read($fh, $buffer, 256, length($buffer))) {
         $string .= decode($encoding, $buffer, Encode::FB_QUIET);
         # $buffer now contains the unprocessed partial character
@@ -520,8 +484,7 @@
 </pre>
 <p class="Pp"><i>FB_WARN</i></p>
 <p class="Pp"></p>
-<pre>
-  I&lt;CHECK&gt; = Encode::FB_WARN
+<pre>  I&lt;CHECK&gt; = Encode::FB_WARN
 </pre>
 <p class="Pp">This is the same as <span class="Li">&quot;FB_QUIET&quot;</span>
     above, except that instead of being silent on errors, it issues a warning.
@@ -552,35 +515,34 @@
     <span class="Li">&quot;decode&quot;</span> into
     <span class="Li">&quot;perlqq&quot;</span> fallback mode.</p>
 <p class="Pp">When you decode,
-    <span class="Li">&quot;\x</span><i>HH</i><span class="Li">&quot;</span> is
-    inserted for a malformed character, where <i>HH</i> is the hex
+    <span class="Li">&quot;\x</span><span class="Li"><i>HH</i></span><span class="Li">&quot;</span>
+    is inserted for a malformed character, where <i>HH</i> is the hex
     representation of the octet that could not be decoded to utf8. When you
     encode,
-    <span class="Li">&quot;\x{</span><i>HHHH</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\x{</span><span class="Li"><i>HHHH</i></span><span class="Li">}&quot;</span>
     will be inserted, where <i>HHHH</i> is the Unicode code point (in any number
     of hex digits) of the character that cannot be found in the character
     repertoire of the encoding.</p>
 <p class="Pp">The HTML/XML character reference modes are about the same. In
     place of
-    <span class="Li">&quot;\x{</span><i>HHHH</i><span class="Li">}&quot;</span>,
+    <span class="Li">&quot;\x{</span><span class="Li"><i>HHHH</i></span><span class="Li">}&quot;</span>,
     HTML uses
-    <span class="Li">&quot;&amp;#</span><i>NNN</i><span class="Li">;&quot;</span>
+    <span class="Li">&quot;&amp;#</span><span class="Li"><i>NNN</i></span><span class="Li">;&quot;</span>
     where <i>NNN</i> is a decimal number, and XML uses
-    <span class="Li">&quot;&amp;#x</span><i>HHHH</i><span class="Li">;&quot;</span>
+    <span class="Li">&quot;&amp;#x</span><span class="Li"><i>HHHH</i></span><span class="Li">;&quot;</span>
     where <i>HHHH</i> is the hexadecimal number.</p>
 <p class="Pp">In <span class="Li">&quot;Encode&quot;</span> 2.10 or later,
     <span class="Li">&quot;LEAVE_SRC&quot;</span> is also implied.</p>
 <p class="Pp"><i>The bitmask</i></p>
 <p class="Pp">These modes are all actually set via a bitmask. Here is how the
-    <span class="Li">&quot;FB_</span><i>XXX</i><span class="Li">&quot;</span>
+    <span class="Li">&quot;FB_</span><span class="Li"><i>XXX</i></span><span class="Li">&quot;</span>
     constants are laid out. You can import the
-    <span class="Li">&quot;FB_</span><i>XXX</i><span class="Li">&quot;</span>
+    <span class="Li">&quot;FB_</span><span class="Li"><i>XXX</i></span><span class="Li">&quot;</span>
     constants via <span class="Li">&quot;use Encode qw(:fallbacks)&quot;</span>,
     and you can import the generic bitmask constants via
     <span class="Li">&quot;use Encode qw(:fallback_all)&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-                     FB_DEFAULT FB_CROAK FB_QUIET FB_WARN  FB_PERLQQ
+<pre>                     FB_DEFAULT FB_CROAK FB_QUIET FB_WARN  FB_PERLQQ
  DIE_ON_ERR    0x0001             X
  WARN_ON_ERR   0x0002                               X
  RETURN_ON_ERR 0x0004                      X        X
@@ -591,8 +553,7 @@
 </pre>
 <p class="Pp"><i>LEAVE_SRC</i></p>
 <p class="Pp"></p>
-<pre>
-  Encode::LEAVE_SRC
+<pre>  Encode::LEAVE_SRC
 </pre>
 <p class="Pp">If the <span class="Li">&quot;Encode::LEAVE_SRC&quot;</span> bit
     is <i>not</i> set but <i>CHECK</i> is set, then the source string to
@@ -607,20 +568,18 @@
     takes the ordinal value of the unmapped character as an argument and returns
     octets that represent the fallback character. For instance:</p>
 <p class="Pp"></p>
-<pre>
-  $ascii = encode(&quot;ascii&quot;, $utf8, sub{ sprintf &quot;&lt;U+%04X&gt;&quot;, shift });
+<pre>  $ascii = encode(&quot;ascii&quot;, $utf8, sub{ sprintf &quot;&lt;U+%04X&gt;&quot;, shift });
 </pre>
 <p class="Pp">Acts like <span class="Li">&quot;FB_PERLQQ&quot;</span> but
     U+<i>XXXX</i> is used instead of
-    <span class="Li">&quot;\x{</span><i>XXXX</i><span class="Li">}&quot;</span>.</p>
+    <span class="Li">&quot;\x{</span><span class="Li"><i>XXXX</i></span><span class="Li">}&quot;</span>.</p>
 <p class="Pp">Fallback for <span class="Li">&quot;decode&quot;</span> must
     return decoded string (sequence of characters) and takes a list of ordinal
     values as its arguments. So for example if you wish to decode octets as
     UTF-8, and use ISO-8859-15 as a fallback for bytes that are not valid UTF-8,
     you could write</p>
 <p class="Pp"></p>
-<pre>
-    $str = decode 'UTF-8', $octets, sub {
+<pre>    $str = decode 'UTF-8', $octets, sub {
         my $tmp = join '', map chr, @_;
         return decode 'ISO-8859-15', $tmp;
     };
@@ -632,15 +591,14 @@
   Encodings</a></h1>
 <p class="Pp">To define a new encoding, use:</p>
 <p class="Pp"></p>
-<pre>
-    use Encode qw(define_encoding);
+<pre>    use Encode qw(define_encoding);
     define_encoding($object, CANONICAL_NAME [, alias...]);
 </pre>
 <p class="Pp"><i>CANONICAL_NAME</i> will be associated with
-    <i></i><i>$object</i><i></i>. The object should provide the interface
-    described in Encode::Encoding. If more than two arguments are provided,
-    additional arguments are considered aliases for
-    <i></i><i>$object</i><i></i>.</p>
+    <i></i><span class="Li"><i>$object</i></span><i></i>. The object should
+    provide the interface described in Encode::Encoding. If more than two
+    arguments are provided, additional arguments are considered aliases for
+    <i></i><span class="Li"><i>$object</i></span><i></i>.</p>
 <p class="Pp">See Encode::Encoding for details.</p>
 </section>
 <section class="Sh">
@@ -685,8 +643,7 @@
     release.</p>
 <p class="Pp"><i>is_utf8</i></p>
 <p class="Pp"></p>
-<pre>
-  is_utf8(STRING [, CHECK])
+<pre>  is_utf8(STRING [, CHECK])
 </pre>
 <p class="Pp">[INTERNAL] Tests whether the UTF8 flag is turned on in the
     <i>STRING</i>. If <i>CHECK</i> is true, also checks whether <i>STRING</i>
@@ -700,8 +657,7 @@
     <span class="Li">&quot;utf8::is_utf8&quot;</span> function.</p>
 <p class="Pp"><i>_utf8_on</i></p>
 <p class="Pp"></p>
-<pre>
-  _utf8_on(STRING)
+<pre>  _utf8_on(STRING)
 </pre>
 <p class="Pp">[INTERNAL] Turns the <i>STRING</i>'s internal UTF8 flag <b>on</b>.
     The <i>STRING</i> is <i>not</i> checked for containing only well-formed
@@ -714,8 +670,7 @@
     tainted values.</p>
 <p class="Pp"><i>_utf8_off</i></p>
 <p class="Pp"></p>
-<pre>
-  _utf8_off(STRING)
+<pre>  _utf8_off(STRING)
 </pre>
 <p class="Pp">[INTERNAL] Turns the <i>STRING</i>'s internal UTF8 flag
     <b>off</b>. Do not use frivolously. Returns the previous state of the UTF8
@@ -729,8 +684,7 @@
 <section class="Sh">
 <h1 class="Sh" id="UTF"><a class="permalink" href="#UTF">UTF-8 vs. utf8 vs.
   UTF8</a></h1>
-<pre>
-  ....We now view strings not as sequences of bytes, but as sequences
+<pre>  ....We now view strings not as sequences of bytes, but as sequences
   of numbers in the range 0 .. 2**32-1 (or in the case of 64-bit
   computers, 0 .. 2**64-1) -- Programming Perl, 3rd ed.
 </pre>
@@ -746,24 +700,19 @@
 <p class="Pp">The former default in which Perl would always use a loose
     interpretation of UTF-8 has now been overruled:</p>
 <p class="Pp"></p>
-<pre>
-  From: Larry Wall &lt;larry@wall.org&gt;
+<pre>  From: Larry Wall &lt;larry@wall.org&gt;
   Date: December 04, 2004 11:51:58 JST
   To: perl-unicode@perl.org
   Subject: Re: Make Encode.pm support the real UTF-8
   Message-Id: &lt;20041204025158.GA28754@wall.org&gt;
-
   On Fri, Dec 03, 2004 at 10:12:12PM +0000, Tim Bunce wrote:
   : I've no problem with 'utf8' being perl's unrestricted uft8 encoding,
   : but &quot;UTF-8&quot; is the name of the standard and should give the
   : corresponding behaviour.
-
   For what it's worth, that's how I've always kept them straight in my
   head.
-
   Also for what it's worth, Perl 6 will mostly default to strict but
   make it easy to switch back to lax.
-
   Larry
 </pre>
 <p class="Pp">Got that? As of Perl 5.8.7, <b>&quot;UTF-8&quot;</b> means UTF-8
@@ -775,8 +724,7 @@
     <span class="Li">&quot;UTF-8&quot;</span> and
     <span class="Li">&quot;utf8&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  encode(&quot;utf8&quot;,  &quot;\x{FFFF_FFFF}&quot;, 1); # okay
+<pre>  encode(&quot;utf8&quot;,  &quot;\x{FFFF_FFFF}&quot;, 1); # okay
   encode(&quot;UTF-8&quot;, &quot;\x{FFFF_FFFF}&quot;, 1); # croaks
 </pre>
 <p class="Pp">In the <span class="Li">&quot;Encode&quot;</span> module,
@@ -787,8 +735,7 @@
     <span class="Li">&quot;Encode&quot;</span> goes &quot;liberal&quot; and
     (perhaps overly-)permissive:</p>
 <p class="Pp"></p>
-<pre>
-  find_encoding(&quot;UTF-8&quot;)-&gt;name # is 'utf-8-strict'
+<pre>  find_encoding(&quot;UTF-8&quot;)-&gt;name # is 'utf-8-strict'
   find_encoding(&quot;utf-8&quot;)-&gt;name # ditto. names are case insensitive
   find_encoding(&quot;utf_8&quot;)-&gt;name # ditto. &quot;_&quot; are treated as &quot;-&quot;
   find_encoding(&quot;UTF8&quot;)-&gt;name  # is 'utf8'.

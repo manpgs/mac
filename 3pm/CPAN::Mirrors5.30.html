@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CPAN::Mirrors(3pm)</title>
 </head>
@@ -29,24 +30,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use CPAN::Mirrors;
-
+<pre>    use CPAN::Mirrors;
     my $mirrors = CPAN::Mirrors-&gt;new( $mirrored_by_file );
-
     my $seen = {};
-
     my $best_continent = $mirrors-&gt;find_best_continents( { seen =&gt; $seen } );
     my @mirrors        = $mirrors-&gt;get_mirrors_by_continents( $best_continent );
-
     my $callback = sub {
         my( $m ) = @_;
         printf &quot;%s = %s\n&quot;, $m-&gt;hostname, $m-&gt;rtt
         };
     $mirrors-&gt;get_mirrors_timings( \@mirrors, $seen, $callback );
-
     @mirrors = sort { $a-&gt;rtt &lt;=&gt; $b-&gt;rtt } @mirrors;
-
     print &quot;Best mirrors are &quot;, map( { $_-&gt;rtt } @mirrors[0..3] ), &quot;\n&quot;;
 </pre>
 </section>
@@ -101,8 +95,7 @@
       returns the single best mirror.
     <p class="Pp">Arguments</p>
     <p class="Pp"></p>
-    <pre>
-    how_many   - the number of mirrors to return. Default: 1
+    <pre>    how_many   - the number of mirrors to return. Default: 1
     callback   - a callback for find_best_continents
     verbose    - true or false on all the whining and moaning. Default: false
     continents - an array ref of the continents to check
@@ -143,8 +136,7 @@
       context, it returns the same list as an anonymous array.
     <p class="Pp">Arguments:</p>
     <p class="Pp"></p>
-    <pre>
-    n        - the number of hosts to ping for each continent. Default: 3
+    <pre>    n        - the number of hosts to ping for each continent. Default: 3
     seen     - a hashref of cached hostname ping times
     verbose  - true or false for noisy or quiet. Default: false
     callback - a subroutine to run after each ping.

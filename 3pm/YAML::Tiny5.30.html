@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>YAML::Tiny(3)</title>
 </head>
@@ -54,8 +55,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Assuming <i>file.yml</i> like this:</p>
 <p class="Pp"></p>
-<pre>
-    ---
+<pre>    ---
     rootproperty: blah
     section:
       one: two
@@ -65,44 +65,34 @@
 </pre>
 <p class="Pp">Read and write <i>file.yml</i> like this:</p>
 <p class="Pp"></p>
-<pre>
-    use YAML::Tiny;
-
+<pre>    use YAML::Tiny;
     # Open the config
     my $yaml = YAML::Tiny-&gt;read( 'file.yml' );
-
     # Get a reference to the first document
     my $config = $yaml-&gt;[0];
-
     # Or read properties directly
     my $root = $yaml-&gt;[0]-&gt;{rootproperty};
     my $one  = $yaml-&gt;[0]-&gt;{section}-&gt;{one};
     my $Foo  = $yaml-&gt;[0]-&gt;{section}-&gt;{Foo};
-
     # Change data directly
     $yaml-&gt;[0]-&gt;{newsection} = { this =&gt; 'that' }; # Add a section
     $yaml-&gt;[0]-&gt;{section}-&gt;{Foo} = 'Not Bar!';     # Change a value
     delete $yaml-&gt;[0]-&gt;{section};                  # Delete a value
-
     # Save the document back to the file
     $yaml-&gt;write( 'file.yml' );
 </pre>
 <p class="Pp">To create a new YAML file from scratch:</p>
 <p class="Pp"></p>
-<pre>
-    # Create a new object with a single hashref document
+<pre>    # Create a new object with a single hashref document
     my $yaml = YAML::Tiny-&gt;new( { wibble =&gt; &quot;wobble&quot; } );
-
     # Add an arrayref document
     push @$yaml, [ 'foo', 'bar', 'baz' ];
-
     # Save both documents to a file
     $yaml-&gt;write( 'data.yml' );
 </pre>
 <p class="Pp">Then <i>data.yml</i> will contain:</p>
 <p class="Pp"></p>
-<pre>
-    ---
+<pre>    ---
     wibble: wobble
     ---
     - foo
@@ -208,8 +198,7 @@
     with the YAML API. These should be a drop-in replacement.</p>
 <section class="Ss">
 <h2 class="Ss" id="Dump"><a class="permalink" href="#Dump">Dump</a></h2>
-<pre>
-  my $string = Dump(list-of-Perl-data-structures);
+<pre>  my $string = Dump(list-of-Perl-data-structures);
 </pre>
 <p class="Pp">Turn Perl data into YAML. This function works very much like
     <b>Data::Dumper::Dumper()</b>.</p>
@@ -222,8 +211,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Load"><a class="permalink" href="#Load">Load</a></h2>
-<pre>
-  my @data_structures = Load(string-containing-a-YAML-stream);
+<pre>  my @data_structures = Load(string-containing-a-YAML-stream);
 </pre>
 <p class="Pp">Turn YAML into Perl data. This is the opposite of Dump.</p>
 <p class="Pp">Just like Storable's <b>thaw()</b> function or the <b>eval()</b>
@@ -233,8 +221,7 @@
     sure to decode the character string correctly if the string came from a file
     or socket.</p>
 <p class="Pp"></p>
-<pre>
-  my $last_data_structure = Load(string-containing-a-YAML-stream);
+<pre>  my $last_data_structure = Load(string-containing-a-YAML-stream);
 </pre>
 <p class="Pp">For consistency with YAML.pm, when Load is called in scalar
     context, it returns the data structure corresponding to the last of the YAML
@@ -313,8 +300,7 @@
     prevent other implementations that do support &quot;bool&quot; accidentally
     reading a string as a boolean</p>
 <p class="Pp"></p>
-<pre>
-  y|Y|yes|Yes|YES|n|N|no|No|NO
+<pre>  y|Y|yes|Yes|YES|n|N|no|No|NO
   |true|True|TRUE|false|False|FALSE
   |on|On|ON|off|Off|OFF
 </pre>
@@ -400,8 +386,7 @@
     the document header.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  %YAML 1.1
+<pre>  %YAML 1.1
   ---
   - A sequence with a single element
 </pre>
@@ -411,8 +396,7 @@
     required.</p>
 <p class="Pp">For example,</p>
 <p class="Pp"></p>
-<pre>
-  %YAML 1.1
+<pre>  %YAML 1.1
   # A document consisting of only an empty mapping
   --- {}
   # A document consisting of only an empty sequence
@@ -443,14 +427,11 @@
     anyway)</p>
 <p class="Pp">That is, all of the following should be supported.</p>
 <p class="Pp"></p>
-<pre>
-  --- #YAML:1.0
+<pre>  --- #YAML:1.0
   - foo
-
   %YAML:1.0
   ---
   - foo
-
   % YAML 1.1
   ---
   - foo
@@ -469,12 +450,10 @@
 <p class="Pp">Support for implicit document starts is required.</p>
 <p class="Pp">That is, the following must be equivalent.</p>
 <p class="Pp"></p>
-<pre>
- # Full form
+<pre> # Full form
  %YAML 1.1
  ---
  foo: bar
-
  # Implicit form
  foo: bar
 </pre>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ8(1)</title>
 </head>
@@ -69,8 +70,7 @@
 <dl class="Bl-tag">
   <dt id="Keyboard"><a class="permalink" href="#Keyboard">Keyboard</a></dt>
   <dd>
-    <pre>
-    Term::Cap               Standard perl distribution
+    <pre>    Term::Cap               Standard perl distribution
     Term::ReadKey           CPAN
     Term::ReadLine::Gnu     CPAN
     Term::ReadLine::Perl    CPAN
@@ -79,16 +79,14 @@
   </dd>
   <dt id="Screen"><a class="permalink" href="#Screen">Screen</a></dt>
   <dd>
-    <pre>
-    Term::Cap               Standard perl distribution
+    <pre>    Term::Cap               Standard perl distribution
     Curses                  CPAN
     Term::ANSIColor         CPAN
     </pre>
   </dd>
   <dt id="Mouse"><a class="permalink" href="#Mouse">Mouse</a></dt>
   <dd>
-    <pre>
-    Tk                      CPAN
+    <pre>    Tk                      CPAN
     Wx                      CPAN
     Gtk2                    CPAN
     Qt4                     kdebindings4 package
@@ -106,15 +104,13 @@
     ANSI terminal that understands color, you can use the Term::ANSIColor module
     from CPAN:</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ANSIColor;
+<pre>    use Term::ANSIColor;
     print color(&quot;red&quot;), &quot;Stop!\n&quot;, color(&quot;reset&quot;);
     print color(&quot;green&quot;), &quot;Go!\n&quot;, color(&quot;reset&quot;);
 </pre>
 <p class="Pp">Or like this:</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ANSIColor qw(:constants);
+<pre>    use Term::ANSIColor qw(:constants);
     print RED, &quot;Stop!\n&quot;, RESET;
     print GREEN, &quot;Go!\n&quot;, RESET;
 </pre>
@@ -127,8 +123,7 @@
     in &quot;getc&quot; in perlfunc, but as you see, that's already getting you
     into portability snags.</p>
 <p class="Pp"></p>
-<pre>
-    open(TTY, &quot;+&lt;/dev/tty&quot;) or die &quot;no tty: $!&quot;;
+<pre>    open(TTY, &quot;+&lt;/dev/tty&quot;) or die &quot;no tty: $!&quot;;
     system &quot;stty  cbreak &lt;/dev/tty &gt;/dev/tty 2&gt;&amp;1&quot;;
     $key = getc(TTY);        # perhaps this works
     # OR ELSE
@@ -139,8 +134,7 @@
     that should be more efficient than shelling out to <b>stty</b> for each key.
     It even includes limited support for Windows.</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ReadKey;
+<pre>    use Term::ReadKey;
     ReadMode('cbreak');
     $key = ReadKey(0);
     ReadMode('normal');
@@ -150,47 +144,37 @@
     solution using the standard POSIX module, which is already on your system
     (assuming your system supports POSIX).</p>
 <p class="Pp"></p>
-<pre>
-    use HotKey;
+<pre>    use HotKey;
     $key = readkey();
 </pre>
 <p class="Pp">And here's the <span class="Li">&quot;HotKey&quot;</span> module,
     which hides the somewhat mystifying calls to manipulate the POSIX termios
     structures.</p>
 <p class="Pp"></p>
-<pre>
-    # HotKey.pm
+<pre>    # HotKey.pm
     package HotKey;
-
     use strict;
     use warnings;
-
     use parent 'Exporter';
     our @EXPORT = qw(cbreak cooked readkey);
-
     use POSIX qw(:termios_h);
     my ($term, $oterm, $echo, $noecho, $fd_stdin);
-
     $fd_stdin = fileno(STDIN);
     $term     = POSIX::Termios-&gt;new();
     $term-&gt;getattr($fd_stdin);
     $oterm     = $term-&gt;getlflag();
-
     $echo     = ECHO | ECHOK | ICANON;
     $noecho   = $oterm &amp; ~$echo;
-
     sub cbreak {
         $term-&gt;setlflag($noecho);  # ok, so i don't want echo either
         $term-&gt;setcc(VTIME, 1);
         $term-&gt;setattr($fd_stdin, TCSANOW);
     }
-
     sub cooked {
         $term-&gt;setlflag($oterm);
         $term-&gt;setcc(VTIME, 0);
         $term-&gt;setattr($fd_stdin, TCSANOW);
     }
-
     sub readkey {
         my $key = '';
         cbreak();
@@ -198,9 +182,7 @@
         cooked();
         return $key;
     }
-
     END { cooked() }
-
     1;
 </pre>
 </section>
@@ -211,17 +193,13 @@
     with the Term::ReadKey module from CPAN, passing it an argument of -1 to
     indicate not to block:</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ReadKey;
-
+<pre>    use Term::ReadKey;
     ReadMode('cbreak');
-
     if (defined (my $char = ReadKey(-1)) ) {
         # input was waiting and it was $char
     } else {
         # no input was waiting
     }
-
     ReadMode('normal');                  # restore normal tty settings
 </pre>
 </section>
@@ -236,10 +214,8 @@
     sequence. Import the <span class="Li">&quot;cls&quot;</span> function (or
     the <span class="Li">&quot;:screen&quot;</span> tag):</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ANSIScreen qw(cls);
+<pre>    use Term::ANSIScreen qw(cls);
     my $clear_screen = cls();
-
     print $clear_screen;
 </pre>
 <p class="Pp">The Term::Cap module can also get the special sequence if you want
@@ -247,32 +223,24 @@
     <span class="Li">&quot;Tputs&quot;</span> method returns the string for the
     given capability:</p>
 <p class="Pp"></p>
-<pre>
-    use Term::Cap;
-
+<pre>    use Term::Cap;
     my $terminal = Term::Cap-&gt;Tgetent( { OSPEED =&gt; 9600 } );
     my $clear_screen = $terminal-&gt;Tputs('cl');
-
     print $clear_screen;
 </pre>
 <p class="Pp">On Windows, you can use the Win32::Console module. After creating
     an object for the output filehandle you want to affect, call the
     <span class="Li">&quot;Cls&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-    Win32::Console;
-
+<pre>    Win32::Console;
     my $OUT = Win32::Console-&gt;new(STD_OUTPUT_HANDLE);
     my $clear_string = $OUT-&gt;Cls;
-
     print $clear_screen;
 </pre>
 <p class="Pp">If you have a command-line program that does the job, you can call
     it in backticks to capture whatever it outputs so you can use it later:</p>
 <p class="Pp"></p>
-<pre>
-    my $clear_string = `clear`;
-
+<pre>    my $clear_string = `clear`;
     print $clear_string;
 </pre>
 </section>
@@ -282,15 +250,13 @@
 <p class="Pp">If you have Term::ReadKey module installed from CPAN, you can use
     it to fetch the width and height in characters and in pixels:</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ReadKey;
+<pre>    use Term::ReadKey;
     my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
 </pre>
 <p class="Pp">This is more portable than the raw
     <span class="Li">&quot;ioctl&quot;</span>, but not as illustrative:</p>
 <p class="Pp"></p>
-<pre>
-    require './sys/ioctl.ph';
+<pre>    require './sys/ioctl.ph';
     die &quot;no TIOCGWINSZ &quot; unless defined &amp;TIOCGWINSZ;
     open(my $tty_fh, &quot;+&lt;/dev/tty&quot;)                     or die &quot;No tty: $!&quot;;
     unless (ioctl($tty_fh, &amp;TIOCGWINSZ, $winsize='')) {
@@ -316,9 +282,7 @@
 <p class="Pp">You can also do this for most systems using the Term::ReadKey
     module from CPAN, which is easier to use and in theory more portable.</p>
 <p class="Pp"></p>
-<pre>
-    use Term::ReadKey;
-
+<pre>    use Term::ReadKey;
     ReadMode('noecho');
     my $password = ReadLine(0);
 </pre>
@@ -353,8 +317,7 @@
       (&quot;0x0D&quot;), or as a control-character specification
       (&quot;\cM&quot;).
     <p class="Pp"></p>
-    <pre>
-    print DEV &quot;atv1\012&quot;;    # wrong, for some devices
+    <pre>    print DEV &quot;atv1\012&quot;;    # wrong, for some devices
     print DEV &quot;atv1\015&quot;;    # right, for some devices
     </pre>
     <p class="Pp">Even though with normal text files a &quot;\n&quot; will do
@@ -374,23 +337,20 @@
       &quot;How do I flush/unbuffer an output filehandle? Why must I do
       this?&quot;):
     <p class="Pp"></p>
-    <pre>
-    my $old_handle = select($dev_fh);
+    <pre>    my $old_handle = select($dev_fh);
     $| = 1;
     select($old_handle);
     </pre>
     <p class="Pp">You'll also see code that does this without a temporary
         variable, as in</p>
     <p class="Pp"></p>
-    <pre>
-    select((select($deb_handle), $| = 1)[0]);
+    <pre>    select((select($deb_handle), $| = 1)[0]);
     </pre>
     <p class="Pp">Or if you don't mind pulling in a few thousand lines of code
         just because you're afraid of a little <span class="Li">$|</span>
         variable:</p>
     <p class="Pp"></p>
-    <pre>
-    use IO::Handle;
+    <pre>    use IO::Handle;
     $dev_fh-&gt;autoflush(1);
     </pre>
     <p class="Pp">As mentioned in the previous item, this still doesn't work
@@ -415,8 +375,7 @@
     <span class="Li">&quot;tcgetattr&quot;</span> business, and various other
     functions that go bump in the night, finally came up with this:</p>
 <p class="Pp"></p>
-<pre>
-    sub open_modem {
+<pre>    sub open_modem {
         use IPC::Open2;
         my $stty = `/bin/stty -g`;
         open2( \*MODEM_IN, \*MODEM_OUT, &quot;cu -l$modem_device -s2400 2&gt;&amp;1&quot;);
@@ -462,8 +421,7 @@
     with a system call where you put an
     <span class="Li">&quot;&amp;&quot;</span> on the end of the command:</p>
 <p class="Pp"></p>
-<pre>
-    system(&quot;cmd &amp;&quot;)
+<pre>    system(&quot;cmd &amp;&quot;)
 </pre>
 <p class="Pp">You can also try using <span class="Li">&quot;fork&quot;</span>,
     as described in perlfunc (although this is the same thing that many of the
@@ -488,9 +446,7 @@
   <dd>You have to be prepared to &quot;reap&quot; the child process when it
       finishes.
     <p class="Pp"></p>
-    <pre>
-    $SIG{CHLD} = sub { wait };
-
+    <pre>    $SIG{CHLD} = sub { wait };
     $SIG{CHLD} = 'IGNORE';
     </pre>
     <p class="Pp">You can also use a double fork. You immediately
@@ -498,8 +454,7 @@
         init daemon will <span class="Li">&quot;wait()&quot;</span> for your
         grandchild once it exits.</p>
     <p class="Pp"></p>
-    <pre>
-    unless ($pid = fork) {
+    <pre>    unless ($pid = fork) {
         unless (fork) {
             exec &quot;what you really wanna do&quot;;
             die &quot;exec failed!&quot;;
@@ -527,17 +482,11 @@
     signal, it looks in <span class="Li">%SIG</span> for a key with the same
     name as the signal, then calls the subroutine value for that key.</p>
 <p class="Pp"></p>
-<pre>
-    # as an anonymous subroutine
-
+<pre>    # as an anonymous subroutine
     $SIG{INT} = sub { syswrite(STDERR, &quot;ouch\n&quot;, 5 ) };
-
     # or a reference to a function
-
     $SIG{INT} = \&amp;ouch;
-
     # or the name of the function as a string
-
     $SIG{INT} = &quot;ouch&quot;;
 </pre>
 <p class="Pp">Perl versions before 5.8 had in its C source code signal handlers
@@ -571,8 +520,7 @@
 <p class="Pp">However, if all you want to do is change your time zone, you can
     probably get away with setting an environment variable:</p>
 <p class="Pp"></p>
-<pre>
-    $ENV{TZ} = &quot;MST7MDT&quot;;           # Unixish
+<pre>    $ENV{TZ} = &quot;MST7MDT&quot;;           # Unixish
     $ENV{'SYS$TIMEZONE_DIFFERENTIAL'}=&quot;-5&quot; # vms
     system('trn', 'comp.lang.perl.misc');
 </pre>
@@ -611,8 +559,7 @@
 <p class="Pp">For example, you can use this to make sure your filter program
     managed to finish its output without filling up the disk:</p>
 <p class="Pp"></p>
-<pre>
-    END {
+<pre>    END {
         close(STDOUT) || die &quot;stdout close failed: $!&quot;;
     }
 </pre>
@@ -620,8 +567,7 @@
     when untrapped signals kill the program, though, so if you use
     <span class="Li">&quot;END&quot;</span> blocks you should also use</p>
 <p class="Pp"></p>
-<pre>
-    use sigtrap qw(die normal-signals);
+<pre>    use sigtrap qw(die normal-signals);
 </pre>
 <p class="Pp">Perl's exception-handling mechanism is its
     <span class="Li">&quot;eval()&quot;</span> operator. You can use
@@ -679,8 +625,7 @@
     and <i>socket.h</i> were fine, but the hard ones like <i>ioctl.h</i> nearly
     always need to be hand-edited. Here's how to install the *.ph files:</p>
 <p class="Pp"></p>
-<pre>
-    1. Become the super-user
+<pre>    1. Become the super-user
     2. cd /usr/include
     3. h2ph *.h */*.h
 </pre>
@@ -725,8 +670,7 @@
     process died from, if any, and the high 8 bits are the actual exit value).
     Backticks (``) run a command and return what it sent to STDOUT.</p>
 <p class="Pp"></p>
-<pre>
-    my $exit_status   = system(&quot;mail-users&quot;);
+<pre>    my $exit_status   = system(&quot;mail-users&quot;);
     my $output_string = `ls`;
 </pre>
 </section>
@@ -735,8 +679,7 @@
   can I capture STDERR from an external command?</a></h2>
 <p class="Pp">There are three basic ways of running external commands:</p>
 <p class="Pp"></p>
-<pre>
-    system $cmd;        # using system()
+<pre>    system $cmd;        # using system()
     my $output = `$cmd`;        # using backticks (``)
     open (my $pipe_fh, &quot;$cmd |&quot;);    # using open()
 </pre>
@@ -749,8 +692,7 @@
     function from IPC::Open3. Benjamin Goldberg provides some sample code:</p>
 <p class="Pp">To capture a program's STDOUT, but discard its STDERR:</p>
 <p class="Pp"></p>
-<pre>
-    use IPC::Open3;
+<pre>    use IPC::Open3;
     use File::Spec;
     my $in = '';
     open(NULL, &quot;&gt;&quot;, File::Spec-&gt;devnull);
@@ -760,8 +702,7 @@
 </pre>
 <p class="Pp">To capture a program's STDERR, but discard its STDOUT:</p>
 <p class="Pp"></p>
-<pre>
-    use IPC::Open3;
+<pre>    use IPC::Open3;
     use File::Spec;
     my $in = '';
     open(NULL, &quot;&gt;&quot;, File::Spec-&gt;devnull);
@@ -772,8 +713,7 @@
 <p class="Pp">To capture a program's STDERR, and let its STDOUT go to our own
     STDERR:</p>
 <p class="Pp"></p>
-<pre>
-    use IPC::Open3;
+<pre>    use IPC::Open3;
     my $in = '';
     my $pid = open3($in, &quot;&gt;&amp;STDERR&quot;, \*PH, &quot;cmd&quot;);
     while( &lt;PH&gt; ) { }
@@ -783,8 +723,7 @@
     redirect them to temp files, let the command run, then read the temp
   files:</p>
 <p class="Pp"></p>
-<pre>
-    use IPC::Open3;
+<pre>    use IPC::Open3;
     use IO::File;
     my $in = '';
     local *CATCHOUT = IO::File-&gt;new_tmpfile;
@@ -798,8 +737,7 @@
 <p class="Pp">But there's no real need for <b>both</b> to be tempfiles... the
     following should work just as well, without deadlocking:</p>
 <p class="Pp"></p>
-<pre>
-    use IPC::Open3;
+<pre>    use IPC::Open3;
     my $in = '';
     use IO::File;
     local *CATCHERR = IO::File-&gt;new_tmpfile;
@@ -815,29 +753,25 @@
 <p class="Pp">With any of these, you can change file descriptors before the
     call:</p>
 <p class="Pp"></p>
-<pre>
-    open(STDOUT, &quot;&gt;logfile&quot;);
+<pre>    open(STDOUT, &quot;&gt;logfile&quot;);
     system(&quot;ls&quot;);
 </pre>
 <p class="Pp">or you can use Bourne shell file-descriptor redirection:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `$cmd 2&gt;some_file`;
+<pre>    $output = `$cmd 2&gt;some_file`;
     open (PIPE, &quot;cmd 2&gt;some_file |&quot;);
 </pre>
 <p class="Pp">You can also use file-descriptor redirection to make STDERR a
     duplicate of STDOUT:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `$cmd 2&gt;&amp;1`;
+<pre>    $output = `$cmd 2&gt;&amp;1`;
     open (PIPE, &quot;cmd 2&gt;&amp;1 |&quot;);
 </pre>
 <p class="Pp">Note that you <i>cannot</i> simply open STDERR to be a dup of
     STDOUT in your Perl program and avoid calling the shell to do the
     redirection. This doesn't work:</p>
 <p class="Pp"></p>
-<pre>
-    open(STDERR, &quot;&gt;&amp;STDOUT&quot;);
+<pre>    open(STDERR, &quot;&gt;&amp;STDOUT&quot;);
     $alloutput = `cmd args`;  # stderr still escapes
 </pre>
 <p class="Pp">This fails because the <span class="Li">&quot;open()&quot;</span>
@@ -854,30 +788,26 @@
     &lt;http://www.cpan.org/misc/olddoc/FMTEYEWTK.tgz&gt; . To capture a
     command's STDERR and STDOUT together:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `cmd 2&gt;&amp;1`;                       # either with backticks
+<pre>    $output = `cmd 2&gt;&amp;1`;                       # either with backticks
     $pid = open(PH, &quot;cmd 2&gt;&amp;1 |&quot;);              # or with an open pipe
     while (&lt;PH&gt;) { }                            #    plus a read
 </pre>
 <p class="Pp">To capture a command's STDOUT but discard its STDERR:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `cmd 2&gt;/dev/null`;                # either with backticks
+<pre>    $output = `cmd 2&gt;/dev/null`;                # either with backticks
     $pid = open(PH, &quot;cmd 2&gt;/dev/null |&quot;);       # or with an open pipe
     while (&lt;PH&gt;) { }                            #    plus a read
 </pre>
 <p class="Pp">To capture a command's STDERR but discard its STDOUT:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `cmd 2&gt;&amp;1 1&gt;/dev/null`;           # either with backticks
+<pre>    $output = `cmd 2&gt;&amp;1 1&gt;/dev/null`;           # either with backticks
     $pid = open(PH, &quot;cmd 2&gt;&amp;1 1&gt;/dev/null |&quot;);  # or with an open pipe
     while (&lt;PH&gt;) { }                            #    plus a read
 </pre>
 <p class="Pp">To exchange a command's STDOUT and STDERR in order to capture the
     STDERR but leave its STDOUT to come out our old STDERR:</p>
 <p class="Pp"></p>
-<pre>
-    $output = `cmd 3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3 3&gt;&amp;-`;        # either with backticks
+<pre>    $output = `cmd 3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3 3&gt;&amp;-`;        # either with backticks
     $pid = open(PH, &quot;cmd 3&gt;&amp;1 1&gt;&amp;2 2&gt;&amp;3 3&gt;&amp;-|&quot;);# or with an open pipe
     while (&lt;PH&gt;) { }                            #    plus a read
 </pre>
@@ -885,15 +815,13 @@
     easiest to redirect them separately to files, and then read from those files
     when the program is done:</p>
 <p class="Pp"></p>
-<pre>
-    system(&quot;program args 1&gt;program.stdout 2&gt;program.stderr&quot;);
+<pre>    system(&quot;program args 1&gt;program.stdout 2&gt;program.stderr&quot;);
 </pre>
 <p class="Pp">Ordering is important in all these examples. That's because the
     shell processes file descriptor redirections in strictly left to right
     order.</p>
 <p class="Pp"></p>
-<pre>
-    system(&quot;prog args 1&gt;tmpfile 2&gt;&amp;1&quot;);
+<pre>    system(&quot;prog args 1&gt;tmpfile 2&gt;&amp;1&quot;);
     system(&quot;prog args 2&gt;&amp;1 1&gt;tmpfile&quot;);
 </pre>
 <p class="Pp">The first command sends both standard out and standard error to
@@ -932,19 +860,16 @@
     Why send a clear message that isn't true?</p>
 <p class="Pp">Consider this line:</p>
 <p class="Pp"></p>
-<pre>
-    `cat /etc/termcap`;
+<pre>    `cat /etc/termcap`;
 </pre>
 <p class="Pp">You forgot to check <span class="Li">$?</span> to see whether the
     program even ran correctly. Even if you wrote</p>
 <p class="Pp"></p>
-<pre>
-    print `cat /etc/termcap`;
+<pre>    print `cat /etc/termcap`;
 </pre>
 <p class="Pp">this code could and probably should be written as</p>
 <p class="Pp"></p>
-<pre>
-    system(&quot;cat /etc/termcap&quot;) == 0
+<pre>    system(&quot;cat /etc/termcap&quot;) == 0
     or die &quot;cat program failed!&quot;;
 </pre>
 <p class="Pp">which will echo the cat command's output as it is generated,
@@ -960,23 +885,20 @@
 <p class="Pp">This is a bit tricky. You can't simply write the command like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    @ok = `grep @opts '$search_string' @filenames`;
+<pre>    @ok = `grep @opts '$search_string' @filenames`;
 </pre>
 <p class="Pp">As of Perl 5.8.0, you can use
     <span class="Li">&quot;open()&quot;</span> with multiple arguments. Just
     like the list forms of <span class="Li">&quot;system()&quot;</span> and
     <span class="Li">&quot;exec()&quot;</span>, no shell escapes happen.</p>
 <p class="Pp"></p>
-<pre>
-    open( GREP, &quot;-|&quot;, 'grep', @opts, $search_string, @filenames );
+<pre>    open( GREP, &quot;-|&quot;, 'grep', @opts, $search_string, @filenames );
     chomp(@ok = &lt;GREP&gt;);
     close GREP;
 </pre>
 <p class="Pp">You can also:</p>
 <p class="Pp"></p>
-<pre>
-    my @ok = ();
+<pre>    my @ok = ();
     if (open(GREP, &quot;-|&quot;)) {
         while (&lt;GREP&gt;) {
             chomp;
@@ -1010,8 +932,7 @@
   <dt>1.</dt>
   <dd>Try keeping around the seekpointer and go there, like this:
     <p class="Pp"></p>
-    <pre>
-    my $where = tell($log_fh);
+    <pre>    my $where = tell($log_fh);
     seek($log_fh, $where, 0);
     </pre>
   </dd>
@@ -1047,8 +968,7 @@
     initial telnet handshaking, then the standard dual-process approach will
     suffice:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Socket;             # new in 5.004
+<pre>    use IO::Socket;             # new in 5.004
     my $handle = IO::Socket::INET-&gt;new('www.perl.com:80')
         or die &quot;can't connect to port 80 on www.perl.com $!&quot;;
     $handle-&gt;autoflush(1);
@@ -1084,8 +1004,7 @@
     work on all operating systems, though. Daemon programs like sendmail place
     their state there, as in:</p>
 <p class="Pp"></p>
-<pre>
-    $0 = &quot;orcus [accepting connections]&quot;;
+<pre>    $0 = &quot;orcus [accepting connections]&quot;;
 </pre>
 </section>
 <section class="Ss">
@@ -1128,8 +1047,7 @@
     tty.</li>
   <li>Background yourself like this:
     <p class="Pp"></p>
-    <pre>
-    fork &amp;&amp; exit;
+    <pre>    fork &amp;&amp; exit;
     </pre>
   </li>
 </ul>
@@ -1146,8 +1064,7 @@
     of your filehandles is connected to a terminal, you can try the
     <span class="Li">&quot;-t&quot;</span> file test:</p>
 <p class="Pp"></p>
-<pre>
-    if( -t STDOUT ) {
+<pre>    if( -t STDOUT ) {
         print &quot;I'm connected to a terminal!\n&quot;;
     }
 </pre>
@@ -1161,9 +1078,7 @@
     the module thinks the session is interactive. Otherwise, the filehandle is a
     null handle that simply discards the output:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Interactive;
-
+<pre>    use IO::Interactive;
     print { is_interactive } &quot;I might go to standard output!\n&quot;;
 </pre>
 <p class="Pp">This still doesn't guarantee that a real person is answering your
@@ -1172,8 +1087,7 @@
     distribution, you can check the environment. The CPAN Testers, for instance,
     set the value of <span class="Li">&quot;AUTOMATED_TESTING&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    unless( $ENV{AUTOMATED_TESTING} ) {
+<pre>    unless( $ENV{AUTOMATED_TESTING} ) {
         print &quot;Hello interactive tester!\n&quot;;
     }
 </pre>
@@ -1196,8 +1110,7 @@
 <p class="Pp">(contributed by Xho)</p>
 <p class="Pp">Use the BSD::Resource module from CPAN. As an example:</p>
 <p class="Pp"></p>
-<pre>
-    use BSD::Resource;
+<pre>    use BSD::Resource;
     setrlimit(RLIMIT_CPU,10,20) or die $!;
 </pre>
 <p class="Pp">This sets the soft and hard limits to 10 and 20 seconds,
@@ -1238,8 +1151,7 @@
     code) and then have a signal handler for the INT signal that passes the
     signal on to the subprocess. Or you can check for it:</p>
 <p class="Pp"></p>
-<pre>
-    $rc = system($cmd);
+<pre>    $rc = system($cmd);
     if ($rc &amp; 127) { die &quot;signal death&quot; }
 </pre>
 </section>
@@ -1253,8 +1165,7 @@
     <span class="Li">&quot;Fcntl&quot;</span> module in conjunction with
     <span class="Li">&quot;sysopen()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    use Fcntl;
+<pre>    use Fcntl;
     sysopen(my $fh, &quot;/foo/somefile&quot;, O_WRONLY|O_NDELAY|O_CREAT, 0644)
         or die &quot;can't open /foo/somefile: $!&quot;:
 </pre>
@@ -1273,9 +1184,7 @@
 <p class="Pp">Consider this script, which has an error you may not notice
     immediately.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/locl/bin/perl
-
+<pre>    #!/usr/locl/bin/perl
     print &quot;Hello World\n&quot;;
 </pre>
 <p class="Pp">I get an error when I run this from my shell (which happens to be
@@ -1283,21 +1192,17 @@
     <span class="Li">&quot;print()&quot;</span> function, but my shebang line is
     not the path to perl, so the shell runs the script, and I get the error.</p>
 <p class="Pp"></p>
-<pre>
-    $ ./test
+<pre>    $ ./test
     ./test: line 3: print: command not found
 </pre>
 <p class="Pp">A quick and dirty fix involves a little bit of code, but this may
     be all you need to figure out the problem.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl -w
-
+<pre>    #!/usr/bin/perl -w
     BEGIN {
         $SIG{__WARN__} = sub{ print STDERR &quot;Perl: &quot;, @_; };
         $SIG{__DIE__}  = sub{ print STDERR &quot;Perl: &quot;, @_; exit 1};
     }
-
     $a = 1 + undef;
     $x / 0;
     __END__
@@ -1307,8 +1212,7 @@
     of the compilation errors and warnings get the &quot;Perl:&quot; prefix
   too.</p>
 <p class="Pp"></p>
-<pre>
-    Perl: Useless use of division (/) in void context at ./test line 9.
+<pre>    Perl: Useless use of division (/) in void context at ./test line 9.
     Perl: Name &quot;main::a&quot; used only once: possible typo at ./test line 8.
     Perl: Name &quot;main::x&quot; used only once: possible typo at ./test line 9.
     Perl: Use of uninitialized value in addition (+) at ./test line 8.
@@ -1325,8 +1229,7 @@
     it for you. Use the diagnostics pragma with turns perl's normal messages
     into longer discussions on the topic.</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics;
+<pre>    use diagnostics;
 </pre>
 <p class="Pp">If you don't get a paragraph or two of expanded discussion, it
     might not be perl's message.</p>
@@ -1339,21 +1242,18 @@
     by using the <span class="Li">&quot;cpan&quot;</span> command that comes
     with Perl. You can give it a list of modules to install:</p>
 <p class="Pp"></p>
-<pre>
-    $ cpan IO::Interactive Getopt::Whatever
+<pre>    $ cpan IO::Interactive Getopt::Whatever
 </pre>
 <p class="Pp">If you prefer <span class="Li">&quot;CPANPLUS&quot;</span>, it's
     just as easy:</p>
 <p class="Pp"></p>
-<pre>
-    $ cpanp i IO::Interactive Getopt::Whatever
+<pre>    $ cpanp i IO::Interactive Getopt::Whatever
 </pre>
 <p class="Pp">If you want to install a distribution from the current directory,
     you can tell <span class="Li">&quot;CPAN.pm&quot;</span> to install
     <span class="Li">&quot;.&quot;</span> (the full stop):</p>
 <p class="Pp"></p>
-<pre>
-    $ cpan .
+<pre>    $ cpan .
 </pre>
 <p class="Pp">See the documentation for either of those commands to see what
     else you can do.</p>
@@ -1362,14 +1262,12 @@
     paths.</p>
 <p class="Pp">For distributions that use <i>Makefile.PL</i>:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl Makefile.PL
+<pre>    $ perl Makefile.PL
     $ make test install
 </pre>
 <p class="Pp">For distributions that use <i>Build.PL</i>:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl Build.PL
+<pre>    $ perl Build.PL
     $ ./Build test
     $ ./Build install
 </pre>
@@ -1389,9 +1287,7 @@
     but Perl also calls the <span class="Li">&quot;import&quot;</span> method
     for the loaded package. These two are the same:</p>
 <p class="Pp"></p>
-<pre>
-    use MODULE qw(import list);
-
+<pre>    use MODULE qw(import list);
     BEGIN {
         require MODULE;
         MODULE-&gt;import(import list);
@@ -1401,9 +1297,7 @@
     <span class="Li">&quot;import&quot;</span> by using an explicit, empty
     import list. Both of these still happen at compile-time:</p>
 <p class="Pp"></p>
-<pre>
-    use MODULE ();
-
+<pre>    use MODULE ();
     BEGIN {
         require MODULE;
     }
@@ -1414,8 +1308,7 @@
     <span class="Li">&quot;use&quot;</span> cannot load files by name, although
     <span class="Li">&quot;require&quot;</span> can:</p>
 <p class="Pp"></p>
-<pre>
-    require &quot;$ENV{HOME}/lib/Foo.pm&quot;; # no @INC searching!
+<pre>    require &quot;$ENV{HOME}/lib/Foo.pm&quot;; # no @INC searching!
 </pre>
 <p class="Pp">See the entry for <span class="Li">&quot;use&quot;</span> in
     perlfunc for more details.</p>
@@ -1434,30 +1327,26 @@
 <p class="Pp">For <span class="Li">&quot;Makefile.PL&quot;</span>-based
     distributions, use the INSTALL_BASE option when generating Makefiles:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL INSTALL_BASE=/mydir/perl
+<pre>    perl Makefile.PL INSTALL_BASE=/mydir/perl
 </pre>
 <p class="Pp">You can set this in your
     <span class="Li">&quot;CPAN.pm&quot;</span> configuration so modules
     automatically install in your private library directory when you use the
     CPAN.pm shell:</p>
 <p class="Pp"></p>
-<pre>
-    % cpan
+<pre>    % cpan
     cpan&gt; o conf makepl_arg INSTALL_BASE=/mydir/perl
     cpan&gt; o conf commit
 </pre>
 <p class="Pp">For <span class="Li">&quot;Build.PL&quot;</span>-based
     distributions, use the --install_base option:</p>
 <p class="Pp"></p>
-<pre>
-    perl Build.PL --install_base /mydir/perl
+<pre>    perl Build.PL --install_base /mydir/perl
 </pre>
 <p class="Pp">You can configure <span class="Li">&quot;CPAN.pm&quot;</span> to
     automatically use this option too:</p>
 <p class="Pp"></p>
-<pre>
-    % cpan
+<pre>    % cpan
     cpan&gt; o conf mbuild_arg &quot;--install_base /mydir/perl&quot;
     cpan&gt; o conf commit
 </pre>
@@ -1482,8 +1371,7 @@
     <span class="Li">@INC</span> as you would for any other directory. You might
     &lt;use lib&gt; if you know the directory at compile time:</p>
 <p class="Pp"></p>
-<pre>
-    use lib $directory;
+<pre>    use lib $directory;
 </pre>
 <p class="Pp">The trick in this task is to find the directory. Before your
     script does anything else (such as a
@@ -1491,12 +1379,10 @@
     directory with the <span class="Li">&quot;Cwd&quot;</span> module, which
     comes with Perl:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         use Cwd;
         our $directory = cwd;
     }
-
     use lib $directory;
 </pre>
 <p class="Pp">You can do a similar thing with the value of
@@ -1504,15 +1390,12 @@
     relative path, but <span class="Li">&quot;rel2abs&quot;</span> can turn it
     into an absolute path. Once you have the</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         use File::Spec::Functions qw(rel2abs);
         use File::Basename qw(dirname);
-
         my $path   = rel2abs( $0 );
         our $directory = dirname( $path );
     }
-
     use lib $directory;
 </pre>
 <p class="Pp">The FindBin module, which comes with Perl, might work. It finds
@@ -1520,14 +1403,12 @@
     <span class="Li">$Bin</span>, which you can then use to construct the right
     library path:</p>
 <p class="Pp"></p>
-<pre>
-    use FindBin qw($Bin);
+<pre>    use FindBin qw($Bin);
 </pre>
 <p class="Pp">You can also use local::lib to do much of the same thing. Install
     modules using local::lib's settings then use the module in your program:</p>
 <p class="Pp"></p>
-<pre>
-     use local::lib; # sets up a local lib at ~/perl5
+<pre>     use local::lib; # sets up a local lib at ~/perl5
 </pre>
 <p class="Pp">See the local::lib documentation for more details.</p>
 </section>
@@ -1541,39 +1422,33 @@
   <dt id="the"><a class="permalink" href="#the">the &quot;PERLLIB&quot;
     environment variable</a></dt>
   <dd>
-    <pre>
-    $ export PERLLIB=/path/to/my/dir
+    <pre>    $ export PERLLIB=/path/to/my/dir
     $ perl program.pl
     </pre>
   </dd>
   <dt id="the~2"><a class="permalink" href="#the~2">the &quot;PERL5LIB&quot;
     environment variable</a></dt>
   <dd>
-    <pre>
-    $ export PERL5LIB=/path/to/my/dir
+    <pre>    $ export PERL5LIB=/path/to/my/dir
     $ perl program.pl
     </pre>
   </dd>
   <dt id="the~3"><a class="permalink" href="#the~3">the &quot;perl -Idir&quot;
     command line flag</a></dt>
   <dd>
-    <pre>
-    $ perl -I/path/to/my/dir program.pl
+    <pre>    $ perl -I/path/to/my/dir program.pl
     </pre>
   </dd>
   <dt id="the~4"><a class="permalink" href="#the~4">the &quot;lib&quot;
     pragma:</a></dt>
   <dd>
-    <pre>
-    use lib &quot;$ENV{HOME}/myown_perllib&quot;;
+    <pre>    use lib &quot;$ENV{HOME}/myown_perllib&quot;;
     </pre>
   </dd>
   <dt id="the~5"><a class="permalink" href="#the~5">the local::lib
     module:</a></dt>
   <dd>
-    <pre>
-    use local::lib;
-
+    <pre>    use local::lib;
     use local::lib &quot;~/myown_perllib&quot;;
     </pre>
   </dd>
@@ -1591,19 +1466,16 @@
     of these paths are stored in <span class="Li">@INC</span>, which you can
     display with the one-liner</p>
 <p class="Pp"></p>
-<pre>
-    perl -e 'print join(&quot;\n&quot;,@INC,&quot;&quot;)'
+<pre>    perl -e 'print join(&quot;\n&quot;,@INC,&quot;&quot;)'
 </pre>
 <p class="Pp">The same information is displayed at the end of the output from
     the command</p>
 <p class="Pp"></p>
-<pre>
-    perl -V
+<pre>    perl -V
 </pre>
 <p class="Pp">To find out where a module's source code is located, use</p>
 <p class="Pp"></p>
-<pre>
-    perldoc -l Encode
+<pre>    perldoc -l Encode
 </pre>
 <p class="Pp">to display the path to the module. In some cases (for example, the
     <span class="Li">&quot;AutoLoader&quot;</span> module), this command will

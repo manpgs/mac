@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLOOTUT(1)</title>
 </head>
@@ -106,15 +107,13 @@
     used. Here's our &quot;class declaration&quot; for the
     <span class="Li">&quot;File&quot;</span> class:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
+<pre>  package File;
 </pre>
 <p class="Pp">In Perl, there is no special keyword for constructing an object.
     However, most OO modules on CPAN use a method named
     <span class="Li">&quot;new()&quot;</span> to construct a new object:</p>
 <p class="Pp"></p>
-<pre>
-  my $hostname = File-&gt;new(
+<pre>  my $hostname = File-&gt;new(
       path          =&gt; '/etc/hostname',
       content       =&gt; &quot;foo\n&quot;,
       last_mod_time =&gt; 1304974868,
@@ -137,9 +136,7 @@
     core module can tell us its class name. This subroutine returns an object's
     class when passed an object, and false otherwise.</p>
 <p class="Pp"></p>
-<pre>
-  use Scalar::Util 'blessed';
-
+<pre>  use Scalar::Util 'blessed';
   print blessed($hash);      # undef
   print blessed($hostname);  # File
 </pre>
@@ -150,8 +147,7 @@
     <span class="Li">&quot;new&quot;</span> as the name for their
   constructor:</p>
 <p class="Pp"></p>
-<pre>
-  my $file = File-&gt;new(...);
+<pre>  my $file = File-&gt;new(...);
 </pre>
 </section>
 <section class="Ss">
@@ -164,13 +160,10 @@
     package. Methods are always written to receive the object as their first
     argument:</p>
 <p class="Pp"></p>
-<pre>
-  sub print_info {
+<pre>  sub print_info {
       my $self = shift;
-
       print &quot;This file is at &quot;, $self-&gt;path, &quot;\n&quot;;
   }
-
   $file-&gt;print_info;
   # The file is at /etc/hostname
 </pre>
@@ -183,14 +176,11 @@
     either be a class name or an object. We can also pass additional arguments
     to the method:</p>
 <p class="Pp"></p>
-<pre>
-  sub print_info {
+<pre>  sub print_info {
       my $self   = shift;
       my $prefix = shift // &quot;This file is at &quot;;
-
       print $prefix, &quot;, &quot;, $self-&gt;path, &quot;\n&quot;;
   }
-
   $file-&gt;print_info(&quot;The file is located at &quot;);
   # The file is located at /etc/hostname
 </pre>
@@ -260,9 +250,7 @@
     <span class="Li">&quot;File::MP3&quot;</span> is a <b>subclass</b> of
     <span class="Li">&quot;File&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  package File::MP3;
-
+<pre>  package File::MP3;
   use parent 'File';
 </pre>
 <p class="Pp">The parent module is one of several ways that Perl lets you define
@@ -285,32 +273,25 @@
     <span class="Li">&quot;print_info()&quot;</span> method from
     <span class="Li">&quot;File&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $cage = File::MP3-&gt;new(
+<pre>  my $cage = File::MP3-&gt;new(
       path          =&gt; 'mp3s/My-Body-Is-a-Cage.mp3',
       content       =&gt; $mp3_data,
       last_mod_time =&gt; 1304974868,
       title         =&gt; 'My Body Is a Cage',
   );
-
   $cage-&gt;print_info;
   # The file is at mp3s/My-Body-Is-a-Cage.mp3
 </pre>
 <p class="Pp">If we wanted to include the mp3's title in the greeting, we could
     override the method:</p>
 <p class="Pp"></p>
-<pre>
-  package File::MP3;
-
+<pre>  package File::MP3;
   use parent 'File';
-
   sub print_info {
       my $self = shift;
-
       print &quot;This file is at &quot;, $self-&gt;path, &quot;\n&quot;;
       print &quot;Its title is &quot;, $self-&gt;title, &quot;\n&quot;;
   }
-
   $cage-&gt;print_info;
   # The file is at mp3s/My-Body-Is-a-Cage.mp3
   # Its title is My Body Is a Cage
@@ -332,14 +313,10 @@
 <p class="Pp">It is possible to explicitly call a parent method from a
   child:</p>
 <p class="Pp"></p>
-<pre>
-  package File::MP3;
-
+<pre>  package File::MP3;
   use parent 'File';
-
   sub print_info {
       my $self = shift;
-
       $self-&gt;SUPER::print_info();
       print &quot;Its title is &quot;, $self-&gt;title, &quot;\n&quot;;
   }
@@ -466,17 +443,13 @@
 <p class="Pp">Here is our <span class="Li">&quot;File&quot;</span> class using
     <span class="Li">&quot;Moose&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
+<pre>  package File;
   use Moose;
-
   has path          =&gt; ( is =&gt; 'ro' );
   has content       =&gt; ( is =&gt; 'ro' );
   has last_mod_time =&gt; ( is =&gt; 'ro' );
-
   sub print_info {
       my $self = shift;
-
       print &quot;This file is at &quot;, $self-&gt;path, &quot;\n&quot;;
   }
 </pre>
@@ -501,20 +474,16 @@
     <p class="Pp"><span class="Li">&quot;Moose&quot;</span> lets you define
         roles the same way you define classes:</p>
     <p class="Pp"></p>
-    <pre>
-  package HasOnOffSwitch;
+    <pre>  package HasOnOffSwitch;
   use Moose::Role;
-
   has is_on =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Bool',
   );
-
   sub turn_on {
       my $self = shift;
       $self-&gt;is_on(1);
   }
-
   sub turn_off {
       my $self = shift;
       $self-&gt;is_on(0);
@@ -630,17 +599,13 @@
 <p class="Pp">Here's our <span class="Li">&quot;File&quot;</span> class with
     <span class="Li">&quot;Class::Accessor&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
+<pre>  package File;
   use Class::Accessor 'antlers';
-
   has path          =&gt; ( is =&gt; 'ro' );
   has content       =&gt; ( is =&gt; 'ro' );
   has last_mod_time =&gt; ( is =&gt; 'ro' );
-
   sub print_info {
       my $self = shift;
-
       print &quot;This file is at &quot;, $self-&gt;path, &quot;\n&quot;;
   }
 </pre>
@@ -667,13 +632,10 @@
 <p class="Pp">Here's our <span class="Li">&quot;File&quot;</span> class once
     more:</p>
 <p class="Pp"></p>
-<pre>
-  package File;
+<pre>  package File;
   use Class::Tiny qw( path content last_mod_time );
-
   sub print_info {
       my $self = shift;
-
       print &quot;This file is at &quot;, $self-&gt;path, &quot;\n&quot;;
   }
 </pre>

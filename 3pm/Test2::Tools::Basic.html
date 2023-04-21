@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Tools::Basic(3)</title>
 </head>
@@ -36,41 +37,30 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Tools::Basic;
-
+<pre>    use Test2::Tools::Basic;
     ok($x, &quot;simple test&quot;);
-
     if ($passing) {
         pass('a passing test');
     }
     else {
         fail('a failing test');
     }
-
     diag &quot;This is a diagnostics message on STDERR&quot;;
     note &quot;This is a diagnostics message on STDOUT&quot;;
-
     {
         my $todo = todo &quot;Reason for todo&quot;;
         ok(0, &quot;this test is todo&quot;);
     }
-
     ok(1, &quot;this test is not todo&quot;);
-
     todo &quot;reason&quot; =&gt; sub {
         ok(0, &quot;this test is todo&quot;);
     };
-
     ok(1, &quot;this test is not todo&quot;);
-
     SKIP: {
         skip &quot;This will wipe your drive&quot;;
-
         # This never gets run:
         ok(!system('sudo rm -rf /'), &quot;Wipe drive&quot;);
     }
-
     done_testing;
 </pre>
 </section>
@@ -158,43 +148,31 @@
     <p class="Pp">There are two ways to use this. The first is to use a
         codeblock, and the TODO will only apply to the codeblock.</p>
     <p class="Pp"></p>
-    <pre>
-    ok(1, &quot;before&quot;); # Not TODO
-
+    <pre>    ok(1, &quot;before&quot;); # Not TODO
     todo 'this will fail' =&gt; sub {
         # This is TODO, as is any other test in this block.
         ok(0, &quot;blah&quot;);
     };
-
     ok(1, &quot;after&quot;); # Not TODO
     </pre>
     <p class="Pp">The other way is to use a scoped variable. TODO will end when
         the variable is destroyed or set to undef.</p>
     <p class="Pp"></p>
-    <pre>
-    ok(1, &quot;before&quot;); # Not TODO
-
+    <pre>    ok(1, &quot;before&quot;); # Not TODO
     {
         my $todo = todo 'this will fail';
-
         # This is TODO, as is any other test in this block.
         ok(0, &quot;blah&quot;);
     };
-
     ok(1, &quot;after&quot;); # Not TODO
     </pre>
     <p class="Pp">This is the same thing, but without the
         <span class="Li">&quot;{...}&quot;</span> scope.</p>
     <p class="Pp"></p>
-    <pre>
-    ok(1, &quot;before&quot;); # Not TODO
-
+    <pre>    ok(1, &quot;before&quot;); # Not TODO
     my $todo = todo 'this will fail';
-
     ok(0, &quot;blah&quot;); # TODO
-
     $todo = undef;
-
     ok(1, &quot;after&quot;); # Not TODO
     </pre>
   </dd>
@@ -208,10 +186,8 @@
       issue a single result. If you specify <span class="Li">$count</span> it
       will issue that many results.
     <p class="Pp"></p>
-    <pre>
-    SKIP: {
+    <pre>    SKIP: {
         skip &quot;This will wipe your drive&quot;;
-
         # This never gets run:
         ok(!system('sudo rm -rf /'), &quot;Wipe drive&quot;);
     }

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::Control::PreRead(3)</title>
 </head>
@@ -28,23 +29,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::LDAP;
+<pre> use Net::LDAP;
  use Net::LDAP::Control::PreRead;
  use Net::LDAP::Constant qw( LDAP_CONTROL_PREREAD LDAP_SUCCESS );
-
  $ldap = Net::LDAP-&gt;new( &quot;ldap.mydomain.eg&quot; );
-
  $preread = Net::LDAP::Control::PreRead-&gt;new( attrs =&gt; [ qw/givenName/ ] );
-
  my $mesg = $ldap-&gt;modify( &quot;cn=Barbara Jensen, o=University of Michigan, c=US&quot;,
                            replace =&gt; { givenName =&gt; &quot;Babs&quot; },
                            control =&gt; $preread );
-
  if ($mesg-&gt;code eq LDAP_SUCCESS) {
    my ($previous) = $mesg-&gt;control( LDAP_CONTROL_PREREAD );
    my $entry = $previous ? $previous-&gt;entry() : undef;
-
    if ($entry) {
      print &quot;givenName changed from '&quot; .
            join(&quot;', '&quot;, $entry-&gt;get_value(givenName&quot;) .

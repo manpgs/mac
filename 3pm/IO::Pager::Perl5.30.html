@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Pager::Perl(3)</title>
 </head>
@@ -29,10 +30,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Term:ReadKey; #Optional, but recommended
+<pre>    use Term:ReadKey; #Optional, but recommended
     use IO::Pager::Perl;
-
     my $t = IO::Pager::Perl-&gt;new( rows =&gt; 25, cols =&gt; 80 );
     $t-&gt;add_text( $text );
     $t-&gt;more();
@@ -49,8 +48,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Create_the_Pager"><a class="permalink" href="#Create_the_Pager">Create
   the Pager</a></h2>
-<pre>
-    $t = IO::Pager::Perl-&gt;new( option =&gt; value, ... );
+<pre>    $t = IO::Pager::Perl-&gt;new( option =&gt; value, ... );
 </pre>
 <p class="Pp">If no options are specified, sensible default values will be used.
     The following options are recognized, and shown with the default value:</p>
@@ -100,10 +98,8 @@
 <p class="Pp">There are accessors for all of the above properties, however those
     for rows, cols, speed, fold and squeeze are read only.</p>
 <p class="Pp"></p>
-<pre>
-  #Is visualBeep set?
+<pre>  #Is visualBeep set?
   $t-&gt;visualBeep();
-
   #Enable line numbering
   $t-&gt;lineNo(1);
 </pre>
@@ -114,21 +110,18 @@
 <p class="Pp">You will need some text to page through. You can specify text as
     as a parameter to the constructor:</p>
 <p class="Pp"></p>
-<pre>
-    text =&gt; $text
+<pre>    text =&gt; $text
 </pre>
 <p class="Pp">Or even add text later:</p>
 <p class="Pp"></p>
-<pre>
-    $t-&gt;add_text( $text );
+<pre>    $t-&gt;add_text( $text );
 </pre>
 <p class="Pp">If you wish to continuously add text to the pager, you must setup
     your own event loop, and indicate to
     <span class="Li">&quot;more&quot;</span> that it should relinquish control
     e.g;</p>
 <p class="Pp"></p>
-<pre>
-    eval{
+<pre>    eval{
         while( $t-&gt;more(RT=&gt;.05) ){
           ...
           $t-&gt;add_text(&quot;More text to page&quot;);
@@ -155,8 +148,7 @@
     keypress; where \c? represents Control-? and \e? represents Alt-? The
     existing pairings are:</p>
 <p class="Pp"></p>
-<pre>
-        'h' =&gt; \&amp;help,
+<pre>        'h' =&gt; \&amp;help,
         'q' =&gt; \&amp;done,
         'r' =&gt; \&amp;refresh,       #also &quot;\cL&quot;
         &quot;\n&quot;=&gt; \&amp;downline,      #also &quot;\e[B&quot;
@@ -178,8 +170,7 @@
 <p class="Pp">And a special sequence of a number followed by enter analogous
   to:</p>
 <p class="Pp"></p>
-<pre>
-        '/(\d+)/'   =&gt; \&amp;jump(\1)
+<pre>        '/(\d+)/'   =&gt; \&amp;jump(\1)
 </pre>
 <p class="Pp">if the value for that key is true.</p>
 <p class="Pp">The <span class="Li">&quot;dialog&quot;</span> method may be
@@ -188,12 +179,10 @@
     If the timeout is missing or 0, the dialog remains until a key is
   pressed.</p>
 <p class="Pp"></p>
-<pre>
-    my $t = IO::Pager::Perl-&gt;new();
+<pre>    my $t = IO::Pager::Perl-&gt;new();
     $t-&gt;add_text(&quot;Text to display&quot;);
     $t-&gt;add_func('!'=&gt;\&amp;boo);
     $t-&gt;more();
-
     sub boo{ my $self = shift; $self-&gt;dialog(&quot;BOO!&quot;, 1); }
 </pre>
 <p class="Pp">Should you add additional functionality to your pager, you will
@@ -201,17 +190,14 @@
     line. Use the <span class="Li">&quot;I18N&quot;</span> method to replace the
     default text or save text for your own interface.</p>
 <p class="Pp"></p>
-<pre>
-    #Get the default help text
+<pre>    #Get the default help text
     my $help = $t-&gt;I18N('help');
-
     #Minimal status line
     $t-&gt;I18N('prompt', &quot;&lt;h&gt; help&quot;);
 </pre>
 <p class="Pp">Current text elements available for customization are:</p>
 <p class="Pp"></p>
-<pre>
-    404      - search text not found dialog
+<pre>    404      - search text not found dialog
     bottom   - prompt line end of file indicator
     continue - text to display at the bottom of the help dialog
     help     - help dialog text, a list of keys and their functions
@@ -276,9 +262,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
-<pre>
-    Jerrad Pierce jpierce@cpan.org
-
+<pre>    Jerrad Pierce jpierce@cpan.org
     Jeff Weisberg - http://www.tcp4me.com
 </pre>
 </section>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Warnings(3)</title>
 </head>
@@ -32,33 +33,27 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test::More;
+<pre>    use Test::More;
     use Test::Warnings;
-
     pass('yay!');
     done_testing;
 </pre>
 <p class="Pp">emits TAP:</p>
 <p class="Pp"></p>
-<pre>
-    ok 1 - yay!
+<pre>    ok 1 - yay!
     ok 2 - no (unexpected) warnings (via done_testing)
     1..2
 </pre>
 <p class="Pp">and:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::More tests =&gt; 3;
+<pre>    use Test::More tests =&gt; 3;
     use Test::Warnings 0.005 ':all';
-
     pass('yay!');
     like(warning { warn &quot;oh noes!&quot; }, qr/^oh noes/, 'we warned');
 </pre>
 <p class="Pp">emits TAP:</p>
 <p class="Pp"></p>
-<pre>
-    ok 1 - yay!
+<pre>    ok 1 - yay!
     ok 2 - we warned
     ok 3 - no (unexpected) warnings (via END block)
     1..3
@@ -83,8 +78,7 @@
     not, and things will still Just Work.</p>
 <p class="Pp">It is actually equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-    use Test::NoWarnings 1.04 ':early';
+<pre>    use Test::NoWarnings 1.04 ':early';
 </pre>
 <p class="Pp">as warnings are still printed normally as they occur. You are
     safe, and enthusiastically encouraged, to perform a global search-replace of
@@ -135,8 +129,7 @@
 <p class="Pp">You can use this construct as a replacement for
     Test::Warn::warnings_are:</p>
 <p class="Pp"></p>
-<pre>
-    is_deeply(
+<pre>    is_deeply(
         [ warnings { ... } ],
         [
             'warning message 1',
@@ -147,8 +140,7 @@
 </pre>
 <p class="Pp">or, to replace Test::Warn::warnings_like:</p>
 <p class="Pp"></p>
-<pre>
-    cmp_deeply(
+<pre>    cmp_deeply(
         [ warnings { ... } ],
         bag(    # ordering of messages doesn't matter
             re(qr/warning message 1/),
@@ -187,8 +179,7 @@
     can dump its value if it doesn't contain what you expect. e.g. with this
     test:</p>
 <p class="Pp"></p>
-<pre>
-    like(
+<pre>    like(
         warning { foo() },
         qr/^this is a warning/,
         'got a warning from foo()',
@@ -198,16 +189,14 @@
     an arrayref, which will result in an unhelpful test failure message
   like:</p>
 <p class="Pp"></p>
-<pre>
-    #   Failed test 'got a warning from foo()'
+<pre>    #   Failed test 'got a warning from foo()'
     #   at t/mytest.t line 10.
     #                   'ARRAY(0xdeadbeef)'
     #     doesn't match '(?^:^this is a warning)'
 </pre>
 <p class="Pp">So instead, change your test to:</p>
 <p class="Pp"></p>
-<pre>
-    my $warning = warning { foo() };
+<pre>    my $warning = warning { foo() };
     like(
         $warning,
         qr/^this is a warning/,
@@ -256,8 +245,7 @@
     only making warnings fail tests in an author environment -- you can do this
     with the if pragma:</p>
 <p class="Pp"></p>
-<pre>
-    use if $ENV{AUTHOR_TESTING} || $ENV{RELEASE_TESTING}, 'Test::Warnings';
+<pre>    use if $ENV{AUTHOR_TESTING} || $ENV{RELEASE_TESTING}, 'Test::Warnings';
 </pre>
 <p class="Pp">In future versions of this module, when interfaces are added to
     test the content of warnings, there will likely be additional sugar
@@ -267,12 +255,10 @@
     ticket, or come by <span class="Li">&quot;#perl-qa&quot;</span> on irc!</p>
 <p class="Pp"><b>Achtung!</b> This is not a great idea:</p>
 <p class="Pp"></p>
-<pre>
-    sub warning_like(&amp;$;$) {
+<pre>    sub warning_like(&amp;$;$) {
         my ($code, $pattern, $name) = @_;
         like( &amp;warning($code), $pattern, $name );
     }
-
     warning_like( { ... }, qr/foo/, 'foo appears in the warning' );
 </pre>
 <p class="Pp">If the code in the <span class="Li">&quot;{ ... }&quot;</span> is
@@ -282,8 +268,7 @@
     appears in the warning&quot; will itself be matched by the regex (see
     <i>examples/warning_like.t</i>). Instead, write this:</p>
 <p class="Pp"></p>
-<pre>
-  like( warning { ... }, qr/foo/, 'foo appears in the warning' );
+<pre>  like( warning { ... }, qr/foo/, 'foo appears in the warning' );
 </pre>
 </section>
 <section class="Sh">

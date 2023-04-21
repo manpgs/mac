@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLMOD(1)</title>
 </head>
@@ -167,8 +168,7 @@
 <p class="Pp">The value in each entry of the hash is what you are referring to
     when you use the <span class="Li">*name</span> typeglob notation.</p>
 <p class="Pp"></p>
-<pre>
-    local *main::foo    = *main::bar;
+<pre>    local *main::foo    = *main::bar;
 </pre>
 <p class="Pp">You can use this to print out all the variables in a package, for
     instance. The standard but antiquated <i>dumpvar.pl</i> library and the CPAN
@@ -178,8 +178,7 @@
     subject to change between releases of perl.</p>
 <p class="Pp">Assignment to a typeglob performs an aliasing operation, i.e.,</p>
 <p class="Pp"></p>
-<pre>
-    *dick = *richard;
+<pre>    *dick = *richard;
 </pre>
 <p class="Pp">causes variables, subroutines, formats, and file and directory
     handles accessible via the identifier
@@ -187,8 +186,7 @@
     identifier <span class="Li">&quot;dick&quot;</span>. If you want to alias
     only a particular variable or subroutine, assign a reference instead:</p>
 <p class="Pp"></p>
-<pre>
-    *dick = \$richard;
+<pre>    *dick = \$richard;
 </pre>
 <p class="Pp">Which makes <span class="Li">$richard</span> and
     <span class="Li">$dick</span> the same variable, but leaves
@@ -197,8 +195,7 @@
 <p class="Pp">There is one subtle difference between the following
   statements:</p>
 <p class="Pp"></p>
-<pre>
-    *foo = *bar;
+<pre>    *foo = *bar;
     *foo = \$bar;
 </pre>
 <p class="Pp"><span class="Li">&quot;*foo = *bar&quot;</span> makes the
@@ -206,10 +203,8 @@
     \$bar&quot;</span> makes the SCALAR portions of two distinct typeglobs refer
     to the same scalar value. This means that the following code:</p>
 <p class="Pp"></p>
-<pre>
-    $bar = 1;
+<pre>    $bar = 1;
     *foo = \$bar;       # Make $foo an alias for $bar
-
     {
         local $bar = 2; # Restrict changes to block
         print $foo;     # Prints '1'!
@@ -228,8 +223,7 @@
     properly localize a variable that has been exported from a module depends on
     how it was exported:</p>
 <p class="Pp"></p>
-<pre>
-    @EXPORT = qw($FOO); # Usual form, can't be localized
+<pre>    @EXPORT = qw($FOO); # Usual form, can't be localized
     @EXPORT = qw(*FOO); # Can be localized
 </pre>
 <p class="Pp">You can work around the first case by using the fully qualified
@@ -241,8 +235,7 @@
     don't want to copy the whole thing. It only works when assigning to dynamic
     variables, not lexicals.</p>
 <p class="Pp"></p>
-<pre>
-    %some_hash = ();                    # can't be my()
+<pre>    %some_hash = ();                    # can't be my()
     *some_hash = fn( \%another_hash );
     sub fn {
         local *hashsym = shift;
@@ -259,8 +252,7 @@
 <p class="Pp">Another use of symbol tables is for making &quot;constant&quot;
     scalars.</p>
 <p class="Pp"></p>
-<pre>
-    *PI = \3.14159265358979;
+<pre>    *PI = \3.14159265358979;
 </pre>
 <p class="Pp">Now you cannot alter <span class="Li">$PI</span>, which is
     probably a good thing all in all. This isn't the same as a constant
@@ -273,8 +265,7 @@
     *foo symbol table entry comes from. This may be useful in a subroutine that
     gets passed typeglobs as arguments:</p>
 <p class="Pp"></p>
-<pre>
-    sub identify_typeglob {
+<pre>    sub identify_typeglob {
         my $glob = shift;
         print 'You gave me ', *{$glob}{PACKAGE},
             '::', *{$glob}{NAME}, &quot;\n&quot;;
@@ -284,8 +275,7 @@
 </pre>
 <p class="Pp">This prints</p>
 <p class="Pp"></p>
-<pre>
-    You gave me main::foo
+<pre>    You gave me main::foo
     You gave me bar::baz
 </pre>
 <p class="Pp">The <span class="Li">*foo{THING}</span> notation can also be used
@@ -295,20 +285,17 @@
     You can define a subroutine outside its package by explicitly qualifying the
     name of the subroutine:</p>
 <p class="Pp"></p>
-<pre>
-    package main;
+<pre>    package main;
     sub Some_package::foo { ... }   # &amp;foo defined in Some_package
 </pre>
 <p class="Pp">This is just a shorthand for a typeglob assignment at compile
     time:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { *Some_package::foo = sub { ... } }
+<pre>    BEGIN { *Some_package::foo = sub { ... } }
 </pre>
 <p class="Pp">and is <i>not</i> the same as writing:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Some_package;
         sub foo { ... }
     }
@@ -316,27 +303,21 @@
 <p class="Pp">In the first two versions, the body of the subroutine is lexically
     in the main package, <i>not</i> in Some_package. So something like this:</p>
 <p class="Pp"></p>
-<pre>
-    package main;
-
+<pre>    package main;
     $Some_package::name = &quot;fred&quot;;
     $main::name = &quot;barney&quot;;
-
     sub Some_package::foo {
         print &quot;in &quot;, __PACKAGE__, &quot;: \$name is '$name'\n&quot;;
     }
-
     Some_package::foo();
 </pre>
 <p class="Pp">prints:</p>
 <p class="Pp"></p>
-<pre>
-    in main: $name is 'barney'
+<pre>    in main: $name is 'barney'
 </pre>
 <p class="Pp">rather than:</p>
 <p class="Pp"></p>
-<pre>
-    in Some_package: $name is 'fred'
+<pre>    in Some_package: $name is 'fred'
 </pre>
 <p class="Pp">This also has implications for the use of the SUPER:: qualifier
     (see perlobj).</p>
@@ -443,38 +424,28 @@
     not.</p>
 <p class="Pp">The <b>begincheck</b> program makes it all clear, eventually:</p>
 <p class="Pp"></p>
-<pre>
-  #!/usr/bin/perl
-
+<pre>  #!/usr/bin/perl
   # begincheck
-
   print         &quot;10. Ordinary code runs at runtime.\n&quot;;
-
   END { print   &quot;16.   So this is the end of the tale.\n&quot; }
   INIT { print  &quot; 7. INIT blocks run FIFO just before runtime.\n&quot; }
   UNITCHECK {
     print       &quot; 4.   And therefore before any CHECK blocks.\n&quot;
   }
   CHECK { print &quot; 6.   So this is the sixth line.\n&quot; }
-
   print         &quot;11.   It runs in order, of course.\n&quot;;
-
   BEGIN { print &quot; 1. BEGIN blocks run FIFO during compilation.\n&quot; }
   END { print   &quot;15.   Read perlmod for the rest of the story.\n&quot; }
   CHECK { print &quot; 5. CHECK blocks run LIFO after all compilation.\n&quot; }
   INIT { print  &quot; 8.   Run this again, using Perl's -c switch.\n&quot; }
-
   print         &quot;12.   This is anti-obfuscated code.\n&quot;;
-
   END { print   &quot;14. END blocks run LIFO at quitting time.\n&quot; }
   BEGIN { print &quot; 2.   So this line comes out second.\n&quot; }
   UNITCHECK {
    print &quot; 3. UNITCHECK blocks run LIFO after each file is compiled.\n&quot;
   }
   INIT { print  &quot; 9.   You'll see the difference right away.\n&quot; }
-
   print         &quot;13.   It only _looks_ like it should be confusing.\n&quot;;
-
   __END__
 </pre>
 </section>
@@ -503,55 +474,41 @@
     Some::Module, create a file called <i>Some/Module.pm</i> and start with this
     template:</p>
 <p class="Pp"></p>
-<pre>
-    package Some::Module;  # assumes Some/Module.pm
-
+<pre>    package Some::Module;  # assumes Some/Module.pm
     use strict;
     use warnings;
-
     # Get the import method from Exporter to export functions and
     # variables
     use Exporter 5.57 'import';
-
     # set the version for version checking
     our $VERSION     = '1.00';
-
     # Functions and variables which are exported by default
     our @EXPORT      = qw(func1 func2);
-
     # Functions and variables which can be optionally exported
     our @EXPORT_OK   = qw($Var1 %Hashit func3);
-
     # exported package globals go here
     our $Var1    = '';
     our %Hashit  = ();
-
     # non-exported package globals go here
     # (they are still accessible as $Some::Module::stuff)
     our @more    = ();
     our $stuff   = '';
-
     # file-private lexicals go here, before any functions which use them
     my $priv_var    = '';
     my %secret_hash = ();
-
     # here's a file-private function as a closure,
     # callable as $priv_func-&gt;();
     my $priv_func = sub {
         ...
     };
-
     # make all your functions, whether exported or not;
     # remember to put something interesting in the {} stubs
     sub func1      { ... }
     sub func2      { ... }
-
     # this one isn't always exported, but could be called directly
     # as Some::Module::func3()
     sub func3      { ... }
-
     END { ... }       # module clean-up code here (global destructor)
-
     1;  # don't forget to return a true value from the file
 </pre>
 <p class="Pp">Then go on to declare and use your variables in functions without
@@ -559,33 +516,27 @@
     and style issues in module creation.</p>
 <p class="Pp">Perl modules are included into your program by saying</p>
 <p class="Pp"></p>
-<pre>
-    use Module;
+<pre>    use Module;
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    use Module LIST;
+<pre>    use Module LIST;
 </pre>
 <p class="Pp">This is exactly equivalent to</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { require 'Module.pm'; 'Module'-&gt;import; }
+<pre>    BEGIN { require 'Module.pm'; 'Module'-&gt;import; }
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { require 'Module.pm'; 'Module'-&gt;import( LIST ); }
+<pre>    BEGIN { require 'Module.pm'; 'Module'-&gt;import( LIST ); }
 </pre>
 <p class="Pp">As a special case</p>
 <p class="Pp"></p>
-<pre>
-    use Module ();
+<pre>    use Module ();
 </pre>
 <p class="Pp">is exactly equivalent to</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { require 'Module.pm'; }
+<pre>    BEGIN { require 'Module.pm'; }
 </pre>
 <p class="Pp">All Perl module files have the extension <i>.pm</i>. The
     <span class="Li">&quot;use&quot;</span> operator assumes this so you don't
@@ -596,8 +547,7 @@
     modules&quot; (or even &quot;pragmata&quot; if you're a classicist).</p>
 <p class="Pp">The two statements:</p>
 <p class="Pp"></p>
-<pre>
-    require SomeModule;
+<pre>    require SomeModule;
     require &quot;SomeModule.pm&quot;;
 </pre>
 <p class="Pp">differ from each other in two ways. In the first case, any double
@@ -622,13 +572,10 @@
     <span class="Li">&quot;require&quot;</span> you can get into this
   problem:</p>
 <p class="Pp"></p>
-<pre>
-    require Cwd;                # make Cwd:: accessible
+<pre>    require Cwd;                # make Cwd:: accessible
     $here = Cwd::getcwd();
-
     use Cwd;                    # import names from Cwd::
     $here = getcwd();
-
     require Cwd;                # make Cwd:: accessible
     $here = getcwd();           # oops! no main::getcwd()
 </pre>

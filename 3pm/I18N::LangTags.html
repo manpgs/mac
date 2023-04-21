@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>I18N::LangTags(3pm)</title>
 </head>
@@ -29,21 +30,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use I18N::LangTags();
+<pre>  use I18N::LangTags();
 </pre>
 <p class="Pp">...or specify whichever of those functions you want to import,
     like so:</p>
 <p class="Pp"></p>
-<pre>
-  use I18N::LangTags qw(implicate_supers similarity_language_tag);
+<pre>  use I18N::LangTags qw(implicate_supers similarity_language_tag);
 </pre>
 <p class="Pp">All the exportable functions are listed below -- you're free to
     import only some, or none at all. By default, none are imported. If you
   say:</p>
 <p class="Pp"></p>
-<pre>
-    use I18N::LangTags qw(:ALL)
+<pre>    use I18N::LangTags qw(:ALL)
 </pre>
 <p class="Pp">...then all are exported. (This saves you from having to use
     something less obvious like <span class="Li">&quot;use I18N::LangTags
@@ -67,26 +65,20 @@
     <p class="Pp">Returns true iff <span class="Li">$lang1</span> is a formally
         valid language tag.</p>
     <p class="Pp"></p>
-    <pre>
-   is_language_tag(&quot;fr&quot;)            is TRUE
+    <pre>   is_language_tag(&quot;fr&quot;)            is TRUE
    is_language_tag(&quot;x-jicarilla&quot;)   is FALSE
        (Subtags can be 8 chars long at most -- 'jicarilla' is 9)
-
    is_language_tag(&quot;sgn-US&quot;)    is TRUE
        (That's American Sign Language)
-
    is_language_tag(&quot;i-Klikitat&quot;)    is TRUE
        (True without regard to the fact noone has actually
         registered Klikitat -- it's a formally valid tag)
-
    is_language_tag(&quot;fr-patois&quot;)     is TRUE
        (Formally valid -- altho descriptively weak!)
-
    is_language_tag(&quot;Spanish&quot;)       is FALSE
    is_language_tag(&quot;french-patois&quot;) is FALSE
        (No good -- first subtag has to match
         /^([xXiI]|[a-zA-Z]{2,3})$/ -- see RFC3066)
-
    is_language_tag(&quot;x-borg-prot2532&quot;) is TRUE
        (Yes, subtags can contain digits, as of RFC3066)
     </pre>
@@ -96,10 +88,8 @@
         tags in <span class="Li">$whatever</span>. Not very smart, so don't get
         too creative with what you want to feed it.</p>
     <p class="Pp"></p>
-    <pre>
-  extract_language_tags(&quot;fr, fr-ca, i-mingo&quot;)
+    <pre>  extract_language_tags(&quot;fr, fr-ca, i-mingo&quot;)
     returns:   ('fr', 'fr-ca', 'i-mingo')
-
   extract_language_tags(&quot;It's like this: I'm in fr -- French!&quot;)
     returns:   ('It', 'in', 'fr')
   (So don't just feed it any old thing.)
@@ -112,8 +102,7 @@
         <span class="Li">$lang2</span> are acceptable variant tags representing
         the same language-form.</p>
     <p class="Pp"></p>
-    <pre>
-   same_language_tag('x-kadara', 'i-kadara')  is TRUE
+    <pre>   same_language_tag('x-kadara', 'i-kadara')  is TRUE
       (The x/i- alternation doesn't matter)
    same_language_tag('X-KADARA', 'i-kadara')  is TRUE
       (...and neither does case)
@@ -140,24 +129,19 @@
         where similarity is the number of common elements on the left, without
         regard to case and to x/i- alternation.</p>
     <p class="Pp"></p>
-    <pre>
-   similarity_language_tag('fr', 'fr-ca')           is 1
+    <pre>   similarity_language_tag('fr', 'fr-ca')           is 1
       (one element in common)
    similarity_language_tag('fr-ca', 'fr-FR')        is 1
       (one element in common)
-
    similarity_language_tag('fr-CA-joual',
                            'fr-CA-PEI')             is 2
    similarity_language_tag('fr-CA-joual', 'fr-CA')  is 2
       (two elements in common)
-
    similarity_language_tag('x-kadara', 'i-kadara')  is 1
       (x/i- doesn't matter)
-
    similarity_language_tag('en',       'x-kadar')   is 0
    similarity_language_tag('x-kadara', 'x-kadar')   is 0
       (unrelated tags -- no similarity)
-
    similarity_language_tag('i-cree-syllabic',
                            'i-cherokee-syllabic')   is 0
       (no B&lt;leftmost&gt; elements in common!)
@@ -169,26 +153,19 @@
     <p class="Pp"><b>Get the order right! It doesn't work the other way
         around!</b></p>
     <p class="Pp"></p>
-    <pre>
-   is_dialect_of('en-US', 'en')            is TRUE
+    <pre>   is_dialect_of('en-US', 'en')            is TRUE
      (American English IS a dialect of all-English)
-
    is_dialect_of('fr-CA-joual', 'fr-CA')   is TRUE
    is_dialect_of('fr-CA-joual', 'fr')      is TRUE
      (Joual is a dialect of (a dialect of) French)
-
    is_dialect_of('en', 'en-US')            is FALSE
      (all-English is a NOT dialect of American English)
-
    is_dialect_of('fr', 'en-CA')            is FALSE
-
    is_dialect_of('en',    'en'   )         is TRUE
    is_dialect_of('en-US', 'en-US')         is TRUE
      (B&lt;Note:&gt; these are degenerate cases)
-
    is_dialect_of('i-mingo-tom', 'x-Mingo') is TRUE
      (the x/i thing doesn't matter, nor does case)
-
    is_dialect_of('nn', 'no')               is TRUE
      (because 'nn' (New Norse) is aliased to 'no-nyn',
       as a special legacy case, and 'no-nyn' is a
@@ -201,13 +178,9 @@
         the end of <span class="Li">$lang1</span> until nothing (or just
         &quot;i&quot; or &quot;x&quot;) is left.</p>
     <p class="Pp"></p>
-    <pre>
-   super_languages(&quot;fr-CA-joual&quot;)  is  (&quot;fr-CA&quot;, &quot;fr&quot;)
-
+    <pre>   super_languages(&quot;fr-CA-joual&quot;)  is  (&quot;fr-CA&quot;, &quot;fr&quot;)
    super_languages(&quot;en-AU&quot;)  is  (&quot;en&quot;)
-
    super_languages(&quot;en&quot;)  is  empty-list, ()
-
    super_languages(&quot;i-cherokee&quot;)  is  empty-list, ()
     ...not (&quot;i&quot;), which would be illegal as well as pointless.
     </pre>
@@ -231,17 +204,11 @@
         &quot;POSIX&quot;), this returns empty-list in a list context, or undef
         in a scalar context.</p>
     <p class="Pp"></p>
-    <pre>
-   locale2language_tag(&quot;en&quot;) is &quot;en&quot;
-
+    <pre>   locale2language_tag(&quot;en&quot;) is &quot;en&quot;
    locale2language_tag(&quot;en_US&quot;) is &quot;en-US&quot;
-
    locale2language_tag(&quot;en_US.ISO8859-1&quot;) is &quot;en-US&quot;
-
    locale2language_tag(&quot;C&quot;) is undef or ()
-
    locale2language_tag(&quot;POSIX&quot;) is undef or ()
-
    locale2language_tag(&quot;POSIX&quot;) is undef or ()
     </pre>
     <p class="Pp">I'm not totally sure that locale names map satisfactorily to
@@ -281,8 +248,7 @@
         languages. Its format is &quot;[language tag]=[how to say
         'Hello']&quot;, like:</p>
     <p class="Pp"></p>
-    <pre>
-          en-US=Hiho
+    <pre>          en-US=Hiho
           fr=Bonjour
           i-mingo=Hau'
     </pre>
@@ -291,15 +257,13 @@
         and then expect the string that says how to greet in that language. So
         an interaction looks like:</p>
     <p class="Pp"></p>
-    <pre>
-          greeting-client asks:    fr
+    <pre>          greeting-client asks:    fr
           greeting-server answers: Bonjour
     </pre>
     <p class="Pp">So far so good. But suppose the way you're implementing this
         is:</p>
     <p class="Pp"></p>
-    <pre>
-          my %greetings;
+    <pre>          my %greetings;
           die unless open(IN, &quot;&lt;&quot;, &quot;in.dat&quot;);
           while(&lt;IN&gt;) {
             chomp;
@@ -312,8 +276,7 @@
     <p class="Pp">at which point <span class="Li">%greetings</span> has the
         contents:</p>
     <p class="Pp"></p>
-    <pre>
-          &quot;en-US&quot;   =&gt; &quot;Hiho&quot;
+    <pre>          &quot;en-US&quot;   =&gt; &quot;Hiho&quot;
           &quot;fr&quot;      =&gt; &quot;Bonjour&quot;
           &quot;i-mingo&quot; =&gt; &quot;Hau'&quot;
     </pre>
@@ -331,8 +294,7 @@
     <p class="Pp">You could instead do lookups on
         <span class="Li">$wanted</span> with:</p>
     <p class="Pp"></p>
-    <pre>
-          use I18N::LangTags qw(same_language_tag);
+    <pre>          use I18N::LangTags qw(same_language_tag);
           my $response = '';
           foreach my $l2 (keys %greetings) {
             if(same_language_tag($wanted, $l2)) {
@@ -344,8 +306,7 @@
     <p class="Pp">But that's rather inefficient. A better way to do it is to
         start your program with:</p>
     <p class="Pp"></p>
-    <pre>
-          use I18N::LangTags qw(encode_language_tag);
+    <pre>          use I18N::LangTags qw(encode_language_tag);
           my %greetings;
           die unless open(IN, &quot;&lt;&quot;, &quot;in.dat&quot;);
           while(&lt;IN&gt;) {
@@ -361,8 +322,7 @@
     <p class="Pp">and then just answer client requests for language
         <span class="Li">$wanted</span> by just looking up</p>
     <p class="Pp"></p>
-    <pre>
-          $greetings{encode_language_tag($wanted)}
+    <pre>          $greetings{encode_language_tag($wanted)}
     </pre>
     <p class="Pp">And that does the Right Thing.</p>
   </li>
@@ -380,8 +340,7 @@
         should be, since a shorter tag (&quot;ar&quot;) exists.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
-  alternate_language_tags('no-bok')       is ('nb')
+    <pre>  alternate_language_tags('no-bok')       is ('nb')
   alternate_language_tags('nb')           is ('no-bok')
   alternate_language_tags('he')           is ('iw')
   alternate_language_tags('iw')           is ('he')
@@ -413,8 +372,7 @@
         common languages are &quot;close&quot; to each other.</p>
     <p class="Pp">A useful construct you might consider using is:</p>
     <p class="Pp"></p>
-    <pre>
-  @fallbacks = super_languages(@accept_languages);
+    <pre>  @fallbacks = super_languages(@accept_languages);
   push @fallbacks, panic_languages(
     @accept_languages, @fallbacks,
   );
@@ -427,18 +385,15 @@
         the list. The original list, plus these insertions, is returned.</p>
     <p class="Pp">In other words, it takes this:</p>
     <p class="Pp"></p>
-    <pre>
-  pt-br de-DE en-US fr pt-br-janeiro
+    <pre>  pt-br de-DE en-US fr pt-br-janeiro
     </pre>
     <p class="Pp">and returns this:</p>
     <p class="Pp"></p>
-    <pre>
-  pt-br pt de-DE de en-US en fr pt-br-janeiro
+    <pre>  pt-br pt de-DE de en-US en fr pt-br-janeiro
     </pre>
     <p class="Pp">This function is most useful in the idiom</p>
     <p class="Pp"></p>
-    <pre>
-  implicate_supers( I18N::LangTags::Detect::detect() );
+    <pre>  implicate_supers( I18N::LangTags::Detect::detect() );
     </pre>
     <p class="Pp">(See I18N::LangTags::Detect.)</p>
   </li>
@@ -453,13 +408,11 @@
         appear in the input list.</p>
     <p class="Pp">In other words, it takes this:</p>
     <p class="Pp"></p>
-    <pre>
-  pt-br de-DE en-US fr pt-br-janeiro
+    <pre>  pt-br de-DE en-US fr pt-br-janeiro
     </pre>
     <p class="Pp">and returns this:</p>
     <p class="Pp"></p>
-    <pre>
-  pt-br de-DE en-US fr pt-br-janeiro pt de en
+    <pre>  pt-br de-DE en-US fr pt-br-janeiro pt de en
     </pre>
     <p class="Pp">The reason this function has &quot;_strictly&quot; in its name
         is that when you're processing an Accept-Language list according to the

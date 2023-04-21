@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERL5100DELTA(1)</title>
 </head>
@@ -71,23 +72,19 @@
 <p class="Pp">A new operator <span class="Li">&quot;//&quot;</span> (defined-or)
     has been implemented. The following expression:</p>
 <p class="Pp"></p>
-<pre>
-    $a // $b
+<pre>    $a // $b
 </pre>
 <p class="Pp">is merely equivalent to</p>
 <p class="Pp"></p>
-<pre>
-   defined $a ? $a : $b
+<pre>   defined $a ? $a : $b
 </pre>
 <p class="Pp">and the statement</p>
 <p class="Pp"></p>
-<pre>
-   $c //= $d;
+<pre>   $c //= $d;
 </pre>
 <p class="Pp">can now be used instead of</p>
 <p class="Pp"></p>
-<pre>
-   $c = $d unless defined $c;
+<pre>   $c = $d unless defined $c;
 </pre>
 <p class="Pp">The <span class="Li">&quot;//&quot;</span> operator has the same
     precedence and associativity as <span class="Li">&quot;||&quot;</span>.
@@ -105,8 +102,7 @@
     <span class="Li">&quot;when&quot;</span>, and
     <span class="Li">&quot;default&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    given ($foo) {
+<pre>    given ($foo) {
         when (/^abc/) { $abc = 1; }
         when (/^def/) { $def = 1; }
         when (/^xyz/) { $xyz = 1; }
@@ -138,8 +134,7 @@
         &quot;parenthesis number&quot;). For example, the following pattern will
         match nested balanced angle brackets:</p>
     <p class="Pp"></p>
-    <pre>
-    /
+    <pre>    /
      ^                      # start of line
      (                      # start capture buffer 1
         &lt;                   #   match an opening angle bracket
@@ -174,15 +169,13 @@
     <p class="Pp">Thus, to replace all doubled chars with a single copy, one
         could write</p>
     <p class="Pp"></p>
-    <pre>
-    s/(?&lt;letter&gt;.)\k&lt;letter&gt;/$+{letter}/g
+    <pre>    s/(?&lt;letter&gt;.)\k&lt;letter&gt;/$+{letter}/g
     </pre>
     <p class="Pp">Only buffers with defined contents will be &quot;visible&quot;
         in the <span class="Li">&quot;%+&quot;</span> hash, so it's possible to
         do something like</p>
     <p class="Pp"></p>
-    <pre>
-    foreach my $name (keys %+) {
+    <pre>    foreach my $name (keys %+) {
         print &quot;content of buffer '$name' is $+{$name}\n&quot;;
     }
     </pre>
@@ -198,8 +191,7 @@
         sequential, and not &quot;unnamed first, then named&quot;. Thus in the
         pattern</p>
     <p class="Pp"></p>
-    <pre>
-   /(A)(?&lt;B&gt;B)(C)(?&lt;D&gt;D)/
+    <pre>   /(A)(?&lt;B&gt;B)(C)(?&lt;D&gt;D)/
     </pre>
     <p class="Pp"><span class="Li">$1</span> will be 'A',
         <span class="Li">$2</span> will be 'B', <span class="Li">$3</span> will
@@ -241,13 +233,11 @@
       floating length positive lookbehind. It is also useful in substitutions
       like:
     <p class="Pp"></p>
-    <pre>
-  s/(foo)bar/$1/g
+    <pre>  s/(foo)bar/$1/g
     </pre>
     <p class="Pp">that can now be converted to</p>
     <p class="Pp"></p>
-    <pre>
-  s/foo\Kbar//g
+    <pre>  s/foo\Kbar//g
     </pre>
     <p class="Pp">which is much more efficient. (Yves Orton)</p>
   </dd>
@@ -299,8 +289,7 @@
     lexicalized, by declaring it like any other lexical variable, with a
   simple</p>
 <p class="Pp"></p>
-<pre>
-    my $_;
+<pre>    my $_;
 </pre>
 <p class="Pp">The operations that default on <span class="Li">$_</span> will use
     the lexically-scoped version of <span class="Li">$_</span> when it exists,
@@ -421,8 +410,7 @@
     Nicholas Clark)</p>
 <p class="Pp">To use state variables, one needs to enable them by using</p>
 <p class="Pp"></p>
-<pre>
-    use feature 'state';
+<pre>    use feature 'state';
 </pre>
 <p class="Pp">or by using the <span class="Li">&quot;-E&quot;</span>
     command-line switch in one-liners. See &quot;Persistent Private
@@ -739,8 +727,7 @@
 <p class="Pp"><span class="Li">&quot;use strict 'refs'&quot;</span> was ignoring
     taking a hard reference in an argument to <b>defined()</b>, as in :</p>
 <p class="Pp"></p>
-<pre>
-    use strict 'refs';
+<pre>    use strict 'refs';
     my $x = 'foo';
     if (defined $$x) {...}
 </pre>
@@ -808,8 +795,7 @@
     behaviour in 5.8.x favors the module writer;</p>
 <p class="Pp">Assume the following code:</p>
 <p class="Pp"></p>
-<pre>
-  main calls Foo::Bar::baz()
+<pre>  main calls Foo::Bar::baz()
   Foo::Bar inherits from Foo::Base
   Foo::Bar::baz() calls Foo::Base::_bazbaz()
   Foo::Base::_bazbaz() calls: warnings::warnif('substr', 'some warning 
@@ -878,8 +864,7 @@ message');
       following (faulty) code won't work anymore, and will require parentheses
       to be added after the function name:
     <p class="Pp"></p>
-    <pre>
-    use warnings;
+    <pre>    use warnings;
     require Carp;
     Carp::confess 'argh';
     </pre>
@@ -1246,9 +1231,9 @@ message');
   <dd>Run-time customization of <span class="Li">@INC</span> can be enabled by
       passing the <span class="Li">&quot;-Dusesitecustomize&quot;</span> flag to
       Configure. When enabled, this will make perl run
-      <i></i><i>$sitelibexp</i><i>/sitecustomize.pl</i> before anything else.
-      This script can then be set up to add additional entries to
-      <span class="Li">@INC</span>.</dd>
+      <i></i><span class="Li"><i>$sitelibexp</i></span><i>/sitecustomize.pl</i>
+      before anything else. This script can then be set up to add additional
+      entries to <span class="Li">@INC</span>.</dd>
   <dt id="Relocatable"><a class="permalink" href="#Relocatable">Relocatable
     installations</a></dt>
   <dd>There is now Configure support for creating a relocatable perl tree. If
@@ -1374,8 +1359,7 @@ message');
   <dd>You can now use a non-arrowed form for chained subscripts after a list
       slice, like in:
     <p class="Pp"></p>
-    <pre>
-    ({foo =&gt; &quot;bar&quot;})[0]{foo}
+    <pre>    ({foo =&gt; &quot;bar&quot;})[0]{foo}
     </pre>
     <p class="Pp">This used to be a syntax error; a
         <span class="Li">&quot;-&gt;&quot;</span> was required.</p>
@@ -1498,8 +1482,7 @@ message');
       in false conditional</i>, has been added, to warn against the use of the
       dubious and deprecated construct
     <p class="Pp"></p>
-    <pre>
-    my $x if 0;
+    <pre>    my $x if 0;
     </pre>
     <p class="Pp">See perldiag. Use <span class="Li">&quot;state&quot;</span>
         variables instead.</p>
@@ -1519,15 +1502,13 @@ message');
       of the declarations involved is a <span class="Li">&quot;my&quot;</span>
       variable:
     <p class="Pp"></p>
-    <pre>
-    my $x;   my $x;     # warns
+    <pre>    my $x;   my $x;     # warns
     my $x;  our $x;     # warns
     our $x;  my $x;     # warns
     </pre>
     <p class="Pp">On the other hand, the following:</p>
     <p class="Pp"></p>
-    <pre>
-    our $x; our $x;
+    <pre>    our $x; our $x;
     </pre>
     <p class="Pp">now gives a <span class="Li">&quot;&quot;our&quot; variable %s
         redeclared&quot;</span> warning.</p>
@@ -1540,8 +1521,7 @@ message');
     dirhandle/filehandle %s also as a file/directory</a></dt>
   <dd>Two deprecation warnings have been added: (Rafael)
     <p class="Pp"></p>
-    <pre>
-    Opening dirhandle %s also as a file
+    <pre>    Opening dirhandle %s also as a file
     Opening filehandle %s also as a directory
     </pre>
   </dd>

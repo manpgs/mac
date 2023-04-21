@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Spiffy(3)</title>
 </head>
@@ -28,12 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Keen;
+<pre>    package Keen;
     use Spiffy -Base;
     field 'mirth';
     const mood =&gt; ':-)';
-
     sub happy {
         if ($self-&gt;mood eq ':-(') {
             $self-&gt;mirth(-1);
@@ -72,8 +71,7 @@
     class, you specify the <span class="Li">&quot;-base&quot;</span> argument to
     the <span class="Li">&quot;use&quot;</span> command.</p>
 <p class="Pp"></p>
-<pre>
-    use MySpiffyBaseModule -base;
+<pre>    use MySpiffyBaseModule -base;
 </pre>
 <p class="Pp">You can also use the traditional <span class="Li">&quot;use base
     'MySpiffyBaseModule';&quot;</span> syntax and everything will work exactly
@@ -83,8 +81,7 @@
     Just like <span class="Li">&quot;base&quot;</span> you can use either of the
     following invocations:</p>
 <p class="Pp"></p>
-<pre>
-    use mixin 'MySpiffyBaseModule';
+<pre>    use mixin 'MySpiffyBaseModule';
     use MySpiffyBaseModule -mixin;
 </pre>
 <p class="Pp">The second version will only work if the class being mixed in is a
@@ -93,15 +90,13 @@
 <p class="Pp">To limit the methods that get mixed in, use roles. (Hint: they
     work just like an Exporter list):</p>
 <p class="Pp"></p>
-<pre>
-    use MySpiffyBaseModule -mixin =&gt; qw(:basics x y !foo);
+<pre>    use MySpiffyBaseModule -mixin =&gt; qw(:basics x y !foo);
 </pre>
 <p class="Pp">In object oriented Perl almost every subroutine is a method. Each
     method gets the object passed to it as its first argument. That means
     practically every subroutine starts with the line:</p>
 <p class="Pp"></p>
-<pre>
-    my $self = shift;
+<pre>    my $self = shift;
 </pre>
 <p class="Pp">Spiffy provides a simple, optional filter mechanism to insert that
     line for you, resulting in cleaner code. If you figure an average method has
@@ -122,8 +117,7 @@
     the same method from a parent class. This is generally known as calling a
     super method. Perl's facility for doing this is butt ugly:</p>
 <p class="Pp"></p>
-<pre>
-    sub cleanup {
+<pre>    sub cleanup {
         my $self = shift;
         $self-&gt;scrub;
         $self-&gt;SUPER::cleanup(@_);
@@ -134,8 +128,7 @@
     to pass it any arguments because it automatically passes them on for you.
     Here's the same function with Spiffy:</p>
 <p class="Pp"></p>
-<pre>
-    sub cleanup {
+<pre>    sub cleanup {
         $self-&gt;scrub;
         super;
     }
@@ -171,13 +164,11 @@
 <p class="Pp">Spiffy considers all the arguments that don't begin with a dash to
     comprise the export specification.</p>
 <p class="Pp"></p>
-<pre>
-    package Vehicle;
+<pre>    package Vehicle;
     use Spiffy -base;
     our $SERIAL_NUMBER = 0;
     our @EXPORT = qw($SERIAL_NUMBER);
     our @EXPORT_BASE = qw(tire horn);
-
     package Bicycle;
     use Vehicle -base, '!field';
     $self-&gt;inflate(tire);
@@ -192,8 +183,7 @@
     hundreds of classes, and you want them all to have access to some functions
     or constants</p>
 <p class="Pp"></p>
-<pre>
-      or variables. Just export them in your main base class and every subclass
+<pre>      or variables. Just export them in your main base class and every subclass
 </pre>
 <p class="Pp">will get the functions they need.</p>
 <p class="Pp">You can do almost everything that Exporter does because Spiffy
@@ -218,8 +208,7 @@
     then chains the new class into your SI ISA path. In other words, if you
   say:</p>
 <p class="Pp"></p>
-<pre>
-    package AAA;
+<pre>    package AAA;
     use BBB -base;
     use CCC -mixin;
     use DDD -mixin;
@@ -227,8 +216,7 @@
 <p class="Pp">You end up with a single inheritance chain of classes like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    AAA &lt;&lt; AAA-DDD &lt;&lt; AAA-CCC &lt;&lt; BBB;
+<pre>    AAA &lt;&lt; AAA-DDD &lt;&lt; AAA-CCC &lt;&lt; BBB;
 </pre>
 <p class="Pp"><span class="Li">&quot;AAA-DDD&quot;</span> and
     <span class="Li">&quot;AAA-CCC&quot;</span> are the actual package names of
@@ -247,8 +235,7 @@
     and negation. If the first element of your list uses negation, Spiffy will
     start with all the methods that your mixin class can do.</p>
 <p class="Pp"></p>
-<pre>
-    use EEE -mixin =&gt; qw(:tools walk !run !:sharp_tools);
+<pre>    use EEE -mixin =&gt; qw(:tools walk !run !:sharp_tools);
 </pre>
 <p class="Pp">In this example, <span class="Li">&quot;walk&quot;</span> and
     <span class="Li">&quot;run&quot;</span> are methods that EEE can do, and
@@ -267,17 +254,14 @@
     instead of <span class="Li">&quot;-base&quot;</span> you never need to write
     the line:</p>
 <p class="Pp"></p>
-<pre>
-    my $self = shift;
+<pre>    my $self = shift;
 </pre>
 <p class="Pp">This statement is added to every subroutine in your class by using
     a source filter. The magic is simple and fast, so there is litte performance
     penalty for creating clean code on par with Ruby and Python.</p>
 <p class="Pp"></p>
-<pre>
-    package Example;
+<pre>    package Example;
     use Spiffy -Base;
-
     sub crazy {
         $self-&gt;nuts;
     }
@@ -288,8 +272,7 @@
 </pre>
 <p class="Pp">is exactly the same as:</p>
 <p class="Pp"></p>
-<pre>
-    package Example;
+<pre>    package Example;
     use Spiffy -base;
     use strict;use warnings;
     sub crazy {my $self = shift;
@@ -316,15 +299,12 @@
     <span class="Li">&quot;my&quot;</span> keyword, and call them with a
     <span class="Li">'$'</span> in front. Like this:</p>
 <p class="Pp"></p>
-<pre>
-    package Keen;
+<pre>    package Keen;
     use SomethingSpiffy -Base;
-
     # normal public method
     sub swell {
         $self-&gt;$stinky;
     }
-
     # private lexical method. uncallable from outside this file.
     my sub stinky {
         ...
@@ -338,14 +318,12 @@
     insert it almost anywhere, and it will dump your data in nice clean YAML.
     Take the following statement:</p>
 <p class="Pp"></p>
-<pre>
-    my @stuff = grep { /keen/ } $self-&gt;find($a, $b);
+<pre>    my @stuff = grep { /keen/ } $self-&gt;find($a, $b);
 </pre>
 <p class="Pp">If you have a problem with this statement, you can debug it in any
     of the following ways:</p>
 <p class="Pp"></p>
-<pre>
-    XXX my @stuff = grep { /keen/ } $self-&gt;find($a, $b);
+<pre>    XXX my @stuff = grep { /keen/ } $self-&gt;find($a, $b);
     my @stuff = XXX grep { /keen/ } $self-&gt;find($a, $b);
     my @stuff = grep { /keen/ } XXX $self-&gt;find($a, $b);
     my @stuff = grep { /keen/ } $self-&gt;find(XXX $a, $b);
@@ -362,14 +340,12 @@
     previously used the <span class="Li">&quot;-XXX&quot;</span> option. To
     export all 4 functions use the export tag:</p>
 <p class="Pp"></p>
-<pre>
-    use SomeSpiffyModule ':XXX';
+<pre>    use SomeSpiffyModule ':XXX';
 </pre>
 <p class="Pp">To force the debugging functions to use Data::Dumper instead of
     YAML:</p>
 <p class="Pp"></p>
-<pre>
-    use SomeSpiffyModule -dumper;
+<pre>    use SomeSpiffyModule -dumper;
 </pre>
 </section>
 <section class="Sh">
@@ -386,13 +362,10 @@
   <dt id="field"><a class="permalink" href="#field">field</a></dt>
   <dd>Defines accessor methods for a field of your class:
     <p class="Pp"></p>
-    <pre>
-    package Example;
+    <pre>    package Example;
     use Spiffy -Base;
-
     field 'foo';
     field bar =&gt; [];
-
     sub lalala {
         $self-&gt;foo(42);
         push @{$self-&gt;{bar}}, $self-&gt;foo;
@@ -406,8 +379,7 @@
   </dd>
   <dt id="const"><a class="permalink" href="#const">const</a></dt>
   <dd>
-    <pre>
-    const bar =&gt; 42;
+    <pre>    const bar =&gt; 42;
     </pre>
     <p class="Pp">The <span class="Li">&quot;const&quot;</span> function is
         similar to &lt;field&gt; except that it is immutable. It also does not
@@ -417,8 +389,7 @@
   </dd>
   <dt id="stub"><a class="permalink" href="#stub">stub</a></dt>
   <dd>
-    <pre>
-    stub 'cigar';
+    <pre>    stub 'cigar';
     </pre>
     <p class="Pp">The <span class="Li">&quot;stub&quot;</span> function
         generates a method that will die with an appropriate message. The idea
@@ -432,13 +403,11 @@
       with <span class="Li">$self</span> in the front. In other words, it just
       works like you'd expect.
     <p class="Pp"></p>
-    <pre>
-    sub foo {
+    <pre>    sub foo {
         super;             # Same as $self-&gt;SUPER::foo(@_);
         super('hello');    # Same as $self-&gt;SUPER::foo('hello');
         $self-&gt;bar(42);
     }
-
     sub new() {
         my $self = super;
         $self-&gt;init;
@@ -462,8 +431,7 @@
       <span class="Li">&quot;use mixin</span> <span class="Li">...&quot;</span>.
       Makes the target class a mixin of the caller.
     <p class="Pp"></p>
-    <pre>
-    $self-&gt;mixin('SomeClass');
+    <pre>    $self-&gt;mixin('SomeClass');
     $object-&gt;mixin('SomeOtherClass' =&gt; 'some_method');
     </pre>
   </dd>
@@ -474,8 +442,7 @@
       values in the hash. Any arguments that cannot be paired, are returned as a
       list. Here is an example:
     <p class="Pp"></p>
-    <pre>
-    sub boolean_arguments { qw(-has_spots -is_yummy) }
+    <pre>    sub boolean_arguments { qw(-has_spots -is_yummy) }
     sub paired_arguments { qw(-name -size) }
     my ($pairs, @others) = $self-&gt;parse_arguments(
         'red', 'white',
@@ -489,8 +456,7 @@
     <p class="Pp">After this call, <span class="Li">$pairs</span> will
       contain:</p>
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         -name =&gt; 'Ingy',
         -has_spots =&gt; 1,
         -size =&gt; 'large',
@@ -528,8 +494,7 @@
     modules where you would want to <span class="Li">&quot;use
     base&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    package Something;
+<pre>    package Something;
     use Spiffy::Module -base;
     use base 'NonSpiffy::Module';
 </pre>
@@ -537,8 +502,7 @@
     Therefore Spiffy has actually been made to work with base.pm. You can
   say:</p>
 <p class="Pp"></p>
-<pre>
-    package Something;
+<pre>    package Something;
     use base 'Spiffy::Module';
     use base 'NonSpiffy::Module';
 </pre>
@@ -567,8 +531,7 @@
     <p class="Pp">If you get this error, simply put a statement like this up
         front in your code:</p>
     <p class="Pp"></p>
-    <pre>
-    use Spiffy ();
+    <pre>    use Spiffy ();
     </pre>
   </dd>
   <dt id="No"><a class="permalink" href="#No">No Mixing</a></dt>

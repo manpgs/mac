@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::DNS::Update(3)</title>
 </head>
@@ -28,11 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Net::DNS;
-
+<pre>    use Net::DNS;
     $update = new Net::DNS::Update( 'example.com', 'IN' );
-
     $update-&gt;push( prereq =&gt; nxrrset('foo.example.com. A') );
     $update-&gt;push( update =&gt; rr_add('foo.example.com. 86400 A 192.168.1.2') );
 </pre>
@@ -50,8 +48,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-    $update = new Net::DNS::Update;
+<pre>    $update = new Net::DNS::Update;
     $update = new Net::DNS::Update( 'example.com' );
     $update = new Net::DNS::Update( 'example.com', 'HS' );
 </pre>
@@ -74,27 +71,19 @@
 <section class="Ss">
 <h2 class="Ss" id="Add_a_new_host"><a class="permalink" href="#Add_a_new_host">Add
   a new host</a></h2>
-<pre>
-    #!/usr/bin/perl
-
+<pre>    #!/usr/bin/perl
     use Net::DNS;
-
     # Create the update packet.
     my $update = new Net::DNS::Update('example.com');
-
     # Prerequisite is that no A records exist for the name.
     $update-&gt;push( pre =&gt; nxrrset('foo.example.com. A') );
-
     # Add two A records for the name.
     $update-&gt;push( update =&gt; rr_add('foo.example.com. 86400 A 192.168.1.2') );
     $update-&gt;push( update =&gt; rr_add('foo.example.com. 86400 A 172.16.3.4') );
-
     # Send the update to the zone's primary master.
     my $resolver = new Net::DNS::Resolver;
     $resolver-&gt;nameservers('primary-master.example.com');
-
     my $reply = $resolver-&gt;send($update);
-
     # Did it work?
     if ($reply) {
             if ( $reply-&gt;header-&gt;rcode eq 'NOERROR' ) {
@@ -110,8 +99,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Add_an_"><a class="permalink" href="#Add_an_">Add an MX
   record for a name that already exists</a></h2>
-<pre>
-    my $update = new Net::DNS::Update('example.com');
+<pre>    my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( prereq =&gt; yxdomain('example.com') );
     $update-&gt;push( update =&gt; rr_add('example.com MX 10 mailhost.example.com') );
 </pre>
@@ -119,8 +107,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Add_a_"><a class="permalink" href="#Add_a_">Add a TXT record
   for a name that doesn't exist</a></h2>
-<pre>
-    my $update = new Net::DNS::Update('example.com');
+<pre>    my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( prereq =&gt; nxdomain('info.example.com') );
     $update-&gt;push( update =&gt; rr_add('info.example.com TXT &quot;yabba dabba doo&quot;') );
 </pre>
@@ -128,8 +115,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Delete_all_A_records_for_a_name"><a class="permalink" href="#Delete_all_A_records_for_a_name">Delete
   all A records for a name</a></h2>
-<pre>
-    my $update = new Net::DNS::Update('example.com');
+<pre>    my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( prereq =&gt; yxrrset('foo.example.com A') );
     $update-&gt;push( update =&gt; rr_del('foo.example.com A') );
 </pre>
@@ -137,8 +123,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Delete_all_RRs_for_a_name"><a class="permalink" href="#Delete_all_RRs_for_a_name">Delete
   all RRs for a name</a></h2>
-<pre>
-    my $update = new Net::DNS::Update('example.com');
+<pre>    my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( prereq =&gt; yxdomain('byebye.example.com') );
     $update-&gt;push( update =&gt; rr_del('byebye.example.com') );
 </pre>
@@ -146,25 +131,21 @@
 <section class="Ss">
 <h2 class="Ss" id="Perform_a_"><a class="permalink" href="#Perform_a_">Perform a
   DNS update signed using a BIND key file</a></h2>
-<pre>
-    my $update = new Net::DNS::Update('example.com');
+<pre>    my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( update =&gt; rr_add('foo.example.com A 10.1.2.3') );
     $update-&gt;push( update =&gt; rr_add('bar.example.com A 10.4.5.6') );
     $update-&gt;sign_tsig( &quot;$dir/Khmac-sha512.example.com.+165+01018.private&quot; );
 </pre>
 <p class="Pp">The corresponding public key file may also be used:</p>
 <p class="Pp"></p>
-<pre>
-    $update-&gt;sign_tsig( &quot;$dir/Khmac-sha512.example.com.+165+01018.key&quot; );
+<pre>    $update-&gt;sign_tsig( &quot;$dir/Khmac-sha512.example.com.+165+01018.key&quot; );
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Another_way_to_perform_a_signed_update"><a class="permalink" href="#Another_way_to_perform_a_signed_update">Another
   way to perform a signed update</a></h2>
-<pre>
-    my $key_name = 'tsig-key';
+<pre>    my $key_name = 'tsig-key';
     my $key      = 'awwLOtRfpGE+rRKF2+DEiw==';
-
     my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( update =&gt; rr_add('foo.example.com A 10.1.2.3') );
     $update-&gt;push( update =&gt; rr_add('bar.example.com A 10.4.5.6') );
@@ -174,13 +155,10 @@
 <section class="Ss">
 <h2 class="Ss" id="Perform_a_signed_update_with_a_customized_"><a class="permalink" href="#Perform_a_signed_update_with_a_customized_">Perform
   a signed update with a customized TSIG record</a></h2>
-<pre>
-    my $key_name = 'tsig-key';
+<pre>    my $key_name = 'tsig-key';
     my $key      = 'awwLOtRfpGE+rRKF2+DEiw==';
-
     my $tsig = new Net::DNS::RR(&quot;$key_name TSIG $key&quot;);
     $tsig-&gt;fudge(60);
-
     my $update = new Net::DNS::Update('example.com');
     $update-&gt;push( update     =&gt; rr_add('foo.example.com A 10.1.2.3') );
     $update-&gt;push( update     =&gt; rr_add('bar.example.com A 10.4.5.6') );

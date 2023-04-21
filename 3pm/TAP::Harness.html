@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>TAP::Harness(3pm)</title>
 </head>
@@ -37,8 +38,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use TAP::Harness;
+<pre> use TAP::Harness;
  my $harness = TAP::Harness-&gt;new( \%args );
  $harness-&gt;runtests(@tests);
 </pre>
@@ -48,10 +48,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
   Methods</a></h2>
-<p class="Pp"><i></i><i>&quot;new&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;new&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
- my %args = (
+<pre> my %args = (
     verbosity =&gt; 1,
     lib     =&gt; [ 'lib', 'blib/lib', 'blib/arch' ],
  )
@@ -64,8 +63,7 @@
   <li><span class="Li">&quot;verbosity&quot;</span>
     <p class="Pp">Set the verbosity level:</p>
     <p class="Pp"></p>
-    <pre>
-     1   verbose        Print individual test results to STDOUT.
+    <pre>     1   verbose        Print individual test results to STDOUT.
      0   normal
     -1   quiet          Suppress some test output (mostly failures 
                         while tests are running).
@@ -108,14 +106,12 @@
     <p class="Pp">A reference to an <span class="Li">@INC</span> style array of
         arguments to be passed to each test program.</p>
     <p class="Pp"></p>
-    <pre>
-  test_args =&gt; ['foo', 'bar'],
+    <pre>  test_args =&gt; ['foo', 'bar'],
     </pre>
     <p class="Pp">if you want to pass different arguments to each test then you
         should pass a hash of arrays, keyed by the alias for each test:</p>
     <p class="Pp"></p>
-    <pre>
-  test_args =&gt; {
+    <pre>  test_args =&gt; {
     my_test    =&gt; ['foo', 'bar'],
     other_test =&gt; ['baz'],
   }
@@ -129,8 +125,7 @@
         which spits out TAP is fine. You can use this argument to specify the
         name of the program (and optional switches) to run your tests with:</p>
     <p class="Pp"></p>
-    <pre>
-  exec =&gt; ['/usr/bin/ruby', '-w']
+    <pre>  exec =&gt; ['/usr/bin/ruby', '-w']
     </pre>
     <p class="Pp">You can also pass a subroutine reference in order to determine
         and return the proper program to run based on a given test script. The
@@ -141,10 +136,8 @@
         <span class="Li">&quot;undef&quot;</span>, in which case TAP::Harness
         will fall back on executing the test script in Perl:</p>
     <p class="Pp"></p>
-    <pre>
-    exec =&gt; sub {
+    <pre>    exec =&gt; sub {
         my ( $harness, $test_file ) = @_;
-
         # Let Perl tests run.
         return undef if $test_file =~ /[.]t$/;
         return [ qw( /usr/bin/ruby -w ), $test_file ]
@@ -169,8 +162,7 @@
         TAP::Parser::Source.</p>
     <p class="Pp">For example:</p>
     <p class="Pp"></p>
-    <pre>
-  sources =&gt; {
+    <pre>  sources =&gt; {
     Perl =&gt; { exec =&gt; '/path/to/custom/perl' },
     File =&gt; { extensions =&gt; [ '.tap', '.txt' ] },
     MyCustom =&gt; { some =&gt; 'config' },
@@ -221,8 +213,7 @@
         will be made in the summary report. To see all of the parse errors, set
         this argument to true:</p>
     <p class="Pp"></p>
-    <pre>
-  errors =&gt; 1
+    <pre>  errors =&gt; 1
     </pre>
   </li>
   <li><span class="Li">&quot;directives&quot;</span>
@@ -254,16 +245,13 @@
         structure and the related glob-style pattern matching, see &quot;Rules
         data structure&quot; in TAP::Parser::Scheduler.</p>
     <p class="Pp"></p>
-    <pre>
-    # Run all tests in sequence, except those starting with &quot;p&quot;
+    <pre>    # Run all tests in sequence, except those starting with &quot;p&quot;
     $harness-&gt;rules({
         par =&gt; 't/p*.t'
     });
-
     # Equivalent YAML file
     ---
     par: t/p*.t
-
     # Run all tests in parallel, except those starting with &quot;p&quot;
     $harness-&gt;rules({
         seq =&gt; [
@@ -271,13 +259,11 @@
                   { par =&gt; '**'     },
                ],
     });
-
     # Equivalent YAML file
     ---
     seq:
         - seq: t/p*.t
         - par: **
-
     # Run some  startup tests in sequence, then some parallel tests than some
     # teardown tests in sequence.
     $harness-&gt;rules({
@@ -286,9 +272,7 @@
             { par =&gt; ['t/a/*.t','t/b/*.t','t/c/*.t'], }
             { seq =&gt; 't/shutdown/*.t' },
         ],
-
     });
-
     # Equivalent YAML file
     ---
     seq:
@@ -324,10 +308,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Instance_Methods"><a class="permalink" href="#Instance_Methods">Instance
   Methods</a></h2>
-<p class="Pp"><i></i><i>&quot;runtests&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;runtests&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-    $harness-&gt;runtests(@tests);
+<pre>    $harness-&gt;runtests(@tests);
 </pre>
 <p class="Pp">Accepts an array of <span class="Li">@tests</span> to be run. This
     should generally be the names of test files, but this is not required. Each
@@ -339,8 +322,7 @@
     of the test name by supplying the test as a reference to an array containing
     <span class="Li">&quot;[ $test, $alias ]&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    $harness-&gt;runtests( [ 't/foo.t', 'Foo Once' ],
+<pre>    $harness-&gt;runtests( [ 't/foo.t', 'Foo Once' ],
                         [ 't/foo.t', 'Foo Twice' ] );
 </pre>
 <p class="Pp">Normally it is an error to attempt to run the same test twice.
@@ -353,16 +335,14 @@
     be written. TAP is written to files named for each test. Subdirectories will
     be created as needed.</p>
 <p class="Pp">Returns a TAP::Parser::Aggregator containing the test results.</p>
-<p class="Pp"><i></i><i>&quot;summary&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;summary&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-  $harness-&gt;summary( $aggregator );
+<pre>  $harness-&gt;summary( $aggregator );
 </pre>
 <p class="Pp">Output the summary for a TAP::Parser::Aggregator.</p>
-<p class="Pp"><i></i><i>&quot;aggregate_tests&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;aggregate_tests&quot;</i></span><i></i></p>
 <p class="Pp"></p>
-<pre>
-  $harness-&gt;aggregate_tests( $aggregate, @tests );
+<pre>  $harness-&gt;aggregate_tests( $aggregate, @tests );
 </pre>
 <p class="Pp">Run the named tests and display a summary of result. Tests will be
     run in the order found.</p>
@@ -376,8 +356,7 @@
     for example, in the case where some tests should run in parallel but others
     are unsuitable for parallel execution.</p>
 <p class="Pp"></p>
-<pre>
-    my $formatter   = TAP::Formatter::Console-&gt;new;
+<pre>    my $formatter   = TAP::Formatter::Console-&gt;new;
     my $ser_harness = TAP::Harness-&gt;new( { formatter =&gt; $formatter } );
     my $par_harness = TAP::Harness-&gt;new(
         {   formatter =&gt; $formatter,
@@ -385,7 +364,6 @@
         }
     );
     my $aggregator = TAP::Parser::Aggregator-&gt;new;
-
     $aggregator-&gt;start();
     $ser_harness-&gt;aggregate_tests( $aggregator, @ser_tests );
     $par_harness-&gt;aggregate_tests( $aggregator, @par_tests );
@@ -407,24 +385,23 @@
     a test more than once; the display name is effectively the alias by which
     the test is known inside the harness. The harness doesn't care if it runs
     the same test more than once when each invocation uses a different name.</p>
-<p class="Pp"><i></i><i>&quot;make_scheduler&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;make_scheduler&quot;</i></span><i></i></p>
 <p class="Pp">Called by the harness when it needs to create a
     TAP::Parser::Scheduler. Override in a subclass to provide an alternative
     scheduler. <span class="Li">&quot;make_scheduler&quot;</span> is passed the
     list of tests that was passed to
     <span class="Li">&quot;aggregate_tests&quot;</span>.</p>
-<p class="Pp"><i></i><i>&quot;jobs&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;jobs&quot;</i></span><i></i></p>
 <p class="Pp">Gets or sets the number of concurrent test runs the harness is
     handling. By default, this value is 1 -- for parallel testing, this should
     be set higher.</p>
-<p class="Pp"><i></i><i>&quot;make_parser&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;make_parser&quot;</i></span><i></i></p>
 <p class="Pp">Make a new parser and display formatter session. Typically used
     and/or overridden in subclasses.</p>
 <p class="Pp"></p>
-<pre>
-    my ( $parser, $session ) = $harness-&gt;make_parser;
+<pre>    my ( $parser, $session ) = $harness-&gt;make_parser;
 </pre>
-<p class="Pp"><i></i><i>&quot;finish_parser&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;finish_parser&quot;</i></span><i></i></p>
 <p class="Pp">Terminate use of a parser. Typically used and/or overridden in
     subclasses. The parser isn't destroyed as a result of this.</p>
 </section>
@@ -458,8 +435,7 @@
     parameter to <span class="Li">&quot;new&quot;</span>, typically from your
     <span class="Li">&quot;Build.PL&quot;</span>. For example:</p>
 <p class="Pp"></p>
-<pre>
-  Module::Build-&gt;new(
+<pre>  Module::Build-&gt;new(
       module_name        =&gt; 'MyApp',
       test_file_exts     =&gt; [qw(.t .tap .txt)],
       use_tap_harness    =&gt; 1,
@@ -550,8 +526,7 @@
     <span class="Li">&quot;runtests&quot;</span> methods. Then you can use the
     <span class="Li">&quot;prove&quot;</span> utility like so:</p>
 <p class="Pp"></p>
-<pre>
- prove --harness My::Test::Harness
+<pre> prove --harness My::Test::Harness
 </pre>
 <p class="Pp">Note that while <span class="Li">&quot;prove&quot;</span> accepts
     a list of tests (or things to be tested),

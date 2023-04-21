@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>diagnostics(3pm)</title>
 </head>
@@ -31,25 +32,21 @@
 <p class="Pp">Using the <span class="Li">&quot;diagnostics&quot;</span>
   pragma:</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics;
+<pre>    use diagnostics;
     use diagnostics -verbose;
-
     enable  diagnostics;
     disable diagnostics;
 </pre>
 <p class="Pp">Using the <span class="Li">&quot;splain&quot;</span> standalone
     filter program:</p>
 <p class="Pp"></p>
-<pre>
-    perl program 2&gt;diag.out
+<pre>    perl program 2&gt;diag.out
     splain [-v] [-p] diag.out
 </pre>
 <p class="Pp">Using diagnostics to get stack traces from a misbehaving
   script:</p>
 <p class="Pp"></p>
-<pre>
-    perl -Mdiagnostics=-traceonly my_script.pl
+<pre>    perl -Mdiagnostics=-traceonly my_script.pl
 </pre>
 </section>
 <section class="Sh">
@@ -65,8 +62,7 @@
     than merely the execution phase.</p>
 <p class="Pp">To use in your program as a pragma, merely invoke</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics;
+<pre>    use diagnostics;
 </pre>
 <p class="Pp">at the start (or near the start) of your program. (Note that this
     <i>does</i> enable perl's <b>-w</b> flag.) Your whole compilation will then
@@ -92,8 +88,7 @@
     warning messages leaving just the stack traces. So if your script is dieing,
     run it again with</p>
 <p class="Pp"></p>
-<pre>
-  perl -Mdiagnostics=-traceonly my_bad_script
+<pre>  perl -Mdiagnostics=-traceonly my_bad_script
 </pre>
 <p class="Pp">to see the call stack at the time of death. By supplying the
     <b>-warntrace</b> (or just <b>-w</b>) flag, any warnings emitted will also
@@ -119,8 +114,7 @@
 <p class="Pp">The following file is certain to trigger a few errors at both
     runtime and compiletime:</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics;
+<pre>    use diagnostics;
     print NOWHERE &quot;nothing\n&quot;;
     print STDERR &quot;\n\tThis message should be unadorned.\n&quot;;
     warn &quot;\tThis is a user warning&quot;;
@@ -132,15 +126,13 @@
 <p class="Pp">If you prefer to run your program first and look at its problem
     afterwards, do this:</p>
 <p class="Pp"></p>
-<pre>
-    perl -w test.pl 2&gt;test.out
+<pre>    perl -w test.pl 2&gt;test.out
     ./splain &lt; test.out
 </pre>
 <p class="Pp">Note that this is not in general possible in shells of more
     dubious heritage, as the theoretical</p>
 <p class="Pp"></p>
-<pre>
-    (perl -w test.pl &gt;/dev/tty) &gt;&amp; test.out
+<pre>    (perl -w test.pl &gt;/dev/tty) &gt;&amp; test.out
     ./splain &lt; test.out
 </pre>
 <p class="Pp">Because you just moved the existing <b>stdout</b> to somewhere
@@ -148,8 +140,7 @@
 <p class="Pp">If you don't want to modify your source code, but still have
     on-the-fly warnings, do this:</p>
 <p class="Pp"></p>
-<pre>
-    exec 3&gt;&amp;1; perl -w test.pl 2&gt;&amp;1 1&gt;&amp;3 3&gt;&amp;- | splain 1&gt;&amp;2 3&gt;&amp;-
+<pre>    exec 3&gt;&amp;1; perl -w test.pl 2&gt;&amp;1 1&gt;&amp;3 3&gt;&amp;- | splain 1&gt;&amp;2 3&gt;&amp;-
 </pre>
 <p class="Pp">Nifty, eh?</p>
 <p class="Pp">If you want to control warnings on the fly, do something like
@@ -157,22 +148,18 @@
     you won't be able to get at the <b>enable()</b> or <b>disable()</b>
   methods.</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics; # checks entire compilation phase 
+<pre>    use diagnostics; # checks entire compilation phase 
         print &quot;\ntime for 1st bogus diags: SQUAWKINGS\n&quot;;
         print BOGUS1 'nada';
         print &quot;done with 1st bogus\n&quot;;
-
     disable diagnostics; # only turns off runtime warnings
         print &quot;\ntime for 2nd bogus: (squelched)\n&quot;;
         print BOGUS2 'nada';
         print &quot;done with 2nd bogus\n&quot;;
-
     enable diagnostics; # turns back on runtime warnings
         print &quot;\ntime for 3rd bogus: SQUAWKINGS\n&quot;;
         print BOGUS3 'nada';
         print &quot;done with 3rd bogus\n&quot;;
-
     disable diagnostics;
         print &quot;\ntime for 4th bogus: (squelched)\n&quot;;
         print BOGUS4 'nada';
@@ -193,8 +180,7 @@
     you may set if you're desperately curious what sorts of things are being
     intercepted.</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { $diagnostics::DEBUG = 1 }
+<pre>    BEGIN { $diagnostics::DEBUG = 1 }
 </pre>
 </section>
 <section class="Sh">
@@ -205,8 +191,7 @@
     called too late to affect matters. You have to do this instead, and
     <i>before</i> you load the module.</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN { $diagnostics::PRETTY = 1 }
+<pre>    BEGIN { $diagnostics::PRETTY = 1 }
 </pre>
 <p class="Pp">I could start up faster by delaying compilation until it should be
     needed, but this gets a &quot;panic: top_level&quot; when using the pragma

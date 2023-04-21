@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ7(1)</title>
 </head>
@@ -51,8 +52,7 @@
   them?</a></h2>
 <p class="Pp">They are type specifiers, as detailed in perldata:</p>
 <p class="Pp"></p>
-<pre>
-    $ for scalar values (number, string or reference)
+<pre>    $ for scalar values (number, string or reference)
     @ for arrays
     % for hashes (associative arrays)
     &amp; for subroutines (aka functions, procedures, methods)
@@ -62,8 +62,7 @@
 <p class="Pp">There are a couple of other symbols that you're likely to
     encounter that aren't really type specifiers:</p>
 <p class="Pp"></p>
-<pre>
-    &lt;&gt; are used for inputting a record from a filehandle.
+<pre>    &lt;&gt; are used for inputting a record from a filehandle.
     \  takes a reference to something.
 </pre>
 <p class="Pp">Note that &lt;FILE&gt; is <i>neither</i> the type specifier for
@@ -87,8 +86,7 @@
     left-hand operand to the <span class="Li">&quot;=&gt;&quot;</span> operator
     both count as though they were quoted:</p>
 <p class="Pp"></p>
-<pre>
-    This                    is like this
+<pre>    This                    is like this
     ------------            ---------------
     $foo{line}              $foo{'line'}
     bar =&gt; stuff            'bar' =&gt; stuff
@@ -97,14 +95,11 @@
     in a list. Good style (see perlstyle) says to put them in except for
     one-liners:</p>
 <p class="Pp"></p>
-<pre>
-    if ($whoops) { exit 1 }
+<pre>    if ($whoops) { exit 1 }
     my @nums = (1, 2, 3);
-
     if ($whoops) {
         exit 1;
     }
-
     my @lines = (
         &quot;There Beren came from mountains cold&quot;,
         &quot;And lost he wandered under leaves&quot;,
@@ -117,20 +112,17 @@
 <p class="Pp">One way is to treat the return values as a list and index into
   it:</p>
 <p class="Pp"></p>
-<pre>
-    $dir = (getpwnam($user))[7];
+<pre>    $dir = (getpwnam($user))[7];
 </pre>
 <p class="Pp">Another way is to use undef as an element on the
   left-hand-side:</p>
 <p class="Pp"></p>
-<pre>
-    ($dev, $ino, undef, undef, $uid, $gid) = stat($file);
+<pre>    ($dev, $ino, undef, undef, $uid, $gid) = stat($file);
 </pre>
 <p class="Pp">You can also use a list slice to select only the elements that you
     need:</p>
 <p class="Pp"></p>
-<pre>
-    ($dev, $ino, $uid, $gid) = ( stat($file) )[0,1,4,5];
+<pre>    ($dev, $ino, $uid, $gid) = ( stat($file) )[0,1,4,5];
 </pre>
 </section>
 <section class="Ss">
@@ -140,8 +132,7 @@
     <span class="Li">&quot;use warnings&quot;</span> pragma allows fine control
     of what warnings are produced. See perllexwarn for more details.</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         no warnings;          # temporarily turn off warnings
         $x = $y + $z;         # I know these might be undef
     }
@@ -151,8 +142,7 @@
     categories of warnings. See perllexwarn for the complete details, including
     the category names and hierarchy.</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         no warnings 'uninitialized';
         $x = $y + $z;
     }
@@ -161,8 +151,7 @@
     <span class="Li">$^W</span> variable (documented in perlvar) controls
     runtime warnings for a block:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         local $^W = 0;        # temporarily turn off warnings
         $x = $y + $z;         # I know these might be undef
     }
@@ -187,19 +176,16 @@
     perlop.</p>
 <p class="Pp">A common mistake is to write:</p>
 <p class="Pp"></p>
-<pre>
-    unlink $file || die &quot;snafu&quot;;
+<pre>    unlink $file || die &quot;snafu&quot;;
 </pre>
 <p class="Pp">This gets interpreted as:</p>
 <p class="Pp"></p>
-<pre>
-    unlink ($file || die &quot;snafu&quot;);
+<pre>    unlink ($file || die &quot;snafu&quot;);
 </pre>
 <p class="Pp">To avoid this problem, either put in extra parentheses or use the
     super low precedence <span class="Li">&quot;or&quot;</span> operator:</p>
 <p class="Pp"></p>
-<pre>
-    (unlink $file) || die &quot;snafu&quot;;
+<pre>    (unlink $file) || die &quot;snafu&quot;;
     unlink $file or die &quot;snafu&quot;;
 </pre>
 <p class="Pp">The &quot;English&quot; operators
@@ -220,8 +206,7 @@
     <span class="Li">$if_true</span> or <span class="Li">$if_false</span>,
     depending on the trueness of <span class="Li">$maybe:</span></p>
 <p class="Pp"></p>
-<pre>
-    ($maybe ? $if_true : $if_false) = $x;
+<pre>    ($maybe ? $if_true : $if_false) = $x;
 </pre>
 </section>
 <section class="Ss">
@@ -231,8 +216,7 @@
     (probably anonymous) hash reference. See perlref and perldsc for details.
     Here's an example:</p>
 <p class="Pp"></p>
-<pre>
-    $person = {};                   # new anonymous hash
+<pre>    $person = {};                   # new anonymous hash
     $person-&gt;{AGE}  = 24;           # set field AGE to 24
     $person-&gt;{NAME} = &quot;Nat&quot;;        # set field NAME to &quot;Nat&quot;
 </pre>
@@ -311,11 +295,9 @@
     closures.</p>
 <p class="Pp">Here's a classic non-closure function-generating function:</p>
 <p class="Pp"></p>
-<pre>
-    sub add_function_generator {
+<pre>    sub add_function_generator {
         return sub { shift() + shift() };
     }
-
     my $add_sub = add_function_generator();
     my $sum = $add_sub-&gt;(4,5);                # $sum is 9 now.
 </pre>
@@ -330,12 +312,10 @@
     requires that Perl return a proper closure, thus locking in for all time the
     value that the lexical had when the function was created.</p>
 <p class="Pp"></p>
-<pre>
-    sub make_adder {
+<pre>    sub make_adder {
         my $addpiece = shift;
         return sub { shift() + $addpiece };
     }
-
     my $f1 = make_adder(20);
     my $f2 = make_adder(555);
 </pre>
@@ -347,8 +327,7 @@
 <p class="Pp">Closures are often used for less esoteric purposes. For example,
     when you want to pass in a bit of code into a function:</p>
 <p class="Pp"></p>
-<pre>
-    my $line;
+<pre>    my $line;
     timeout( 30, sub { $line = &lt;STDIN&gt; } );
 </pre>
 <p class="Pp">If the code to execute had been passed in as a string,
@@ -361,8 +340,7 @@
     with a BEGIN block in package files to make sure a variable doesn't get
     meddled with during the lifetime of the package:</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         my $id = 0;
         sub next_id { ++$id }
     }
@@ -382,12 +360,10 @@
     inadvertently lose a variable's value this way, but now it's much harder.
     Take this code:</p>
 <p class="Pp"></p>
-<pre>
-    my $f = 'foo';
+<pre>    my $f = 'foo';
     sub T {
         while ($i++ &lt; 3) { my $f = $f; $f .= &quot;bar&quot;; print $f, &quot;\n&quot; }
     }
-
     T;
     print &quot;Finally $f\n&quot;;
 </pre>
@@ -398,8 +374,7 @@
     the value of <span class="Li">$f</span> leaks through when it shouldn't, as
     in this output:</p>
 <p class="Pp"></p>
-<pre>
-    foobar
+<pre>    foobar
     foobarbar
     foobarbarbar
     Finally foo
@@ -409,8 +384,7 @@
     <span class="Li">&quot;my $f&quot;</span> should create a new lexical
     variable each time through the loop. The expected output is:</p>
 <p class="Pp"></p>
-<pre>
-    foobar
+<pre>    foobar
     foobar
     foobar
     Finally foo
@@ -429,15 +403,11 @@
   <dd>Regular variables and functions are quite easy to pass: just pass in a
       reference to an existing or anonymous variable or function:
     <p class="Pp"></p>
-    <pre>
-    func( \$some_scalar );
-
+    <pre>    func( \$some_scalar );
     func( \@some_array  );
     func( [ 1 .. 10 ]   );
-
     func( \%some_hash   );
     func( { this =&gt; 10, that =&gt; 20 }   );
-
     func( \&amp;some_func   );
     func( sub { $_[0] ** $_[1] }   );
     </pre>
@@ -447,13 +417,10 @@
   <dd>As of Perl 5.6, you can represent filehandles with scalar variables which
       you treat as any other scalar.
     <p class="Pp"></p>
-    <pre>
-    open my $fh, $filename or die &quot;Cannot open $filename! $!&quot;;
+    <pre>    open my $fh, $filename or die &quot;Cannot open $filename! $!&quot;;
     func( $fh );
-
     sub func {
         my $passed_fh = shift;
-
         my $line = &lt;$passed_fh&gt;;
     }
     </pre>
@@ -469,8 +436,7 @@
       it to match against. You construct the pattern with the
       <span class="Li">&quot;qr//&quot;</span> operator:
     <p class="Pp"></p>
-    <pre>
-    sub compare {
+    <pre>    sub compare {
         my ($val1, $regex) = @_;
         my $retval = $val1 =~ /$regex/;
         return $retval;
@@ -482,8 +448,7 @@
     Methods</a></dt>
   <dd>To pass an object method into a subroutine, you can do this:
     <p class="Pp"></p>
-    <pre>
-    call_a_lot(10, $some_obj, &quot;methname&quot;)
+    <pre>    call_a_lot(10, $some_obj, &quot;methname&quot;)
     sub call_a_lot {
         my ($count, $widget, $trick) = @_;
         for (my $i = 0; $i &lt; $count; $i++) {
@@ -494,8 +459,7 @@
     <p class="Pp">Or, you can use a closure to bundle up the object, its method
         call, and arguments:</p>
     <p class="Pp"></p>
-    <pre>
-    my $whatnot = sub { $some_obj-&gt;obfuscate(@args) };
+    <pre>    my $whatnot = sub { $some_obj-&gt;obfuscate(@args) };
     func($whatnot);
     sub func {
         my $code = shift;
@@ -516,8 +480,7 @@
     <span class="Li">&quot;state&quot;</span> declaration creates the lexical
     variable that persists between calls to the subroutine:</p>
 <p class="Pp"></p>
-<pre>
-    sub counter { state $count = 1; $count++ }
+<pre>    sub counter { state $count = 1; $count++ }
 </pre>
 <p class="Pp">You can fake a static variable by using a lexical variable which
     goes out of scope. In this example, you define the subroutine
@@ -535,16 +498,12 @@
     <span class="Li">$count</span> is private to
     <span class="Li">&quot;counter&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         my $count = 1;
         sub counter { $count++ }
     }
-
     my $start = counter();
-
     .... # code that calls counter();
-
     my $end = counter();
 </pre>
 <p class="Pp">In the previous example, you created a function-private variable
@@ -559,8 +518,7 @@
     both access <span class="Li">$count</span>, and since it has gone out of
     scope, there is no other way to access it.</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         my $count = 1;
         sub increment_count { $count++ }
         sub return_count    { $count }
@@ -591,23 +549,18 @@
     static(ly scoped) variables.</p>
 <p class="Pp">For instance:</p>
 <p class="Pp"></p>
-<pre>
-    sub visible {
+<pre>    sub visible {
         print &quot;var has value $var\n&quot;;
     }
-
     sub dynamic {
         local $var = 'local';    # new temporary value for the still-global
         visible();              #   variable called $var
     }
-
     sub lexical {
         my $var = 'private';    # new private variable, $var
         visible();              # (invisible outside of sub scope)
     }
-
     $var = 'global';
-
     visible();              # prints global
     dynamic();              # prints local
     lexical();              # prints global
@@ -634,26 +587,20 @@
     the &quot;main&quot; package, as though you had written
     <span class="Li">$main::var</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use vars '$var';
+<pre>    use vars '$var';
     local $var = &quot;global&quot;;
     my    $var = &quot;lexical&quot;;
-
     print &quot;lexical is $var\n&quot;;
     print &quot;global  is $main::var\n&quot;;
 </pre>
 <p class="Pp">Alternatively you can use the compiler directive <b>our()</b> to
     bring a dynamic variable into the current lexical scope.</p>
 <p class="Pp"></p>
-<pre>
-    require 5.006; # our() did not exist before 5.6
+<pre>    require 5.006; # our() did not exist before 5.6
     use vars '$var';
-
     local $var = &quot;global&quot;;
     my $var    = &quot;lexical&quot;;
-
     print &quot;lexical is $var\n&quot;;
-
     {
         our $var;
         print &quot;global  is $var\n&quot;;
@@ -688,16 +635,14 @@
 <p class="Pp">To enforce scalar context in this particular case, however, you
     need merely omit the parentheses:</p>
 <p class="Pp"></p>
-<pre>
-    local($foo) = &lt;$fh&gt;;        # WRONG
+<pre>    local($foo) = &lt;$fh&gt;;        # WRONG
     local($foo) = scalar(&lt;$fh&gt;);   # ok
     local $foo  = &lt;$fh&gt;;        # right
 </pre>
 <p class="Pp">You should probably be using lexical variables anyway, although
     the issue is the same here:</p>
 <p class="Pp"></p>
-<pre>
-    my($foo) = &lt;$fh&gt;;    # WRONG
+<pre>    my($foo) = &lt;$fh&gt;;    # WRONG
     my $foo  = &lt;$fh&gt;;    # right
 </pre>
 </section>
@@ -729,57 +674,44 @@
     <span class="Li">&quot;bar&quot;</span> subroutine calls
     <span class="Li">&amp;foo</span>, which prints its arguments list:</p>
 <p class="Pp"></p>
-<pre>
-    sub foo { print &quot;Args in foo are: @_\n&quot;; }
-
+<pre>    sub foo { print &quot;Args in foo are: @_\n&quot;; }
     sub bar { &amp;foo; }
-
     bar( &quot;a&quot;, &quot;b&quot;, &quot;c&quot; );
 </pre>
 <p class="Pp">When you call <span class="Li">&quot;bar&quot;</span> with
     arguments, you see that <span class="Li">&quot;foo&quot;</span> got the same
     <span class="Li">@_</span>:</p>
 <p class="Pp"></p>
-<pre>
-    Args in foo are: a b c
+<pre>    Args in foo are: a b c
 </pre>
 <p class="Pp">Calling the subroutine with trailing parentheses, with or without
     arguments, does not use the current <span class="Li">@_</span>. Changing the
     example to put parentheses after the call to
     <span class="Li">&quot;foo&quot;</span> changes the program:</p>
 <p class="Pp"></p>
-<pre>
-    sub foo { print &quot;Args in foo are: @_\n&quot;; }
-
+<pre>    sub foo { print &quot;Args in foo are: @_\n&quot;; }
     sub bar { &amp;foo(); }
-
     bar( &quot;a&quot;, &quot;b&quot;, &quot;c&quot; );
 </pre>
 <p class="Pp">Now the output shows that <span class="Li">&quot;foo&quot;</span>
     doesn't get the <span class="Li">@_</span> from its caller.</p>
 <p class="Pp"></p>
-<pre>
-    Args in foo are:
+<pre>    Args in foo are:
 </pre>
 <p class="Pp">However, using <span class="Li">&quot;&amp;&quot;</span> in the
     call still overrides the prototype of
     <span class="Li">&quot;foo&quot;</span> if present:</p>
 <p class="Pp"></p>
-<pre>
-    sub foo ($$$) { print &quot;Args infoo are: @_\n&quot;; }
-
+<pre>    sub foo ($$$) { print &quot;Args infoo are: @_\n&quot;; }
     sub bar_1 { &amp;foo; }
     sub bar_2 { &amp;foo(); }
     sub bar_3 { foo( $_[0], $_[1], $_[2] ); }
     # sub bar_4 { foo(); }
     # bar_4 doesn't compile: &quot;Not enough arguments for main::foo at ...&quot;
-
     bar_1( &quot;a&quot;, &quot;b&quot;, &quot;c&quot; );
     # Args in foo are: a b c
-
     bar_2( &quot;a&quot;, &quot;b&quot;, &quot;c&quot; );
     # Args in foo are:
-
     bar_3( &quot;a&quot;, &quot;b&quot;, &quot;c&quot; );
     # Args in foo are: a b c
 </pre>
@@ -795,8 +727,7 @@
 <p class="Pp">The general answer is to use a CPAN module such as
   Switch::Plain:</p>
 <p class="Pp"></p>
-<pre>
-    use Switch::Plain;
+<pre>    use Switch::Plain;
     sswitch($variable_holding_a_string) {
         case 'first': { }
         case 'second': { }
@@ -806,8 +737,7 @@
 <p class="Pp">or for more complicated comparisons,
     <span class="Li">&quot;if-elsif-else&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    for ($variable_to_test) {
+<pre>    for ($variable_to_test) {
         if    (/pat1/)  { }     # do something
         elsif (/pat2/)  { }     # do something else
         elsif (/pat3/)  { }     # do something else
@@ -819,35 +749,26 @@
     multiway conditional based on the type of reference stored in
     <span class="Li">$whatchamacallit:</span></p>
 <p class="Pp"></p>
-<pre>
-    SWITCH: for (ref $whatchamacallit) {
-
+<pre>    SWITCH: for (ref $whatchamacallit) {
         /^$/           &amp;&amp; die &quot;not a reference&quot;;
-
         /SCALAR/       &amp;&amp; do {
                         print_scalar($$ref);
                         last SWITCH;
                       };
-
         /ARRAY/        &amp;&amp; do {
                         print_array(@$ref);
                         last SWITCH;
                       };
-
         /HASH/        &amp;&amp; do {
                         print_hash(%$ref);
                         last SWITCH;
                       };
-
         /CODE/        &amp;&amp; do {
                         warn &quot;can't print function ref&quot;;
                         last SWITCH;
                       };
-
         # DEFAULT
-
         warn &quot;User defined type skipped&quot;;
-
     }
 </pre>
 <p class="Pp">See perlsyn for other examples in this style.</p>
@@ -859,8 +780,7 @@
     takes precedence over another, as <span class="Li">&quot;SEND&quot;</span>
     has precedence over <span class="Li">&quot;STOP&quot;</span> here:</p>
 <p class="Pp"></p>
-<pre>
-    chomp($answer = &lt;&gt;);
+<pre>    chomp($answer = &lt;&gt;);
     if    (&quot;SEND&quot;  =~ /^\Q$answer/i) { print &quot;Action is send\n&quot;  }
     elsif (&quot;STOP&quot;  =~ /^\Q$answer/i) { print &quot;Action is stop\n&quot;  }
     elsif (&quot;ABORT&quot; =~ /^\Q$answer/i) { print &quot;Action is abort\n&quot; }
@@ -870,14 +790,12 @@
 <p class="Pp">A totally different approach is to create a hash of function
     references.</p>
 <p class="Pp"></p>
-<pre>
-    my %commands = (
+<pre>    my %commands = (
         &quot;happy&quot; =&gt; \&amp;joy,
         &quot;sad&quot;,  =&gt; \&amp;sullen,
         &quot;done&quot;  =&gt; sub { die &quot;See ya!&quot; },
         &quot;mad&quot;   =&gt; \&amp;angry,
     );
-
     print &quot;How are you? &quot;;
     chomp($string = &lt;STDIN&gt;);
     if ($commands{$string}) {
@@ -902,8 +820,7 @@
     under <span class="Li">&quot;use warnings&quot;</span>, you can promote the
     warning to an error.</p>
 <p class="Pp"></p>
-<pre>
-    use warnings FATAL =&gt; qw(uninitialized);
+<pre>    use warnings FATAL =&gt; qw(uninitialized);
 </pre>
 </section>
 <section class="Ss">
@@ -936,19 +853,16 @@
     You can only use the special literals as separate tokens, so you can't
     interpolate them into strings like you can with variables:</p>
 <p class="Pp"></p>
-<pre>
-    my $current_package = __PACKAGE__;
+<pre>    my $current_package = __PACKAGE__;
     print &quot;I am in package $current_package\n&quot;;
 </pre>
 <p class="Pp">If you want to find the package calling your code, perhaps to give
     better diagnostics as Carp does, use the
     <span class="Li">&quot;caller&quot;</span> built-in:</p>
 <p class="Pp"></p>
-<pre>
-    sub foo {
+<pre>    sub foo {
         my @args = ...;
         my( $package, $filename, $line ) = caller;
-
         print &quot;I was called from package $package\n&quot;;
         );
 </pre>
@@ -960,23 +874,20 @@
     <span class="Li">&quot;blessed&quot;</span> from Scalar::Util, part of the
     Standard Library since Perl 5.8:</p>
 <p class="Pp"></p>
-<pre>
-    use Scalar::Util qw(blessed);
+<pre>    use Scalar::Util qw(blessed);
     my $object_package = blessed( $object );
 </pre>
 <p class="Pp">Most of the time, you shouldn't care what package an object is
     blessed into, however, as long as it claims to inherit from that class:</p>
 <p class="Pp"></p>
-<pre>
-    my $is_right_class = eval { $object-&gt;isa( $package ) }; # true or false
+<pre>    my $is_right_class = eval { $object-&gt;isa( $package ) }; # true or false
 </pre>
 <p class="Pp">And, with Perl 5.10 and later, you don't have to check for an
     inheritance to see if the object can handle a role. For that, you can use
     <span class="Li">&quot;DOES&quot;</span>, which comes from
     <span class="Li">&quot;UNIVERSAL&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    my $class_does_it = eval { $object-&gt;DOES( $role ) }; # true or false
+<pre>    my $class_does_it = eval { $object-&gt;DOES( $role ) }; # true or false
 </pre>
 <p class="Pp">You can safely replace <span class="Li">&quot;isa&quot;</span>
     with <span class="Li">&quot;DOES&quot;</span> (although the converse is not
@@ -993,15 +904,10 @@
     <span class="Li">&quot;#&quot;</span> comments). You end the comment with
     <span class="Li">&quot;=cut&quot;</span>, ending the Pod section:</p>
 <p class="Pp"></p>
-<pre>
-    =pod
-
+<pre>    =pod
     my $object = NotGonnaHappen-&gt;new();
-
     ignored_sub();
-
     $wont_be_assigned = 37;
-
     =cut
 </pre>
 <p class="Pp">The quick-and-dirty method only works well when you don't plan to
@@ -1016,17 +922,11 @@
     the <span class="Li">&quot;=cut&quot;</span> to go back to Perl code from
     the Pod comment:</p>
 <p class="Pp"></p>
-<pre>
-    =begin comment
-
+<pre>    =begin comment
     my $object = NotGonnaHappen-&gt;new();
-
     ignored_sub();
-
     $wont_be_assigned = 37;
-
     =end comment
-
     =cut
 </pre>
 <p class="Pp">For more information on Pod, check out perlpod and
@@ -1037,8 +937,7 @@
   do I clear a package?</a></h2>
 <p class="Pp">Use this code, provided by Mark-Jason Dominus:</p>
 <p class="Pp"></p>
-<pre>
-    sub scrub_package {
+<pre>    sub scrub_package {
         no strict 'refs';
         my $pack = shift;
         die &quot;Shouldn't delete main package&quot;
@@ -1065,8 +964,7 @@
 <p class="Pp">Beginners often think they want to have a variable contain the
     name of a variable.</p>
 <p class="Pp"></p>
-<pre>
-    $fred    = 23;
+<pre>    $fred    = 23;
     $varname = &quot;fred&quot;;
     ++$$varname;         # $fred now 24
 </pre>
@@ -1090,8 +988,7 @@
     (like <span class="Li">%main::</span>) instead of a user-defined hash. The
     solution is to use your own hash or a real reference instead.</p>
 <p class="Pp"></p>
-<pre>
-    $USER_VARS{&quot;fred&quot;} = 23;
+<pre>    $USER_VARS{&quot;fred&quot;} = 23;
     my $varname = &quot;fred&quot;;
     $USER_VARS{$varname}++;  # not $$varname++
 </pre>
@@ -1103,23 +1000,20 @@
     Instead of reading a string and expanding it to the actual contents of your
     program's own variables:</p>
 <p class="Pp"></p>
-<pre>
-    $str = 'this has a $fred and $barney in it';
+<pre>    $str = 'this has a $fred and $barney in it';
     $str =~ s/(\$\w+)/$1/eeg;          # need double eval
 </pre>
 <p class="Pp">it would be better to keep a hash around like
     <span class="Li">%USER_VARS</span> and have variable references actually
     refer to entries in that hash:</p>
 <p class="Pp"></p>
-<pre>
-    $str =~ s/\$(\w+)/$USER_VARS{$1}/g;   # no /e here at all
+<pre>    $str =~ s/\$(\w+)/$USER_VARS{$1}/g;   # no /e here at all
 </pre>
 <p class="Pp">That's faster, cleaner, and safer than the previous approach. Of
     course, you don't need to use a dollar sign. You could use your own scheme
     to make it less confusing, like bracketed percent symbols, etc.</p>
 <p class="Pp"></p>
-<pre>
-    $str = 'this has a %fred% and %barney% in it';
+<pre>    $str = 'this has a %fred% and %barney% in it';
     $str =~ s/%(\w+)%/$USER_VARS{$1}/g;   # no /e here at all
 </pre>
 <p class="Pp">Another reason that folks sometimes think they want a variable to
@@ -1129,18 +1023,15 @@
     <span class="Li">%barney</span>, and that they wanted to use another scalar
     variable to refer to those by name.</p>
 <p class="Pp"></p>
-<pre>
-    $name = &quot;fred&quot;;
+<pre>    $name = &quot;fred&quot;;
     $$name{WIFE} = &quot;wilma&quot;;     # set %fred
-
     $name = &quot;barney&quot;;
     $$name{WIFE} = &quot;betty&quot;;    # set %barney
 </pre>
 <p class="Pp">This is still a symbolic reference, and is still saddled with the
     problems enumerated above. It would be far better to write:</p>
 <p class="Pp"></p>
-<pre>
-    $folks{&quot;fred&quot;}{WIFE}   = &quot;wilma&quot;;
+<pre>    $folks{&quot;fred&quot;}{WIFE}   = &quot;wilma&quot;;
     $folks{&quot;barney&quot;}{WIFE} = &quot;betty&quot;;
 </pre>
 <p class="Pp">And just use a multilevel hash to start with.</p>
@@ -1153,8 +1044,7 @@
     'refs'&quot;</span> temporarily so you can play around with the symbol
     table. For example:</p>
 <p class="Pp"></p>
-<pre>
-    @colors = qw(red blue green yellow orange purple violet);
+<pre>    @colors = qw(red blue green yellow orange purple violet);
     for my $name (@colors) {
         no strict 'refs';  # renege for the block
         *$name = sub { &quot;&lt;FONT COLOR='$name'&gt;@_&lt;/FONT&gt;&quot; };
@@ -1190,8 +1080,7 @@
 <p class="Pp">In either case, you should still be able to run the scripts with
     perl explicitly:</p>
 <p class="Pp"></p>
-<pre>
-    % perl script.pl
+<pre>    % perl script.pl
 </pre>
 <p class="Pp">If you get a message like &quot;perl: command not found&quot;,
     perl is not in your PATH, which might also mean that the location of perl is

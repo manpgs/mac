@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Mock(3)</title>
 </head>
@@ -35,10 +36,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Mock;
+<pre>    use Test2::Mock;
     use MyClass;
-
     my $mock = Test2::Mock-&gt;new(
         track =&gt; $BOOL, # enable call tracking if desired
         class =&gt; 'MyClass',
@@ -52,12 +51,9 @@
         ],
         ...
     );
-
     # Unmock the 'name' sub
     $mock-&gt;restore('name');
-
     ...
-
     $mock = undef; # Will remove all the mocking
 </pre>
 </section>
@@ -75,16 +71,14 @@
         arrayref of arguments to be used within the method. For instance the
         <span class="Li">&quot;add()&quot;</span> method:</p>
     <p class="Pp"></p>
-    <pre>
-    my $mock = Test2::Mock-&gt;new(
+    <pre>    my $mock = Test2::Mock-&gt;new(
         class =&gt; 'AClass',
         add =&gt; [foo =&gt; sub { 'foo' }],
     );
     </pre>
     <p class="Pp">is identical to this:</p>
     <p class="Pp"></p>
-    <pre>
-    my $mock = Test2::Mock-&gt;new(
+    <pre>    my $mock = Test2::Mock-&gt;new(
         class =&gt; 'AClass',
     );
     $mock-&gt;add(foo =&gt; sub { 'foo' });
@@ -99,8 +93,7 @@
   <dt>$hashref = $mock-&gt;sub_tracking</dt>
   <dd>The tracking data looks like this:
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         sub_name =&gt; [
             {sub_name =&gt; $sub_name, sub_ref =&gt; $mock_subref, args =&gt; [... copy of @_ from the call ... ]},
             ...,
@@ -117,8 +110,7 @@
   <dt>$arrayref = $mock-&gt;call_tracking</dt>
   <dd>The tracking data looks like this:
     <p class="Pp"></p>
-    <pre>
-    [
+    <pre>    [
         {sub_name =&gt; $sub_name, sub_ref =&gt; $mock_subref, args =&gt; [... copy of @_ from the call ... ]},
         ...,
         ...,
@@ -163,24 +155,21 @@
         by a new specification of the symbol. If no sigil is specified then
         '&amp;' (sub) is assumed. A simple example of overriding a sub:</p>
     <p class="Pp"></p>
-    <pre>
-    $mock-&gt;override(foo =&gt; sub { 'overridden foo' });
+    <pre>    $mock-&gt;override(foo =&gt; sub { 'overridden foo' });
     my $val = $class-&gt;foo; # Runs our override
     # $val is now set to 'overridden foo'
     </pre>
     <p class="Pp">You can also simply provide a value and it will be wrapped in
         a sub for you:</p>
     <p class="Pp"></p>
-    <pre>
-    $mock-&gt;override( foo =&gt; 'foo' );
+    <pre>    $mock-&gt;override( foo =&gt; 'foo' );
     </pre>
     <p class="Pp">The example above will generate a sub that always returns the
         string 'foo'.</p>
     <p class="Pp">There are three *special* values that can be used to generate
         accessors:</p>
     <p class="Pp"></p>
-    <pre>
-    $mock-&gt;add(
+    <pre>    $mock-&gt;add(
         name =&gt; 'rw',   # Generates a read/write accessor
         age  =&gt; 'ro',   # Generates a read only accessor
         size =&gt; 'wo',   # Generates a write only accessor
@@ -190,8 +179,7 @@
         three special strings, or that returns a coderef, you can use a hashref
         as the spec:</p>
     <p class="Pp"></p>
-    <pre>
-    my $ref = sub { 'my sub' };
+    <pre>    my $ref = sub { 'my sub' };
     $mock-&gt;add(
         rw_string =&gt; { val =&gt; 'rw' },
         ro_string =&gt; { val =&gt; 'ro' },
@@ -202,20 +190,16 @@
     <p class="Pp">You can also override/add other symbol types, such as
       hash:</p>
     <p class="Pp"></p>
-    <pre>
-    package Foo;
+    <pre>    package Foo;
     ...
-
     $mock-&gt;add('%foo' =&gt; {a =&gt; 1});
-
     print $Foo::foo{a}; # prints '1'
     </pre>
     <p class="Pp">You can also tell mock to deduce the symbol type for the
         add/override from the reference, rules are similar to glob
       assignments:</p>
     <p class="Pp"></p>
-    <pre>
-    $mock-&gt;add(
+    <pre>    $mock-&gt;add(
         -foo =&gt; sub { 'foo' },     # Adds the &amp;foo sub to the package
         -foo =&gt; { foo =&gt; 1 },      # Adds the %foo hash to the package
         -foo =&gt; [ 'f', 'o', 'o' ], # Adds the @foo array to the package
@@ -249,8 +233,7 @@
     <p class="Pp">The <span class="Li">&quot;hash&quot;</span> type is the most
         common, all arguments are used to create a new hash that is blessed.</p>
     <p class="Pp"></p>
-    <pre>
-    hash =&gt; sub  {
+    <pre>    hash =&gt; sub  {
         my ($class, %params) = @_;
         return bless \%params, $class;
     };
@@ -258,8 +241,7 @@
     <p class="Pp">The <span class="Li">&quot;array&quot;</span> type is similar
         to the hash type, but accepts a list instead of key/value pairs:</p>
     <p class="Pp"></p>
-    <pre>
-    array =&gt; sub {
+    <pre>    array =&gt; sub {
         my ($class, @params) = @_;
         return bless \@params, $class;
     };
@@ -268,8 +250,7 @@
         reference and blesses it. This will modify your original input
       argument.</p>
     <p class="Pp"></p>
-    <pre>
-    ref =&gt; sub {
+    <pre>    ref =&gt; sub {
         my ($class, $params) = @_;
         return bless $params, $class;
     };
@@ -277,17 +258,13 @@
     <p class="Pp">The <span class="Li">&quot;ref_copy&quot;</span> type will
         copy your reference and bless the copy:</p>
     <p class="Pp"></p>
-    <pre>
-    ref_copy =&gt; sub {
+    <pre>    ref_copy =&gt; sub {
         my ($class, $params) = @_;
         my $type = reftype($params);
-
         return bless {%$params}, $class
             if $type eq 'HASH';
-
         return bless [@$params], $class
             if $type eq 'ARRAY';
-
         croak &quot;Not sure how to construct a '$class' from '$params'&quot;;
     };
     </pre>
@@ -303,16 +280,13 @@
   <dt>$mock-&gt;around($NAME, sub { ... })</dt>
   <dd>This gives you the chance to wrap the original sub:
     <p class="Pp"></p>
-    <pre>
-    $mock-&gt;around(foo =&gt; sub {
+    <pre>    $mock-&gt;around(foo =&gt; sub {
         my $orig = shift;
         my $self = shift;
         my (@args) = @_;
-
         ...
         $self-&gt;$orig(@args);
         ...
-
         return ...;
     });
     </pre>
@@ -339,8 +313,7 @@
   <dd>This returns the stash for the class being mocked. This is the equivalent
       of:
     <p class="Pp"></p>
-    <pre>
-    my $stash = \%{&quot;${class}\::&quot;};
+    <pre>    my $stash = \%{&quot;${class}\::&quot;};
     </pre>
     <p class="Pp">This saves you from needing to turn off strict.</p>
   </dd>

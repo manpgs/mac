@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Storage::DBI(3)</title>
 </head>
@@ -28,11 +29,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  my $schema = MySchema-&gt;connect('dbi:SQLite:my.db');
-
+<pre>  my $schema = MySchema-&gt;connect('dbi:SQLite:my.db');
   $schema-&gt;storage-&gt;debug(1);
-
   my @stuff = $schema-&gt;storage-&gt;dbh_do(
     sub {
       my ($storage, $dbh, @args) = @_;
@@ -40,7 +38,6 @@
     },
     @column_list
   );
-
   $schema-&gt;resultset('Book')-&gt;search({
      written_on =&gt; $schema-&gt;storage-&gt;datetime_parser-&gt;format_datetime(DateTime-&gt;now)
   });
@@ -65,29 +62,25 @@
       &quot;connect&quot; in DBI, optionally followed by extra attributes
       recognized by DBIx::Class:
     <p class="Pp"></p>
-    <pre>
-  $connect_info_args = [ $dsn, $user, $password, \%dbi_attributes?, \%extra_attributes? ];
+    <pre>  $connect_info_args = [ $dsn, $user, $password, \%dbi_attributes?, \%extra_attributes? ];
     </pre>
   </li>
   <li>A single code reference which returns a connected DBI database handle
       optionally followed by extra attributes recognized by DBIx::Class:
     <p class="Pp"></p>
-    <pre>
-  $connect_info_args = [ sub { DBI-&gt;connect (...) }, \%extra_attributes? ];
+    <pre>  $connect_info_args = [ sub { DBI-&gt;connect (...) }, \%extra_attributes? ];
     </pre>
   </li>
   <li>A single hashref with all the attributes and the dsn/user/password mixed
       together:
     <p class="Pp"></p>
-    <pre>
-  $connect_info_args = [{
+    <pre>  $connect_info_args = [{
     dsn =&gt; $dsn,
     user =&gt; $user,
     password =&gt; $pass,
     %dbi_attributes,
     %extra_attributes,
   }];
-
   $connect_info_args = [{
     dbh_maker =&gt; sub { DBI-&gt;connect (...) },
     %dbi_attributes,
@@ -97,8 +90,7 @@
     <p class="Pp">This is particularly useful for Catalyst based applications,
         allowing the following config (Config::General style):</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;Model::DB&gt;
+    <pre>  &lt;Model::DB&gt;
     schema_class   App::DB
     &lt;connect_info&gt;
       dsn          dbi:mysql:database=test
@@ -161,13 +153,11 @@
       specified <span class="Li">&quot;connect_call_METHOD&quot;</span> methods
       in your storage driver.
     <p class="Pp"></p>
-    <pre>
-  on_connect_do =&gt; 'select 1'
+    <pre>  on_connect_do =&gt; 'select 1'
     </pre>
     <p class="Pp">is equivalent to:</p>
     <p class="Pp"></p>
-    <pre>
-  on_connect_call =&gt; [ [ do_sql =&gt; 'select 1' ] ]
+    <pre>  on_connect_call =&gt; [ [ do_sql =&gt; 'select 1' ] ]
     </pre>
     <p class="Pp">Its values may contain:</p>
   </dd>
@@ -291,19 +281,15 @@
 <p class="Pp">Some real-life examples of arguments to &quot;connect_info&quot;
     and &quot;connect&quot; in DBIx::Class::Schema</p>
 <p class="Pp"></p>
-<pre>
-  # Simple SQLite connection
+<pre>  # Simple SQLite connection
   -&gt;connect_info([ 'dbi:SQLite:./foo.db' ]);
-
   # Connect via subref
   -&gt;connect_info([ sub { DBI-&gt;connect(...) } ]);
-
   # Connect via subref in hashref
   -&gt;connect_info([{
     dbh_maker =&gt; sub { DBI-&gt;connect(...) },
     on_connect_do =&gt; 'alter session ...',
   }]);
-
   # A bit more complicated
   -&gt;connect_info(
     [
@@ -314,7 +300,6 @@
       { quote_char =&gt; q{&quot;} },
     ]
   );
-
   # Equivalent to the previous example
   -&gt;connect_info(
     [
@@ -324,7 +309,6 @@
       { AutoCommit =&gt; 1, quote_char =&gt; q{&quot;}, name_sep =&gt; q{.} },
     ]
   );
-
   # Same, but with hashref as argument
   # See parse_connect_info for explanation
   -&gt;connect_info(
@@ -337,7 +321,6 @@
       name_sep    =&gt; q{.},
     }]
   );
-
   # Subref + DBIx::Class-specific connection options
   -&gt;connect_info(
     [
@@ -353,12 +336,12 @@
 </pre>
 </section>
 <section class="Ss">
-<h2 class="Ss">on_connect_do</h2>
+<h2 class="Ss" id="on_connect_do~2"><a class="permalink" href="#on_connect_do~2">on_connect_do</a></h2>
 <p class="Pp">This method is deprecated in favour of setting via
     &quot;connect_info&quot;.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss">on_disconnect_do</h2>
+<h2 class="Ss" id="on_disconnect_do~2"><a class="permalink" href="#on_disconnect_do~2">on_disconnect_do</a></h2>
 <p class="Pp">This method is deprecated in favour of setting via
     &quot;connect_info&quot;.</p>
 </section>
@@ -381,8 +364,7 @@
     the database connection was stale/dysfunctional.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-  my @stuff = $schema-&gt;storage-&gt;dbh_do(
+<pre>  my @stuff = $schema-&gt;storage-&gt;dbh_do(
     sub {
       my ($storage, $dbh, @cols) = @_;
       my $cols = join(q{, }, @cols);
@@ -439,8 +421,7 @@
 <p class="Pp">A no-op stub method, provided so that one can always safely supply
     the connection option</p>
 <p class="Pp"></p>
-<pre>
- on_connect_call =&gt; 'datetime_setup'
+<pre> on_connect_call =&gt; 'datetime_setup'
 </pre>
 <p class="Pp">This way one does not need to know in advance whether the
     underlying storage requires any sort of hand-holding when dealing with
@@ -564,14 +545,12 @@
 <p class="Pp">By default, <span class="Li">&quot;\%sqlt_args&quot;</span> will
     have</p>
 <p class="Pp"></p>
-<pre>
- { add_drop_table =&gt; 1, ignore_constraint_names =&gt; 1, ignore_index_names =&gt; 1 }
+<pre> { add_drop_table =&gt; 1, ignore_constraint_names =&gt; 1, ignore_index_names =&gt; 1 }
 </pre>
 <p class="Pp">merged with the hash passed in. To disable any of those features,
     pass in a hashref like the following</p>
 <p class="Pp"></p>
-<pre>
- { ignore_constraint_names =&gt; 0, # ... other options }
+<pre> { ignore_constraint_names =&gt; 0, # ... other options }
 </pre>
 <p class="Pp">WARNING: You are strongly advised to check all SQL files created,
     before applying them.</p>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Kit(3)</title>
 </head>
@@ -50,54 +51,39 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Somewhere in your project...</p>
 <p class="Pp"></p>
-<pre>
-    package MyProject::Test;
-
+<pre>    package MyProject::Test;
     use Test::Kit;
-
     # Combine multiple modules' behaviour into one
-
     include 'Test::More';
     include 'Test::LongString';
-
     # Exclude or rename exported subs
-
     include 'Test::Warn' =&gt; {
         exclude =&gt; [ 'warning_is' ],
         renamed =&gt; {
             'warning_like' =&gt; 'test_warn_warning_like'
         },
     };
-
     # Pass parameters through to import() directly
-
     include 'List::Util' =&gt; {
         import =&gt; [ 'min', 'max', 'shuffle' ],
     };
-
     # Include pragmata in your kit
-
     include 'strict', 'warnings';
 </pre>
 <p class="Pp">And then in your test files...</p>
 <p class="Pp"></p>
-<pre>
-    use MyProject::Test tests =&gt; 4;
-
+<pre>    use MyProject::Test tests =&gt; 4;
     ok 1, &quot;1 is true&quot;;
-
     like_string(
         `cat /usr/share/dict/words`,
         qr/^ kit $/imsx,
         &quot;kit is a word&quot;
     );
-
     test_warn_warning_like {
         warn &quot;foo&quot;;
     }
     qr/FOO/i,
     &quot;warned foo&quot;;
-
     is max(qw(1 2 3 4 5)), 5, 'maximum is 5';
 </pre>
 </section>

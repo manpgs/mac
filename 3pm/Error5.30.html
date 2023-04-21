@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Error(3)</title>
 </head>
@@ -32,19 +33,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Error qw(:try);
-
+<pre>    use Error qw(:try);
     throw Error::Simple( &quot;A simple error&quot;);
-
     sub xyz {
         ...
         record Error::Simple(&quot;A simple error&quot;)
             and return;
     }
-
     unlink($file) or throw Error::Simple(&quot;$file: $!&quot;,$!);
-
     try {
         do_some_stuff();
         die &quot;error!&quot; if $condition;
@@ -157,9 +153,7 @@
     <span class="Li">&quot;with&quot;</span> which clashes with Error's. This
     example returns a prototype mismatch error:</p>
 <p class="Pp"></p>
-<pre>
-    package MyTest;
-
+<pre>    package MyTest;
     use warnings;
     use Moose;
     use Error qw(:try);
@@ -179,8 +173,7 @@
     retrievable by the <span class="Li">&quot;Error&quot;</span> class are
     listed below, other classes may add to these.</p>
 <p class="Pp"></p>
-<pre>
-        -file
+<pre>        -file
         -line
         -text
         -value
@@ -214,8 +207,7 @@
   <dd>Create a new <span class="Li">&quot;Error&quot;</span> object and returns
       it. This is defined for syntactic sugar, eg
     <p class="Pp"></p>
-    <pre>
-    die with Some::Error ( ... );
+    <pre>    die with Some::Error ( ... );
     </pre>
   </dd>
   <dt id="record"><a class="permalink" href="#record">record ( [ ARGS ]
@@ -223,8 +215,7 @@
   <dd>Create a new <span class="Li">&quot;Error&quot;</span> object and returns
       it. This is defined for syntactic sugar, eg
     <p class="Pp"></p>
-    <pre>
-    record Some::Error ( ... )
+    <pre>    record Some::Error ( ... )
         and return;
     </pre>
   </dd>
@@ -244,8 +235,7 @@
       error stack before exiting the package or uncaught errors generated using
       <span class="Li">&quot;record&quot;</span> will be reported.
     <p class="Pp"></p>
-    <pre>
-     $Error-&gt;flush;
+    <pre>     $Error-&gt;flush;
     </pre>
   </dd>
 </dl>
@@ -272,8 +262,7 @@
   <dt>$err-&gt;associate($obj)</dt>
   <dd>Associates an error with an object to allow error propagation. I.e:
     <p class="Pp"></p>
-    <pre>
-    $ber-&gt;encode(...) or
+    <pre>    $ber-&gt;encode(...) or
         return Error-&gt;prior($ber)-&gt;associate($ldap);
     </pre>
   </dd>
@@ -333,18 +322,15 @@
 <p class="Pp">For example the following code will cause Error.pm to throw
     objects of the class MyError::Bar by default:</p>
 <p class="Pp"></p>
-<pre>
-    sub throw_MyError_Bar
+<pre>    sub throw_MyError_Bar
     {
         my $args = shift;
         my $err = MyError::Bar-&gt;new();
         $err-&gt;{'MyBarText'} = $args-&gt;{'text'};
         return $err;
     }
-
     {
         local $Error::ObjectifyCallback = \&amp;throw_MyError_Bar;
-
         # Error handling here.
     }
 </pre>
@@ -360,8 +346,7 @@
     <span class="Li">&quot;:warndie&quot;</span> tag in the
     <span class="Li">&quot;use&quot;</span> line.</p>
 <p class="Pp"></p>
-<pre>
- use Error qw( :warndie );
+<pre> use Error qw( :warndie );
 </pre>
 <p class="Pp">These new error handlers are installed in
     <span class="Li">$SIG{__WARN__}</span> and
@@ -370,13 +355,11 @@
     code. Thus, to arrange for custom handling of warnings and errors, you will
     need to perform something like the following:</p>
 <p class="Pp"></p>
-<pre>
- BEGIN {
+<pre> BEGIN {
    $SIG{__WARN__} = sub {
      print STDERR &quot;My special warning handler: $_[0]&quot;
    };
  }
-
  use Error qw( :warndie );
 </pre>
 <p class="Pp">Note that setting <span class="Li">$SIG{__WARN__}</span> after the
@@ -385,11 +368,8 @@
     provides. If this cannot be avoided, then the tag can be explicitly
     <span class="Li">&quot;import&quot;</span>ed later</p>
 <p class="Pp"></p>
-<pre>
- use Error;
-
+<pre> use Error;
  $SIG{__WARN__} = ...;
-
  import Error qw( :warndie );
 </pre>
 <section class="Ss">
@@ -397,20 +377,14 @@
 <p class="Pp">The <span class="Li">&quot;__DIE__&quot;</span> handler turns
     messages such as</p>
 <p class="Pp"></p>
-<pre>
- Can't call method &quot;foo&quot; on an undefined value at examples/warndie.pl line 16.
+<pre> Can't call method &quot;foo&quot; on an undefined value at examples/warndie.pl line 16.
 </pre>
 <p class="Pp">into</p>
 <p class="Pp"></p>
-<pre>
- Unhandled perl error caught at toplevel:
-
+<pre> Unhandled perl error caught at toplevel:
    Can't call method &quot;foo&quot; on an undefined value
-
  Thrown from: examples/warndie.pl:16
-
  Full stack trace:
-
          main::inner('undef') called at examples/warndie.pl line 20
          main::outer('undef') called at examples/warndie.pl line 23
 </pre>
@@ -529,8 +503,7 @@
     repository :)</p>
 <p class="Pp">&lt;https://github.com/shlomif/perl-error.pm&gt;</p>
 <p class="Pp"></p>
-<pre>
-  git clone git://github.com/shlomif/perl-error.pm.git
+<pre>  git clone git://github.com/shlomif/perl-error.pm.git
 </pre>
 </section>
 </section>
@@ -557,7 +530,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

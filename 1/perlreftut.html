@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLREFTUT(1)</title>
 </head>
@@ -48,8 +49,7 @@
 <p class="Pp">Why would you want a hash of lists? Let's take a simple example:
     You have a file of city and country names, like this:</p>
 <p class="Pp"></p>
-<pre>
-        Chicago, USA
+<pre>        Chicago, USA
         Frankfurt, Germany
         Berlin, Germany
         Washington, USA
@@ -60,8 +60,7 @@
     mentioned once, and then an alphabetical list of the cities in that
   country:</p>
 <p class="Pp"></p>
-<pre>
-        Finland: Helsinki.
+<pre>        Finland: Helsinki.
         Germany: Berlin, Frankfurt.
         USA:  Chicago, New York, Washington.
 </pre>
@@ -117,8 +116,7 @@
 <p class="Pp">If you put a <span class="Li">&quot;\&quot;</span> in front of a
     variable, you get a reference to that variable.</p>
 <p class="Pp"></p>
-<pre>
-    $aref = \@array;         # $aref now holds a reference to @array
+<pre>    $aref = \@array;         # $aref now holds a reference to @array
     $href = \%hash;          # $href now holds a reference to %hash
     $sref = \$scalar;        # $sref now holds a reference to $scalar
 </pre>
@@ -126,8 +124,7 @@
     <span class="Li">$aref</span> or <span class="Li">$href</span>, you can copy
     it or store it just the same as any other scalar value:</p>
 <p class="Pp"></p>
-<pre>
-    $xy = $aref;             # $xy now holds a reference to @array
+<pre>    $xy = $aref;             # $xy now holds a reference to @array
     $p[3] = $href;           # $p[3] now holds a reference to %hash
     $z = $p[3];              # $z now holds a reference to %hash
 </pre>
@@ -142,20 +139,16 @@
     <span class="Li">&quot;{ ITEMS }&quot;</span> makes a new, anonymous hash,
     and returns a reference to that hash.</p>
 <p class="Pp"></p>
-<pre>
-    $aref = [ 1, &quot;foo&quot;, undef, 13 ];
+<pre>    $aref = [ 1, &quot;foo&quot;, undef, 13 ];
     # $aref now holds a reference to an array
-
     $href = { APR =&gt; 4, AUG =&gt; 8 };
     # $href now holds a reference to a hash
 </pre>
 <p class="Pp">The references you get from rule 2 are the same kind of references
     that you get from rule 1:</p>
 <p class="Pp"></p>
-<pre>
-        # This:
+<pre>        # This:
         $aref = [ 1, 2, 3 ];
-
         # Does the same as this:
         @array = (1, 2, 3);
         $aref = \@array;
@@ -182,8 +175,7 @@
 <p class="Pp">Here are some examples of that:</p>
 <p class="Pp">Arrays:</p>
 <p class="Pp"></p>
-<pre>
-        @a              @{$aref}                An array
+<pre>        @a              @{$aref}                An array
         reverse @a      reverse @{$aref}        Reverse the array
         $a[3]           ${$aref}[3]             An element of the array
         $a[3] = 17;     ${$aref}[3] = 17        Assigning an element
@@ -195,8 +187,7 @@
     on, both versions do the same things to the arrays.</p>
 <p class="Pp">Using a hash reference is <i>exactly</i> the same:</p>
 <p class="Pp"></p>
-<pre>
-        %h              %{$href}              A hash
+<pre>        %h              %{$href}              A hash
         keys %h         keys %{$href}         Get the keys from the hash
         $h{'red'}       ${$href}{'red'}       An element of the hash
         $h{'red'} = 17  ${$href}{'red'} = 17  Assigning an element
@@ -208,31 +199,27 @@
     &quot;How do I loop over an array when all I have is a reference?&quot;
     Well, to loop over an array, you would write</p>
 <p class="Pp"></p>
-<pre>
-        for my $element (@array) {
+<pre>        for my $element (@array) {
           ...
         }
 </pre>
 <p class="Pp">so replace the array name, <span class="Li">@array</span>, with
     the reference:</p>
 <p class="Pp"></p>
-<pre>
-        for my $element (@{$aref}) {
+<pre>        for my $element (@{$aref}) {
           ...
         }
 </pre>
 <p class="Pp">&quot;How do I print out the contents of a hash when all I have is
     a reference?&quot; First write the code for printing out a hash:</p>
 <p class="Pp"></p>
-<pre>
-        for my $key (keys %hash) {
+<pre>        for my $key (keys %hash) {
           print &quot;$key =&gt; $hash{$key}\n&quot;;
         }
 </pre>
 <p class="Pp">And then replace the hash name with the reference:</p>
 <p class="Pp"></p>
-<pre>
-        for my $key (keys %{$href}) {
+<pre>        for my $key (keys %{$href}) {
           print &quot;$key =&gt; ${$href}{$key}\n&quot;;
         }
 </pre>
@@ -273,8 +260,7 @@
     3)&quot;</span>, and gives you a reference to that array.</p>
 <p class="Pp">Now think about</p>
 <p class="Pp"></p>
-<pre>
-        @a = ( [1, 2, 3],
+<pre>        @a = ( [1, 2, 3],
                [4, 5, 6],
                [7, 8, 9]
              );
@@ -315,16 +301,13 @@
 <p class="Pp">Here's the answer to the problem I posed earlier, of reformatting
     a file of city and country names.</p>
 <p class="Pp"></p>
-<pre>
-    1   my %table;
-
+<pre>    1   my %table;
     2   while (&lt;&gt;) {
     3     chomp;
     4     my ($city, $country) = split /, /;
     5     $table{$country} = [] unless exists $table{$country};
     6     push @{$table{$country}}, $city;
     7   }
-
     8   for my $country (sort keys %table) {
     9     print &quot;$country: &quot;;
    10     my @cities = @{$table{$country}};
@@ -338,8 +321,7 @@
     country names, and whose values are references to arrays of city names. The
     data structure will look like this:</p>
 <p class="Pp"></p>
-<pre>
-           %table
+<pre>           %table
         +-------+---+
         |       |   |   +-----------+--------+
         |Germany| *----&gt;| Frankfurt | Berlin |
@@ -357,8 +339,7 @@
 <p class="Pp">We'll look at output first. Supposing we already have this
     structure, how do we print it out?</p>
 <p class="Pp"></p>
-<pre>
-    8   for my $country (sort keys %table) {
+<pre>    8   for my $country (sort keys %table) {
     9     print &quot;$country: &quot;;
    10     my @cities = @{$table{$country}};
    11     print join ', ', sort @cities;
@@ -375,8 +356,7 @@
     <span class="Li">&quot;@{$table{$country}}&quot;</span>. Line 10 is just
     like</p>
 <p class="Pp"></p>
-<pre>
-        @cities = @array;
+<pre>        @cities = @array;
 </pre>
 <p class="Pp">except that the name <span class="Li">&quot;array&quot;</span> has
     been replaced by the reference
@@ -387,8 +367,7 @@
 <p class="Pp">Lines 2-7 are responsible for building the structure in the first
     place. Here they are again:</p>
 <p class="Pp"></p>
-<pre>
-    2   while (&lt;&gt;) {
+<pre>    2   while (&lt;&gt;) {
     3     chomp;
     4     my ($city, $country) = split /, /;
     5     $table{$country} = [] unless exists $table{$country};
@@ -404,8 +383,7 @@
     <span class="Li">$table{$country}</span> now holds a reference to the array
     of cities seen in that country so far. Line 6 is exactly like</p>
 <p class="Pp"></p>
-<pre>
-        push @array, $city;
+<pre>        push @array, $city;
 </pre>
 <p class="Pp">except that the name <span class="Li">&quot;array&quot;</span> has
     been replaced by the reference
@@ -415,8 +393,7 @@
 <p class="Pp">There's one fine point I skipped. Line 5 is unnecessary, and we
     can get rid of it.</p>
 <p class="Pp"></p>
-<pre>
-    2   while (&lt;&gt;) {
+<pre>    2   while (&lt;&gt;) {
     3     chomp;
     4     my ($city, $country) = split /, /;
     5   ####  $table{$country} = [] unless exists $table{$country};
@@ -463,8 +440,7 @@
       brackets.</li>
   <li>This doesn't copy the underlying array:
     <p class="Pp"></p>
-    <pre>
-        $aref2 = $aref1;
+    <pre>        $aref2 = $aref1;
     </pre>
     <p class="Pp">You get two references to the same array. If you modify
         <span class="Li">&quot;$aref1-&gt;[23]&quot;</span> and then look at
@@ -472,8 +448,7 @@
         change.</p>
     <p class="Pp">To copy the array, use</p>
     <p class="Pp"></p>
-    <pre>
-        $aref2 = [@{$aref1}];
+    <pre>        $aref2 = [@{$aref1}];
     </pre>
     <p class="Pp">This uses <span class="Li">&quot;[...]&quot;</span> notation
         to create a new anonymous array, and <span class="Li">$aref2</span> is
@@ -482,8 +457,7 @@
       <span class="Li">$aref1</span>.</p>
     <p class="Pp">Similarly, to copy an anonymous hash, you can use</p>
     <p class="Pp"></p>
-    <pre>
-        $href2 = {%{$href1}};
+    <pre>        $href2 = {%{$href1}};
     </pre>
   </li>
   <li>To see if a variable contains a reference, use the
@@ -493,8 +467,7 @@
       <span class="Li">&quot;ARRAY&quot;</span> for array references.</li>
   <li>If you try to use a reference like a string, you get strings like
     <p class="Pp"></p>
-    <pre>
-        ARRAY(0x80f5dec)   or    HASH(0x826afc0)
+    <pre>        ARRAY(0x80f5dec)   or    HASH(0x826afc0)
     </pre>
     <p class="Pp">If you ever see a string that looks like this, you'll know you
         printed out a reference by mistake.</p>

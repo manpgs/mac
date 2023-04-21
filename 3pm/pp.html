@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>pp(3)</title>
 </head>
@@ -37,20 +38,16 @@
 <p class="Pp">Note: When running on Microsoft Windows, the <i>a.out</i> below
     will be replaced by <i>a.exe</i> instead.</p>
 <p class="Pp"></p>
-<pre>
-    % pp hello.pl               # Pack 'hello.pl' into executable 'a.out'
+<pre>    % pp hello.pl               # Pack 'hello.pl' into executable 'a.out'
     % pp -o hello hello.pl      # Pack 'hello.pl' into executable 'hello'
                                 # (or 'hello.exe' on Win32)
-
     % pp -o foo foo.pl bar.pl   # Pack 'foo.pl' and 'bar.pl' into 'foo'
     % ./foo                     # Run 'foo.pl' inside 'foo'
     % mv foo bar; ./bar         # Run 'bar.pl' inside 'foo'
     % mv bar baz; ./baz         # Error: Can't open perl script &quot;baz&quot;
-
     % pp -p file                # Creates a PAR file, 'a.par'
     % pp -o hello a.par         # Pack 'a.par' to executable 'hello'
     % pp -S -o hello file       # Combine the two steps above
-
     % pp -p -o out.par file     # Creates 'out.par' from 'file'
     % pp -B -p -o out.par file  # same as above, but bundles core modules
                                 # and removes any local paths from @INC
@@ -58,31 +55,24 @@
     % pp -B -p -o out.pl file   # same as above, but bundles core modules
                                 # and removes any local paths from @INC
                                 # (-B is assumed when making executables)
-
     % pp -e &quot;print 123&quot;         # Pack a one-liner into 'a.out'
     % pp -p -e &quot;print 123&quot;      # Creates a PAR file 'a.par'
     % pp -P -e &quot;print 123&quot;      # Creates a perl script 'a.pl'
-
     % pp -c hello               # Check dependencies from &quot;perl -c hello&quot;
     % pp -x hello               # Check dependencies from &quot;perl hello&quot;
     % pp -n -x hello            # same as above, but skips static scanning
-
     % pp -I /foo hello          # Extra include paths
     % pp -M Foo::Bar hello      # Extra modules in the include path
     % pp -M abbrev.pl hello     # Extra libraries in the include path
     % pp -X Foo::Bar hello      # Exclude modules
     % pp -a data.txt hello      # Additional data files
-
     % pp -r hello               # Pack 'hello' into 'a.out', runs 'a.out'
     % pp -r hello a b c         # Pack 'hello' into 'a.out', runs 'a.out'
                                 # with arguments 'a b c'
-
     % pp hello --log=c          # Pack 'hello' into 'a.out', logs
                                 # messages into 'c'
-
     # Pack 'hello' into a console-less 'out.exe' (Win32 only)
     % pp --gui -o out.exe hello
-
     % pp @file hello.pl         # Pack 'hello.pl' but read _additional_
                                 # options from file 'file'
 </pre>
@@ -112,8 +102,7 @@
 <p class="Pp">Options are available in a <i>short</i> form and a <i>long</i>
     form. For example, the three lines below are all equivalent:</p>
 <p class="Pp"></p>
-<pre>
-    % pp -o output.exe input.pl
+<pre>    % pp -o output.exe input.pl
     % pp --output output.exe input.pl
     % pp --output=output.exe input.pl
 </pre>
@@ -136,8 +125,7 @@
         original names. You may override this by appending the target filename
         after a <span class="Li">&quot;;&quot;</span>, like this:</p>
     <p class="Pp"></p>
-    <pre>
-    % pp -a &quot;old_filename.txt;new_filename.txt&quot;
+    <pre>    % pp -a &quot;old_filename.txt;new_filename.txt&quot;
     % pp -a &quot;old_dirname;new_dirname&quot;
     </pre>
     <p class="Pp">You may specify <span class="Li">&quot;-a&quot;</span>
@@ -220,8 +208,7 @@
     <p class="Pp">If you wish to hide the source code from casual prying, this
         will do:</p>
     <p class="Pp"></p>
-    <pre>
-    % pp -f Bleach source.pl
+    <pre>    % pp -f Bleach source.pl
     </pre>
     <p class="Pp">If you are more serious about hiding your source code, you
         should have a look at Steve Hay's PAR::Filter::Crypto module. Make sure
@@ -260,8 +247,7 @@
         (<i>REGEX</i> above) to select the files in the archive which should be
         filtered. Example:</p>
     <p class="Pp"></p>
-    <pre>
-  pp -o foo.exe -F Bleach=warnings\.pm$ foo.pl
+    <pre>  pp -o foo.exe -F Bleach=warnings\.pm$ foo.pl
     </pre>
     <p class="Pp">This creates a binary executable <i>foo.exe</i> from
         <i>foo.pl</i> packaging all files as usual except for files ending in
@@ -347,8 +333,7 @@
     <p class="Pp">Make the packaged executable reusable for running arbitrary,
         external Perl scripts as if they were part of the package:</p>
     <p class="Pp"></p>
-    <pre>
-  pp -o myapp --reusable someapp.pl
+    <pre>  pp -o myapp --reusable someapp.pl
   ./myapp --par-options --reuse otherapp.pl
     </pre>
     <p class="Pp">The second line will run <i>otherapp.pl</i> instead of
@@ -382,8 +367,7 @@
         your program is written in UTF-8.)</p>
     <p class="Pp">If your packed program exits with an error message like</p>
     <p class="Pp"></p>
-    <pre>
-  Can't locate utf8_heavy.pl in @INC (@INC contains: ...)
+    <pre>  Can't locate utf8_heavy.pl in @INC (@INC contains: ...)
     </pre>
     <p class="Pp">try to pack it with <span class="Li">&quot;-u&quot;</span> (or
         use <span class="Li">&quot;-x&quot;</span>).</p>
@@ -426,8 +410,7 @@
   <dd>To make a stand-alone executable, suitable for running on a machine that
       doesn't have perl installed:
     <p class="Pp"></p>
-    <pre>
-    % pp -o packed.exe source.pl        # makes packed.exe
+    <pre>    % pp -o packed.exe source.pl        # makes packed.exe
     # Now, deploy 'packed.exe' to target machine...
     $ packed.exe                        # run it
     </pre>
@@ -438,8 +421,7 @@
       a machine that has a perl interpreter, but where you want to be sure of
       the versions of the core modules that your program uses:
     <p class="Pp"></p>
-    <pre>
-    % pp -B -P -o packed.pl source.pl   # makes packed.pl
+    <pre>    % pp -B -P -o packed.pl source.pl   # makes packed.pl
     # Now, deploy 'packed.pl' to target machine...
     $ perl packed.pl                    # run it
     </pre>
@@ -450,8 +432,7 @@
       machine's perl interpreter and its core libraries. This produces a
       significantly smaller file than the previous version:
     <p class="Pp"></p>
-    <pre>
-    % pp -P -o packed.pl source.pl      # makes packed.pl
+    <pre>    % pp -P -o packed.pl source.pl      # makes packed.pl
     # Now, deploy 'packed.pl' to target machine...
     $ perl packed.pl                    # run it
     </pre>
@@ -461,8 +442,7 @@
   <dd>Make a separate archive and executable that uses the archive. This relies
       upon the perl interpreter and libraries on the target machine.
     <p class="Pp"></p>
-    <pre>
-    % pp -p source.pl                   # makes source.par
+    <pre>    % pp -p source.pl                   # makes source.par
     % echo &quot;use PAR 'source.par';&quot; &gt; packed.pl;
     % cat source.pl &gt;&gt; packed.pl;       # makes packed.pl
     # Now, deploy 'source.par' and 'packed.pl' to target machine...
@@ -515,8 +495,7 @@
     licensing restrictions on files generated by their execution, in accordance
     with the 8th article of the Artistic License:</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Aggregation of this Package with a commercial distribution is
+<pre>    &quot;Aggregation of this Package with a commercial distribution is
     always permitted provided that the use of this Package is embedded;
     that is, when no overt attempt is made to make this Package's
     interfaces visible to the end user of the commercial distribution.

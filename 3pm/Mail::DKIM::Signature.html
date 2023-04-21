@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Mail::DKIM::Signature(3)</title>
 </head>
@@ -30,8 +31,7 @@
 <h1 class="Sh" id="CONSTRUCTORS"><a class="permalink" href="#CONSTRUCTORS">CONSTRUCTORS</a></h1>
 <section class="Ss">
 <h2 class="Ss"><b>new()</b> - create a new signature from parameters</h2>
-<pre>
-  my $signature = Mail::DKIM::Signature-&gt;new(
+<pre>  my $signature = Mail::DKIM::Signature-&gt;new(
                       [ Algorithm =&gt; 'rsa-sha1', ]
                       [ Signature =&gt; $base64, ]
                       [ Method =&gt; 'relaxed', ]
@@ -48,8 +48,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>parse()</b> - create a new signature from a DKIM-Signature
   header</h2>
-<pre>
-  my $sig = Mail::DKIM::Signature-&gt;parse(
+<pre>  my $sig = Mail::DKIM::Signature-&gt;parse(
                   'DKIM-Signature: a=rsa-sha1; b=yluiJ7+0=; c=relaxed'
             );
 </pre>
@@ -72,13 +71,11 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>as_string()</b> - the signature header as a string</h2>
-<pre>
-  print $signature-&gt;as_string . &quot;\n&quot;;
+<pre>  print $signature-&gt;as_string . &quot;\n&quot;;
 </pre>
 <p class="Pp">outputs</p>
 <p class="Pp"></p>
-<pre>
-  DKIM-Signature: a=rsa-sha1; b=yluiJ7+0=; c=relaxed
+<pre>  DKIM-Signature: a=rsa-sha1; b=yluiJ7+0=; c=relaxed
 </pre>
 <p class="Pp">As shown in the example, the as_string method can be used to
     generate the DKIM-Signature that gets prepended to a signed message.</p>
@@ -86,13 +83,11 @@
 <section class="Ss">
 <h2 class="Ss"><b>as_string_without_data()</b> - signature without the signature
   data</h2>
-<pre>
-  print $signature-&gt;as_string_without_data . &quot;\n&quot;;
+<pre>  print $signature-&gt;as_string_without_data . &quot;\n&quot;;
 </pre>
 <p class="Pp">outputs</p>
 <p class="Pp"></p>
-<pre>
-  DKIM-Signature: a=rsa-sha1; b=; c=relaxed
+<pre>  DKIM-Signature: a=rsa-sha1; b=; c=relaxed
 </pre>
 <p class="Pp">This is similar to the <b>as_string()</b> method, but it always
     excludes the &quot;data&quot; part. This is used by the DKIM
@@ -101,8 +96,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>body_count()</b> - get or set the body count (l=) field</h2>
-<pre>
-  my $i = $signature-&gt;body_count;
+<pre>  my $i = $signature-&gt;body_count;
 </pre>
 <p class="Pp">Informs the verifier of the number of bytes in the body of the
     email included in the cryptographic hash, starting from 0 immediately
@@ -113,8 +107,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>body_hash()</b> - get or set the body hash (bh=) field</h2>
-<pre>
-  my $bh = $signature-&gt;body_hash;
+<pre>  my $bh = $signature-&gt;body_hash;
 </pre>
 <p class="Pp">The hash of the body part of the message. Whitespace is ignored in
     this value. This tag is required.</p>
@@ -124,9 +117,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>canonicalization()</b> - get or set the canonicalization (c=)
   field</h2>
-<pre>
-  $signature-&gt;canonicalization('relaxed', 'simple');
-
+<pre>  $signature-&gt;canonicalization('relaxed', 'simple');
   ($header, $body) = $signature-&gt;canonicalization;
 </pre>
 <p class="Pp">Message canonicalization (default is &quot;simple/simple&quot;).
@@ -138,8 +129,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>data()</b> - get or set the signature data (b=) field</h2>
-<pre>
-  my $base64 = $signature-&gt;data;
+<pre>  my $base64 = $signature-&gt;data;
   $signature-&gt;data($base64);
 </pre>
 <p class="Pp">The signature data. Whitespace is automatically stripped from the
@@ -147,8 +137,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>domain()</b> - get or set the domain (d=) field</h2>
-<pre>
-  my $d = $signature-&gt;domain;          # gets the domain value
+<pre>  my $d = $signature-&gt;domain;          # gets the domain value
   $signature-&gt;domain('example.org');   # sets the domain value
 </pre>
 <p class="Pp">The domain of the signing entity, as specified in the signature.
@@ -167,8 +156,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>get_public_key()</b> - fetches the public key referenced by
   this signature</h2>
-<pre>
-  my $pubkey = $signature-&gt;get_public_key;
+<pre>  my $pubkey = $signature-&gt;get_public_key;
 </pre>
 <p class="Pp">Public key to fetch is determined by the protocol, selector, and
     domain fields.</p>
@@ -180,8 +168,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>get_tag()</b> - access the raw value of a tag in this
   signature</h2>
-<pre>
-  my $raw_identity = $signature-&gt;get_tag('i');
+<pre>  my $raw_identity = $signature-&gt;get_tag('i');
 </pre>
 <p class="Pp">Use this method to access a tag not already supported by
     Mail::DKIM, or if you want to bypass decoding of the value by
@@ -195,8 +182,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>hash_algorithm()</b> - access the hash algorithm specified in
   this signature</h2>
-<pre>
-  my $hash = $signature-&gt;hash_algorithm;
+<pre>  my $hash = $signature-&gt;hash_algorithm;
 </pre>
 <p class="Pp">Determines what hashing algorithm is used as part of the
     signature's specified algorithm.</p>
@@ -208,11 +194,8 @@
 <section class="Ss">
 <h2 class="Ss"><b>headerlist()</b> - get or set the signed header fields (h=)
   field</h2>
-<pre>
-  $signature-&gt;headerlist('a:b:c');
-
+<pre>  $signature-&gt;headerlist('a:b:c');
   my $headerlist = $signature-&gt;headerlist;
-
   my @headers = $signature-&gt;headerlist;
 </pre>
 <p class="Pp">Signed header fields. A colon-separated list of header field names
@@ -224,8 +207,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>identity()</b> - get or set the signing identity (i=)
   field</h2>
-<pre>
-  my $i = $signature-&gt;identity;
+<pre>  my $i = $signature-&gt;identity;
 </pre>
 <p class="Pp">Identity of the user or agent on behalf of which this message is
     signed. The identity has an optional local part, followed by &quot;@&quot;,
@@ -246,9 +228,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>key()</b> - get or set the private key object</h2>
-<pre>
-  my $key = $signature-&gt;key;
-
+<pre>  my $key = $signature-&gt;key;
   $signature-&gt;key(Mail::DKIM::PrivateKey-&gt;load(File =&gt; 'private.key'));
 </pre>
 <p class="Pp">The private key is used for signing messages. It is not used for
@@ -272,11 +252,8 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>result()</b> - get or set the verification result</h2>
-<pre>
-  my $result = $signature-&gt;result;
-
+<pre>  my $result = $signature-&gt;result;
   $signature-&gt;result('pass');
-
   # to set the result with details
   $signature-&gt;result('invalid', 'no public key');
 </pre>
@@ -284,8 +261,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>result_detail()</b> - access the result, plus details if
   available</h2>
-<pre>
-  my $detail = $signature-&gt;result_detail;
+<pre>  my $detail = $signature-&gt;result_detail;
 </pre>
 <p class="Pp">An explanation of possible detail messages can be found in the
     documentation for &quot;<b>result_detail()</b>&quot; in
@@ -299,8 +275,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>prettify()</b> - alters the signature to look
   &quot;nicer&quot; as an email header</h2>
-<pre>
-  $signature-&gt;prettify;
+<pre>  $signature-&gt;prettify;
 </pre>
 <p class="Pp">This method may alter the signature in a way that breaks
     signatures, so it should be done ONLY when the signature is being generated,
@@ -311,8 +286,7 @@
 <section class="Ss">
 <h2 class="Ss"><b>prettify_safe()</b> - same as <b>prettify()</b> but only
   touches the b= part</h2>
-<pre>
-  $signature-&gt;prettify_safe;
+<pre>  $signature-&gt;prettify_safe;
 </pre>
 <p class="Pp">This method will not break the signature, but it only affects the
     b= part of the signature.</p>

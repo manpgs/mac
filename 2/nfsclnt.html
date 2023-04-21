@@ -24,6 +24,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>NFSCLNT(2)</title>
 </head>
@@ -49,8 +50,8 @@
   <code class="In">#include <a class="In">&lt;nfs/nfs.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">int</var>
   <br/>
-  <code class="Fn">nfsclnt</code>(<var class="Fa" style="white-space: nowrap;">int
-    flags</var>, <var class="Fa" style="white-space: nowrap;">void
+  <code class="Fn">nfsclnt</code>(<var class="Fa" style="white-space: nowrap;">unsigned
+    long request</var>, <var class="Fa" style="white-space: nowrap;">void
     *argstructp</var>);</p>
 </section>
 <section class="Sh">
@@ -58,8 +59,8 @@
 <p class="Pp">The
     <a class="permalink" href="#nfsclnt"><code class="Fn" id="nfsclnt">nfsclnt</code></a>()
     function is used by the NFS client daemons to pass information into and out
-    of the kernel. The <var class="Fa">flags</var> argument consists of several
-    bits that show what action is to be taken once in the kernel and the
+    of the kernel. The <var class="Fa">request</var> argument consists of
+    several bits that show what action is to be taken once in the kernel and the
     <var class="Fa">argstructp</var> points to any corresponding data that the
     action may require.</p>
 <p class="Pp" id="nfsclnt~2"><a class="Xr" href="../8/rpc.lockd">rpc.lockd(8)</a>
@@ -67,9 +68,8 @@
     <a class="permalink" href="#nfsclnt~2"><code class="Fn">nfsclnt</code></a>()
     with the flag <code class="Dv">NFSCLNT_LOCKDANS</code> and a pointer to
   a</p>
-<div class="Bd Pp">
-<pre>
-struct lockd_ans {
+<div class="Bd Pp Li">
+<pre>struct lockd_ans {
 	int		la_version;		/* lockd_ans version */
 	int		la_errno;		/* return status */
 	u_int64_t	la_xid;			/* unique message transaction ID */
@@ -79,8 +79,7 @@ struct lockd_ans {
 	off_t		la_len;			/* lock length */
 	int 		la_fh_len;		/* The file handle length. */
 	u_int8_t	la_fh[NFSV3_MAX_FH_SIZE];/* The file handle. */
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">to pass the response to an NFS file locking request back into the
     kernel.</p>
@@ -125,7 +124,7 @@ struct lockd_ans {
 <table class="foot">
   <tr>
     <td class="foot-date">January 9, 2007</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

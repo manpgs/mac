@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Tiny::Manual::NonOO(3)</title>
 </head>
@@ -54,29 +55,25 @@
 <p class="Pp">The following can be used as to check if a value passes a type
     constraint:</p>
 <p class="Pp"></p>
-<pre>
-  $value ~~ SomeType
+<pre>  $value ~~ SomeType
 </pre>
 <p class="Pp">Where it gets weird is if <span class="Li">$value</span> is an
     object and overloads <span class="Li">&quot;~~&quot;</span>. Which overload
     of <span class="Li">&quot;~~&quot;</span> wins? I don't know.</p>
 <p class="Pp">Better to use:</p>
 <p class="Pp"></p>
-<pre>
-  SomeType-&gt;check( $value )   # more reliable, probably faster
+<pre>  SomeType-&gt;check( $value )   # more reliable, probably faster
   is_SomeType($value)         # more reliable, definitely faster
 </pre>
 <p class="Pp">It's also possible to do:</p>
 <p class="Pp"></p>
-<pre>
-  $value ~~ SomeType-&gt;coercion
+<pre>  $value ~~ SomeType-&gt;coercion
 </pre>
 <p class="Pp">This checks to see if <span class="Li">$value</span> matches any
     type that can be coerced to <b>SomeType</b>.</p>
 <p class="Pp">But better to use:</p>
 <p class="Pp"></p>
-<pre>
-  SomeType-&gt;coercion-&gt;has_coercion_for_value( $value )
+<pre>  SomeType-&gt;coercion-&gt;has_coercion_for_value( $value )
 </pre>
 </section>
 <section class="Ss">
@@ -87,8 +84,7 @@
     syntax.</p>
 <p class="Pp">This will not do what you want it to do:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Str Int );
+<pre>  use Types::Standard qw( Str Int );
   
   given ($value) {
     when (Int) { ... }
@@ -97,8 +93,7 @@
 </pre>
 <p class="Pp">This will do what you wanted:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( is_Str is_Int );
+<pre>  use Types::Standard qw( is_Str is_Int );
   
   given ($value) {
     when (\&amp;is_Int) { ... }
@@ -108,8 +103,7 @@
 <p class="Pp">Sorry, that's just how Perl be.</p>
 <p class="Pp">Better though:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Str Int );
+<pre>  use Types::Standard qw( Str Int );
   use Type::Utils qw( match_on_type );
   
   match_on_type $value =&gt; (
@@ -120,8 +114,7 @@
 <p class="Pp">If this is part of a loop or other frequently called bit of code,
     you can compile the checks once and use them many times:</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Str Int );
+<pre>  use Types::Standard qw( Str Int );
   use Type::Utils qw( compile_match_on_type );
   
   my $dispatch_table = compile_match_on_type(

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Extending::Mooseish_MooseSugar(3)</title>
 </head>
@@ -33,26 +34,20 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Mooseish;
-
+<pre>  package MyApp::Mooseish;
   use Moose::Exporter;
-
   Moose::Exporter-&gt;setup_import_methods(
       with_meta       =&gt; ['has_table'],
       class_metaroles =&gt; {
           class =&gt; ['MyApp::Meta::Class::Trait::HasTable'],
       },
   );
-
   sub has_table {
       my $meta = shift;
       $meta-&gt;table(shift);
   }
-
   package MyApp::Meta::Class::Trait::HasTable;
   use Moose::Role;
-
   has table =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
@@ -79,19 +74,13 @@
 <p class="Pp">The purpose of all this code is to provide a Moose-like interface.
     Here's what it would look like in actual use:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::User;
-
+<pre>  package MyApp::User;
   use namespace::autoclean;
-
   use Moose;
   use MyApp::Mooseish;
-
   has_table 'User';
-
   has 'username' =&gt; ( is =&gt; 'ro' );
   has 'password' =&gt; ( is =&gt; 'ro' );
-
   sub login { ... }
 </pre>
 </section>

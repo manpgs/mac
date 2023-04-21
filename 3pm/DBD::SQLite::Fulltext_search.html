@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::SQLite::Fulltext_search(3)</title>
 </head>
@@ -51,8 +52,7 @@
   example</a></h2>
 <p class="Pp">Here is a very short example of using FTS :</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;do(&lt;&lt;&quot;&quot;) or die DBI::errstr;
+<pre>  $dbh-&gt;do(&lt;&lt;&quot;&quot;) or die DBI::errstr;
   CREATE VIRTUAL TABLE fts_example USING fts4(content)
   
   my $sth = $dbh-&gt;prepare(&quot;INSERT INTO fts_example(content) VALUES (?)&quot;);
@@ -65,8 +65,7 @@
 <ul class="Bl-bullet">
   <li>The syntax for creating FTS tables is
     <p class="Pp"></p>
-    <pre>
-  CREATE VIRTUAL TABLE &lt;table_name&gt; USING fts4(&lt;columns&gt;)
+    <pre>  CREATE VIRTUAL TABLE &lt;table_name&gt; USING fts4(&lt;columns&gt;)
     </pre>
     <p class="Pp">where <span class="Li">&quot;&lt;columns&gt;&quot;</span> is a
         list of column names. Columns may be typed, but the type information is
@@ -107,8 +106,7 @@
     The query expression used to search for a term prefix is the prefix itself
     with a '*' character appended to it. For example:</p>
 <p class="Pp"></p>
-<pre>
-  -- Virtual table declaration
+<pre>  -- Virtual table declaration
   CREATE VIRTUAL TABLE docs USING fts3(title, body);
   
   -- Query for all documents containing the term &quot;linux&quot;:
@@ -134,12 +132,10 @@
     be space between the &quot;:&quot; and the term to query for, but not
     between the column-name and the &quot;:&quot; character. For example:</p>
 <p class="Pp"></p>
-<pre>
-  -- Query the database for documents for which the term &quot;linux&quot; appears in
+<pre>  -- Query the database for documents for which the term &quot;linux&quot; appears in
   -- the document title, and the term &quot;problems&quot; appears in either the title
   -- or body of the document.
   SELECT * FROM docs WHERE docs MATCH 'title:linux problems';
-
   -- Query the database for documents for which the term &quot;linux&quot; appears in
   -- the document title, and the term &quot;driver&quot; appears in the body of the document
   -- (&quot;driver&quot; may also appear in the title, but this alone will not satisfy the.
@@ -156,10 +152,8 @@
     separated sequence of terms or term prefixes in double quotes (&quot;). For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  -- Query for all documents that contain the phrase &quot;linux applications&quot;.
+<pre>  -- Query for all documents that contain the phrase &quot;linux applications&quot;.
   SELECT * FROM docs WHERE docs MATCH '&quot;linux applications&quot;';
-
   -- Query for all documents that contain a phrase that matches &quot;lin* app*&quot;. 
   -- As well as &quot;linux applications&quot;, this will match common phrases such 
   -- as &quot;linoleum appliances&quot; or &quot;link apprentice&quot;.
@@ -176,34 +170,27 @@
     operator of the form &quot;NEAR/&lt;N&gt;&quot; may be used, where &lt;N&gt;
     is the maximum number of intervening terms allowed. For example:</p>
 <p class="Pp"></p>
-<pre>
-  -- Virtual table declaration.
+<pre>  -- Virtual table declaration.
   CREATE VIRTUAL TABLE docs USING fts4();
-
   -- Virtual table data.
   INSERT INTO docs VALUES('SQLite is an ACID compliant embedded relational database management system');
-
   -- Search for a document that contains the terms &quot;sqlite&quot; and &quot;database&quot; with
   -- not more than 10 intervening terms. This matches the only document in
   -- table docs (since there are only six terms between &quot;SQLite&quot; and &quot;database&quot; 
   -- in the document).
   SELECT * FROM docs WHERE docs MATCH 'sqlite NEAR database';
-
   -- Search for a document that contains the terms &quot;sqlite&quot; and &quot;database&quot; with
   -- not more than 6 intervening terms. This also matches the only document in
   -- table docs. Note that the order in which the terms appear in the document
   -- does not have to be the same as the order in which they appear in the query.
   SELECT * FROM docs WHERE docs MATCH 'database NEAR/6 sqlite';
-
   -- Search for a document that contains the terms &quot;sqlite&quot; and &quot;database&quot; with
   -- not more than 5 intervening terms. This query matches no documents.
   SELECT * FROM docs WHERE docs MATCH 'database NEAR/5 sqlite';
-
   -- Search for a document that contains the phrase &quot;ACID compliant&quot; and the term
   -- &quot;database&quot; with not more than 2 terms separating the two. This matches the
   -- document stored in table docs.
   SELECT * FROM docs WHERE docs MATCH 'database NEAR/2 &quot;ACID compliant&quot;';
-
   -- Search for a document that contains the phrase &quot;ACID compliant&quot; and the term
   -- &quot;sqlite&quot; with not more than 2 terms separating the two. This also matches
   -- the only document stored in table docs.
@@ -214,13 +201,11 @@
     within the specified proximity of each other in the document. Using the same
     table and data as in the block of examples above:</p>
 <p class="Pp"></p>
-<pre>
-  -- The following query selects documents that contains an instance of the term 
+<pre>  -- The following query selects documents that contains an instance of the term 
   -- &quot;sqlite&quot; separated by two or fewer terms from an instance of the term &quot;acid&quot;,
   -- which is in turn separated by two or fewer terms from an instance of the term
   -- &quot;relational&quot;.
   SELECT * FROM docs WHERE docs MATCH 'sqlite NEAR/2 acid NEAR/2 relational';
-
   -- This query matches no documents. There is an instance of the term &quot;sqlite&quot; with
   -- sufficient proximity to an instance of &quot;acid&quot; but it is not sufficiently close
   -- to an instance of the term &quot;relational&quot;.
@@ -271,8 +256,7 @@
     documents are split into <i>tokens</i>; therefore FTS table declarations can
     explicitly specify how to perform tokenization:</p>
 <p class="Pp"></p>
-<pre>
-  CREATE ... USING fts4(&lt;columns&gt;, tokenize=&lt;tokenizer&gt;)
+<pre>  CREATE ... USING fts4(&lt;columns&gt;, tokenize=&lt;tokenizer&gt;)
 </pre>
 <p class="Pp">where <span class="Li">&quot;&lt;tokenizer&gt;&quot;</span> is a
     sequence of space-separated words that triggers a specific tokenizer.
@@ -324,12 +308,10 @@
         <span class="Li">&quot;remove_diacritics=0&quot;</span>. For
       example:</p>
     <p class="Pp"></p>
-    <pre>
-  -- Create tables that remove diacritics from Latin script characters
+    <pre>  -- Create tables that remove diacritics from Latin script characters
   -- as part of tokenization.
   CREATE VIRTUAL TABLE txt1 USING fts4(tokenize=unicode61);
   CREATE VIRTUAL TABLE txt2 USING fts4(tokenize=unicode61 &quot;remove_diacritics=1&quot;);
-
   -- Create a table that does not remove diacritics from Latin script
   -- characters as part of tokenization.
   CREATE VIRTUAL TABLE txt3 USING fts4(tokenize=unicode61 &quot;remove_diacritics=0&quot;);
@@ -353,8 +335,7 @@
     tokenizer, that can hook to any tokenizing algorithm written in Perl. This
     is specified as follows :</p>
 <p class="Pp"></p>
-<pre>
-  CREATE ... USING fts4(&lt;columns&gt;, tokenize=perl '&lt;perl_function&gt;')
+<pre>  CREATE ... USING fts4(&lt;columns&gt;, tokenize=perl '&lt;perl_function&gt;')
 </pre>
 <p class="Pp">where <span class="Li">&quot;&lt;perl_function&gt;&quot;</span> is
     a fully qualified Perl function name (i.e. prefixed by the name of the
@@ -362,8 +343,7 @@
     is <span class="Li">&quot;my_func&quot;</span> in the main program,
   write</p>
 <p class="Pp"></p>
-<pre>
-  CREATE ... USING fts4(&lt;columns&gt;, tokenize=perl 'main::my_func')
+<pre>  CREATE ... USING fts4(&lt;columns&gt;, tokenize=perl 'main::my_func')
 </pre>
 <p class="Pp"><i>Writing a perl tokenizer by hand</i></p>
 <p class="Pp">That function should return a code reference that takes a string
@@ -372,15 +352,12 @@
     $index)&quot;</span> for each term. Here is a simple example that tokenizes
     on words according to the current perl locale</p>
 <p class="Pp"></p>
-<pre>
-  sub locale_tokenizer {
+<pre>  sub locale_tokenizer {
     return sub {
       my $string = shift;
-
       use locale;
       my $regex      = qr/\w+/;
       my $term_index = 0;
-
       return sub { # closure
         $string =~ /$regex/g or return; # either match, or no more token
         my ($start, $end) = ($-[0], $+[0]);
@@ -407,8 +384,7 @@
     already implemented in the Search::Tokenizer module. For example, if you
     want ignore differences between accented characters, you can write :</p>
 <p class="Pp"></p>
-<pre>
-  use Search::Tokenizer;
+<pre>  use Search::Tokenizer;
   $dbh-&gt;do(&lt;&lt;&quot;&quot;) or die DBI::errstr;
   CREATE ... USING fts4(&lt;columns&gt;, 
                         tokenize=perl 'Search::Tokenizer::unaccent')
@@ -417,8 +393,7 @@
     build your own tokenizer. Here is an example that treats compound words
     (words with an internal dash or dot) as single tokens :</p>
 <p class="Pp"></p>
-<pre>
-  sub my_tokenizer {
+<pre>  sub my_tokenizer {
     return Search::Tokenizer-&gt;new(
       regex =&gt; qr{\p{Word}+(?:[-./]\p{Word}+)*},
      );
@@ -434,8 +409,7 @@
     database contains a full-text indexed table named &quot;ft&quot;, we can
     declare :</p>
 <p class="Pp"></p>
-<pre>
-  CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft)
+<pre>  CREATE VIRTUAL TABLE ft_terms USING fts4aux(ft)
 </pre>
 <p class="Pp">and then query the <span class="Li">&quot;ft_terms&quot;</span>
     table to access the list of terms, their frequency, etc. Examples are
@@ -454,17 +428,14 @@
     specified as <span class="Li">&quot;content=&quot;&quot;&quot;</span>, like
     in the following example :</p>
 <p class="Pp"></p>
-<pre>
-  CREATE VIRTUAL TABLE t1 USING fts4(content=&quot;&quot;, a, b)
+<pre>  CREATE VIRTUAL TABLE t1 USING fts4(content=&quot;&quot;, a, b)
 </pre>
 <p class="Pp">Data can be inserted into such an FTS4 table using an INSERT
     statements. However, unlike ordinary FTS4 tables, the user must supply an
     explicit integer docid value. For example:</p>
 <p class="Pp"></p>
-<pre>
-  -- This statement is Ok:
+<pre>  -- This statement is Ok:
   INSERT INTO t1(docid, a, b) VALUES(1, 'a b c', 'd e f');
-
   -- This statement causes an error, as no docid value has been provided:
   INSERT INTO t1(a, b) VALUES('j k l', 'm n o');
 </pre>
@@ -476,21 +447,18 @@
     able to automatically infer the proper type. So the following doesn't work
   :</p>
 <p class="Pp"></p>
-<pre>
-  my $sth = $dbh-&gt;prepare(&quot;INSERT INTO t1(docid, a, b) VALUES(?, ?, ?)&quot;);
+<pre>  my $sth = $dbh-&gt;prepare(&quot;INSERT INTO t1(docid, a, b) VALUES(?, ?, ?)&quot;);
   $sth-&gt;execute(2, 'aa', 'bb'); # constraint error
 </pre>
 <p class="Pp">but it works with an explicitly cast :</p>
 <p class="Pp"></p>
-<pre>
-  my $sql = &quot;INSERT INTO t1(docid, a, b) VALUES(CAST(? AS INTEGER), ?, ?)&quot;,
+<pre>  my $sql = &quot;INSERT INTO t1(docid, a, b) VALUES(CAST(? AS INTEGER), ?, ?)&quot;,
   my $sth = $dbh-&gt;prepare(sql);
   $sth-&gt;execute(2, 'aa', 'bb');
 </pre>
 <p class="Pp">or with an explicitly typed &quot;bind_param&quot; in DBI :</p>
 <p class="Pp"></p>
-<pre>
-  use DBI qw/SQL_INTEGER/;
+<pre>  use DBI qw/SQL_INTEGER/;
   my $sql = &quot;INSERT INTO t1(docid, a, b) VALUES(?, ?, ?)&quot;;
   my $sth = $dbh-&gt;prepare(sql);
   $sth-&gt;bind_param(1, 2, SQL_INTEGER);

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Tools(3)</title>
 </head>
@@ -31,16 +32,12 @@
 <p class="Pp">Here's some pretty basic code for <b>parsing a MIME message,</b>
     and outputting its decoded components to a given directory:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Parser;
-
+<pre>    use MIME::Parser;
     ### Create parser, and set some parsing options:
     my $parser = new MIME::Parser;
     $parser-&gt;output_under(&quot;$ENV{HOME}/mimemail&quot;);
-
     ### Parse input:
     $entity = $parser-&gt;parse(\*STDIN) or die &quot;parse failed\n&quot;;
-
     ### Take a look at the top-level entity (and any parts it has):
     $entity-&gt;dump_skeleton;
 </pre>
@@ -48,26 +45,20 @@
     containing three parts: a text file, an attached GIF, and some more
   text:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Entity;
-
+<pre>    use MIME::Entity;
     ### Create the top-level, and set up the mail headers:
     $top = MIME::Entity-&gt;build(Type    =&gt;&quot;multipart/mixed&quot;,
                                From    =&gt; &quot;me\@myhost.com&quot;,
                                To      =&gt; &quot;you\@yourhost.com&quot;,
                                Subject =&gt; &quot;Hello, nurse!&quot;);
-
     ### Part #1: a simple text document:
     $top-&gt;attach(Path=&gt;&quot;./testin/short.txt&quot;);
-
     ### Part #2: a GIF file:
     $top-&gt;attach(Path        =&gt; &quot;./docs/mime-sm.gif&quot;,
                  Type        =&gt; &quot;image/gif&quot;,
                  Encoding    =&gt; &quot;base64&quot;);
-
     ### Part #3: some literal text:
     $top-&gt;attach(Data=&gt;$message);
-
     ### Send it:
     open MAIL, &quot;| /usr/lib/sendmail -t -oi -oem&quot; or die &quot;open: $!&quot;;
     $top-&gt;print(\*MAIL);
@@ -87,8 +78,7 @@
 <h1 class="Sh" id="REQUIREMENTS"><a class="permalink" href="#REQUIREMENTS">REQUIREMENTS</a></h1>
 <p class="Pp">You will need the following installed on your system:</p>
 <p class="Pp"></p>
-<pre>
-        File::Path
+<pre>        File::Path
         File::Spec
         IPC::Open2              (optional)
         MIME::Base64
@@ -109,8 +99,7 @@
 <p class="Pp">Here are the classes you'll generally be dealing with
   directly:</p>
 <p class="Pp"></p>
-<pre>
-    (START HERE)            results() .-----------------.
+<pre>    (START HERE)            results() .-----------------.
           \                 .--------&gt;| MIME::          |
            .-----------.   /          | Parser::Results |
            | MIME::    |--'           `-----------------'
@@ -170,8 +159,7 @@
     MIME::Entity objects, each of which would have its own MIME::Head. Like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    .--------.
+<pre>    .--------.
     | MIME:: | Content-type: multipart/mixed
     | Entity | Subject: Happy Samhaine!
     `--------'
@@ -249,8 +237,7 @@
 <p class="Pp">Since MIME::Entity inherits directly from Mail::Internet, you can
     use the normal Mail::Internet mechanisms to send email. For example,</p>
 <p class="Pp"></p>
-<pre>
-    $entity-&gt;smtpsend;
+<pre>    $entity-&gt;smtpsend;
 </pre>
 </section>
 <section class="Ss">
@@ -260,8 +247,7 @@
     well; this is done when printing MIME entities. All the standard encodings
     are supported (see &quot;A MIME PRIMER&quot; below for details):</p>
 <p class="Pp"></p>
-<pre>
-    Encoding:        | Normally used when message contents are:
+<pre>    Encoding:        | Normally used when message contents are:
     -------------------------------------------------------------------
     7bit             | 7-bit data with under 1000 chars/line, or multipart.
     8bit             | 8-bit data with under 1000 chars/line.
@@ -338,23 +324,20 @@
   <dt id="debugging"><a class="permalink" href="#debugging">debugging</a></dt>
   <dd>Turn debugging on or off. Default is false (off).
     <p class="Pp"></p>
-    <pre>
-     MIME::Tools-&gt;debugging(1);
+    <pre>     MIME::Tools-&gt;debugging(1);
     </pre>
   </dd>
   <dt id="quiet"><a class="permalink" href="#quiet">quiet</a></dt>
   <dd>Turn the reporting of warning/error messages on or off. Default is true,
       meaning that these message are silenced.
     <p class="Pp"></p>
-    <pre>
-     MIME::Tools-&gt;quiet(1);
+    <pre>     MIME::Tools-&gt;quiet(1);
     </pre>
   </dd>
   <dt id="version"><a class="permalink" href="#version">version</a></dt>
   <dd>Return the toolkit version.
     <p class="Pp"></p>
-    <pre>
-     print MIME::Tools-&gt;version, &quot;\n&quot;;
+    <pre>     print MIME::Tools-&gt;version, &quot;\n&quot;;
     </pre>
   </dd>
 </dl>
@@ -391,8 +374,7 @@
 <p class="Pp">For example, if your mail-handling code absolutely must not die,
     then perform mail parsing like this:</p>
 <p class="Pp"></p>
-<pre>
-    $entity = eval { $parser-&gt;parse(\*INPUT) };
+<pre>    $entity = eval { $parser-&gt;parse(\*INPUT) };
 </pre>
 <p class="Pp">Parsing is a complex process, and some components may throw
     exceptions if seriously-bad things happen. Since &quot;seriously-bad&quot;
@@ -420,8 +402,7 @@
     like ambiguities in base64-encoding, the following is <i>not</i> going to
     spit out its input unchanged in all cases:</p>
 <p class="Pp"></p>
-<pre>
-    $entity = $parser-&gt;parse(\*STDIN);
+<pre>    $entity = $parser-&gt;parse(\*STDIN);
     $entity-&gt;print(\*STDOUT);
 </pre>
 <p class="Pp">If you're using MIME::Tools to process email, remember to save the
@@ -435,8 +416,7 @@
     characters from any character set, by using special sequences which look
     like this:</p>
 <p class="Pp"></p>
-<pre>
-    =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=
+<pre>    =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=
 </pre>
 <p class="Pp">To be consistent with the existing Mail::Field classes,
     MIME::Tools does <i>not</i> automatically unencode these strings, since
@@ -458,8 +438,7 @@
     <span class="Li">&quot;unmime()&quot;</span>, a function wrapped around your
     &quot;default&quot; decoder, as follows:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::WordDecoder;
+<pre>    use MIME::WordDecoder;
     ...
     $subject = unmime $entity-&gt;head-&gt;get('subject');
 </pre>
@@ -518,8 +497,7 @@
     of the real headers; e.g., the initial &quot;From&quot; line in the
     following message:</p>
 <p class="Pp"></p>
-<pre>
-    From - Wed Mar 22 02:13:18 2000
+<pre>    From - Wed Mar 22 02:13:18 2000
     Return-Path: &lt;eryq@zeegee.com&gt;
     Subject: Hello
 </pre>
@@ -534,13 +512,11 @@
     regarded as having an empty preamble (where
     <span class="Li">&quot;\n&quot;</span> indicates a newline character):</p>
 <p class="Pp"></p>
-<pre>
-     Content-type: multipart/mixed; boundary=&quot;xyz&quot;\n
+<pre>     Content-type: multipart/mixed; boundary=&quot;xyz&quot;\n
      Subject: This message (#1) has an empty preamble\n
      \n
      --xyz\n
      ...
-
      Content-type: multipart/mixed; boundary=&quot;xyz&quot;\n
      Subject: This message (#2) also has an empty preamble\n
      \n
@@ -758,8 +734,7 @@
 <p class="Pp"><b>This kit would not have been possible</b> but for the direct
     contributions of the following:</p>
 <p class="Pp"></p>
-<pre>
-    Gisle Aas             The MIME encoding/decoding modules.
+<pre>    Gisle Aas             The MIME encoding/decoding modules.
     Laurent Amon          Bug reports and suggestions.
     Graham Barr           The new MailTools.
     Achim Bohnet          Numerous good suggestions, including the I/O model.
@@ -772,8 +747,7 @@
 <p class="Pp">Not to mention the Accidental Beta Test Team, whose bug reports
     (and comments) have been invaluable in improving the whole:</p>
 <p class="Pp"></p>
-<pre>
-    Phil Abercrombie
+<pre>    Phil Abercrombie
     Mike Blazer
     Brandon Browning
     Kurt Freytag

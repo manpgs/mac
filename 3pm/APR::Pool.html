@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>install::TempContent::Objects::mod_perl-2.0.9::docs::api::APR::Pool(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h1>
-<pre>
-  use APR::Pool ();
+<pre>  use APR::Pool ();
   
   my $sp = $r-&gt;pool-&gt;new;
   my $sp2 = APR::Pool-&gt;new;
@@ -47,7 +47,6 @@
   # compare the handle as variables)
   my $sp4 = $sp3-&gt;parent_get;
   
-
   # register a dummy cleanup function
   # that just prints the passed args
   $sp-&gt;cleanup_register(sub { print @{ $_[0] || [] } }, [1..3]);
@@ -91,8 +90,7 @@
 <h2 class="Ss" id="_cleanup_register_"><a class="permalink" href="#_cleanup_register_">&quot;cleanup_register&quot;</a></h2>
 <p class="Pp">Register cleanup callback to run</p>
 <p class="Pp"></p>
-<pre>
-  $pool-&gt;cleanup_register($callback);
+<pre>  $pool-&gt;cleanup_register($callback);
   $pool-&gt;cleanup_register($callback, $arg);
 </pre>
 <dl class="Bl-tag">
@@ -119,8 +117,7 @@
       printing it to the <i>error_log</i>. However, a
       <span class="Li">$SIG{__WARN__}</span> handler can be used to catch them.
     <p class="Pp"></p>
-    <pre>
-  $pool-&gt;cleanup_register(sub {die &quot;message1\n&quot;});
+    <pre>  $pool-&gt;cleanup_register(sub {die &quot;message1\n&quot;});
   $pool-&gt;cleanup_register(sub {die &quot;message2\n&quot;});
   my @warnings;
   {
@@ -147,13 +144,11 @@
 <p class="Pp">Examples:</p>
 <p class="Pp">No arguments, using anon sub as a cleanup callback:</p>
 <p class="Pp"></p>
-<pre>
-  $r-&gt;pool-&gt;cleanup_register(sub { warn &quot;running cleanup&quot; });
+<pre>  $r-&gt;pool-&gt;cleanup_register(sub { warn &quot;running cleanup&quot; });
 </pre>
 <p class="Pp">One or more arguments using a cleanup code reference:</p>
 <p class="Pp"></p>
-<pre>
-  $r-&gt;pool-&gt;cleanup_register(\&amp;cleanup, $r);
+<pre>  $r-&gt;pool-&gt;cleanup_register(\&amp;cleanup, $r);
   $r-&gt;pool-&gt;cleanup_register(\&amp;cleanup, [$r, $foo]);
   sub cleanup {
       my @args = (@_ &amp;&amp; ref $_[0] eq ARRAY) ? @{ +shift } : shift;
@@ -163,8 +158,7 @@
 </pre>
 <p class="Pp">No arguments, using a function name as a cleanup callback:</p>
 <p class="Pp"></p>
-<pre>
-  $r-&gt;pool-&gt;cleanup_register('foo');
+<pre>  $r-&gt;pool-&gt;cleanup_register('foo');
 </pre>
 </section>
 <section class="Ss">
@@ -172,8 +166,7 @@
 <p class="Pp">Clear all memory in the pool and run all the registered cleanups.
     This also destroys all sub-pools.</p>
 <p class="Pp"></p>
-<pre>
-  $pool-&gt;clear();
+<pre>  $pool-&gt;clear();
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~2"><a class="permalink" href="#obj:~2">obj: $pool (
@@ -207,8 +200,7 @@
 <h2 class="Ss" id="_destroy_"><a class="permalink" href="#_destroy_">&quot;destroy&quot;</a></h2>
 <p class="Pp">Destroy the pool.</p>
 <p class="Pp"></p>
-<pre>
-  $pool-&gt;destroy();
+<pre>  $pool-&gt;destroy();
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~3"><a class="permalink" href="#obj:~3">obj: $pool (
@@ -228,8 +220,7 @@
 <h2 class="Ss" id="_is_ancestor_"><a class="permalink" href="#_is_ancestor_">&quot;is_ancestor&quot;</a></h2>
 <p class="Pp">Determine if pool a is an ancestor of pool b</p>
 <p class="Pp"></p>
-<pre>
-  $ret = $pool_a-&gt;is_ancestor($pool_b);
+<pre>  $ret = $pool_a-&gt;is_ancestor($pool_b);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~4"><a class="permalink" href="#obj:~4">obj: $pool_a (
@@ -248,8 +239,7 @@
 <p class="Pp">For example create a sub-pool of a given pool and check that the
     pool is an ancestor of that sub-pool:</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Pool ();
+<pre>  use APR::Pool ();
   my $pp = $r-&gt;pool;
   my $sp = $pp-&gt;new();
   $pp-&gt;is_ancestor($sp) or die &quot;Don't mess with genes!&quot;;
@@ -259,8 +249,7 @@
 <h2 class="Ss" id="_new_"><a class="permalink" href="#_new_">&quot;new&quot;</a></h2>
 <p class="Pp">Create a new sub-pool</p>
 <p class="Pp"></p>
-<pre>
-  my $pool_child = $pool_parent-&gt;new;
+<pre>  my $pool_child = $pool_parent-&gt;new;
   my $pool_child = APR::Pool-&gt;new;
 </pre>
 <dl class="Bl-tag">
@@ -271,8 +260,7 @@
         you can use this object method as a class method, in which case the
         sub-pool will be created from the global pool:</p>
     <p class="Pp"></p>
-    <pre>
-  my $pool_child = APR::Pool-&gt;new;
+    <pre>  my $pool_child = APR::Pool-&gt;new;
     </pre>
   </dd>
   <dt id="ret:~5"><a class="permalink" href="#ret:~5">ret: $pool_child (
@@ -286,8 +274,7 @@
 <h2 class="Ss" id="_parent_get_"><a class="permalink" href="#_parent_get_">&quot;parent_get&quot;</a></h2>
 <p class="Pp">Get the parent pool</p>
 <p class="Pp"></p>
-<pre>
-  $parent_pool = $child_pool-&gt;parent_get();
+<pre>  $parent_pool = $child_pool-&gt;parent_get();
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~6"><a class="permalink" href="#obj:~6">obj: $child_pool (
@@ -302,8 +289,7 @@
 </dl>
 <p class="Pp">Example: Calculate how big is the pool's ancestry:</p>
 <p class="Pp"></p>
-<pre>
-  use APR::Pool ();
+<pre>  use APR::Pool ();
   sub ancestry_count {
       my $child = shift;
       my $gen = 0;
@@ -319,8 +305,7 @@
 <h2 class="Ss" id="_tag_"><a class="permalink" href="#_tag_">&quot;tag&quot;</a></h2>
 <p class="Pp">Tag a pool (give it a name)</p>
 <p class="Pp"></p>
-<pre>
-  $pool-&gt;tag($tag);
+<pre>  $pool-&gt;tag($tag);
 </pre>
 <dl class="Bl-tag">
   <dt id="obj:~7"><a class="permalink" href="#obj:~7">obj: $pool (

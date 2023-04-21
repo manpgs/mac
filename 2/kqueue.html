@@ -50,6 +50,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>KQUEUE(2)</title>
 </head>
@@ -229,9 +230,8 @@
     initializes a <var class="Va">kevent_qos_s</var> structure.</p>
 <p class="Pp">The <var class="Va">kevent,</var> <var class="Va">kevent64_s</var>
     and <var class="Va">kevent_qos_s</var> structures are defined as:</p>
-<div class="Bd Pp">
-<pre>
-struct kevent {
+<div class="Bd Pp Li">
+<pre>struct kevent {
 	uintptr_t 	ident;		/* identifier for this event */
 	int16_t		filter;		/* filter for event */
 	uint16_t	flags;		/* general flags */
@@ -260,8 +260,7 @@ struct kevent_qos_s {
 	uint32_t        xflags;         /* extra filter-specific flags */
 	int64_t         data;           /* filter-specific data */
 	uint64_t        ext[4];         /* filter-specific extensions */
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">----</p>
 <p class="Pp">The fields of <var class="Fa">struct kevent,</var>
@@ -453,6 +452,12 @@ struct kevent_qos_s {
       <dd>The file was unlocked by calling
           <a class="Xr" href="../2/flock">flock(2)</a> or
           <a class="Xr" href="../2/close">close(2)</a></dd>
+      <dt>NOTE_LEASE_DOWNGRADE</dt>
+      <dd>A lease break to downgrade the lease to read lease is requested on the
+          file referenced by the descriptor.</dd>
+      <dt>NOTE_LEASE_RELEASE</dt>
+      <dd>A lease break to release the lease is requested on the file or
+          directory referenced by the descriptor.</dd>
     </dl>
     <p class="Pp">On return, <var class="Va">fflags</var> contains the
         filter-specific flags which are associated with the triggered events
@@ -520,13 +525,13 @@ struct kevent_qos_s {
     <p class="Pp"><var class="Va">fflags</var> can include one of the following
         flags to specify a different unit:</p>
     <dl class="Bl-tag">
-      <dt>NOTE_SECONDS</dt>
+      <dt id="data">NOTE_SECONDS</dt>
       <dd><var class="Va">data</var> is in seconds</dd>
-      <dt>NOTE_USECONDS</dt>
+      <dt id="data~2">NOTE_USECONDS</dt>
       <dd><var class="Va">data</var> is in microseconds</dd>
-      <dt>NOTE_NSECONDS</dt>
+      <dt id="data~3">NOTE_NSECONDS</dt>
       <dd><var class="Va">data</var> is in nanoseconds</dd>
-      <dt>NOTE_MACHTIME</dt>
+      <dt id="data~4">NOTE_MACHTIME</dt>
       <dd><var class="Va">data</var> is in Mach absolute time units</dd>
     </dl>
     <p class="Pp" id="mach_absolute_time"><var class="Va">fflags</var> can also
@@ -547,7 +552,7 @@ struct kevent_qos_s {
       <dt>NOTE_BACKGROUND</dt>
       <dd>apply more power-saving techniques to coalesce this timer with other
           timers</dd>
-      <dt>NOTE_LEEWAY</dt>
+      <dt id="ext_1_">NOTE_LEEWAY</dt>
       <dd><var class="Va">ext[1]</var> holds user-supplied slop in deadline for
           timer coalescing.</dd>
     </dl>
@@ -659,7 +664,7 @@ struct kevent_qos_s {
 <table class="foot">
   <tr>
     <td class="foot-date">October 21, 2008</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

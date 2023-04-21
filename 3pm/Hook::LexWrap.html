@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Hook::LexWrap(3)</title>
 </head>
@@ -32,24 +33,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-        use Hook::LexWrap;
-
+<pre>        use Hook::LexWrap;
         sub doit { print &quot;[doit:&quot;, caller, &quot;]&quot;; return {my=&gt;&quot;data&quot;} }
-
         SCOPED: {
                 wrap doit =&gt;
                         pre  =&gt; sub { print &quot;[pre1: @_]\n&quot; },
                         post =&gt; sub { print &quot;[post1:@_]\n&quot;; $_[1]=9; };
-
                 my $temporarily = wrap doit =&gt;
                         post =&gt; sub { print &quot;[post2:@_]\n&quot; },
                         pre  =&gt; sub { print &quot;[pre2: @_]\n  &quot;};
-
                 @args = (1,2,3);
                 doit(@args);    # pre2-&gt;pre1-&gt;doit-&gt;post1-&gt;post2
         }
-
         @args = (4,5,6);
         doit(@args);            # pre1-&gt;doit-&gt;post1
 </pre>
@@ -64,11 +59,8 @@
     the wrapped subroutine.</p>
 <p class="Pp">To install a prewrappers, you write:</p>
 <p class="Pp"></p>
-<pre>
-        use Hook::LexWrap;
-
+<pre>        use Hook::LexWrap;
         wrap 'subroutine_name', pre =&gt; \&amp;some_other_sub;
-
    #or: wrap *subroutine_name,  pre =&gt; \&amp;some_other_sub;
 </pre>
 <p class="Pp">The first argument to <span class="Li">&quot;wrap&quot;</span> is
@@ -81,22 +73,18 @@
   wrapper.</p>
 <p class="Pp">To install a post-wrapper, you write:</p>
 <p class="Pp"></p>
-<pre>
-        wrap 'subroutine_name', post =&gt; \&amp;yet_another_sub;
-
+<pre>        wrap 'subroutine_name', post =&gt; \&amp;yet_another_sub;
    #or: wrap *subroutine_name,  post =&gt; \&amp;yet_another_sub;
 </pre>
 <p class="Pp">To install both at once:</p>
 <p class="Pp"></p>
-<pre>
-        wrap 'subroutine_name',
+<pre>        wrap 'subroutine_name',
              pre  =&gt; \&amp;some_other_sub,
              post =&gt; \&amp;yet_another_sub;
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-        wrap *subroutine_name,
+<pre>        wrap *subroutine_name,
              post =&gt; \&amp;yet_another_sub,  # order in which wrappers are
              pre  =&gt; \&amp;some_other_sub;   # specified doesn't matter
 </pre>
@@ -134,8 +122,7 @@
 <p class="Pp">Access to the arguments and return value is useful for
     implementing techniques such as memoization:</p>
 <p class="Pp"></p>
-<pre>
-        my %cache;
+<pre>        my %cache;
         wrap fibonacci =&gt;
                 pre  =&gt; sub { $_[-1] = $cache{$_[0]} if $cache{$_[0]} },
                 post =&gt; sub { $cache{$_[0]} = $_[-1] };
@@ -143,8 +130,7 @@
 <p class="Pp">or for converting arguments and return values in a consistent
     manner:</p>
 <p class="Pp"></p>
-<pre>
-        # set_temp expects and returns degrees Fahrenheit,
+<pre>        # set_temp expects and returns degrees Fahrenheit,
         # but we want to use Celsius
         wrap set_temp =&gt;
                 pre   =&gt; sub { splice @_, 0, 1, $_[0] * 1.8 + 32 },
@@ -162,8 +148,7 @@
 <p class="Pp">If <span class="Li">&quot;wrap&quot;</span> is called in a
     <i>non-void</i> context:</p>
 <p class="Pp"></p>
-<pre>
-        my $lexical = wrap 'sub_name', pre =&gt; \&amp;wrapper;
+<pre>        my $lexical = wrap 'sub_name', pre =&gt; \&amp;wrapper;
 </pre>
 <p class="Pp">it returns a special object corresponding to the particular
     wrapper being placed around the original subroutine. When that object is
@@ -191,21 +176,16 @@
     those installed via the subroutine's name (or typeglob).</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-        sub original { print &quot;ray&quot; }
-
+<pre>        sub original { print &quot;ray&quot; }
         # Wrap anonymously...
         my $anon_wrapped = wrap \&amp;original, pre =&gt; sub { print &quot;do...&quot; };
-
         # Show effects...
         original();             # prints &quot;ray&quot;
         $anon_wrapped-&gt;();      # prints &quot;do..ray&quot;
-
         # Wrap nonymously...
         wrap *original,
                 pre  =&gt; sub { print &quot;fa..&quot; },
                 post =&gt; sub { print &quot;..mi&quot; };
-
         # Show effects...
         original();             #   now prints &quot;fa..ray..mi&quot;
         $anon_wrapped-&gt;();      # still prints &quot;do...ray&quot;
@@ -224,8 +204,7 @@
       Typically, someone forgot the <span class="Li">&quot;sub&quot;</span> on
       the anonymous subroutine:
     <p class="Pp"></p>
-    <pre>
-        wrap 'subname', pre =&gt; { your_code_here() };
+    <pre>        wrap 'subname', pre =&gt; { your_code_here() };
     </pre>
     <p class="Pp">and Perl interpreted the last argument as a hash
       constructor.</p>

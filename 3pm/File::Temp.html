@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::Temp(3pm)</title>
 </head>
@@ -32,69 +33,51 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use File::Temp qw/ tempfile tempdir /;
-
+<pre>  use File::Temp qw/ tempfile tempdir /;
   $fh = tempfile();
   ($fh, $filename) = tempfile();
-
   ($fh, $filename) = tempfile( $template, DIR =&gt; $dir);
   ($fh, $filename) = tempfile( $template, SUFFIX =&gt; '.dat');
   ($fh, $filename) = tempfile( $template, TMPDIR =&gt; 1 );
-
   binmode( $fh, &quot;:utf8&quot; );
-
   $dir = tempdir( CLEANUP =&gt; 1 );
   ($fh, $filename) = tempfile( DIR =&gt; $dir );
 </pre>
 <p class="Pp">Object interface:</p>
 <p class="Pp"></p>
-<pre>
-  require File::Temp;
+<pre>  require File::Temp;
   use File::Temp ();
   use File::Temp qw/ :seekable /;
-
   $fh = File::Temp-&gt;new();
   $fname = $fh-&gt;filename;
-
   $fh = File::Temp-&gt;new(TEMPLATE =&gt; $template);
   $fname = $fh-&gt;filename;
-
   $tmp = File::Temp-&gt;new( UNLINK =&gt; 0, SUFFIX =&gt; '.dat' );
   print $tmp &quot;Some data\n&quot;;
   print &quot;Filename is $tmp\n&quot;;
   $tmp-&gt;seek( 0, SEEK_END );
-
   $dir = File::Temp-&gt;newdir(); # CLEANUP =&gt; 1 by default
 </pre>
 <p class="Pp">The following interfaces are provided for compatibility with
     existing APIs. They should not be used in new code.</p>
 <p class="Pp">MkTemp family:</p>
 <p class="Pp"></p>
-<pre>
-  use File::Temp qw/ :mktemp  /;
-
+<pre>  use File::Temp qw/ :mktemp  /;
   ($fh, $file) = mkstemp( &quot;tmpfileXXXXX&quot; );
   ($fh, $file) = mkstemps( &quot;tmpfileXXXXXX&quot;, $suffix);
-
   $tmpdir = mkdtemp( $template );
-
   $unopened_file = mktemp( $template );
 </pre>
 <p class="Pp">POSIX functions:</p>
 <p class="Pp"></p>
-<pre>
-  use File::Temp qw/ :POSIX /;
-
+<pre>  use File::Temp qw/ :POSIX /;
   $file = tmpnam();
   $fh = tmpfile();
-
   ($fh, $file) = tmpnam();
 </pre>
 <p class="Pp">Compatibility functions:</p>
 <p class="Pp"></p>
-<pre>
-  $unopened_file = File::Temp::tempnam( $dir, $pfx );
+<pre>  $unopened_file = File::Temp::tempnam( $dir, $pfx );
 </pre>
 </section>
 <section class="Sh">
@@ -145,8 +128,7 @@
     other handles and so can be compared to other handles with
     <span class="Li">&quot;==&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    $fh eq $filename       # as a string
+<pre>    $fh eq $filename       # as a string
     $fh != \*STDOUT        # as a number
 </pre>
 <p class="Pp">Available since 0.14.</p>
@@ -154,8 +136,7 @@
   <dt id="new"><a class="permalink" href="#new"><b>new</b></a></dt>
   <dd>Create a temporary file object.
     <p class="Pp"></p>
-    <pre>
-  my $tmp = File::Temp-&gt;new();
+    <pre>  my $tmp = File::Temp-&gt;new();
     </pre>
     <p class="Pp">by default the object is constructed as if
         <span class="Li">&quot;tempfile&quot;</span> was called without options,
@@ -167,8 +148,7 @@
         specified using the TEMPLATE option. The OPEN option is not supported
         (the file is always opened).</p>
     <p class="Pp"></p>
-    <pre>
- $tmp = File::Temp-&gt;new( TEMPLATE =&gt; 'tempXXXXX',
+    <pre> $tmp = File::Temp-&gt;new( TEMPLATE =&gt; 'tempXXXXX',
                         DIR =&gt; 'mydir',
                         SUFFIX =&gt; '.dat');
     </pre>
@@ -180,8 +160,7 @@
   <dt id="newdir"><a class="permalink" href="#newdir"><b>newdir</b></a></dt>
   <dd>Create a temporary directory using an object oriented interface.
     <p class="Pp"></p>
-    <pre>
-  $dir = File::Temp-&gt;newdir();
+    <pre>  $dir = File::Temp-&gt;newdir();
     </pre>
     <p class="Pp">By default the directory is deleted when the object goes out
         of scope.</p>
@@ -189,8 +168,7 @@
         <span class="Li">&quot;tempdir&quot;</span> function. Note that
         directories created with this method default to CLEANUP =&gt; 1.</p>
     <p class="Pp"></p>
-    <pre>
-  $dir = File::Temp-&gt;newdir( $template, %options );
+    <pre>  $dir = File::Temp-&gt;newdir( $template, %options );
     </pre>
     <p class="Pp">A template may be specified either with a leading template or
         with a TEMPLATE argument.</p>
@@ -201,8 +179,7 @@
   <dd>Return the name of the temporary file associated with this object (if the
       object was created using the &quot;new&quot; constructor).
     <p class="Pp"></p>
-    <pre>
-  $filename = $tmp-&gt;filename;
+    <pre>  $filename = $tmp-&gt;filename;
     </pre>
     <p class="Pp">This method is called automatically when the object is used as
         a string.</p>
@@ -212,8 +189,7 @@
   <dd>Return the name of the temporary directory associated with this object (if
       the object was created using the &quot;newdir&quot; constructor).
     <p class="Pp"></p>
-    <pre>
-  $dirname = $tmpdir-&gt;dirname;
+    <pre>  $dirname = $tmpdir-&gt;dirname;
     </pre>
     <p class="Pp">This method is called automatically when the object is used in
         string context.</p>
@@ -223,8 +199,7 @@
       The file is removed if this value is true and
       <span class="Li">$KEEP_ALL</span> is not.
     <p class="Pp"></p>
-    <pre>
- $fh-&gt;unlink_on_destroy( 1 );
+    <pre> $fh-&gt;unlink_on_destroy( 1 );
     </pre>
     <p class="Pp">Default is for the file to be removed.</p>
     <p class="Pp">Current API available since 0.15</p>
@@ -259,46 +234,40 @@
   <dd>This is the basic function to generate temporary files. The behaviour of
       the file can be changed using various options:
     <p class="Pp"></p>
-    <pre>
-  $fh = tempfile();
+    <pre>  $fh = tempfile();
   ($fh, $filename) = tempfile();
     </pre>
     <p class="Pp">Create a temporary file in the directory specified for
         temporary files, as specified by the <b>tmpdir()</b> function in
         File::Spec.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template);
+    <pre>  ($fh, $filename) = tempfile($template);
     </pre>
     <p class="Pp">Create a temporary file in the current directory using the
         supplied template. Trailing `X' characters are replaced with random
         letters to generate the filename. At least four `X' characters must be
         present at the end of the template.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, SUFFIX =&gt; $suffix)
+    <pre>  ($fh, $filename) = tempfile($template, SUFFIX =&gt; $suffix)
     </pre>
     <p class="Pp">Same as previously, except that a suffix is added to the
         template after the `X' translation. Useful for ensuring that a temporary
         filename has a particular extension when needed by other applications.
         But see the WARNING at the end.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, DIR =&gt; $dir);
+    <pre>  ($fh, $filename) = tempfile($template, DIR =&gt; $dir);
     </pre>
     <p class="Pp">Translates the template as before except that a directory name
         is specified.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, TMPDIR =&gt; 1);
+    <pre>  ($fh, $filename) = tempfile($template, TMPDIR =&gt; 1);
     </pre>
     <p class="Pp">Equivalent to specifying a DIR of
         &quot;File::Spec-&gt;tmpdir&quot;, writing the file into the same
         temporary directory as would be used if no template was specified at
         all.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, UNLINK =&gt; 1);
+    <pre>  ($fh, $filename) = tempfile($template, UNLINK =&gt; 1);
     </pre>
     <p class="Pp">Return the filename and filehandle as before except that the
         file is automatically removed when the program exits (dependent on
@@ -315,8 +284,7 @@
         <b>tmpdir()</b> (File::Spec) unless a directory is specified explicitly
         with the DIR option.</p>
     <p class="Pp"></p>
-    <pre>
-  $fh = tempfile( DIR =&gt; $dir );
+    <pre>  $fh = tempfile( DIR =&gt; $dir );
     </pre>
     <p class="Pp">If called in scalar context, only the filehandle is returned
         and the file will automatically be deleted when closed on operating
@@ -330,8 +298,7 @@
         to setting UNLINK to 1). The <span class="Li">&quot;UNLINK&quot;</span>
         flag is ignored if present.</p>
     <p class="Pp"></p>
-    <pre>
-  (undef, $filename) = tempfile($template, OPEN =&gt; 0);
+    <pre>  (undef, $filename) = tempfile($template, OPEN =&gt; 0);
     </pre>
     <p class="Pp">This will return the filename based on the template but will
         not open this file. Cannot be used in conjunction with UNLINK set to
@@ -349,8 +316,7 @@
         versions, explicitly set
         <span class="Li">&quot;EXLOCK=&gt;0&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, EXLOCK =&gt; 1);
+    <pre>  ($fh, $filename) = tempfile($template, EXLOCK =&gt; 1);
     </pre>
     <p class="Pp">Options can be combined as required.</p>
     <p class="Pp">Will <b>croak()</b> if there is an error.</p>
@@ -369,13 +335,11 @@
       directory to be cleaned up when the object goes out of scope.
     <p class="Pp">The behaviour of the function depends on the arguments:</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir();
+    <pre>  $tempdir = tempdir();
     </pre>
     <p class="Pp">Create a directory in <b>tmpdir()</b> (see File::Spec).</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir( $template );
+    <pre>  $tempdir = tempdir( $template );
     </pre>
     <p class="Pp">Create a directory from the supplied template. This template
         is similar to that described for <b>tempfile()</b>. `X' characters at
@@ -383,28 +347,24 @@
         the directory name. At least four `X' characters must be in the
         template.</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir ( DIR =&gt; $dir );
+    <pre>  $tempdir = tempdir ( DIR =&gt; $dir );
     </pre>
     <p class="Pp">Specifies the directory to use for the temporary directory.
         The temporary directory name is derived from an internal template.</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir ( $template, DIR =&gt; $dir );
+    <pre>  $tempdir = tempdir ( $template, DIR =&gt; $dir );
     </pre>
     <p class="Pp">Prepend the supplied directory name to the template. The
         template should not include parent directory specifications itself. Any
         parent directory specifications are removed from the template before
         prepending the supplied directory.</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir ( $template, TMPDIR =&gt; 1 );
+    <pre>  $tempdir = tempdir ( $template, TMPDIR =&gt; 1 );
     </pre>
     <p class="Pp">Using the supplied template, create the temporary directory in
         a standard location for temporary files. Equivalent to doing</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir ( $template, DIR =&gt; File::Spec-&gt;tmpdir);
+    <pre>  $tempdir = tempdir ( $template, DIR =&gt; File::Spec-&gt;tmpdir);
     </pre>
     <p class="Pp">but shorter. Parent directory specifications are stripped from
         the template itself. The <span class="Li">&quot;TMPDIR&quot;</span>
@@ -412,8 +372,7 @@
         explicitly. Additionally, <span class="Li">&quot;TMPDIR&quot;</span> is
         implied if neither a template nor a directory are supplied.</p>
     <p class="Pp"></p>
-    <pre>
-  $tempdir = tempdir( $template, CLEANUP =&gt; 1);
+    <pre>  $tempdir = tempdir( $template, CLEANUP =&gt; 1);
     </pre>
     <p class="Pp">Create a temporary directory using the supplied template, but
         attempt to remove it (and all files inside it) when the program exits.
@@ -438,8 +397,7 @@
   <dd>Given a template, returns a filehandle to the temporary file and the name
       of the file.
     <p class="Pp"></p>
-    <pre>
-  ($fh, $name) = mkstemp( $template );
+    <pre>  ($fh, $name) = mkstemp( $template );
     </pre>
     <p class="Pp">In scalar context, just the filehandle is returned.</p>
     <p class="Pp">The template may be any filename with some number of X's
@@ -452,8 +410,7 @@
   <dd>Similar to <b>mkstemp()</b>, except that an extra argument can be supplied
       with a suffix to be appended to the template.
     <p class="Pp"></p>
-    <pre>
-  ($fh, $name) = mkstemps( $template, $suffix );
+    <pre>  ($fh, $name) = mkstemps( $template, $suffix );
     </pre>
     <p class="Pp">For example a template of
         <span class="Li">&quot;testXXXXXX&quot;</span> and suffix of
@@ -468,8 +425,7 @@
   <dd>Create a directory from a template. The template must end in X's that are
       replaced by the routine.
     <p class="Pp"></p>
-    <pre>
-  $tmpdir_name = mkdtemp($template);
+    <pre>  $tmpdir_name = mkdtemp($template);
     </pre>
     <p class="Pp">Returns the name of the temporary directory created.</p>
     <p class="Pp">Directory must be removed by the caller.</p>
@@ -480,8 +436,7 @@
   <dd>Returns a valid temporary filename but does not guarantee that the file
       will not be opened by someone else.
     <p class="Pp"></p>
-    <pre>
-  $unopened_file = mktemp($template);
+    <pre>  $unopened_file = mktemp($template);
     </pre>
     <p class="Pp">Template is the same as that required by <b>mkstemp()</b>.</p>
     <p class="Pp">Will <b>croak()</b> if there is an error.</p>
@@ -510,15 +465,13 @@
       does not already exist, but there is no guarantee that that condition will
       continue to apply.
     <p class="Pp"></p>
-    <pre>
-  $file = tmpnam();
+    <pre>  $file = tmpnam();
     </pre>
     <p class="Pp">When called in list context, a filehandle to the open file and
         a filename are returned. This is achieved by calling <b>mkstemp()</b>
         after constructing a suitable template.</p>
     <p class="Pp"></p>
-    <pre>
-  ($fh, $file) = tmpnam();
+    <pre>  ($fh, $file) = tmpnam();
     </pre>
     <p class="Pp">If possible, this form should be used to prevent possible race
         conditions.</p>
@@ -530,8 +483,7 @@
   <dt id="tmpfile"><a class="permalink" href="#tmpfile"><b>tmpfile</b></a></dt>
   <dd>Returns the filehandle of a temporary file.
     <p class="Pp"></p>
-    <pre>
-  $fh = tmpfile();
+    <pre>  $fh = tmpfile();
     </pre>
     <p class="Pp">The file is removed when the filehandle is closed or when the
         program exits. No access to the filename is provided.</p>
@@ -560,8 +512,7 @@
       <span class="Li">&quot;O_CREAT | O_EXCL&quot;</span> if you must open such
       a filename.
     <p class="Pp"></p>
-    <pre>
-  $filename = File::Temp::tempnam( $dir, $prefix );
+    <pre>  $filename = File::Temp::tempnam( $dir, $prefix );
     </pre>
     <p class="Pp">Equivalent to running <b>mktemp()</b> with
         <span class="Li">$dir</span>/$prefixXXXXXXXX (using unix file convention
@@ -588,8 +539,7 @@
       come to making sure that the filename unlinked was the same as the file
       whose descriptor you hold.
     <p class="Pp"></p>
-    <pre>
-  unlink0($fh, $path)
+    <pre>  unlink0($fh, $path)
      or die &quot;Error unlinking file $path safely&quot;;
     </pre>
     <p class="Pp">Returns false on error but <b>croaks()</b> if there is a
@@ -634,8 +584,7 @@
       file and that the number of links to the file is 1 (all fields returned by
       <b>stat()</b> are compared).
     <p class="Pp"></p>
-    <pre>
-  cmpstat($fh, $path)
+    <pre>  cmpstat($fh, $path)
      or die &quot;Error comparing handle with file&quot;;
     </pre>
     <p class="Pp">Returns false if the stat information differs or if the link
@@ -662,8 +611,7 @@
       state provided by <span class="Li">&quot;unlink0&quot;</span> is not
       available.
     <p class="Pp"></p>
-    <pre>
-  unlink1($fh, $path)
+    <pre>  unlink1($fh, $path)
      or die &quot;Error closing and unlinking file&quot;;
     </pre>
     <p class="Pp">Usually called from the object destructor when using the OO
@@ -692,8 +640,7 @@
         than to remove temporary directories (which may include temporary
         files).</p>
     <p class="Pp"></p>
-    <pre>
-  File::Temp::cleanup();
+    <pre>  File::Temp::cleanup();
     </pre>
     <p class="Pp">Not exported by default.</p>
     <p class="Pp">Current API available since 0.15.</p>
@@ -739,8 +686,7 @@
 <div class="Bd-indent">
 <p class="Pp">The level can be changed as follows:</p>
 <p class="Pp"></p>
-<pre>
-  File::Temp-&gt;safe_level( File::Temp::HIGH );
+<pre>  File::Temp-&gt;safe_level( File::Temp::HIGH );
 </pre>
 <p class="Pp">The level constants are not exported by the module.</p>
 <p class="Pp">Currently, you must be running at least perl v5.6.0 in order to
@@ -758,8 +704,7 @@
     simply examine the return value of
     <span class="Li">&quot;safe_level&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  $newlevel = File::Temp-&gt;safe_level( File::Temp::HIGH );
+<pre>  $newlevel = File::Temp-&gt;safe_level( File::Temp::HIGH );
   die &quot;Could not change to high security&quot;
       if $newlevel != File::Temp::HIGH;
 </pre>
@@ -777,8 +722,7 @@
     <p class="Pp">Default is to assume that any UID less than or equal to 10 is
         a root UID.</p>
     <p class="Pp"></p>
-    <pre>
-  File::Temp-&gt;top_system_uid(10);
+    <pre>  File::Temp-&gt;top_system_uid(10);
   my $topid = File::Temp-&gt;top_system_uid;
     </pre>
     <p class="Pp">This value can be adjusted to reduce security checking if
@@ -787,14 +731,13 @@
         higher.</p>
     <p class="Pp">Available since 0.05.</p>
   </dd>
-  <dt><b></b><b>$KEEP_ALL</b><b></b></dt>
+  <dt><b></b><span class="Li"><b>$KEEP_ALL</b></span><b></b></dt>
   <dd>Controls whether temporary files and directories should be retained
       regardless of any instructions in the program to remove them
       automatically. This is useful for debugging but should not be used in
       production code.
     <p class="Pp"></p>
-    <pre>
-  $File::Temp::KEEP_ALL = 1;
+    <pre>  $File::Temp::KEEP_ALL = 1;
     </pre>
     <p class="Pp">Default is for files to be removed as requested by the
       caller.</p>
@@ -803,11 +746,10 @@
         temporary file, set this variable and expect the temp file to still be
         around when the program exits.</p>
   </dd>
-  <dt><b></b><b>$DEBUG</b><b></b></dt>
+  <dt><b></b><span class="Li"><b>$DEBUG</b></span><b></b></dt>
   <dd>Controls whether debugging messages should be enabled.
     <p class="Pp"></p>
-    <pre>
-  $File::Temp::DEBUG = 1;
+    <pre>  $File::Temp::DEBUG = 1;
     </pre>
     <p class="Pp">Default is for debugging mode to be disabled.</p>
     <p class="Pp">Available since 0.15.</p>
@@ -832,8 +774,7 @@
     close-on-exec bit on that file descriptor before passing it to another
     process.</p>
 <p class="Pp"></p>
-<pre>
-    use Fcntl qw/F_SETFD F_GETFD/;
+<pre>    use Fcntl qw/F_SETFD F_GETFD/;
     fcntl($tmpfh, F_SETFD, 0)
         or die &quot;Can't clear close-on-exec flag on temp fh: $!\n&quot;;
 </pre>

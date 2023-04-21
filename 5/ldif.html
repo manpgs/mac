@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>LDIF(5)</title>
 </head>
@@ -33,8 +34,7 @@
 <p class="Pp">LDIF entry records are used to represent directory entries. The
     basic form of an entry record is:</p>
 <p class="Pp"></p>
-<pre>
-	dn: &lt;distinguished name&gt;
+<pre>	dn: &lt;distinguished name&gt;
 	&lt;attrdesc&gt;: &lt;attrvalue&gt;
 	&lt;attrdesc&gt;: &lt;attrvalue&gt;
 	&lt;attrdesc&gt;:: &lt;base64-encoded-value&gt;
@@ -46,16 +46,14 @@
 <p class="Pp">A line may be continued by starting the next line with a single
     space or tab, e.g.,</p>
 <p class="Pp"></p>
-<pre>
-	dn: cn=Barbara J Jensen,dc=exam
+<pre>	dn: cn=Barbara J Jensen,dc=exam
 	 ple,dc=com
 </pre>
 <p class="Pp">Lines beginning with a sharp sign ('#') are ignored.</p>
 <p class="Pp">Multiple attribute values are specified on separate lines,
   e.g.,</p>
 <p class="Pp"></p>
-<pre>
-	cn: Barbara J Jensen
+<pre>	cn: Barbara J Jensen
 	cn: Babs Jensen
 </pre>
 <p class="Pp">If an value contains a non-printing character, or begins with a
@@ -63,15 +61,13 @@
     the value is encoded in base 64 notation. e.g., the value &quot; begins with
     a space&quot; would be encoded like this:</p>
 <p class="Pp"></p>
-<pre>
-	cn:: IGJlZ2lucyB3aXRoIGEgc3BhY2U=
+<pre>	cn:: IGJlZ2lucyB3aXRoIGEgc3BhY2U=
 </pre>
 <p class="Pp">If the attribute value is located in a file, the &lt;attrtype&gt;
     is followed by a ':&lt;' and a file: URI. e.g., the value contained in the
     file /tmp/value would be listed like this:</p>
 <p class="Pp"></p>
-<pre>
-	cn:&lt; file:///tmp/value
+<pre>	cn:&lt; file:///tmp/value
 </pre>
 Other URI schemes (ftp,http) may be supported as well.
 <p class="Pp">Multiple entries within the same LDIF file are separated by blank
@@ -82,8 +78,7 @@ Other URI schemes (ftp,http) may be supported as well.
   RECORD EXAMPLE</a></h1>
 <p class="Pp">Here is an example of an LDIF file containing three entries.</p>
 <p class="Pp"></p>
-<pre>
-	dn: cn=Barbara J Jensen,dc=example,dc=com
+<pre>	dn: cn=Barbara J Jensen,dc=example,dc=com
 	cn: Barbara J Jensen
 	cn: Babs Jensen
 	objectclass: person
@@ -115,64 +110,50 @@ Other URI schemes (ftp,http) may be supported as well.
     requests. Each change record starts with line indicating the distinguished
     name of the entry being changed:</p>
 <p class="Pp"></p>
-<pre>
-	dn: &lt;distinguishedname&gt;
-</pre>
+<pre>	dn: &lt;distinguishedname&gt;</pre>
 <p class="Pp"></p>
-<pre>
-	changetype: &lt;[modify|add|delete|modrdn]&gt;
-</pre>
+<pre>	changetype: &lt;[modify|add|delete|modrdn]&gt;</pre>
 <p class="Pp">Finally, the change information itself is given, the format of
     which depends on what kind of change was specified above. For a
     <i>changetype</i> of <i>modify</i>, the format is one or more of the
     following:</p>
 <p class="Pp"></p>
-<pre>
-	add: &lt;attributetype&gt;
+<pre>	add: &lt;attributetype&gt;
 	&lt;attrdesc&gt;: &lt;value1&gt;
 	&lt;attrdesc&gt;: &lt;value2&gt;
 	...
-	-
-</pre>
+	-</pre>
 <p class="Pp">Or, for a replace modification:</p>
 <p class="Pp"></p>
-<pre>
-	replace: &lt;attributetype&gt;
+<pre>	replace: &lt;attributetype&gt;
 	&lt;attrdesc&gt;: &lt;value1&gt;
 	&lt;attrdesc&gt;: &lt;value2&gt;
 	...
-	-
-</pre>
+	-</pre>
 <p class="Pp">If no <i>attributetype</i> lines are given to replace, the entire
     attribute is to be deleted (if present).</p>
 <p class="Pp">Or, for a delete modification:</p>
 <p class="Pp"></p>
-<pre>
-	delete: &lt;attributetype&gt;
+<pre>	delete: &lt;attributetype&gt;
 	&lt;attrdesc&gt;: &lt;value1&gt;
 	&lt;attrdesc&gt;: &lt;value2&gt;
 	...
-	-
-</pre>
+	-</pre>
 <p class="Pp">If no <i>attributetype</i> lines are given to delete, the entire
     attribute is to be deleted.</p>
 <p class="Pp">For a <i>changetype</i> of <i>add</i>, the format is:</p>
 <p class="Pp"></p>
-<pre>
-	&lt;attrdesc1&gt;: &lt;value1&gt;
+<pre>	&lt;attrdesc1&gt;: &lt;value1&gt;
 	&lt;attrdesc1&gt;: &lt;value2&gt;
 	...
 	&lt;attrdescN&gt;: &lt;value1&gt;
-	&lt;attrdescN&gt;: &lt;value2&gt;
-</pre>
+	&lt;attrdescN&gt;: &lt;value2&gt;</pre>
 <p class="Pp">For a <i>changetype</i> of <i>modrdn</i> or <i>moddn</i>, the
     format is:</p>
 <p class="Pp"></p>
-<pre>
-	newrdn: &lt;newrdn&gt;
+<pre>	newrdn: &lt;newrdn&gt;
 	deleteoldrdn: 0 | 1
-	newsuperior: &lt;DN&gt;
-</pre>
+	newsuperior: &lt;DN&gt;</pre>
 <p class="Pp">where a value of 1 for deleteoldrdn means to delete the values
     forming the old rdn from the entry, and a value of 0 means to leave the
     values as non-distinguished attributes in the entry. The newsuperior line is
@@ -190,8 +171,7 @@ Other URI schemes (ftp,http) may be supported as well.
 <p class="Pp">The following sample LDIF file contains a change record of each
     type of change.</p>
 <p class="Pp"></p>
-<pre>
-	dn: cn=Babs Jensen,dc=example,dc=com
+<pre>	dn: cn=Babs Jensen,dc=example,dc=com
 	changetype: add
 	objectclass: person
 	objectclass: extensibleObject
@@ -216,8 +196,7 @@ Other URI schemes (ftp,http) may be supported as well.
 	deleteoldrdn: 0
 	newsuperior: ou=People,dc=example,dc=com
 	dn: cn=Barbara J Jensen,ou=People,dc=example,dc=com
-	changetype: delete
-</pre>
+	changetype: delete</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -230,15 +209,13 @@ Other URI schemes (ftp,http) may be supported as well.
     they were part of the original LDIF file. As above, other URI schemes may be
     supported. For example:</p>
 <p class="Pp"></p>
-<pre>
-	dn: dc=example,dc=com
+<pre>	dn: dc=example,dc=com
 	objectclass: domain
 	dc: example
 	include: file:///tmp/example.com.ldif
 	dn: dc=example,dc=org
 	objectclass: domain
-	dc: example
-</pre>
+	dc: example</pre>
 This feature is not part of the LDIF specification in RFC 2849 but is expected
   to appear in a future revision of this spec. It is supported by the
   <b>ldapadd</b>(1), <b>ldapmodify</b>(1), and <b>slapadd</b>(8) commands.

@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SQLITE_TABLE(5)</title>
 </head>
@@ -21,10 +22,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<b>postmap -q &quot;</b><i>string</i><b>&quot; sqlite:/etc/postfix/</b><i>filename</i>
-<b>postmap -q - sqlite:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i>
-</pre>
+<pre><b>postmap -q &quot;</b><i>string</i><b>&quot; sqlite:/etc/postfix/</b><i>filename</i>
+<b>postmap -q - sqlite:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i></pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -36,16 +35,14 @@
     In order to use SQLite lookups, define an SQLite source as a lookup table in
     main.cf, for example:</p>
 <pre>
-    alias_maps = sqlite:/etc/sqlite-aliases.cf
-</pre>
+    alias_maps = sqlite:/etc/sqlite-aliases.cf</pre>
 <p class="Pp">The file /etc/postfix/sqlite-aliases.cf has the same format as the
     Postfix main.cf file, and can specify the parameters described below.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LIST_MEMBERSHIP"><a class="permalink" href="#LIST_MEMBERSHIP">LIST
   MEMBERSHIP</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">When using SQL to store lists such as $mynetworks, $mydestination,
     $relay_domains, $local_recipient_maps, etc., it is important to understand
     that the table must store each list member as a separate key. The table
@@ -60,21 +57,18 @@
 <section class="Sh">
 <h1 class="Sh" id="SQLITE_PARAMETERS"><a class="permalink" href="#SQLITE_PARAMETERS">SQLITE
   PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <dl class="Bl-tag">
   <dt id="dbpath"><a class="permalink" href="#dbpath"><b>dbpath</b></a></dt>
   <dd>The SQLite database file location. Example:
     <pre>
-    dbpath = customer_database
-    </pre>
+    dbpath = customer_database</pre>
   </dd>
   <dt id="query"><a class="permalink" href="#query"><b>query</b></a></dt>
   <dd>The SQL query template used to search the database, where <b>%s</b> is a
       substitute for the address Postfix is trying to resolve, e.g.
     <pre>
-    query = SELECT replacement FROM aliases WHERE mailbox = '%s'
-    </pre>
+    query = SELECT replacement FROM aliases WHERE mailbox = '%s'</pre>
     <p class="Pp">This parameter supports the following '%' expansions:</p>
   </dd>
 </dl>
@@ -124,8 +118,7 @@
     SELECT [<b>select_field</b>]
     FROM [<b>table</b>]
     WHERE [<b>where_field</b>] = '%s'
-          [<b>additional_conditions</b>]
-    </pre>
+          [<b>additional_conditions</b>]</pre>
     <p class="Pp">The '%s' in the <b>WHERE</b> clause expands to the escaped
         search string. With Postfix 2.2 these legacy parameters are used if the
         <b>query</b> parameter is not specified.</p>
@@ -181,8 +174,7 @@
       lookups and &quot;@domain&quot; lookups are not performed. This can
       significantly reduce the query load on the SQLite server.
     <pre>
-    domain = postfix.org, hash:/etc/postfix/searchdomains
-    </pre>
+    domain = postfix.org, hash:/etc/postfix/searchdomains</pre>
     <p class="Pp">It is best not to use SQL to store the domains eligible for
         SQL lookups.</p>
     <p class="Pp">This parameter is available with Postfix 2.2 and later.</p>
@@ -201,8 +193,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OBSOLETE_MAIN.CF_PARAMETERS"><a class="permalink" href="#OBSOLETE_MAIN.CF_PARAMETERS">OBSOLETE
   MAIN.CF PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">For compatibility with other Postfix lookup tables, SQLite
     parameters can also be defined in main.cf. In order to do that, specify as
     SQLite source a name that doesn't begin with a slash or a dot. The SQLite
@@ -215,8 +206,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OBSOLETE_QUERY_INTERFACE"><a class="permalink" href="#OBSOLETE_QUERY_INTERFACE">OBSOLETE
   QUERY INTERFACE</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">This section describes an interface that is deprecated as of
     Postfix 2.2. It is replaced by the more general <b>query</b> interface
     described above. If the <b>query</b> parameter is defined, the legacy
@@ -229,8 +219,7 @@
     SELECT [<b>select_field</b>]
     FROM [<b>table</b>]
     WHERE [<b>where_field</b>] = '%s'
-          [<b>additional_conditions</b>]
-</pre>
+          [<b>additional_conditions</b>]</pre>
 <p class="Pp">The specifier %s is replaced by the search string, and is escaped
     so if it contains single quotes or other odd characters, it will not cause a
     parse error, or worse, a security problem.</p>
@@ -238,70 +227,57 @@
   <dt id="select_field"><a class="permalink" href="#select_field"><b>select_field</b></a></dt>
   <dd>The SQL &quot;select&quot; parameter. Example:
     <pre>
-    <b>select_field</b> = forw_addr
-    </pre>
+    <b>select_field</b> = forw_addr</pre>
   </dd>
   <dt id="table"><a class="permalink" href="#table"><b>table</b></a></dt>
   <dd>The SQL &quot;select .. from&quot; table name. Example:
     <pre>
-    <b>table</b> = mxaliases
-    </pre>
+    <b>table</b> = mxaliases</pre>
   </dd>
   <dt id="where_field"><a class="permalink" href="#where_field"><b>where_field</b></a></dt>
   <dd>The SQL &quot;select .. where&quot; parameter. Example:
     <pre>
-    <b>where_field</b> = alias
-    </pre>
+    <b>where_field</b> = alias</pre>
   </dd>
   <dt id="additional_conditions"><a class="permalink" href="#additional_conditions"><b>additional_conditions</b></a></dt>
   <dd>Additional conditions to the SQL query. Example:
     <pre>
-    <b>additional_conditions</b> = AND status = 'paid'
-    </pre>
+    <b>additional_conditions</b> = AND status = 'paid'</pre>
   </dd>
 </dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<pre>
-postmap(1), Postfix lookup table maintenance
+<pre>postmap(1), Postfix lookup table maintenance
 postconf(5), configuration parameters
 ldap_table(5), LDAP lookup tables
 mysql_table(5), MySQL lookup tables
-pgsql_table(5), PostgreSQL lookup tables
-</pre>
+pgsql_table(5), PostgreSQL lookup tables</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="README_FILES"><a class="permalink" href="#README_FILES">README
   FILES</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">Use &quot;<b>postconf readme_directory</b>&quot; or
     &quot;<b>postconf html_directory</b>&quot; to locate this information.</p>
-<pre>
-DATABASE_README, Postfix lookup table overview
-SQLITE_README, Postfix SQLITE howto
-</pre>
+<pre>DATABASE_README, Postfix lookup table overview
+SQLITE_README, Postfix SQLITE howto</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">The Secure Mailer license must be distributed with this
   software.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
-<br/>
 <p class="Pp">SQLite support was introduced with Postfix version 2.8.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR(S)"><a class="permalink" href="#AUTHOR(S)">AUTHOR(S)</a></h1>
-<pre>
-Original implementation by:
-Axel Steiner
-</pre>
+<pre>Original implementation by:
+Axel Steiner</pre>
 </section>
 </div>
 <table class="foot">

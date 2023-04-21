@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::Path(3pm)</title>
 </head>
@@ -32,9 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use File::Path qw(make_path remove_tree);
-
+<pre>    use File::Path qw(make_path remove_tree);
     @created = make_path('foo/bar/baz', '/zug/zwang');
     @created = make_path('foo/bar/baz', '/zug/zwang', {
         verbose =&gt; 1,
@@ -43,20 +42,17 @@
     make_path('foo/bar/baz', '/zug/zwang', {
         chmod =&gt; 0777,
     });
-
     $removed_count = remove_tree('foo/bar/baz', '/zug/zwang', {
         verbose =&gt; 1,
         error  =&gt; \my $err_list,
         safe =&gt; 1,
     });
-
     # legacy (interface promoted before v2.00)
     @created = mkpath('/foo/bar/baz');
     @created = mkpath('/foo/bar/baz', 1, 0711);
     @created = mkpath(['/foo/bar/baz', 'blurfl/quux'], 1, 0711);
     $removed_count = rmtree('foo/bar/baz', 1, 1);
     $removed_count = rmtree(['foo/bar/baz', 'blurfl/quux'], 1, 1);
-
     # legacy (interface promoted before v2.06)
     @created = mkpath('foo/bar/baz', '/zug/zwang', { verbose =&gt; 1, mode =&gt; 0711 });
     $removed_count = rmtree('foo/bar/baz', '/zug/zwang', { verbose =&gt; 1, mode =&gt; 0711 });
@@ -141,8 +137,7 @@
     <p class="Pp">Group ownership of directories that already exist will not be
         changed.</p>
     <p class="Pp"></p>
-    <pre>
-    make_path '/var/tmp/webcache', {owner=&gt;'nobody', group=&gt;'nogroup'};
+    <pre>    make_path '/var/tmp/webcache', {owner=&gt;'nobody', group=&gt;'nogroup'};
     </pre>
   </dd>
 </dl>
@@ -189,8 +184,7 @@
         the <span class="Li">&quot;safe&quot;</span> element to a true
       value.</p>
     <p class="Pp"></p>
-    <pre>
-    remove_tree( $dir1, $dir2, ....,
+    <pre>    remove_tree( $dir1, $dir2, ....,
         {
             safe =&gt; 1,
             ...         # other key-value pairs
@@ -222,8 +216,7 @@
       removed, except the initially specified directories. This comes in handy
       when cleaning out an application's scratch directory.
     <p class="Pp"></p>
-    <pre>
-    remove_tree( '/tmp', {keep_root =&gt; 1} );
+    <pre>    remove_tree( '/tmp', {keep_root =&gt; 1} );
     </pre>
   </dd>
   <dt id="result"><a class="permalink" href="#result">result =&gt;
@@ -233,8 +226,7 @@
       directories unlinked during the call. If nothing is unlinked, the array
       will be empty.
     <p class="Pp"></p>
-    <pre>
-    remove_tree( '/tmp', {result =&gt; \my $list} );
+    <pre>    remove_tree( '/tmp', {result =&gt; \my $list} );
     print &quot;unlinked $_\n&quot; for @$list;
     </pre>
     <p class="Pp">This is a useful alternative to the
@@ -277,8 +269,7 @@
         the hashref-as-final-argument syntax, specifically with a setting of the
         <span class="Li">&quot;safe&quot;</span> element to a true value.</p>
     <p class="Pp"></p>
-    <pre>
-    rmtree( $dir1, $dir2, ....,
+    <pre>    rmtree( $dir1, $dir2, ....,
         {
             safe =&gt; 1,
             ...         # other key-value pairs
@@ -316,8 +307,7 @@
     encountered the diagnostic key will be empty.</p>
 <p class="Pp">An example usage looks like:</p>
 <p class="Pp"></p>
-<pre>
-  remove_tree( 'foo/bar', 'bar/rat', {error =&gt; \my $err} );
+<pre>  remove_tree( 'foo/bar', 'bar/rat', {error =&gt; \my $err} );
   if ($err &amp;&amp; @$err) {
       for my $diag (@$err) {
           my ($file, $message) = %$diag;
@@ -347,15 +337,13 @@
     much code. Nonetheless, you are invited to specify what it is you are
     expecting to use:</p>
 <p class="Pp"></p>
-<pre>
-  use File::Path 'rmtree';
+<pre>  use File::Path 'rmtree';
 </pre>
 <p class="Pp">The routines <span class="Li">&quot;make_path&quot;</span> and
     <span class="Li">&quot;remove_tree&quot;</span> are <b>not</b> exported by
     default. You must specify which ones you want to use.</p>
 <p class="Pp"></p>
-<pre>
-  use File::Path 'remove_tree';
+<pre>  use File::Path 'remove_tree';
 </pre>
 <p class="Pp">Note that a side-effect of the above is that
     <span class="Li">&quot;mkpath&quot;</span> and
@@ -365,8 +353,7 @@
     will have to list everything explicitly. But that's just good practice
     anyway.</p>
 <p class="Pp"></p>
-<pre>
-  use File::Path qw(remove_tree rmtree);
+<pre>  use File::Path qw(remove_tree rmtree);
 </pre>
 <p class="Pp"><i>API CHANGES</i></p>
 <p class="Pp">The API was changed in the 2.0 branch. For a time,
@@ -387,8 +374,7 @@
     version contains code to avoid the problem mentioned in CVE-2002-0435.</p>
 <p class="Pp">See the following pages for more information:</p>
 <p class="Pp"></p>
-<pre>
-    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=286905
+<pre>    http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=286905
     http://www.nntp.perl.org/group/perl.perl5.porters/2005/01/msg97623.html
     http://www.debian.org/security/2005/dsa-696
 </pre>
@@ -625,8 +611,7 @@
 <p class="Pp">&lt;http://rt.cpan.org/NoAuth/Bugs.html?Dist=File-Path&gt;</p>
 <p class="Pp">or by email:</p>
 <p class="Pp"></p>
-<pre>
-    bug-File-Path@rt.cpan.org
+<pre>    bug-File-Path@rt.cpan.org
 </pre>
 <p class="Pp">In either case, please <b>attach</b> patches to the bug report
     rather than including them inline in the web post or the body of the

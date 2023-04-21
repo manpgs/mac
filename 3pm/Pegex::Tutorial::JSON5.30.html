@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pegex::Tutorial::JSON(3)</title>
 </head>
@@ -44,8 +45,7 @@
     multiple programming languages.</p>
 <p class="Pp">You can run the test like normal:</p>
 <p class="Pp"></p>
-<pre>
-    &gt; prove -lv t/test.t
+<pre>    &gt; prove -lv t/test.t
 </pre>
 </section>
 <section class="Sh">
@@ -65,21 +65,18 @@
     in Pegex and go from a '#' to the end of a line. Just as you would
   expect.</p>
 <p class="Pp"></p>
-<pre>
-    # A simple grammar for the simple JSON data language.
+<pre>    # A simple grammar for the simple JSON data language.
     # For parser implementations that use this grammar, see:
     # * https://github.com/ingydotnet/pegex-json-pm
 </pre>
 <p class="Pp">Next we have what is called the Meta section of the grammar.</p>
 <p class="Pp"></p>
-<pre>
-    %grammar json
+<pre>    %grammar json
     %version 0.0.1
 </pre>
 <p class="Pp">Meta section lines are of the form:</p>
 <p class="Pp"></p>
-<pre>
-    %key value
+<pre>    %key value
 </pre>
 <p class="Pp">Your grammar should have at least a name and a version.</p>
 <p class="Pp">Everything else in the grammar is a set of things called
@@ -88,8 +85,7 @@
     first rule as the starting rule (although this can be overridden).</p>
 <p class="Pp">We start the JSON grammar with this rule:</p>
 <p class="Pp"></p>
-<pre>
-    json: map | seq
+<pre>    json: map | seq
 </pre>
 <p class="Pp">The name of this rule is 'json'. When we start parsing JSON we say
     that the entire text must match the rule 'json'. This makes a lot of
@@ -108,16 +104,14 @@
     enclosed in angle brackets (which are sometimes required). ie the rule above
     could also be written like this:</p>
 <p class="Pp"></p>
-<pre>
-    json: map | seq
+<pre>    json: map | seq
 </pre>
 <p class="Pp">We are also introduced to the OR operator which is a single PIPE
     character. It should also be noted that a COLON simply separates a rule name
     and its definition.</p>
 <p class="Pp">The next line defines a new rule called 'node':</p>
 <p class="Pp"></p>
-<pre>
-    node: map | seq | scalar
+<pre>    node: map | seq | scalar
 </pre>
 <p class="Pp">We are calling 'node' the list of general structures that any
     given point in the JSON data graph can be. This is simply a mapping,
@@ -126,8 +120,7 @@
     grammar is complete when all of its rule references are defined.</p>
 <p class="Pp">Let's start with map:</p>
 <p class="Pp"></p>
-<pre>
-    map:
+<pre>    map:
         /- LCURLY -/
         pair* % /- COMMA -/
         /- RCURLY -/
@@ -142,8 +135,7 @@
     actually allows for multiple rules on one line, but they must be separated
     by semicolons, like so:</p>
 <p class="Pp"></p>
-<pre>
-    rule1: a|b; rule2: c|d; rule3: e|f
+<pre>    rule1: a|b; rule2: c|d; rule3: e|f
 </pre>
 <p class="Pp">The next thing we see are forward slash characters. Like in Perl
     and JavaScript, a pair of slashes indicate a regular expression. In this
@@ -161,15 +153,13 @@
     be quite hard to understand.</p>
 <p class="Pp">For example if we had this Pegex grammar:</p>
 <p class="Pp"></p>
-<pre>
-    greeting: / hello COMMA - world /
+<pre>    greeting: / hello COMMA - world /
     hello: / (:'O' SPACE 'HAI' | 'Hey' SPACE 'there') /
     world: / (:Earth|Mars|Venus) /
 </pre>
 <p class="Pp">It would compile to:</p>
 <p class="Pp"></p>
-<pre>
-    greeting:
+<pre>    greeting:
       .rgx: (?:O\ HAI|Hey\ there),\s*(?:Earth|Mars|Venus)
 </pre>
 <p class="Pp">Note the the 'hello' and 'world' rules are gone, but their
@@ -194,8 +184,7 @@
 <p class="Pp">The rule we defined for 'map' should now be more readable. Let's
     look at it again, but this time in a more compact form:</p>
 <p class="Pp"></p>
-<pre>
-    map: /- LCURLY -/   (pair* % /- COMMA -/)   /- RCURLY -/
+<pre>    map: /- LCURLY -/   (pair* % /- COMMA -/)   /- RCURLY -/
 </pre>
 <p class="Pp">I've compacted the regexes (since they just mean curlies and
     commas with possible whitespace), and I've added parentheses around the
@@ -203,8 +192,7 @@
 <p class="Pp">So what is the '%' operator? It was borrowed from Perl 6 Rules.
     Consider:</p>
 <p class="Pp"></p>
-<pre>
-    a+ % b
+<pre>    a+ % b
 </pre>
 <p class="Pp">This means one or more 'a', separated by 'b'. Simple. The %%
     operator means the same thing, except it indicates that a trailing 'b' is
@@ -221,18 +209,15 @@
     two forms, you need to put the rule reference in angle brackets, or else the
     number looks like part of the rule name. For example:</p>
 <p class="Pp"></p>
-<pre>
-    rule1: &lt;rule2&gt;5-9 &lt;rule3&gt;29+
+<pre>    rule1: &lt;rule2&gt;5-9 &lt;rule3&gt;29+
 </pre>
 <p class="Pp">not:</p>
 <p class="Pp"></p>
-<pre>
-    rule1: rule25-9 rule329+
+<pre>    rule1: rule25-9 rule329+
 </pre>
 <p class="Pp">Let's take a look at that rule after Pegex compilation:</p>
 <p class="Pp"></p>
-<pre>
-    map:
+<pre>    map:
       .all:
       - .rgx: \s*\{\s*
       - +min: 0
@@ -247,8 +232,7 @@
 <p class="Pp">One thing that we have silently covered is the AND operator.
     That's because there is no operator symbol for it. Consider the rules:</p>
 <p class="Pp"></p>
-<pre>
-    a: b c+ /d/
+<pre>    a: b c+ /d/
     b: c | d
     c: d e | f % g
 </pre>
@@ -257,25 +241,21 @@
     and OR binds loosest, with AND in the middle. Precedence can be
     disambiguated with parentheses. Thus the rule for 'c' can be restated:</p>
 <p class="Pp"></p>
-<pre>
-    c: ((d e) | (f % g))
+<pre>    c: ((d e) | (f % g))
 </pre>
 <p class="Pp">OK. I think we've covered just about everything needed so far.
     That was a lot of learning for one rule, but now you know most of Pegex!</p>
 <p class="Pp">The next three rules need no new knowledge. Take a look at these
     and see if you can figure them out.</p>
 <p class="Pp"></p>
-<pre>
-    pair:
+<pre>    pair:
         string
         /- COLON -/
         node
-
     seq:
         /- LSQUARE -/
         node* % /- COMMA -/
         /- RSQUARE -/
-
     scalar:
         string |
         number |
@@ -295,8 +275,7 @@
   Regexes in More Depth</a></h2>
 <p class="Pp">Next we have the definition for a JSON string:</p>
 <p class="Pp"></p>
-<pre>
-    # string and number are interpretations of http://www.json.org/
+<pre>    # string and number are interpretations of http://www.json.org/
     string: /
         DOUBLE
             (
@@ -324,8 +303,7 @@
 </pre>
 <p class="Pp">which Pegex compiles to this (simple and obvious;) regex:</p>
 <p class="Pp"></p>
-<pre>
-    /&quot;((?:\\(?:[&quot;\\/bfnrt]|u[0-9a-fA-F]{4})|[^&quot;\x00-\x1f])*)&quot;/
+<pre>    /&quot;((?:\\(?:[&quot;\\/bfnrt]|u[0-9a-fA-F]{4})|[^&quot;\x00-\x1f])*)&quot;/
 </pre>
 <p class="Pp">Let's see what's new here...</p>
 <p class="Pp">First off, we have lots of whitespace and comments. This should
@@ -383,20 +361,15 @@
 <p class="Pp">There are just 5 more simple rules needed to complete the JSON
     Pegex grammar:</p>
 <p class="Pp"></p>
-<pre>
-    number: /(
+<pre>    number: /(
         DASH?
         (: 0 | [1-9] DIGIT* )
         (: DOT DIGIT* )?
         (: [eE] [ DASH PLUS ]? DIGIT+ )?
     )/
-
     boolean: true | false
-
     true: /true/
-
     false: /false/
-
     null: /null/
 </pre>
 <p class="Pp">Note that the rule for 'number' captures data, but the other rules
@@ -428,20 +401,17 @@
     have to recompile it to Perl and copy/paste it into our module. This would
     be a pain, so there is a special command to do it for us. Just run this:</p>
 <p class="Pp"></p>
-<pre>
-    perl -Ilib -MPegex::JSON:Grammar=compile
+<pre>    perl -Ilib -MPegex::JSON:Grammar=compile
 </pre>
 <p class="Pp">If you are in heavy development mode and changing the grammar a
     lot, you can simply set an environment variable like this:</p>
 <p class="Pp"></p>
-<pre>
-    export PERL_PEGEX_AUTO_COMPILE=Pegex::JSON::Grammar
+<pre>    export PERL_PEGEX_AUTO_COMPILE=Pegex::JSON::Grammar
 </pre>
 <p class="Pp">and recompilation will happen automatically. This is possible
     because of this line in the grammar module:</p>
 <p class="Pp"></p>
-<pre>
-    use constant file =&gt; '../json-pgx/json.pgx';
+<pre>    use constant file =&gt; '../json-pgx/json.pgx';
 </pre>
 <p class="Pp">That line is only used during development and requires the grammar
     file to be in that location.</p>

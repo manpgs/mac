@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::DBD::SqlEngine(3)</title>
 </head>
@@ -29,11 +30,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package DBD::myDriver;
-
+<pre>    package DBD::myDriver;
     use base qw(DBI::DBD::SqlEngine);
-
     sub driver
     {
         ...
@@ -41,18 +39,12 @@
         ...
         return $drh-&gt;{class};
         }
-
     package DBD::myDriver::dr;
-
     @ISA = qw(DBI::DBD::SqlEngine::dr);
-
     sub data_sources { ... }
     ...
-
     package DBD::myDriver::db;
-
     @ISA = qw(DBI::DBD::SqlEngine::db);
-
     sub init_valid_attributes { ... }
     sub init_default_attributes { ... }
     sub set_versions { ... }
@@ -60,24 +52,15 @@
     sub validate_FETCH_attr { my ($dbh, $attrib) = @_; ... }
     sub get_myd_versions { ... }
     sub get_avail_tables { ... }
-
     package DBD::myDriver::st;
-
     @ISA = qw(DBI::DBD::SqlEngine::st);
-
     sub FETCH { ... }
     sub STORE { ... }
-
     package DBD::myDriver::Statement;
-
     @ISA = qw(DBI::DBD::SqlEngine::Statement);
-
     sub open_table { ... }
-
     package DBD::myDriver::Table;
-
     @ISA = qw(DBI::DBD::SqlEngine::Table);
-
     sub new { ... }
 </pre>
 </section>
@@ -99,8 +82,7 @@
 <p class="Pp">The following attributes are handled by DBI itself and not by
     DBI::DBD::SqlEngine, thus they all work as expected:</p>
 <p class="Pp"></p>
-<pre>
-    Active
+<pre>    Active
     ActiveKids
     CachedKids
     CompatMode             (Not used)
@@ -174,8 +156,7 @@
 <p class="Pp">Contains how DBI::DBD::SqlEngine deals with non-quoted SQL
     identifiers:</p>
 <p class="Pp"></p>
-<pre>
-  * SQL_IC_UPPER (1) means all identifiers are internally converted
+<pre>  * SQL_IC_UPPER (1) means all identifiers are internally converted
     into upper-cased pendants
   * SQL_IC_LOWER (2) means all identifiers are internally converted
     into lower-cased pendants
@@ -187,8 +168,7 @@
     expect <span class="Li">&quot;sql_identifier_case&quot;</span> affects
     column names in statements like</p>
 <p class="Pp"></p>
-<pre>
-  SELECT * FROM foo
+<pre>  SELECT * FROM foo
 </pre>
 <p class="Pp">sql_quoted_identifier_case</p>
 <p class="Pp">Contains how DBI::DBD::SqlEngine deals with quoted SQL identifiers
@@ -202,8 +182,7 @@
 <p class="Pp">Controls the dialect understood by SQL::Parser. Possible values
     (delivery state of SQL::Statement):</p>
 <p class="Pp"></p>
-<pre>
-  * ANSI
+<pre>  * ANSI
   * CSV
   * AnyData
 </pre>
@@ -256,16 +235,14 @@
 <p class="Pp">If you want to read the subdirectories of another directory,
   use</p>
 <p class="Pp"></p>
-<pre>
-    my ($drh)  = DBI-&gt;install_driver (&quot;CSV&quot;);
+<pre>    my ($drh)  = DBI-&gt;install_driver (&quot;CSV&quot;);
     my (@list) = $drh-&gt;data_sources (f_dir =&gt; &quot;/usr/local/csv_data&quot;);
 </pre>
 <p class="Pp">list_tables</p>
 <p class="Pp">This method returns a list of file names inside
     <span class="Li">$dbh</span>-&gt;{f_dir}. Example:</p>
 <p class="Pp"></p>
-<pre>
-    my ($dbh)  = DBI-&gt;connect (&quot;dbi:CSV:f_dir=/usr/local/csv_data&quot;);
+<pre>    my ($dbh)  = DBI-&gt;connect (&quot;dbi:CSV:f_dir=/usr/local/csv_data&quot;);
     my (@list) = $dbh-&gt;func (&quot;list_tables&quot;);
 </pre>
 <p class="Pp">Note that the list includes all files contained in the directory,
@@ -279,8 +256,7 @@
 <p class="Pp">sql_versions</p>
 <p class="Pp">Signature:</p>
 <p class="Pp"></p>
-<pre>
-  sub sql_versions (;$) {
+<pre>  sub sql_versions (;$) {
     my ($table_name) = @_;
     $table_name ||= &quot;.&quot;;
     ...
@@ -290,8 +266,7 @@
     Perl version, DBI::PurePerl version (if DBI::PurePerl is active) and the
     version of the SQL engine in use.</p>
 <p class="Pp"></p>
-<pre>
-    my $dbh = DBI-&gt;connect (&quot;dbi:File:&quot;);
+<pre>    my $dbh = DBI-&gt;connect (&quot;dbi:File:&quot;);
     my $sql_versions = $dbh-&gt;func( &quot;sql_versions&quot; );
     print &quot;$sql_versions\n&quot;;
     __END__
@@ -309,8 +284,7 @@
 <p class="Pp">sql_get_meta</p>
 <p class="Pp">Signature:</p>
 <p class="Pp"></p>
-<pre>
-    sub sql_get_meta ($$)
+<pre>    sub sql_get_meta ($$)
     {
         my ($table_name, $attrib) = @_;
         ...
@@ -325,8 +299,7 @@
 <p class="Pp">sql_set_meta</p>
 <p class="Pp">Signature:</p>
 <p class="Pp"></p>
-<pre>
-    sub sql_set_meta ($$$)
+<pre>    sub sql_set_meta ($$$)
     {
         my ($table_name, $attrib, $value) = @_;
         ...
@@ -341,8 +314,7 @@
 <p class="Pp">sql_clear_meta</p>
 <p class="Pp">Signature:</p>
 <p class="Pp"></p>
-<pre>
-    sub sql_clear_meta ($)
+<pre>    sub sql_clear_meta ($)
     {
         my ($table_name) = @_;
         ...
@@ -357,15 +329,12 @@
 <p class="Pp">Provides data sources and table information on database driver and
     database handle level.</p>
 <p class="Pp"></p>
-<pre>
-  package DBI::DBD::SqlEngine::TableSource;
-
+<pre>  package DBI::DBD::SqlEngine::TableSource;
   sub data_sources ($;$)
   {
     my ( $class, $drh, $attrs ) = @_;
     ...
   }
-
   sub avail_tables
   {
     my ( $class, $drh ) = @_;
@@ -375,8 +344,7 @@
 <p class="Pp">The <span class="Li">&quot;data_sources&quot;</span> method is
     called when the user invokes any of the following:</p>
 <p class="Pp"></p>
-<pre>
-  @ary = DBI-&gt;data_sources($driver);
+<pre>  @ary = DBI-&gt;data_sources($driver);
   @ary = DBI-&gt;data_sources($driver, \%attr);
   
   @ary = $dbh-&gt;data_sources();
@@ -385,12 +353,10 @@
 <p class="Pp">The <span class="Li">&quot;avail_tables&quot;</span> method is
     called when the user invokes any of the following:</p>
 <p class="Pp"></p>
-<pre>
-  @names = $dbh-&gt;tables( $catalog, $schema, $table, $type );
+<pre>  @names = $dbh-&gt;tables( $catalog, $schema, $table, $type );
   
   $sth = $dbh-&gt;table_info( $catalog, $schema, $table, $type );
   $sth = $dbh-&gt;table_info( $catalog, $schema, $table, $type, \%attr );
-
   $dbh-&gt;func( &quot;list_tables&quot; );
 </pre>
 <p class="Pp">Every time where an <span class="Li">&quot;\%attr&quot;</span>
@@ -399,8 +365,7 @@
     preferred over the <span class="Li">$dbh</span> attribute or the driver
     default, eg.</p>
 <p class="Pp"></p>
-<pre>
-  @ary = DBI-&gt;data_sources(&quot;dbi:CSV:&quot;, {
+<pre>  @ary = DBI-&gt;data_sources(&quot;dbi:CSV:&quot;, {
     f_dir =&gt; &quot;/your/csv/tables&quot;,
     # note: this class doesn't comes with DBI
     sql_table_source =&gt; &quot;DBD::File::Archive::Tar::TableSource&quot;,
@@ -420,9 +385,7 @@
     (eg. opening streams from an archive, transparently compress/uncompress log
     files before parsing them,</p>
 <p class="Pp"></p>
-<pre>
-  package DBI::DBD::SqlEngine::DataSource;
-
+<pre>  package DBI::DBD::SqlEngine::DataSource;
   sub complete_table_name ($$;$)
   {
     my ( $self, $meta, $table, $respect_case ) = @_;
@@ -432,16 +395,14 @@
 <p class="Pp">The method <span class="Li">&quot;complete_table_name&quot;</span>
     is called when first setting up the <i>meta information</i> for a table:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;SELECT user.id, user.name, user.shell FROM user WHERE ...&quot;
+<pre>  &quot;SELECT user.id, user.name, user.shell FROM user WHERE ...&quot;
 </pre>
 <p class="Pp">results in opening the table
     <span class="Li">&quot;user&quot;</span>. First step of the table open
     process is completing the name. Let's imagine you're having a DBD::CSV
     handle with following settings:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{sql_identifier_case} = SQL_IC_LOWER;
+<pre>  $dbh-&gt;{sql_identifier_case} = SQL_IC_LOWER;
   $dbh-&gt;{f_ext} = '.lst';
   $dbh-&gt;{f_dir} = '/data/web/adrmgr';
 </pre>
@@ -457,9 +418,7 @@
     <span class="Li">&quot;complete_table_name&quot;</span> method, a method to
     open the resource is required:</p>
 <p class="Pp"></p>
-<pre>
-  package DBI::DBD::SqlEngine::DataSource;
-
+<pre>  package DBI::DBD::SqlEngine::DataSource;
   sub open_data ($)
   {
     my ( $self, $meta, $attrs, $flags ) = @_;
@@ -491,8 +450,7 @@
 <p class="Pp">You can find documentation for this module with the perldoc
     command.</p>
 <p class="Pp"></p>
-<pre>
-    perldoc DBI::DBD::SqlEngine
+<pre>    perldoc DBI::DBD::SqlEngine
 </pre>
 <p class="Pp">You can also look for information at:</p>
 <ul class="Bl-bullet">
@@ -543,8 +501,7 @@
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT_AND_LICENSE"><a class="permalink" href="#COPYRIGHT_AND_LICENSE">COPYRIGHT
   AND LICENSE</a></h1>
-<pre>
- Copyright (C) 2009-2013 by H.Merijn Brand &amp; Jens Rehsack
+<pre> Copyright (C) 2009-2013 by H.Merijn Brand &amp; Jens Rehsack
  Copyright (C) 2004-2009 by Jeff Zucker
  Copyright (C) 1998-2004 by Jochen Wiedmann
 </pre>

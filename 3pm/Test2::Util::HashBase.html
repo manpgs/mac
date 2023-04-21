@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Util::HashBase(3pm)</title>
 </head>
@@ -30,14 +31,11 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">A class:</p>
 <p class="Pp"></p>
-<pre>
-    package My::Class;
+<pre>    package My::Class;
     use strict;
     use warnings;
-
     # Generate 3 accessors
     use Test2::Util::HashBase qw/foo -bar ^baz/;
-
     # Chance to initialize defaults
     sub init {
         my $self = shift;    # No other args
@@ -45,60 +43,47 @@
         $self-&gt;{+BAR} ||= &quot;bar&quot;;
         $self-&gt;{+BAZ} ||= &quot;baz&quot;;
     }
-
     sub print {
         print join &quot;, &quot; =&gt; map { $self-&gt;{$_} } FOO, BAR, BAZ;
     }
 </pre>
 <p class="Pp">Subclass it</p>
 <p class="Pp"></p>
-<pre>
-    package My::Subclass;
+<pre>    package My::Subclass;
     use strict;
     use warnings;
-
     # Note, you should subclass before loading HashBase.
     use base 'My::Class';
     use Test2::Util::HashBase qw/bat/;
-
     sub init {
         my $self = shift;
-
         # We get the constants from the base class for free.
         $self-&gt;{+FOO} ||= 'SubFoo';
         $self-&gt;{+BAT} ||= 'bat';
-
         $self-&gt;SUPER::init();
     }
 </pre>
 <p class="Pp">use it:</p>
 <p class="Pp"></p>
-<pre>
-    package main;
+<pre>    package main;
     use strict;
     use warnings;
     use My::Class;
-
     # These are all functionally identical
     my $one   = My::Class-&gt;new(foo =&gt; 'MyFoo', bar =&gt; 'MyBar');
     my $two   = My::Class-&gt;new({foo =&gt; 'MyFoo', bar =&gt; 'MyBar'});
     my $three = My::Class-&gt;new(['MyFoo', 'MyBar']);
-
     # Accessors!
     my $foo = $one-&gt;foo;    # 'MyFoo'
     my $bar = $one-&gt;bar;    # 'MyBar'
     my $baz = $one-&gt;baz;    # Defaulted to: 'baz'
-
     # Setters!
     $one-&gt;set_foo('A Foo');
-
     #'-bar' means read-only, so the setter will throw an exception (but is defined).
     $one-&gt;set_bar('A bar');
-
     # '^baz' means deprecated setter, this will warn about the setter being
     # deprecated.
     $one-&gt;set_baz('A Baz');
-
     $one-&gt;{+FOO} = 'xxx';
 </pre>
 </section>
@@ -138,14 +123,10 @@
     <p class="Pp"><b>If you do not want this method you can define your own</b>
         you just have to declare it before loading Test2::Util::HashBase.</p>
     <p class="Pp"></p>
-    <pre>
-    package My::Package;
-
+    <pre>    package My::Package;
     # predeclare new() so that HashBase does not give us one.
     sub new;
-
     use Test2::Util::HashBase qw/foo bar baz/;
-
     # Now we define our own new method.
     sub new { ... }
     </pre>
@@ -196,8 +177,7 @@
 <h2 class="Ss">READ/WRITE</h2>
 <p class="Pp">To generate accessors you list them when using the module:</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::Util::HashBase qw/foo/;
+<pre>    use Test2::Util::HashBase qw/foo/;
 </pre>
 <p class="Pp">This will generate the following subs in your namespace:</p>
 <dl class="Bl-tag">
@@ -220,8 +200,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">READ ONLY</h2>
-<pre>
-    use Test2::Util::HashBase qw/-foo/;
+<pre>    use Test2::Util::HashBase qw/-foo/;
 </pre>
 <dl class="Bl-tag">
   <dt id="set_foo()~2"><a class="permalink" href="#set_foo()~2"><b>set_foo()</b></a></dt>
@@ -232,8 +211,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">DEPRECATED SETTER</h2>
-<pre>
-    use Test2::Util::HashBase qw/^foo/;
+<pre>    use Test2::Util::HashBase qw/^foo/;
 </pre>
 <dl class="Bl-tag">
   <dt id="set_foo()~3"><a class="permalink" href="#set_foo()~3"><b>set_foo()</b></a></dt>
@@ -246,8 +224,7 @@
 <h1 class="Sh" id="SUBCLASSING"><a class="permalink" href="#SUBCLASSING">SUBCLASSING</a></h1>
 <p class="Pp">You can subclass an existing HashBase class.</p>
 <p class="Pp"></p>
-<pre>
-    use base 'Another::HashBase::Class';
+<pre>    use base 'Another::HashBase::Class';
     use Test2::Util::HashBase qw/foo bar baz/;
 </pre>
 <p class="Pp">The base class is added to <span class="Li">@ISA</span> for you,

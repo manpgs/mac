@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::DBD::SqlEngine::HowTo(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  perldoc DBI::DBD::SqlEngine::HowTo
+<pre>  perldoc DBI::DBD::SqlEngine::HowTo
   perldoc DBI
   perldoc DBI::DBD
   perldoc DBI::DBD::SqlEngine::Developers
@@ -69,51 +69,31 @@
 <section class="Ss">
 <h2 class="Ss" id="Sample_Skeleton"><a class="permalink" href="#Sample_Skeleton">Sample
   Skeleton</a></h2>
-<pre>
-    package DBD::Foo;
-
+<pre>    package DBD::Foo;
     use strict;
     use warnings;
     use vars qw($VERSION);
     use base qw(DBI::DBD::SqlEngine);
-
     use DBI ();
-
     $VERSION = &quot;0.001&quot;;
-
     package DBD::Foo::dr;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBI::DBD::SqlEngine::dr);
     $imp_data_size = 0;
-
     package DBD::Foo::db;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBI::DBD::SqlEngine::db);
     $imp_data_size = 0;
-
     package DBD::Foo::st;
-
     use vars qw(@ISA $imp_data_size);
-
     @ISA = qw(DBI::DBD::SqlEngine::st);
     $imp_data_size = 0;
-
     package DBD::Foo::Statement;
-
     use vars qw(@ISA);
-
     @ISA = qw(DBI::DBD::SqlEngine::Statement);
-
     package DBD::Foo::Table;
-
     use vars qw(@ISA);
-
     @ISA = qw(DBI::DBD::SqlEngine::Table);
-
     1;
 </pre>
 <p class="Pp">Tiny, eh? And all you have now is a DBD named foo which will is
@@ -138,13 +118,10 @@
     <span class="Li">&quot;init_valid_attributes&quot;</span> to your db
   class:</p>
 <p class="Pp"></p>
-<pre>
-    sub init_valid_attributes
+<pre>    sub init_valid_attributes
     {
         my $dbh = $_[0];
-
         $dbh-&gt;SUPER::init_valid_attributes ();
-
         $dbh-&gt;{foo_valid_attrs} = {
             foo_version         =&gt; 1,   # contains version of this driver
             foo_valid_attrs     =&gt; 1,   # contains the valid attributes of foo drivers
@@ -160,7 +137,6 @@
             foo_readonly_attrs  =&gt; 1,   # ... or make the immutable mutable
             foo_manager         =&gt; 1,   # manager is set internally only
         };
-
         return $dbh;
     }
 </pre>
@@ -168,13 +144,10 @@
     intended, overwrite <span class="Li">&quot;STORE&quot;</span> to handle
   it!</p>
 <p class="Pp"></p>
-<pre>
-    sub STORE ($$$)
+<pre>    sub STORE ($$$)
     {
         my ( $dbh, $attrib, $value ) = @_;
-
         $dbh-&gt;SUPER::STORE( $attrib, $value );
-
         # we're still alive, so no exception is thrown ...
         # by DBI::DBD::SqlEngine::db::STORE
         if ( $attrib eq &quot;foo_manager_type&quot; )
@@ -189,13 +162,10 @@
     assignes a <span class="Li">&quot;foo_manager_type&quot;</span>. Well, no -
     there're two places where you can initialize defaults:</p>
 <p class="Pp"></p>
-<pre>
-    sub init_default_attributes
+<pre>    sub init_default_attributes
     {
         my ($dbh, $phase) = @_;
-
         $dbh-&gt;SUPER::init_default_attributes($phase);
-
         if( 0 == $phase )
         {
             # init all attributes which have no knowledge about
@@ -208,7 +178,6 @@
             # hash
             $dbh-&gt;{foo_manager} = $dbh-&gt;{foo_manager_type}-&gt;new();
         }
-
         return $dbh;
     }
 </pre>
@@ -238,34 +207,28 @@
     ()&quot;</span> interface provided by DBI. Well, many users don't feel
     comfortize when calling</p>
 <p class="Pp"></p>
-<pre>
-    # don't require extension for tables cars
+<pre>    # don't require extension for tables cars
     $dbh-&gt;func (&quot;cars&quot;, &quot;f_ext&quot;, &quot;.csv&quot;, &quot;set_sql_engine_meta&quot;);
 </pre>
 <p class="Pp">DBI::DBD::SqlEngine will inject a method into your driver to
     increase the user comfort to allow:</p>
 <p class="Pp"></p>
-<pre>
-    # don't require extension for tables cars
+<pre>    # don't require extension for tables cars
     $dbh-&gt;foo_set_meta (&quot;cars&quot;, &quot;f_ext&quot;, &quot;.csv&quot;);
 </pre>
 <p class="Pp">Better, but here and there users likes to do:</p>
 <p class="Pp"></p>
-<pre>
-    # don't require extension for tables cars
+<pre>    # don't require extension for tables cars
     $dbh-&gt;{foo_tables}-&gt;{cars}-&gt;{f_ext} = &quot;.csv&quot;;
 </pre>
 <p class="Pp">This interface is provided when derived DBD's define following in
     <span class="Li">&quot;init_valid_attributes&quot;</span> (re-capture
     &quot;Deal with own attributes&quot;):</p>
 <p class="Pp"></p>
-<pre>
-    sub init_valid_attributes
+<pre>    sub init_valid_attributes
     {
         my $dbh = $_[0];
-
         $dbh-&gt;SUPER::init_valid_attributes ();
-
         $dbh-&gt;{foo_valid_attrs} = {
             foo_version         =&gt; 1,   # contains version of this driver
             foo_valid_attrs     =&gt; 1,   # contains the valid attributes of foo drivers
@@ -283,9 +246,7 @@
             foo_manager         =&gt; 1,   # manager is set internally only
             foo_meta            =&gt; 1,   # ensure public interface to modify table meta attributes are immutable
         };
-
         $dbh-&gt;{foo_meta} = &quot;foo_tables&quot;;
-
         return $dbh;
     }
 </pre>
@@ -296,16 +257,14 @@
     Modifications on the table meta attributes are done using the table
   methods:</p>
 <p class="Pp"></p>
-<pre>
-    sub get_table_meta_attr { ... }
+<pre>    sub get_table_meta_attr { ... }
     sub set_table_meta_attr { ... }
 </pre>
 <p class="Pp">Both methods can adjust the attribute name for compatibility
     reasons, e.g. when former versions of the DBD allowed different names to be
     used for the same flag:</p>
 <p class="Pp"></p>
-<pre>
-    my %compat_map = (
+<pre>    my %compat_map = (
                        abc =&gt; 'foo_abc',
                        xyz =&gt; 'foo_xyz',
                      );
@@ -320,8 +279,7 @@
     <span class="Li">&quot;f_lockfile&quot;</span>), inform DBI::DBD::SqlEngine
     by doing</p>
 <p class="Pp"></p>
-<pre>
-    my %reset_on_modify = (
+<pre>    my %reset_on_modify = (
                             foo_xyz =&gt; &quot;foo_bar&quot;,
                             foo_abc =&gt; &quot;foo_bar&quot;,
                           );
@@ -332,8 +290,7 @@
 <p class="Pp">Any further action which needs to be taken can handled in
     <span class="Li">&quot;table_meta_attr_changed&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    sub table_meta_attr_changed
+<pre>    sub table_meta_attr_changed
     {
         my ($class, $meta, $attrib, $value) = @_;
         ...

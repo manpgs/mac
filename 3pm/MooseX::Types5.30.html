@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Types(3pm)</title>
 </head>
@@ -35,9 +36,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Library_Definition"><a class="permalink" href="#Library_Definition">Library
   Definition</a></h2>
-<pre>
-  package MyLibrary;
-
+<pre>  package MyLibrary;
   # predeclare our own types
   use MooseX::Types -declare =&gt; [
       qw(
@@ -50,65 +49,47 @@
           MyDateTime
           )
   ];
-
   # import builtin types
   use MooseX::Types::Moose qw/Int HashRef/;
-
   # type definition.
   subtype PositiveInt,
       as Int,
       where { $_ &gt; 0 },
       message { &quot;Int is not larger than 0&quot; };
-
   subtype NegativeInt,
       as Int,
       where { $_ &lt; 0 },
       message { &quot;Int is not smaller than 0&quot; };
-
   # type coercion
   coerce PositiveInt,
       from Int,
           via { 1 };
-
   # with parameterized constraints.
-
   subtype ArrayRefOfPositiveInt,
     as ArrayRef[PositiveInt];
-
   subtype ArrayRefOfAtLeastThreeNegativeInts,
     as ArrayRef[NegativeInt],
     where { scalar(@$_) &gt; 2 };
-
   subtype LotsOfInnerConstraints,
     as ArrayRef[ArrayRef[HashRef[Int]]];
-
   # with TypeConstraint Unions
-
   subtype StrOrArrayRef,
     as Str|ArrayRef;
-
   # class types
-
   class_type 'DateTime';
-
   # or better
-
   class_type MyDateTime, { class =&gt; 'DateTime' };
-
   coerce MyDateTime,
     from HashRef,
     via { DateTime-&gt;new(%$_) };
-
   1;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Usage"><a class="permalink" href="#Usage">Usage</a></h2>
-<pre>
-  package Foo;
+<pre>  package Foo;
   use Moose;
   use MyLibrary qw( PositiveInt NegativeInt );
-
   # use the exported constants as type names
   has 'bar',
       isa    =&gt; PositiveInt,
@@ -116,19 +97,15 @@
   has 'baz',
       isa    =&gt; NegativeInt,
       is     =&gt; 'rw';
-
   sub quux {
       my ($self, $value);
-
       # test the value
       print &quot;positive\n&quot; if is_PositiveInt($value);
       print &quot;negative\n&quot; if is_NegativeInt($value);
-
       # coerce the value, NegativeInt doesn't have a coercion
       # helper, since it didn't define any coercions.
       $value = to_PositiveInt($value) or die &quot;Cannot coerce&quot;;
   }
-
   1;
 </pre>
 </section>
@@ -168,8 +145,7 @@
     so this is up to you.</p>
 <p class="Pp">The only thing a library is required to do is</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::Types -declare =&gt; \@types;
+<pre>  use MooseX::Types -declare =&gt; \@types;
 </pre>
 <p class="Pp">with <span class="Li">@types</span> being a list of types you wish
     to define in this library. This line will install a proper base class in
@@ -180,8 +156,7 @@
 <p class="Pp">If you want to use Moose' built-in types (e.g. for subtyping) you
     will want to</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::Types::Moose @types;
+<pre>  use MooseX::Types::Moose @types;
 </pre>
 <p class="Pp">to import the helpers from the shipped MooseX::Types::Moose
     library which can export all types that come with Moose.</p>
@@ -203,8 +178,7 @@
     as arguments. If you want all of them, use the
     <span class="Li">&quot;:all&quot;</span> tag. For example:</p>
 <p class="Pp"></p>
-<pre>
-  use MyLibrary      ':all';
+<pre>  use MyLibrary      ':all';
   use MyOtherLibrary qw( TypeA TypeB );
 </pre>
 <p class="Pp">MooseX::Types comes with a library of Moose' built-in types called
@@ -212,8 +186,7 @@
 <p class="Pp">The exporting mechanism is, since version 0.5, implemented via a
     wrapper around Sub::Exporter. This means you can do something like this:</p>
 <p class="Pp"></p>
-<pre>
-  use MyLibrary TypeA =&gt; { -as =&gt; 'MyTypeA' },
+<pre>  use MyLibrary TypeA =&gt; { -as =&gt; 'MyTypeA' },
                 TypeB =&gt; { -as =&gt; 'MyTypeB' };
 </pre>
 </section>
@@ -247,12 +220,10 @@
 <p class="Pp">You can define your own wrapper subclasses to manipulate the
     behaviour of a set of library exports. Here is an example:</p>
 <p class="Pp"></p>
-<pre>
-  package MyWrapper;
+<pre>  package MyWrapper;
   use strict;
   use MRO::Compat;
   use base 'MooseX::Types::Wrapper';
-
   sub coercion_export_generator {
       my $class = shift;
       my $code = $class-&gt;next::method(@_);
@@ -263,19 +234,16 @@
           return $value;
       };
   }
-
   1;
 </pre>
 <p class="Pp">This class wraps the coercion generator (e.g.,
     <span class="Li">&quot;to_Int()&quot;</span>) and warns if a coercion
     returned an undefined value. You can wrap any library with this:</p>
 <p class="Pp"></p>
-<pre>
-  package Foo;
+<pre>  package Foo;
   use strict;
   use MyWrapper MyLibrary =&gt; [qw( Foo Bar )],
                 Moose     =&gt; [qw( Str Int )];
-
   ...
   1;
 </pre>
@@ -318,13 +286,11 @@
 <p class="Pp">As of version 0.08, Moose::Types has experimental support for
     Recursive subtypes. This will allow:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Tree() =&gt; as HashRef[Str|Tree];
+<pre>    subtype Tree() =&gt; as HashRef[Str|Tree];
 </pre>
 <p class="Pp">Which validates things like:</p>
 <p class="Pp"></p>
-<pre>
-    {key=&gt;'value'};
+<pre>    {key=&gt;'value'};
     {key=&gt;{subkey1=&gt;'value', subkey2=&gt;'value'}}
 </pre>
 <p class="Pp">And so on. This feature is new and there may be lurking bugs so
@@ -337,17 +303,14 @@
 <p class="Pp">MooseX::Types uses MooseX::Types::TypeDecorator to do some
     overloading which generally allows you to easily create union types:</p>
 <p class="Pp"></p>
-<pre>
-  subtype StrOrArrayRef,
+<pre>  subtype StrOrArrayRef,
       as Str|ArrayRef;
 </pre>
 <p class="Pp">As with parameterized constraints, this overloading extends to
     modules using the types you define in a type library.</p>
 <p class="Pp"></p>
-<pre>
-  use Moose;
+<pre>  use Moose;
   use MooseX::Types::Moose qw(HashRef Int);
-
   has 'attr' =&gt; ( isa =&gt; HashRef | Int );
 </pre>
 <p class="Pp">And everything should just work as you'd think.</p>
@@ -421,8 +384,7 @@
 <p class="Pp">Due to this stringification, the following will NOT work as you
     might think:</p>
 <p class="Pp"></p>
-<pre>
-  subtype StrOrArrayRef =&gt; as Str | ArrayRef;
+<pre>  subtype StrOrArrayRef =&gt; as Str | ArrayRef;
 </pre>
 <p class="Pp">The <span class="Li">&quot;StrOrArrayRef&quot;</span> type will
     have its stringification activated -- this causes the subtype to not be
@@ -440,21 +402,15 @@
     make sure you export all the type constraints declared AS WELL AS any
     additional export targets. For example if you do:</p>
 <p class="Pp"></p>
-<pre>
-  package TypeAndSubExporter;
-
+<pre>  package TypeAndSubExporter;
   use MooseX::Types::Moose qw(Str);
   use MooseX::Types -declare =&gt; [qw(MyStr)];
   use Sub::Exporter -setup =&gt; { exports =&gt; [qw(something)] };
-
   subtype MyStr, as Str;
-
   sub something {
       return 1;
   }
-
   # then in another module ...
-
   package Foo;
   use TypeAndSubExporter qw(MyStr);
 </pre>
@@ -462,8 +418,7 @@
     exported by the TypeAndSubExporter module&quot;</span> error. It can be
     worked around by:</p>
 <p class="Pp"></p>
-<pre>
-  - use Sub::Exporter -setup =&gt; { exports =&gt; [ qw(something) ] };
+<pre>  - use Sub::Exporter -setup =&gt; { exports =&gt; [ qw(something) ] };
   + use Sub::Exporter -setup =&gt; { exports =&gt; [ qw(something MyStr) ] };
 </pre>
 <p class="Pp">This is a workaround and I am exploring how to make these modules

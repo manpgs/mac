@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GITWEB(1)</title>
 </head>
@@ -79,9 +80,7 @@
     configuration with multiple projects' root&quot; subsection).</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-our $projectroot = '/path/to/parent/directory';
-</pre>
+<pre>our $projectroot = '/path/to/parent/directory';</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The default value for <b>$projectroot</b> is <b>/pub/git</b>. You
@@ -144,10 +143,8 @@ our $projectroot = '/path/to/parent/directory';
 <p class="Pp">Example contents:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-foo.git       Joe+R+Hacker+&lt;joe@example.com&gt;
-foo/bar.git   O+W+Ner+&lt;owner@example.org&gt;
-</pre>
+<pre>foo.git       Joe+R+Hacker+&lt;joe@example.com&gt;
+foo/bar.git   O+W+Ner+&lt;owner@example.org&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">By default this file controls only which projects are
@@ -168,10 +165,8 @@ foo/bar.git   O+W+Ner+&lt;owner@example.org&gt;
     <i>gitweb_make_index.perl</i> file:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-read_config_file(&quot;gitweb_config.perl&quot;);
-$projects_list = $projectroot;
-</pre>
+<pre>read_config_file(&quot;gitweb_config.perl&quot;);
+$projects_list = $projectroot;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Then create the following script to get list of project in the
@@ -179,15 +174,13 @@ $projects_list = $projectroot;
     <b>$projects_list</b> variable in gitweb config):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-#!/bin/sh
+<pre>#!/bin/sh
 export GITWEB_CONFIG=&quot;gitweb_make_index.perl&quot;
 export GATEWAY_INTERFACE=&quot;CGI/1.1&quot;
 export HTTP_ACCEPT=&quot;*/*&quot;
 export REQUEST_METHOD=&quot;GET&quot;
 export QUERY_STRING=&quot;a=project_index&quot;
-perl -- /var/www/cgi-bin/gitweb.cgi
-</pre>
+perl -- /var/www/cgi-bin/gitweb.cgi</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Run this script and save its output to a file. This file could
@@ -219,9 +212,7 @@ perl -- /var/www/cgi-bin/gitweb.cgi
     repositories that have <i>git-daemon-export-ok</i> file. Adding</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-our $export_ok = &quot;git-daemon-export-ok&quot;;
-</pre>
+<pre>our $export_ok = &quot;git-daemon-export-ok&quot;;</pre>
 </div>
 <p class="Pp">makes gitweb show and allow access only to those repositories that
     can be fetched from via <b>git://</b> protocol.</p>
@@ -237,8 +228,7 @@ our $export_ok = &quot;git-daemon-export-ok&quot;;
     the files:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$export_auth_hook = sub {
+<pre>$export_auth_hook = sub {
         use Apache2::SubRequest ();
         use Apache2::Const -compile =&gt; qw(HTTP_OK);
         my $path = &quot;$_[0]/HEAD&quot;;
@@ -246,8 +236,7 @@ $export_auth_hook = sub {
         my $sub  = $r-&gt;lookup_file($path);
         return $sub-&gt;filename eq $path
             &amp;&amp; $sub-&gt;status == Apache2::Const::HTTP_OK;
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp"></p>
 </div>
@@ -276,9 +265,7 @@ $export_auth_hook = sub {
   set to
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-Unnamed repository; edit this file to name it for gitweb.
-</pre>
+<pre>Unnamed repository; edit this file to name it for gitweb.</pre>
 </div>
 <p class="Pp">from the template during repository creation, usually installed in
     <b>/usr/share/git-core/templates/</b>. You can use the
@@ -330,9 +317,7 @@ Unnamed repository; edit this file to name it for gitweb.
     broken down in to five components:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-.../gitweb.cgi/&lt;repo&gt;/&lt;action&gt;/&lt;revision&gt;:/&lt;path&gt;?&lt;arguments&gt;
-</pre>
+<pre>.../gitweb.cgi/&lt;repo&gt;/&lt;action&gt;/&lt;revision&gt;:/&lt;path&gt;?&lt;arguments&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp"></p>
@@ -358,9 +343,7 @@ Unnamed repository; edit this file to name it for gitweb.
     (component) based gitweb URL looks like this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-.../gitweb.cgi/&lt;repo&gt;/&lt;action&gt;/&lt;revision_from&gt;:/&lt;path_from&gt;..&lt;revision_to&gt;:/&lt;path_to&gt;?&lt;arguments&gt;
-</pre>
+<pre>.../gitweb.cgi/&lt;repo&gt;/&lt;action&gt;/&lt;revision_from&gt;:/&lt;path_from&gt;..&lt;revision_to&gt;:/&lt;path_to&gt;?&lt;arguments&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Each action is implemented as a subroutine, and must be present in
@@ -369,9 +352,7 @@ Unnamed repository; edit this file to name it for gitweb.
     following to gitweb configuration file:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$feature{'blame'}{'default'} = [1];
-</pre>
+<pre>$feature{'blame'}{'default'} = [1];</pre>
 </div>
 <p class="Pp"></p>
 <section class="Ss">
@@ -454,24 +435,20 @@ $feature{'blame'}{'default'} = [1];
     <b>/var/www/cgi-bin</b> directory.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-ScriptAlias /cgi-bin/ &quot;/var/www/cgi-bin/&quot;
+<pre>ScriptAlias /cgi-bin/ &quot;/var/www/cgi-bin/&quot;
 &lt;Directory &quot;/var/www/cgi-bin&quot;&gt;
     Options Indexes FollowSymlinks ExecCGI
     AllowOverride None
     Order allow,deny
     Allow from all
-&lt;/Directory&gt;
-</pre>
+&lt;/Directory&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">With that configuration the full path to browse repositories would
     be:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://server/cgi-bin/gitweb.cgi
-</pre>
+<pre>http://server/cgi-bin/gitweb.cgi</pre>
 </div>
 </section>
 <section class="Ss">
@@ -484,8 +461,7 @@ http://server/cgi-bin/gitweb.cgi
     following Apache configuration (for mod_perl 2.x) is suitable.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-Alias /perl &quot;/var/www/perl&quot;
+<pre>Alias /perl &quot;/var/www/perl&quot;
 &lt;Directory &quot;/var/www/perl&quot;&gt;
     SetHandler perl-script
     PerlResponseHandler ModPerl::Registry
@@ -494,17 +470,14 @@ Alias /perl &quot;/var/www/perl&quot;
     AllowOverride None
     Order allow,deny
     Allow from all
-&lt;/Directory&gt;
-</pre>
+&lt;/Directory&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">With that configuration the full path to browse repositories would
     be:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://server/perl/gitweb.cgi
-</pre>
+<pre>http://server/perl/gitweb.cgi</pre>
 </div>
 </section>
 <section class="Ss">
@@ -516,23 +489,19 @@ http://server/perl/gitweb.cgi
     configuration is suitable (UNTESTED!)</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-FastCgiServer /usr/share/gitweb/gitweb.cgi
+<pre>FastCgiServer /usr/share/gitweb/gitweb.cgi
 ScriptAlias /gitweb /usr/share/gitweb/gitweb.cgi
 Alias /gitweb/static /usr/share/gitweb/static
 &lt;Directory /usr/share/gitweb/static&gt;
     SetHandler default-handler
-&lt;/Directory&gt;
-</pre>
+&lt;/Directory&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">With that configuration the full path to browse repositories would
     be:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://server/gitweb
-</pre>
+<pre>http://server/gitweb</pre>
 </div>
 </section>
 </section>
@@ -549,8 +518,7 @@ http://server/gitweb
     <b>http://</b> repositories, you can configure Apache like this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;VirtualHost *:80&gt;
+<pre>&lt;VirtualHost *:80&gt;
     ServerName    git.example.org
     DocumentRoot  /pub/git
     SetEnv        GITWEB_CONFIG   /etc/gitweb.conf
@@ -561,8 +529,7 @@ http://server/gitweb
     # make access for &quot;dumb clients&quot; work
     RewriteRule ^/(.*\.git/(?!/?(HEAD|info|objects|refs)).*)?$ \
                 /cgi-bin/gitweb.cgi%{REQUEST_URI}  [L,PT]
-&lt;/VirtualHost&gt;
-</pre>
+&lt;/VirtualHost&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The above configuration expects your public repositories to live
@@ -583,12 +550,10 @@ http://server/gitweb
     (<b>/etc/gitweb.conf</b> following example):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-@stylesheets = (&quot;/some/absolute/path/gitweb.css&quot;);
+<pre>@stylesheets = (&quot;/some/absolute/path/gitweb.css&quot;);
 $my_uri    = &quot;/&quot;;
 $home_link = &quot;/&quot;;
-$per_request_config = 1;
-</pre>
+$per_request_config = 1;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Nowadays though gitweb should create HTML base tag when needed (to
@@ -604,8 +569,7 @@ $per_request_config = 1;
     should look like this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;VirtualHost *:80&gt;
+<pre>&lt;VirtualHost *:80&gt;
     ServerName    git.example.org
     DocumentRoot  /pub/git
     SetEnv        GITWEB_CONFIG  /etc/gitweb.conf
@@ -631,8 +595,7 @@ $per_request_config = 1;
     # make access for &quot;dumb clients&quot; work
     RewriteRule ^/(.*\.git/(?!/?(HEAD|info|objects|refs)).*)?$ \
                 /cgi-bin/gitweb.cgi%{REQUEST_URI}  [L,PT]
-&lt;/VirtualHost&gt;
-</pre>
+&lt;/VirtualHost&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">Here actual project root is passed to gitweb via
@@ -641,9 +604,7 @@ $per_request_config = 1;
     (<b>/etc/gitweb.conf</b> in above example):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$projectroot = $ENV{'GITWEB_PROJECTROOT'} || &quot;/pub/git&quot;;
-</pre>
+<pre>$projectroot = $ENV{'GITWEB_PROJECTROOT'} || &quot;/pub/git&quot;;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp"><b>Note</b> that this requires to be set for each request, so
@@ -654,9 +615,7 @@ $projectroot = $ENV{'GITWEB_PROJECTROOT'} || &quot;/pub/git&quot;;
     Git repositories found in <b>~/public_git/</b> with the following url:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://git.example.org/~&lt;user&gt;/
-</pre>
+<pre>http://git.example.org/~&lt;user&gt;/</pre>
 </div>
 <p class="Pp">If you do not want this feature on your server just remove the
     second rewrite rule.</p>
@@ -676,18 +635,14 @@ http://git.example.org/~&lt;user&gt;/
 <p class="Pp">If you enable PATH_INFO usage in gitweb by putting</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$feature{'pathinfo'}{'default'} = [1];
-</pre>
+<pre>$feature{'pathinfo'}{'default'} = [1];</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">in your gitweb configuration file, it is possible to set up your
     server so that it consumes and produces URLs in the form</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://git.example.com/project.git/shortlog/sometag
-</pre>
+<pre>http://git.example.com/project.git/shortlog/sometag</pre>
 </div>
 <p class="Pp">i.e. without <i>gitweb.cgi</i> part, by using a configuration such
     as the following. This configuration assumes that <b>/var/www/gitweb</b> is
@@ -695,8 +650,7 @@ http://git.example.com/project.git/shortlog/sometag
     complementary static files (stylesheet, favicon, JavaScript):</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;VirtualHost *:80&gt;
+<pre>&lt;VirtualHost *:80&gt;
         ServerAlias git.example.com
         DocumentRoot /var/www/gitweb
         &lt;Directory /var/www/gitweb&gt;
@@ -708,8 +662,7 @@ http://git.example.com/project.git/shortlog/sometag
                 RewriteCond %{REQUEST_FILENAME} !-d
                 RewriteRule ^.* /gitweb.cgi/$0 [L,PT]
         &lt;/Directory&gt;
-&lt;/VirtualHost&gt;
-</pre>
+&lt;/VirtualHost&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The rewrite rule guarantees that existing static files will be
@@ -725,8 +678,7 @@ http://git.example.com/project.git/shortlog/sometag
     configure Apache as follows:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;VirtualHost *:80&gt;
+<pre>&lt;VirtualHost *:80&gt;
         ServerAlias git.example.com
         DocumentRoot /var/www/gitweb
         AliasMatch ^(/.*?)(\.git)(/.*)?$ /pub/git$1$3
@@ -739,24 +691,19 @@ http://git.example.com/project.git/shortlog/sometag
                 RewriteCond %{REQUEST_FILENAME} !-d
                 RewriteRule ^.* /gitweb.cgi/$0 [L,PT]
         &lt;/Directory&gt;
-&lt;/VirtualHost&gt;
-</pre>
+&lt;/VirtualHost&gt;</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The additional AliasMatch makes it so that</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://git.example.com/project.git
-</pre>
+<pre>http://git.example.com/project.git</pre>
 </div>
 <p class="Pp">will give raw access to the project&#x2019;s Git dir (so that the
     project can be cloned), while</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://git.example.com/project
-</pre>
+<pre>http://git.example.com/project</pre>
 </div>
 <p class="Pp">will provide human-friendly gitweb access.</p>
 <p class="Pp">This solution is not 100% bulletproof, in the sense that if some
@@ -764,9 +711,7 @@ http://git.example.com/project
     such as</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-http://git.example.com/project/command/abranch..git/abranch
-</pre>
+<pre>http://git.example.com/project/command/abranch..git/abranch</pre>
 </div>
 <p class="Pp">will fail with a 404 error.</p>
 </section>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ9(1)</title>
 </head>
@@ -121,16 +122,12 @@
 <p class="Pp">Use the libwww-perl distribution. The LWP::Simple module can fetch
     web resources and give their content back to you as a string:</p>
 <p class="Pp"></p>
-<pre>
-    use LWP::Simple qw(get);
-
+<pre>    use LWP::Simple qw(get);
     my $html = get( &quot;http://www.example.com/index.html&quot; );
 </pre>
 <p class="Pp">It can also store the resource directly in a file:</p>
 <p class="Pp"></p>
-<pre>
-    use LWP::Simple qw(getstore);
-
+<pre>    use LWP::Simple qw(getstore);
     getstore( &quot;http://www.example.com/index.html&quot;, &quot;foo.html&quot; );
 </pre>
 <p class="Pp">If you need to do something more complicated, you can use
@@ -148,10 +145,8 @@
     encode the form using the <span class="Li">&quot;query_form&quot;</span>
     method:</p>
 <p class="Pp"></p>
-<pre>
-    use LWP::Simple;
+<pre>    use LWP::Simple;
     use URI::URL;
-
     my $url = url('L&lt;http://www.perl.com/cgi-bin/cpan_mod')&gt;;
     $url-&gt;query_form(module =&gt; 'DB_File', readme =&gt; 1);
     $content = get($url);
@@ -159,10 +154,8 @@
 <p class="Pp">If you're using the POST method, create your own user agent and
     encode the content appropriately.</p>
 <p class="Pp"></p>
-<pre>
-    use HTTP::Request::Common qw(POST);
+<pre>    use HTTP::Request::Common qw(POST);
     use LWP::UserAgent;
-
     my $ua = LWP::UserAgent-&gt;new();
     my $req = POST 'L&lt;http://www.perl.com/cgi-bin/cpan_mod'&gt;,
                    [ module =&gt; 'DB_File', readme =&gt; 1 ];
@@ -179,19 +172,14 @@
     <span class="Li">&quot;uri_escape&quot;</span> function returns the escaped
     string:</p>
 <p class="Pp"></p>
-<pre>
-    my $original = &quot;Colon : Hash # Percent %&quot;;
-
+<pre>    my $original = &quot;Colon : Hash # Percent %&quot;;
     my $escaped = uri_escape( $original );
-
     print &quot;$escaped\n&quot;; # 'Colon%20%3A%20Hash%20%23%20Percent%20%25'
 </pre>
 <p class="Pp">To decode the string, use the
     <span class="Li">&quot;uri_unescape&quot;</span> function:</p>
 <p class="Pp"></p>
-<pre>
-    my $unescaped = uri_unescape( $escaped );
-
+<pre>    my $unescaped = uri_unescape( $escaped );
     print $unescaped; # back to original
 </pre>
 <p class="Pp">Remember not to encode a full URI, you need to escape each
@@ -203,8 +191,7 @@
 <p class="Pp">Most Perl Web Frameworks will have a mechanism for doing this,
     using the Catalyst framework it would be:</p>
 <p class="Pp"></p>
-<pre>
-    $c-&gt;res-&gt;redirect($url);
+<pre>    $c-&gt;res-&gt;redirect($url);
     $c-&gt;detach();
 </pre>
 <p class="Pp">If you are using Plack (which most frameworks do), then
@@ -246,9 +233,7 @@
     craziness that you'll see in the real world (comment-folding whitespace,
     encodings, comments, etc.).</p>
 <p class="Pp"></p>
-<pre>
-  use Email::MIME;
-
+<pre>  use Email::MIME;
   my $message = Email::MIME-&gt;new($rfc2822);
   my $subject = $message-&gt;header('Subject');
   my $from    = $message-&gt;header('From');
@@ -257,8 +242,7 @@
     passing it to Email::Abstract and then using its cast method to get an
     Email::MIME object:</p>
 <p class="Pp"></p>
-<pre>
-  my $abstract = Email::Abstract-&gt;new($mail_message_object);
+<pre>  my $abstract = Email::Abstract-&gt;new($mail_message_object);
   my $email_mime_object = $abstract-&gt;cast('Email::MIME');
 </pre>
 </section>
@@ -296,8 +280,7 @@
 <p class="Pp">The MIME::Base64 package handles this as well as the MIME/QP
     encoding. Decoding base 64 becomes as simple as:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Base64;
+<pre>    use MIME::Base64;
     my $decoded = decode_base64($encoded);
 </pre>
 <p class="Pp">The Email::MIME module can decode base 64-encoded email message
@@ -315,8 +298,7 @@
     <span class="Li">$ENV</span>{LOGNAME}, and getpwuid($&lt;) in scalar
     context, like so:</p>
 <p class="Pp"></p>
-<pre>
-  my $user_name = getpwuid($&lt;)
+<pre>  my $user_name = getpwuid($&lt;)
 </pre>
 <p class="Pp">But you still cannot make assumptions about whether this is
     correct, unless your policy says it is. You really are best off asking the
@@ -328,8 +310,7 @@
 <p class="Pp">Use the Email::MIME and Email::Sender::Simple modules, like
   so:</p>
 <p class="Pp"></p>
-<pre>
-  # first, create your message
+<pre>  # first, create your message
   my $message = Email::MIME-&gt;create(
     header_str =&gt; [
       From    =&gt; 'you@example.com',
@@ -342,7 +323,6 @@
     },
     body_str =&gt; &quot;Happy birthday to you!\n&quot;,
   );
-
   use Email::Sender::Simple qw(sendmail);
   sendmail($message);
 </pre>
@@ -363,8 +343,7 @@
 <p class="Pp">Telling Email::Sender::Simple to use your transport is
     straightforward.</p>
 <p class="Pp"></p>
-<pre>
-  sendmail(
+<pre>  sendmail(
     $message,
     {
       transport =&gt; $email_sender_transport_object,
@@ -385,9 +364,7 @@
   do I read email?</a></h2>
 <p class="Pp">Use the Email::Folder module, like so:</p>
 <p class="Pp"></p>
-<pre>
-  use Email::Folder;
-
+<pre>  use Email::Folder;
   my $folder = Email::Folder-&gt;new('/path/to/email/folder');
   while(my $message = $folder-&gt;next_message) {
     # next_message returns Email::Simple objects, but we want
@@ -407,25 +384,19 @@
     starting in Perl 5.7.3, can get you the fully qualified domain name (FQDN),
     the host name, or the domain name.</p>
 <p class="Pp"></p>
-<pre>
-    use Net::Domain qw(hostname hostfqdn hostdomain);
-
+<pre>    use Net::Domain qw(hostname hostfqdn hostdomain);
     my $host = hostfqdn();
 </pre>
 <p class="Pp">The Sys::Hostname module, part of the Standard Library, can also
     get the hostname:</p>
 <p class="Pp"></p>
-<pre>
-    use Sys::Hostname;
-
+<pre>    use Sys::Hostname;
     $host = hostname();
 </pre>
 <p class="Pp">The Sys::Hostname::Long module takes a different approach and
     tries harder to return the fully qualified hostname:</p>
 <p class="Pp"></p>
-<pre>
-  use Sys::Hostname::Long 'hostname_long';
-
+<pre>  use Sys::Hostname::Long 'hostname_long';
   my $hostname = hostname_long();
 </pre>
 <p class="Pp">To get the IP address, you can use the
@@ -435,9 +406,7 @@
     <span class="Li">&quot;inet_ntoa&quot;</span> function from the Socket
     module, which also comes with perl.</p>
 <p class="Pp"></p>
-<pre>
-    use Socket;
-
+<pre>    use Socket;
     my $address = inet_ntoa(
         scalar gethostbyname( $host || 'localhost' )
     );

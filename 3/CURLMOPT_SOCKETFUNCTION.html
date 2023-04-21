@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2019, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLMOPT_SOCKETFUNCTION(3)</title>
 </head>
@@ -45,15 +48,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-#include &lt;curl/curl.h&gt;
+<pre>#include &lt;curl/curl.h&gt;
 int socket_callback(CURL *easy,      /* easy handle */
                     curl_socket_t s, /* socket */
                     int what,        /* describes the socket */
                     void *userp,     /* private callback pointer */
                     void *socketp);  /* private socket pointer */
-CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION, socket_callback);
-</pre>
+CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION, socket_callback);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -76,6 +77,9 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION, socket_callb
     information about what activity on this socket the application is supposed
     to monitor. Subsequent calls to this callback might update the <b>what</b>
     bits for a socket that is already monitored.</p>
+<p class="Pp">The socket callback should return 0 on success, and -1 on error.
+    If this callback returns error, <b>all</b> transfers currently in progress
+    in this multi handle will be aborted and fail.</p>
 <p class="Pp"><b>userp</b> is set with <i>CURLMOPT_SOCKETDATA(3)</i>.</p>
 <p class="Pp"><b>socketp</b> is set with <i>curl_multi_assign(3)</i> or will be
     NULL.</p>
@@ -103,8 +107,7 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_SOCKETFUNCTION, socket_callb
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-static int sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
+<pre>static int sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp)
 {
   GlobalInfo *g = (GlobalInfo*) cbp;
   SockInfo *fdp = (SockInfo*) sockp;
@@ -127,8 +130,7 @@ main()
   /* ... use socket callback and custom pointer */
   curl_multi_setopt(multi, CURLMOPT_SOCKETFUNCTION, sock_cb);
   curl_multi_setopt(multi, CURLMOPT_SOCKETDATA, &amp;setup);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -148,8 +150,8 @@ main()
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

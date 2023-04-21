@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-HTTP-BACKEND(1)</title>
 </head>
@@ -30,9 +31,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git http-backend</i>
-</pre>
+<pre><i>git http-backend</i></pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -98,8 +97,7 @@
   the CGI:
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-SetEnv GIT_PROJECT_ROOT /var/www/git
+<pre>SetEnv GIT_PROJECT_ROOT /var/www/git
 SetEnv GIT_HTTP_EXPORT_ALL
 ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
 # This is not strictly necessary using Apache and a modern version of
@@ -112,8 +110,7 @@ ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
 # Having the webserver set up GIT_PROTOCOL is perfectly fine even with
 # modern versions (and will take precedence over HTTP_GIT_PROTOCOL,
 # which means it can be used to override the client's request).
-SetEnvIf Git-Protocol &quot;.*&quot; GIT_PROTOCOL=$0
-</pre>
+SetEnvIf Git-Protocol &quot;.*&quot; GIT_PROTOCOL=$0</pre>
 </div>
 <p class="Pp">To enable anonymous read access but authenticated write access,
     require authorization for both the initial ref advertisement (which we
@@ -121,8 +118,7 @@ SetEnvIf Git-Protocol &quot;.*&quot; GIT_PROTOCOL=$0
     receive-pack invocation itself:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-RewriteCond %{QUERY_STRING} service=git-receive-pack [OR]
+<pre>RewriteCond %{QUERY_STRING} service=git-receive-pack [OR]
 RewriteCond %{REQUEST_URI} /git-receive-pack$
 RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
 &lt;LocationMatch &quot;^/git/&quot;&gt;
@@ -133,22 +129,19 @@ RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
         Require group committers
         Satisfy Any
         ...
-&lt;/LocationMatch&gt;
-</pre>
+&lt;/LocationMatch&gt;</pre>
 </div>
 <p class="Pp">If you do not have <b>mod_rewrite</b> available to match against
     the query string, it is sufficient to just protect <b>git-receive-pack</b>
     itself, like:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;LocationMatch &quot;^/git/.*/git-receive-pack$&quot;&gt;
+<pre>&lt;LocationMatch &quot;^/git/.*/git-receive-pack$&quot;&gt;
         AuthType Basic
         AuthName &quot;Git Access&quot;
         Require group committers
         ...
-&lt;/LocationMatch&gt;
-</pre>
+&lt;/LocationMatch&gt;</pre>
 </div>
 <p class="Pp">In this mode, the server will not request authentication until the
     client actually starts the object negotiation phase of the push, rather than
@@ -163,22 +156,19 @@ RewriteRule ^/git/ - [E=AUTHREQUIRED:yes]
   directories:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-&lt;Location /git/private&gt;
+<pre>&lt;Location /git/private&gt;
         AuthType Basic
         AuthName &quot;Private Git Access&quot;
         Require group committers
         ...
-&lt;/Location&gt;
-</pre>
+&lt;/Location&gt;</pre>
 </div>
 <p class="Pp">To serve gitweb at the same url, use a ScriptAliasMatch to only
     those URLs that <i>git http-backend</i> can handle, and forward the rest to
     gitweb:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-ScriptAliasMatch \
+<pre>ScriptAliasMatch \
         &quot;(?x)^/git/(.*/(HEAD | \
                         info/refs | \
                         objects/(info/[^/]+ | \
@@ -186,17 +176,14 @@ ScriptAliasMatch \
                                  pack/pack-[0-9a-f]{40}\.(pack|idx)) | \
                         git-(upload|receive)-pack))$&quot; \
         /usr/libexec/git-core/git-http-backend/$1
-ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
-</pre>
+ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/</pre>
 </div>
 <p class="Pp">To serve multiple repositories from different
     <b>gitnamespaces</b>(7) in a single repository:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-SetEnvIf Request_URI &quot;^/git/([^/]*)&quot; GIT_NAMESPACE=$1
-ScriptAliasMatch ^/git/[^/]*(.*) /usr/libexec/git-core/git-http-backend/storage.git$1
-</pre>
+<pre>SetEnvIf Request_URI &quot;^/git/([^/]*)&quot; GIT_NAMESPACE=$1
+ScriptAliasMatch ^/git/[^/]*(.*) /usr/libexec/git-core/git-http-backend/storage.git$1</pre>
 </div>
 <p class="Pp"></p>
 </div>
@@ -207,18 +194,15 @@ ScriptAliasMatch ^/git/[^/]*(.*) /usr/libexec/git-core/git-http-backend/storage.
   system directly to the network:
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-SetEnv GIT_PROJECT_ROOT /var/www/git
+<pre>SetEnv GIT_PROJECT_ROOT /var/www/git
 AliasMatch ^/git/(.*/objects/[0-9a-f]{2}/[0-9a-f]{38})$          /var/www/git/$1
 AliasMatch ^/git/(.*/objects/pack/pack-[0-9a-f]{40}.(pack|idx))$ /var/www/git/$1
-ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/
-</pre>
+ScriptAlias /git/ /usr/libexec/git-core/git-http-backend/</pre>
 </div>
 <p class="Pp">This can be combined with the gitweb configuration:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-SetEnv GIT_PROJECT_ROOT /var/www/git
+<pre>SetEnv GIT_PROJECT_ROOT /var/www/git
 AliasMatch ^/git/(.*/objects/[0-9a-f]{2}/[0-9a-f]{38})$          /var/www/git/$1
 AliasMatch ^/git/(.*/objects/pack/pack-[0-9a-f]{40}.(pack|idx))$ /var/www/git/$1
 ScriptAliasMatch \
@@ -227,8 +211,7 @@ ScriptAliasMatch \
                         objects/info/[^/]+ | \
                         git-(upload|receive)-pack))$&quot; \
         /usr/libexec/git-core/git-http-backend/$1
-ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
-</pre>
+ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/</pre>
 </div>
 <p class="Pp"></p>
 </div>
@@ -238,52 +221,44 @@ ScriptAlias /git/ /var/www/cgi-bin/gitweb.cgi/
   <b>GIT_PROJECT_ROOT</b> appropriately and redirect all requests to the CGI:
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-alias.url += ( &quot;/git&quot; =&gt; &quot;/usr/lib/git-core/git-http-backend&quot; )
+<pre>alias.url += ( &quot;/git&quot; =&gt; &quot;/usr/lib/git-core/git-http-backend&quot; )
 $HTTP[&quot;url&quot;] =~ &quot;^/git&quot; {
         cgi.assign = (&quot;&quot; =&gt; &quot;&quot;)
         setenv.add-environment = (
                 &quot;GIT_PROJECT_ROOT&quot; =&gt; &quot;/var/www/git&quot;,
                 &quot;GIT_HTTP_EXPORT_ALL&quot; =&gt; &quot;&quot;
         )
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">To enable anonymous read access but authenticated write
   access:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$HTTP[&quot;querystring&quot;] =~ &quot;service=git-receive-pack&quot; {
+<pre>$HTTP[&quot;querystring&quot;] =~ &quot;service=git-receive-pack&quot; {
         include &quot;git-auth.conf&quot;
 }
 $HTTP[&quot;url&quot;] =~ &quot;^/git/.*/git-receive-pack$&quot; {
         include &quot;git-auth.conf&quot;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp">where <b>git-auth.conf</b> looks something like:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-auth.require = (
+<pre>auth.require = (
         &quot;/&quot; =&gt; (
                 &quot;method&quot; =&gt; &quot;basic&quot;,
                 &quot;realm&quot; =&gt; &quot;Git Access&quot;,
                 &quot;require&quot; =&gt; &quot;valid-user&quot;
                )
 )
-# ...and set up auth.backend here
-</pre>
+# ...and set up auth.backend here</pre>
 </div>
 <p class="Pp">To require authentication for both reads and writes:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$HTTP[&quot;url&quot;] =~ &quot;^/git/private&quot; {
+<pre>$HTTP[&quot;url&quot;] =~ &quot;^/git/private&quot; {
         include &quot;git-auth.conf&quot;
-}
-</pre>
+}</pre>
 </div>
 <p class="Pp"></p>
 </div>

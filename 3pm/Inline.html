@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline(3)</title>
 </head>
@@ -32,18 +33,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Inline C;
-
+<pre>    use Inline C;
     print &quot;9 + 16 = &quot;, add(9, 16), &quot;\n&quot;;
     print &quot;9 - 16 = &quot;, subtract(9, 16), &quot;\n&quot;;
-
     __END__
     __C__
     int add(int x, int y) {
       return x + y;
     }
-
     int subtract(int x, int y) {
       return x - y;
     }
@@ -159,8 +156,7 @@
   Basics</a></h2>
 <p class="Pp">The most basic form for using Inline is:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline X =&gt; &quot;X source code&quot;;
+<pre>    use Inline X =&gt; &quot;X source code&quot;;
 </pre>
 <p class="Pp">where 'X' is one of the supported Inline programming languages.
     The second parameter identifies the source code that you want to bind to
@@ -169,11 +165,8 @@
 <dl class="Bl-tag">
   <dt id="The"><a class="permalink" href="#The">The DATA Keyword.</a></dt>
   <dd>
-    <pre>
-    use Inline Java =&gt; 'DATA';
-
+    <pre>    use Inline Java =&gt; 'DATA';
     # Perl code goes here ...
-
     __DATA__
     __Java__
     /* Java code goes here ... */
@@ -209,12 +202,9 @@
   <dt id="The~2"><a class="permalink" href="#The~2">The FILE and BELOW
     keywords.</a></dt>
   <dd>
-    <pre>
-    use Inline::Files;
+    <pre>    use Inline::Files;
     use Inline Java =&gt; 'file';
-
     # Perl code goes here ...
-
     __JAVA__
     /* Java code goes here ... */
     </pre>
@@ -231,8 +221,7 @@
         '<span class="Li">&quot;below&quot;</span>'. This allows for the bad pun
         idiom of:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; 'below';
+    <pre>    use Inline C =&gt; 'below';
     </pre>
     <p class="Pp">You can omit the <span class="Li">&quot;__DATA__&quot;</span>
         tag now. Inline::Files is a source filter that will remove these
@@ -255,12 +244,9 @@
   </dd>
   <dt id="Strings"><a class="permalink" href="#Strings">Strings</a></dt>
   <dd>
-    <pre>
-    use Inline Java =&gt; &lt;&lt;'END';
-
+    <pre>    use Inline Java =&gt; &lt;&lt;'END';
     /* Java code goes here ... */
     END
-
     # Perl code goes here ...
     </pre>
     <p class="Pp">You also just specify the source code as a single string. A
@@ -274,16 +260,13 @@
         set at compile time, <span class="Li">&quot;before&quot;</span> the 'use
         Inline' statement. Here is one way to do it:</p>
     <p class="Pp"></p>
-    <pre>
-    my $code;
+    <pre>    my $code;
     BEGIN {
         $code = &lt;&lt;END;
-
     /* Java code goes here ... */
     END
     }
     use Inline Java =&gt; $code;
-
     # Perl code goes here ...
     </pre>
   </dd>
@@ -295,12 +278,9 @@
       <span class="Li">&quot;bind()&quot;</span> method takes the same arguments
       as <span class="Li">'use Inline ...'</span>.
     <p class="Pp"></p>
-    <pre>
-    my $code = &lt;&lt;END;
-
+    <pre>    my $code = &lt;&lt;END;
     /* Java code goes here ... */
     END
-
     Inline-&gt;bind(Java =&gt; $code);
     </pre>
     <p class="Pp">You can think of <span class="Li">&quot;bind()&quot;</span> as
@@ -322,8 +302,7 @@
     <p class="Pp">For instance, to load your C++ code from a file named the same
         as your perl module with a swapped file extension, you can use:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline CPP =&gt; (__FILE__ =~ s/\.pm$/.cpp/r);
+    <pre>    use Inline CPP =&gt; (__FILE__ =~ s/\.pm$/.cpp/r);
     </pre>
   </dd>
   <dt id="Shorthand"><a class="permalink" href="#Shorthand">Shorthand</a></dt>
@@ -331,23 +310,17 @@
       there are no extra parameters, you can omit the keyword altogether. For
       example:
     <p class="Pp"></p>
-    <pre>
-    use Inline 'Java';
-
+    <pre>    use Inline 'Java';
     # Perl code goes here ...
-
     __DATA__
     __Java__
     /* Java code goes here ... */
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline::Files;
+    <pre>    use Inline::Files;
     use Inline 'Java';
-
     # Perl code goes here ...
-
     __JAVA__
     /* Java code goes here ... */
     </pre>
@@ -366,38 +339,26 @@
 <p class="Pp">You can also specify multiple Inline sections, possibly in
     different programming languages. Here is another example:</p>
 <p class="Pp"></p>
-<pre>
-    # The module Foo.pm
+<pre>    # The module Foo.pm
     package Foo;
     use AutoLoader;
-
     use Inline C;
     use Inline C =&gt; DATA =&gt; filters =&gt; 'Strip_POD';
     use Inline Python;
-
     1;
-
     __DATA__
-
     sub marine {
         # This is an autoloaded subroutine
     }
-
     =head1 External subroutines
-
     =cut
-
     __C__
     /* First C section */
-
     __C__
     /* Second C section */
     =head1 My C Function
-
     Some POD doc.
-
     =cut
-
     __Python__
     &quot;&quot;&quot;A Python Section&quot;&quot;&quot;
 </pre>
@@ -416,8 +377,7 @@
     parameters. All configuration options are specified as (key, value)
   pairs.</p>
 <p class="Pp"></p>
-<pre>
-    use Inline (C =&gt; 'DATA',
+<pre>    use Inline (C =&gt; 'DATA',
                 directory =&gt; './inline_dir',
                 libs =&gt; '-lfoo',
                 inc =&gt; '-I/foo/include',
@@ -428,8 +388,7 @@
 <p class="Pp">You can also specify the configuration options on a separate
     Inline call like this:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline (C =&gt; Config =&gt;
+<pre>    use Inline (C =&gt; Config =&gt;
                 directory =&gt; './inline_dir',
                 libs =&gt; '-lfoo',
                 inc =&gt; '-I/foo/include',
@@ -445,8 +404,7 @@
     apply to a particular language, just leave the language out of the call.
     Like this:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline Config =&gt; warnings =&gt; 0;
+<pre>    use Inline Config =&gt; warnings =&gt; 0;
 </pre>
 <p class="Pp">The Config options are inherited and additive. You can use as many
     Config calls as you want. And you can apply different options to different
@@ -454,8 +412,7 @@
     whichever options have been specified up to that point. Here is a complex
     configuration example:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline (Config =&gt;
+<pre>    use Inline (Config =&gt;
                 directory =&gt; './inline_dir',
                );
     use Inline (C =&gt; Config =&gt;
@@ -502,15 +459,13 @@
 <p class="Pp">If a particular config option has value options of 1 and 0, you
     can use the 'enable' and 'disable' modifiers. In other words, this:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline Config =&gt;
+<pre>    use Inline Config =&gt;
                force_build =&gt; 1,
                clean_after_build =&gt; 0;
 </pre>
 <p class="Pp">could be reworded as:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline Config =&gt;
+<pre>    use Inline Config =&gt;
                enable =&gt; force_build =&gt;
                disable =&gt; clean_after_build;
 </pre>
@@ -521,8 +476,7 @@
 <p class="Pp">Inline has a special configuration syntax that tells it to get
     more configuration options from other Perl modules. Here is an example:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline with =&gt; 'Event';
+<pre>    use Inline with =&gt; 'Event';
 </pre>
 <p class="Pp">This tells Inline to load the module
     <span class="Li">&quot;Event.pm&quot;</span> and ask it for configuration
@@ -534,8 +488,7 @@
   work.</p>
 <p class="Pp">You can specify a single module or a list of them. Like:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline with =&gt; qw(Event Foo Bar);
+<pre>    use Inline with =&gt; qw(Event Foo Bar);
 </pre>
 <p class="Pp">Currently, modules that works <i>with</i> Inline include
     <span class="Li">&quot;Event&quot;</span>,
@@ -548,15 +501,13 @@
     configuration information that is acceptable to the relevant ILSM. For C,
     see C Configuration Options. E.g.:</p>
 <p class="Pp"></p>
-<pre>
-    my $confighashref = Event-&gt;Inline('C'); # only supports C in 1.21
+<pre>    my $confighashref = Event-&gt;Inline('C'); # only supports C in 1.21
     # hashref contains keys INC, TYPEMAPS, MYEXTLIB, AUTO_INCLUDE, BOOT
 </pre>
 <p class="Pp">If your module uses ExtUtils::Depends version 0.400 or higher,
     your module only needs this:</p>
 <p class="Pp"></p>
-<pre>
-    package Module;
+<pre>    package Module;
     use autouse Module::Install::Files =&gt; qw(Inline);
 </pre>
 </section>
@@ -571,24 +522,20 @@
     code in the script <span class="Li">&quot;Foo.pl&quot;</span>, use the
     command:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=info Foo.pl
+<pre>    perl -MInline=info Foo.pl
 </pre>
 <p class="Pp">If you want to force your code to compile, even if its already
     done, use:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=force Foo.pl
+<pre>    perl -MInline=force Foo.pl
 </pre>
 <p class="Pp">If you want to do both, use:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=info -MInline=force Foo.pl
+<pre>    perl -MInline=info -MInline=force Foo.pl
 </pre>
 <p class="Pp">or better yet:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=info,force Foo.pl
+<pre>    perl -MInline=info,force Foo.pl
 </pre>
 </section>
 <section class="Ss">
@@ -678,14 +625,12 @@
   <dd>You can use this option to set the name of your Inline extension object
       module. For example:
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; 'DATA',
+    <pre>    use Inline C =&gt; 'DATA',
                name =&gt; 'Foo::Bar';
     </pre>
     <p class="Pp">would cause your C code to be compiled in to the object:</p>
     <p class="Pp"></p>
-    <pre>
-    lib/auto/Foo/Bar/Bar.so
+    <pre>    lib/auto/Foo/Bar/Bar.so
     lib/auto/Foo/Bar/Bar.inl
     </pre>
     <p class="Pp">(The .inl component contains dependency information to make
@@ -702,8 +647,7 @@
       <span class="Li">&quot;name&quot;</span> parameter is not specified. To
       disable it say:
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; 'DATA',
+    <pre>    use Inline C =&gt; 'DATA',
                disable =&gt; 'autoname';
     </pre>
     <p class="Pp"><span class="Li">&quot;autoname&quot;</span> mangles in enough
@@ -740,8 +684,7 @@
       if you want to use different sections of Inline code <i>with</i> different
       modules. (Probably a very rare usage)
     <p class="Pp"></p>
-    <pre>
-    use Event;
+    <pre>    use Event;
     use Inline C =&gt; DATA =&gt; with =&gt; 'Event';
     </pre>
     <p class="Pp">Modules specified using the config form of
@@ -755,8 +698,7 @@
       to override the default parser for Inline::C, but might be used by any
       ILSM for any purpose.
     <p class="Pp"></p>
-    <pre>
-    use Inline config =&gt; using =&gt; '::Parser::RecDescent';
+    <pre>    use Inline config =&gt; using =&gt; '::Parser::RecDescent';
     use Inline C =&gt; '...';
     </pre>
     <p class="Pp">This would tell Inline::C to use
@@ -848,20 +790,17 @@
     available for Inline. Specify them from the command line when running Inline
     scripts.</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=noclean inline_script.pl
+<pre>    perl -MInline=noclean inline_script.pl
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    perl -MInline=info,force,noclean inline_script.pl
+<pre>    perl -MInline=info,force,noclean inline_script.pl
 </pre>
 <p class="Pp">You can specify multiple shortcuts separated by commas. They are
     not case sensitive. You can also specify shortcuts inside the Inline program
     like this:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline 'info', 'force', 'noclean';
+<pre>    use Inline 'info', 'force', 'noclean';
 </pre>
 <p class="Pp">NOTE: If a <span class="Li">'use Inline'</span> statement is used
     to set shortcuts, it can not be
@@ -962,42 +901,31 @@
     <span class="Li">&quot;Math::Simple&quot;</span>. Start by using the
     following command:</p>
 <p class="Pp"></p>
-<pre>
-    h2xs -PAXn Math::Simple
+<pre>    h2xs -PAXn Math::Simple
 </pre>
 <p class="Pp">This will generate a bunch of files that form a skeleton of what
     you need for a distributable module. (Read the h2xs manpage to find out what
     the options do) Next, modify the
     <span class="Li">&quot;Simple.pm&quot;</span> file to look like this:</p>
 <p class="Pp"></p>
-<pre>
-    package Math::Simple;
+<pre>    package Math::Simple;
     $VERSION = '1.23';
-
     use base 'Exporter';
     @EXPORT_OK = qw(add subtract);
     use strict;
-
     use Inline C =&gt; 'DATA',
                version =&gt; '1.23',
                name =&gt; 'Math::Simple';
-
     # The following Inline-&gt;init() call is optional - see below for more info.
     #Inline-&gt;init();
-
     1;
-
     __DATA__
-
     =pod
-
     =cut
-
     __C__
     int add(int x, int y) {
       return x + y;
     }
-
     int subtract(int x, int y) {
       return x - y;
     }
@@ -1021,20 +949,17 @@
    work in exactly the same manner as XS based ones.</p>
 <p class="Pp">Finally, you need to modify the Makefile.PL. Simply change:</p>
 <p class="Pp"></p>
-<pre>
-    use ExtUtils::MakeMaker;
+<pre>    use ExtUtils::MakeMaker;
 </pre>
 <p class="Pp">to</p>
 <p class="Pp"></p>
-<pre>
-    use Inline::MakeMaker;
+<pre>    use Inline::MakeMaker;
 </pre>
 <p class="Pp">And, in order that the module build work correctly in the cpan
     shell, add the following directive to the Makefile.PL's
     <b>WriteMakefile()</b>:</p>
 <p class="Pp"></p>
-<pre>
-    CONFIGURE_REQUIRES  =&gt;  {
+<pre>    CONFIGURE_REQUIRES  =&gt;  {
         'Inline::MakeMaker'     =&gt; 0.45,
         'ExtUtils::MakeMaker'   =&gt; 6.52,
     },
@@ -1066,8 +991,7 @@
     where an installed module should go).</p>
 <p class="Pp">Now all you need to do is:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL
+<pre>    perl Makefile.PL
     make dist
 </pre>
 <p class="Pp">That will generate the file
@@ -1098,13 +1022,11 @@
     <p class="Pp">Inline gets the source code from your script or module with a
         statements like the following:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; &quot;Source-Code&quot;;
+    <pre>    use Inline C =&gt; &quot;Source-Code&quot;;
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline;
+    <pre>    use Inline;
     bind Inline C =&gt; &quot;Source-Code&quot;;
     </pre>
     <p class="Pp">where <span class="Li">&quot;C&quot;</span> is the programming
@@ -1140,8 +1062,7 @@
         <span class="Li">&quot;example.pl&quot;</span> might create these
       files:</p>
     <p class="Pp"></p>
-    <pre>
-    example_pl_3a9a.so
+    <pre>    example_pl_3a9a.so
     example_pl_3a9a.inl
     </pre>
     <p class="Pp">If all the contingency information matches the values stored

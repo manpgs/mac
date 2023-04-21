@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLUNIFAQ(1)</title>
 </head>
@@ -47,8 +48,7 @@
   character encodings does Perl support?</a></h2>
 <p class="Pp">To find out which character encodings your Perl supports, run:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MEncode -le &quot;print for Encode-&gt;encodings(':all')&quot;
+<pre>    perl -MEncode -le &quot;print for Encode-&gt;encodings(':all')&quot;
 </pre>
 </section>
 <section class="Ss">
@@ -101,8 +101,7 @@
     format. In some cases, Perl will warn you that you're doing something wrong,
     with a friendly warning:</p>
 <p class="Pp"></p>
-<pre>
-    Wide character in print at example.pl line 2.
+<pre>    Wide character in print at example.pl line 2.
 </pre>
 <p class="Pp">Because the internal format is often UTF-8, these bugs are hard to
     spot, because UTF-8 is usually the encoding you wanted! But don't be lazy,
@@ -121,14 +120,12 @@
 <p class="Pp">You can provide this layer when
     <span class="Li">&quot;open&quot;</span>ing the file:</p>
 <p class="Pp"></p>
-<pre>
-  open my $fh, '&gt;:encoding(UTF-8)', $filename;  # auto encoding on write
+<pre>  open my $fh, '&gt;:encoding(UTF-8)', $filename;  # auto encoding on write
   open my $fh, '&lt;:encoding(UTF-8)', $filename;  # auto decoding on read
 </pre>
 <p class="Pp">Or if you already have an open filehandle:</p>
 <p class="Pp"></p>
-<pre>
-  binmode $fh, ':encoding(UTF-8)';
+<pre>  binmode $fh, ':encoding(UTF-8)';
 </pre>
 <p class="Pp">Some database drivers for DBI can also automatically encode and
     decode, but that is sometimes limited to the UTF-8 encoding.</p>
@@ -151,8 +148,7 @@
 <p class="Pp">Yes, you can! If your sources are UTF-8 encoded, you can indicate
     that with the <span class="Li">&quot;use utf8&quot;</span> pragma.</p>
 <p class="Pp"></p>
-<pre>
-    use utf8;
+<pre>    use utf8;
 </pre>
 <p class="Pp">This doesn't do anything to your input, or to your output. It only
     influences the way your sources are read. You can use Unicode in string
@@ -229,21 +225,18 @@
 <p class="Pp">By first converting the FOO-encoded byte string to a text string,
     and then the text string to a BAR-encoded byte string:</p>
 <p class="Pp"></p>
-<pre>
-    my $text_string = decode('FOO', $foo_string);
+<pre>    my $text_string = decode('FOO', $foo_string);
     my $bar_string  = encode('BAR', $text_string);
 </pre>
 <p class="Pp">or by skipping the text string part, and going directly from one
     binary encoding to the other:</p>
 <p class="Pp"></p>
-<pre>
-    use Encode qw(from_to);
+<pre>    use Encode qw(from_to);
     from_to($string, 'FOO', 'BAR');  # changes contents of $string
 </pre>
 <p class="Pp">or by letting automatic decoding and encoding do all the work:</p>
 <p class="Pp"></p>
-<pre>
-    open my $foofh, '&lt;:encoding(FOO)', 'example.foo.txt';
+<pre>    open my $foofh, '&lt;:encoding(FOO)', 'example.foo.txt';
     open my $barfh, '&gt;:encoding(BAR)', 'example.bar.txt';
     print { $barfh } $_ while &lt;$foofh&gt;;
 </pre>
@@ -273,8 +266,7 @@
     encodings in a single stream, always specify an encoding explicitly, for
     example with a PerlIO layer:</p>
 <p class="Pp"></p>
-<pre>
-    binmode STDOUT, &quot;:encoding(UTF-8)&quot;;
+<pre>    binmode STDOUT, &quot;:encoding(UTF-8)&quot;;
 </pre>
 </section>
 </section>

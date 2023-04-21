@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MLDBM(3)</title>
 </head>
@@ -29,11 +30,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use MLDBM;                          # this gets the default, SDBM
+<pre>    use MLDBM;                          # this gets the default, SDBM
     #use MLDBM qw(DB_File FreezeThaw);  # use FreezeThaw for serializing
     #use MLDBM qw(DB_File Storable);    # use Storable for serializing
-
     $dbm = tie %o, 'MLDBM' [..other DBM args..] or die $!;
 </pre>
 </section>
@@ -69,15 +68,15 @@
     serializers can be supported by writing a wrapper that implements the
     interface required by <b>MLDBM::Serializer</b>. See the supported wrappers
     and the <b>MLDBM::Serializer</b> source for details.</p>
-<p class="Pp">In the following, <i></i><i>$OBJ</i><i></i> stands for the tied
+<p class="Pp">In the following,
+    <i></i><span class="Li"><i>$OBJ</i></span><i></i> stands for the tied
     object, as in:</p>
 <p class="Pp"></p>
-<pre>
-        $obj = tie %o, ....
+<pre>        $obj = tie %o, ....
         $obj = tied %o;
 </pre>
 <dl class="Bl-tag">
-  <dt>$MLDBM::UseDB	<i>or</i>	<i></i><i>$OBJ</i><i></i>-&gt;UseDB(<i>[TIEDOBJECT]</i>)</dt>
+  <dt>$MLDBM::UseDB	<i>or</i>	<i></i><span class="Li"><i>$OBJ</i></span><i></i>-&gt;UseDB(<i>[TIEDOBJECT]</i>)</dt>
   <dd>The global <span class="Li">$MLDBM::UseDB</span> can be set to default to
       something other than <span class="Li">&quot;SDBM_File&quot;</span>, in
       case you have a more efficient DBM, or if you want to use this with some
@@ -89,7 +88,7 @@
         object when called without arguments. It can be called with any object
         that implements Perl's TIEHASH interface, to set that value.</p>
   </dd>
-  <dt>$MLDBM::Serializer	<i>or</i>	<i></i><i>$OBJ</i><i></i>-&gt;Serializer(<i>[SZROBJECT]</i>)</dt>
+  <dt>$MLDBM::Serializer	<i>or</i>	<i></i><span class="Li"><i>$OBJ</i></span><i></i>-&gt;Serializer(<i>[SZROBJECT]</i>)</dt>
   <dd>The global <span class="Li">$MLDBM::Serializer</span> can be set to the
       name of the serializing package to be used. Currently can be set to one of
       <span class="Li">&quot;Data::Dumper&quot;</span>,
@@ -118,7 +117,7 @@
     usually lead to an exception.</p>
 <dl class="Bl-tag">
   <dt>$MLDBM::DumpMeth	<i>or</i>
-    <i></i><i>$OBJ</i><i></i>-&gt;DumpMeth(<i>[METHNAME]</i>)</dt>
+    <i></i><span class="Li"><i>$OBJ</i></span><i></i>-&gt;DumpMeth(<i>[METHNAME]</i>)</dt>
   <dd>If the serializer provides alternative serialization methods, this can be
       used to set them.
     <p class="Pp">With <b>Data::Dumper</b> (which offers a pure Perl and an XS
@@ -137,7 +136,7 @@
     <p class="Pp"><b>FreezeThaw</b> does not honor this attribute.</p>
   </dd>
   <dt>$MLDBM::Key <i>or</i>
-    <i></i><i>$OBJ</i><i></i>-&gt;Key(<i>[KEYSTRING]</i>)</dt>
+    <i></i><span class="Li"><i>$OBJ</i></span><i></i>-&gt;Key(<i>[KEYSTRING]</i>)</dt>
   <dd>If the serializer only deals with part of the data (perhaps because the
       TIEHASH object can natively store some types of data), it may need a
       unique key string to recognize the data it handles. This can be used to
@@ -149,7 +148,7 @@
         attribute.</p>
   </dd>
   <dt>$MLDBM::RemoveTaint <i>or</i>
-    <i></i><i>$OBJ</i><i></i>-&gt;RemoveTaint(<i>[BOOL]</i>)</dt>
+    <i></i><span class="Li"><i>$OBJ</i></span><i></i>-&gt;RemoveTaint(<i>[BOOL]</i>)</dt>
   <dd>If the serializer can optionally untaint any retrieved data subject to
       taint checks in Perl, this can be used to request that feature. Data that
       comes from external sources (like disk-files) must always be viewed with
@@ -171,13 +170,10 @@
     underlying serializing package--most real life examples should not,
   usually.</p>
 <p class="Pp"></p>
-<pre>
-    use MLDBM;                          # this gets SDBM and Data::Dumper
+<pre>    use MLDBM;                          # this gets SDBM and Data::Dumper
     #use MLDBM qw(SDBM_File Storable);  # SDBM and Storable
     use Fcntl;                          # to get 'em constants
-
     $dbm = tie %o, 'MLDBM', 'testmldbm', O_CREAT|O_RDWR, 0640 or die $!;
-
     $c = [\ 'c'];
     $b = {};
     $a = [1, $b, $c];
@@ -185,20 +181,17 @@
     $b-&gt;{b} = $a-&gt;[1];
     $b-&gt;{c} = $a-&gt;[2];
     @o{qw(a b c)} = ($a, $b, $c);
-
     #
     # to see what was stored
     #
     use Data::Dumper;
     print Data::Dumper-&gt;Dump([@o{qw(a b c)}], [qw(a b c)]);
-
     #
     # to modify data in a substructure
     #
     $tmp = $o{a};
     $tmp-&gt;[0] = 'foo';
     $o{a} = $tmp;
-
     #
     # can access the underlying DBM methods transparently
     #
@@ -207,11 +200,8 @@
 <p class="Pp">Here is another small example using Storable, in a portable
     format:</p>
 <p class="Pp"></p>
-<pre>
-    use MLDBM qw(DB_File Storable);     # DB_File and Storable
-
+<pre>    use MLDBM qw(DB_File Storable);     # DB_File and Storable
     tie %o, 'MLDBM', 'testmldbm', O_CREAT|O_RDWR, 0640 or die $!;
-
     (tied %o)-&gt;DumpMeth('portable');    # Ask for portable binary
     $o{'ENV'} = \%ENV;                  # Stores the whole environment
 </pre>
@@ -226,13 +216,11 @@
       in a temporary variable for further modifications. In particular,
       something like this will NOT work properly:
     <p class="Pp"></p>
-    <pre>
-        $mldb{key}{subkey}[3] = 'stuff';        # won't work
+    <pre>        $mldb{key}{subkey}[3] = 'stuff';        # won't work
     </pre>
     <p class="Pp">Instead, that must be written as:</p>
     <p class="Pp"></p>
-    <pre>
-        $tmp = $mldb{key};                      # retrieve value
+    <pre>        $tmp = $mldb{key};                      # retrieve value
         $tmp-&gt;{subkey}[3] = 'stuff';
         $mldb{key} = $tmp;                      # store value
     </pre>
@@ -267,16 +255,14 @@
       translates to a MLDBM <span class="Li">&quot;FETCH()&quot;</span> call.
     <p class="Pp">Too often, people end up writing something like this:</p>
     <p class="Pp"></p>
-    <pre>
-        tie %h, 'MLDBM', ...;
+    <pre>        tie %h, 'MLDBM', ...;
         for my $k (keys %{$h{something}}) {
             print $h{something}{$k}[0]{foo}{bar};  # FETCH _every_ time!
         }
     </pre>
     <p class="Pp">when it should be written this for efficiency:</p>
     <p class="Pp"></p>
-    <pre>
-        tie %h, 'MLDBM', ...;
+    <pre>        tie %h, 'MLDBM', ...;
         my $root = $h{something};                  # FETCH _once_
         for my $k (keys %$root) {
             print $k-&gt;[0]{foo}{bar};
@@ -312,7 +298,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

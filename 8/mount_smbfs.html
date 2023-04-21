@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MOUNT_SMBFS(8)</title>
 </head>
@@ -80,6 +81,36 @@
       <dt>shareencrypt</dt>
       <dd>Force share encryption to be used for that share and also for IPC$
           traffic</dd>
+      <dt>filemode</dt>
+      <dd>Specify permissions that should be assigned to files. The value must
+          be specified as an octal number. Default value is taken from mount
+          point.
+        <p class="Pp">
+          <br/>
+           Note that these permissions can differ from the rights granted by SMB
+            server.</p>
+      </dd>
+      <dt>dirmode</dt>
+      <dd>Specify permissions that should be assigned to directories. The value
+          must be specified as an octal number. Default value adds execute
+          permission where the file mode gives read permission.
+        <p class="Pp">
+          <br/>
+           Note that these permissions can differ from the rights granted by SMB
+            server.</p>
+      </dd>
+      <dt>snapshot</dt>
+      <dd>Do a read only mount using the specific snapshot of the share. A new
+          session is created to allow multiple snapshots of the same share to be
+          mounted. Value must be in GMT format e.g.
+        @GMT-YYYY.MM.DD-HH.MM.SS</dd>
+      <dt>nopassprompt</dt>
+      <dd>Do not ask for a password. At run time, mount_smbfs reads the
+          ~/Library/Preferences/nsmb.conf file for additional configuration
+          parameters and a password. If no password is found, mount_smbfs
+          prompts for it.</dd>
+      <dt>forcenewsession</dt>
+      <dd>Force a new session to be created to the server.</dd>
     </dl>
   </dd>
   <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a>
@@ -130,20 +161,17 @@
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">This example shows the proper url to use to mount the share PUBLIC
     from the SMB server myserver :</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-mkdir /smb/public
+<div class="Bd Pp Bd-indent Li">
+<pre>mkdir /smb/public
 mount -t smbfs //username:userpass@myserver/PUBLIC /smb/public
 
 </pre>
 </div>
 This example shows the proper url to use to mount the share PUBLIC from the SMB
   server myserver as guest:
-<div class="Bd Pp Bd-indent">
-<pre>
-mkdir /smb/public
-mount -t smbfs //guest:@myserver/PUBLIC /smb/public
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>mkdir /smb/public
+mount -t smbfs //guest:@myserver/PUBLIC /smb/public</pre>
 </div>
 <b>Note:</b> You should always use the system mount command and never call
   mount_smbfs directly.

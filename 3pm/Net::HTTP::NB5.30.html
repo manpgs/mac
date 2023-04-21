@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::HTTP::NB(3)</title>
 </head>
@@ -32,20 +33,16 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::HTTP::NB;
+<pre> use Net::HTTP::NB;
  my $s = Net::HTTP::NB-&gt;new(Host =&gt; &quot;www.perl.com&quot;) || die $@;
  $s-&gt;write_request(GET =&gt; &quot;/&quot;);
-
  use IO::Select;
  my $sel = IO::Select-&gt;new($s);
-
  READ_HEADER: {
     die &quot;Header timeout&quot; unless $sel-&gt;can_read(10);
     my($code, $mess, %h) = $s-&gt;read_response_headers;
     redo READ_HEADER unless $code;
  }
-
  while (1) {
     die &quot;Body timeout&quot; unless $sel-&gt;can_read(10);
     my $buf;

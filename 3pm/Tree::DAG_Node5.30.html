@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Tree::DAG_Node(3)</title>
 </head>
@@ -31,42 +32,31 @@
 <section class="Ss">
 <h2 class="Ss" id="Using_as_a_base_class"><a class="permalink" href="#Using_as_a_base_class">Using
   as a base class</a></h2>
-<pre>
-        package Game::Tree::Node;
-
+<pre>        package Game::Tree::Node;
         use parent 'Tree::DAG_Node';
-
         # Now add your own methods overriding/extending the methods in C&lt;Tree::DAG_Node&gt;...
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Using_as_a_class_on_its_own"><a class="permalink" href="#Using_as_a_class_on_its_own">Using
   as a class on its own</a></h2>
-<pre>
-        use Tree::DAG_Node;
-
+<pre>        use Tree::DAG_Node;
         my($root) = Tree::DAG_Node -&gt; new({name =&gt; 'root', attributes =&gt; {uid =&gt; 0} });
-
         $root -&gt; add_daughter(Tree::DAG_Node -&gt; new({name =&gt; 'one', attributes =&gt; {uid =&gt; 1} }) );
         $root -&gt; add_daughter(Tree::DAG_Node -&gt; new({name =&gt; 'two', attributes =&gt; {} }) );
         $root -&gt; add_daughter(Tree::DAG_Node -&gt; new({name =&gt; 'three'}) ); # Attrs default to {}.
 </pre>
 <p class="Pp">Or:</p>
 <p class="Pp"></p>
-<pre>
-        my($count) = 0;
+<pre>        my($count) = 0;
         my($tree)  = Tree::DAG_Node -&gt; new({name =&gt; 'Root', attributes =&gt; {'uid' =&gt; $count} });
 </pre>
 <p class="Pp">Or:</p>
 <p class="Pp"></p>
-<pre>
-        my $root = Tree::DAG_Node -&gt; new();
-
+<pre>        my $root = Tree::DAG_Node -&gt; new();
         $root -&gt; name(&quot;I'm the tops&quot;);
         $root -&gt; attributes({uid =&gt; 0});
-
         my $new_daughter = $root -&gt; new_daughter;
-
         $new_daughter -&gt; name('Another node');
         $new_daughter -&gt; attributes({uid =&gt; 1});
         ...
@@ -148,8 +138,7 @@
     <span class="Li">&quot;Tree::DAG_Node&quot;</span> can be used as a normal
     class. You can go ahead and say:</p>
 <p class="Pp"></p>
-<pre>
-        use Tree::DAG_Node;
+<pre>        use Tree::DAG_Node;
         my $root = Tree::DAG_Node-&gt;new();
         $root-&gt;name(&quot;I'm the tops&quot;);
         $new_daughter = Tree::DAG_Node-&gt;new();
@@ -249,12 +238,10 @@
         <span class="Li">$this</span>-&gt;SUPER::_init($options) to use its
         superclass's _init method, and then initializes the new attributes:</p>
     <p class="Pp"></p>
-    <pre>
-  sub _init {
+    <pre>  sub _init {
     my($this, $options) = @_[0,1];
     $this-&gt;SUPER::_init($options); # call my superclass's _init to
       # init all the attributes I'm inheriting
-
     # Now init /my/ new attributes:
     $this-&gt;{'amigos'} = []; # for example
   }
@@ -429,8 +416,7 @@
     set the value of this. (_init has already initialized it to {}.) Instead you
     can just do...</p>
 <p class="Pp"></p>
-<pre>
-  $node-&gt;attributes-&gt;{'foo'} = 'bar';
+<pre>  $node-&gt;attributes-&gt;{'foo'} = 'bar';
 </pre>
 <p class="Pp">...to write foo =&gt; bar.</p>
 </section>
@@ -536,8 +522,7 @@
 <p class="Pp">If you try calling any methods on any of the node objects in the
     tree you've destroyed, you'll get an error like:</p>
 <p class="Pp"></p>
-<pre>
-  Can't locate object method &quot;leaves_under&quot;
+<pre>  Can't locate object method &quot;leaves_under&quot;
     via package &quot;DEADNODE&quot;.
 </pre>
 <p class="Pp">So if you see that, that's what you've done wrong. (Actually, the
@@ -567,8 +552,7 @@
     maybe a bit odd, and 2) is your problem, because it's your hash structure
     that's circular, not the tree's. Anyway, consider:</p>
 <p class="Pp"></p>
-<pre>
-      # null out all my &quot;attributes&quot; hashes
+<pre>      # null out all my &quot;attributes&quot; hashes
       $anywhere-&gt;root-&gt;walk_down({
         'callback' =&gt; sub {
           $hr = $_[0]-&gt;attributes; %$hr = (); return 1;
@@ -605,8 +589,7 @@
 <p class="Pp">Draws a nice ASCII-art representation of the tree structure.</p>
 <p class="Pp">The tree looks like:</p>
 <p class="Pp"></p>
-<pre>
-                     |
+<pre>                     |
                   &lt;Root&gt;
            /-------+-----+---+---\
            |       |     |   |   |
@@ -626,8 +609,7 @@
 <p class="Pp">See scripts/cut.and.paste.subtrees.pl.</p>
 <p class="Pp">Example usage:</p>
 <p class="Pp"></p>
-<pre>
-  print map(&quot;$_\n&quot;, @{$tree-&gt;draw_ascii_tree});
+<pre>  print map(&quot;$_\n&quot;, @{$tree-&gt;draw_ascii_tree});
 </pre>
 <p class="Pp"><i></i><b><i>draw_ascii_tree()</i></b><i></i> takes parameters you
     set in the <span class="Li">$options</span> hashref:</p>
@@ -726,8 +708,7 @@
     in <span class="Li">$node</span>'s generation that are also descendants of
     <span class="Li">$node</span> -- in other words,</p>
 <p class="Pp"></p>
-<pre>
-    @us = $node-&gt;generation_under( $node-&gt;mother-&gt;mother );
+<pre>    @us = $node-&gt;generation_under( $node-&gt;mother-&gt;mother );
 </pre>
 <p class="Pp">is all <span class="Li">$node</span>'s first cousins (to borrow
     yet more kinship terminology) -- assuming <span class="Li">$node</span> does
@@ -738,13 +719,11 @@
 <p class="Pp">Actually, &quot;generation_under($node)&quot; is just an alias to
     &quot;<b>generation()</b>&quot;, but I figure that this:</p>
 <p class="Pp"></p>
-<pre>
-   @us = $node-&gt;generation_under($way_upline);
+<pre>   @us = $node-&gt;generation_under($way_upline);
 </pre>
 <p class="Pp">is a bit more readable than this:</p>
 <p class="Pp"></p>
-<pre>
-   @us = $node-&gt;generation($way_upline);
+<pre>   @us = $node-&gt;generation($way_upline);
 </pre>
 <p class="Pp">But it's up to you.</p>
 <p class="Pp"><span class="Li">$node</span>-&gt;generation_under($node) returns
@@ -820,8 +799,7 @@
     represent [['Foo'], ['Bar'], 'N'].</p>
 <p class="Pp">An example will illustrate:</p>
 <p class="Pp"></p>
-<pre>
-  use Tree::DAG_Node;
+<pre>  use Tree::DAG_Node;
   $lol =
     [
       [
@@ -839,8 +817,7 @@
 </pre>
 <p class="Pp">...returns this tree:</p>
 <p class="Pp"></p>
-<pre>
-                   |
+<pre>                   |
                   &lt;S&gt;
                    |
                 /------------------\
@@ -860,14 +837,12 @@
 <p class="Pp">By the way (and this rather follows from the above rules), when
     denoting a LoL tree consisting of just one node, this:</p>
 <p class="Pp"></p>
-<pre>
-  $tree = Tree::DAG_Node-&gt;lol_to_tree( 'Lonely' );
+<pre>  $tree = Tree::DAG_Node-&gt;lol_to_tree( 'Lonely' );
 </pre>
 <p class="Pp">is okay, although it'd probably occur to you to denote it only
   as:</p>
 <p class="Pp"></p>
-<pre>
-  $tree = Tree::DAG_Node-&gt;lol_to_tree( ['Lonely'] );
+<pre>  $tree = Tree::DAG_Node-&gt;lol_to_tree( ['Lonely'] );
 </pre>
 <p class="Pp">which is of course fine, too.</p>
 </section>
@@ -926,8 +901,7 @@
     daughter list of <span class="Li">$mother</span>. This is essentially the
     same as going</p>
 <p class="Pp"></p>
-<pre>
-      $daughter = $mother-&gt;new;
+<pre>      $daughter = $mother-&gt;new;
       $mother-&gt;add_daughter($daughter);
 </pre>
 <p class="Pp">but is rather more efficient because (since
@@ -1085,16 +1059,14 @@
     <span class="Li">$Old</span> with <span class="Li">$New</span>, then you
     want:</p>
 <p class="Pp"></p>
-<pre>
-  $New-&gt;set_daughters($Old-&gt;clear_daughters);
+<pre>  $New-&gt;set_daughters($Old-&gt;clear_daughters);
   $Old-&gt;replace_with($New);
 </pre>
 <p class="Pp">(I can't say <span class="Li">$node</span>'s and LIST-items'
     daughter lists are <b>never</b> affected my replace_with -- they can be
     affected in this case:</p>
 <p class="Pp"></p>
-<pre>
-  $N1 = ($node-&gt;daughters)[0]; # first daughter of $node
+<pre>  $N1 = ($node-&gt;daughters)[0]; # first daughter of $node
   $N2 = ($N1-&gt;daughters)[0];   # first daughter of $N1;
   $N3 = Tree::DAG_Node-&gt;random_network; # or whatever
   $node-&gt;replace_with($N1, $N2, $N3);
@@ -1192,8 +1164,7 @@
     making things like expression trees, or at least starting them off. Consider
     that this:</p>
 <p class="Pp"></p>
-<pre>
-    $tree = Tree::DAG_Node-&gt;simple_lol_to_tree(
+<pre>    $tree = Tree::DAG_Node-&gt;simple_lol_to_tree(
       [ 'foo', ['bar', ['baz'], 'quux'], 'zaz', 'pati' ]
     );
 </pre>
@@ -1202,8 +1173,7 @@
 <p class="Pp">Note that there is a (possibly surprising) degenerate case of what
     I'm calling a &quot;simple-LoL&quot;, and it's like this:</p>
 <p class="Pp"></p>
-<pre>
-  $tree = Tree::DAG_Node-&gt;simple_lol_to_tree('Lonely');
+<pre>  $tree = Tree::DAG_Node-&gt;simple_lol_to_tree('Lonely');
 </pre>
 <p class="Pp">This is the (only) way you can specify a tree consisting of only a
     single node, which here gets the name 'Lonely'.</p>
@@ -1247,20 +1217,17 @@
 <p class="Pp">For example, starting with the tree from the above example,
   this:</p>
 <p class="Pp"></p>
-<pre>
-  print $tree-&gt;tree_to_lol_notation, &quot;\n&quot;;
+<pre>  print $tree-&gt;tree_to_lol_notation, &quot;\n&quot;;
 </pre>
 <p class="Pp">prints the following (which I've broken over two lines for sake of
     printability of documentation):</p>
 <p class="Pp"></p>
-<pre>
-  [[[['Det:The'], [['dog'], 'N'], 'NP'], [[&quot;/with rabies\x5c&quot;],
+<pre>  [[[['Det:The'], [['dog'], 'N'], 'NP'], [[&quot;/with rabies\x5c&quot;],
   'PP'], 'NP'], [['died'], 'VP'], 'S'],
 </pre>
 <p class="Pp">Doing this:</p>
 <p class="Pp"></p>
-<pre>
-  print $tree-&gt;tree_to_lol_notation({ multiline =&gt; 1 });
+<pre>  print $tree-&gt;tree_to_lol_notation({ multiline =&gt; 1 });
 </pre>
 <p class="Pp">prints the same content, just spread over many lines, and prettily
     indented.</p>
@@ -1293,8 +1260,7 @@
 <p class="Pp">Draws a nice ASCII-art representation of the tree structure.</p>
 <p class="Pp">The tree looks like:</p>
 <p class="Pp"></p>
-<pre>
-        Root. Attributes: {}
+<pre>        Root. Attributes: {}
             |--- &#x00C2;. Attributes: {# =&gt; &quot;&#x00C2;&#x00C2;&quot;}
             |    |--- &#x00E2;. Attributes: {# =&gt; &quot;&#x00E2;&#x00E2;&quot;}
             |    |    |--- &#x00C9;. Attributes: {# =&gt; &quot;&#x00C9;&#x00C9;&quot;}
@@ -1319,8 +1285,7 @@
 </pre>
 <p class="Pp">Or, without attributes:</p>
 <p class="Pp"></p>
-<pre>
-        Root
+<pre>        Root
             |--- &#x00C2;
             |    |--- &#x00E2;
             |    |    |--- &#x00C9;
@@ -1346,8 +1311,7 @@
 <p class="Pp">See scripts/cut.and.paste.subtrees.pl.</p>
 <p class="Pp">Example usage:</p>
 <p class="Pp"></p>
-<pre>
-  print map(&quot;$_\n&quot;, @{$tree-&gt;tree2string});
+<pre>  print map(&quot;$_\n&quot;, @{$tree-&gt;tree2string});
 </pre>
 <p class="Pp">Can be called with <span class="Li">$some_tree</span> set to any
     <span class="Li">$node</span>, and will print the tree assuming
@@ -1438,8 +1402,7 @@
     memory back.</p>
 <p class="Pp">But consider this case: you've got this tree:</p>
 <p class="Pp"></p>
-<pre>
-      A
+<pre>      A
     / | \
    B  C  D
    |     | \
@@ -1449,8 +1412,7 @@
     the tree, so you call D-&gt;unlink_from_mother. This does NOT automagically
     destroy the tree D-X-Y. Instead it merely splits the tree into two:</p>
 <p class="Pp"></p>
-<pre>
-     A                        D
+<pre>     A                        D
     / \                      / \
    B   C                    X   Y
    |
@@ -1468,13 +1430,11 @@
     <span class="Li">$node</span>'s children and freeing up the memory
     associated with them and their descendants:</p>
 <p class="Pp"></p>
-<pre>
-  foreach my $it ($node-&gt;clear_daughters) { $it-&gt;delete_tree }
+<pre>  foreach my $it ($node-&gt;clear_daughters) { $it-&gt;delete_tree }
 </pre>
 <p class="Pp">Just be sure not to do this:</p>
 <p class="Pp"></p>
-<pre>
-  foreach my $it ($node-&gt;daughters) { $it-&gt;delete_tree }
+<pre>  foreach my $it ($node-&gt;daughters) { $it-&gt;delete_tree }
   $node-&gt;clear_daughters;
 </pre>
 <p class="Pp">That's bad; the first call to
@@ -1518,8 +1478,7 @@
     membership of nodes being manipulated, other than by testing whether each
     one provides a method &quot;<b>is_node()</b>&quot;, a la:</p>
 <p class="Pp"></p>
-<pre>
-  die &quot;Not a node!!!&quot; unless UNIVERSAL::can($node, &quot;is_node&quot;);
+<pre>  die &quot;Not a node!!!&quot; unless UNIVERSAL::can($node, &quot;is_node&quot;);
 </pre>
 <p class="Pp">So, as far as I'm concerned, a given tree's nodes are free to
     belong to different classes, just so long as they provide/inherit
@@ -1563,26 +1522,20 @@
     <span class="Li">$options</span> normally looks like this, assuming we wish
     to pass in an arrayref as a stack:</p>
 <p class="Pp"></p>
-<pre>
-        my(@stack);
-
+<pre>        my(@stack);
         $tree -&gt; walk_down
         ({
                 callback =&gt;
                 sub
                 {
                         my(@node, $options) = @_;
-
                         # Process $node, using $options...
-
                         push @{$$options{stack} }, $node -&gt; name;
-
                         return 1; # Keep walking.
                 },
                 _depth =&gt; 0,
                 stack  =&gt; \@stack,
         });
-
         # Process @stack...
 </pre>
 </section>
@@ -1610,18 +1563,15 @@
   <dt id="o~42"><a class="permalink" href="#o~42">o Copy the daughter list, and
     change it</a></dt>
   <dd>
-    <pre>
-        @them    = $mother-&gt;daughters;
+    <pre>        @them    = $mother-&gt;daughters;
         @removed = splice(@them, 0, 2, @new_nodes);
-
         $mother-&gt;set_daughters(@them);
     </pre>
   </dd>
   <dt id="o~43"><a class="permalink" href="#o~43">o Select a sub-set of
     nodes</a></dt>
   <dd>
-    <pre>
-        $mother-&gt;set_daughters
+    <pre>        $mother-&gt;set_daughters
         (
                 grep($_-&gt;name =~ /wanted/, $mother-&gt;daughters)
         );

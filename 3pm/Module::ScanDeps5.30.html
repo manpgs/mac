@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Module::ScanDeps(3)</title>
 </head>
@@ -30,26 +31,21 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Via the command-line program scandeps.pl:</p>
 <p class="Pp"></p>
-<pre>
-    % scandeps.pl *.pm          # Print PREREQ_PM section for *.pm
+<pre>    % scandeps.pl *.pm          # Print PREREQ_PM section for *.pm
     % scandeps.pl -e &quot;use utf8&quot; # Read script from command line
     % scandeps.pl -B *.pm       # Include core modules
     % scandeps.pl -V *.pm       # Show autoload/shared/data files
 </pre>
 <p class="Pp">Used in a program;</p>
 <p class="Pp"></p>
-<pre>
-    use Module::ScanDeps;
-
+<pre>    use Module::ScanDeps;
     # standard usage
     my $hash_ref = scan_deps(
         files   =&gt; [ 'a.pl', 'b.pl' ],
         recurse =&gt; 1,
     );
-
     # shorthand; assume recurse == 1
     my $hash_ref = scan_deps( 'a.pl', 'b.pl' );
-
     # App::Packer::Frontend compatible interface
     # see App::Packer::Frontend for the structure returned by get_files
     my $scan = Module::ScanDeps-&gt;new;
@@ -67,8 +63,7 @@
     <span class="Li">&quot;Test/More.pm&quot;</span>); the values are hash
     references with this structure:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         file    =&gt; '/usr/local/lib/perl5/5.8.0/Test/More.pm',
         key     =&gt; 'Test/More.pm',
         type    =&gt; 'module',    # or 'autoload', 'data', 'shared'
@@ -87,8 +82,7 @@
     dependency-checking frontend, by tweaking their <i>p2e.pl</i> like
   below:</p>
 <p class="Pp"></p>
-<pre>
-    use Module::ScanDeps;
+<pre>    use Module::ScanDeps;
     ...
     my $packer = App::Packer-&gt;new( frontend =&gt; 'Module::ScanDeps' );
     ...
@@ -97,8 +91,7 @@
     structure returned by <span class="Li">&quot;get_files&quot;</span>.</p>
 <section class="Ss">
 <h2 class="Ss"><b>scan_deps</b></h2>
-<pre>
-    $rv_ref = scan_deps(
+<pre>    $rv_ref = scan_deps(
         files      =&gt; \@files,     recurse =&gt; $recurse,
         rv         =&gt; \%rv,        skip    =&gt; \%skip,
         compile    =&gt; $compile,    execute =&gt; $execute,
@@ -142,8 +135,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>scan_line</b></h2>
-<pre>
-    @modules = scan_line($line);
+<pre>    @modules = scan_line($line);
 </pre>
 <p class="Pp">Splits a line into chunks (currently with the semicolon
     characters), and return the union of
@@ -161,8 +153,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>scan_chunk</b></h2>
-<pre>
-    $module = scan_chunk($chunk);
+<pre>    $module = scan_chunk($chunk);
     @modules = scan_chunk($chunk);
 </pre>
 <p class="Pp">Apply various heuristics to <span class="Li">$chunk</span> to find
@@ -171,8 +162,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>add_deps</b></h2>
-<pre>
-    $rv_ref = add_deps( rv =&gt; \%rv, modules =&gt; \@modules );
+<pre>    $rv_ref = add_deps( rv =&gt; \%rv, modules =&gt; \@modules );
     $rv_ref = add_deps( @modules ); # shorthand, without rv
 </pre>
 <p class="Pp">Resolves a list of module names to its actual on-disk location, by
@@ -184,8 +174,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>path_to_inc_name</b></h2>
-<pre>
-    $perl_name = path_to_inc_name($path, $warn)
+<pre>    $perl_name = path_to_inc_name($path, $warn)
 </pre>
 <p class="Pp">Assumes <span class="Li">$path</span> refers to a perl file and
     does it's best to return the name as it would appear in
@@ -199,13 +188,13 @@
 <section class="Sh">
 <h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>@Module::ScanDeps::IncludeLibs</b><b></b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>@Module::ScanDeps::IncludeLibs</b></span><b></b></h2>
 <p class="Pp">You can set this global variable to specify additional directories
     in which to search modules without modifying <span class="Li">@INC</span>
     itself.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b></b><b>$Module::ScanDeps::ScanFileRE</b><b></b></h2>
+<h2 class="Ss"><b></b><span class="Li"><b>$Module::ScanDeps::ScanFileRE</b></span><b></b></h2>
 <p class="Pp">You can set this global variable to specify a regular expression
     to identify what files to scan. By default it includes all files of the
     following types: .pm, .pl, .t and .al. Additionally, all files without a
@@ -226,13 +215,11 @@
 <p class="Pp">Chunks that span multiple lines are not handled correctly. For
     example, this one works:</p>
 <p class="Pp"></p>
-<pre>
-    use base 'Foo::Bar';
+<pre>    use base 'Foo::Bar';
 </pre>
 <p class="Pp">But this one does not:</p>
 <p class="Pp"></p>
-<pre>
-    use base
+<pre>    use base
         'Foo::Bar';
 </pre>
 </section>

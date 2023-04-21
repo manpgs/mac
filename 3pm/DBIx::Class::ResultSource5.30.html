@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::ResultSource(3)</title>
 </head>
@@ -28,26 +29,19 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # Create a table based result source, in a result class.
-
+<pre>  # Create a table based result source, in a result class.
   package MyApp::Schema::Result::Artist;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;table('artist');
   __PACKAGE__-&gt;add_columns(qw/ artistid name /);
   __PACKAGE__-&gt;set_primary_key('artistid');
   __PACKAGE__-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD');
-
   1;
-
   # Create a query (view) based result source, in a result class
   package MyApp::Schema::Result::Year2000CDs;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;load_components('InflateColumn::DateTime');
   __PACKAGE__-&gt;table_class('DBIx::Class::ResultSource::View');
-
   __PACKAGE__-&gt;table('year2000cds');
   __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
   __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
@@ -80,22 +74,19 @@
 <dl class="Bl-tag">
   <dt id="From"><a class="permalink" href="#From">From a Schema object:</a></dt>
   <dd>
-    <pre>
-   $schema-&gt;source($source_name);
+    <pre>   $schema-&gt;source($source_name);
     </pre>
   </dd>
   <dt id="From~2"><a class="permalink" href="#From~2">From a Result
     object:</a></dt>
   <dd>
-    <pre>
-   $result-&gt;result_source;
+    <pre>   $result-&gt;result_source;
     </pre>
   </dd>
   <dt id="From~3"><a class="permalink" href="#From~3">From a ResultSet
     object:</a></dt>
   <dd>
-    <pre>
-   $rs-&gt;result_source;
+    <pre>   $rs-&gt;result_source;
     </pre>
   </dd>
 </dl>
@@ -105,9 +96,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-  $class-&gt;new();
-
+<pre>  $class-&gt;new();
   $class-&gt;new({attribute_name =&gt; value});
 </pre>
 <p class="Pp">Creates a new ResultSource object. Not normally called directly by
@@ -124,11 +113,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;add_columns(qw/col1 col2 col3/);
-
+<pre>  $source-&gt;add_columns(qw/col1 col2 col3/);
   $source-&gt;add_columns('col1' =&gt; \%col1_info, 'col2' =&gt; \%col2_info, ...);
-
   $source-&gt;add_columns(
     'col1' =&gt; { data_type =&gt; 'integer', is_nullable =&gt; 1, ... },
     'col2' =&gt; { data_type =&gt; 'text',    is_auto_increment =&gt; 1, ... },
@@ -153,16 +139,12 @@
 <dl class="Bl-tag">
   <dt id="accessor"><a class="permalink" href="#accessor">accessor</a></dt>
   <dd>
-    <pre>
-   { accessor =&gt; '_name' }
-
+    <pre>   { accessor =&gt; '_name' }
    # example use, replace standard accessor with one of your own:
    sub name {
        my ($self, $value) = @_;
-
        die &quot;Name cannot contain digits!&quot; if($value =~ /\d/);
        $self-&gt;_name($value);
-
        return $self-&gt;_name();
    }
     </pre>
@@ -171,8 +153,7 @@
   </dd>
   <dt id="data_type"><a class="permalink" href="#data_type">data_type</a></dt>
   <dd>
-    <pre>
-   { data_type =&gt; 'integer' }
+    <pre>   { data_type =&gt; 'integer' }
     </pre>
     <p class="Pp">This contains the column type. It is automatically filled if
         you use the SQL::Translator::Producer::DBIx::Class::File producer, or
@@ -182,15 +163,13 @@
   </dd>
   <dt id="size"><a class="permalink" href="#size">size</a></dt>
   <dd>
-    <pre>
-   { size =&gt; 20 }
+    <pre>   { size =&gt; 20 }
     </pre>
     <p class="Pp">The length of your column, if it is a column type that can
         have a size restriction. This is currently only used to create tables
         from your schema, see &quot;deploy&quot; in DBIx::Class::Schema.</p>
     <p class="Pp"></p>
-    <pre>
-   { size =&gt; [ 9, 6 ] }
+    <pre>   { size =&gt; [ 9, 6 ] }
     </pre>
     <p class="Pp">For decimal or float values you can specify an ArrayRef in
         order to control precision, assuming your database's
@@ -198,8 +177,7 @@
   </dd>
   <dt id="is_nullable"><a class="permalink" href="#is_nullable">is_nullable</a></dt>
   <dd>
-    <pre>
-   { is_nullable =&gt; 1 }
+    <pre>   { is_nullable =&gt; 1 }
     </pre>
     <p class="Pp">Set this to a true value for a column that is allowed to
         contain NULL values, default is false. This is currently only used to
@@ -208,8 +186,7 @@
   </dd>
   <dt id="is_auto_increment"><a class="permalink" href="#is_auto_increment">is_auto_increment</a></dt>
   <dd>
-    <pre>
-   { is_auto_increment =&gt; 1 }
+    <pre>   { is_auto_increment =&gt; 1 }
     </pre>
     <p class="Pp">Set this to a true value for a column whose value is somehow
         automatically set, defaults to false. This is used to determine which
@@ -219,8 +196,7 @@
   </dd>
   <dt id="is_numeric"><a class="permalink" href="#is_numeric">is_numeric</a></dt>
   <dd>
-    <pre>
-   { is_numeric =&gt; 1 }
+    <pre>   { is_numeric =&gt; 1 }
     </pre>
     <p class="Pp">Set this to a true or false value (not
         <span class="Li">&quot;undef&quot;</span>) to explicitly specify if this
@@ -236,8 +212,7 @@
   </dd>
   <dt id="is_foreign_key"><a class="permalink" href="#is_foreign_key">is_foreign_key</a></dt>
   <dd>
-    <pre>
-   { is_foreign_key =&gt; 1 }
+    <pre>   { is_foreign_key =&gt; 1 }
     </pre>
     <p class="Pp">Set this to a true value for a column that contains a key from
         a foreign table, defaults to false. This is currently only used to
@@ -246,8 +221,7 @@
   </dd>
   <dt id="default_value"><a class="permalink" href="#default_value">default_value</a></dt>
   <dd>
-    <pre>
-   { default_value =&gt; \'now()' }
+    <pre>   { default_value =&gt; \'now()' }
     </pre>
     <p class="Pp">Set this to the default value which will be inserted into a
         column by the database. Can contain either a value or a function (use a
@@ -259,8 +233,7 @@
   </dd>
   <dt id="sequence"><a class="permalink" href="#sequence">sequence</a></dt>
   <dd>
-    <pre>
-   { sequence =&gt; 'my_table_seq' }
+    <pre>   { sequence =&gt; 'my_table_seq' }
     </pre>
     <p class="Pp">Set this on a primary key column to the name of the sequence
         used to generate a new key value. If not specified,
@@ -269,8 +242,7 @@
   </dd>
   <dt id="retrieve_on_insert"><a class="permalink" href="#retrieve_on_insert">retrieve_on_insert</a></dt>
   <dd>
-    <pre>
-  { retrieve_on_insert =&gt; 1 }
+    <pre>  { retrieve_on_insert =&gt; 1 }
     </pre>
     <p class="Pp">For every column where this is set to true, DBIC will retrieve
         the RDBMS-side value upon a new row insertion (normally only the
@@ -281,8 +253,7 @@
   </dd>
   <dt id="auto_nextval"><a class="permalink" href="#auto_nextval">auto_nextval</a></dt>
   <dd>
-    <pre>
-   { auto_nextval =&gt; 1 }
+    <pre>   { auto_nextval =&gt; 1 }
     </pre>
     <p class="Pp">Set this to a true value for a column whose value is retrieved
         automatically from a sequence or function (if supported by your Storage
@@ -313,8 +284,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;add_column('col' =&gt; \%info);
+<pre>  $source-&gt;add_column('col' =&gt; \%info);
 </pre>
 <p class="Pp">Add a single column and optional column info. Uses the same column
     info keys as &quot;add_columns&quot;.</p>
@@ -330,8 +300,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  if ($source-&gt;has_column($colname)) { ... }
+<pre>  if ($source-&gt;has_column($colname)) { ... }
 </pre>
 <p class="Pp">Returns true if the source has a column of this name, false
     otherwise.</p>
@@ -347,8 +316,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $info = $source-&gt;column_info($col);
+<pre>  my $info = $source-&gt;column_info($col);
 </pre>
 <p class="Pp">Returns the column metadata hashref for a column, as originally
     passed to &quot;add_columns&quot;. See &quot;add_columns&quot; above for
@@ -365,8 +333,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my @column_names = $source-&gt;columns;
+<pre>  my @column_names = $source-&gt;columns;
 </pre>
 <p class="Pp">Returns all column names in the order they were declared to
     &quot;add_columns&quot;.</p>
@@ -382,8 +349,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $columns_info = $source-&gt;columns_info;
+<pre>  my $columns_info = $source-&gt;columns_info;
 </pre>
 <p class="Pp">Like &quot;column_info&quot; but returns information for the
     requested columns. If the optional column-list arrayref is omitted it
@@ -401,8 +367,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;remove_columns(qw/col1 col2 col3/);
+<pre>  $source-&gt;remove_columns(qw/col1 col2 col3/);
 </pre>
 <p class="Pp">Removes the given list of columns by name, from the result
   source.</p>
@@ -421,8 +386,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;remove_column('col');
+<pre>  $source-&gt;remove_column('col');
 </pre>
 <p class="Pp">Remove a single column by name from the result source, similar to
     &quot;remove_columns&quot;.</p>
@@ -463,7 +427,7 @@
     supplied by &quot;set_primary_key&quot;.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss">sequence</h2>
+<h2 class="Ss" id="sequence~2"><a class="permalink" href="#sequence~2">sequence</a></h2>
 <p class="Pp">Manually define the correct sequence for your table, to avoid the
     overhead associated with looking up the sequence automatically. The supplied
     sequence will be applied to the &quot;column_info&quot; of each
@@ -490,16 +454,14 @@
 <p class="Pp">Declare a unique constraint on this source. Call once for each
     unique constraint.</p>
 <p class="Pp"></p>
-<pre>
-  # For UNIQUE (column1, column2)
+<pre>  # For UNIQUE (column1, column2)
   __PACKAGE__-&gt;add_unique_constraint(
     constraint_name =&gt; [ qw/column1 column2/ ],
   );
 </pre>
 <p class="Pp">Alternatively, you can specify only the columns:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_unique_constraint([ qw/column1 column2/ ]);
+<pre>  __PACKAGE__-&gt;add_unique_constraint([ qw/column1 column2/ ]);
 </pre>
 <p class="Pp">This will result in a unique constraint named
     <span class="Li">&quot;table_column1_column2&quot;</span>, where
@@ -524,16 +486,14 @@
 </dl>
 <p class="Pp">Declare multiple unique constraints on this source.</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_unique_constraints(
+<pre>  __PACKAGE__-&gt;add_unique_constraints(
     constraint_name1 =&gt; [ qw/column1 column2/ ],
     constraint_name2 =&gt; [ qw/column2 column3/ ],
   );
 </pre>
 <p class="Pp">Alternatively, you can specify only the columns:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_unique_constraints(
+<pre>  __PACKAGE__-&gt;add_unique_constraints(
     [ qw/column1 column2/ ],
     [ qw/column3 column4/ ]
   );
@@ -558,8 +518,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;table('mytable');
+<pre>  $source-&gt;table('mytable');
   $source-&gt;name_unique_constraint(['col1', 'col2']);
   # returns
   'mytable_col1_col2'
@@ -586,8 +545,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;unique_constraints();
+<pre>  $source-&gt;unique_constraints();
 </pre>
 <p class="Pp">Read-only accessor which returns a hash of unique constraints on
     this source.</p>
@@ -605,8 +563,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;unique_constraint_names();
+<pre>  $source-&gt;unique_constraint_names();
 </pre>
 <p class="Pp">Returns the list of unique constraint names defined on this
     source.</p>
@@ -622,8 +579,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;unique_constraint_columns('myconstraint');
+<pre>  $source-&gt;unique_constraint_columns('myconstraint');
 </pre>
 <p class="Pp">Returns the list of columns that make up the specified unique
     constraint.</p>
@@ -639,11 +595,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;sqlt_deploy_callback('mycallbackmethod');
-
+<pre>  __PACKAGE__-&gt;sqlt_deploy_callback('mycallbackmethod');
    or
-
   __PACKAGE__-&gt;sqlt_deploy_callback(sub {
     my ($source_instance, $sqlt_table) = @_;
     ...
@@ -691,10 +644,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
- use My::Schema::ResultClass::Inflator;
+<pre> use My::Schema::ResultClass::Inflator;
  ...
-
  use My::Schema::Artist;
  ...
  __PACKAGE__-&gt;result_class('My::Schema::ResultClass::Inflator');
@@ -720,8 +671,7 @@
 <p class="Pp">Returns a resultset for the given source. This will initially be
     created on demand by calling</p>
 <p class="Pp"></p>
-<pre>
-  $self-&gt;resultset_class-&gt;new($self, $self-&gt;resultset_attributes)
+<pre>  $self-&gt;resultset_class-&gt;new($self, $self-&gt;resultset_attributes)
 </pre>
 <p class="Pp">but is cached from then on unless resultset_class changes.</p>
 </section>
@@ -736,14 +686,11 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  package My::Schema::ResultSet::Artist;
+<pre>  package My::Schema::ResultSet::Artist;
   use base 'DBIx::Class::ResultSet';
   ...
-
   # In the result class
   __PACKAGE__-&gt;resultset_class('My::Schema::ResultSet::Artist');
-
   # Or in code
   $source-&gt;resultset_class('My::Schema::ResultSet::Artist');
 </pre>
@@ -763,10 +710,8 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # In the result class
+<pre>  # In the result class
   __PACKAGE__-&gt;resultset_attributes({ order_by =&gt; [ 'id' ] });
-
   # Or in code
   $source-&gt;resultset_attributes({ order_by =&gt; [ 'id' ] });
 </pre>
@@ -784,17 +729,13 @@
 <p class="Pp">In most cases, what you should actually be using are
     project-specific methods:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Schema::ResultSet::Artist;
+<pre>  package My::Schema::ResultSet::Artist;
   use base 'DBIx::Class::ResultSet';
   ...
-
   # BAD IDEA!
   #__PACKAGE__-&gt;resultset_attributes({ prefetch =&gt; 'tracks' });
-
   # GOOD IDEA!
   sub with_tracks { shift-&gt;search({}, { prefetch =&gt; 'tracks' }) }
-
   # in your code
   $schema-&gt;resultset('Artist')-&gt;with_tracks-&gt;...
 </pre>
@@ -831,12 +772,10 @@
     a schema. This is useful if you want to refer to a result source by a name
     other than its class name.</p>
 <p class="Pp"></p>
-<pre>
-  package ArchivedBooks;
+<pre>  package ArchivedBooks;
   use base qw/DBIx::Class/;
   __PACKAGE__-&gt;table('books_archive');
   __PACKAGE__-&gt;source_name('Books');
-
   # from your schema...
   $schema-&gt;resultset('Books')-&gt;find(1);
 </pre>
@@ -852,8 +791,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $from_clause = $source-&gt;from();
+<pre>  my $from_clause = $source-&gt;from();
 </pre>
 <p class="Pp">Returns an expression of the source to be supplied to storage to
     specify retrieval from this source. In the case of a database, the required
@@ -865,8 +803,7 @@
     have yet been standardized, the examples below are purely hypothetical and
     don't actually accomplish anything on their own:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;source_info({
+<pre>  __PACKAGE__-&gt;source_info({
     &quot;_tablespace&quot; =&gt; 'fast_disk_array_3',
     &quot;_engine&quot; =&gt; 'InnoDB',
   });
@@ -883,8 +820,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $schema = $source-&gt;schema();
+<pre>  my $schema = $source-&gt;schema();
 </pre>
 <p class="Pp">Sets and/or returns the DBIx::Class::Schema object to which this
     result source instance has been attached to.</p>
@@ -900,8 +836,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;storage-&gt;debug(1);
+<pre>  $source-&gt;storage-&gt;debug(1);
 </pre>
 <p class="Pp">Returns the storage handle for the current schema.</p>
 </section>
@@ -916,8 +851,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $source-&gt;add_relationship('rel_name', 'related_source', $cond, $attrs);
+<pre>  $source-&gt;add_relationship('rel_name', 'related_source', $cond, $attrs);
 </pre>
 <p class="Pp">DBIx::Class::Relationship describes a series of methods which
     create pre-defined useful types of relationships. Look there first before
@@ -927,8 +861,7 @@
     the name with which the related result source was registered with the
     current schema. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;source('Book')-&gt;add_relationship('reviews', 'Review', {
+<pre>  $schema-&gt;source('Book')-&gt;add_relationship('reviews', 'Review', {
     'foreign.book_id' =&gt; 'self.id',
   });
 </pre>
@@ -936,13 +869,11 @@
     SQL::Abstract-style representation of the join between the tables. For
     example, if you're creating a relation from Author to Book,</p>
 <p class="Pp"></p>
-<pre>
-  { 'foreign.author_id' =&gt; 'self.id' }
+<pre>  { 'foreign.author_id' =&gt; 'self.id' }
 </pre>
 <p class="Pp">will result in the JOIN clause</p>
 <p class="Pp"></p>
-<pre>
-  author me JOIN book foreign ON foreign.author_id = me.id
+<pre>  author me JOIN book foreign ON foreign.author_id = me.id
 </pre>
 <p class="Pp">You can specify as many foreign =&gt; self mappings as
   necessary.</p>
@@ -957,16 +888,14 @@
   <dd>An arrayref containing a list of accessors in the foreign class to proxy
       in the main class. If, for example, you do the following:
     <p class="Pp"></p>
-    <pre>
-  CD-&gt;might_have(liner_notes =&gt; 'LinerNotes', undef, {
+    <pre>  CD-&gt;might_have(liner_notes =&gt; 'LinerNotes', undef, {
     proxy =&gt; [ qw/notes/ ],
   });
     </pre>
     <p class="Pp">Then, assuming LinerNotes has an accessor named notes, you can
         do:</p>
     <p class="Pp"></p>
-    <pre>
-  my $cd = CD-&gt;find(1);
+    <pre>  my $cd = CD-&gt;find(1);
   # set notes -- LinerNotes object is created if it doesn't exist
   $cd-&gt;notes('Notes go here');
     </pre>
@@ -997,8 +926,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my @rel_names = $source-&gt;relationships();
+<pre>  my @rel_names = $source-&gt;relationships();
 </pre>
 <p class="Pp">Returns all relationship names for this source.</p>
 </section>
@@ -1104,8 +1032,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;column_info_from_storage(1);
+<pre>  __PACKAGE__-&gt;column_info_from_storage(1);
 </pre>
 <p class="Pp">Enables the on-demand automatic loading of the above column
     metadata from storage as necessary. This is *deprecated*, and should not be

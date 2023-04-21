@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>LDAP_TABLE(5)</title>
 </head>
@@ -21,10 +22,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<b>postmap -q &quot;</b><i>string</i><b>&quot; ldap:/etc/postfix/</b><i>filename</i>
-<b>postmap -q - ldap:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i>
-</pre>
+<pre><b>postmap -q &quot;</b><i>string</i><b>&quot; ldap:/etc/postfix/</b><i>filename</i>
+<b>postmap -q - ldap:/etc/postfix/</b><i>filename</i><b> &lt;</b><i>inputfile</i></pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -38,8 +37,7 @@
     table in main.cf, for example:</p>
 <p class="Pp"></p>
 <pre>
-    alias_maps = ldap:/etc/postfix/ldap-aliases.cf
-</pre>
+    alias_maps = ldap:/etc/postfix/ldap-aliases.cf</pre>
 <p class="Pp">The file /etc/postfix/ldap-aliases.cf has the same format as the
     Postfix main.cf file, and can specify the parameters described below. An
     example is given at the end of this manual.</p>
@@ -52,8 +50,7 @@
 <section class="Sh">
 <h1 class="Sh" id="LIST_MEMBERSHIP"><a class="permalink" href="#LIST_MEMBERSHIP">LIST
   MEMBERSHIP</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">When using LDAP to store lists such as $mynetworks,
     $mydestination, $relay_domains, $local_recipient_maps, etc., it is important
     to understand that the table must store each list member as a separate key.
@@ -69,20 +66,17 @@
 <p class="Pp"></p>
 <pre>
     query_filter = domain=*
-    result_attribute = domain
-</pre>
+    result_attribute = domain</pre>
 <p class="Pp">Do this instead:</p>
 <p class="Pp"></p>
 <pre>
     query_filter = domain=%s
-    result_attribute = domain
-</pre>
+    result_attribute = domain</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="GENERAL_LDAP_PARAMETERS"><a class="permalink" href="#GENERAL_LDAP_PARAMETERS">GENERAL
   LDAP PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">In the text below, default values are given in parentheses. Note:
     don't use quotes in these variables; at least, not until the Postfix
     configuration routines understand how to deal with quoted strings.</p>
@@ -92,8 +86,7 @@
   <dd>The name of the host running the LDAP server, e.g.
     <p class="Pp"></p>
     <pre>
-    server_host = ldap.example.com
-    </pre>
+    server_host = ldap.example.com</pre>
     <p class="Pp">Depending on the LDAP client library you're using, it should
         be possible to specify multiple servers here, with the library trying
         them in order should the first one fail. It should also be possible to
@@ -101,31 +94,27 @@
         <b>server_port</b> below), by naming them like</p>
     <p class="Pp"></p>
     <pre>
-    server_host = ldap.example.com:1444
-    </pre>
+    server_host = ldap.example.com:1444</pre>
     <p class="Pp">With OpenLDAP, a (list of) LDAP URLs can be used to specify
         both the hostname(s) and the port(s):</p>
     <p class="Pp"></p>
     <pre>
     server_host = ldap://ldap.example.com:1444
-                ldap://ldap2.example.com:1444
-    </pre>
+                ldap://ldap2.example.com:1444</pre>
     <p class="Pp">All LDAP URLs accepted by the OpenLDAP library are supported,
         including connections over UNIX domain sockets, and LDAP SSL (the last
         one provided that OpenLDAP was compiled with support for SSL):</p>
     <p class="Pp"></p>
     <pre>
     server_host = ldapi://%2Fsome%2Fpath
-                ldaps://ldap.example.com:636
-    </pre>
+                ldaps://ldap.example.com:636</pre>
   </dd>
   <dt id="server_port"><a class="permalink" href="#server_port"><b>server_port
     (default: 389)</b></a></dt>
   <dd>The port the LDAP server listens on, e.g.
     <p class="Pp"></p>
     <pre>
-    server_port = 778
-    </pre>
+    server_port = 778</pre>
   </dd>
   <dt id="timeout"><a class="permalink" href="#timeout"><b>timeout (default: 10
     seconds)</b></a></dt>
@@ -142,8 +131,7 @@
   <dd>The RFC2253 base DN at which to conduct the search, e.g.
     <p class="Pp"></p>
     <pre>
-    search_base = dc=your, dc=com
-    </pre>
+    search_base = dc=your, dc=com</pre>
   </dd>
   <dt></dt>
   <dd>With Postfix 2.2 and later this parameter supports the following '%'
@@ -188,8 +176,7 @@
       substitute for the address Postfix is trying to resolve, e.g.
     <p class="Pp"></p>
     <pre>
-    query_filter = (&amp;(mail=%s)(paid_up=true))
-    </pre>
+    query_filter = (&amp;(mail=%s)(paid_up=true))</pre>
     <p class="Pp">This parameter supports the following '%' expansions:</p>
   </dd>
 </dl>
@@ -300,8 +287,7 @@
       significantly reduce the query load on the LDAP server.
     <p class="Pp"></p>
     <pre>
-    domain = postfix.org, hash:/etc/postfix/searchdomains
-    </pre>
+    domain = postfix.org, hash:/etc/postfix/searchdomains</pre>
     <p class="Pp">It is best not to use LDAP to store the domains eligible for
         LDAP lookups.</p>
     <p class="Pp">NOTE: DO NOT define this parameter for local(8) aliases.</p>
@@ -313,8 +299,7 @@
       the lookup, to be resolved to an email address.
     <p class="Pp"></p>
     <pre>
-    result_attribute = mailbox, maildrop
-    </pre>
+    result_attribute = mailbox, maildrop</pre>
     <p class="Pp">Don't rely on the default value (&quot;maildrop&quot;). Set
         the result_attribute explicitly in all ldap table configuration files.
         This is particularly relevant when no result_attribute is applicable,
@@ -330,8 +315,7 @@
       referenced by the DN, or the entries matched by the URL query.
     <p class="Pp"></p>
     <pre>
-    special_result_attribute = memberdn
-    </pre>
+    special_result_attribute = memberdn</pre>
     <p class="Pp">DN recursion retrieves the same result_attributes as the main
         query, including the special attributes for further recursion.</p>
     <p class="Pp">URL processing retrieves only those attributes that are
@@ -364,8 +348,7 @@
     <p class="Pp"></p>
     <pre>
     result_attribute =
-    terminal_result_attribute = maildrop
-    </pre>
+    terminal_result_attribute = maildrop</pre>
     <p class="Pp">When using terminal and/or leaf result attributes, the
         result_attribute is best set to an empty value when it is not used, or
         else explicitly set to the desired value, even if it is the default
@@ -394,8 +377,7 @@
     result_attribute = memberaddr
     special_result_attribute = memberdn
     terminal_result_attribute = maildrop
-    leaf_result_attribute = mail
-    </pre>
+    leaf_result_attribute = mail</pre>
     <p class="Pp">When using terminal and/or leaf result attributes, the
         result_attribute is best set to an empty value when it is not used, or
         else explicitly set to the desired value, even if it is the default
@@ -418,8 +400,7 @@
     # Use SIMPLE bind
     bind = yes
     # Use SASL bind
-    bind = sasl
-    </pre>
+    bind = sasl</pre>
     <p class="Pp">Postfix versions prior to 2.8 only support &quot;bind =
         no&quot; which means don't bind, and &quot;bind = yes&quot; which means
         do a SIMPLE bind. Postfix 2.8 and later also supports &quot;bind =
@@ -440,8 +421,7 @@
   <dd>If you do have to bind, do it with this distinguished name. Example:
     <p class="Pp"></p>
     <pre>
-    bind_dn = uid=postfix, dc=your, dc=com
-    </pre>
+    bind_dn = uid=postfix, dc=your, dc=com</pre>
     With &quot;bind = sasl&quot; (see above) the DN may be optional for some
       SASL mechanisms, don't specify a DN if not needed.</dd>
   <dt id="bind_pw"><a class="permalink" href="#bind_pw"><b>bind_pw (default:
@@ -454,8 +434,7 @@
       local accounts to submit mail via the sendmail command. Example:
     <p class="Pp"></p>
     <pre>
-    bind_pw = postfixpw
-    </pre>
+    bind_pw = postfixpw</pre>
     With &quot;bind = sasl&quot; (see above) the password may be optional for
       some SASL mechanisms, don't specify a password if not needed.</dd>
   <dt id="cache"><a class="permalink" href="#cache"><b>cache (IGNORED with a
@@ -530,8 +509,7 @@
 <section class="Sh">
 <h1 class="Sh" id="LDAP_SASL_PARAMETERS"><a class="permalink" href="#LDAP_SASL_PARAMETERS">LDAP
   SASL PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">If you're using the OpenLDAP libraries compiled with SASL support,
     Postfix 2.8 and later built with LDAP SASL support as described in
     LDAP_README can authenticate to LDAP servers via SASL.</p>
@@ -572,8 +550,7 @@
 <section class="Sh">
 <h1 class="Sh" id="LDAP_SSL_AND_STARTTLS_PARAMETERS"><a class="permalink" href="#LDAP_SSL_AND_STARTTLS_PARAMETERS">LDAP
   SSL AND STARTTLS PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">If you're using the OpenLDAP libraries compiled with SSL support,
     Postfix can connect to LDAP SSL servers and can issue the STARTTLS
   command.</p>
@@ -581,19 +558,16 @@
     server_host parameter:</p>
 <p class="Pp"></p>
 <pre>
-    server_host = ldaps://ldap.example.com:636
-</pre>
+    server_host = ldaps://ldap.example.com:636</pre>
 <p class="Pp">STARTTLS can be turned on with the start_tls parameter:</p>
 <p class="Pp"></p>
 <pre>
-    start_tls = yes
-</pre>
+    start_tls = yes</pre>
 <p class="Pp">Both forms require LDAP protocol version 3, which has to be set
     explicitly with:</p>
 <p class="Pp"></p>
 <pre>
-    version = 3
-</pre>
+    version = 3</pre>
 <p class="Pp">If any of the Postfix programs querying the map is configured in
     master.cf to run chrooted, all the certificates and keys involved have to be
     copied to the chroot jail. Of course, the private keys should only be
@@ -672,21 +646,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">Here's a basic example for using LDAP to look up local(8) aliases.
     Assume that in main.cf, you have:</p>
 <p class="Pp"></p>
 <pre>
     alias_maps = hash:/etc/aliases,
-            ldap:/etc/postfix/ldap-aliases.cf
-</pre>
+            ldap:/etc/postfix/ldap-aliases.cf</pre>
 <p class="Pp">and in ldap:/etc/postfix/ldap-aliases.cf you have:</p>
 <p class="Pp"></p>
 <pre>
     server_host = ldap.example.com
-    search_base = dc=example, dc=com
-</pre>
+    search_base = dc=example, dc=com</pre>
 <p class="Pp">Upon receiving mail for a local address &quot;ldapuser&quot; that
     isn't found in the /etc/aliases database, Postfix will search the LDAP
     server listening at port 389 on ldap.example.com. It will bind anonymously,
@@ -698,8 +669,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OBSOLETE_MAIN.CF_PARAMETERS"><a class="permalink" href="#OBSOLETE_MAIN.CF_PARAMETERS">OBSOLETE
   MAIN.CF PARAMETERS</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">For backwards compatibility with Postfix version 2.0 and earlier,
     LDAP parameters can also be defined in main.cf. Specify as LDAP source a
     name that doesn't begin with a slash or a dot. The LDAP parameters will then
@@ -715,8 +685,7 @@
 <section class="Sh">
 <h1 class="Sh" id="OTHER_OBSOLETE_FEATURES"><a class="permalink" href="#OTHER_OBSOLETE_FEATURES">OTHER
   OBSOLETE FEATURES</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">For backwards compatibility with the pre 2.2 LDAP clients,
     <b>result_filter</b> can for now be used instead of <b>result_format</b>,
     when the latter parameter is not also set. The new name better reflects the
@@ -726,36 +695,29 @@
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<pre>
-postmap(1), Postfix lookup table manager
+<pre>postmap(1), Postfix lookup table manager
 postconf(5), configuration parameters
 mysql_table(5), MySQL lookup tables
-pgsql_table(5), PostgreSQL lookup tables
-</pre>
+pgsql_table(5), PostgreSQL lookup tables</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="README_FILES"><a class="permalink" href="#README_FILES">README
   FILES</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">Use &quot;<b>postconf readme_directory</b>&quot; or
     &quot;<b>postconf html_directory</b>&quot; to locate this information.</p>
-<pre>
-DATABASE_README, Postfix lookup table overview
-LDAP_README, Postfix LDAP client guide
-</pre>
+<pre>DATABASE_README, Postfix lookup table overview
+LDAP_README, Postfix LDAP client guide</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">The Secure Mailer license must be distributed with this
   software.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR(S)"><a class="permalink" href="#AUTHOR(S)">AUTHOR(S)</a></h1>
-<pre>
-</pre>
+<pre></pre>
 <p class="Pp">Carsten Hoeger, Hery Rakotoarisoa, John Hensley, Keith Stevenson,
     LaMont Jones, Liviu Daia, Manuel Guesdon, Mike Mattice, Prabhat K Singh,
     Sami Haahtinen, Samuel Tardieu, Victor Duchovni, and many others.</p>

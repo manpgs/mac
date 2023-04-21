@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IPL(4)</title>
 </head>
@@ -29,8 +30,7 @@
     information relevant to the packet following and why it was logged. The
     structure's format is as follows:</p>
 <p class="Pp"></p>
-<pre>
-struct ipl_ci   {
+<pre>struct ipl_ci   {
         u_long  sec;      /* time when the packet was logged */
         u_long  usec;
         u_long  plen;     /* length of packet data logged */
@@ -46,23 +46,18 @@ struct ipl_ci   {
 #endif
 };
 </pre>
-<pre>
-In the case of the header causing the buffer to finish on a non-32bit
+<pre>In the case of the header causing the buffer to finish on a non-32bit
 boundary, padding will be `appended' to ensure that the next log entry
-is aligned to a 32bit boundary.
-</pre>
-<pre>
-If the packet contents is more then 128 bytes, then only 128 bytes of the
+is aligned to a 32bit boundary.</pre>
+<pre>If the packet contents is more then 128 bytes, then only 128 bytes of the
 packet contents is logged. Should the packet contents finish on a non-32bit
 boundary, then the last few bytes are not logged to ensure the log entry
 is aligned to a 32bit boundary.
 <b>ipl</b> is a read-only (sequential) character pseudo-device.
 The ioctls which are loaded with this device can be found under <b>ipf(4)</b>.
-The only ioctl which is used for logging and doesn't affect the filter is:
-</pre>
+The only ioctl which is used for logging and doesn't affect the filter is:</pre>
 <pre>
-        ioctl(fd, SIOCIPFFB, int *)
-</pre>
+        ioctl(fd, SIOCIPFFB, int *)</pre>
 <p class="Pp">This ioctl flushes the log buffer and returns the number of bytes
     flushed.</p>
 <p class="Pp">There is currently no support for non-blocking IO with this

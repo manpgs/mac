@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Manual::Tooling::Subtest(3)</title>
 </head>
@@ -49,20 +50,14 @@
 <p class="Pp">This example will emulate the
     <span class="Li">&quot;subtest&quot;</span> function.</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::API qw/context run_subtest/;
-
+<pre>    use Test2::API qw/context run_subtest/;
     sub my_subtest {
         my ($name, $code) = @_;
-
         # Like any other tool, you need to acquire a context, if you do not then
         # things will not report the correct file and line number.
         my $ctx = context();
-
         my $bool = run_subtest($name, $code);
-
         $ctx-&gt;release;
-
         return $bool;
     }
 </pre>
@@ -75,8 +70,7 @@
 <p class="Pp"><span class="Li">&quot;run_subtest()&quot;</span> can take
     additional arguments:</p>
 <p class="Pp"></p>
-<pre>
-    run_subtest($name, $code, \%params, @args);
+<pre>    run_subtest($name, $code, \%params, @args);
 </pre>
 <dl class="Bl-tag">
   <dt>@args</dt>
@@ -108,24 +102,17 @@
     other tools into a subtest. For this we will be using the tool we created in
     Test2::Manual::Tooling::Nesting.</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::API qw/context run_subtest/;
-
+<pre>    use Test2::API qw/context run_subtest/;
     sub check_class {
         my $class = shift;
-
         my $ctx = context();
-
         my $code = sub {
             my $obj = $class-&gt;new;
             is($obj-&gt;foo, 'foo', &quot;got foo&quot;);
             is($obj-&gt;bar, 'bar', &quot;got bar&quot;);
         };
-
         my $bool = run_subtest($class, $code, {buffered =&gt; 1, inherit_trace =&gt; 1});
-
         $ctx-&gt;release;
-
         return $bool;
     }
 </pre>

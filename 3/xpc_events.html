@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>xpc_events(3)</title>
 </head>
@@ -87,9 +88,8 @@
     values of this inner dictionary are events that may cause the job to be
     launched on-demand. The keys of this inner dictionary are names chosen by
     the developer to identify the event.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-&lt;key&gt;LaunchEvents&lt;/key&gt;
+<div class="Bd Pp Bd-indent Li">
+<pre>&lt;key&gt;LaunchEvents&lt;/key&gt;
 &lt;dict&gt;
 	&lt;key&gt;com.apple.iokit.matching&lt;/key&gt;
 	&lt;dict&gt;
@@ -118,8 +118,7 @@
 			&lt;string&gt;com.apple.other-interesting-notification&lt;/string&gt;
 		&lt;/dict&gt;
 	&lt;/dict&gt;
-&lt;/dict&gt;
-</pre>
+&lt;/dict&gt;</pre>
 </div>
 <p class="Pp">The above specifies that the job will be launched when a node
     matching the given matching dictionary appears in the IORegistry, when a
@@ -162,16 +161,14 @@
     <a class="permalink" href="#IORegistryEntryIDMatching"><code class="Fn" id="IORegistryEntryIDMatching">IORegistryEntryIDMatching</code></a>()
     to obtain the registry entry which caused the event to fire.</p>
 <p class="Pp">BSD Notfication events have no additional payload.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-xpc_set_event_stream_handler(&quot;com.apple.iokit.matching&quot;, q, ^(xpc_object_t event) {
+<div class="Bd Pp Bd-indent Li">
+<pre>xpc_set_event_stream_handler(&quot;com.apple.iokit.matching&quot;, q, ^(xpc_object_t event) {
 	const char *name = xpc_dictionary_get_string(event, XPC_EVENT_KEY_NAME);
 	uint64_t id = xpc_dictionary_get_uint64(event, &quot;IOMatchLaunchServiceID&quot;);
 
 	CFMutableDictionaryRef matching = IORegistryEntryIDMatching(id);
 	// Pass to IOServiceGetMatchingServices() or IOServiceAddNotification().
-});
-</pre>
+});</pre>
 </div>
 <p class="Pp" id="xpc_set_event_stream_handler~3"><i class="Em">IMPORTANT</i>:
     <a class="permalink" href="#xpc_set_event_stream_handler~3"><code class="Fn">xpc_set_event_stream_handler</code></a>()

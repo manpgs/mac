@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLREAPI(1)</title>
 </head>
@@ -33,8 +34,7 @@
 <p class="Pp">Each engine is supposed to provide access to a constant structure
     of the following format:</p>
 <p class="Pp"></p>
-<pre>
-    typedef struct regexp_engine {
+<pre>    typedef struct regexp_engine {
         REGEXP* (*comp) (pTHX_
                          const SV * const pattern, const U32 flags);
         I32     (*exec) (pTHX_
@@ -96,8 +96,7 @@
 <h1 class="Sh" id="Callbacks"><a class="permalink" href="#Callbacks">Callbacks</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="comp"><a class="permalink" href="#comp">comp</a></h2>
-<pre>
-    REGEXP* comp(pTHX_ const SV * const pattern, const U32 flags);
+<pre>    REGEXP* comp(pTHX_ const SV * const pattern, const U32 flags);
 </pre>
 <p class="Pp">Compile the pattern stored in
     <span class="Li">&quot;pattern&quot;</span> using the given
@@ -111,8 +110,7 @@
     of the stringified pattern; the following snippet can be used to get the old
     parameters:</p>
 <p class="Pp"></p>
-<pre>
-    STRLEN plen;
+<pre>    STRLEN plen;
     char*  exp = SvPV(pattern, plen);
     char* xend = exp + plen;
 </pre>
@@ -192,8 +190,7 @@
         it and set the SKIPWHITE and WHITE extflags. To do this, the Perl engine
         does:</p>
     <p class="Pp"></p>
-    <pre>
-    if (flags &amp; RXf_SPLIT &amp;&amp; r-&gt;prelen == 1 &amp;&amp; r-&gt;precomp[0] == ' ')
+    <pre>    if (flags &amp; RXf_SPLIT &amp;&amp; r-&gt;prelen == 1 &amp;&amp; r-&gt;precomp[0] == ' ')
         r-&gt;extflags |= (RXf_SKIPWHITE|RXf_WHITE);
     </pre>
   </dd>
@@ -254,8 +251,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="exec"><a class="permalink" href="#exec">exec</a></h2>
-<pre>
-    I32 exec(pTHX_ REGEXP * const rx,
+<pre>    I32 exec(pTHX_ REGEXP * const rx,
              char *stringarg, char* strend, char* strbeg,
              SSize_t minend, SV* sv,
              void* data, U32 flags);
@@ -292,8 +288,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="intuit"><a class="permalink" href="#intuit">intuit</a></h2>
-<pre>
-    char* intuit(pTHX_
+<pre>    char* intuit(pTHX_
                 REGEXP * const rx,
                 SV *sv,
                 const char * const strbeg,
@@ -309,8 +304,7 @@
     <span class="Li">&quot;regexp&quot;</span> structure.</p>
 <p class="Pp">Arguments:</p>
 <p class="Pp"></p>
-<pre>
-    rx:     the regex to match against
+<pre>    rx:     the regex to match against
     sv:     the SV being matched: only used for utf8 flag; the string
             itself is accessed via the pointers below. Note that on
             something like an overloaded SV, SvPOK(sv) may be false
@@ -325,8 +319,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="checkstr"><a class="permalink" href="#checkstr">checkstr</a></h2>
-<pre>
-    SV* checkstr(pTHX_ REGEXP * const rx);
+<pre>    SV* checkstr(pTHX_ REGEXP * const rx);
 </pre>
 <p class="Pp">Return a SV containing a string that must appear in the pattern.
     Used by <span class="Li">&quot;split&quot;</span> for optimising
@@ -334,8 +327,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="free"><a class="permalink" href="#free">free</a></h2>
-<pre>
-    void free(pTHX_ REGEXP * const rx);
+<pre>    void free(pTHX_ REGEXP * const rx);
 </pre>
 <p class="Pp">Called by Perl when it is freeing a regexp pattern so that the
     engine can release any resources pointed to by the
@@ -359,8 +351,7 @@
     <span class="Li">2</span> for <span class="Li">$2</span> and so forth, and
     have these symbolic values for the special variables:</p>
 <p class="Pp"></p>
-<pre>
-    ${^PREMATCH}  RX_BUFF_IDX_CARET_PREMATCH
+<pre>    ${^PREMATCH}  RX_BUFF_IDX_CARET_PREMATCH
     ${^POSTMATCH} RX_BUFF_IDX_CARET_POSTMATCH
     ${^MATCH}     RX_BUFF_IDX_CARET_FULLMATCH
     $`            RX_BUFF_IDX_PREMATCH
@@ -375,8 +366,7 @@
     via magic.</p>
 <p class="Pp"><i>numbered_buff_FETCH</i></p>
 <p class="Pp"></p>
-<pre>
-    void numbered_buff_FETCH(pTHX_ REGEXP * const rx, const I32 paren,
+<pre>    void numbered_buff_FETCH(pTHX_ REGEXP * const rx, const I32 paren,
                              SV * const sv);
 </pre>
 <p class="Pp">Fetch a specified numbered capture.
@@ -393,8 +383,7 @@
     you'd like your engine to do as well.</p>
 <p class="Pp"><i>numbered_buff_STORE</i></p>
 <p class="Pp"></p>
-<pre>
-    void    (*numbered_buff_STORE) (pTHX_
+<pre>    void    (*numbered_buff_STORE) (pTHX_
                                     REGEXP * const rx,
                                     const I32 paren,
                                     SV const * const value);
@@ -405,8 +394,7 @@
     value (or reject it).</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-    if (&quot;ook&quot; =~ /(o*)/) {
+<pre>    if (&quot;ook&quot; =~ /(o*)/) {
         # 'paren' will be '1' and 'value' will be 'ee'
         $1 =~ tr/o/e/;
     }
@@ -415,8 +403,7 @@
     variables, to do this in another engine use the following callback (copied
     from <span class="Li">&quot;Perl_reg_numbered_buff_store&quot;</span>):</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     Example_reg_numbered_buff_store(pTHX_
                                     REGEXP * const rx,
                                     const I32 paren,
@@ -425,7 +412,6 @@
         PERL_UNUSED_ARG(rx);
         PERL_UNUSED_ARG(paren);
         PERL_UNUSED_ARG(value);
-
         if (!PL_localizing)
             Perl_croak(aTHX_ PL_no_modify);
     }
@@ -436,16 +422,12 @@
     to modify the value. This is exactly how tied variables behave in the same
     situation:</p>
 <p class="Pp"></p>
-<pre>
-    package CaptureVar;
+<pre>    package CaptureVar;
     use parent 'Tie::Scalar';
-
     sub TIESCALAR { bless [] }
     sub FETCH { undef }
     sub STORE { die &quot;This doesn't get called&quot; }
-
     package main;
-
     tie my $sv =&gt; &quot;CaptureVar&quot;;
     $sv =~ y/a/b/;
 </pre>
@@ -458,8 +440,7 @@
     then; now they'll just die when assigned to in the default engine.</p>
 <p class="Pp"><i>numbered_buff_LENGTH</i></p>
 <p class="Pp"></p>
-<pre>
-    I32 numbered_buff_LENGTH (pTHX_
+<pre>    I32 numbered_buff_LENGTH (pTHX_
                               REGEXP * const rx,
                               const SV * const sv,
                               const I32 paren);
@@ -471,8 +452,7 @@
     <span class="Li">&quot;rx-&gt;offs&quot;</span>, this is much more
     efficient:</p>
 <p class="Pp"></p>
-<pre>
-    I32 s1  = rx-&gt;offs[paren].start;
+<pre>    I32 s1  = rx-&gt;offs[paren].start;
     I32 s2  = rx-&gt;offs[paren].end;
     I32 len = t1 - s1;
 </pre>
@@ -501,8 +481,7 @@
     on <span class="Li">&quot;%+&quot;</span> or
     <span class="Li">&quot;%+&quot;</span>, if any:</p>
 <p class="Pp"></p>
-<pre>
-    RXapif_FETCH
+<pre>    RXapif_FETCH
     RXapif_STORE
     RXapif_DELETE
     RXapif_CLEAR
@@ -514,8 +493,7 @@
 <p class="Pp">If <span class="Li">&quot;%+&quot;</span> or
     <span class="Li">&quot;%-&quot;</span> is being operated on, if any.</p>
 <p class="Pp"></p>
-<pre>
-    RXapif_ONE /* %+ */
+<pre>    RXapif_ONE /* %+ */
     RXapif_ALL /* %- */
 </pre>
 <p class="Pp">If this is being called as
@@ -525,8 +503,7 @@
     two will be combined with <span class="Li">&quot;RXapif_ONE&quot;</span> or
     <span class="Li">&quot;RXapif_ALL&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    RXapif_REGNAME
+<pre>    RXapif_REGNAME
     RXapif_REGNAMES
     RXapif_REGNAMES_COUNT
 </pre>
@@ -538,14 +515,12 @@
     implemented by magic instead (would need an extension to mgvtbl).</p>
 <p class="Pp"><i>named_buff</i></p>
 <p class="Pp"></p>
-<pre>
-    SV*     (*named_buff) (pTHX_ REGEXP * const rx, SV * const key,
+<pre>    SV*     (*named_buff) (pTHX_ REGEXP * const rx, SV * const key,
                            SV * const value, U32 flags);
 </pre>
 <p class="Pp"><i>named_buff_iter</i></p>
 <p class="Pp"></p>
-<pre>
-    SV*     (*named_buff_iter) (pTHX_
+<pre>    SV*     (*named_buff_iter) (pTHX_
                                 REGEXP * const rx,
                                 const SV * const lastkey,
                                 const U32 flags);
@@ -553,8 +528,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="qr_package"><a class="permalink" href="#qr_package">qr_package</a></h2>
-<pre>
-    SV* qr_package(pTHX_ REGEXP * const rx);
+<pre>    SV* qr_package(pTHX_ REGEXP * const rx);
 </pre>
 <p class="Pp">The package the qr// magic object is blessed into (as seen by
     <span class="Li">&quot;ref</span> <span class="Li">qr//&quot;</span>). It is
@@ -567,8 +541,7 @@
     always be true regardless of what engine is being used.</p>
 <p class="Pp">Example implementation might be:</p>
 <p class="Pp"></p>
-<pre>
-    SV*
+<pre>    SV*
     Example_qr_package(pTHX_ REGEXP * const rx)
     {
         PERL_UNUSED_ARG(rx);
@@ -579,8 +552,7 @@
     <span class="Li">&quot;qr//&quot;</span> will be dispatched to the package
     as a normal object.</p>
 <p class="Pp"></p>
-<pre>
-    use re::engine::Example;
+<pre>    use re::engine::Example;
     my $re = qr//;
     $re-&gt;meth; # dispatched to re::engine::Example::meth()
 </pre>
@@ -589,16 +561,14 @@
     <span class="Li">&quot;SvRX&quot;</span> macro, see &quot;REGEXP
     Functions&quot; in perlapi.</p>
 <p class="Pp"></p>
-<pre>
-    void meth(SV * rv)
+<pre>    void meth(SV * rv)
     PPCODE:
         REGEXP * re = SvRX(sv);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="dupe"><a class="permalink" href="#dupe">dupe</a></h2>
-<pre>
-    void* dupe(pTHX_ REGEXP * const rx, CLONE_PARAMS *param);
+<pre>    void* dupe(pTHX_ REGEXP * const rx, CLONE_PARAMS *param);
 </pre>
 <p class="Pp">On threaded builds a regexp may need to be duplicated so that the
     pattern can be used by multiple threads. This routine is expected to handle
@@ -641,14 +611,11 @@
     arbitrary structure, whose use and management is the responsibility of the
     compiling engine. Perl will never modify either of these values.</p>
 <p class="Pp"></p>
-<pre>
-    typedef struct regexp {
+<pre>    typedef struct regexp {
         /* what engine created this regexp? */
         const struct regexp_engine* engine;
-
         /* what re is this a lightweight copy of? */
         struct regexp* mother_re;
-
         /* Information about the match that the Perl core uses to manage
          * things */
         U32 extflags;   /* Flags used both externally and internally */
@@ -656,25 +623,20 @@
                            string to match */
         I32 minlenret;  /* mininum possible number of chars in $&amp; */
         U32 gofs;       /* chars left of pos that we search from */
-
         /* substring data about strings that must appear
            in the final match, used for optimisations */
         struct reg_substr_data *substrs;
-
         U32 nparens;  /* number of capture groups */
-
         /* private engine specific data */
         U32 intflags;   /* Engine Specific Internal flags */
         void *pprivate; /* Data private to the regex engine which 
                            created this object. */
-
         /* Data about the last/current match. These are modified during
          * matching*/
         U32 lastparen;            /* highest close paren matched ($+) */
         U32 lastcloseparen;       /* last close paren matched ($^N) */
         regexp_paren_pair *offs;  /* Array of offsets for (@-) and
                                      (@+) */
-
         char *subbeg;  /* saved or original string so \digit works
                           forever. */
         SV_SAVED_COPY  /* If non-NULL, SV which is COW from original */
@@ -682,18 +644,14 @@
         I32 suboffset;  /* byte offset of subbeg from logical start of
                            str */
         I32 subcoffset; /* suboffset equiv, but in chars (for @-/@+) */
-
         /* Information about the match that isn't often used */
         I32 prelen;           /* length of precomp */
         const char *precomp;  /* pre-compilation regular expression */
-
         char *wrapped;  /* wrapped version of the pattern */
         I32 wraplen;    /* length of wrapped */
-
         I32 seen_evals;   /* number of eval groups in the pattern - for
                              security checks */
         HV *paren_names;  /* Optional hash of paren names */
-
         /* Refcount of this regexp */
         I32 refcnt;             /* Refcount of this regexp */
     } regexp;
@@ -738,8 +696,7 @@
     and <span class="Li">&quot;minlenret&quot;</span> can be seen in the
     following pattern:</p>
 <p class="Pp"></p>
-<pre>
-    /ns(?=\d)/
+<pre>    /ns(?=\d)/
 </pre>
 <p class="Pp">where the <span class="Li">&quot;minlen&quot;</span> would be 3
     but <span class="Li">&quot;minlenret&quot;</span> would only be 2 as the \d
@@ -789,8 +746,7 @@
     <span class="Li">&quot;regexp_paren_pair&quot;</span> struct is defined as
     follows:</p>
 <p class="Pp"></p>
-<pre>
-    typedef struct regexp_paren_pair {
+<pre>    typedef struct regexp_paren_pair {
         I32 start;
         I32 end;
     } regexp_paren_pair;
@@ -821,8 +777,7 @@
 <p class="Pp">The relevant snippet from
     <span class="Li">&quot;Perl_pp_regcomp&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-        if (!re || !re-&gt;precomp || re-&gt;prelen != (I32)len ||
+<pre>        if (!re || !re-&gt;precomp || re-&gt;prelen != (I32)len ||
             memNE(re-&gt;precomp, t, len))
         /* Compile a new pattern */
 </pre>
@@ -886,8 +841,7 @@
     stringify to the supplied pattern, note that this will create undesired
     patterns in cases such as:</p>
 <p class="Pp"></p>
-<pre>
-    my $x = qr/a|b/;  # &quot;a|b&quot;
+<pre>    my $x = qr/a|b/;  # &quot;a|b&quot;
     my $y = qr/c/i;   # &quot;c&quot;
     my $z = qr/$x$y/; # &quot;a|bc&quot;
 </pre>

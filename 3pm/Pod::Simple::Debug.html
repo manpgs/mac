@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pod::Simple::Debug(3pm)</title>
 </head>
@@ -28,21 +29,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Pod::Simple::Debug (5);  # or some integer
+<pre> use Pod::Simple::Debug (5);  # or some integer
 </pre>
 <p class="Pp">Or:</p>
 <p class="Pp"></p>
-<pre>
- my $debuglevel;
+<pre> my $debuglevel;
  use Pod::Simple::Debug (\$debuglevel, 0);
  ...some stuff that uses Pod::Simple to do stuff, but which
   you don't want debug output from...
-
  $debug_level = 4;
  ...some stuff that uses Pod::Simple to do stuff, but which
   you DO want debug output from...
-
  $debug_level = 0;
 </pre>
 </section>
@@ -60,33 +57,29 @@
     Pod::Simple::Debug will throw a fatal error to the effect that &quot;It's
     too late to call Pod::Simple::Debug&quot;.</p>
 <p class="Pp">Note that the <span class="Li">&quot;use Pod::Simple::Debug (\$x,
-    </span><i>somenum</i><span class="Li">)&quot;</span> mode will make
-    Pod::Simple (et al) run rather slower, since &amp;Pod::Simple::DEBUG won't
-    be a constant sub anymore, and so Pod::Simple (et al) won't compile with
-    constant-folding.</p>
+    </span><span class="Li"><i>somenum</i></span><span class="Li">)&quot;</span>
+    mode will make Pod::Simple (et al) run rather slower, since
+    &amp;Pod::Simple::DEBUG won't be a constant sub anymore, and so Pod::Simple
+    (et al) won't compile with constant-folding.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="GUTS"><a class="permalink" href="#GUTS">GUTS</a></h1>
 <p class="Pp">Doing this:</p>
 <p class="Pp"></p>
-<pre>
-  use Pod::Simple::Debug (5);  # or some integer
+<pre>  use Pod::Simple::Debug (5);  # or some integer
 </pre>
 <p class="Pp">is basically equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN { sub Pod::Simple::DEBUG () {5} }  # or some integer
+<pre>  BEGIN { sub Pod::Simple::DEBUG () {5} }  # or some integer
   use Pod::Simple ();
 </pre>
 <p class="Pp">And this:</p>
 <p class="Pp"></p>
-<pre>
-  use Pod::Simple::Debug (\$debug_level,0);  # or some integer
+<pre>  use Pod::Simple::Debug (\$debug_level,0);  # or some integer
 </pre>
 <p class="Pp">is basically equivalent to this:</p>
 <p class="Pp"></p>
-<pre>
-  my $debug_level;
+<pre>  my $debug_level;
   BEGIN { $debug_level = 0 }
   BEGIN { sub Pod::Simple::DEBUG () { $debug_level }
   use Pod::Simple ();

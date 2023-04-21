@@ -27,6 +27,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>BPF(4)</title>
 </head>
@@ -87,13 +88,11 @@
 <p class="Pp">The <a class="Xr" href="../2/ioctl">ioctl(2)</a> command codes
     below are defined in &#x27E8;<span class="Pa">net/bpf.h</span>&#x27E9;. All
     commands require these includes:</p>
-<div class="Bd Pp">
-<pre>
-	#include &lt;sys/types.h&gt;
+<div class="Bd Pp Li">
+<pre>	#include &lt;sys/types.h&gt;
 	#include &lt;sys/time.h&gt;
 	#include &lt;sys/ioctl.h&gt;
-	#include &lt;net/bpf.h&gt;
-</pre>
+	#include &lt;net/bpf.h&gt;</pre>
 </div>
 <p class="Pp">Additionally, <code class="Dv">BIOCGETIF</code> and
     <code class="Dv">BIOCSETIF</code> require
@@ -123,13 +122,11 @@
   <dt id="BIOCGDLTLIST"><a class="permalink" href="#BIOCGDLTLIST"><code class="Dv">BIOCGDLTLIST</code></a></dt>
   <dd>(<code class="Li">struct bpf_dltlist</code>) Returns an array of the
       available types of the data link layer underlying the attached interface:
-    <div class="Bd Pp Bd-indent">
-    <pre>
-struct bpf_dltlist {
+    <div class="Bd Pp Bd-indent Li">
+    <pre>struct bpf_dltlist {
 	u_int bfl_len;
 	u_int *bfl_list;
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp">The available types are returned in the array pointed to by
         the <var class="Va">bfl_list</var> field while their length in u_int is
@@ -181,13 +178,11 @@ struct bpf_dltlist {
   <dt id="BIOCGSTATS"><a class="permalink" href="#BIOCGSTATS"><code class="Dv">BIOCGSTATS</code></a></dt>
   <dd>(<code class="Li">struct bpf_stat</code>) Returns the following structure
       of packet statistics:
-    <div class="Bd Pp">
-    <pre>
-struct bpf_stat {
+    <div class="Bd Pp Li">
+    <pre>struct bpf_stat {
 	u_int bs_recv;    /* number of packets received */
 	u_int bs_drop;    /* number of packets dropped */
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp">The fields are:</p>
     <dl class="Bl-hang Bd-indent">
@@ -214,13 +209,11 @@ struct bpf_stat {
   <dd>(<code class="Li">struct bpf_program</code>) Sets the filter program used
       by the kernel to discard uninteresting packets. An array of instructions
       and its length is passed in using the following structure:
-    <div class="Bd Pp">
-    <pre>
-struct bpf_program {
+    <div class="Bd Pp Li">
+    <pre>struct bpf_program {
 	u_int bf_len;
 	struct bpf_insn *bf_insns;
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp">The filter program is pointed to by the
         <code class="Li">bf_insns</code> field while its length in units of
@@ -242,13 +235,11 @@ struct bpf_program {
       compatible if the major numbers match and the application minor is less
       than or equal to the kernel minor. The kernel version number is returned
       in the following structure:
-    <div class="Bd Pp">
-    <pre>
-struct bpf_version {
+    <div class="Bd Pp Li">
+    <pre>struct bpf_version {
 	u_short bv_major;
 	u_short bv_minor;
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp" id="ioctl">The current version numbers are given by
         <code class="Dv">BPF_MAJOR_VERSION</code> and
@@ -305,16 +296,14 @@ struct bpf_version {
   HEADER</a></h1>
 <p class="Pp">The following structure is prepended to each packet returned by
     <a class="Xr" href="../2/read">read(2)</a>:</p>
-<div class="Bd Pp">
-<pre>
-struct bpf_hdr {
+<div class="Bd Pp Li">
+<pre>struct bpf_hdr {
 	struct BPF_TIMEVAL bh_tstamp; /* time stamp */
 	bpf_u_int32 bh_caplen;        /* length of captured portion */
 	bpf_u_int32 bh_datalen;       /* original length of packet */
 	u_short bh_hdrlen;            /* length of bpf header (this struct
 					 plus alignment padding */
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">The fields, whose values are stored in host order, are:</p>
 <p class="Pp"></p>
@@ -371,15 +360,13 @@ struct bpf_hdr {
     state, which consists of an accumulator, index register, scratch memory
     store, and implicit program counter.</p>
 <p class="Pp">The following structure defines the instruction format:</p>
-<div class="Bd Pp">
-<pre>
-struct bpf_insn {
+<div class="Bd Pp Li">
+<pre>struct bpf_insn {
 	u_short     code;
 	u_char      jt;
 	u_char      jf;
 	bpf_u_int32 k;
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">The <code class="Li">k</code> field is used in different ways by
     different instructions, and the <code class="Li">jt</code> and
@@ -595,9 +582,8 @@ struct bpf_insn {
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">The following filter is taken from the Reverse ARP Daemon. It
     accepts only Reverse ARP requests.</p>
-<div class="Bd Pp">
-<pre>
-struct bpf_insn insns[] = {
+<div class="Bd Pp Li">
+<pre>struct bpf_insn insns[] = {
 	BPF_STMT(BPF_LD+BPF_H+BPF_ABS, 12),
 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, ETHERTYPE_REVARP, 0, 3),
 	BPF_STMT(BPF_LD+BPF_H+BPF_ABS, 20),
@@ -605,14 +591,12 @@ struct bpf_insn insns[] = {
 	BPF_STMT(BPF_RET+BPF_K, sizeof(struct ether_arp) +
 		 sizeof(struct ether_header)),
 	BPF_STMT(BPF_RET+BPF_K, 0),
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">This filter accepts only IP packets between host 128.3.112.15 and
     128.3.112.35.</p>
-<div class="Bd Pp">
-<pre>
-struct bpf_insn insns[] = {
+<div class="Bd Pp Li">
+<pre>struct bpf_insn insns[] = {
 	BPF_STMT(BPF_LD+BPF_H+BPF_ABS, 12),
 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, ETHERTYPE_IP, 0, 8),
 	BPF_STMT(BPF_LD+BPF_W+BPF_ABS, 26),
@@ -624,16 +608,14 @@ struct bpf_insn insns[] = {
 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, 0x8003700f, 0, 1),
 	BPF_STMT(BPF_RET+BPF_K, (u_int)-1),
 	BPF_STMT(BPF_RET+BPF_K, 0),
-};
-</pre>
+};</pre>
 </div>
 <p class="Pp">Finally, this filter returns only TCP finger packets. We must
     parse the IP header to reach the TCP header. The
     <code class="Dv">BPF_JSET</code> instruction checks that the IP fragment
     offset is 0 so we are sure that we have a TCP header.</p>
-<div class="Bd Pp">
-<pre>
-struct bpf_insn insns[] = {
+<div class="Bd Pp Li">
+<pre>struct bpf_insn insns[] = {
 	BPF_STMT(BPF_LD+BPF_H+BPF_ABS, 12),
 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, ETHERTYPE_IP, 0, 10),
 	BPF_STMT(BPF_LD+BPF_B+BPF_ABS, 23),
@@ -647,8 +629,7 @@ struct bpf_insn insns[] = {
 	BPF_JUMP(BPF_JMP+BPF_JEQ+BPF_K, 79, 0, 1),
 	BPF_STMT(BPF_RET+BPF_K, (u_int)-1),
 	BPF_STMT(BPF_RET+BPF_K, 0),
-};
-</pre>
+};</pre>
 </div>
 </section>
 <section class="Sh">
@@ -689,7 +670,7 @@ struct bpf_insn insns[] = {
 <table class="foot">
   <tr>
     <td class="foot-date">January 16, 1996</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

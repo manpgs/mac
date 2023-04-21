@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Types(3)</title>
 </head>
@@ -56,8 +57,7 @@
   TYPES</a></h1>
 <p class="Pp">The basic Moose type hierarchy looks like this</p>
 <p class="Pp"></p>
-<pre>
-  Any
+<pre>  Any
       Item
           Bool
           Maybe[`a]
@@ -133,16 +133,13 @@
     new class using Moose, it defines an associated type name behind the
   scenes:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::User;
-
+<pre>  package MyApp::User;
   use Moose;
 </pre>
 <p class="Pp">Now you can use <span class="Li">'MyApp::User'</span> as a type
     name:</p>
 <p class="Pp"></p>
-<pre>
-  has creator =&gt; (
+<pre>  has creator =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'MyApp::User',
   );
@@ -153,8 +150,7 @@
     <span class="Li">&quot;isa&quot;</span> value for an attribute is a class.
     So this works:</p>
 <p class="Pp"></p>
-<pre>
-  has 'birth_date' =&gt; (
+<pre>  has 'birth_date' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'DateTime',
   );
@@ -162,12 +158,10 @@
 <p class="Pp">In general, when Moose is presented with an unknown name, it
     assumes that the name is a class:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'ModernDateTime'
+<pre>  subtype 'ModernDateTime'
       =&gt; as 'DateTime'
       =&gt; where { $_-&gt;year() &gt;= 1980 }
       =&gt; message { 'The date you provided is not modern enough' };
-
   has 'valid_dates' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'ArrayRef[DateTime]',
@@ -197,8 +191,7 @@
     Moose will use if possible to display the invalid value.</p>
 <p class="Pp">Here's a simple (and useful) subtype example:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'PositiveInt',
+<pre>  subtype 'PositiveInt',
       as 'Int',
       where { $_ &gt; 0 },
       message { &quot;The number you provided, $_, was not a positive number&quot; };
@@ -225,15 +218,13 @@
     module. This module makes it easy to create a &quot;type library&quot;
     module, which can export your types as perl constants.</p>
 <p class="Pp"></p>
-<pre>
-  has 'counter' =&gt; (is =&gt; 'rw', isa =&gt; PositiveInt);
+<pre>  has 'counter' =&gt; (is =&gt; 'rw', isa =&gt; PositiveInt);
 </pre>
 <p class="Pp">This lets you use a short name rather than needing to fully
     qualify the name everywhere. It also allows you to easily create
     parameterized types:</p>
 <p class="Pp"></p>
-<pre>
-  has 'counts' =&gt; (is =&gt; 'ro', isa =&gt; HashRef[PositiveInt]);
+<pre>  has 'counts' =&gt; (is =&gt; 'ro', isa =&gt; HashRef[PositiveInt]);
 </pre>
 <p class="Pp">This module will check your names at compile time, and is
     generally more robust than the string type parsing for complex cases.</p>
@@ -243,10 +234,8 @@
 <p class="Pp">A coercion lets you tell Moose to automatically convert one type
     to another.</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'ArrayRefOfInts',
+<pre>  subtype 'ArrayRefOfInts',
       as 'ArrayRef[Int]';
-
   coerce 'ArrayRefOfInts',
       from 'Int',
       via { [ $_ ] };
@@ -262,15 +251,12 @@
     <span class="Li">&quot;coerce&quot;</span> attribute option to a true
   value:</p>
 <p class="Pp"></p>
-<pre>
-  package Foo;
-
+<pre>  package Foo;
   has 'sizes' =&gt; (
       is     =&gt; 'ro',
       isa    =&gt; 'ArrayRefOfInts',
       coerce =&gt; 1,
   );
-
   Foo-&gt;new( sizes =&gt; 42 );
 </pre>
 <p class="Pp">This code example will do the right thing, and the newly created
@@ -282,15 +268,12 @@
 <p class="Pp">Deep coercion is the coercion of type parameters for parameterized
     types. Let's take these types as an example:</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'HexNum',
+<pre>  subtype 'HexNum',
       as 'Str',
       where { /[a-f0-9]/i };
-
   coerce 'Int',
       from 'HexNum',
       via { hex $_ };
-
   has 'sizes' =&gt; (
       is     =&gt; 'ro',
       isa    =&gt; 'ArrayRef[Int]',
@@ -303,25 +286,20 @@
 <p class="Pp">However, you can define a set of subtypes to enable coercion
     between two parameterized types.</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'ArrayRefOfHexNums',
+<pre>  subtype 'ArrayRefOfHexNums',
       as 'ArrayRef[HexNum]';
-
   subtype 'ArrayRefOfInts',
       as 'ArrayRef[Int]';
-
   coerce 'ArrayRefOfInts',
       from 'ArrayRefOfHexNums',
       via { [ map { hex } @{$_} ] };
-
   Foo-&gt;new( sizes =&gt; [ 'a1', 'ff', '22' ] );
 </pre>
 <p class="Pp">Now Moose will coerce the hex numbers to integers.</p>
 <p class="Pp">Moose does not attempt to chain coercions, so it will not coerce a
     single hex number. To do that, we need to define a separate coercion:</p>
 <p class="Pp"></p>
-<pre>
-  coerce 'ArrayRefOfInts',
+<pre>  coerce 'ArrayRefOfInts',
       from 'HexNum',
       via { [ hex $_ ] };
 </pre>
@@ -337,8 +315,7 @@
     <span class="Li">&quot;Object&quot;</span> or
     <span class="Li">&quot;FileHandle&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  has 'output' =&gt; (
+<pre>  has 'output' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Object | FileHandle',
   );
@@ -354,37 +331,29 @@
     insist that output be an object with a
     <span class="Li">&quot;print&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-  duck_type 'CanPrint', [qw(print)];
+<pre>  duck_type 'CanPrint', [qw(print)];
 </pre>
 <p class="Pp">We can coerce file handles to an object that satisfies this
     condition with a simple wrapper class:</p>
 <p class="Pp"></p>
-<pre>
-  package FHWrapper;
-
+<pre>  package FHWrapper;
   use Moose;
-
   has 'handle' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'FileHandle',
   );
-
   sub print {
       my $self = shift;
       my $fh   = $self-&gt;handle();
-
       print {$fh} @_;
   }
 </pre>
 <p class="Pp">Now we can define a coercion from
     <span class="Li">&quot;FileHandle&quot;</span> to our wrapper class:</p>
 <p class="Pp"></p>
-<pre>
-  coerce 'CanPrint'
+<pre>  coerce 'CanPrint'
       =&gt; from 'FileHandle'
       =&gt; via { FHWrapper-&gt;new( handle =&gt; $_ ) };
-
   has 'output' =&gt; (
       is     =&gt; 'rw',
       isa    =&gt; 'CanPrint',
@@ -408,8 +377,7 @@
     subtype of <span class="Li">&quot;Str&quot;</span> that only allows the
     specified values:</p>
 <p class="Pp"></p>
-<pre>
-  enum 'RGB', [qw( red green blue )];
+<pre>  enum 'RGB', [qw( red green blue )];
 </pre>
 <p class="Pp">This creates a type named
   <span class="Li">&quot;RGB&quot;</span>.</p>
@@ -422,8 +390,7 @@
     as the value for an attribute's <span class="Li">&quot;isa&quot;</span>
     option:</p>
 <p class="Pp"></p>
-<pre>
-  has 'size' =&gt; (
+<pre>  has 'size' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; subtype( 'Int' =&gt; where { $_ &gt; 0 } ),
   );
@@ -440,10 +407,8 @@
 <p class="Pp">The simplest and least sugary is Params::ValidationCompiler. This
     lets you validate a set of named parameters using Moose types:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose::Util::TypeConstraints qw( find_type_constraint );
+<pre>  use Moose::Util::TypeConstraints qw( find_type_constraint );
   use Params::ValidationCompiler qw( validation_for );
-
   {
       my $validator = validation_for(
           params =&gt; {
@@ -458,7 +423,6 @@
               },
           },
       );
-
       sub foo {
           my %args = $validator-&gt;(@_);
       }
@@ -469,8 +433,7 @@
     parameter validation using Moose types, including Moops, which gives you a
     full-blown <span class="Li">&quot;method&quot;</span> keyword.</p>
 <p class="Pp"></p>
-<pre>
-  method morning ( Str $name ) {
+<pre>  method morning ( Str $name ) {
       $self-&gt;say(&quot;Good morning ${name}!&quot;);
   }
 </pre>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Date::Calendar::Year(3)</title>
 </head>
@@ -39,23 +40,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Date::Calendar::Year qw( check_year empty_period );
+<pre>  use Date::Calendar::Year qw( check_year empty_period );
   use Date::Calendar::Year qw( :all ); # same as above
-
   check_year(YEAR|DATE); # dies if year &lt; 1583 or year &gt; 2299
   empty_period();        # warns about empty interval if $^W is set
-
   $index = $year-&gt;date2index(YEAR,MONTH,DAY|DATE);
   $date  = $year-&gt;index2date(INDEX);
-
   use Date::Calendar::Profiles qw( $Profiles );
   $year_2000_US_FL = Date::Calendar::Year-&gt;new( 2000, $Profiles-&gt;{'US-FL'} [,LANG[,WEEKEND]] );
   $year_2001_DE_NW = Date::Calendar::Year-&gt;new( 2001, $Profiles-&gt;{'DE-NW'} [,LANG[,WEEKEND]] );
-
   $year = Date::Calendar::Year-&gt;new( 2001, {} );
   $year-&gt;init( 2002, $Profiles-&gt;{'DE-SN'} [,LANG[,WEEKEND]] );
-
   $vector = $year-&gt;vec_full(); # vector of full holidays
   $vector = $year-&gt;vec_half(); # vector of half holidays
   $vector = $year-&gt;vec_work(); # NOT a vector of workdays but a workspace!
@@ -63,24 +58,18 @@
   $base   = $year-&gt;val_base(); # number of days for [year,1,1] since [1,1,1]
   $number = $year-&gt;val_year(); # the year's number itself
   $number = $year-&gt;year();     # alias for val_year()
-
   @names    = $year-&gt;labels(YEAR,MONTH,DAY|DATE);
   @holidays = $year-&gt;labels();
   $holidays = $year-&gt;labels();
-
   @dates    = $year-&gt;search(PATTERN);
   $dates    = $year-&gt;search(PATTERN);
-
   $hashref  = $year-&gt;tags(YEAR,MONTH,DAY|DATE);
   $hashref  = $year-&gt;tags(INDEX);
-
   $days     = $year-&gt;delta_workdays(YEAR,MONTH1,DAY1|DATE1
                                    ,YEAR,MONTH2,DAY2|DATE2
                                    ,FLAG1,FLAG2);
-
   ($date,$rest,$sign) = $year-&gt;add_delta_workdays(YEAR,MONTH,DAY|DATE
                                                  ,DELTA,SIGN);
-
   $flag     = $year-&gt;is_full(YEAR,MONTH,DAY|DATE);
   $flag     = $year-&gt;is_half(YEAR,MONTH,DAY|DATE);
   $flag     = $year-&gt;is_work(YEAR,MONTH,DAY|DATE);
@@ -95,17 +84,14 @@
 <p class="Pp">See <b>Date::Calc::Object</b>(3) for more details.</p>
 <p class="Pp">So instead of calling a given method like this:</p>
 <p class="Pp"></p>
-<pre>
-  $object-&gt;method1( $year,$month,$day );
+<pre>  $object-&gt;method1( $year,$month,$day );
   $object-&gt;method2( $year1,$month1,$day1, $year2,$month2,$day2 );
   $object-&gt;method3( $year1, $year2, $year3 );
 </pre>
 <p class="Pp">You can also call it like so:</p>
 <p class="Pp"></p>
-<pre>
-  $object-&gt;method1( $date );
+<pre>  $object-&gt;method1( $date );
   $object-&gt;method1( [1964,1,3] );
-
   $object-&gt;method2( $year1,$month1,$day1, $date2 );
   $object-&gt;method2( $date1, $year2,$month2,$day2 );
   $object-&gt;method2( $date1, $date2 );
@@ -114,7 +100,6 @@
   $object-&gt;method2( [1964,1,3], [2001,3,17] );
   $object-&gt;method2( $date1, [2001,3,17] );
   $object-&gt;method2( [1964,1,3], $date2 );
-
   $object-&gt;method3( $year1, $date2, [2001,3,17] );
 </pre>
 <p class="Pp">And similarly if a time or a combined date and time are
@@ -290,13 +275,10 @@
       abortion.</p>
     <p class="Pp">The strings can specify three types of dates:</p>
     <p class="Pp"></p>
-    <pre>
-  -  fixed dates
+    <pre>  -  fixed dates
      (like New Year, or first of January),
-
   -  dates relative to Easter Sunday
      (like Ascension = Easter Sunday + 39 days), and
-
   -  the 1st, 2nd, 3rd, 4th or last
      of a given day of week in a given month
      (like &quot;the 4th Thursday of November&quot;, or Thanksgiving).
@@ -324,29 +306,21 @@
     <p class="Pp">The exact syntax for the date formula strings is the following
         (by example):</p>
     <p class="Pp"></p>
-    <pre>
- -  Fixed dates:
-
+    <pre> -  Fixed dates:
     &quot;Christmas&quot;  =&gt;  &quot;24.12&quot;,   # European format (day, month)
     &quot;Christmas&quot;  =&gt;  &quot;24.12.&quot;,
-
     &quot;Christmas&quot;  =&gt;  &quot;24Dec&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;24.Dec&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;24Dec.&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;24.Dec.&quot;,
-
     &quot;Christmas&quot;  =&gt;  &quot;24-12&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;24-12-&quot;,
-
     &quot;Christmas&quot;  =&gt;  &quot;24-Dec&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;24-Dec-&quot;,
-
     &quot;Christmas&quot;  =&gt;  &quot;12/25&quot;,   # American format (month, day)
     &quot;Christmas&quot;  =&gt;  &quot;Dec25&quot;,
     &quot;Christmas&quot;  =&gt;  &quot;Dec/25&quot;,
-
  -  Dates relative to Easter Sunday:
-
     &quot;Ladies' Carnival&quot;  =&gt;  &quot;-52&quot;,
     &quot;Carnival Monday&quot;   =&gt;  &quot;-48&quot;,
     &quot;Mardi Gras&quot;        =&gt;  &quot;-47&quot;,
@@ -360,9 +334,7 @@
     &quot;Whitsunday&quot;        =&gt;  &quot;+49&quot;,
     &quot;Whitmonday&quot;        =&gt;  &quot;+50&quot;,
     &quot;Corpus Christi&quot;    =&gt;  &quot;+60&quot;,
-
  -  The 1st, 2nd, 3rd, 4th or last day of week:
-
     &quot;Thanksgiving&quot;      =&gt;  &quot;4Thu11&quot;,
     &quot;Thanksgiving&quot;      =&gt;  &quot;4/Thu/Nov&quot;,
     &quot;Columbus Day&quot;      =&gt;  &quot;2/Mon/Oct&quot;,
@@ -374,8 +346,7 @@
     <p class="Pp">Remember that each of these date formula strings may also be
         prefixed with either &quot;#&quot; or &quot;:&quot;:</p>
     <p class="Pp"></p>
-    <pre>
-    &quot;Christmas&quot;         =&gt;  &quot;:24.12.&quot;, # only half a day off
+    <pre>    &quot;Christmas&quot;         =&gt;  &quot;:24.12.&quot;, # only half a day off
     &quot;Valentine's Day&quot;   =&gt;  &quot;#Feb/14&quot;, # not an official holiday
     </pre>
     <p class="Pp">Note that the name of the month or day of week may have any
@@ -393,8 +364,7 @@
     <p class="Pp"><b>BEWARE</b> that if keys are not unique in the source code,
         later entries will overwrite previous ones! I.e.,</p>
     <p class="Pp"></p>
-    <pre>
-    ...
+    <pre>    ...
     &quot;My special holiday&quot; =&gt; &quot;01-11&quot;,
     &quot;My special holiday&quot; =&gt; &quot;02-11&quot;,
     ...
@@ -408,14 +378,12 @@
         (see also the Date::Calendar::Profiles module for examples of this!),
         like this:</p>
     <p class="Pp"></p>
-    <pre>
-    $defaults =
+    <pre>    $defaults =
     {
         &quot;Holiday #1&quot; =&gt; &quot;01-01&quot;,
         &quot;Holiday #2&quot; =&gt; &quot;02-02&quot;,
         &quot;Holiday #3&quot; =&gt; &quot;03-03&quot;
     };
-
     $variant1 =
     {
         %$defaults,
@@ -579,8 +547,7 @@
         keys and 0, 1, 2, or 3 as their corresponding values meaning the
         following:</p>
     <p class="Pp"></p>
-    <pre>
-    0    =&gt;    commemorative day
+    <pre>    0    =&gt;    commemorative day
     1    =&gt;    &quot;half&quot; holiday
     2    =&gt;    &quot;full&quot; holiday
     3    =&gt;    both a &quot;half&quot; and a &quot;full&quot; holiday
@@ -752,8 +719,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AUTHOR"><a class="permalink" href="#AUTHOR">AUTHOR</a></h1>
-<pre>
-  Steffen Beyer
+<pre>  Steffen Beyer
   mailto:STBEY@cpan.org
   http://www.engelschall.com/u/sb/download/
 </pre>

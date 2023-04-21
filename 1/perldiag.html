@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLDIAG(1)</title>
 </head>
@@ -31,8 +32,7 @@
 <p class="Pp">These messages are classified as follows (listed in increasing
     order of desperation):</p>
 <p class="Pp"></p>
-<pre>
-    (W) A warning (optional).
+<pre>    (W) A warning (optional).
     (D) A deprecation (enabled by default).
     (S) A severe warning (enabled by default).
     (F) A fatal error (trappable).
@@ -81,8 +81,7 @@
       experimental feature which may change or be removed in a future Perl
       version:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::refaliasing&quot;;
+    <pre>    no warnings &quot;experimental::refaliasing&quot;;
     use feature &quot;refaliasing&quot;;
     \$x = \$y;
     </pre>
@@ -197,8 +196,7 @@
       stopping you from piping into a program or Perl script which 'splits'
       output into two streams, such as
     <p class="Pp"></p>
-    <pre>
-    open(OUT,&quot;&gt;$ARGV[0]&quot;) or die &quot;Can't write to $ARGV[0]: $!&quot;;
+    <pre>    open(OUT,&quot;&gt;$ARGV[0]&quot;) or die &quot;Can't write to $ARGV[0]: $!&quot;;
     while (&lt;STDIN&gt;) {
         print;
         print OUT;
@@ -256,8 +254,7 @@
   <dd>(F) Each subroutine signature parameter declaration must start with a
       valid sigil; for example:
     <p class="Pp"></p>
-    <pre>
-    sub foo ($a, $, $b = 1, @c) {}
+    <pre>    sub foo ($a, $, $b = 1, @c) {}
     </pre>
   </dd>
   <dt id="A~2"><a class="permalink" href="#A~2">A slurpy parameter may not have
@@ -265,8 +262,7 @@
   <dd>(F) Only scalar subroutine signature parameters may have a default value;
       for example:
     <p class="Pp"></p>
-    <pre>
-    sub foo ($a = 1)        {} # legal
+    <pre>    sub foo ($a = 1)        {} # legal
     sub foo (@a = (1))      {} # invalid
     sub foo (%a = (a =&gt; b)) {} # invalid
     </pre>
@@ -291,8 +287,7 @@
       two references were not of the same type. You cannot alias a scalar to an
       array, or an array to a hash; the two types must match.
     <p class="Pp"></p>
-    <pre>
-    \$x = \@y;  # error
+    <pre>    \$x = \@y;  # error
     \@x = \%y;  # error
      $y = [];
     \$x = $y;   # error; did you mean \$y?
@@ -313,8 +308,7 @@
     class since %s in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(W regexp) You had something like these:
     <p class="Pp"></p>
-    <pre>
- [[:alnum]]
+    <pre> [[:alnum]]
  [[:digit:xyz]
     </pre>
     <p class="Pp">They look like they might have been meant to be the POSIX
@@ -322,8 +316,7 @@
         <span class="Li">&quot;[:digit:]&quot;</span>. If so, they should be
         written:</p>
     <p class="Pp"></p>
-    <pre>
- [[:alnum:]]
+    <pre> [[:alnum:]]
  [[:digit:]xyz]
     </pre>
     <p class="Pp">Since these aren't legal POSIX class specifications, but are
@@ -340,13 +333,11 @@
         message is spurious, and can be suppressed by reordering things, such
       as</p>
     <p class="Pp"></p>
-    <pre>
- [[al:num]]
+    <pre> [[al:num]]
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
- [[:munla]]
+    <pre> [[:munla]]
     </pre>
   </dd>
   <dt>&lt;&gt; at require-statement should be quotes</dt>
@@ -368,20 +359,17 @@
       be the name of the package to bless the resulting object into. You've
       supplied instead a reference to something: perhaps you wrote
     <p class="Pp"></p>
-    <pre>
-    bless $self, $proto;
+    <pre>    bless $self, $proto;
     </pre>
     <p class="Pp">when you intended</p>
     <p class="Pp"></p>
-    <pre>
-    bless $self, ref($proto) || $proto;
+    <pre>    bless $self, ref($proto) || $proto;
     </pre>
     <p class="Pp">If you actually want to bless into the stringified version of
         the reference supplied, you need to stringify it yourself, for example
         by:</p>
     <p class="Pp"></p>
-    <pre>
-    bless $self, &quot;$proto&quot;;
+    <pre>    bless $self, &quot;$proto&quot;;
     </pre>
   </dd>
   <dt id="Attempt~4"><a class="permalink" href="#Attempt~4">Attempt to clear
@@ -449,8 +437,7 @@
       can do this by storing a reference to the scalar representing the last
       index of an array and later assigning through that reference. For example
     <p class="Pp"></p>
-    <pre>
-    $r = do {my @a; \$#a};
+    <pre>    $r = do {my @a; \$#a};
     $$r = 503
     </pre>
   </dd>
@@ -510,14 +497,12 @@
       didn't finish the symbol. In particular, you can't interpolate outside of
       quotes, so
     <p class="Pp"></p>
-    <pre>
-    $var = 'myvar';
+    <pre>    $var = 'myvar';
     $sym = mypack::$var;
     </pre>
     <p class="Pp">is not the same as</p>
     <p class="Pp"></p>
-    <pre>
-    $var = 'myvar';
+    <pre>    $var = 'myvar';
     $sym = &quot;mypack::$var&quot;;
     </pre>
   </dd>
@@ -557,14 +542,12 @@
       conditional, which often indicates that an || or &amp;&amp; was parsed as
       part of the last argument of the previous construct, for example:
     <p class="Pp"></p>
-    <pre>
-    open FOO || die;
+    <pre>    open FOO || die;
     </pre>
     <p class="Pp">It may also indicate a misspelled constant that has been
         interpreted as a bareword:</p>
     <p class="Pp"></p>
-    <pre>
-    use constant TYPO =&gt; 1;
+    <pre>    use constant TYPO =&gt; 1;
     if (TYOP) { print &quot;foo&quot; }
     </pre>
     <p class="Pp">The <span class="Li">&quot;strict&quot;</span> pragma is
@@ -790,8 +773,7 @@
       object reference or package name contains an undefined value. Something
       like this will reproduce the error:
     <p class="Pp"></p>
-    <pre>
-    $BADREF = undef;
+    <pre>    $BADREF = undef;
     process $BADREF 1,2,3;
     $BADREF-&gt;process(1,2,3);
     </pre>
@@ -809,8 +791,7 @@
       defined value which is neither an object reference nor a package name.
       Something like this will reproduce the error:
     <p class="Pp"></p>
-    <pre>
-    $BADREF = 42;
+    <pre>    $BADREF = 42;
     process $BADREF 1,2,3;
     $BADREF-&gt;process(1,2,3);
     </pre>
@@ -839,13 +820,11 @@
       (typeglobs), can't be forced to stop being what they are. So you can't say
       things like:
     <p class="Pp"></p>
-    <pre>
-    *foo += 1;
+    <pre>    *foo += 1;
     </pre>
     <p class="Pp">You CAN say</p>
     <p class="Pp"></p>
-    <pre>
-    $foo = *foo;
+    <pre>    $foo = *foo;
     $foo += 1;
     </pre>
     <p class="Pp">but then <span class="Li">$foo</span> no longer contains a
@@ -978,8 +957,7 @@
       the closing delimiter was omitted. Because bracketed quotes count nesting
       levels, the following is missing its final parenthesis:
     <p class="Pp"></p>
-    <pre>
-    print q(The character '(' starts a side comment.);
+    <pre>    print q(The character '(' starts a side comment.);
     </pre>
     <p class="Pp">If you're getting this error from a here-document, you may
         have included unseen whitespace before or after your closing tag or
@@ -1050,10 +1028,8 @@
       arguments there are, resulting in stack corruption or crashes. This error
       occurs in cases such as these:
     <p class="Pp"></p>
-    <pre>
-    goto F;
+    <pre>    goto F;
     print do { F: }; # Can't jump into the arguments to print
-
     goto G;
     $x + do { G: $y }; # How is + supposed to get its first operand?
     </pre>
@@ -1263,8 +1239,7 @@
   <dd>(W io) You tried to open a scalar reference for reading or writing, using
       the 3-arg <b>open()</b> syntax:
     <p class="Pp"></p>
-    <pre>
-    open FH, '&gt;', $ref;
+    <pre>    open FH, '&gt;', $ref;
     </pre>
     <p class="Pp">but your version of perl is compiled without perlio, and this
         form of open is not supported.</p>
@@ -1471,8 +1446,7 @@
     <p class="Pp">If a check for non-empty is what you wanted then just put it
         in boolean context (see &quot;Scalar values&quot; in perldata):</p>
     <p class="Pp"></p>
-    <pre>
-    if (%hash) {
+    <pre>    if (%hash) {
        # not empty
     }
     </pre>
@@ -1561,7 +1535,7 @@
   <dt id="Character"><a class="permalink" href="#Character">Character following
     &quot;\c&quot; must be printable ASCII</a></dt>
   <dd>(F) In
-      <span class="Li">&quot;\c</span><i>X</i><span class="Li">&quot;</span>,
+      <span class="Li">&quot;\c</span><span class="Li"><i>X</i></span><span class="Li">&quot;</span>,
       <i>X</i> must be a printable (non-control) ASCII character.
     <p class="Pp">Note that ASCII characters that don't map to control
         characters are discouraged, and will generate the warning (when enabled)
@@ -1581,16 +1555,14 @@
     format wrapped in pack</a></dt>
   <dd>(W pack) You said
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;C&quot;, $x)
+    <pre>    pack(&quot;C&quot;, $x)
     </pre>
     <p class="Pp">where <span class="Li">$x</span> is either less than 0 or more
         than 255; the <span class="Li">&quot;C&quot;</span> format is only for
         encoding native operating system characters (ASCII, EBCDIC, and so on)
         and not for Unicode characters, so Perl behaved as if you meant</p>
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;C&quot;, $x &amp; 255)
+    <pre>    pack(&quot;C&quot;, $x &amp; 255)
     </pre>
     <p class="Pp">If you actually want to pack Unicode codepoints, use the
         <span class="Li">&quot;U&quot;</span> format instead.</p>
@@ -1599,16 +1571,14 @@
     format wrapped in pack</a></dt>
   <dd>(W pack) You said
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;c&quot;, $x)
+    <pre>    pack(&quot;c&quot;, $x)
     </pre>
     <p class="Pp">where <span class="Li">$x</span> is either less than -128 or
         more than 127; the <span class="Li">&quot;c&quot;</span> format is only
         for encoding native operating system characters (ASCII, EBCDIC, and so
         on) and not for Unicode characters, so Perl behaved as if you meant</p>
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;c&quot;, $x &amp; 255);
+    <pre>    pack(&quot;c&quot;, $x &amp; 255);
     </pre>
     <p class="Pp">If you actually want to pack Unicode codepoints, use the
         <span class="Li">&quot;U&quot;</span> format instead.</p>
@@ -1617,63 +1587,55 @@
     '%c' format wrapped in unpack</a></dt>
   <dd>(W unpack) You tried something like
     <p class="Pp"></p>
-    <pre>
-   unpack(&quot;H&quot;, &quot;\x{2a1}&quot;)
+    <pre>   unpack(&quot;H&quot;, &quot;\x{2a1}&quot;)
     </pre>
     <p class="Pp">where the format expects to process a byte (a character with a
         value below 256), but a higher value was provided instead. Perl uses the
         value modulus 256 instead, as if you had provided:</p>
     <p class="Pp"></p>
-    <pre>
-   unpack(&quot;H&quot;, &quot;\x{a1}&quot;)
+    <pre>   unpack(&quot;H&quot;, &quot;\x{a1}&quot;)
     </pre>
   </dd>
   <dt id="Character~6"><a class="permalink" href="#Character~6">Character in 'W'
     format wrapped in pack</a></dt>
   <dd>(W pack) You said
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;U0W&quot;, $x)
+    <pre>    pack(&quot;U0W&quot;, $x)
     </pre>
     <p class="Pp">where <span class="Li">$x</span> is either less than 0 or more
         than 255. However, <span class="Li">&quot;U0&quot;</span>-mode expects
         all values to fall in the interval [0, 255], so Perl behaved as if you
         meant:</p>
     <p class="Pp"></p>
-    <pre>
-    pack(&quot;U0W&quot;, $x &amp; 255)
+    <pre>    pack(&quot;U0W&quot;, $x &amp; 255)
     </pre>
   </dd>
   <dt id="Character(s)"><a class="permalink" href="#Character(s)">Character(s)
     in '%c' format wrapped in pack</a></dt>
   <dd>(W pack) You tried something like
     <p class="Pp"></p>
-    <pre>
-   pack(&quot;u&quot;, &quot;\x{1f3}b&quot;)
+    <pre>   pack(&quot;u&quot;, &quot;\x{1f3}b&quot;)
     </pre>
     <p class="Pp">where the format expects to process a sequence of bytes
         (character with a value below 256), but some of the characters had a
         higher value. Perl uses the character values modulus 256 instead, as if
         you had provided:</p>
     <p class="Pp"></p>
-    <pre>
-   pack(&quot;u&quot;, &quot;\x{f3}b&quot;)
+    <pre>   pack(&quot;u&quot;, &quot;\x{f3}b&quot;)
     </pre>
   </dd>
   <dt id="Character(s)~2"><a class="permalink" href="#Character(s)~2">Character(s)
     in '%c' format wrapped in unpack</a></dt>
   <dd>(W unpack) You tried something like
     <p class="Pp"></p>
-    <pre>
-   unpack(&quot;s&quot;, &quot;\x{1f3}b&quot;)
+    <pre>   unpack(&quot;s&quot;, &quot;\x{1f3}b&quot;)
     </pre>
     <p class="Pp">where the format expects to process a sequence of bytes
         (character with a value below 256), but some of the characters had a
         higher value. Perl uses the character values modulus 256 instead, as if
         you had provided:</p>
     <p class="Pp"></p>
-    <pre>
-   unpack(&quot;s&quot;, &quot;\x{f3}b&quot;)
+    <pre>   unpack(&quot;s&quot;, &quot;\x{f3}b&quot;)
     </pre>
   </dd>
   <dt id="charnames"><a class="permalink" href="#charnames">charnames alias
@@ -1702,7 +1664,7 @@
       opened.</dd>
   <dt>&quot;\c%c&quot; is more clearly written simply as &quot;%s&quot;</dt>
   <dd>(W syntax) The
-      <span class="Li">&quot;\c</span><i>X</i><span class="Li">&quot;</span>
+      <span class="Li">&quot;\c</span><span class="Li"><i>X</i></span><span class="Li">&quot;</span>
       construct is intended to be a way to specify non-printable characters. You
       used it for a printable one, which is better written as simply itself,
       perhaps preceded by a backslash for non-word characters. Doing it the way
@@ -1772,8 +1734,7 @@
       shell instead of Perl. Check the #! line, or manually feed your script
       into Perl yourself. The #! line at the top of your file could look like
     <p class="Pp"></p>
-    <pre>
-  #!/usr/bin/perl
+    <pre>  #!/usr/bin/perl
     </pre>
   </dd>
   <dt>%s: command not found</dt>
@@ -1781,8 +1742,7 @@
       shell instead of Perl. Check the #! line, or manually feed your script
       into Perl yourself. The #! line at the top of your file could look like
     <p class="Pp"></p>
-    <pre>
-  #!/usr/bin/perl
+    <pre>  #!/usr/bin/perl
     </pre>
   </dd>
   <dt>%s: command not found: %s</dt>
@@ -1790,8 +1750,7 @@
       shell instead of Perl. Check the #! line, or manually feed your script
       into Perl yourself. The #! line at the top of your file could look like
     <p class="Pp"></p>
-    <pre>
-  #!/usr/bin/perl
+    <pre>  #!/usr/bin/perl
     </pre>
   </dd>
   <dt id="Compilation"><a class="permalink" href="#Compilation">Compilation
@@ -1840,8 +1799,7 @@
     not be allowed in Perl 5.32</a></dt>
   <dd>(D deprecated) You wrote something like
     <p class="Pp"></p>
-    <pre>
-    my $var;
+    <pre>    my $var;
     $sub = sub () { $var };
     </pre>
     <p class="Pp">but <span class="Li">$var</span> is referenced elsewhere and
@@ -1864,16 +1822,14 @@
         inlining, then make sure the variable is not referenced elsewhere,
         possibly by copying it:</p>
     <p class="Pp"></p>
-    <pre>
-    my $var2 = $var;
+    <pre>    my $var2 = $var;
     $sub = sub () { $var2 };
     </pre>
     <p class="Pp">If you do want this subroutine to be a closure that reflects
         future changes to the variable that it closes over, add an explicit
         <span class="Li">&quot;return&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-    my $var;
+    <pre>    my $var;
     $sub = sub () { return $var };
     </pre>
   </dd>
@@ -1916,8 +1872,7 @@
       subroutines in this package cannot yet be called that way, but must be
       called as barewords. Something like this will work:
     <p class="Pp"></p>
-    <pre>
-    BEGIN { *shove = \&amp;CORE::push; }
+    <pre>    BEGIN { *shove = \&amp;CORE::push; }
     shove @array, 1,2,3; # pushes on to @array
     </pre>
   </dd>
@@ -1957,8 +1912,7 @@
       risk of using an experimental feature which may change or be removed in a
       future Perl version:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::declared_refs&quot;;
+    <pre>    no warnings &quot;experimental::declared_refs&quot;;
     use feature &quot;declared_refs&quot;;
     $fooref = my \$foo;
     </pre>
@@ -1995,20 +1949,17 @@
   <dd>(F) The argument to <span class="Li">&quot;delete&quot;</span> must be
       either a hash or array element, such as:
     <p class="Pp"></p>
-    <pre>
-    $foo{$bar}
+    <pre>    $foo{$bar}
     $ref-&gt;{&quot;susie&quot;}[12]
     </pre>
     <p class="Pp">or a hash or array slice, such as:</p>
     <p class="Pp"></p>
-    <pre>
-    @foo[$bar, $baz, $xyzzy]
+    <pre>    @foo[$bar, $baz, $xyzzy]
     @{$ref-&gt;[12]}{&quot;susie&quot;, &quot;queue&quot;}
     </pre>
     <p class="Pp">or a hash key/value or array index/value slice, such as:</p>
     <p class="Pp"></p>
-    <pre>
-    %foo[$bar, $baz, $xyzzy]
+    <pre>    %foo[$bar, $baz, $xyzzy]
     %{$ref-&gt;[12]}{&quot;susie&quot;, &quot;queue&quot;}
     </pre>
   </dd>
@@ -2031,20 +1982,17 @@
       static effect by declaring the variable in a separate block outside the
       function, eg
     <p class="Pp"></p>
-    <pre>
-    sub f { my $x if 0; return $x++ }
+    <pre>    sub f { my $x if 0; return $x++ }
     </pre>
     <p class="Pp">becomes</p>
     <p class="Pp"></p>
-    <pre>
-    { my $x; sub f { return $x++ } }
+    <pre>    { my $x; sub f { return $x++ } }
     </pre>
     <p class="Pp">Beginning with perl 5.10.0, you can also use
         <span class="Li">&quot;state&quot;</span> variables to have lexicals
         that are initialized only once (see feature):</p>
     <p class="Pp"></p>
-    <pre>
-    sub f { state $x; return $x++ }
+    <pre>    sub f { state $x; return $x++ }
     </pre>
     <p class="Pp">This use of <span class="Li">&quot;my()&quot;</span> in a
         false conditional has been deprecated since Perl 5.10, and it will
@@ -2237,8 +2185,7 @@
   <dd>(F) The argument to <span class="Li">&quot;exists&quot;</span> must be a
       hash or array element or a subroutine with an ampersand, such as:
     <p class="Pp"></p>
-    <pre>
-    $foo{$bar}
+    <pre>    $foo{$bar}
     $ref-&gt;{&quot;susie&quot;}[12]
     &amp;do_something
     </pre>
@@ -2274,11 +2221,10 @@
     bracket in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You wrote something like
     <p class="Pp"></p>
-    <pre>
- (?13
+    <pre> (?13
     </pre>
     <p class="Pp">to denote a capturing group of the form
-        <span class="Li">&quot;(?</span><i>PARNO</i><span class="Li">)&quot;</span>,
+        <span class="Li">&quot;(?</span><span class="Li"><i>PARNO</i></span><span class="Li">)&quot;</span>,
         but omitted the <span class="Li">&quot;)&quot;</span>.</p>
   </dd>
   <dt id="Expecting~2"><a class="permalink" href="#Expecting~2">Expecting close
@@ -2286,8 +2232,7 @@
     m/%s/</a></dt>
   <dd>(F) While parsing a nested extended character class like:
     <p class="Pp"></p>
-    <pre>
-    (?[ ... (?flags:(?[ ... ])) ... ])
+    <pre>    (?[ ... (?flags:(?[ ... ])) ... ])
                              ^
     </pre>
     <p class="Pp">we expected to see a close paren ')' (marked by ^) but did
@@ -2298,8 +2243,7 @@
     HERE in m/%s/</a></dt>
   <dd>(F) While parsing a nested extended character class like:
     <p class="Pp"></p>
-    <pre>
-    (?[ ... (?flags:(?[ ... ])) ... ])
+    <pre>    (?[ ... (?flags:(?[ ... ])) ... ])
                               ^
     </pre>
     <p class="Pp">we expected to see a close paren ')' (marked by ^) but did
@@ -2324,8 +2268,7 @@
     aliasing via reference not enabled</a></dt>
   <dd>(F) To do aliasing via references, you must first enable the feature:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::refaliasing&quot;;
+    <pre>    no warnings &quot;experimental::refaliasing&quot;;
     use feature &quot;refaliasing&quot;;
     \$x = \$y;
     </pre>
@@ -2348,8 +2291,7 @@
     subroutine signatures not enabled</a></dt>
   <dd>(F) To use subroutine signatures, you must first enable them:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::signatures&quot;;
+    <pre>    no warnings &quot;experimental::signatures&quot;;
     use feature &quot;signatures&quot;;
     sub foo ($left, $right) { ... }
     </pre>
@@ -2466,8 +2408,7 @@
     redefined</a></dt>
   <dd>(W redefine) You redefined a format. To suppress this warning, say
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         no warnings 'redefine';
         eval &quot;format NAME =...&quot;;
     }
@@ -2477,13 +2418,11 @@
     should be ==</a></dt>
   <dd>(W syntax) You said
     <p class="Pp"></p>
-    <pre>
-    if ($foo = 123)
+    <pre>    if ($foo = 123)
     </pre>
     <p class="Pp">when you meant</p>
     <p class="Pp"></p>
-    <pre>
-    if ($foo == 123)
+    <pre>    if ($foo == 123)
     </pre>
     <p class="Pp">(or something like that).</p>
   </dd>
@@ -2682,9 +2621,7 @@
       prototype while in the scope of <span class="Li">&quot;use feature
       'signatures'&quot;</span>? For example:
     <p class="Pp"></p>
-    <pre>
-    sub foo ($$) {}            # legal - a prototype
-
+    <pre>    sub foo ($$) {}            # legal - a prototype
     use feature 'signatures;
     sub foo ($$) {}            # illegal - was expecting a signature
     sub foo ($a, $b)
@@ -2739,8 +2676,7 @@
       <span class="Li">&quot;,&quot;</span> or
       <span class="Li">&quot;)&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-    use feature 'signatures';
+    <pre>    use feature 'signatures';
     sub foo ($=1) {}           # legal
     sub foo ($a = 1) {}        # legal
     sub foo ($a += 1) {}       # illegal
@@ -2751,12 +2687,11 @@
     regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You wrote something like
     <p class="Pp"></p>
-    <pre>
- (?+foo)
+    <pre> (?+foo)
     </pre>
     <p class="Pp">The <span class="Li">&quot;+&quot;</span> is valid only when
         followed by digits, indicating a capturing group. See
-        <span class="Li">&quot;(?</span><i>PARNO</i><span class="Li">)&quot;</span>.</p>
+        <span class="Li">&quot;(?</span><span class="Li"><i>PARNO</i></span><span class="Li">)&quot;</span>.</p>
   </dd>
   <dt id="Illegal~17"><a class="permalink" href="#Illegal~17">Illegal
     suidscript</a></dt>
@@ -2819,8 +2754,7 @@
         least 2 spaces, but lines 1 and 3 are fine because they have at least
       2:</p>
     <p class="Pp"></p>
-    <pre>
-    if ($something) {
+    <pre>    if ($something) {
       print &lt;&lt;~EOF;
         Line 1
        Line 2 not
@@ -3264,13 +3198,11 @@
       probably wanted a count of the items.
     <p class="Pp">Array size can be obtained by doing:</p>
     <p class="Pp"></p>
-    <pre>
-    scalar(@array);
+    <pre>    scalar(@array);
     </pre>
     <p class="Pp">The number of items in a hash can be obtained by doing:</p>
     <p class="Pp"></p>
-    <pre>
-    scalar(keys %hash);
+    <pre>    scalar(keys %hash);
     </pre>
   </dd>
   <dt id="Lexing"><a class="permalink" href="#Lexing">Lexing code attempted to
@@ -3308,8 +3240,7 @@
         characters are representable by escape sequences which won't present
         such a jarring appearance as your pattern does when displayed.</p>
     <p class="Pp"></p>
-    <pre>
-  \r    carriage return
+    <pre>  \r    carriage return
   \f    form feed
   \n    line feed
   \cK   vertical tab
@@ -3346,8 +3277,7 @@
         rules.</p>
     <p class="Pp">The other common cause is for the characters</p>
     <p class="Pp"></p>
-    <pre>
- $ + &lt; = &gt; ^ ` | ~
+    <pre> $ + &lt; = &gt; ^ ` | ~
     </pre>
     <p class="Pp">These are probematic. The C standard says that these should be
         considered punctuation in the C locale (and the POSIX standard defers to
@@ -3461,8 +3391,7 @@
     PERLLIB_PREFIX</a></dt>
   <dd>(F) An error peculiar to OS/2. PERLLIB_PREFIX should be of the form
     <p class="Pp"></p>
-    <pre>
-    prefix1;prefix2
+    <pre>    prefix1;prefix2
     </pre>
     <p class="Pp">or
       <br/>
@@ -3742,8 +3671,7 @@
       You didn't, of course, try &quot;2 = 1&quot;, because the compiler catches
       that. But an easy way to do the same thing is:
     <p class="Pp"></p>
-    <pre>
-    sub mod { $_[0] = 1 }
+    <pre>    sub mod { $_[0] = 1 }
     mod(2);
     </pre>
     <p class="Pp">Another way is to assign to a <b>substr()</b> that's off the
@@ -3752,8 +3680,7 @@
         <span class="Li">&quot;foreach&quot;</span> loop <i>VAR</i> when
         <i>VAR</i> is aliased to a constant in the look <i>LIST</i>:</p>
     <p class="Pp"></p>
-    <pre>
-    $x = 1;
+    <pre>    $x = 1;
     foreach my $n ($x, 2) {
         $n *= 2; # modifies the $x, but fails on attempt to
     }            # modify the 2
@@ -3819,8 +3746,7 @@
       <span class="Li">&quot;%&quot;</span>) must be the last parameter, and
       there must not be more than one of them; for example:
     <p class="Pp"></p>
-    <pre>
-    sub foo ($a, @b)    {} # legal
+    <pre>    sub foo ($a, @b)    {} # legal
     sub foo ($a, @b, %) {} # invalid
     </pre>
   </dd>
@@ -3878,8 +3804,7 @@
       helps catch some ambiguities. If your constant is too short, add leading
       zeros, like
     <p class="Pp"></p>
-    <pre>
- (?[ [ \078 ] ])     # Syntax error!
+    <pre> (?[ [ \078 ] ])     # Syntax error!
  (?[ [ \0078 ] ])    # Works
  (?[ [ \007 8 ] ])   # Clearer
     </pre>
@@ -3888,8 +3813,7 @@
         need to use \o{} instead. If you meant two separate things, you need to
         separate them:</p>
     <p class="Pp"></p>
-    <pre>
- (?[ [ \7776 ] ])        # Syntax error!
+    <pre> (?[ [ \7776 ] ])        # Syntax error!
  (?[ [ \o{7776} ] ])     # One meaning
  (?[ [ \777 6 ] ])       # Another meaning
  (?[ [ \777 \006 ] ])    # Still another
@@ -3962,8 +3886,7 @@
       <span class="Li">&quot;\N{...}&quot;</span> is used as one of the end
       points of the range, such as in
     <p class="Pp"></p>
-    <pre>
- [\x{41}-\N{ARABIC SEQUENCE YEH WITH HAMZA ABOVE WITH AE}]
+    <pre> [\x{41}-\N{ARABIC SEQUENCE YEH WITH HAMZA ABOVE WITH AE}]
     </pre>
     <p class="Pp">What is meant here is unclear, as the
         <span class="Li">&quot;\N{...}&quot;</span> escape is a sequence of code
@@ -3990,8 +3913,7 @@
       argument. If you want to run an empty program, pass the empty string as a
       separate argument or run a program consisting of a single 0 or 1:
     <p class="Pp"></p>
-    <pre>
-    perl -e &quot;&quot;
+    <pre>    perl -e &quot;&quot;
     perl -e0
     perl -e1
     </pre>
@@ -4074,8 +3996,7 @@
   <dd>(F) In a regular expression, there was a non-hexadecimal character where a
       hex one was expected, like
     <p class="Pp"></p>
-    <pre>
- (?[ [ \xDG ] ])
+    <pre> (?[ [ \xDG ] ])
  (?[ [ \x{DEKA} ] ])
     </pre>
   </dd>
@@ -4084,8 +4005,7 @@
   <dd>(F) In a regular expression, there was a non-octal character where an
       octal one was expected, like
     <p class="Pp"></p>
-    <pre>
- (?[ [ \o{1278} ] ])
+    <pre> (?[ [ \o{1278} ] ])
     </pre>
   </dd>
   <dt id="Non-octal~2"><a class="permalink" href="#Non-octal~2">Non-octal
@@ -4188,8 +4108,7 @@
       whitespace or a comma etc., in particular to avoid confusion with the
       <span class="Li">$#</span> variable. For example:
     <p class="Pp"></p>
-    <pre>
-    # bad
+    <pre>    # bad
     sub f ($# ignore first arg
            , $b) {}
     # good
@@ -4325,8 +4244,7 @@
     preceding operator in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You wrote something like
     <p class="Pp"></p>
-    <pre>
- (?[ \p{Digit} \p{Thai} ])
+    <pre> (?[ \p{Digit} \p{Thai} ])
     </pre>
     <p class="Pp">There are two operands, but no operator giving how you want to
         combine them.</p>
@@ -4646,13 +4564,11 @@
     missing around &quot;%s&quot; list</a></dt>
   <dd>(W parenthesis) You said something like
     <p class="Pp"></p>
-    <pre>
-    my $foo, $bar = @_;
+    <pre>    my $foo, $bar = @_;
     </pre>
     <p class="Pp">when you meant</p>
     <p class="Pp"></p>
-    <pre>
-    my ($foo, $bar) = @_;
+    <pre>    my ($foo, $bar) = @_;
     </pre>
     <p class="Pp">Remember that &quot;my&quot;, &quot;our&quot;,
         &quot;local&quot; and &quot;state&quot; bind tighter than comma.</p>
@@ -4689,8 +4605,7 @@
       If you want to take the risk of using this layer, simply disable this
       warning:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::win32_perlio&quot;;
+    <pre>    no warnings &quot;experimental::win32_perlio&quot;;
     </pre>
   </dd>
   <dt id="Perl_my__s()"><a class="permalink" href="#Perl_my__s()">Perl_my_%s()
@@ -4736,8 +4651,7 @@
     locale failed.</a></dt>
   <dd>(S) The whole warning message will look something like:
     <p class="Pp"></p>
-    <pre>
-        perl: warning: Setting locale failed.
+    <pre>        perl: warning: Setting locale failed.
         perl: warning: Please check that your locale settings:
                 LC_ALL = &quot;En_US&quot;,
                 LANG = (unset)
@@ -4761,8 +4675,7 @@
       but containing an unexpected value. The legal values of this setting are
       as follows.
     <p class="Pp"></p>
-    <pre>
-  Numeric | String        | Result
+    <pre>  Numeric | String        | Result
   --------+---------------+-----------------------------------------
   0       | NO            | Disables key traversal randomization
   1       | RANDOM        | Enables full key traversal randomization
@@ -4846,16 +4759,14 @@
       parentheses shown here; braces are also frequently used.)
     <p class="Pp">You probably wrote something like this:</p>
     <p class="Pp"></p>
-    <pre>
-    @list = qw(
+    <pre>    @list = qw(
         a # a comment
         b # another comment
     );
     </pre>
     <p class="Pp">when you should have written this:</p>
     <p class="Pp"></p>
-    <pre>
-    @list = qw(
+    <pre>    @list = qw(
         a
         b
     );
@@ -4863,8 +4774,7 @@
     <p class="Pp">If you really want comments, build your list the old-fashioned
         way, with quotes and commas:</p>
     <p class="Pp"></p>
-    <pre>
-    @list = (
+    <pre>    @list = (
         'a',    # a comment
         'b',    # another comment
     );
@@ -4878,14 +4788,12 @@
       used.)
     <p class="Pp">You probably wrote something like this:</p>
     <p class="Pp"></p>
-    <pre>
-    qw! a, b, c !;
+    <pre>    qw! a, b, c !;
     </pre>
     <p class="Pp">which puts literal commas into some of the list items. Write
         it without commas if you don't want them to appear in your data:</p>
     <p class="Pp"></p>
-    <pre>
-    qw! a b c !;
+    <pre>    qw! a b c !;
     </pre>
   </dd>
   <dt id="Possible~3"><a class="permalink" href="#Possible~3">Possible memory
@@ -4902,25 +4810,21 @@
       low-precedence operator like <span class="Li">&quot;or&quot;</span>.
       Consider:
     <p class="Pp"></p>
-    <pre>
-    sub { return $a or $b; }
+    <pre>    sub { return $a or $b; }
     </pre>
     <p class="Pp">This is parsed as:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { (return $a) or $b; }
+    <pre>    sub { (return $a) or $b; }
     </pre>
     <p class="Pp">Which is effectively just:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { return $a; }
+    <pre>    sub { return $a; }
     </pre>
     <p class="Pp">Either use parentheses or the high-precedence variant of the
         operator.</p>
     <p class="Pp">Note this may be also triggered for constructs like:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { 1 if die; }
+    <pre>    sub { 1 if die; }
     </pre>
   </dd>
   <dt id="Possible~5"><a class="permalink" href="#Possible~5">Possible
@@ -4928,8 +4832,7 @@
   <dd>(W precedence) Your program uses a bitwise logical operator in conjunction
       with a numeric comparison operator, like this :
     <p class="Pp"></p>
-    <pre>
-    if ($x &amp; $y == 0) { ... }
+    <pre>    if ($x &amp; $y == 0) { ... }
     </pre>
     <p class="Pp">This expression is actually equivalent to
         <span class="Li">&quot;$x &amp; ($y == 0)&quot;</span>, due to the
@@ -4964,13 +4867,11 @@
     problem: open %s should be open(%s)</a></dt>
   <dd>(S precedence) The old irregular construct
     <p class="Pp"></p>
-    <pre>
-    open FOO || die;
+    <pre>    open FOO || die;
     </pre>
     <p class="Pp">is now misinterpreted as</p>
     <p class="Pp"></p>
-    <pre>
-    open(FOO || die);
+    <pre>    open(FOO || die);
     </pre>
     <p class="Pp">because of the strict regularization of Perl 5's grammar into
         unary and list operators. (The old open was a little of both.) You must
@@ -5060,8 +4961,7 @@
         one that was used is not portable between ASCII and EBCDIC platforms,
         and doesn't have an obvious meaning to a casual reader.</p>
     <p class="Pp"></p>
-    <pre>
- [3-7]    # OK; Obvious and portable
+    <pre> [3-7]    # OK; Obvious and portable
  [d-g]    # OK; Obvious and portable
  [A-Y]    # OK; Obvious and portable
  [A-z]    # WRONG; Not portable; not clear what is meant
@@ -5151,8 +5051,7 @@
       that you used the anon hash constructor when you meant to use parens. In
       any case, a hash requires key/value <b>pairs</b>.
     <p class="Pp"></p>
-    <pre>
-    %hash = { one =&gt; 1, two =&gt; 2, };    # WRONG
+    <pre>    %hash = { one =&gt; 1, two =&gt; 2, };    # WRONG
     %hash = [ qw/ an anon array / ];    # WRONG
     %hash = ( one =&gt; 1, two =&gt; 2, );    # right
     %hash = qw( one 1 two 2 );                  # also fine
@@ -5458,8 +5357,7 @@
         a location where the CGI server can't find it, basically, more or less.
         Please see the following for more information:</p>
     <p class="Pp"></p>
-    <pre>
-        http://www.perl.org/CGI_MetaFAQ.html
+    <pre>        http://www.perl.org/CGI_MetaFAQ.html
         http://www.htmlhelp.org/faq/cgifaq.html
         http://www.w3.org/Security/Faq/
     </pre>
@@ -5644,8 +5542,7 @@
       come before the signature. Note that this order was the opposite in
       versions 5.22..5.26. So:
     <p class="Pp"></p>
-    <pre>
-    sub foo :lvalue ($a, $b) { ... }  # 5.20 and 5.28 +
+    <pre>    sub foo :lvalue ($a, $b) { ... }  # 5.20 and 5.28 +
     sub foo ($a, $b) :lvalue { ... }  # 5.22 .. 5.26
     </pre>
   </dd>
@@ -5658,22 +5555,19 @@
       yet been created. (Remember that named subs are created at compile time,
       while anonymous subs are created at run-time.) For example,
     <p class="Pp"></p>
-    <pre>
-    sub { my sub a {...} sub f { \&amp;a } }
+    <pre>    sub { my sub a {...} sub f { \&amp;a } }
     </pre>
     <p class="Pp">At the time that f is created, it can't capture the current
         &quot;a&quot; sub, since the anonymous subroutine hasn't been created
         yet. Conversely, the following won't give a warning since the anonymous
         subroutine has by now been created and is live:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { my sub a {...} eval 'sub f { \&amp;a }' }-&gt;();
+    <pre>    sub { my sub a {...} eval 'sub f { \&amp;a }' }-&gt;();
     </pre>
     <p class="Pp">The second situation is caused by an eval accessing a lexical
         subroutine that has gone out of scope, for example,</p>
     <p class="Pp"></p>
-    <pre>
-    sub f {
+    <pre>    sub f {
         my sub a {...}
         sub { eval '\&amp;a' }
     }
@@ -5694,8 +5588,7 @@
     redefined</a></dt>
   <dd>(W redefine) You redefined a subroutine. To suppress this warning, say
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         no warnings 'redefine';
         eval &quot;sub name { ... }&quot;;
     }
@@ -5761,8 +5654,7 @@
       <span class="Li">&quot;this|that|other&quot;</span>, enclose it in
       clustering parentheses:
     <p class="Pp"></p>
-    <pre>
-    (?(condition)(?:this|that|other)|else-clause)
+    <pre>    (?(condition)(?:this|that|other)|else-clause)
     </pre>
     <p class="Pp">The &lt;--&#x00A0;HERE shows whereabouts in the regular
         expression the problem was discovered. See perlre.</p>
@@ -5772,8 +5664,7 @@
   <dd>(F) The condition part of a (?(condition)if-clause|else-clause) construct
       is not known. The condition must be one of the following:
     <p class="Pp"></p>
-    <pre>
- (1) (2) ...        true if 1st, 2nd, etc., capture matched
+    <pre> (1) (2) ...        true if 1st, 2nd, etc., capture matched
  (&lt;NAME&gt;) ('NAME')  true if named capture matched
  (?=...) (?&lt;=...)   true if subpattern matches
  (?!...) (?&lt;!...)   true if subpattern fails to match
@@ -5799,8 +5690,7 @@
   <dt id="syntax"><a class="permalink" href="#syntax">syntax error</a></dt>
   <dd>(F) Probably means you had a syntax error. Common reasons include:
     <p class="Pp"></p>
-    <pre>
-    A keyword is misspelled.
+    <pre>    A keyword is misspelled.
     A semicolon is missing.
     A comma is missing.
     An opening or closing parenthesis is missing.
@@ -5886,8 +5776,7 @@
   <dd>(F) To declare references to variables, as in <span class="Li">&quot;my
       \%x&quot;</span>, you must first enable the feature:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::declared_refs&quot;;
+    <pre>    no warnings &quot;experimental::declared_refs&quot;;
     use feature &quot;declared_refs&quot;;
     </pre>
   </dd>
@@ -5908,8 +5797,7 @@
       using an experimental feature which may change in a future Perl version,
       you can do this to silence the warning:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::regex_sets&quot;;
+    <pre>    no warnings &quot;experimental::regex_sets&quot;;
     </pre>
   </dd>
   <dt id="The~8"><a class="permalink" href="#The~8">The script_run feature is
@@ -5925,8 +5813,7 @@
       risk of using an experimental feature which may change or be removed in a
       future Perl version:
     <p class="Pp"></p>
-    <pre>
-    no warnings &quot;experimental::signatures&quot;;
+    <pre>    no warnings &quot;experimental::signatures&quot;;
     use feature &quot;signatures&quot;;
     sub foo ($left, $right) { ... }
     </pre>
@@ -5976,20 +5863,17 @@
       static effect by declaring the variable in a separate block outside the
       function, eg
     <p class="Pp"></p>
-    <pre>
-    sub f { my $x if 0; return $x++ }
+    <pre>    sub f { my $x if 0; return $x++ }
     </pre>
     <p class="Pp">becomes</p>
     <p class="Pp"></p>
-    <pre>
-    { my $x; sub f { return $x++ } }
+    <pre>    { my $x; sub f { return $x++ } }
     </pre>
     <p class="Pp">Beginning with perl 5.10.0, you can also use
         <span class="Li">&quot;state&quot;</span> variables to have lexicals
         that are initialized only once (see feature):</p>
     <p class="Pp"></p>
-    <pre>
-    sub f { state $x; return $x++ }
+    <pre>    sub f { state $x; return $x++ }
     </pre>
     <p class="Pp">This use of <span class="Li">&quot;my()&quot;</span> in a
         false conditional was deprecated beginning in Perl 5.10 and became a
@@ -6203,8 +6087,7 @@
       (<span class="Li">&quot;}&quot;</span>) should also be escaped to avoid
       confusing the parser, for example,
     <p class="Pp"></p>
-    <pre>
- qr{abc\{def\}ghi}
+    <pre> qr{abc\{def\}ghi}
     </pre>
     <p class="Pp">Forcing literal <span class="Li">&quot;{&quot;</span>
         characters to be escaped will enable the Perl language to be extended in
@@ -6234,15 +6117,13 @@
       indicating alternation.</li>
   <li>as the first character in a parenthesized grouping like
     <p class="Pp"></p>
-    <pre>
- /foo({bar)/
+    <pre> /foo({bar)/
  /foo(?:{bar)/
     </pre>
   </li>
   <li>as the first character following a quantifier
     <p class="Pp"></p>
-    <pre>
- /\s*{/
+    <pre> /\s*{/
     </pre>
   </li>
 </ul>
@@ -6263,8 +6144,7 @@
       (<span class="Li">&quot;}&quot;</span>) should also be escaped to avoid
       confusing the parser, for example,
     <p class="Pp"></p>
-    <pre>
- qr{abc\{def\}ghi}
+    <pre> qr{abc\{def\}ghi}
     </pre>
     <p class="Pp">Forcing literal <span class="Li">&quot;{&quot;</span>
         characters to be escaped will enable the Perl language to be extended in
@@ -6294,15 +6174,13 @@
       indicating alternation.</li>
   <li>as the first character in a parenthesized grouping like
     <p class="Pp"></p>
-    <pre>
- /foo({bar)/
+    <pre> /foo({bar)/
  /foo(?:{bar)/
     </pre>
   </li>
   <li>as the first character following a quantifier
     <p class="Pp"></p>
-    <pre>
- /\s*{/
+    <pre> /\s*{/
     </pre>
   </li>
 </ul>
@@ -6323,8 +6201,7 @@
       (<span class="Li">&quot;}&quot;</span>) should also be escaped to avoid
       confusing the parser, for example,
     <p class="Pp"></p>
-    <pre>
- qr{abc\{def\}ghi}
+    <pre> qr{abc\{def\}ghi}
     </pre>
     <p class="Pp">Forcing literal <span class="Li">&quot;{&quot;</span>
         characters to be escaped will enable the Perl language to be extended in
@@ -6354,15 +6231,13 @@
       indicating alternation.</li>
   <li>as the first character in a parenthesized grouping like
     <p class="Pp"></p>
-    <pre>
- /foo({bar)/
+    <pre> /foo({bar)/
  /foo(?:{bar)/
     </pre>
   </li>
   <li>as the first character following a quantifier
     <p class="Pp"></p>
-    <pre>
- /\s*{/
+    <pre> /\s*{/
     </pre>
   </li>
 </ul>
@@ -6403,8 +6278,7 @@
     &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You had something like this:
     <p class="Pp"></p>
-    <pre>
- (?[ | \p{Digit} ])
+    <pre> (?[ | \p{Digit} ])
     </pre>
     <p class="Pp">where the <span class="Li">&quot;|&quot;</span> is a binary
         operator with an operand on the right, but no operand on the left.</p>
@@ -6413,15 +6287,13 @@
     character in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You had something like this:
     <p class="Pp"></p>
-    <pre>
- (?[ z ])
+    <pre> (?[ z ])
     </pre>
     <p class="Pp">Within <span class="Li">&quot;(?[ ])&quot;</span>, no literal
         characters are allowed unless they are within an inner pair of square
         brackets, like</p>
     <p class="Pp"></p>
-    <pre>
- (?[ [ z ] ])
+    <pre> (?[ [ z ] ])
     </pre>
     <p class="Pp">Another possibility is that you forgot a backslash. Perl isn't
         smart enough to figure out what you really meant.</p>
@@ -6444,8 +6316,7 @@
     in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) You had something like this:
     <p class="Pp"></p>
-    <pre>
- (?[ ( \p{Digit} + ) ])
+    <pre> (?[ ( \p{Digit} + ) ])
     </pre>
     <p class="Pp">The <span class="Li">&quot;)&quot;</span> is out-of-place.
         Something apparently was supposed to be combined with the digits, or the
@@ -6464,8 +6335,7 @@
     m/%s/</a></dt>
   <dd>(F) You had something like this:
     <p class="Pp"></p>
-    <pre>
- (?[ \p{Digit} ( \p{Lao} + \p{Thai} ) ])
+    <pre> (?[ \p{Digit} ( \p{Lao} + \p{Thai} ) ])
     </pre>
     <p class="Pp">There should be an operator before the
         <span class="Li">&quot;(&quot;</span>, as there's no indication as to
@@ -6569,15 +6439,13 @@
       is if you didn't put in white space between the end of the regex and a
       following alphanumeric operator:
     <p class="Pp"></p>
-    <pre>
- if ($a =~ /foo/and $bar == 3) { ... }
+    <pre> if ($a =~ /foo/and $bar == 3) { ... }
     </pre>
     <p class="Pp">The <span class="Li">&quot;a&quot;</span> is a valid modifier
         flag, but the <span class="Li">&quot;n&quot;</span> is not, and raises
         this error. Likely what was meant instead was:</p>
     <p class="Pp"></p>
-    <pre>
- if ($a =~ /foo/ and $bar == 3) { ... }
+    <pre> if ($a =~ /foo/ and $bar == 3) { ... }
     </pre>
   </dd>
   <dt id="Unknown~9"><a class="permalink" href="#Unknown~9">Unknown
@@ -6589,8 +6457,7 @@
   <dd>(F) The condition part of a (?(condition)if-clause|else-clause) construct
       is not known. The condition must be one of the following:
     <p class="Pp"></p>
-    <pre>
- (1) (2) ...            true if 1st, 2nd, etc., capture matched
+    <pre> (1) (2) ...            true if 1st, 2nd, etc., capture matched
  (&lt;NAME&gt;) ('NAME')      true if named capture matched
  (?=...) (?&lt;=...)       true if subpattern matches
  (*pla:...) (*plb:...)  true if subpattern matches; also
@@ -6768,13 +6635,11 @@
   <dd>(F) This message occurs when a here document label has an initial
       quotation mark but the final quotation mark is missing. Perhaps you wrote:
     <p class="Pp"></p>
-    <pre>
-    &lt;&lt;&quot;foo
+    <pre>    &lt;&lt;&quot;foo
     </pre>
     <p class="Pp">instead of:</p>
     <p class="Pp"></p>
-    <pre>
-    &lt;&lt;&quot;foo&quot;
+    <pre>    &lt;&lt;&quot;foo&quot;
     </pre>
   </dd>
   <dt id="Unterminated~7"><a class="permalink" href="#Unterminated~7">Unterminated
@@ -6824,8 +6689,7 @@
   <dt>$[ used in %s (did you mean $] ?)</dt>
   <dd>(W syntax) You used <span class="Li">$[</span> in a comparison, such as:
     <p class="Pp"></p>
-    <pre>
-    if ($[ &gt; 5.006) {
+    <pre>    if ($[ &gt; 5.006) {
         ...
     }
     </pre>
@@ -6848,13 +6712,11 @@
   <dd>(W regexp) You have used an internal modifier such as (?-o) that has no
       meaning unless removed from the entire regexp:
     <p class="Pp"></p>
-    <pre>
-    if ($string =~ /(?-o)$pattern/o) { ... }
+    <pre>    if ($string =~ /(?-o)$pattern/o) { ... }
     </pre>
     <p class="Pp">must be written as</p>
     <p class="Pp"></p>
-    <pre>
-    if ($string =~ /$pattern/) { ... }
+    <pre>    if ($string =~ /$pattern/) { ... }
     </pre>
     <p class="Pp">The &lt;--&#x00A0;HERE shows whereabouts in the regular
         expression the problem was discovered. See perlre.</p>
@@ -6870,13 +6732,11 @@
   <dd>(W regexp) You have used an internal modifier such as (?o) that has no
       meaning unless applied to the entire regexp:
     <p class="Pp"></p>
-    <pre>
-    if ($string =~ /(?o)$pattern/) { ... }
+    <pre>    if ($string =~ /(?o)$pattern/) { ... }
     </pre>
     <p class="Pp">must be written as</p>
     <p class="Pp"></p>
-    <pre>
-    if ($string =~ /$pattern/o) { ... }
+    <pre>    if ($string =~ /$pattern/o) { ... }
     </pre>
     <p class="Pp">The &lt;--&#x00A0;HERE shows whereabouts in the regular
         expression the problem was discovered. See perlre.</p>
@@ -6903,8 +6763,7 @@
     m/%s/</a></dt>
   <dd>(W regexp) You specified something like these:
     <p class="Pp"></p>
-    <pre>
- qr/a{3}?/
+    <pre> qr/a{3}?/
  qr/b{1,1}+/
     </pre>
     <p class="Pp">The <span class="Li">&quot;?&quot;</span> and
@@ -6922,25 +6781,21 @@
       parse your program the way you thought it would. For example, you'd get
       this if you mixed up your C precedence with Python precedence and said
     <p class="Pp"></p>
-    <pre>
-    $one, $two = 1, 2;
+    <pre>    $one, $two = 1, 2;
     </pre>
     <p class="Pp">when you meant to say</p>
     <p class="Pp"></p>
-    <pre>
-    ($one, $two) = (1, 2);
+    <pre>    ($one, $two) = (1, 2);
     </pre>
     <p class="Pp">Another common error is to use ordinary parentheses to
         construct a list reference when you should be using square or curly
         brackets, for example, if you say</p>
     <p class="Pp"></p>
-    <pre>
-    $array = (1,2);
+    <pre>    $array = (1,2);
     </pre>
     <p class="Pp">when you should have said</p>
     <p class="Pp"></p>
-    <pre>
-    $array = [1,2];
+    <pre>    $array = [1,2];
     </pre>
     <p class="Pp">The square brackets explicitly turn a list value into a scalar
         value, while parentheses do not. So when a parenthesized list is
@@ -6950,8 +6805,7 @@
     <p class="Pp">This warning will not be issued for numerical constants equal
         to 0 or 1 since they are often used in statements like</p>
     <p class="Pp"></p>
-    <pre>
-    1 while sub_with_side_effects();
+    <pre>    1 while sub_with_side_effects();
     </pre>
     <p class="Pp">String constants that would normally evaluate to 0 or 1 are
         warned about.</p>
@@ -6968,8 +6822,7 @@
     sort in scalar context</a></dt>
   <dd>(W void) You used sort in scalar context, as in :
     <p class="Pp"></p>
-    <pre>
-    my $x = sort @y;
+    <pre>    my $x = sort @y;
     </pre>
     <p class="Pp">This is not very useful, and perl currently optimizes this
         away.</p>
@@ -7053,8 +6906,7 @@
   <dd>(F) Perhaps you modified the iterated array within the loop? This error is
       typically caused by code like the following:
     <p class="Pp"></p>
-    <pre>
-    @a = (3,4);
+    <pre>    @a = (3,4);
     @a = () for (1,2,@a);
     </pre>
     <p class="Pp">You are not supposed to modify arrays while they are being
@@ -7186,18 +7038,15 @@
     two hex characters in regex; marked by &lt;--&#x00A0;HERE in m/%s/</a></dt>
   <dd>(F) In a regular expression, you said something like
     <p class="Pp"></p>
-    <pre>
- (?[ [ \xBEEF ] ])
+    <pre> (?[ [ \xBEEF ] ])
     </pre>
     <p class="Pp">Perl isn't sure if you meant this</p>
     <p class="Pp"></p>
-    <pre>
- (?[ [ \x{BEEF} ] ])
+    <pre> (?[ [ \x{BEEF} ] ])
     </pre>
     <p class="Pp">or if you meant this</p>
     <p class="Pp"></p>
-    <pre>
- (?[ [ \x{BE} E F ] ])
+    <pre> (?[ [ \x{BE} E F ] ])
     </pre>
     <p class="Pp">You need to add either braces or blanks to disambiguate.</p>
   </dd>
@@ -7267,22 +7116,19 @@
       (Remember that named subs are created at compile time, while anonymous
       subs are created at run-time.) For example,
     <p class="Pp"></p>
-    <pre>
-    sub { my $a; sub f { $a } }
+    <pre>    sub { my $a; sub f { $a } }
     </pre>
     <p class="Pp">At the time that f is created, it can't capture the current
         value of <span class="Li">$a</span>, since the anonymous subroutine
         hasn't been created yet. Conversely, the following won't give a warning
         since the anonymous subroutine has by now been created and is live:</p>
     <p class="Pp"></p>
-    <pre>
-    sub { my $a; eval 'sub f { $a }' }-&gt;();
+    <pre>    sub { my $a; eval 'sub f { $a }' }-&gt;();
     </pre>
     <p class="Pp">The second situation is caused by an eval accessing a variable
         that has gone out of scope, for example,</p>
     <p class="Pp"></p>
-    <pre>
-    sub f {
+    <pre>    sub f {
         my $a;
         sub { eval '$a' }
     }
@@ -7316,8 +7162,7 @@
         LATIN SMALL LETTER SHARP S. Here's a complete list of the current ones
         affecting ASCII characters:</p>
     <p class="Pp"></p>
-    <pre>
-   ASCII
+    <pre>   ASCII
   sequence      Matches single letter under /i
     FF          U+FB00 LATIN SMALL LIGATURE FF
     FFI         U+FB03 LATIN SMALL LIGATURE FFI
@@ -7334,8 +7179,7 @@
     <p class="Pp">You can avoid this by using a bracketed character class in the
         lookbehind assertion, like</p>
     <p class="Pp"></p>
-    <pre>
- (?&lt;![sS]t)
+    <pre> (?&lt;![sS]t)
  (?&lt;![fF]f[iI])
     </pre>
     <p class="Pp">This fools Perl into not matching the ligatures.</p>
@@ -7345,8 +7189,7 @@
         exclude all these non-obvious matches, thus getting rid of this message.
         You can also say</p>
     <p class="Pp"></p>
-    <pre>
- use if $] ge 5.016, re =&gt; '/aa';
+    <pre> use if $] ge 5.016, re =&gt; '/aa';
     </pre>
     <p class="Pp">to apply <span class="Li">&quot;/aa&quot;</span> to all
         regular expressions compiled within its scope. See re.</p>
@@ -7428,8 +7271,7 @@
       filehandle when its reference count reached zero while it was still open,
       e.g.:
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         open my $fh, '&gt;', $file  or die &quot;open: '$file': $!\n&quot;;
         print $fh $data or die &quot;print: $!&quot;;
     } # implicit close here
@@ -7450,18 +7292,15 @@
       unary operator. For instance, if you know that the rand function has a
       default argument of 1.0, and you write
     <p class="Pp"></p>
-    <pre>
-    rand + 5;
+    <pre>    rand + 5;
     </pre>
     <p class="Pp">you may THINK you wrote the same thing as</p>
     <p class="Pp"></p>
-    <pre>
-    rand() + 5;
+    <pre>    rand() + 5;
     </pre>
     <p class="Pp">but in actual fact, you got</p>
     <p class="Pp"></p>
-    <pre>
-    rand(+5);
+    <pre>    rand(+5);
     </pre>
     <p class="Pp">So put in parentheses to say what you really mean.</p>
   </dd>
@@ -7522,8 +7361,7 @@
       into Unicode characters. The bytes you read in are not legal in this
       encoding. For example
     <p class="Pp"></p>
-    <pre>
-    utf8 &quot;\xE4&quot; does not map to Unicode
+    <pre>    utf8 &quot;\xE4&quot; does not map to Unicode
     </pre>
     <p class="Pp">if you try to read in the a-diaereses Latin-1 as UTF-8.</p>
   </dd>

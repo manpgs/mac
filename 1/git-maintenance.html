@@ -12,6 +12,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-MAINTENANCE(1)</title>
 </head>
@@ -30,11 +31,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-<i>git maintenance</i> run [&lt;options&gt;]
+<pre><i>git maintenance</i> run [&lt;options&gt;]
 <i>git maintenance</i> start [--scheduler=&lt;scheduler&gt;]
-<i>git maintenance</i> (stop|register|unregister)
-</pre>
+<i>git maintenance</i> (stop|register|unregister)</pre>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -251,16 +250,14 @@
     this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-# BEGIN GIT MAINTENANCE SCHEDULE
+<pre># BEGIN GIT MAINTENANCE SCHEDULE
 # The following schedule was created by Git
 # Any edits made in this region might be
 # replaced in the future by a Git command.
 0 1-23 * * * &quot;/&lt;path&gt;/git&quot; --exec-path=&quot;/&lt;path&gt;&quot; for-each-repo --config=maintenance.repo maintenance run --schedule=hourly
 0 0 * * 1-6 &quot;/&lt;path&gt;/git&quot; --exec-path=&quot;/&lt;path&gt;&quot; for-each-repo --config=maintenance.repo maintenance run --schedule=daily
 0 0 * * 0 &quot;/&lt;path&gt;/git&quot; --exec-path=&quot;/&lt;path&gt;&quot; for-each-repo --config=maintenance.repo maintenance run --schedule=weekly
-# END GIT MAINTENANCE SCHEDULE
-</pre>
+# END GIT MAINTENANCE SCHEDULE</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">The comments are used as a region to mark the schedule as written
@@ -305,13 +302,11 @@
     timers written by <b>git maintenance start</b> are similar to this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ systemctl --user list-timers
+<pre>$ systemctl --user list-timers
 NEXT                         LEFT          LAST                         PASSED     UNIT                         ACTIVATES
 Thu 2021-04-29 19:00:00 CEST 42min left    Thu 2021-04-29 18:00:11 CEST 17min ago  git-maintenance@hourly.timer git-maintenance@hourly.service
 Fri 2021-04-30 00:00:00 CEST 5h 42min left Thu 2021-04-29 00:00:11 CEST 18h ago    git-maintenance@daily.timer  git-maintenance@daily.service
-Mon 2021-05-03 00:00:00 CEST 3 days left   Mon 2021-04-26 00:00:11 CEST 3 days ago git-maintenance@weekly.timer git-maintenance@weekly.service
-</pre>
+Mon 2021-05-03 00:00:00 CEST 3 days left   Mon 2021-04-26 00:00:11 CEST 3 days ago git-maintenance@weekly.timer git-maintenance@weekly.service</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">One timer is registered for each
@@ -320,13 +315,11 @@ Mon 2021-05-03 00:00:00 CEST 3 days left   Mon 2021-04-26 00:00:11 CEST 3 days a
     following files:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-~/.config/systemd/user/git-maintenance@.timer
+<pre>~/.config/systemd/user/git-maintenance@.timer
 ~/.config/systemd/user/git-maintenance@.service
 ~/.config/systemd/user/timers.target.wants/git-maintenance@hourly.timer
 ~/.config/systemd/user/timers.target.wants/git-maintenance@daily.timer
-~/.config/systemd/user/timers.target.wants/git-maintenance@weekly.timer
-</pre>
+~/.config/systemd/user/timers.target.wants/git-maintenance@weekly.timer</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp"><b>git maintenance start</b> will overwrite these files and start
@@ -355,12 +348,10 @@ Mon 2021-05-03 00:00:00 CEST 3 days left   Mon 2021-04-26 00:00:11 CEST 3 days a
     currently-registered tasks using the following command:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-$ ls ~/Library/LaunchAgents/org.git-scm.git*
+<pre>$ ls ~/Library/LaunchAgents/org.git-scm.git*
 org.git-scm.git.daily.plist
 org.git-scm.git.hourly.plist
-org.git-scm.git.weekly.plist
-</pre>
+org.git-scm.git.weekly.plist</pre>
 </div>
 <p class="Pp"></p>
 <p class="Pp">One task is registered for each

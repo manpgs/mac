@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Tools::Spec(3)</title>
 </head>
@@ -34,24 +35,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Bundle::Extended;
+<pre>    use Test2::Bundle::Extended;
     use Test2::Tools::Spec;
-
     describe foo =&gt; sub {
         before_all  once =&gt; sub { ... };
         before_each many =&gt; sub { ... };
-
         after_all  once =&gt; sub { ... };
         after_each many =&gt; sub { ... };
-
         case condition_a =&gt; sub { ... };
         case condition_b =&gt; sub { ... };
-
         tests foo =&gt; sub { ... };
         tests bar =&gt; sub { ... };
     };
-
     done_testing;
 </pre>
 </section>
@@ -62,13 +57,11 @@
     reference. Optionally a configuration hash can be inserted between the name
     and the code reference.</p>
 <p class="Pp"></p>
-<pre>
-    FUNCTION &quot;name&quot; =&gt; sub { ... };
-
+<pre>    FUNCTION &quot;name&quot; =&gt; sub { ... };
     FUNCTION &quot;name&quot; =&gt; {...}, sub { ... };
 </pre>
 <dl class="Bl-tag">
-  <dt id="NAME~2"><a class="permalink" href="#NAME~2">NAME</a></dt>
+  <dt>NAME</dt>
   <dd>The first argument to a Test2::Tools::Spec function MUST be a name. The
       name does not need to be unique.</dd>
   <dt id="PARAMS"><a class="permalink" href="#PARAMS">PARAMS</a></dt>
@@ -197,14 +190,10 @@
   <dd>Specify a codeblock that should wrap around each test block. These blocks
       are run AFTER case blocks, but before test blocks.
     <p class="Pp"></p>
-    <pre>
-    around_each wrapit =&gt; sub {
+    <pre>    around_each wrapit =&gt; sub {
         my $cont = shift;
-
         local %ENV = ( ... );
-
         $cont-&gt;();
-
         ...
     };
     </pre>
@@ -286,32 +275,28 @@
     }</a></dt>
   <dd>Same as:
     <p class="Pp"></p>
-    <pre>
-    tests NAME =&gt; { flat =&gt; 1 }, sub { ... }
+    <pre>    tests NAME =&gt; { flat =&gt; 1 }, sub { ... }
     </pre>
   </dd>
   <dt id="iso~2"><a class="permalink" href="#iso~2">iso NAME =&gt; sub { ...
     }</a></dt>
   <dd>Same as:
     <p class="Pp"></p>
-    <pre>
-    tests NAME =&gt; { iso =&gt; 1 }, sub { ... }
+    <pre>    tests NAME =&gt; { iso =&gt; 1 }, sub { ... }
     </pre>
   </dd>
   <dt id="miso"><a class="permalink" href="#miso">miso NAME =&gt; sub { ...
     }</a></dt>
   <dd>Same as:
     <p class="Pp"></p>
-    <pre>
-    tests NAME =&gt; { mini =&gt; 1, iso =&gt; 1 }, sub { ... }
+    <pre>    tests NAME =&gt; { mini =&gt; 1, iso =&gt; 1 }, sub { ... }
     </pre>
   </dd>
   <dt id="async~2"><a class="permalink" href="#async~2">async NAME =&gt; sub {
     ... }</a></dt>
   <dd>Same as:
     <p class="Pp"></p>
-    <pre>
-    tests NAME =&gt; { async =&gt; 1 }, sub { ... }
+    <pre>    tests NAME =&gt; { async =&gt; 1 }, sub { ... }
     </pre>
     <p class="Pp"><b>Note:</b> This conflicts with the
         <span class="Li">&quot;async()&quot;</span> exported from threads. Don't
@@ -321,8 +306,7 @@
     ... }</a></dt>
   <dd>Same as:
     <p class="Pp"></p>
-    <pre>
-    tests NAME =&gt; { minit =&gt; 1, async =&gt; 1 }, sub { ... }
+    <pre>    tests NAME =&gt; { minit =&gt; 1, async =&gt; 1 }, sub { ... }
     </pre>
   </dd>
 </dl>
@@ -334,44 +318,32 @@
     <span class="Li">&quot;case()&quot;</span> blocks. This can be done, and is
     lexical to your describe or package root!</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::Bundle::Extended;
+<pre>    use Test2::Bundle::Extended;
     use Test2::Tools::Spec ':ALL';
-
     # All 'tests' blocks after this declaration will have C&lt;&lt;iso =&gt; 1&gt;&gt; by default
     spec_defaults tests =&gt; (iso =&gt; 1);
-
     tests foo =&gt; sub { ... }; # isolated
-
     tests foo, {iso =&gt; 0}, sub { ... }; # Not isolated
-
     spec_defaults tests =&gt; (iso =&gt; 0); # Turn it off again
 </pre>
 <p class="Pp">Defaults are inherited by nested describe blocks. You can also
     override the defaults for the scope of the describe:</p>
 <p class="Pp"></p>
-<pre>
-    spec_defaults tests =&gt; (iso =&gt; 1);
-
+<pre>    spec_defaults tests =&gt; (iso =&gt; 1);
     describe foo =&gt; sub {
         spec_defaults tests =&gt; (async =&gt; 1); # Scoped to this describe and any child describes
-
         tests bar =&gt; sub { ... }; # both iso and async
     };
-
     tests baz =&gt; sub { ... }; # Just iso, no async.
 </pre>
 <p class="Pp">You can apply defaults to any type of blocks:</p>
 <p class="Pp"></p>
-<pre>
-    spec_defaults case =&gt; (iso =&gt; 1); # All cases are 'iso';
+<pre>    spec_defaults case =&gt; (iso =&gt; 1); # All cases are 'iso';
 </pre>
 <p class="Pp">Defaults are not inherited when a builder's return is
   captured.</p>
 <p class="Pp"></p>
-<pre>
-    spec_defaults tests =&gt; (iso =&gt; 1);
-
+<pre>    spec_defaults tests =&gt; (iso =&gt; 1);
     # Note we are not calling this in void context, that is the key here.
     my $d = describe foo =&gt; {
         tests bar =&gt; sub { ... }; # Not iso
@@ -391,13 +363,11 @@
 <p class="Pp">Here is an overview of the order in which blocks get called once
     compiled (at <span class="Li">&quot;done_testing()&quot;</span>).</p>
 <p class="Pp"></p>
-<pre>
-    before_all
+<pre>    before_all
         for-each-case {
             before_case
                 case
             after_case
-
             # AND/OR nested describes
             before_each
                 tests

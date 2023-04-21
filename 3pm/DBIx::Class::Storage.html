@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Storage(3)</title>
 </head>
@@ -78,19 +79,15 @@
     exception is thrown that includes a &quot;Rollback failed&quot; message.</p>
 <p class="Pp">For example,</p>
 <p class="Pp"></p>
-<pre>
-  my $author_rs = $schema-&gt;resultset('Author')-&gt;find(1);
+<pre>  my $author_rs = $schema-&gt;resultset('Author')-&gt;find(1);
   my @titles = qw/Night Day It/;
-
   my $coderef = sub {
     # If any one of these fails, the entire transaction fails
     $author_rs-&gt;create_related('books', {
       title =&gt; $_
     }) foreach (@titles);
-
     return $author-&gt;books;
   };
-
   my $rs;
   try {
     $rs = $schema-&gt;txn_do($coderef);
@@ -99,7 +96,6 @@
     # Transaction failed
     die &quot;something terrible has happened!&quot;
       if ($error =~ /Rollback failed/);          # Rollback failed
-
     deal_with_failed_transaction();
   };
 </pre>
@@ -161,12 +157,9 @@
 <p class="Pp">An alternative way of transaction handling based on
     DBIx::Class::Storage::TxnScopeGuard:</p>
 <p class="Pp"></p>
-<pre>
- my $txn_guard = $storage-&gt;txn_scope_guard;
-
+<pre> my $txn_guard = $storage-&gt;txn_scope_guard;
  $result-&gt;col1(&quot;val1&quot;);
  $result-&gt;update;
-
  $txn_guard-&gt;commit;
 </pre>
 <p class="Pp">If an exception occurs, or the guard object otherwise leaves the

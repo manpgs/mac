@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLDTRACE(1)</title>
 </head>
@@ -28,13 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- # dtrace -Zn 'perl::sub-entry, perl::sub-return { trace(copyinstr(arg0)) }'
+<pre> # dtrace -Zn 'perl::sub-entry, perl::sub-return { trace(copyinstr(arg0)) }'
  dtrace: description 'perl::sub-entry, perl::sub-return ' matched 10 probes
-
  # perl -E 'sub outer { inner(@_) } sub inner { say shift } outer(&quot;hello&quot;)'
  hello
-
  (dtrace output)
  CPU     ID                    FUNCTION:NAME
    0  75915       Perl_pp_entersub:sub-entry   BEGIN
@@ -92,8 +90,7 @@
       ahold of any information about the subroutine's <i>caller</i> from a
       DTrace action.
     <p class="Pp"></p>
-    <pre>
- :*perl*::sub-entry {
+    <pre> :*perl*::sub-entry {
      printf(&quot;%s::%s entered at %s line %d\n&quot;,
            copyinstr(arg3), copyinstr(arg0), copyinstr(arg1), arg2);
  }
@@ -106,8 +103,7 @@
       of any information about the subroutine's <i>caller</i> from a DTrace
       action.
     <p class="Pp"></p>
-    <pre>
- :*perl*::sub-return {
+    <pre> :*perl*::sub-return {
      printf(&quot;%s::%s returned at %s line %d\n&quot;,
            copyinstr(arg3), copyinstr(arg0), copyinstr(arg1), arg2);
  }
@@ -122,8 +118,7 @@
       <span class="Li">&quot;OLDPHASE&quot;</span> are the strings that
       <span class="Li">&quot;${^GLOBAL_PHASE}&quot;</span> reports.
     <p class="Pp"></p>
-    <pre>
- :*perl*::phase-change {
+    <pre> :*perl*::phase-change {
      printf(&quot;Phase changed from %s to %s\n&quot;,
          copyinstr(arg1), copyinstr(arg0));
  }
@@ -135,8 +130,7 @@
       the DTrace probe is fired <i>after</i> the debugger hooks (but still
       before the opcode itself is executed).
     <p class="Pp"></p>
-    <pre>
- :*perl*::op-entry {
+    <pre> :*perl*::op-entry {
      printf(&quot;About to execute opcode %s\n&quot;, copyinstr(arg0));
  }
     </pre>
@@ -150,8 +144,7 @@
       paths instead of providing
       <span class="Li">&quot;Module::Name&quot;</span>-style names.
     <p class="Pp"></p>
-    <pre>
- :*perl*:loading-file {
+    <pre> :*perl*:loading-file {
      printf(&quot;About to load %s\n&quot;, copyinstr(arg0));
  }
     </pre>
@@ -165,8 +158,7 @@
       converted to local filesystem paths instead of providing
       <span class="Li">&quot;Module::Name&quot;</span>-style names.
     <p class="Pp"></p>
-    <pre>
- :*perl*:loaded-file {
+    <pre> :*perl*:loaded-file {
      printf(&quot;Successfully loaded %s\n&quot;, copyinstr(arg0));
  }
     </pre>
@@ -179,9 +171,7 @@
   <dt id="Most"><a class="permalink" href="#Most">Most frequently called
     functions</a></dt>
   <dd>
-    <pre>
- # dtrace -qZn 'sub-entry { @[strjoin(strjoin(copyinstr(arg3),&quot;::&quot;),copyinstr(arg0))] = count() } END {trunc(@, 10)}'
-
+    <pre> # dtrace -qZn 'sub-entry { @[strjoin(strjoin(copyinstr(arg3),&quot;::&quot;),copyinstr(arg0))] = count() } END {trunc(@, 10)}'
  Class::MOP::Attribute::slots                                    400
  Try::Tiny::catch                                                411
  Try::Tiny::try                                                  411
@@ -197,9 +187,7 @@
   <dt id="Trace"><a class="permalink" href="#Trace">Trace function
     calls</a></dt>
   <dd>
-    <pre>
- # dtrace -qFZn 'sub-entry, sub-return { trace(copyinstr(arg0)) }'
-
+    <pre> # dtrace -qFZn 'sub-entry, sub-return { trace(copyinstr(arg0)) }'
  0  -&gt; Perl_pp_entersub                        BEGIN
  0  &lt;- Perl_pp_leavesub                        BEGIN
  0  -&gt; Perl_pp_entersub                        BEGIN
@@ -219,9 +207,7 @@
   <dt id="Function"><a class="permalink" href="#Function">Function calls during
     interpreter cleanup</a></dt>
   <dd>
-    <pre>
- # dtrace -Zn 'phase-change /copyinstr(arg0) == &quot;END&quot;/ { self-&gt;ending = 1 } sub-entry /self-&gt;ending/ { trace(copyinstr(arg0)) }'
-
+    <pre> # dtrace -Zn 'phase-change /copyinstr(arg0) == &quot;END&quot;/ { self-&gt;ending = 1 } sub-entry /self-&gt;ending/ { trace(copyinstr(arg0)) }'
  CPU     ID                    FUNCTION:NAME
    1  77214       Perl_pp_entersub:sub-entry   END
    1  77214       Perl_pp_entersub:sub-entry   END
@@ -233,9 +219,7 @@
   <dt id="System"><a class="permalink" href="#System">System calls at compile
     time</a></dt>
   <dd>
-    <pre>
- # dtrace -qZn 'phase-change /copyinstr(arg0) == &quot;START&quot;/ { self-&gt;interesting = 1 } phase-change /copyinstr(arg0) == &quot;RUN&quot;/ { self-&gt;interesting = 0 } syscall::: /self-&gt;interesting/ { @[probefunc] = count() } END { trunc(@, 3) }'
-
+    <pre> # dtrace -qZn 'phase-change /copyinstr(arg0) == &quot;START&quot;/ { self-&gt;interesting = 1 } phase-change /copyinstr(arg0) == &quot;RUN&quot;/ { self-&gt;interesting = 0 } syscall::: /self-&gt;interesting/ { @[probefunc] = count() } END { trunc(@, 3) }'
  lseek                                                           310
  read                                                            374
  stat64                                                         1056
@@ -244,9 +228,7 @@
   <dt id="Perl"><a class="permalink" href="#Perl">Perl functions that execute
     the most opcodes</a></dt>
   <dd>
-    <pre>
- # dtrace -qZn 'sub-entry { self-&gt;fqn = strjoin(copyinstr(arg3), strjoin(&quot;::&quot;, copyinstr(arg0))) } op-entry /self-&gt;fqn != &quot;&quot;/ { @[self-&gt;fqn] = count() } END { trunc(@, 3) }'
-
+    <pre> # dtrace -qZn 'sub-entry { self-&gt;fqn = strjoin(copyinstr(arg3), strjoin(&quot;::&quot;, copyinstr(arg0))) } op-entry /self-&gt;fqn != &quot;&quot;/ { @[self-&gt;fqn] = count() } END { trunc(@, 3) }'
  warnings::unimport                                             4589
  Exporter::Heavy::_rebuild_cache                                5039
  Exporter::import                                              14578

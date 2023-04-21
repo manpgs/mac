@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Hierarchy(3)</title>
 </head>
@@ -28,19 +29,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    my $tree = Data::Hierarchy-&gt;new();
+<pre>    my $tree = Data::Hierarchy-&gt;new();
     $tree-&gt;store ('/', {access =&gt; 'all'});
     $tree-&gt;store ('/private', {access =&gt; 'auth',
                                '.note' =&gt; 'this is private});
-
     $info = $tree-&gt;get ('/private/somewhere/deep');
-
     # return actual data points in list context
     ($info, @fromwhere) = $tree-&gt;get ('/private/somewhere/deep');
-
     my @items = $tree-&gt;find ('/', {access =&gt; qr/.*/});
-
     # override all children
     $tree-&gt;store ('/', {'.note' =&gt; undef}, {override_sticky_descendents =&gt; 1});
 </pre>
@@ -63,21 +59,18 @@
     paths: thus, if you store some data at
     <span class="Li">&quot;/some/path&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    $tree-&gt;store('/some/path', {color =&gt; 'red'});
+<pre>    $tree-&gt;store('/some/path', {color =&gt; 'red'});
 </pre>
 <p class="Pp">you can fetch it again at a
     <span class="Li">&quot;/some/path/below/that&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    print $tree-&gt;get('/some/path/below/that')-&gt;{'color'};
+<pre>    print $tree-&gt;get('/some/path/below/that')-&gt;{'color'};
     # prints red
 </pre>
 <p class="Pp">On the other hand, properties whose names begin with dots are
     uninherited, or &quot;sticky&quot;:</p>
 <p class="Pp"></p>
-<pre>
-    $tree-&gt;store('/some/path', {'.color' =&gt; 'blue'});
+<pre>    $tree-&gt;store('/some/path', {'.color' =&gt; 'blue'});
     print $tree-&gt;get('/some/path')-&gt;{'.color'};            # prints blue
     print $tree-&gt;get('/some/path/below/that')-&gt;{'.color'}; # undefined
 </pre>
@@ -115,8 +108,7 @@
         ancestor of <span class="Li">$path</span> defines that property, the
         ancestor's value will be inherited there; that is, with:</p>
     <p class="Pp"></p>
-    <pre>
-    $t-&gt;store('/a',   {k =&gt; 'top'});
+    <pre>    $t-&gt;store('/a',   {k =&gt; 'top'});
     $t-&gt;store('/a/b', {k =&gt; 'bottom'});
     $t-&gt;store('/a/b', {k =&gt; undef});
     print $t-&gt;get('/a/b')-&gt;{'k'};
@@ -157,8 +149,7 @@
       moved to <span class="Li">&quot;/home/awesome_project&quot;</span>, you
       can do
     <p class="Pp"></p>
-    <pre>
-    $hierarchy = $hierarchy-&gt;to_relative('/home/super_project')-&gt;to_absolute('/home/awesome_project');
+    <pre>    $hierarchy = $hierarchy-&gt;to_relative('/home/super_project')-&gt;to_absolute('/home/awesome_project');
     </pre>
     <p class="Pp">(Data::Hierarchy::Relative objects may be a more convenient
         serialization format than Data::Hierarchy objects, if they are tracking

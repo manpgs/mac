@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::Trap::Builder(3)</title>
 </head>
@@ -32,17 +33,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package My::Test::Trap;
-
+<pre>  package My::Test::Trap;
   use Test::Trap::Builder;
   my $B = Test::Trap::Builder-&gt;new;
-
   $B-&gt;layer( $layer_name =&gt; \&amp;layer_implementation );
   $B-&gt;accessor( simple =&gt; [ $layer_name ] );
-
   $B-&gt;multi_layer( $multi_name =&gt; @names );
-
   $B-&gt;test( $test_name =&gt; 'trap, predicate, name', \&amp;test_function );
 </pre>
 </section>
@@ -112,8 +108,7 @@
     documented.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-  # in a layer, setting the callback for TestFailure:
+<pre>  # in a layer, setting the callback for TestFailure:
   $self-&gt;Prop('Test::Trap::Builder')-&gt;{on_test_failure} = \&amp;mydiag;
 </pre>
 </section>
@@ -126,8 +121,7 @@
     <span class="Li">&quot;DESTROY&quot;</span>, make sure it calls this one as
     well:</p>
 <p class="Pp"></p>
-<pre>
-  sub DESTROY {
+<pre>  sub DESTROY {
     my $self = shift;
     # do your thing
     $self-&gt;Test::Trap::Builder::DESTROY;
@@ -160,14 +154,13 @@
 <section class="Ss">
 <h2 class="Ss" id="TestAccessor"><a class="permalink" href="#TestAccessor">TestAccessor</a></h2>
 <p class="Pp">Returns a string of the form
-    <span class="Li">&quot;</span><i>NAME</i><span class="Li">(</span><i>INDEX</i><span class="Li">)&quot;</span>,
+    <span class="Li">&quot;</span><span class="Li"><i>NAME</i></span><span class="Li">(</span><span class="Li"><i>INDEX</i></span><span class="Li">)&quot;</span>,
     where <i>NAME</i> and <i>INDEX</i> are the name of the accessor and the
     index (if any) being tested. Should only be called in the dynamic context of
     test callbacks.</p>
 <p class="Pp">This is intended for diagnostics:</p>
 <p class="Pp"></p>
-<pre>
-  diag( sprintf 'Expected %s in %s; got %s',
+<pre>  diag( sprintf 'Expected %s in %s; got %s',
         $expected, $self-&gt;TestAccessor, dump($got),
       );
 </pre>
@@ -178,8 +171,7 @@
     tag-on property (if any) on the trap object. If you are writing unregistered
     tests, you might want to include (some variation of) this call:</p>
 <p class="Pp"></p>
-<pre>
-  $ok or $self-&gt;TestFailure;
+<pre>  $ok or $self-&gt;TestFailure;
 </pre>
 </section>
 <section class="Ss">
@@ -207,13 +199,11 @@
     trap object itself.</p>
 <p class="Pp">To illustrate:</p>
 <p class="Pp"></p>
-<pre>
-  # this will create a circular reference chain:
+<pre>  # this will create a circular reference chain:
   # trap object has property collection has teardown closure has trap object
   $self-&gt;Teardown($_) for sub {
     do_stuff() or $self-&gt;Exception(&quot;Stuff didn't work.&quot;);
   };
-
   # this will break the circular reference chain:
   # teardown closure no longer has trap object
   $Exception = $self-&gt;ExceptionFunction;
@@ -373,13 +363,10 @@
     the trapped stdout/stderr to the original file handles after the trap has
     sprung), and a <i>cmp_ok</i> test method template:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Test::Trap;
+<pre>  package My::Test::Trap;
   use base 'Test::Trap'; # for example
   use Test::Trap::Builder;
-
   my $B = Test::Trap::Builder-&gt;new;
-
   # example (layer:timeout):
   use Time::HiRes qw/ualarm/;
   $B-&gt;layer( timeout =&gt; $_ ) for sub {
@@ -402,7 +389,6 @@
   $B-&gt;accessor( is_leaveby =&gt; 1,
                 simple =&gt; ['timeout'],
               );
-
   # example (layer:simpletee):
   $B-&gt;layer( simpletee =&gt; $_ ) for sub {
     my $self = shift;
@@ -416,10 +402,8 @@
     $self-&gt;Next;
   };
   # no accessor for this layer
-
   $B-&gt;multi_layer( flow =&gt; qw/ raw die exit timeout / );
   $B-&gt;multi_layer( default =&gt; qw/ flow stdout stderr warn simpletee / );
-
   $B-&gt;test_method( cmp_ok =&gt; 1, 2, \&amp;Test::More::cmp_ok );
 </pre>
 </section>
@@ -457,7 +441,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

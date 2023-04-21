@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Time::Progress(3)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Time::Progress;
-
+<pre>  use Time::Progress;
   my ($min, $max) = (0, 4);
   my $p = Time::Progress-&gt;new(min =&gt; $min, max =&gt; $max);
-
   for (my $c = $min; $c &lt;= $max; $c++) {
     print STDERR $p-&gt;report(&quot;\r%20b  ETA: %E&quot;, $c);
     # do some work
@@ -65,8 +63,7 @@
 <p class="Pp">If you display to STDOUT, then remember to enable
   auto-flushing:</p>
 <p class="Pp"></p>
-<pre>
- use IO::Handle;
+<pre> use IO::Handle;
  STDOUT-&gt;autoflush(1);
 </pre>
 <p class="Pp">The shortest time interval that can be measured is 1 second.</p>
@@ -75,8 +72,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-  my $p = Time::Progress-&gt;new(%options);
+<pre>  my $p = Time::Progress-&gt;new(%options);
 </pre>
 <p class="Pp">Returns new object of Time::Progress class and starts the timer.
     It also sets min and max values to 0 and 100, so the next <b>report</b>
@@ -104,21 +100,18 @@
 <p class="Pp">Restarts the timer and clears the stop mark. Optionally
     <b>restart()</b> may act also as <b>attr()</b> for setting attributes:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;restart( min =&gt; 1, max =&gt; 5 );
+<pre>  $p-&gt;restart( min =&gt; 1, max =&gt; 5 );
 </pre>
 <p class="Pp">is the same as:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;attr( min =&gt; 1, max =&gt; 5 );
+<pre>  $p-&gt;attr( min =&gt; 1, max =&gt; 5 );
   $p-&gt;restart();
 </pre>
 <p class="Pp">If you need to count things, you can set just 'max' attribute
     since 'min' is already set to 0 when object is constructed by
   <b>new()</b>:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;restart( max =&gt; 42 );
+<pre>  $p-&gt;restart( max =&gt; 42 );
 </pre>
 </section>
 <section class="Ss">
@@ -127,8 +120,7 @@
     finish, then do some work that shouldn't be timed and finally report.
     Something like:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;restart;
+<pre>  $p-&gt;restart;
   # do some work here...
   $p-&gt;stop;
   # do some post-work here
@@ -138,8 +130,7 @@
 <p class="Pp">Stop is useless if you want to report time as soon as work is
     finished like:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;restart;
+<pre>  $p-&gt;restart;
   # do some work here...
   print $p-&gt;report;
 </pre>
@@ -166,13 +157,11 @@
 </dl>
 <p class="Pp"><b>attr</b> returns array of the set attributes:</p>
 <p class="Pp"></p>
-<pre>
-  my ( $new_min, $new_max ) = $p-&gt;attr( min =&gt; 1, max =&gt; 5 );
+<pre>  my ( $new_min, $new_max ) = $p-&gt;attr( min =&gt; 1, max =&gt; 5 );
 </pre>
 <p class="Pp">If you want just to get values use undef:</p>
 <p class="Pp"></p>
-<pre>
-  my $old_format = $p-&gt;attr( format =&gt; undef );
+<pre>  my $old_format = $p-&gt;attr( format =&gt; undef );
 </pre>
 <p class="Pp">This way of handling attributes is a bit heavy but saves a lot of
     attribute handling functions. <b>attr</b> will complain if you pass odd
@@ -183,8 +172,7 @@
 <p class="Pp">This is the most complex method in this package :)</p>
 <p class="Pp">The expected arguments are:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;report( format, [current_item] );
+<pre>  $p-&gt;report( format, [current_item] );
 </pre>
 <p class="Pp"><i>format</i> is string that will be used for the result string.
     Recognized special sequences are:</p>
@@ -207,13 +195,11 @@
   <dt>%B</dt>
   <dd>progress bar which looks like:
     <p class="Pp"></p>
-    <pre>
-  ##############......................
+    <pre>  ##############......................
     </pre>
     <p class="Pp"><span class="Li">%b</span> takes optional width:</p>
     <p class="Pp"></p>
-    <pre>
-  %40b -- 40-chars wide bar
+    <pre>  %40b -- 40-chars wide bar
   %9b  --  9-chars wide bar
   %b   -- 79-chars wide bar (default)
     </pre>
@@ -223,8 +209,7 @@
     <b>attr</b> will be used.</p>
 <p class="Pp">Sequences 'L', 'l', 'E' and 'e' can have width also:</p>
 <p class="Pp"></p>
-<pre>
-  %10e
+<pre>  %10e
   %5l
   ...
 </pre>
@@ -233,8 +218,7 @@
     <b>report</b>! if you want to use the default format but still have
     estimates use it like this:</p>
 <p class="Pp"></p>
-<pre>
-  $p-&gt;format( undef, 45 );
+<pre>  $p-&gt;format( undef, 45 );
 </pre>
 <p class="Pp">If you don't give current item (step) or didn't set proper min/max
     value then all estimate sequences will have value `n/a'.</p>
@@ -253,34 +237,28 @@
 <h2 class="Ss" id="elapsed_str($item)"><a class="permalink" href="#elapsed_str($item)">elapsed_str($item)</a></h2>
 <p class="Pp">Returns elapsed time as a formatted string:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;elapsed time is MM:SS min.\n&quot;
+<pre>  &quot;elapsed time is MM:SS min.\n&quot;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="estimate_str($item)"><a class="permalink" href="#estimate_str($item)">estimate_str($item)</a></h2>
 <p class="Pp">Returns estimated remaining time, as a formatted string:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;remaining time is MM:SS min.\n&quot;
+<pre>  &quot;remaining time is MM:SS min.\n&quot;
 </pre>
 </section>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="FORMAT_EXAMPLES"><a class="permalink" href="#FORMAT_EXAMPLES">FORMAT
   EXAMPLES</a></h1>
-<pre>
- # $c is current element (step) reached
+<pre> # $c is current element (step) reached
  # for the examples: min = 0, max = 100, $c = 33.3
-
  print $p-&gt;report( &quot;done %p elapsed: %L (%l sec), ETA %E (%e sec)\n&quot;, $c );
  # prints:
  # done  33.3% elapsed time   0:05 (5 sec), ETA   0:07 (7 sec)
-
  print $p-&gt;report( &quot;%45b %p\r&quot;, $c );
  # prints:
  # ###############..............................  33.3%
-
  print $p-&gt;report( &quot;done %p ETA %f\n&quot;, $c );
  # prints:
  # done  33.3% ETA Sun Oct 21 16:50:57 2001

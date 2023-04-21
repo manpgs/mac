@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::Server::Multiplex(3)</title>
 </head>
@@ -29,15 +30,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package MyPlexer;
-
+<pre>    package MyPlexer;
     use base qw(Net::Server::Multiplex);
-
     sub mux_input {
         #...code...
     }
-
     __PACKAGE__-&gt;run();
 </pre>
 </section>
@@ -65,39 +62,24 @@
 <p class="Pp">The process flow is written in an open, easy to override, easy to
     hook, fashion. The basic flow is shown below.</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;configure_hook;
-
+<pre>    $self-&gt;configure_hook;
     $self-&gt;configure(@_);
-
     $self-&gt;post_configure;
-
     $self-&gt;post_configure_hook;
-
     $self-&gt;pre_bind;
-
     $self-&gt;bind;
-
     if (Restarting server) {
         $self-&gt;restart_open_hook();
     }
-
     $self-&gt;post_bind_hook;
-
     $self-&gt;post_bind;
-
     $self-&gt;pre_loop_hook;
-
     $self-&gt;loop; # This basically just runs IO::Multiplex::loop
     # For routines inside a $self-&gt;loop
     # See CLIENT PROCESSING below
-
     $self-&gt;pre_server_close_hook;
-
     $self-&gt;post_child_cleanup_hook;
-
     $self-&gt;server_close;
-
     if (Restarting server) {
         $self-&gt;restart_close_hook();
         $self-&gt;hup_server;
@@ -111,48 +93,32 @@
   PROCESSING</a></h1>
 <p class="Pp">The following represents the client processing program flow:</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;{server}-&gt;{client} = Net::Server::Proto::TCP-&gt;accept();  # NOTE: Multiplexed with mux_input() below
-
+<pre>    $self-&gt;{server}-&gt;{client} = Net::Server::Proto::TCP-&gt;accept();  # NOTE: Multiplexed with mux_input() below
     if (check_for_dequeue seconds have passed) {
         $self-&gt;run_dequeue();
     }
-
     $self-&gt;get_client_info;
-
     $self-&gt;post_accept_hook; # Net::Server style
-
     if ($self-&gt;allow_deny
         &amp;&amp; $self-&gt;allow_deny_hook) {
-
       # (Net::Server style $self-&gt;process_request() is never called.)
-
       # A unique client specific object is created
       # for all mux_* methods from this point on.
       $self = __PACKAGE__-&gt;new($self, client);
-
       $self-&gt;mux_connection; # IO::Multiplex style
-
       for (every packet received) {
         $self-&gt;mux_input;  # NOTE: Multiplexed with accept() above
       }
-
     } else {
-
       $self-&gt;request_denied_hook;
-
       # Notice that if either allow_deny or allow_deny_hook fails, then
       # new(), mux_connection(), and mux_input() will never be called.
       # mux_eof() and mux_close() will still be called, but using a
       # common listen socket callback object instead of a unique client
       # specific object.
-
     }
-
     $self-&gt;mux_eof;
-
     $self-&gt;post_process_request_hook;
-
     $self-&gt;mux_close;
 </pre>
 <p class="Pp">This process then loops multiplexing between the <b>accept()</b>
@@ -227,8 +193,7 @@
     values within it that this object may need to use later should be copied
     within its own object at this point.</p>
 <p class="Pp"></p>
-<pre>
-  Example:
+<pre>  Example:
   $self-&gt;{peerport} = $self-&gt;{net_server}-&gt;{server}-&gt;{peerport};
 </pre>
 </section>
@@ -281,12 +246,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
-<pre>
-  This package may be distributed under the terms of either the
+<pre>  This package may be distributed under the terms of either the
   GNU General Public License
      or the
   Perl Artistic License
-
   All rights reserved.
 </pre>
 </section>

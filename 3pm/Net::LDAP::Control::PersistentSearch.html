@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP::Control::PersistentSearch(3)</title>
 </head>
@@ -29,29 +30,21 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::LDAP;
+<pre> use Net::LDAP;
  use Net::LDAP::Control::PersistentSearch;
-
  $ldap = Net::LDAP-&gt;new( &quot;ldap.mydomain.eg&quot; );
-
  $persist = Net::LDAP::Control::PersistentSearch-&gt;new( changeTypes =&gt; 15,
                                                        changesOnly =&gt; 1,
                                                        returnECs =&gt; 1 );
-
  $srch = $ldap-&gt;search( base     =&gt; &quot;cn=People,dc=mydomain,dc=eg&quot;,
                         filter   =&gt; &quot;(objectClass=person)&quot;,
                         callback =&gt; \&amp;process_entry, # call for each entry
                         control  =&gt; [ $persist ] );
-
  die &quot;error: &quot;,$srch-&gt;code(),&quot;: &quot;,$srch-&gt;error()  if ($srch-&gt;code());
-
  sub process_entry {
    my $message = shift;
    my $entry = shift;
-
    print $entry-&gt;dn().&quot;\n&quot;;
-
    # reduce memory usage
    $message-&gt;pop_entry();
  }

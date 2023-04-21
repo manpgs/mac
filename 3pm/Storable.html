@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Storable(3pm)</title>
 </head>
@@ -28,30 +29,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Storable;
+<pre> use Storable;
  store \%table, 'file';
  $hashref = retrieve('file');
-
  use Storable qw(nstore store_fd nstore_fd freeze thaw dclone);
-
  # Network order
  nstore \%table, 'file';
  $hashref = retrieve('file');   # There is NO nretrieve()
-
  # Storing to and retrieving from an already opened file
  store_fd \@array, \*STDOUT;
  nstore_fd \%table, \*STDOUT;
  $aryref = fd_retrieve(\*SOCKET);
  $hashref = fd_retrieve(\*SOCKET);
-
  # Serializing to memory
  $serialized = freeze \%table;
  %table_clone = %{ thaw($serialized) };
-
  # Deep (recursive) cloning
  $cloneref = dclone($ref);
-
  # Advisory locking
  use Storable qw(lock_store lock_nstore lock_retrieve)
  lock_store \%table, 'file';
@@ -90,8 +84,7 @@
     those routines. The file descriptor you supply must be already opened, for
     read if you're going to retrieve and for write if you wish to store.</p>
 <p class="Pp"></p>
-<pre>
-        store_fd(\%table, *STDOUT) || die &quot;can't store to stdout\n&quot;;
+<pre>        store_fd(\%table, *STDOUT) || die &quot;can't store to stdout\n&quot;;
         $hashref = fd_retrieve(*STDIN);
 </pre>
 <p class="Pp">You can also store data in network order to allow easy sharing
@@ -133,8 +126,7 @@
 <p class="Pp">Note that freezing an object structure and immediately thawing it
     actually achieves a deep cloning of that structure:</p>
 <p class="Pp"></p>
-<pre>
-    dclone(.) = thaw(freeze(.))
+<pre>    dclone(.) = thaw(freeze(.))
 </pre>
 <p class="Pp">Storable provides you with a
     <span class="Li">&quot;dclone&quot;</span> interface which does not create
@@ -306,16 +298,14 @@
     therefore, how the symmetrical deserialization should be conducted).</p>
 <p class="Pp">Since we said earlier:</p>
 <p class="Pp"></p>
-<pre>
-    dclone(.) = thaw(freeze(.))
+<pre>    dclone(.) = thaw(freeze(.))
 </pre>
 <p class="Pp">everything we say about hooks should also hold for deep cloning.
     However, hooks get to know whether the operation is a mere serialization, or
     a cloning.</p>
 <p class="Pp">Therefore, when serializing hooks are involved,</p>
 <p class="Pp"></p>
-<pre>
-    dclone(.) &lt;&gt; thaw(freeze(.))
+<pre>    dclone(.) &lt;&gt; thaw(freeze(.))
 </pre>
 <p class="Pp">Well, you could keep them in sync, but there's no guarantee it
     will always hold on classes somebody else wrote. Besides, there is little to
@@ -347,8 +337,7 @@
     <p class="Pp">Unless you know better, serializing hook should always
       say:</p>
     <p class="Pp"></p>
-    <pre>
-    sub STORABLE_freeze {
+    <pre>    sub STORABLE_freeze {
         my ($self, $cloning) = @_;
         return if $cloning;         # Regular default serialization
         ....
@@ -507,8 +496,7 @@
 <p class="Pp">In the above [A, C] example, the
     <span class="Li">&quot;STORABLE_freeze&quot;</span> hook could return:</p>
 <p class="Pp"></p>
-<pre>
-        (&quot;something&quot;, $self-&gt;{B})
+<pre>        (&quot;something&quot;, $self-&gt;{B})
 </pre>
 <p class="Pp">and the B part would be serialized by the engine. In
     <span class="Li">&quot;STORABLE_thaw&quot;</span>, you would get back the
@@ -637,34 +625,26 @@
 <p class="Pp">Here are some code samples showing a possible usage of
   Storable:</p>
 <p class="Pp"></p>
-<pre>
- use Storable qw(store retrieve freeze thaw dclone);
-
+<pre> use Storable qw(store retrieve freeze thaw dclone);
  %color = ('Blue' =&gt; 0.1, 'Red' =&gt; 0.8, 'Black' =&gt; 0, 'White' =&gt; 1);
-
  store(\%color, 'mycolors') or die &quot;Can't store %a in mycolors!\n&quot;;
-
  $colref = retrieve('mycolors');
  die &quot;Unable to retrieve from mycolors!\n&quot; unless defined $colref;
  printf &quot;Blue is still %lf\n&quot;, $colref-&gt;{'Blue'};
-
  $colref2 = dclone(\%color);
-
  $str = freeze(\%color);
  printf &quot;Serialization of %%color is %d bytes long.\n&quot;, length($str);
  $colref3 = thaw($str);
 </pre>
 <p class="Pp">which prints (on my machine):</p>
 <p class="Pp"></p>
-<pre>
- Blue is still 0.100000
+<pre> Blue is still 0.100000
  Serialization of %color is 102 bytes long.
 </pre>
 <p class="Pp">Serialization of CODE references and deserialization in a safe
     compartment:</p>
 <p class="Pp"></p>
-<pre>
- use Storable qw(freeze thaw);
+<pre> use Storable qw(freeze thaw);
  use Safe;
  use strict;
  my $safe = new Safe;
@@ -853,8 +833,7 @@
 <h1 class="Sh" id="CREDITS"><a class="permalink" href="#CREDITS">CREDITS</a></h1>
 <p class="Pp">Thank you to (in chronological order):</p>
 <p class="Pp"></p>
-<pre>
-        Jarkko Hietaniemi &lt;jhi@iki.fi&gt;
+<pre>        Jarkko Hietaniemi &lt;jhi@iki.fi&gt;
         Ulrich Pfeifer &lt;pfeifer@charly.informatik.uni-dortmund.de&gt;
         Benjamin A. Holzman &lt;bholzman@earthlink.net&gt;
         Andrew Ford &lt;A.Ford@ford-mason.co.uk&gt;
@@ -903,7 +882,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.3</td>
   </tr>
 </table>

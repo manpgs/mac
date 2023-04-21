@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::LDAP(3)</title>
 </head>
@@ -28,35 +29,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use Net::LDAP;
-
+<pre> use Net::LDAP;
  $ldap = Net::LDAP-&gt;new( 'ldap.example.com' )  or  die &quot;$@&quot;;
-
  $mesg = $ldap-&gt;bind;                         # anonymous bind
-
  $mesg-&gt;code  and  die $mesg-&gt;error;          # check for errors
-
  $srch = $ldap-&gt;search( base   =&gt; &quot;c=US&quot;,     # perform a search
                         filter =&gt; &quot;(&amp;(sn=Barr)(o=Texas Instruments))&quot;
                       );
-
  $srch-&gt;code  and  die $srch-&gt;error;          # check for errors
-
  foreach $entry ($srch-&gt;entries) { $entry-&gt;dump; }
-
  $mesg = $ldap-&gt;unbind;                       # take down session
-
-
  $ldap = Net::LDAP-&gt;new( 'ldaps://ldap.example.com' )  or  die &quot;$@&quot;;
-
  # simple bind with DN and password
  $mesg = $ldap-&gt;bind( 'cn=root, o=University of Michigan, c=us',
                       password =&gt; 'secret'
                     );
-
  $mesg-&gt;code  and  die $mesg-&gt;error;          # check for errors
-
  $result = $ldap-&gt;add( 'cn=Barbara Jensen, o=University of Michigan, c=US',
                        attrs =&gt; [
                          cn          =&gt; ['Barbara Jensen', 'Barbs Jensen'],
@@ -67,9 +55,7 @@
                                          'inetOrgPerson' ],
                        ]
                      );
-
  $result-&gt;code  and  warn &quot;failed to add entry: &quot;, $result-&gt;error;
-
  $mesg = $ldap-&gt;unbind;                       # take down session
 </pre>
 </section>
@@ -191,8 +177,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
-  $ldap = Net::LDAP-&gt;new( 'remote.host', async =&gt; 1 );
+<pre>  $ldap = Net::LDAP-&gt;new( 'remote.host', async =&gt; 1 );
 </pre>
 <p class="Pp">LDAPS connections have some extra valid options, see the start_tls
     method for details. Note the default port for LDAPS is 636, and the default
@@ -207,8 +192,7 @@
     fixed parameters followed by options, these options are passed in a named
     fashion, for example</p>
 <p class="Pp"></p>
-<pre>
-  $mesg = $ldap-&gt;bind( &quot;cn=me,o=example&quot;, password =&gt; &quot;mypasswd&quot;);
+<pre>  $mesg = $ldap-&gt;bind( &quot;cn=me,o=example&quot;, password =&gt; &quot;mypasswd&quot;);
 </pre>
 <p class="Pp">The return value from these methods is an object derived from the
     Net::LDAP::Message class. The methods of this class allow you to examine the
@@ -237,9 +221,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
-  $res = $ldap-&gt;search( @search_args );
-
+<pre>  $res = $ldap-&gt;search( @search_args );
   $mesg = $ldap-&gt;abandon( $res ); # This could be written as $res-&gt;abandon
 </pre>
 </div>
@@ -272,10 +254,8 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
-  # $entry is an object of class Net::LDAP::Entry
+<pre>  # $entry is an object of class Net::LDAP::Entry
   $mesg = $ldap-&gt;add( $entry );
-
   $mesg = $ldap-&gt;add( $dn,
                       attrs =&gt; [
                         name  =&gt; 'Graham Barr',
@@ -344,11 +324,8 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
-  $mesg = $ldap-&gt;bind; # Anonymous bind
-
+<pre>  $mesg = $ldap-&gt;bind; # Anonymous bind
   $mesg = $ldap-&gt;bind( $dn, password =&gt; $password );
-
   # $sasl is an object of class Authen::SASL
   $mesg = $ldap-&gt;bind( $dn, sasl =&gt; $sasl, version =&gt; 3 );
 </pre>
@@ -381,8 +358,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
-  $mesg = $ldap-&gt;compare( $dn,
+<pre>  $mesg = $ldap-&gt;compare( $dn,
                           attr  =&gt; 'cn',
                           value =&gt; 'Graham Barr'
                         );
@@ -411,8 +387,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- $mesg = $ldap-&gt;delete( $dn );
+<pre> $mesg = $ldap-&gt;delete( $dn );
 </pre>
 </div>
 <dl class="Bl-tag">
@@ -448,8 +423,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- $mesg = $ldap-&gt;moddn( $dn, newrdn =&gt; 'cn=Graham Barr' );
+<pre> $mesg = $ldap-&gt;moddn( $dn, newrdn =&gt; 'cn=Graham Barr' );
 </pre>
 </div>
 <dl class="Bl-tag">
@@ -469,8 +443,7 @@
       single value is wanted in the attribute, or a reference to an array of
       strings if multiple values are wanted.
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     add =&gt; {
       description =&gt; 'List of members',    # Add description attribute
       member      =&gt; [
@@ -485,8 +458,7 @@
     ... ]</a></dt>
   <dd>Delete complete attributes from the entry.
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     delete =&gt; ['member','description'] # Delete attributes
   );
     </pre>
@@ -501,8 +473,7 @@
         an empty array or all existing values of the attribute are being
         deleted, then the attribute will be deleted from the entry.</p>
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     delete =&gt; {
       description =&gt; 'List of members',
       member      =&gt; [
@@ -524,8 +495,7 @@
       remove the entire attribute. If the attribute does not already exist in
       the entry, it will be created.
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     replace =&gt; {
       description =&gt; 'New List of members', # Change the description
       member      =&gt; [ # Replace whole list with these
@@ -546,8 +516,7 @@
       LDAP_FEATURE_MODIFY_INCREMENT. Use &quot;supported_feature&quot; in
       Net::LDAP::RootDSE to check this.
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     increment =&gt; {
       uidNumber =&gt; 1 # increment uidNumber by 1
     }
@@ -565,8 +534,7 @@
     <p class="Pp">Use this form if you want to control the order in which the
         operations will be performed.</p>
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;modify( $dn,
+    <pre>  $mesg = $ldap-&gt;modify( $dn,
     changes =&gt; [
       add =&gt; [
         description =&gt; 'A description',
@@ -596,15 +564,10 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- $mesg = $ldap-&gt;modify( $dn, add =&gt; { sn =&gt; 'Barr' } );
-
+<pre> $mesg = $ldap-&gt;modify( $dn, add =&gt; { sn =&gt; 'Barr' } );
  $mesg = $ldap-&gt;modify( $dn, delete =&gt; [qw(faxNumber)] );
-
  $mesg = $ldap-&gt;modify( $dn, delete =&gt; { 'telephoneNumber' =&gt; '911' } );
-
  $mesg = $ldap-&gt;modify( $dn, replace =&gt; { 'mail' =&gt; 'gbarr@pobox.com' } );
-
  $mesg = $ldap-&gt;modify( $dn,
                         changes =&gt; [
                             # add sn=Barr
@@ -718,24 +681,21 @@
         &quot;createTimestamp&quot; and other operational attributes may also be
         available for the asking:</p>
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;search( ... ,
+    <pre>  $mesg = $ldap-&gt;search( ... ,
                          attrs =&gt; ['createTimestamp']
                        );
     </pre>
     <p class="Pp">To retrieve the default attributes and additional ones, use
         '*'.</p>
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;search( ... ,
+    <pre>  $mesg = $ldap-&gt;search( ... ,
                          attrs =&gt; ['*', 'createTimestamp']
                        );
     </pre>
     <p class="Pp">To retrieve no attributes (the server only returns the DNs of
         matching entries), use '1.1':</p>
     <p class="Pp"></p>
-    <pre>
-  $mesg = $ldap-&gt;search( ... ,
+    <pre>  $mesg = $ldap-&gt;search( ... ,
                          attrs =&gt; ['1.1']
                        );
     </pre>
@@ -767,13 +727,11 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- $mesg = $ldap-&gt;search(
+<pre> $mesg = $ldap-&gt;search(
                         base   =&gt; $base_dn,
                         scope  =&gt; 'sub',
                         filter =&gt; '(|(objectclass=rfc822mailgroup)(sn=jones))'
                       );
-
  Net::LDAP::LDIF-&gt;new( \*STDOUT,&quot;w&quot; )-&gt;write( $mesg-&gt;entries );
 </pre>
 </div>
@@ -844,8 +802,7 @@
         keydecrypt should be a subroutine that returns the decrypting key. For
         example:</p>
     <p class="Pp"></p>
-    <pre>
- $ldap = Net::LDAP-&gt;new( 'myhost.example.com', version =&gt; 3 );
+    <pre> $ldap = Net::LDAP-&gt;new( 'myhost.example.com', version =&gt; 3 );
  $mesg = $ldap-&gt;start_tls(
                            verify =&gt; 'require',
                            clientcert =&gt; 'mycert.pem',
@@ -868,8 +825,7 @@
         using the hash value of the certificates' subject names. To generate
         these names, use OpenSSL like this in Unix:</p>
     <p class="Pp"></p>
-    <pre>
-    ln -s cacert.pem `openssl x509 -hash -noout &lt; cacert.pem`.0
+    <pre>    ln -s cacert.pem `openssl x509 -hash -noout &lt; cacert.pem`.0
     </pre>
     <p class="Pp">(assuming that the certificate of the CA is in
       cacert.pem.)</p>
@@ -896,8 +852,7 @@
       another DN and password, without unbind-ing, will generally work.
     <p class="Pp"><b>Example</b></p>
     <p class="Pp"></p>
-    <pre>
- $mesg = $ldap-&gt;unbind;
+    <pre> $mesg = $ldap-&gt;unbind;
     </pre>
   </dd>
   <dt id="done"><a class="permalink" href="#done">done ( )</a></dt>
@@ -919,8 +874,7 @@
         OpenSSL-specific format, different from RFC 1779 and RFC 4514) from the
         server's certificate, do this:</p>
     <p class="Pp"></p>
-    <pre>
-    print &quot;Subject DN: &quot; . $ldaps-&gt;certificate-&gt;subject_name . &quot;\n&quot;;
+    <pre>    print &quot;Subject DN: &quot; . $ldaps-&gt;certificate-&gt;subject_name . &quot;\n&quot;;
     </pre>
   </dd>
   <dt id="cipher"><a class="permalink" href="#cipher">cipher ( )</a></dt>
@@ -932,8 +886,7 @@
       sent to <span class="Li">&quot;STDERR&quot;</span>. The bits of this value
       are:
     <p class="Pp"></p>
-    <pre>
- 1   Show outgoing packets (using asn_hexdump).
+    <pre> 1   Show outgoing packets (using asn_hexdump).
  2   Show incoming packets (using asn_hexdump).
  4   Show outgoing packets (using asn_dump).
  8   Show incoming packets (using asn_dump).
@@ -955,8 +908,7 @@
   <dd>A reference to a list of attributes to be returned. If not specified, then
       the following attributes will be requested
     <p class="Pp"></p>
-    <pre>
-  subschemaSubentry
+    <pre>  subschemaSubentry
   namingContexts
   altServer
   supportedExtension
@@ -972,8 +924,7 @@
 <p class="Pp">The result is an object of class Net::LDAP::RootDSE.</p>
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- my $root = $ldap-&gt;root_dse;
+<pre> my $root = $ldap-&gt;root_dse;
  # get naming Context
  $root-&gt;get_value( 'namingContexts', asref =&gt; 1 );
  # get supported LDAP versions
@@ -1003,8 +954,7 @@
 <div class="Bd-indent">
 <p class="Pp"><b>Example</b></p>
 <p class="Pp"></p>
-<pre>
- my $schema = $ldap-&gt;schema;
+<pre> my $schema = $ldap-&gt;schema;
  # get objectClasses
  @ocs = $schema-&gt;all_objectclasses;
  # Get the attributes

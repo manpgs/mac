@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Zlib(3pm)</title>
 </head>
@@ -30,21 +31,17 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">With any version of Perl 5 you can use the basic OO interface:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Zlib;
-
+<pre>    use IO::Zlib;
     $fh = new IO::Zlib;
     if ($fh-&gt;open(&quot;file.gz&quot;, &quot;rb&quot;)) {
         print &lt;$fh&gt;;
         $fh-&gt;close;
     }
-
     $fh = IO::Zlib-&gt;new(&quot;file.gz&quot;, &quot;wb9&quot;);
     if (defined $fh) {
         print $fh &quot;bar\n&quot;;
         $fh-&gt;close;
     }
-
     $fh = IO::Zlib-&gt;new(&quot;file.gz&quot;, &quot;rb&quot;);
     if (defined $fh) {
         print &lt;$fh&gt;;
@@ -54,12 +51,9 @@
 <p class="Pp">With Perl 5.004 you can also use the TIEHANDLE interface to access
     compressed files just like ordinary files:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Zlib;
-
+<pre>    use IO::Zlib;
     tie *FILE, 'IO::Zlib', &quot;file.gz&quot;, &quot;wb&quot;;
     print FILE &quot;line 1\nline2\n&quot;;
-
     tie *FILE, 'IO::Zlib', &quot;file.gz&quot;, &quot;rb&quot;;
     while (&lt;FILE&gt;) { print &quot;LINE: &quot;, $_ };
 </pre>
@@ -75,13 +69,11 @@
     <span class="Li">&quot;Compress::Zlib&quot;</span> can be loaded, unless
     explicitly disabled by</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Zlib qw(:gzip_external 0);
+<pre>    use IO::Zlib qw(:gzip_external 0);
 </pre>
 <p class="Pp">If explicitly enabled by</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Zlib qw(:gzip_external 1);
+<pre>    use IO::Zlib qw(:gzip_external 1);
 </pre>
 <p class="Pp">then the external <i>gzip</i> is used <b>instead</b> of
     <span class="Li">&quot;Compress::Zlib&quot;</span>.</p>
@@ -151,15 +143,13 @@
 <p class="Pp">If the external <i>gzip</i> is used, the following
     <span class="Li">&quot;open&quot;</span>s are used:</p>
 <p class="Pp"></p>
-<pre>
-    open(FH, &quot;gzip -dc $filename |&quot;)  # for read opens
+<pre>    open(FH, &quot;gzip -dc $filename |&quot;)  # for read opens
     open(FH, &quot; | gzip &gt; $filename&quot;)   # for write opens
 </pre>
 <p class="Pp">You can modify the 'commands' for example to hardwire an absolute
     path by e.g.</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Zlib ':gzip_read_open'  =&gt; '/some/where/gunzip -c %s |';
+<pre>    use IO::Zlib ':gzip_read_open'  =&gt; '/some/where/gunzip -c %s |';
     use IO::Zlib ':gzip_write_open' =&gt; '| /some/where/gzip.exe &gt; %s';
 </pre>
 <p class="Pp">The <span class="Li">%s</span> is expanded to be the filename

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::C3(3)</title>
 </head>
@@ -29,43 +30,32 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    # NOTE - DO NOT USE Class::C3 directly as a user, use MRO::Compat instead!
+<pre>    # NOTE - DO NOT USE Class::C3 directly as a user, use MRO::Compat instead!
     package ClassA;
     use Class::C3;
     sub hello { 'A::hello' }
-
     package ClassB;
     use base 'ClassA';
     use Class::C3;
-
     package ClassC;
     use base 'ClassA';
     use Class::C3;
-
     sub hello { 'C::hello' }
-
     package ClassD;
     use base ('ClassB', 'ClassC');
     use Class::C3;
-
     # Classic Diamond MI pattern
     #    &lt;A&gt;
     #   /   \
     # &lt;B&gt;   &lt;C&gt;
     #   \   /
     #    &lt;D&gt;
-
     package main;
-
     # initializez the C3 module
     # (formerly called in INIT)
     Class::C3::initialize();
-
     print join ', ' =&gt; Class::C3::calculateMRO('ClassD'); # prints ClassD, ClassB, ClassC, ClassA
-
     print ClassD-&gt;hello(); # prints 'C::hello' instead of the standard p5 'A::hello'
-
     ClassD-&gt;can('hello')-&gt;();          # can() also works correctly
     UNIVERSAL::can('ClassD', 'hello'); # as does UNIVERSAL::can()
 </pre>
@@ -97,8 +87,7 @@
     essentially means that no class will appear before any of its subclasses.
     Take the classic diamond inheritance pattern for instance:</p>
 <p class="Pp"></p>
-<pre>
-     &lt;A&gt;
+<pre>     &lt;A&gt;
     /   \
   &lt;B&gt;   &lt;C&gt;
     \   /
@@ -137,14 +126,12 @@
     lowercase module names are considered <i>&quot;bad&quot;</i> by some people.
     However I think that code looks much nicer like this:</p>
 <p class="Pp"></p>
-<pre>
-  package MyClass;
+<pre>  package MyClass;
   use c3;
 </pre>
 <p class="Pp">This is more clunky:</p>
 <p class="Pp"></p>
-<pre>
-  package MyClass;
+<pre>  package MyClass;
   use Class::C3;
 </pre>
 <p class="Pp">But hey, it's your choice, that's why it is optional.</p>
@@ -162,18 +149,14 @@
       do this as soon as possible <b>after</b> loading any classes which use C3.
       Here is a quick code example:
     <p class="Pp"></p>
-    <pre>
-  package Foo;
+    <pre>  package Foo;
   use Class::C3;
   # ... Foo methods here
-
   package Bar;
   use Class::C3;
   use base 'Foo';
   # ... Bar methods here
-
   package main;
-
   Class::C3::initialize(); # now it is safe to use Foo and Bar
     </pre>
     <p class="Pp">This function used to be called automatically for you in the
@@ -207,33 +190,27 @@
     <span class="Li">&quot;NEXT::&quot;</span> which will re-dispatch the method
     along the C3 linearization. This is best shown with an example.</p>
 <p class="Pp"></p>
-<pre>
-  # a classic diamond MI pattern ...
+<pre>  # a classic diamond MI pattern ...
   #    &lt;A&gt;
   #   /   \
   # &lt;B&gt;   &lt;C&gt;
   #   \   /
   #    &lt;D&gt;
-
   package ClassA;
   use Class::C3;
   sub foo { 'ClassA::foo' }
-
   package ClassB;
   use base 'ClassA';
   use Class::C3;
   sub foo { 'ClassB::foo =&gt; ' . (shift)-&gt;next::method() }
-
   package ClassC;
   use base 'ClassA';
   use Class::C3;
   sub foo { 'ClassC::foo =&gt; ' . (shift)-&gt;next::method() }
-
   package ClassD;
   use base ('ClassB', 'ClassC');
   use Class::C3;
   sub foo { 'ClassD::foo =&gt; ' . (shift)-&gt;next::method() }
-
   print ClassD-&gt;foo; # prints out &quot;ClassD::foo =&gt; ClassB::foo =&gt; ClassC::foo =&gt; ClassA::foo&quot;
 </pre>
 <p class="Pp">A few things to note. First, we do not require you to add on the
@@ -252,16 +229,14 @@
     <span class="Li">&quot;next::method&quot;</span> will succeed before you
     call it like so:</p>
 <p class="Pp"></p>
-<pre>
-  $self-&gt;next::method(@_) if $self-&gt;next::can;
+<pre>  $self-&gt;next::method(@_) if $self-&gt;next::can;
 </pre>
 <p class="Pp">Additionally, you can use
     <span class="Li">&quot;maybe::next::method&quot;</span> as a shortcut to
     only call the next method if it exists. The previous example could be simply
     written as:</p>
 <p class="Pp"></p>
-<pre>
-  $self-&gt;maybe::next::method(@_);
+<pre>  $self-&gt;maybe::next::method(@_);
 </pre>
 <p class="Pp">There are some caveats about using
     <span class="Li">&quot;next::method&quot;</span>, see below for those.</p>
@@ -309,8 +284,7 @@
       sounds complicated, but it really isn't. Here is an example which will not
       work correctly:
     <p class="Pp"></p>
-    <pre>
-  *Foo::foo = sub { (shift)-&gt;next::method(@_) };
+    <pre>  *Foo::foo = sub { (shift)-&gt;next::method(@_) };
     </pre>
     <p class="Pp">The problem exists because the anonymous subroutine being
         assigned to the glob <span class="Li">*Foo::foo</span> will show up in
@@ -325,8 +299,7 @@
         internals and assign a name to an anonymous subroutine for you. Simply
         do this:</p>
     <p class="Pp"></p>
-    <pre>
-  use Sub::Name 'subname';
+    <pre>  use Sub::Name 'subname';
   *Foo::foo = subname 'Foo::foo' =&gt; sub { (shift)-&gt;next::method(@_) };
     </pre>
     <p class="Pp">and things will Just Work. Of course this is not always

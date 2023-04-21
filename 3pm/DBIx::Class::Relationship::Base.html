@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Relationship::Base(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  __PACKAGE__-&gt;add_relationship(
+<pre>  __PACKAGE__-&gt;add_relationship(
     spiders =&gt; 'My::DB::Result::Creatures',
     sub {
       my $args = shift;
@@ -58,8 +58,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_relationship('rel_name',
+<pre>  __PACKAGE__-&gt;add_relationship('rel_name',
                                 'Foreign::Class',
                                 $condition, $attrs);
 </pre>
@@ -81,22 +80,19 @@
     when the SQL is produced.</p>
 <p class="Pp">For example given:</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::Author-&gt;has_many(
+<pre>  My::Schema::Author-&gt;has_many(
     books =&gt; 'My::Schema::Book',
     { 'foreign.author_id' =&gt; 'self.id' }
   );
 </pre>
 <p class="Pp">A query like:</p>
 <p class="Pp"></p>
-<pre>
-  $author_rs-&gt;search_related('books')-&gt;next
+<pre>  $author_rs-&gt;search_related('books')-&gt;next
 </pre>
 <p class="Pp">will result in the following
     <span class="Li">&quot;JOIN&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
-  ... FROM author me LEFT JOIN book books ON books.author_id = me.id ...
+<pre>  ... FROM author me LEFT JOIN book books ON books.author_id = me.id ...
 </pre>
 <p class="Pp">This describes a relationship between the
     <span class="Li">&quot;Author&quot;</span> table and the
@@ -106,24 +102,20 @@
     <span class="Li">&quot;Author&quot;</span>.</p>
 <p class="Pp">Similarly:</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::Book-&gt;has_many(
+<pre>  My::Schema::Book-&gt;has_many(
     editions =&gt; 'My::Schema::Edition',
     {
       'foreign.publisher_id' =&gt; 'self.publisher_id',
       'foreign.type_id'      =&gt; 'self.type_id',
     }
   );
-
   ...
-
   $book_rs-&gt;search_related('editions')-&gt;next
 </pre>
 <p class="Pp">will result in the <span class="Li">&quot;JOIN&quot;</span>
     clause:</p>
 <p class="Pp"></p>
-<pre>
-  ... FROM book me
+<pre>  ... FROM book me
       LEFT JOIN edition editions ON
            editions.publisher_id = me.publisher_id
        AND editions.type_id = me.type_id ...
@@ -140,8 +132,7 @@
     <span class="Li">&quot;OR&quot;</span> can be achieved with an arrayref. For
     example a condition like:</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::Item-&gt;has_many(
+<pre>  My::Schema::Item-&gt;has_many(
     related_item_links =&gt; My::Schema::Item::Links,
     [
       { 'foreign.left_itemid'  =&gt; 'self.id' },
@@ -152,8 +143,7 @@
 <p class="Pp">will translate to the following
     <span class="Li">&quot;JOIN&quot;</span> clause:</p>
 <p class="Pp"></p>
-<pre>
- ... FROM item me JOIN item_relations related_item_links ON
+<pre> ... FROM item me JOIN item_relations related_item_links ON
          related_item_links.left_itemid = me.id
       OR related_item_links.right_itemid = me.id ...
 </pre>
@@ -165,8 +155,7 @@
     &quot;parent-child&quot; designation)</p>
 <p class="Pp">Custom join conditions</p>
 <p class="Pp"></p>
-<pre>
-  NOTE: The custom join condition specification mechanism is capable of
+<pre>  NOTE: The custom join condition specification mechanism is capable of
   generating JOIN clauses of virtually unlimited complexity. This may limit
   your ability to traverse some of the more involved relationship chains the
   way you expect, *and* may bring your RDBMS to its knees. Exercise care
@@ -176,36 +165,30 @@
     column values, the custom join condition coderef syntax can be used. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  My::Schema::Artist-&gt;has_many(
+<pre>  My::Schema::Artist-&gt;has_many(
     cds_80s =&gt; 'My::Schema::CD',
     sub {
       my $args = shift;
-
       return {
         &quot;$args-&gt;{foreign_alias}.artist&quot; =&gt; { -ident =&gt; &quot;$args-&gt;{self_alias}.artistid&quot; },
         &quot;$args-&gt;{foreign_alias}.year&quot;   =&gt; { '&gt;', &quot;1979&quot;, '&lt;', &quot;1990&quot; },
       };
     }
   );
-
   ...
-
   $artist_rs-&gt;search_related('cds_80s')-&gt;next;
 </pre>
 <p class="Pp">will result in the <span class="Li">&quot;JOIN&quot;</span>
     clause:</p>
 <p class="Pp"></p>
-<pre>
-  ... FROM artist me LEFT JOIN cd cds_80s ON
+<pre>  ... FROM artist me LEFT JOIN cd cds_80s ON
         cds_80s.artist = me.artistid
     AND cds_80s.year &lt; ?
     AND cds_80s.year &gt; ?
 </pre>
 <p class="Pp">with the bind values:</p>
 <p class="Pp"></p>
-<pre>
-   '1990', '1979'
+<pre>   '1990', '1979'
 </pre>
 <p class="Pp"><span class="Li">&quot;$args-&gt;{foreign_alias}&quot;</span> and
     <span class="Li">&quot;$args-&gt;{self_alias}&quot;</span> are supplied the
@@ -247,10 +230,8 @@
     <span class="Li">&quot;foreign_values&quot;</span>. In other words if you
     define your condition coderef as:</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     my $args = shift;
-
     return (
       {
         &quot;$args-&gt;{foreign_alias}.artist&quot; =&gt; { -ident =&gt; &quot;$args-&gt;{self_alias}.artistid&quot; },
@@ -268,15 +249,13 @@
 </pre>
 <p class="Pp">Then this code:</p>
 <p class="Pp"></p>
-<pre>
-    my $artist = $schema-&gt;resultset(&quot;Artist&quot;)-&gt;find({ id =&gt; 4 });
+<pre>    my $artist = $schema-&gt;resultset(&quot;Artist&quot;)-&gt;find({ id =&gt; 4 });
     $artist-&gt;cds_80s-&gt;all;
 </pre>
 <p class="Pp">Can skip a <span class="Li">&quot;JOIN&quot;</span> altogether and
     instead produce:</p>
 <p class="Pp"></p>
-<pre>
-    SELECT cds_80s.cdid, cds_80s.artist, cds_80s.title, cds_80s.year, cds_80s.genreid, cds_80s.single_track
+<pre>    SELECT cds_80s.cdid, cds_80s.artist, cds_80s.title, cds_80s.year, cds_80s.genreid, cds_80s.single_track
       FROM cd cds_80s
       WHERE cds_80s.artist = ?
         AND cds_80s.year &lt; ?
@@ -284,13 +263,11 @@
 </pre>
 <p class="Pp">With the bind values:</p>
 <p class="Pp"></p>
-<pre>
-    '4', '1990', '1979'
+<pre>    '4', '1990', '1979'
 </pre>
 <p class="Pp">While this code:</p>
 <p class="Pp"></p>
-<pre>
-    my $cd = $schema-&gt;resultset(&quot;CD&quot;)-&gt;search({ artist =&gt; 1 }, { rows =&gt; 1 })-&gt;single;
+<pre>    my $cd = $schema-&gt;resultset(&quot;CD&quot;)-&gt;search({ artist =&gt; 1 }, { rows =&gt; 1 })-&gt;single;
     my $artist = $schema-&gt;resultset(&quot;Artist&quot;)-&gt;new({});
     $artist-&gt;set_from_related('cds_80s');
 </pre>
@@ -310,24 +287,18 @@
     <span class="Li">$args</span> hashref passed to the subroutine contains some
     extra metadata. Currently the supplied coderef is executed as:</p>
 <p class="Pp"></p>
-<pre>
-  $relationship_info-&gt;{cond}-&gt;({
+<pre>  $relationship_info-&gt;{cond}-&gt;({
     self_resultsource   =&gt; The resultsource instance on which rel_name is registered
     rel_name            =&gt; The relationship name (does *NOT* always match foreign_alias)
-
     self_alias          =&gt; The alias of the invoking resultset
     foreign_alias       =&gt; The alias of the to-be-joined resultset (does *NOT* always match rel_name)
-
     # only one of these (or none at all) will ever be supplied to aid in the
     # construction of a join-free condition
-
     self_result_object  =&gt; The invocant *object* itself in case of a call like
                            $result_object-&gt;$rel_name( ... )
-
     foreign_values      =&gt; A *hashref* of related data: may be passed in directly or
                            derived via -&gt;get_columns() from a related object in case of
                            $result_object-&gt;set_from_related( $rel_name, $foreign_result_object )
-
     # deprecated inconsistent names, will be forever available for legacy code
     self_rowobj         =&gt; Old deprecated slot for self_result_object
     foreign_relname     =&gt; Old deprecated slot for rel_name
@@ -338,8 +309,7 @@
     attributes. In particular, the 'where' attribute is useful for filtering
     relationships:</p>
 <p class="Pp"></p>
-<pre>
-     __PACKAGE__-&gt;has_many( 'valid_users', 'MyApp::Schema::User',
+<pre>     __PACKAGE__-&gt;has_many( 'valid_users', 'MyApp::Schema::User',
         { 'foreign.user_id' =&gt; 'self.user_id' },
         { where =&gt; { valid =&gt; 1 } }
     );
@@ -365,8 +335,7 @@
   <dd>An arrayref containing a list of accessors in the foreign class to create
       in the main class. If, for example, you do the following:
     <p class="Pp"></p>
-    <pre>
-  MyApp::Schema::CD-&gt;might_have(liner_notes =&gt; 'MyApp::Schema::LinerNotes',
+    <pre>  MyApp::Schema::CD-&gt;might_have(liner_notes =&gt; 'MyApp::Schema::LinerNotes',
     undef, {
       proxy =&gt; [ qw/notes/ ],
     });
@@ -374,15 +343,13 @@
     <p class="Pp">Then, assuming MyApp::Schema::LinerNotes has an accessor named
         notes, you can do:</p>
     <p class="Pp"></p>
-    <pre>
-  my $cd = MyApp::Schema::CD-&gt;find(1);
+    <pre>  my $cd = MyApp::Schema::CD-&gt;find(1);
   $cd-&gt;notes('Notes go here'); # set notes -- LinerNotes object is
                                # created if it doesn't exist
     </pre>
     <p class="Pp">For a 'belongs_to relationship, note the 'cascade_update':</p>
     <p class="Pp"></p>
-    <pre>
-  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd,
+    <pre>  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd,
       { proxy =&gt; ['title'], cascade_update =&gt; 1 }
   );
   $track-&gt;title('New Title');
@@ -393,8 +360,7 @@
   <dd>A hashref where each key is the accessor you want installed in the main
       class, and its value is the name of the original in the foreign class.
     <p class="Pp"></p>
-    <pre>
-  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd', {
+    <pre>  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd', {
       proxy =&gt; { cd_title =&gt; 'title' },
   });
     </pre>
@@ -407,8 +373,7 @@
 <div class="Bd-indent">
 <p class="Pp">NOTE: you can pass a nested struct too, for example:</p>
 <p class="Pp"></p>
-<pre>
-  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd', {
+<pre>  MyApp::Schema::Track-&gt;belongs_to( cd =&gt; 'MyApp::Schema::CD', 'cd', {
     proxy =&gt; [ 'year', { cd_title =&gt; 'title' } ],
   });
 </pre>
@@ -521,8 +486,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $rs = $cd-&gt;related_resultset('artist');
+<pre>  $rs = $cd-&gt;related_resultset('artist');
 </pre>
 <p class="Pp">Returns a DBIx::Class::ResultSet for the relationship named
     <span class="Li">$rel_name</span>.</p>
@@ -538,8 +502,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  # These pairs do the same thing
+<pre>  # These pairs do the same thing
   $result = $cd-&gt;related_resultset('artist')-&gt;single;  # has_one relationship
   $result = $cd-&gt;artist;
   $rs = $cd-&gt;related_resultset('tracks');           # has_many relationship
@@ -616,8 +579,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $result = $obj-&gt;create_related($rel_name, \%col_data);
+<pre>  my $result = $obj-&gt;create_related($rel_name, \%col_data);
 </pre>
 <p class="Pp">Creates a new result object, similarly to new_related, and also
     inserts the result's data into your storage medium. See the distinction
@@ -637,8 +599,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $result = $obj-&gt;find_related($rel_name, \%col_data);
+<pre>  my $result = $obj-&gt;find_related($rel_name, \%col_data);
 </pre>
 <p class="Pp">Attempt to find a related object using its primary key or unique
     constraints. See &quot;find&quot; in DBIx::Class::ResultSet for details.</p>
@@ -693,8 +654,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $book-&gt;set_from_related('author', $author_obj);
+<pre>  $book-&gt;set_from_related('author', $author_obj);
   $book-&gt;author($author_obj);                      ## same thing
 </pre>
 <p class="Pp">Set column values on the current object, using related values from
@@ -718,8 +678,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  $book-&gt;update_from_related('author', $author_obj);
+<pre>  $book-&gt;update_from_related('author', $author_obj);
 </pre>
 <p class="Pp">The same as &quot;set_from_related&quot;, but the changes are
     immediately updated in storage.</p>
@@ -737,16 +696,16 @@
 <p class="Pp">Delete any related row, subject to the given conditions.
     Internally, this calls:</p>
 <p class="Pp"></p>
-<pre>
-  $self-&gt;search_related(@_)-&gt;delete
+<pre>  $self-&gt;search_related(@_)-&gt;delete
 </pre>
 <p class="Pp">And returns the result of that.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="add_to_$rel"><a class="permalink" href="#add_to_$rel">add_to_$rel</a></h2>
 <p class="Pp"><b>Currently only available for
-    </b><b>&quot;has_many&quot;</b><b>, </b><b>&quot;many_to_many&quot;</b><b>
-    and 'multi' type</b> <b>relationships.</b></p>
+    </b><span class="Li"><b>&quot;has_many&quot;</b></span><b>,
+    </b><span class="Li"><b>&quot;many_to_many&quot;</b></span><b> and 'multi'
+    type</b> <b>relationships.</b></p>
 <p class="Pp"><i>has_many / multi</i></p>
 <dl class="Bl-tag">
   <dt id="Arguments:~16"><a class="permalink" href="#Arguments:~16">Arguments:
@@ -758,8 +717,7 @@
 </dl>
 <p class="Pp">Creates/inserts a new result object. Internally, this calls:</p>
 <p class="Pp"></p>
-<pre>
-  $self-&gt;create_related($rel, @_)
+<pre>  $self-&gt;create_related($rel, @_)
 </pre>
 <p class="Pp">And returns the result of that.</p>
 <p class="Pp"><i>many_to_many</i></p>
@@ -772,11 +730,9 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $role = $schema-&gt;resultset('Role')-&gt;find(1);
+<pre>  my $role = $schema-&gt;resultset('Role')-&gt;find(1);
   $actor-&gt;add_to_roles($role);
       # creates a My::DBIC::Schema::ActorRoles linking table result object
-
   $actor-&gt;add_to_roles({ name =&gt; 'lead' }, { salary =&gt; 15_000_000 });
       # creates a new My::DBIC::Schema::Role result object and the linking table
       # object with an extra column in the link
@@ -793,7 +749,8 @@
 <section class="Ss">
 <h2 class="Ss" id="set_$rel"><a class="permalink" href="#set_$rel">set_$rel</a></h2>
 <p class="Pp"><b>Currently only available for
-    </b><b>&quot;many_to_many&quot;</b><b> relationships.</b></p>
+    </b><span class="Li"><b>&quot;many_to_many&quot;</b></span><b>
+    relationships.</b></p>
 <dl class="Bl-tag">
   <dt id="Arguments:~18"><a class="permalink" href="#Arguments:~18">Arguments:
     (\@hashrefs_of_col_data | \@result_objs), $link_vals?</a></dt>
@@ -803,14 +760,11 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $actor = $schema-&gt;resultset('Actor')-&gt;find(1);
+<pre>  my $actor = $schema-&gt;resultset('Actor')-&gt;find(1);
   my @roles = $schema-&gt;resultset('Role')-&gt;search({ role =&gt;
      { '-in' =&gt; ['Fred', 'Barney'] } } );
-
   $actor-&gt;set_roles(\@roles);
      # Replaces all of $actor's previous roles with the two named
-
   $actor-&gt;set_roles(\@roles, { salary =&gt; 15_000_000 });
      # Sets a column in the link table for all roles
 </pre>
@@ -830,7 +784,8 @@
 <section class="Ss">
 <h2 class="Ss" id="remove_from_$rel"><a class="permalink" href="#remove_from_$rel">remove_from_$rel</a></h2>
 <p class="Pp"><b>Currently only available for
-    </b><b>&quot;many_to_many&quot;</b><b> relationships.</b></p>
+    </b><span class="Li"><b>&quot;many_to_many&quot;</b></span><b>
+    relationships.</b></p>
 <dl class="Bl-tag">
   <dt id="Arguments:~19"><a class="permalink" href="#Arguments:~19">Arguments:
     $result</a></dt>
@@ -840,8 +795,7 @@
   <dd></dd>
 </dl>
 <p class="Pp"></p>
-<pre>
-  my $role = $schema-&gt;resultset('Role')-&gt;find(1);
+<pre>  my $role = $schema-&gt;resultset('Role')-&gt;find(1);
   $actor-&gt;remove_from_roles($role);
       # removes $role's My::DBIC::Schema::ActorRoles linking table result object
 </pre>

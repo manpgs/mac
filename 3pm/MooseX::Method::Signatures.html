@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Method::Signatures(3pm)</title>
 </head>
@@ -33,20 +34,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Foo;
-
+<pre>    package Foo;
     use Moose;
     use MooseX::Method::Signatures;
-
     method morning (Str $name) {
         $self-&gt;say(&quot;Good morning ${name}!&quot;);
     }
-
     method hello (Str :$who, Int :$age where { $_ &gt; 0 }) {
         $self-&gt;say(&quot;Hello ${who}, I am ${age} years old!&quot;);
     }
-
     method greet (Str $name, Bool :$excited = 0) {
         if ($excited) {
             $self-&gt;say(&quot;GREETINGS ${name}!&quot;);
@@ -55,19 +51,12 @@
             $self-&gt;say(&quot;Hi ${name}!&quot;);
         }
     }
-
     $foo-&gt;morning('Resi');                          # This works.
-
     $foo-&gt;hello(who =&gt; 'world', age =&gt; 42);         # This too.
-
     $foo-&gt;greet('Resi', excited =&gt; 1);              # And this as well.
-
     $foo-&gt;hello(who =&gt; 'world', age =&gt; 'fortytwo'); # This doesn't.
-
     $foo-&gt;hello(who =&gt; 'world', age =&gt; -23);        # This neither.
-
     $foo-&gt;morning;                                  # Won't work.
-
     $foo-&gt;greet;                                    # Will fail.
 </pre>
 </section>
@@ -101,8 +90,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Type_Constraints"><a class="permalink" href="#Type_Constraints">Type
   Constraints</a></h2>
-<pre>
-    method foo (             $affe) # no type checking
+<pre>    method foo (             $affe) # no type checking
     method bar (Animal       $affe) # $affe-&gt;isa('Animal')
     method baz (Animal|Human $affe) # $affe-&gt;isa('Animal') || $affe-&gt;isa('Human')
 </pre>
@@ -110,8 +98,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Positional_vs._Named"><a class="permalink" href="#Positional_vs._Named">Positional
   vs. Named</a></h2>
-<pre>
-    method foo ( $a,  $b,  $c) # positional
+<pre>    method foo ( $a,  $b,  $c) # positional
     method bar (:$a, :$b, :$c) # named
     method baz ( $a,  $b, :$c) # combined
 </pre>
@@ -119,42 +106,36 @@
 <section class="Ss">
 <h2 class="Ss" id="Required_vs._Optional"><a class="permalink" href="#Required_vs._Optional">Required
   vs. Optional</a></h2>
-<pre>
-    method foo ($a , $b!, :$c!, :$d!) # required
+<pre>    method foo ($a , $b!, :$c!, :$d!) # required
     method bar ($a?, $b?, :$c , :$d?) # optional
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Defaults"><a class="permalink" href="#Defaults">Defaults</a></h2>
-<pre>
-    method foo ($a = 42) # defaults to 42
+<pre>    method foo ($a = 42) # defaults to 42
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Constraints"><a class="permalink" href="#Constraints">Constraints</a></h2>
-<pre>
-    method foo ($foo where { $_ % 2 == 0 }) # only even
+<pre>    method foo ($foo where { $_ % 2 == 0 }) # only even
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Invocant"><a class="permalink" href="#Invocant">Invocant</a></h2>
-<pre>
-    method foo (        $moo) # invocant is called $self and is required
+<pre>    method foo (        $moo) # invocant is called $self and is required
     method bar ($self:  $moo) # same, but explicit
     method baz ($class: $moo) # invocant is called $class
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Labels"><a class="permalink" href="#Labels">Labels</a></h2>
-<pre>
-    method foo (:     $affe ) # called as $obj-&gt;foo(affe =&gt; $value)
+<pre>    method foo (:     $affe ) # called as $obj-&gt;foo(affe =&gt; $value)
     method bar (:apan($affe)) # called as $obj-&gt;foo(apan =&gt; $value)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Traits"><a class="permalink" href="#Traits">Traits</a></h2>
-<pre>
-    method foo (Affe $bar does trait)
+<pre>    method foo (Affe $bar does trait)
     method foo (Affe $bar is trait)
 </pre>
 <p class="Pp">The only currently supported trait is
@@ -164,8 +145,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Placeholders"><a class="permalink" href="#Placeholders">Placeholders</a></h2>
-<pre>
-    method foo ($bar, $, $baz)
+<pre>    method foo ($bar, $, $baz)
 </pre>
 <p class="Pp">Sometimes you don't care about some parameters you're being called
     with. Just put the bare sigil instead of a full variable name into the
@@ -174,11 +154,9 @@
 <section class="Ss">
 <h2 class="Ss" id="Complex_Example"><a class="permalink" href="#Complex_Example">Complex
   Example</a></h2>
-<pre>
-    method foo ( SomeClass $thing where { $_-&gt;can('stuff') }:
+<pre>    method foo ( SomeClass $thing where { $_-&gt;can('stuff') }:
                  Str  $bar  = &quot;apan&quot;,
                  Int :$baz! = 42 where { $_ % 2 == 0 } where { $_ &gt; 10 } )
-
     # the invocant is called $thing, must be an instance of SomeClass and
            has to implement a 'stuff' method
     # $bar is positional, required, must be a string and defaults to &quot;apan&quot;
@@ -225,8 +203,7 @@
   about the return value?</a></h2>
 <p class="Pp">Type constraints for return values can be declared using</p>
 <p class="Pp"></p>
-<pre>
-  method foo (Int $x, Str $y) returns (Bool) { ... }
+<pre>  method foo (Int $x, Str $y) returns (Bool) { ... }
 </pre>
 <p class="Pp">however, this feature only works with scalar return values and is
     still considered to be experimental.</p>
@@ -235,7 +212,7 @@
 <h2 class="Ss" id="Interaction_with_Moose::Role"><a class="permalink" href="#Interaction_with_Moose::Role">Interaction
   with Moose::Role</a></h2>
 <p class="Pp"><i>Methods not seen by a role's
-    </i><i>&quot;requires&quot;</i><i></i></p>
+    </i><span class="Li"><i>&quot;requires&quot;</i></span><i></i></p>
 <p class="Pp">Because the processing of the MooseX::Method::Signatures
     <span class="Li">&quot;method&quot;</span> and the Moose
     <span class="Li">&quot;with&quot;</span> keywords are both done at runtime,
@@ -243,36 +220,22 @@
     will cause Moose to complain very loudly and abort the program).</p>
 <p class="Pp">For example, the following will not work:</p>
 <p class="Pp"></p>
-<pre>
-    # in file Canine.pm
-
+<pre>    # in file Canine.pm
     package Canine;
-
     use Moose;
     use MooseX::Method::Signatures;
-
     with 'Watchdog';
-
     method bark { print &quot;Woof!\n&quot;; }
-
     1;
-
-
     # in file Watchdog.pm
-
     package Watchdog;
-
     use Moose::Role;
-
     requires 'bark';  # will assert! evaluated before 'method' is processed
-
     sub warn_intruder {
         my $self = shift;
         my $intruder = shift;
-
         $self-&gt;bark until $intruder-&gt;gone;
     }
-
     1;
 </pre>
 <p class="Pp">A workaround for this problem is to use
@@ -280,45 +243,31 @@
     defined. To take our previous example, <b>Canine</b> could be reworked
   thus:</p>
 <p class="Pp"></p>
-<pre>
-    package Canine;
-
+<pre>    package Canine;
     use Moose;
     use MooseX::Method::Signatures;
-
     method bark { print &quot;Woof!\n&quot;; }
-
     with 'Watchdog';
-
     1;
 </pre>
 <p class="Pp">A better solution is to use MooseX::Declare instead of plain
     MooseX::Method::Signatures. It defers application of roles until the end of
     the class definition. With it, our example would becomes:</p>
 <p class="Pp"></p>
-<pre>
-    # in file Canine.pm
-
+<pre>    # in file Canine.pm
     use MooseX::Declare;
-
     class Canine with Watchdog {
         method bark { print &quot;Woof!\n&quot;; }
     }
-
     1;
-
     # in file Watchdog.pm
-
     use MooseX::Declare;
-
     role Watchdog {
         requires 'bark';
-
         method warn_intruder ( $intruder ) {
             $self-&gt;bark until $intruder-&gt;gone;
         }
     }
-
     1;
 </pre>
 <p class="Pp"><i></i><i>Subroutine redefined</i><i> warnings</i></p>

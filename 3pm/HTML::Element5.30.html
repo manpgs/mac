@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTML::Element(3)</title>
 </head>
@@ -33,19 +34,15 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use HTML::Element;
+<pre>    use HTML::Element;
     $a = HTML::Element-&gt;new('a', href =&gt; 'http://www.perl.com/');
     $a-&gt;push_content(&quot;The Perl Homepage&quot;);
-
     $tag = $a-&gt;tag;
     print &quot;$tag starts out as:&quot;,  $a-&gt;starttag, &quot;\n&quot;;
     print &quot;$tag ends as:&quot;,  $a-&gt;endtag, &quot;\n&quot;;
     print &quot;$tag\'s href attribute is: &quot;, $a-&gt;attr('href'), &quot;\n&quot;;
-
     $links_r = $a-&gt;extract_links();
     print &quot;Hey, I found &quot;, scalar(@$links_r), &quot; links.\n&quot;;
-
     print &quot;And that, as HTML, is: &quot;, $a-&gt;as_HTML, &quot;\n&quot;;
     $a = $a-&gt;delete;
 </pre>
@@ -65,8 +62,7 @@
   WE REPRESENT TREES</a></h1>
 <p class="Pp">Consider this HTML document:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;html lang='en-US'&gt;
+<pre>  &lt;html lang='en-US'&gt;
     &lt;head&gt;
       &lt;title&gt;Stuff&lt;/title&gt;
       &lt;meta name='author' content='Jojo'&gt;
@@ -79,8 +75,7 @@
 <p class="Pp">Building a syntax tree out of it makes a tree-structure in memory
     that could be diagrammed as:</p>
 <p class="Pp"></p>
-<pre>
-                     html (lang='en-US')
+<pre>                     html (lang='en-US')
                       / \
                     /     \
                   /         \
@@ -101,8 +96,7 @@
   source.)</p>
 <p class="Pp">Another way to represent the above tree is with indenting:</p>
 <p class="Pp"></p>
-<pre>
-  html (attributes: lang='en-US')
+<pre>  html (attributes: lang='en-US')
     head
       title
         &quot;Stuff&quot;
@@ -118,30 +112,24 @@
 <p class="Pp">However you diagram the tree, it's stored the same in memory --
     it's a network of objects, each of which has attributes like so:</p>
 <p class="Pp"></p>
-<pre>
-  element #1:  _tag: 'html'
+<pre>  element #1:  _tag: 'html'
                _parent: none
                _content: [element #2, element #5]
                lang: 'en-US'
-
   element #2:  _tag: 'head'
                _parent: element #1
                _content: [element #3, element #4]
-
   element #3:  _tag: 'title'
                _parent: element #2
                _content: [text segment &quot;Stuff&quot;]
-
   element #4   _tag: 'meta'
                _parent: element #2
                _content: none
                name: author
                content: Jojo
-
   element #5   _tag: 'body'
                _parent: element #1
                _content: [element #6]
-
   element #6   _tag: 'h1'
                _parent: element #5
                _content: [text segment &quot;I like potatoes&quot;]
@@ -197,8 +185,7 @@
   METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-  $h = HTML::Element-&gt;new('tag', 'attrname' =&gt; 'value', ... );
+<pre>  $h = HTML::Element-&gt;new('tag', 'attrname' =&gt; 'value', ... );
 </pre>
 <p class="Pp">This constructor method returns a new HTML::Element object. The
     tag name is a required argument; it will be forced to lowercase. Optionally,
@@ -206,8 +193,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="attr"><a class="permalink" href="#attr">attr</a></h2>
-<pre>
-  $value = $h-&gt;attr('attr');
+<pre>  $value = $h-&gt;attr('attr');
   $old_value = $h-&gt;attr('attr', $new_value);
 </pre>
 <p class="Pp">Returns (optionally sets) the value of the given attribute of
@@ -227,8 +213,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tag"><a class="permalink" href="#tag">tag</a></h2>
-<pre>
-  $tagname = $h-&gt;tag();
+<pre>  $tagname = $h-&gt;tag();
   $h-&gt;tag('tagname');
 </pre>
 <p class="Pp">Returns (optionally sets) the tag name (also known as the generic
@@ -246,15 +231,13 @@
       (<span class="Li">&quot;$h-&gt;attr(&quot;text&quot;)&quot;</span>). For
       example, parsing this code with HTML::TreeBuilder...
     <p class="Pp"></p>
-    <pre>
-  &lt;!-- I like Pie.
+    <pre>  &lt;!-- I like Pie.
      Pie is good
   --&gt;
     </pre>
     <p class="Pp">produces an HTML::Element object with these attributes:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;_tag&quot;,
+    <pre>  &quot;_tag&quot;,
   &quot;~comment&quot;,
   &quot;text&quot;,
   &quot; I like Pie.\n     Pie is good\n  &quot;
@@ -266,13 +249,11 @@
       with a tag name of &quot;~declaration&quot;, and content in the
       &quot;text&quot; attribute. For example, this:
     <p class="Pp"></p>
-    <pre>
-  &lt;!DOCTYPE foo&gt;
+    <pre>  &lt;!DOCTYPE foo&gt;
     </pre>
     <p class="Pp">produces an element whose attributes include:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;_tag&quot;, &quot;~declaration&quot;, &quot;text&quot;, &quot;DOCTYPE foo&quot;
+    <pre>  &quot;_tag&quot;, &quot;~declaration&quot;, &quot;text&quot;, &quot;DOCTYPE foo&quot;
     </pre>
   </dd>
   <dt id="Processing"><a class="permalink" href="#Processing">Processing
@@ -281,13 +262,11 @@
       tag name of &quot;~pi&quot;, and content in the &quot;text&quot;
       attribute. For example, this:
     <p class="Pp"></p>
-    <pre>
-  &lt;?stuff foo?&gt;
+    <pre>  &lt;?stuff foo?&gt;
     </pre>
     <p class="Pp">produces an element whose attributes include:</p>
     <p class="Pp"></p>
-    <pre>
-  &quot;_tag&quot;, &quot;~pi&quot;, &quot;text&quot;, &quot;stuff foo?&quot;
+    <pre>  &quot;_tag&quot;, &quot;~pi&quot;, &quot;text&quot;, &quot;stuff foo?&quot;
     </pre>
     <p class="Pp">(assuming a recent version of HTML::Parser)</p>
   </dd>
@@ -302,8 +281,7 @@
         behavior of amp-quoting text segments.</p>
     <p class="Pp">For example, this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $literal = HTML::Element-&gt;new('~literal',
+    <pre>  my $literal = HTML::Element-&gt;new('~literal',
     'text' =&gt; 'x &lt; 4 &amp; y &gt; 7'
   );
   my $span = HTML::Element-&gt;new('span');
@@ -312,21 +290,18 @@
     </pre>
     <p class="Pp">prints this:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;span&gt;x &lt; 4 &amp; y &gt; 7&lt;/span&gt;
+    <pre>  &lt;span&gt;x &lt; 4 &amp; y &gt; 7&lt;/span&gt;
     </pre>
     <p class="Pp">Whereas this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $span = HTML::Element-&gt;new('span');
+    <pre>  my $span = HTML::Element-&gt;new('span');
   $span-&gt;push_content('x &lt; 4 &amp; y &gt; 7');
     # normal text segment
   print $span-&gt;as_HTML;
     </pre>
     <p class="Pp">prints this:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;span&gt;x &amp;lt; 4 &amp;amp; y &amp;gt; 7&lt;/span&gt;
+    <pre>  &lt;span&gt;x &amp;lt; 4 &amp;amp; y &amp;gt; 7&lt;/span&gt;
     </pre>
     <p class="Pp">Unless you're inserting lots of pre-cooked code into existing
         trees, and dumping them out again, it's not likely that you'll find
@@ -336,8 +311,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="parent"><a class="permalink" href="#parent">parent</a></h2>
-<pre>
-  $parent = $h-&gt;parent();
+<pre>  $parent = $h-&gt;parent();
   $h-&gt;parent($new_parent);
 </pre>
 <p class="Pp">Returns (optionally sets) the parent (aka &quot;container&quot;)
@@ -352,8 +326,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="content_list"><a class="permalink" href="#content_list">content_list</a></h2>
-<pre>
-  @content = $h-&gt;content_list();
+<pre>  @content = $h-&gt;content_list();
   $num_children = $h-&gt;content_list();
 </pre>
 <p class="Pp">Returns a list of the child nodes of this element -- i.e., what
@@ -364,8 +337,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="content"><a class="permalink" href="#content">content</a></h2>
-<pre>
-  $content_array_ref = $h-&gt;content(); # may return undef
+<pre>  $content_array_ref = $h-&gt;content(); # may return undef
 </pre>
 <p class="Pp">This somewhat deprecated method returns the content of this
     element; but unlike content_list, this returns either undef (which you
@@ -380,13 +352,11 @@
     conceivable cases. It is my experience that in most cases this leads to
     simpler code anyway, since it means one can say:</p>
 <p class="Pp"></p>
-<pre>
-    @children = $h-&gt;content_list;
+<pre>    @children = $h-&gt;content_list;
 </pre>
 <p class="Pp">instead of the inelegant:</p>
 <p class="Pp"></p>
-<pre>
-    @children = @{$h-&gt;content || []};
+<pre>    @children = @{$h-&gt;content || []};
 </pre>
 <p class="Pp">If you do use <span class="Li">&quot;$h-&gt;content&quot;</span>
     (or <span class="Li">&quot;$h-&gt;content_array_ref&quot;</span>), you
@@ -397,8 +367,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="content_array_ref"><a class="permalink" href="#content_array_ref">content_array_ref</a></h2>
-<pre>
-  $content_array_ref = $h-&gt;content_array_ref(); # never undef
+<pre>  $content_array_ref = $h-&gt;content_array_ref(); # never undef
 </pre>
 <p class="Pp">This is like <span class="Li">&quot;content&quot;</span> (with all
     its caveats and deprecations) except that it is guaranteed to return an
@@ -412,8 +381,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="content_refs_list"><a class="permalink" href="#content_refs_list">content_refs_list</a></h2>
-<pre>
-  @content_refs = $h-&gt;content_refs_list;
+<pre>  @content_refs = $h-&gt;content_refs_list;
 </pre>
 <p class="Pp">This returns a list of scalar references to each element of
     <span class="Li">$h</span>'s content list. This is useful in case you want
@@ -422,16 +390,14 @@
     <span class="Li">&quot;splice_content&quot;</span> to replace the old with
     the new. Instead, here you can in-place edit:</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $item_r ($h-&gt;content_refs_list) {
+<pre>    foreach my $item_r ($h-&gt;content_refs_list) {
         next if ref $$item_r;
         $$item_r =~ s/honour/honor/g;
     }
 </pre>
 <p class="Pp">You <i>could</i> currently achieve the same affect with:</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $item (@{ $h-&gt;content_array_ref }) {
+<pre>    foreach my $item (@{ $h-&gt;content_array_ref }) {
         # deprecated!
         next if ref $item;
         $item =~ s/honour/honor/g;
@@ -444,8 +410,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="implicit"><a class="permalink" href="#implicit">implicit</a></h2>
-<pre>
-  $is_implicit = $h-&gt;implicit();
+<pre>  $is_implicit = $h-&gt;implicit();
   $h-&gt;implicit($make_implicit);
 </pre>
 <p class="Pp">Returns (optionally sets) the &quot;_implicit&quot; attribute.
@@ -456,8 +421,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pos"><a class="permalink" href="#pos">pos</a></h2>
-<pre>
-  $pos = $h-&gt;pos();
+<pre>  $pos = $h-&gt;pos();
   $h-&gt;pos($element);
 </pre>
 <p class="Pp">Returns (and optionally sets) the &quot;_pos&quot; (for
@@ -478,14 +442,12 @@
     and are no longer sure <span class="Li">&quot;$h-&gt;pos&quot;</span> is
     valid, you can enforce validity with:</p>
 <p class="Pp"></p>
-<pre>
-    $h-&gt;pos(undef) unless $h-&gt;pos-&gt;is_inside($h);
+<pre>    $h-&gt;pos(undef) unless $h-&gt;pos-&gt;is_inside($h);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="all_attr"><a class="permalink" href="#all_attr">all_attr</a></h2>
-<pre>
-  %attr = $h-&gt;all_attr();
+<pre>  %attr = $h-&gt;all_attr();
 </pre>
 <p class="Pp">Returns all this element's attributes and values, as key-value
     pairs. This will include any &quot;internal&quot; attributes (i.e., ones not
@@ -502,8 +464,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="all_attr_names"><a class="permalink" href="#all_attr_names">all_attr_names</a></h2>
-<pre>
-  @names = $h-&gt;all_attr_names();
+<pre>  @names = $h-&gt;all_attr_names();
   $num_attrs = $h-&gt;all_attr_names();
 </pre>
 <p class="Pp">Like <span class="Li">&quot;all_attr&quot;</span>, but only
@@ -516,16 +477,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="all_external_attr"><a class="permalink" href="#all_external_attr">all_external_attr</a></h2>
-<pre>
-  %attr = $h-&gt;all_external_attr();
+<pre>  %attr = $h-&gt;all_external_attr();
 </pre>
 <p class="Pp">Like <span class="Li">&quot;all_attr&quot;</span>, except that
     internal attributes are not present.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="all_external_attr_names"><a class="permalink" href="#all_external_attr_names">all_external_attr_names</a></h2>
-<pre>
-  @names = $h-&gt;all_external_attr_names();
+<pre>  @names = $h-&gt;all_external_attr_names();
   $num_attrs = $h-&gt;all_external_attr_names();
 </pre>
 <p class="Pp">Like <span class="Li">&quot;all_attr_names&quot;</span>, except
@@ -533,8 +492,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="id"><a class="permalink" href="#id">id</a></h2>
-<pre>
-  $id = $h-&gt;id();
+<pre>  $id = $h-&gt;id();
   $h-&gt;id($string);
 </pre>
 <p class="Pp">Returns (optionally sets to <span class="Li">$string</span>) the
@@ -548,8 +506,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="idf"><a class="permalink" href="#idf">idf</a></h2>
-<pre>
-  $id = $h-&gt;idf();
+<pre>  $id = $h-&gt;idf();
   $h-&gt;idf($string);
 </pre>
 <p class="Pp">Just like the <span class="Li">&quot;id&quot;</span> method,
@@ -566,8 +523,7 @@
     adding or changing nodes as parents or children of other nodes.</p>
 <section class="Ss">
 <h2 class="Ss" id="push_content"><a class="permalink" href="#push_content">push_content</a></h2>
-<pre>
-  $h-&gt;push_content($element_or_text, ...);
+<pre>  $h-&gt;push_content($element_or_text, ...);
 </pre>
 <p class="Pp">Adds the specified items to the <i>end</i> of the content list of
     the element <span class="Li">$h</span>. The items of content to be added
@@ -578,8 +534,7 @@
     <span class="Li">$h</span>. This means you can say things concise things
     like:</p>
 <p class="Pp"></p>
-<pre>
-  $body-&gt;push_content(
+<pre>  $body-&gt;push_content(
     ['br'],
     ['ul',
       map ['li', $_], qw(Peaches Apples Pears Mangos)
@@ -594,56 +549,46 @@
     <span class="Li">$h</span>'s
     <span class="Li">&quot;content_list&quot;</span> is</p>
 <p class="Pp"></p>
-<pre>
-  ('foo bar ', $some_node, 'baz!')
+<pre>  ('foo bar ', $some_node, 'baz!')
 </pre>
 <p class="Pp">and you call</p>
 <p class="Pp"></p>
-<pre>
-   $h-&gt;push_content('quack?');
+<pre>   $h-&gt;push_content('quack?');
 </pre>
 <p class="Pp">then the resulting content list will be this:</p>
 <p class="Pp"></p>
-<pre>
-  ('foo bar ', $some_node, 'baz!quack?')
+<pre>  ('foo bar ', $some_node, 'baz!quack?')
 </pre>
 <p class="Pp">and not this:</p>
 <p class="Pp"></p>
-<pre>
-  ('foo bar ', $some_node, 'baz!', 'quack?')
+<pre>  ('foo bar ', $some_node, 'baz!', 'quack?')
 </pre>
 <p class="Pp">If that latter is what you want, you'll have to override the
     feature of consolidating text by using splice_content, as in:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;splice_content(scalar($h-&gt;content_list),0,'quack?');
+<pre>  $h-&gt;splice_content(scalar($h-&gt;content_list),0,'quack?');
 </pre>
 <p class="Pp">Similarly, if you wanted to add 'Skronk' to the beginning of the
     content list, calling this:</p>
 <p class="Pp"></p>
-<pre>
-   $h-&gt;unshift_content('Skronk');
+<pre>   $h-&gt;unshift_content('Skronk');
 </pre>
 <p class="Pp">then the resulting content list will be this:</p>
 <p class="Pp"></p>
-<pre>
-  ('Skronkfoo bar ', $some_node, 'baz!')
+<pre>  ('Skronkfoo bar ', $some_node, 'baz!')
 </pre>
 <p class="Pp">and not this:</p>
 <p class="Pp"></p>
-<pre>
-  ('Skronk', 'foo bar ', $some_node, 'baz!')
+<pre>  ('Skronk', 'foo bar ', $some_node, 'baz!')
 </pre>
 <p class="Pp">What you'd to do get the latter is:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;splice_content(0,0,'Skronk');
+<pre>  $h-&gt;splice_content(0,0,'Skronk');
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="unshift_content"><a class="permalink" href="#unshift_content">unshift_content</a></h2>
-<pre>
-  $h-&gt;unshift_content($element_or_text, ...)
+<pre>  $h-&gt;unshift_content($element_or_text, ...)
 </pre>
 <p class="Pp">Just like <span class="Li">&quot;push_content&quot;</span>, but
     adds to the <i>beginning</i> of the <span class="Li">$h</span> element's
@@ -658,8 +603,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="splice_content"><a class="permalink" href="#splice_content">splice_content</a></h2>
-<pre>
-  @removed = $h-&gt;splice_content($offset, $length,
+<pre>  @removed = $h-&gt;splice_content($offset, $length,
                                 $element_or_text, ...);
 </pre>
 <p class="Pp">Detaches the elements from <span class="Li">$h</span>'s list of
@@ -678,8 +622,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="detach"><a class="permalink" href="#detach">detach</a></h2>
-<pre>
-  $old_parent = $h-&gt;detach();
+<pre>  $old_parent = $h-&gt;detach();
 </pre>
 <p class="Pp">This unlinks <span class="Li">$h</span> from its parent, by
     setting its 'parent' attribute to undef, and by removing it from the content
@@ -690,8 +633,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="detach_content"><a class="permalink" href="#detach_content">detach_content</a></h2>
-<pre>
-  @old_content = $h-&gt;detach_content();
+<pre>  @old_content = $h-&gt;detach_content();
 </pre>
 <p class="Pp">This unlinks all of <span class="Li">$h</span>'s children from
     <span class="Li">$h</span>, and returns them. Note that these are not
@@ -700,8 +642,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="replace_with"><a class="permalink" href="#replace_with">replace_with</a></h2>
-<pre>
-  $h-&gt;replace_with( $element_or_text, ... )
+<pre>  $h-&gt;replace_with( $element_or_text, ... )
 </pre>
 <p class="Pp">This replaces <span class="Li">$h</span> in its parent's content
     list with the nodes specified. The element <span class="Li">$h</span> (which
@@ -717,8 +658,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="preinsert"><a class="permalink" href="#preinsert">preinsert</a></h2>
-<pre>
-  $h-&gt;preinsert($element_or_text...);
+<pre>  $h-&gt;preinsert($element_or_text...);
 </pre>
 <p class="Pp">Inserts the given nodes right BEFORE <span class="Li">$h</span> in
     <span class="Li">$h</span>'s parent's content list. This causes a fatal
@@ -728,8 +668,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="postinsert"><a class="permalink" href="#postinsert">postinsert</a></h2>
-<pre>
-  $h-&gt;postinsert($element_or_text...)
+<pre>  $h-&gt;postinsert($element_or_text...)
 </pre>
 <p class="Pp">Inserts the given nodes right AFTER <span class="Li">$h</span> in
     <span class="Li">$h</span>'s parent's content list. This causes a fatal
@@ -739,8 +678,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="replace_with_content"><a class="permalink" href="#replace_with_content">replace_with_content</a></h2>
-<pre>
-  $h-&gt;replace_with_content();
+<pre>  $h-&gt;replace_with_content();
 </pre>
 <p class="Pp">This replaces <span class="Li">$h</span> in its parent's content
     list with its own content. The element <span class="Li">$h</span> (which by
@@ -753,8 +691,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="delete_content"><a class="permalink" href="#delete_content">delete_content</a></h2>
-<pre>
-  $h-&gt;delete_content();
+<pre>  $h-&gt;delete_content();
   $h-&gt;destroy_content(); # alias
 </pre>
 <p class="Pp">Clears the content of <span class="Li">$h</span>, calling
@@ -766,8 +703,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="delete"><a class="permalink" href="#delete">delete</a></h2>
-<pre>
-  $h-&gt;delete();
+<pre>  $h-&gt;delete();
   $h-&gt;destroy(); # alias
 </pre>
 <p class="Pp">Detaches this element from its parent (if it has one) and
@@ -789,8 +725,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="clone"><a class="permalink" href="#clone">clone</a></h2>
-<pre>
-  $copy = $h-&gt;clone();
+<pre>  $copy = $h-&gt;clone();
 </pre>
 <p class="Pp">Returns a copy of the element (whose children are clones
     (recursively) of the original's children, if any).</p>
@@ -806,8 +741,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="clone_list"><a class="permalink" href="#clone_list">clone_list</a></h2>
-<pre>
-  @copies = HTML::Element-&gt;clone_list(...nodes...);
+<pre>  @copies = HTML::Element-&gt;clone_list(...nodes...);
 </pre>
 <p class="Pp">Returns a list consisting of a copy of each node given. Text
     segments are simply copied; elements are cloned by calling
@@ -816,14 +750,12 @@
     instance method. <span class="Li">&quot;clone_list&quot;</span> will croak
     if called as an instance method. You can also call it like so:</p>
 <p class="Pp"></p>
-<pre>
-    ref($h)-&gt;clone_list(...nodes...)
+<pre>    ref($h)-&gt;clone_list(...nodes...)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="normalize_content"><a class="permalink" href="#normalize_content">normalize_content</a></h2>
-<pre>
-  $h-&gt;normalize_content
+<pre>  $h-&gt;normalize_content
 </pre>
 <p class="Pp">Normalizes the content of <span class="Li">$h</span> -- i.e.,
     concatenates any adjacent text nodes. (Any undefined text segments are
@@ -832,8 +764,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="delete_ignorable_whitespace"><a class="permalink" href="#delete_ignorable_whitespace">delete_ignorable_whitespace</a></h2>
-<pre>
-  $h-&gt;delete_ignorable_whitespace()
+<pre>  $h-&gt;delete_ignorable_whitespace()
 </pre>
 <p class="Pp">This traverses under <span class="Li">$h</span> and deletes any
     text segments that are ignorable whitespace. You should not use this if
@@ -842,8 +773,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="insert_element"><a class="permalink" href="#insert_element">insert_element</a></h2>
-<pre>
-  $h-&gt;insert_element($element, $implicit);
+<pre>  $h-&gt;insert_element($element, $implicit);
 </pre>
 <p class="Pp">Inserts (via push_content) a new element under the element at
     <span class="Li">&quot;$h-&gt;pos()&quot;</span>. Then updates
@@ -862,8 +792,7 @@
   METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="dump"><a class="permalink" href="#dump">dump</a></h2>
-<pre>
-  $h-&gt;dump()
+<pre>  $h-&gt;dump()
   $h-&gt;dump(*FH)  ; # or *FH{IO} or $fh_obj
 </pre>
 <p class="Pp">Prints the element and all its children to STDOUT (or to a
@@ -872,8 +801,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_HTML"><a class="permalink" href="#as_HTML">as_HTML</a></h2>
-<pre>
-  $s = $h-&gt;as_HTML();
+<pre>  $s = $h-&gt;as_HTML();
   $s = $h-&gt;as_HTML($entities);
   $s = $h-&gt;as_HTML($entities, $indent_char);
   $s = $h-&gt;as_HTML($entities, $indent_char, \%optional_end_tags);
@@ -904,8 +832,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_text"><a class="permalink" href="#as_text">as_text</a></h2>
-<pre>
-  $s = $h-&gt;as_text();
+<pre>  $s = $h-&gt;as_text();
   $s = $h-&gt;as_text(skip_dels =&gt; 1);
 </pre>
 <p class="Pp">Returns a string consisting of only the text parts of the
@@ -917,8 +844,7 @@
     <span class="Li">&quot;no_space_compacting&quot;</span> attributes). Also,
     since whitespace is never added during parsing,</p>
 <p class="Pp"></p>
-<pre>
-  HTML::TreeBuilder-&gt;new_from_content(&quot;&lt;p&gt;a&lt;/p&gt;&lt;p&gt;b&lt;/p&gt;&quot;)
+<pre>  HTML::TreeBuilder-&gt;new_from_content(&quot;&lt;p&gt;a&lt;/p&gt;&lt;p&gt;b&lt;/p&gt;&quot;)
                    -&gt;as_text;
 </pre>
 <p class="Pp">returns <span class="Li">&quot;ab&quot;</span>, not
@@ -933,8 +859,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_trimmed_text"><a class="permalink" href="#as_trimmed_text">as_trimmed_text</a></h2>
-<pre>
-  $s = $h-&gt;as_trimmed_text(...);
+<pre>  $s = $h-&gt;as_trimmed_text(...);
   $s = $h-&gt;as_trimmed_text(extra_chars =&gt; '\xA0'); # remove &amp;nbsp;
   $s = $h-&gt;as_text_trimmed(...); # alias
 </pre>
@@ -953,8 +878,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_XML"><a class="permalink" href="#as_XML">as_XML</a></h2>
-<pre>
-  $s = $h-&gt;as_XML()
+<pre>  $s = $h-&gt;as_XML()
 </pre>
 <p class="Pp">Returns a string representing in XML the element and its
     descendants.</p>
@@ -962,8 +886,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="as_Lisp_form"><a class="permalink" href="#as_Lisp_form">as_Lisp_form</a></h2>
-<pre>
-  $s = $h-&gt;as_Lisp_form();
+<pre>  $s = $h-&gt;as_Lisp_form();
 </pre>
 <p class="Pp">Returns a string representing the element and its descendants as a
     Lisp form. Unsafe characters are encoded as octal escapes.</p>
@@ -973,14 +896,12 @@
     &quot;_parent&quot;, which is omitted.</p>
 <p class="Pp">Current example output for a given element:</p>
 <p class="Pp"></p>
-<pre>
-  (&quot;_tag&quot; &quot;img&quot; &quot;border&quot; &quot;0&quot; &quot;src&quot; &quot;pie.png&quot; &quot;usemap&quot; &quot;#main.map&quot;)
+<pre>  (&quot;_tag&quot; &quot;img&quot; &quot;border&quot; &quot;0&quot; &quot;src&quot; &quot;pie.png&quot; &quot;usemap&quot; &quot;#main.map&quot;)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="format"><a class="permalink" href="#format">format</a></h2>
-<pre>
-  $s = $h-&gt;format; # use HTML::FormatText
+<pre>  $s = $h-&gt;format; # use HTML::FormatText
   $s = $h-&gt;format($formatter);
 </pre>
 <p class="Pp">Formats text output. Defaults to HTML::FormatText.</p>
@@ -988,8 +909,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="starttag"><a class="permalink" href="#starttag">starttag</a></h2>
-<pre>
-  $start = $h-&gt;starttag();
+<pre>  $start = $h-&gt;starttag();
   $start = $h-&gt;starttag($entities);
 </pre>
 <p class="Pp">Returns a string representing the complete start tag for the
@@ -1006,24 +926,21 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="starttag_XML"><a class="permalink" href="#starttag_XML">starttag_XML</a></h2>
-<pre>
-  $start = $h-&gt;starttag_XML();
+<pre>  $start = $h-&gt;starttag_XML();
 </pre>
 <p class="Pp">Returns a string representing the complete start tag for the
     element.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="endtag"><a class="permalink" href="#endtag">endtag</a></h2>
-<pre>
-  $end = $h-&gt;endtag();
+<pre>  $end = $h-&gt;endtag();
 </pre>
 <p class="Pp">Returns a string representing the complete end tag for this
     element. I.e., &quot;&lt;/&quot;, tag name, and &quot;&gt;&quot;.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="endtag_XML"><a class="permalink" href="#endtag_XML">endtag_XML</a></h2>
-<pre>
-  $end = $h-&gt;endtag_XML();
+<pre>  $end = $h-&gt;endtag_XML();
 </pre>
 <p class="Pp">Returns a string representing the complete end tag for this
     element. I.e., &quot;&lt;/&quot;, tag name, and &quot;&gt;&quot;.</p>
@@ -1037,8 +954,7 @@
     traversal down the tree, or walking up the tree.</p>
 <section class="Ss">
 <h2 class="Ss" id="is_inside"><a class="permalink" href="#is_inside">is_inside</a></h2>
-<pre>
-  $inside = $h-&gt;is_inside('tag', $element, ...);
+<pre>  $inside = $h-&gt;is_inside('tag', $element, ...);
 </pre>
 <p class="Pp">Returns true if the <span class="Li">$h</span> element is, or is
     contained anywhere inside an element that is any of the ones listed, or
@@ -1047,8 +963,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="is_empty"><a class="permalink" href="#is_empty">is_empty</a></h2>
-<pre>
-  $empty = $h-&gt;is_empty();
+<pre>  $empty = $h-&gt;is_empty();
 </pre>
 <p class="Pp">Returns true if <span class="Li">$h</span> has no content, i.e.,
     has no elements or text segments under it. In other words, this returns true
@@ -1072,14 +987,12 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pindex"><a class="permalink" href="#pindex">pindex</a></h2>
-<pre>
-  $index = $h-&gt;pindex();
+<pre>  $index = $h-&gt;pindex();
 </pre>
 <p class="Pp">Return the index of the element in its parent's contents array,
     such that <span class="Li">$h</span> would equal</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;parent-&gt;content-&gt;[$h-&gt;pindex]
+<pre>  $h-&gt;parent-&gt;content-&gt;[$h-&gt;pindex]
   # or
   ($h-&gt;parent-&gt;content_list)[$h-&gt;pindex]
 </pre>
@@ -1090,8 +1003,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="left"><a class="permalink" href="#left">left</a></h2>
-<pre>
-  $element = $h-&gt;left();
+<pre>  $element = $h-&gt;left();
   @elements = $h-&gt;left();
 </pre>
 <p class="Pp">In scalar context: returns the node that's the immediate left
@@ -1107,8 +1019,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="right"><a class="permalink" href="#right">right</a></h2>
-<pre>
-  $element = $h-&gt;right();
+<pre>  $element = $h-&gt;right();
   @elements = $h-&gt;right();
 </pre>
 <p class="Pp">In scalar context: returns the node that's the immediate right
@@ -1124,8 +1035,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="address"><a class="permalink" href="#address">address</a></h2>
-<pre>
-  $address = $h-&gt;address();
+<pre>  $address = $h-&gt;address();
   $element_or_text = $h-&gt;address($address);
 </pre>
 <p class="Pp">The first form (with no parameter) returns a string representing
@@ -1141,8 +1051,7 @@
 <p class="Pp">I forsee this being used mainly for debugging, but you may find
     your own uses for it.</p>
 <p class="Pp"></p>
-<pre>
-  $element_or_text = $h-&gt;address($address);
+<pre>  $element_or_text = $h-&gt;address($address);
 </pre>
 <p class="Pp">This form returns the node (whether element or text-segment) at
     the given address in the tree that <span class="Li">$h</span> is a part of.
@@ -1159,8 +1068,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="depth"><a class="permalink" href="#depth">depth</a></h2>
-<pre>
-  $depth = $h-&gt;depth();
+<pre>  $depth = $h-&gt;depth();
 </pre>
 <p class="Pp">Returns a number expressing <span class="Li">$h</span>'s depth
     within its tree, i.e., how many steps away it is from the root. If
@@ -1169,8 +1077,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="root"><a class="permalink" href="#root">root</a></h2>
-<pre>
-  $root = $h-&gt;root();
+<pre>  $root = $h-&gt;root();
 </pre>
 <p class="Pp">Returns the element that's the top of <span class="Li">$h</span>'s
     tree. If <span class="Li">$h</span> is root, this just returns
@@ -1181,8 +1088,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="lineage"><a class="permalink" href="#lineage">lineage</a></h2>
-<pre>
-  @lineage = $h-&gt;lineage();
+<pre>  @lineage = $h-&gt;lineage();
 </pre>
 <p class="Pp">Returns the list of <span class="Li">$h</span>'s ancestors,
     starting with its parent, and then that parent's parent, and so on, up to
@@ -1194,8 +1100,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="lineage_tag_names"><a class="permalink" href="#lineage_tag_names">lineage_tag_names</a></h2>
-<pre>
-  @names = $h-&gt;lineage_tag_names();
+<pre>  @names = $h-&gt;lineage_tag_names();
 </pre>
 <p class="Pp">Returns the list of the tag names of <span class="Li">$h</span>'s
     ancestors, starting with its parent, and that parent's parent, and so on, up
@@ -1204,14 +1109,12 @@
     'body', 'html')&quot;</span></p>
 <p class="Pp">Equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  map { $_-&gt;tag } $h-&gt;lineage;
+<pre>  map { $_-&gt;tag } $h-&gt;lineage;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="descendants"><a class="permalink" href="#descendants">descendants</a></h2>
-<pre>
-  @descendants = $h-&gt;descendants();
+<pre>  @descendants = $h-&gt;descendants();
 </pre>
 <p class="Pp">In list context, returns the list of all
     <span class="Li">$h</span>'s descendant elements, listed in pre-order (i.e.,
@@ -1226,8 +1129,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="find_by_tag_name"><a class="permalink" href="#find_by_tag_name">find_by_tag_name</a></h2>
-<pre>
-  @elements = $h-&gt;find_by_tag_name('tag', ...);
+<pre>  @elements = $h-&gt;find_by_tag_name('tag', ...);
   $first_match = $h-&gt;find_by_tag_name('tag', ...);
 </pre>
 <p class="Pp">In list context, returns a list of elements at or under
@@ -1246,8 +1148,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="find_by_attribute"><a class="permalink" href="#find_by_attribute">find_by_attribute</a></h2>
-<pre>
-  @elements = $h-&gt;find_by_attribute('attribute', 'value');
+<pre>  @elements = $h-&gt;find_by_attribute('attribute', 'value');
   $first_match = $h-&gt;find_by_attribute('attribute', 'value');
 </pre>
 <p class="Pp">In a list context, returns a list of elements at or under
@@ -1260,8 +1161,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="look_down"><a class="permalink" href="#look_down">look_down</a></h2>
-<pre>
-  @elements = $h-&gt;look_down( ...criteria... );
+<pre>  @elements = $h-&gt;look_down( ...criteria... );
   $first_match = $h-&gt;look_down( ...criteria... );
 </pre>
 <p class="Pp">This starts at <span class="Li">$h</span> and looks thru its
@@ -1284,8 +1184,7 @@
   <dd>This means you're looking for elements where coderef-&gt;(each_element)
       returns true. Example:
     <p class="Pp"></p>
-    <pre>
-  my @wide_pix_images = $h-&gt;look_down(
+    <pre>  my @wide_pix_images = $h-&gt;look_down(
     _tag =&gt; &quot;img&quot;,
     alt  =&gt; &quot;pix!&quot;,
     sub { $_[0]-&gt;attr('width') &gt; 350 }
@@ -1314,20 +1213,17 @@
     considers &quot;&quot; (empty-string) and undef to be different things, in
     attribute values. So this:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;look_down(&quot;alt&quot;, &quot;&quot;)
+<pre>  $h-&gt;look_down(&quot;alt&quot;, &quot;&quot;)
 </pre>
 <p class="Pp">will find elements <i>with</i> an &quot;alt&quot; attribute, but
     where the value for the &quot;alt&quot; attribute is &quot;&quot;. But
   this:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;look_down(&quot;alt&quot;, undef)
+<pre>  $h-&gt;look_down(&quot;alt&quot;, undef)
 </pre>
 <p class="Pp">is the same as:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;look_down(sub { !defined($_[0]-&gt;attr('alt')) } )
+<pre>  $h-&gt;look_down(sub { !defined($_[0]-&gt;attr('alt')) } )
 </pre>
 <p class="Pp">That is, it finds elements that do not have an &quot;alt&quot;
     attribute at all (or that do have an &quot;alt&quot; attribute, but with a
@@ -1340,8 +1236,7 @@
     <i>or</i> with an &quot;id&quot; attribute with the value &quot;baz&quot;,
     you'd have to do it like:</p>
 <p class="Pp"></p>
-<pre>
-  @them = $h-&gt;look_down(
+<pre>  @them = $h-&gt;look_down(
     sub {
       # the lcs are to fold case
       lc($_[0]-&gt;attr('name')) eq 'foo'
@@ -1367,8 +1262,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="look_up"><a class="permalink" href="#look_up">look_up</a></h2>
-<pre>
-  @elements = $h-&gt;look_up( ...criteria... );
+<pre>  @elements = $h-&gt;look_up( ...criteria... );
   $first_match = $h-&gt;look_up( ...criteria... );
 </pre>
 <p class="Pp">This is identical to
@@ -1376,14 +1270,12 @@
     <span class="Li">&quot;$h-&gt;look_down&quot;</span> basically scans over
     the list:</p>
 <p class="Pp"></p>
-<pre>
-   ($h, $h-&gt;descendants)
+<pre>   ($h, $h-&gt;descendants)
 </pre>
 <p class="Pp"><span class="Li">&quot;$h-&gt;look_up&quot;</span> instead scans
     over the list</p>
 <p class="Pp"></p>
-<pre>
-   ($h, $h-&gt;lineage)
+<pre>   ($h, $h-&gt;lineage)
 </pre>
 <p class="Pp">So, for example, this returns all ancestors of
     <span class="Li">$h</span> (possibly including <span class="Li">$h</span>
@@ -1391,14 +1283,12 @@
     with an &quot;align&quot; attribute with a value of &quot;right&quot; (or
     &quot;RIGHT&quot;, etc.):</p>
 <p class="Pp"></p>
-<pre>
-   $h-&gt;look_up(&quot;_tag&quot;, &quot;td&quot;, &quot;align&quot;, &quot;right&quot;);
+<pre>   $h-&gt;look_up(&quot;_tag&quot;, &quot;td&quot;, &quot;align&quot;, &quot;right&quot;);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="traverse"><a class="permalink" href="#traverse">traverse</a></h2>
-<pre>
-  $h-&gt;traverse(...options...)
+<pre>  $h-&gt;traverse(...options...)
 </pre>
 <p class="Pp">Lengthy discussion of HTML::Element's unnecessary and confusing
     <span class="Li">&quot;traverse&quot;</span> method has been moved to a
@@ -1406,8 +1296,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="attr_get_i"><a class="permalink" href="#attr_get_i">attr_get_i</a></h2>
-<pre>
-  @values = $h-&gt;attr_get_i('attribute');
+<pre>  @values = $h-&gt;attr_get_i('attribute');
   $first_value = $h-&gt;attr_get_i('attribute');
 </pre>
 <p class="Pp">In list context, returns a list consisting of the values of the
@@ -1418,8 +1307,7 @@
     first such value, or undef if none.</p>
 <p class="Pp">Consider a document consisting of:</p>
 <p class="Pp"></p>
-<pre>
-   &lt;html lang='i-klingon'&gt;
+<pre>   &lt;html lang='i-klingon'&gt;
      &lt;head&gt;&lt;title&gt;Pati Pata&lt;/title&gt;&lt;/head&gt;
      &lt;body&gt;
        &lt;h1 lang='la'&gt;Stuff&lt;/h1&gt;
@@ -1438,8 +1326,7 @@
     <span class="Li">'es-MX'</span>.</p>
 <p class="Pp">If you call with multiple attribute names...</p>
 <p class="Pp"></p>
-<pre>
-  @values = $h-&gt;attr_get_i('a1', 'a2', 'a3');
+<pre>  @values = $h-&gt;attr_get_i('a1', 'a2', 'a3');
   $first_value = $h-&gt;attr_get_i('a1', 'a2', 'a3');
 </pre>
 <p class="Pp">...in list context, this will return a list consisting of the
@@ -1448,41 +1335,35 @@
     of the first existing attribute from the first element that has any of the
     attributes listed). So, in the above example,</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;attr_get_i('lang', 'align');
+<pre>  $h-&gt;attr_get_i('lang', 'align');
 </pre>
 <p class="Pp">will return:</p>
 <p class="Pp"></p>
-<pre>
-   ('es-MX', 'center', 'i-klingon') # in list context
+<pre>   ('es-MX', 'center', 'i-klingon') # in list context
   or
    'es-MX' # in scalar context.
 </pre>
 <p class="Pp">But note that this:</p>
 <p class="Pp"></p>
-<pre>
- $h-&gt;attr_get_i('align', 'lang');
+<pre> $h-&gt;attr_get_i('align', 'lang');
 </pre>
 <p class="Pp">will return:</p>
 <p class="Pp"></p>
-<pre>
-   ('center', 'es-MX', 'i-klingon') # in list context
+<pre>   ('center', 'es-MX', 'i-klingon') # in list context
   or
    'center' # in scalar context.
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tagname_map"><a class="permalink" href="#tagname_map">tagname_map</a></h2>
-<pre>
-  $hash_ref = $h-&gt;tagname_map();
+<pre>  $hash_ref = $h-&gt;tagname_map();
 </pre>
 <p class="Pp">Scans across <span class="Li">$h</span> and all its descendants,
     and makes a hash (a reference to which is returned) where each entry
     consists of a key that's a tag name, and a value that's a reference to a
     list to all elements that have that tag name. I.e., this method returns:</p>
 <p class="Pp"></p>
-<pre>
-   {
+<pre>   {
      # Across $h and all descendants...
      'a'   =&gt; [ ...list of all &lt;a&gt;   elements... ],
      'em'  =&gt; [ ...list of all &lt;em&gt;  elements... ],
@@ -1495,8 +1376,7 @@
     &quot;img&quot; entry in the returned hashref.)</p>
 <p class="Pp">Example usage:</p>
 <p class="Pp"></p>
-<pre>
-    my $map_r = $h-&gt;tagname_map();
+<pre>    my $map_r = $h-&gt;tagname_map();
     my @heading_tags = sort grep m/^h\d$/s, keys %$map_r;
     if(@heading_tags) {
       print &quot;Heading levels used: @heading_tags\n&quot;;
@@ -1507,8 +1387,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="extract_links"><a class="permalink" href="#extract_links">extract_links</a></h2>
-<pre>
-  $links_array_ref = $h-&gt;extract_links();
+<pre>  $links_array_ref = $h-&gt;extract_links();
   $links_array_ref = $h-&gt;extract_links(@wantedTypes);
 </pre>
 <p class="Pp">Returns links found by traversing the element and all of its
@@ -1520,9 +1399,10 @@
     link-value, the element that has the attribute with that link-value, and the
     name of that attribute, and the tagname of that element. (Example:
     <span class="Li">&quot;['http://www.suck.com/',&quot;</span>
-    <i></i><i>$elem_obj</i><i></i> <span class="Li">&quot;, 'href',
-    'a']&quot;</span>.) You may or may not end up using the element itself --
-    for some purposes, you may use only the link value.</p>
+    <i></i><span class="Li"><i>$elem_obj</i></span><i></i>
+    <span class="Li">&quot;, 'href', 'a']&quot;</span>.) You may or may not end
+    up using the element itself -- for some purposes, you may use only the link
+    value.</p>
 <p class="Pp">You might specify that you want to extract links from just some
     kinds of elements (instead of the default, which is to extract links from
     <i>all</i> the kinds of elements known to have attributes whose values
@@ -1531,8 +1411,7 @@
     <span class="Li">&quot;&lt;img&gt;&quot;</span> elements, you could code it
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  for (@{  $e-&gt;extract_links('a', 'img')  }) {
+<pre>  for (@{  $e-&gt;extract_links('a', 'img')  }) {
       my($link, $element, $attr, $tag) = @$_;
       print
         &quot;Hey, there's a $tag that links to &quot;,
@@ -1543,8 +1422,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="simplify_pres"><a class="permalink" href="#simplify_pres">simplify_pres</a></h2>
-<pre>
-  $h-&gt;simplify_pres();
+<pre>  $h-&gt;simplify_pres();
 </pre>
 <p class="Pp">In text bits under PRE elements that are at/under
     <span class="Li">$h</span>, this routine nativizes all newlines, and expands
@@ -1561,8 +1439,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="same_as"><a class="permalink" href="#same_as">same_as</a></h2>
-<pre>
-  $equal = $h-&gt;same_as($i)
+<pre>  $equal = $h-&gt;same_as($i)
 </pre>
 <p class="Pp">Returns true if <span class="Li">$h</span> and
     <span class="Li">$i</span> are both elements representing the same tree of
@@ -1576,8 +1453,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="new_from_lol"><a class="permalink" href="#new_from_lol">new_from_lol</a></h2>
-<pre>
-  $h = HTML::Element-&gt;new_from_lol($array_ref);
+<pre>  $h = HTML::Element-&gt;new_from_lol($array_ref);
   @elements = HTML::Element-&gt;new_from_lol($array_ref, ...);
 </pre>
 <p class="Pp">Resursively constructs a tree of nodes, based on the (non-cyclic)
@@ -1613,8 +1489,7 @@
 </ul>
 <p class="Pp">An example will hopefully make this more obvious:</p>
 <p class="Pp"></p>
-<pre>
-  my $h = HTML::Element-&gt;new_from_lol(
+<pre>  my $h = HTML::Element-&gt;new_from_lol(
     ['html',
       ['head',
         [ 'title', 'I like stuff!' ],
@@ -1631,8 +1506,7 @@
 </pre>
 <p class="Pp">Will print this:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;html&gt; @0
+<pre>  &lt;html&gt; @0
     &lt;head&gt; @0.0
       &lt;title&gt; @0.0.0
         &quot;I like stuff!&quot;
@@ -1646,16 +1520,14 @@
 <p class="Pp">And printing <span class="Li">$h</span>-&gt;as_HTML will give
     something like:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;html&gt;&lt;head&gt;&lt;title&gt;I like stuff!&lt;/title&gt;&lt;/head&gt;
+<pre>  &lt;html&gt;&lt;head&gt;&lt;title&gt;I like stuff!&lt;/title&gt;&lt;/head&gt;
   &lt;body lang=&quot;en-JP&quot;&gt;stuff&lt;p class=&quot;par123&quot;&gt;um, p &amp;lt; 4!
   &lt;div foo=&quot;bar&quot;&gt;123&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
 </pre>
 <p class="Pp">You can even do fancy things with
     <span class="Li">&quot;map&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  $body-&gt;push_content(
+<pre>  $body-&gt;push_content(
     # push_content implicitly calls new_from_lol on arrayrefs...
     ['br'],
     ['blockquote',
@@ -1675,8 +1547,7 @@
     context, you can pass a list of arrayrefs, and new_from_lol will return a
     list of elements, one for each arrayref.</p>
 <p class="Pp"></p>
-<pre>
-  @elements = HTML::Element-&gt;new_from_lol(
+<pre>  @elements = HTML::Element-&gt;new_from_lol(
     ['hr'],
     ['p', 'And there, on the door, was a hook!'],
   );
@@ -1685,8 +1556,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="objectify_text"><a class="permalink" href="#objectify_text">objectify_text</a></h2>
-<pre>
-  $h-&gt;objectify_text();
+<pre>  $h-&gt;objectify_text();
 </pre>
 <p class="Pp">This turns any text nodes under <span class="Li">$h</span> from
     mere text segments (strings) into real objects, pseudo-elements with a
@@ -1705,8 +1575,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="deobjectify_text"><a class="permalink" href="#deobjectify_text">deobjectify_text</a></h2>
-<pre>
-  $h-&gt;deobjectify_text();
+<pre>  $h-&gt;deobjectify_text();
 </pre>
 <p class="Pp">This undoes the effect of
     <span class="Li">&quot;$h-&gt;objectify_text&quot;</span>. That is, it takes
@@ -1726,8 +1595,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="number_lists"><a class="permalink" href="#number_lists">number_lists</a></h2>
-<pre>
-  $h-&gt;number_lists();
+<pre>  $h-&gt;number_lists();
 </pre>
 <p class="Pp">For every UL, OL, DIR, and MENU element at/under
     <span class="Li">$h</span>, this sets a &quot;_bullet&quot; attribute for
@@ -1741,8 +1609,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="has_insane_linkage"><a class="permalink" href="#has_insane_linkage">has_insane_linkage</a></h2>
-<pre>
-  $h-&gt;has_insane_linkage
+<pre>  $h-&gt;has_insane_linkage
 </pre>
 <p class="Pp">This method is for testing whether this element or the elements
     under it have linkage attributes (_parent and _content) whose values are
@@ -1769,8 +1636,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="element_class"><a class="permalink" href="#element_class">element_class</a></h2>
-<pre>
-  $classname = $h-&gt;element_class();
+<pre>  $classname = $h-&gt;element_class();
 </pre>
 <p class="Pp">This method returns the class which will be used for new elements.
     It defaults to HTML::Element, but can be overridden by subclassing or
@@ -1783,8 +1649,7 @@
   METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="Use_Weak_Refs"><a class="permalink" href="#Use_Weak_Refs">Use_Weak_Refs</a></h2>
-<pre>
-  $enabled = HTML::Element-&gt;Use_Weak_Refs;
+<pre>  $enabled = HTML::Element-&gt;Use_Weak_Refs;
   HTML::Element-&gt;Use_Weak_Refs( $enabled );
 </pre>
 <p class="Pp">This method allows you to check whether weak reference support is
@@ -1901,7 +1766,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Filter::Simple(3pm)</title>
 </head>
@@ -28,27 +29,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- # in MyFilter.pm:
-
+<pre> # in MyFilter.pm:
      package MyFilter;
-
      use Filter::Simple;
-
      FILTER { ... };
-
      # or just:
      #
      # use Filter::Simple sub { ... };
-
  # in user's code:
-
      use MyFilter;
-
      # this code is filtered
-
      no MyFilter;
-
      # this code is not
 </pre>
 </section>
@@ -114,11 +105,8 @@
     the next <span class="Li">&quot;no BANG;&quot;</span> statement, if
   any):</p>
 <p class="Pp"></p>
-<pre>
-    package BANG;
-
+<pre>    package BANG;
     use Filter::Util::Call ;
-
     sub import {
         filter_add( sub {
         my $caller = caller;
@@ -138,11 +126,9 @@
         return 1;
         })
     }
-
     sub unimport {
         filter_del();
     }
-
     1 ;
 </pre>
 <p class="Pp">This level of sophistication puts filtering out of the reach of
@@ -171,14 +157,11 @@
 </dl>
 <p class="Pp">In other words, the previous example, would become:</p>
 <p class="Pp"></p>
-<pre>
-    package BANG;
+<pre>    package BANG;
     use Filter::Simple;
-
     FILTER {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     };
-
     1 ;
 </pre>
 <p class="Pp">Note that the source code is passed as a single string, so any
@@ -192,18 +175,15 @@
 <p class="Pp">By default, the installed filter only filters up to a line
     consisting of one of the three standard source &quot;terminators&quot;:</p>
 <p class="Pp"></p>
-<pre>
-    no ModuleName;  # optional comment
+<pre>    no ModuleName;  # optional comment
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-    __END__
+<pre>    __END__
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-    __DATA__
+<pre>    __DATA__
 </pre>
 <p class="Pp">but this can be altered by passing a second argument to
     <span class="Li">&quot;use Filter::Simple&quot;</span> or
@@ -219,15 +199,12 @@
 <p class="Pp">For example, to cause the previous filter to filter only up to a
     line of the form:</p>
 <p class="Pp"></p>
-<pre>
-    GNAB esu;
+<pre>    GNAB esu;
 </pre>
 <p class="Pp">you would write:</p>
 <p class="Pp"></p>
-<pre>
-    package BANG;
+<pre>    package BANG;
     use Filter::Simple;
-
     FILTER {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     }
@@ -235,18 +212,15 @@
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-    FILTER {
+<pre>    FILTER {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     }
     { terminator =&gt; qr/^\s*GNAB\s+esu\s*;\s*?$/ };
 </pre>
 <p class="Pp">and to prevent the filter's being turned off in any way:</p>
 <p class="Pp"></p>
-<pre>
-    package BANG;
+<pre>    package BANG;
     use Filter::Simple;
-
     FILTER {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     }
@@ -254,8 +228,7 @@
 </pre>
 <p class="Pp">or:</p>
 <p class="Pp"></p>
-<pre>
-    FILTER {
+<pre>    FILTER {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     }
     { terminator =&gt; &quot;&quot; };
@@ -269,13 +242,11 @@
   interface</a></h2>
 <p class="Pp">Separating the loading of Filter::Simple:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::Simple;
+<pre>    use Filter::Simple;
 </pre>
 <p class="Pp">from the setting up of the filtering:</p>
 <p class="Pp"></p>
-<pre>
-    FILTER { ... };
+<pre>    FILTER { ... };
 </pre>
 <p class="Pp">is useful because it allows other code (typically parser support
     code or caching variables) to be defined before the filter is invoked.
@@ -285,15 +256,13 @@
     <span class="Li">&quot;use&quot;</span> statement that loads Filter::Simple,
     like so:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::Simple sub {
+<pre>    use Filter::Simple sub {
         s/BANG\s+BANG/die 'BANG' if \$BANG/g;
     };
 </pre>
 <p class="Pp">This is exactly the same as:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::Simple;
+<pre>    use Filter::Simple;
     BEGIN {
         Filter::Simple::FILTER {
             s/BANG\s+BANG/die 'BANG' if \$BANG/g;
@@ -308,22 +277,18 @@
   only specific components of source code</a></h2>
 <p class="Pp">One of the problems with a filter like:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::Simple;
-
+<pre>    use Filter::Simple;
     FILTER { s/BANG\s+BANG/die 'BANG' if \$BANG/g };
 </pre>
 <p class="Pp">is that it indiscriminately applies the specified transformation
     to the entire text of your source program. So something like:</p>
 <p class="Pp"></p>
-<pre>
-    warn 'BANG BANG, YOU'RE DEAD';
+<pre>    warn 'BANG BANG, YOU'RE DEAD';
     BANG BANG;
 </pre>
 <p class="Pp">will become:</p>
 <p class="Pp"></p>
-<pre>
-    warn 'die 'BANG' if $BANG, YOU'RE DEAD';
+<pre>    warn 'die 'BANG' if $BANG, YOU'RE DEAD';
     die 'BANG' if $BANG;
 </pre>
 <p class="Pp">It is very common when filtering source to only want to apply the
@@ -336,9 +301,7 @@
     of specifiers that install separate (and possibly multiple) filters that act
     on only parts of the source code. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use Filter::Simple;
-
+<pre>    use Filter::Simple;
     FILTER_ONLY
         code      =&gt; sub { s/BANG\s+BANG/die 'BANG' if \$BANG/g },
         quotelike =&gt; sub { s/BANG\s+BANG/CHITTY CHITTY/g };
@@ -388,8 +351,7 @@
     regexes, with a final debugging pass that prints the resulting source
   code:</p>
 <p class="Pp"></p>
-<pre>
-    use Regexp::Common;
+<pre>    use Regexp::Common;
     FILTER_ONLY
         regex =&gt; sub { s/!\[/[^/g },
         regex =&gt; sub { s/%d/$RE{num}{int}/g },
@@ -448,10 +410,8 @@
     strings/quotelikes and reverses the order in which they are
   concatenated:</p>
 <p class="Pp"></p>
-<pre>
-    package DemoRevCat;
+<pre>    package DemoRevCat;
     use Filter::Simple;
-
     FILTER_ONLY code =&gt; sub {
         my $ph = $Filter::Simple::placeholder;
         s{ ($ph) \s* [.] \s* ($ph) }{ $2.$1 }gx
@@ -459,24 +419,18 @@
 </pre>
 <p class="Pp">Thus, the following code:</p>
 <p class="Pp"></p>
-<pre>
-    use DemoRevCat;
-
+<pre>    use DemoRevCat;
     my $str = &quot;abc&quot; . q(def);
-
     print &quot;$str\n&quot;;
 </pre>
 <p class="Pp">would become:</p>
 <p class="Pp"></p>
-<pre>
-    my $str = q(def).&quot;abc&quot;;
-
+<pre>    my $str = q(def).&quot;abc&quot;;
     print &quot;$str\n&quot;;
 </pre>
 <p class="Pp">and hence print:</p>
 <p class="Pp"></p>
-<pre>
-    defabc
+<pre>    defabc
 </pre>
 </section>
 <section class="Ss">
@@ -499,20 +453,15 @@
     declared <i>before</i> the filter is installed. If you use
     <span class="Li">&quot;FILTER&quot;</span> to install the filter:</p>
 <p class="Pp"></p>
-<pre>
-    package Filter::TurnItUpTo11;
-
+<pre>    package Filter::TurnItUpTo11;
     use Filter::Simple;
-
     FILTER { s/(\w+)/\U$1/ };
 </pre>
 <p class="Pp">that will almost never be a problem, but if you install a
     filtering subroutine by passing it directly to the
     <span class="Li">&quot;use Filter::Simple&quot;</span> statement:</p>
 <p class="Pp"></p>
-<pre>
-    package Filter::TurnItUpTo11;
-
+<pre>    package Filter::TurnItUpTo11;
     use Filter::Simple sub{ s/(\w+)/\U$1/ };
 </pre>
 <p class="Pp">then you must make sure that your
@@ -525,14 +474,11 @@
 <p class="Pp">Likewise, Filter::Simple is also smart enough to Do The Right
     Thing if you use Exporter:</p>
 <p class="Pp"></p>
-<pre>
-    package Switch;
+<pre>    package Switch;
     use base Exporter;
     use Filter::Simple;
-
     @EXPORT    = qw(switch case);
     @EXPORT_OK = qw(given  when);
-
     FILTER { $_ = magic_Perl_filter($_) }
 </pre>
 <p class="Pp">Immediately after the filter has been applied to the source,
@@ -560,18 +506,13 @@
     argument list to the filtering subroutine, so the BANG.pm filter could
     easily be made parametric:</p>
 <p class="Pp"></p>
-<pre>
-    package BANG;
-
+<pre>    package BANG;
     use Filter::Simple;
-
     FILTER {
         my ($die_msg, $var_name) = @_;
         s/BANG\s+BANG/die '$die_msg' if \${$var_name}/g;
     };
-
     # and in some user code:
-
     use BANG &quot;BOOM&quot;, &quot;BAM&quot;;  # &quot;BANG BANG&quot; becomes: die 'BOOM' if $BAM
 </pre>
 <p class="Pp">The specified filtering subroutine is called every time a
@@ -604,8 +545,7 @@
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT_AND_LICENSE"><a class="permalink" href="#COPYRIGHT_AND_LICENSE">COPYRIGHT
   AND LICENSE</a></h1>
-<pre>
-    Copyright (c) 2000-2014, Damian Conway. All Rights Reserved.
+<pre>    Copyright (c) 2000-2014, Damian Conway. All Rights Reserved.
     This module is free software. It may be used, redistributed
     and/or modified under the same terms as Perl itself.
 </pre>

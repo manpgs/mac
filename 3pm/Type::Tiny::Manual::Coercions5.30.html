@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Type::Tiny::Manual::Coercions(3)</title>
 </head>
@@ -44,8 +45,7 @@
     can choose which one to import, or import them both with different
   names:</p>
 <p class="Pp"></p>
-<pre>
-  use Some::Types qw( Str );
+<pre>  use Some::Types qw( Str );
   use Other::Types &quot;Str&quot; =&gt; { -as =&gt; &quot;Str2&quot; };
 </pre>
 <p class="Pp">This might seem to be a small advantage of Type::Tiny, but where
@@ -62,8 +62,7 @@
     are both perfectly sensible ways to coerce an arrayref. In Moose, a typical
     way to do this would be:</p>
 <p class="Pp"></p>
-<pre>
-  package My::UserManager {
+<pre>  package My::UserManager {
     use Moose;
     use Moose::Util::TypeConstraints;
     
@@ -98,20 +97,17 @@
       their type constraints to prevent external code from adding new coercions
       to them.
     <p class="Pp"></p>
-    <pre>
-  $type-&gt;coercion-&gt;freeze();
+    <pre>  $type-&gt;coercion-&gt;freeze();
     </pre>
     <p class="Pp">You can freeze coercions for your entire type library
       using:</p>
     <p class="Pp"></p>
-    <pre>
-  __PACKAGE__-&gt;make_immutable;
+    <pre>  __PACKAGE__-&gt;make_immutable;
     </pre>
     <p class="Pp">If you try to add coercions to a type constraint that has
         frozen coercions, it will throw an error.</p>
     <p class="Pp"></p>
-    <pre>
-  use Types::Standard qw( Str ArrayRef );
+    <pre>  use Types::Standard qw( Str ArrayRef );
   
   Str-&gt;coercion-&gt;add_type_coercions(
     ArrayRef, sub { join &quot;\n&quot;, @$_ },
@@ -122,8 +118,7 @@
   <dd>Type::Tiny makes the above-mentioned pattern of adding coercions to a
       subtype much easier.
     <p class="Pp"></p>
-    <pre>
-  use Types::Standard ( Str ArrayRef );
+    <pre>  use Types::Standard ( Str ArrayRef );
   
   my $subtype = Str-&gt;plus_coercions(
     ArrayRef, sub { join &quot;\n&quot;, @$_ },
@@ -150,8 +145,7 @@
     to define within the library itself so it's available to any packages that
     use the library.</p>
 <p class="Pp"></p>
-<pre>
-  my $pt = __PACKAGE__-&gt;add_type(
+<pre>  my $pt = __PACKAGE__-&gt;add_type(
     Type::Tiny::Class-&gt;new(
       name    =&gt; 'Path',
       class   =&gt; 'Path::Tiny',
@@ -179,8 +173,7 @@
     <span class="Li">&quot;plus_constructors&quot;</span> method as a shortcut
     for coercing via a constructor method. The following two are the same:</p>
 <p class="Pp"></p>
-<pre>
-  Path-&gt;plus_constructors(Str, &quot;new&quot;)
+<pre>  Path-&gt;plus_constructors(Str, &quot;new&quot;)
   
   Path-&gt;plus_coercions(Str, q{ Path::Tiny-&gt;new($_) })
 </pre>
@@ -190,8 +183,7 @@
     Type::Tiny::Manual::Libraries, removing the coercion from <b>Int</b> but
     keeping the coercions from <b>Undef</b> and <b>Dict</b>.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Int );
+<pre>  use Types::Standard qw( Int );
   use Example::Types qw( Datetime );
   
   has start_date =&gt; (
@@ -205,14 +197,12 @@
     either to create a &quot;blank slate&quot; for
     <span class="Li">&quot;plus_coercions&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $Path = Path-&gt;no_coercions-&gt;plus_coercions(Str, sub { ... });
+<pre>  my $Path = Path-&gt;no_coercions-&gt;plus_coercions(Str, sub { ... });
 </pre>
 <p class="Pp">Or to disable coercions for Type::Params. Type::Params will always
     automatically coerce a parameter if there is a coercion for that type.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( Object );
+<pre>  use Types::Standard qw( Object );
   use Types::Common::String qw( UpperCaseStr );
   use Type::Params;
   
@@ -236,8 +226,7 @@
     library to define a named collection of coercions which can be optionally
     added to a type constraint.</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     package MyApp::Types;
     use Type::Library -base;
     use Type::Utils qw( extends );
@@ -256,8 +245,7 @@
 </pre>
 <p class="Pp">This set of coercions has a name and can be imported and used:</p>
 <p class="Pp"></p>
-<pre>
-  use MyApp::Types qw( ArrayRef FromLines );
+<pre>  use MyApp::Types qw( ArrayRef FromLines );
   
   has lines =&gt; (
     is      =&gt; 'ro',
@@ -268,8 +256,7 @@
 <p class="Pp">Types::Standard defines a named coercion <b>MkOpt</b> designed to
     be used for <b>OptList</b>.</p>
 <p class="Pp"></p>
-<pre>
-  use Types::Standard qw( OptList MkOpt );
+<pre>  use Types::Standard qw( OptList MkOpt );
   my $OptList = OptList-&gt;plus_coercions(MkOpt);
 </pre>
 </section>
@@ -278,8 +265,7 @@
   Coercions</a></h2>
 <p class="Pp">Named coercions can also be parameterizable.</p>
 <p class="Pp"></p>
-<pre>
-  my $ArrayOfLines = ArrayRef-&gt;plus_coercions( Split[ qr{\n} ] );
+<pre>  my $ArrayOfLines = ArrayRef-&gt;plus_coercions( Split[ qr{\n} ] );
 </pre>
 <p class="Pp">Types::Standard defines <b>Split</b> and <b>Join</b>
     parameterizable coercions.</p>
@@ -292,8 +278,7 @@
 <p class="Pp">Certain parameterized type constraints can automatically acquire
     coercions if their parameters have coercions. For example:</p>
 <p class="Pp"></p>
-<pre>
-   ArrayRef[ Int-&gt;plus_coercions(Num, q{int($_)}) ]
+<pre>   ArrayRef[ Int-&gt;plus_coercions(Num, q{int($_)}) ]
 </pre>
 <p class="Pp">... does what you mean!</p>
 <p class="Pp">The parameterized type constraints that do this magic include the
@@ -311,8 +296,7 @@
 </ul>
 <p class="Pp">Imagine we're defining a type <b>Paths</b> in a type library:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_type(
+<pre>  __PACKAGE__-&gt;add_type(
     name      =&gt; 'Paths',
     parent    =&gt; ArrayRef[Path],
   );
@@ -328,8 +312,7 @@
     shortcut when declaring a subtype to copy the parent type constraint's
     coercions:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;add_type(
+<pre>  __PACKAGE__-&gt;add_type(
     name      =&gt; 'Paths',
     parent    =&gt; ArrayRef[Path],
     coercion  =&gt; 1,   # inherit
@@ -341,8 +324,7 @@
     deep coercions and mutable (non-frozen) coercions. Consider the
   following:</p>
 <p class="Pp"></p>
-<pre>
-   class_type Path, { class =&gt; &quot;Path::Tiny&quot; };
+<pre>   class_type Path, { class =&gt; &quot;Path::Tiny&quot; };
    coerce Path,
       from Str, via { &quot;Path::Tiny&quot;-&gt;new($_) };
    
@@ -364,8 +346,7 @@
   Coercions</a></h2>
 <p class="Pp">Consider the following type library:</p>
 <p class="Pp"></p>
-<pre>
-   package Types::Geometric {
+<pre>   package Types::Geometric {
       use Type::Library -base, -declare =&gt; qw(
          VectorArray
          VectorArray3D
@@ -423,8 +404,7 @@
     <b>VectorArray3D</b>&quot;.</p>
 <p class="Pp">So we can define the coercions for <b>Point3D</b> as:</p>
 <p class="Pp"></p>
-<pre>
-   coerce Point3D,
+<pre>   coerce Point3D,
       from VectorArray3D-&gt;coercibles, via {
          my $tmp = to_VectorArray3D($_);
          Point3D-&gt;new(x =&gt; $tmp-&gt;[0], y =&gt; $tmp-&gt;[1], z =&gt; $tmp-&gt;[2]);

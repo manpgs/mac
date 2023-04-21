@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose(3)</title>
 </head>
@@ -32,26 +33,19 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Point;
+<pre>  package Point;
   use Moose; # automatically turns on strict and warnings
-
   has 'x' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
   has 'y' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
-
   sub clear {
       my $self = shift;
       $self-&gt;x(0);
       $self-&gt;y(0);
   }
-
   package Point3D;
   use Moose;
-
   extends 'Point';
-
   has 'z' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
-
   after 'clear' =&gt; sub {
       my $self = shift;
       $self-&gt;z(0);
@@ -134,8 +128,7 @@
 <p class="Pp">If you'd like to rename this method, you can do so by passing the
     <span class="Li">&quot;-meta_name&quot;</span> option when using Moose:</p>
 <p class="Pp"></p>
-<pre>
-    use Moose -meta_name =&gt; 'my_meta';
+<pre>    use Moose -meta_name =&gt; 'my_meta';
 </pre>
 <p class="Pp">However, the Moose::Object class <i>also</i> provides a method
     named <span class="Li">&quot;meta&quot;</span> which does the same thing. If
@@ -148,8 +141,7 @@
     can pass <span class="Li">&quot;undef&quot;</span> as the
     <span class="Li">&quot;-meta_name&quot;</span> option:</p>
 <p class="Pp"></p>
-<pre>
-    use Moose -meta_name =&gt; undef;
+<pre>    use Moose -meta_name =&gt; undef;
 </pre>
 <p class="Pp">Again, you will still inherit
     <span class="Li">&quot;meta&quot;</span> from Moose::Object in this
@@ -178,8 +170,7 @@
 <p class="Pp">Each superclass can be followed by a hash reference with options.
     Currently, only -version is recognized:</p>
 <p class="Pp"></p>
-<pre>
-    extends 'My::Parent'      =&gt; { -version =&gt; 0.01 },
+<pre>    extends 'My::Parent'      =&gt; { -version =&gt; 0.01 },
             'My::OtherParent' =&gt; { -version =&gt; 0.03 };
 </pre>
 <p class="Pp">An exception will be thrown if the version requirements are not
@@ -194,8 +185,7 @@
     specified role can be followed by a hash reference with a -version
   option:</p>
 <p class="Pp"></p>
-<pre>
-    with 'My::Role'      =&gt; { -version =&gt; 0.32 },
+<pre>    with 'My::Role'      =&gt; { -version =&gt; 0.32 },
          'My::Otherrole' =&gt; { -version =&gt; 0.23 };
 </pre>
 <p class="Pp">The specified version requirements must be satisfied, otherwise an
@@ -230,7 +220,7 @@
         <i>is</i> option.</p>
   </dd>
   <dt id="isa"><a class="permalink" href="#isa"><i>isa =&gt;
-    </i><i>$type_name</i><i></i></a></dt>
+    </i><span class="Li"><i>$type_name</i></span><i></i></a></dt>
   <dd>The <i>isa</i> option uses Moose's type constraint facilities to set up
       runtime type checking for this attribute. Moose will perform the checks
       during class construction, and within any accessors. The
@@ -246,7 +236,7 @@
       define a coercion. See Moose::Cookbook::Basics::HTTP_SubtypesAndCoercion
       for an example.</dd>
   <dt id="does"><a class="permalink" href="#does"><i>does =&gt;
-    </i><i>$role_name</i><i></i></a></dt>
+    </i><span class="Li"><i>$role_name</i></span><i></i></a></dt>
   <dd>This will accept the name of a role which the value stored in this
       attribute is expected to have consumed.</dd>
   <dt id="required"><a class="permalink" href="#required"><i>required =&gt;
@@ -270,7 +260,7 @@
       necessary. If an attribute is marked as lazy it <b>must</b> have a default
       or builder supplied.</dd>
   <dt id="trigger"><a class="permalink" href="#trigger"><i>trigger =&gt;
-    </i><i>$code</i><i></i></a></dt>
+    </i><span class="Li"><i>$code</i></span><i></i></a></dt>
   <dd>The <i>trigger</i> option is a CODE reference which will be called after
       the value of the attribute is set. The CODE ref is passed the instance
       itself, the updated value, and the original value if the attribute was
@@ -327,18 +317,14 @@
         is a quick example (soon to be expanded into a Moose::Cookbook
       recipe):</p>
     <p class="Pp"></p>
-    <pre>
-  package Tree;
+    <pre>  package Tree;
   use Moose;
-
   has 'node' =&gt; (is =&gt; 'rw', isa =&gt; 'Any');
-
   has 'children' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'ArrayRef',
       default =&gt; sub { [] }
   );
-
   has 'parent' =&gt; (
       is          =&gt; 'rw',
       isa         =&gt; 'Tree',
@@ -359,12 +345,10 @@
     <p class="Pp">You may also use an array reference to curry arguments to the
         original method.</p>
     <p class="Pp"></p>
-    <pre>
-  has 'thing' =&gt; (
+    <pre>  has 'thing' =&gt; (
       ...
       handles =&gt; { set_foo =&gt; [ set =&gt; 'foo' ] },
   );
-
   # $self-&gt;set_foo(...) calls $self-&gt;thing-&gt;set('foo', ...)
     </pre>
     <p class="Pp">The first element of the array reference is the original
@@ -410,7 +394,7 @@
 <div class="Bd-indent"></div>
 <dl class="Bl-tag">
   <dt id="traits"><a class="permalink" href="#traits"><i>traits =&gt; [
-    </i><i>@role_names</i><i> ]</i></a></dt>
+    </i><span class="Li"><i>@role_names</i></span><i> ]</i></a></dt>
   <dd>This tells Moose to take the list of <span class="Li">@role_names</span>
       and apply them to the attribute meta-object. Custom attribute metaclass
       traits are useful for extending the capabilities of the <i>has</i>
@@ -465,21 +449,16 @@
     an attribute from a superclass or from a role. Here is an example of the
     superclass usage:</p>
 <p class="Pp"></p>
-<pre>
-  package Foo;
+<pre>  package Foo;
   use Moose;
-
   has 'message' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'Str',
       default =&gt; 'Hello, I am a Foo'
   );
-
   package My::Foo;
   use Moose;
-
   extends 'Foo';
-
   has '+message' =&gt; (default =&gt; 'Hello I am My::Foo');
 </pre>
 <p class="Pp">What is happening here is that <b>My::Foo</b> is cloning the
@@ -490,21 +469,16 @@
     in <span class="Li">&quot;default&quot;</span>.</p>
 <p class="Pp">Here is another example, but within the context of a role:</p>
 <p class="Pp"></p>
-<pre>
-  package Foo::Role;
+<pre>  package Foo::Role;
   use Moose::Role;
-
   has 'message' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'Str',
       default =&gt; 'Hello, I am a Foo'
   );
-
   package My::Foo;
   use Moose;
-
   with 'Foo::Role';
-
   has '+message' =&gt; (default =&gt; 'Hello I am My::Foo');
 </pre>
 <p class="Pp">In this case, we are basically taking the attribute which the role
@@ -610,8 +584,7 @@
 <p class="Pp">When you use Moose, you can specify traits which will be applied
     to your metaclass:</p>
 <p class="Pp"></p>
-<pre>
-    use Moose -traits =&gt; 'My::Trait';
+<pre>    use Moose -traits =&gt; 'My::Trait';
 </pre>
 <p class="Pp">This is very similar to the attribute traits feature. When you do
     this, your class's <span class="Li">&quot;meta&quot;</span> object will have
@@ -649,18 +622,14 @@
     <span class="Li">&quot;no Moose&quot;</span> at the bottom of your code for
     this to work. Here is an example:</p>
 <p class="Pp"></p>
-<pre>
-    package Person;
+<pre>    package Person;
     use Moose;
-
     has 'first_name' =&gt; (is =&gt; 'rw', isa =&gt; 'Str');
     has 'last_name'  =&gt; (is =&gt; 'rw', isa =&gt; 'Str');
-
     sub full_name {
         my $self = shift;
         $self-&gt;first_name . ' ' . $self-&gt;last_name
     }
-
     no Moose; # keywords are removed from the Person package
 </pre>
 </section>

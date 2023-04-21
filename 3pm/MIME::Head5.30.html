@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Head(3)</title>
 </head>
@@ -34,15 +35,12 @@
 <p class="Pp">Ready? Ok...</p>
 <section class="Ss">
 <h2 class="Ss" id="Construction"><a class="permalink" href="#Construction">Construction</a></h2>
-<pre>
-    ### Create a new, empty header, and populate it manually:
+<pre>    ### Create a new, empty header, and populate it manually:
     $head = MIME::Head-&gt;new;
     $head-&gt;replace('content-type', 'text/plain; charset=US-ASCII');
     $head-&gt;replace('content-length', $len);
-
     ### Parse a new header from a filehandle:
     $head = MIME::Head-&gt;read(\*STDIN);
-
     ### Parse a new header from a file, or a readable pipe:
     $testhead = MIME::Head-&gt;from_file(&quot;/tmp/test.hdr&quot;);
     $a_b_head = MIME::Head-&gt;from_file(&quot;cat a.hdr b.hdr |&quot;);
@@ -50,10 +48,8 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Output"><a class="permalink" href="#Output">Output</a></h2>
-<pre>
-    ### Output to filehandle:
+<pre>    ### Output to filehandle:
     $head-&gt;print(\*STDOUT);
-
     ### Output as string:
     print STDOUT $head-&gt;as_string;
     print STDOUT $head-&gt;stringify;
@@ -62,20 +58,15 @@
 <section class="Ss">
 <h2 class="Ss" id="Getting_field_contents"><a class="permalink" href="#Getting_field_contents">Getting
   field contents</a></h2>
-<pre>
-    ### Is this a reply?
+<pre>    ### Is this a reply?
     $is_reply = 1 if ($head-&gt;get('Subject') =~ /^Re: /);
-
     ### Get receipt information:
     print &quot;Last received from: &quot;, $head-&gt;get('Received', 0);
     @all_received = $head-&gt;get('Received');
-
     ### Print the subject, or the empty string if none:
     print &quot;Subject: &quot;, $head-&gt;get('Subject',0);
-
     ### Too many hops?  Count 'em and see!
     if ($head-&gt;count('Received') &gt; 5) { ...
-
     ### Test whether a given field exists
     warn &quot;missing subject!&quot; if (! $head-&gt;count('subject'));
 </pre>
@@ -83,18 +74,15 @@
 <section class="Ss">
 <h2 class="Ss" id="Setting_field_contents"><a class="permalink" href="#Setting_field_contents">Setting
   field contents</a></h2>
-<pre>
-    ### Declare this to be an HTML header:
+<pre>    ### Declare this to be an HTML header:
     $head-&gt;replace('Content-type', 'text/html');
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Manipulating_field_contents"><a class="permalink" href="#Manipulating_field_contents">Manipulating
   field contents</a></h2>
-<pre>
-    ### Get rid of internal newlines in fields:
+<pre>    ### Get rid of internal newlines in fields:
     $head-&gt;unfold;
-
     ### Decode any Q- or B-encoded-text in fields (DEPRECATED):
     $head-&gt;decode;
 </pre>
@@ -102,21 +90,16 @@
 <section class="Ss">
 <h2 class="Ss" id="Getting_high-level_"><a class="permalink" href="#Getting_high-level_">Getting
   high-level MIME information</a></h2>
-<pre>
-    ### Get/set a given MIME attribute:
+<pre>    ### Get/set a given MIME attribute:
     unless ($charset = $head-&gt;mime_attr('content-type.charset')) {
         $head-&gt;mime_attr(&quot;content-type.charset&quot; =&gt; &quot;US-ASCII&quot;);
     }
-
     ### The content type (e.g., &quot;text/html&quot;):
     $mime_type     = $head-&gt;mime_type;
-
     ### The content transfer encoding (e.g., &quot;quoted-printable&quot;):
     $mime_encoding = $head-&gt;mime_encoding;
-
     ### The recommended name when extracted:
     $file_name     = $head-&gt;recommended_filename;
-
     ### The boundary text, for multipart messages:
     $boundary      = $head-&gt;multipart_boundary;
 </pre>
@@ -146,16 +129,14 @@
       that can be sent to <b>open()</b> so as to return a readable filehandle.
       The &quot;file&quot; will be opened, read, and then closed:
     <p class="Pp"></p>
-    <pre>
-    ### Create a new header by parsing in a file:
+    <pre>    ### Create a new header by parsing in a file:
     my $head = MIME::Head-&gt;from_file(&quot;/tmp/test.hdr&quot;);
     </pre>
     <p class="Pp">Since this method can function as either a class constructor
         <i>or</i> an instance initializer, the above is exactly equivalent
       to:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Create a new header by parsing in a file:
+    <pre>    ### Create a new header by parsing in a file:
     my $head = MIME::Head-&gt;new-&gt;from_file(&quot;/tmp/test.hdr&quot;);
     </pre>
     <p class="Pp">On success, the object will be returned; on failure, the
@@ -173,8 +154,7 @@
     <p class="Pp">Supply this routine with a reference to a filehandle glob;
         e.g., <span class="Li">&quot;\*STDIN&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Create a new header by parsing in STDIN:
+    <pre>    ### Create a new header by parsing in STDIN:
     $head-&gt;read(\*STDIN);
     </pre>
     <p class="Pp">On success, the self object will be returned; on failure, a
@@ -201,8 +181,7 @@
   <dd><i>Instance method, inherited.</i> Add a new occurrence of the field named
       TAG, given by TEXT:
     <p class="Pp"></p>
-    <pre>
-    ### Add the trace information:
+    <pre>    ### Add the trace information:
     $head-&gt;add('Received',
                'from eryq.pr.mcs.net by gonzo.net with smtp');
     </pre>
@@ -220,8 +199,7 @@
   <dd><i>Instance method, inherited.</i> Returns the number of occurrences of a
       field; in a boolean context, this tells you whether a given field exists:
     <p class="Pp"></p>
-    <pre>
-    ### Was a &quot;Subject:&quot; field given?
+    <pre>    ### Was a &quot;Subject:&quot; field given?
     $subject_was_given = $head-&gt;count('subject');
     </pre>
     <p class="Pp">The TAG is treated in a case-insensitive manner. This method
@@ -240,11 +218,9 @@
         absolutely must use it and don't like the warning, then provide a
       FORCE:</p>
     <p class="Pp"></p>
-    <pre>
-   &quot;I_NEED_TO_FIX_THIS&quot;
+    <pre>   &quot;I_NEED_TO_FIX_THIS&quot;
           Just shut up and do it.  Not recommended.
           Provided only for those who need to keep old scripts functioning.
-
    &quot;I_KNOW_WHAT_I_AM_DOING&quot;
           Just shut up and do it.  Not recommended.
           Provided for those who REALLY know what they are doing.
@@ -252,8 +228,7 @@
     <p class="Pp"><b>What this method does.</b> For an example, let's consider a
         valid email header you might get:</p>
     <p class="Pp"></p>
-    <pre>
-    From: =?US-ASCII?Q?Keith_Moore?= &lt;moore@cs.utk.edu&gt;
+    <pre>    From: =?US-ASCII?Q?Keith_Moore?= &lt;moore@cs.utk.edu&gt;
     To: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= &lt;keld@dkuug.dk&gt;
     CC: =?ISO-8859-1?Q?Andr=E9_?= Pirard &lt;PIRARD@vm1.ulg.ac.be&gt;
     Subject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
@@ -263,8 +238,7 @@
     <p class="Pp">That basically decodes to (sorry, I can only approximate the
         Latin characters with 7 bit sequences /o and 'e):</p>
     <p class="Pp"></p>
-    <pre>
-    From: Keith Moore &lt;moore@cs.utk.edu&gt;
+    <pre>    From: Keith Moore &lt;moore@cs.utk.edu&gt;
     To: Keld J/orn Simonsen &lt;keld@dkuug.dk&gt;
     CC: Andr'e  Pirard &lt;PIRARD@vm1.ulg.ac.be&gt;
     Subject: If you can read this you understand the example... cool!
@@ -289,8 +263,7 @@
   <dd><i>Instance method, inherited.</i> Delete all occurrences of the field
       named TAG.
     <p class="Pp"></p>
-    <pre>
-    ### Remove some MIME information:
+    <pre>    ### Remove some MIME information:
     $head-&gt;delete('MIME-Version');
     $head-&gt;delete('Content-type');
     </pre>
@@ -300,23 +273,20 @@
     <p class="Pp">If a <b>numeric INDEX</b> is given, returns the occurrence at
         that index, or undef if not present:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Print the first and last 'Received:' entries (explicitly):
+    <pre>    ### Print the first and last 'Received:' entries (explicitly):
     print &quot;First, or most recent: &quot;, $head-&gt;get('received', 0);
     print &quot;Last, or least recent: &quot;, $head-&gt;get('received',-1);
     </pre>
     <p class="Pp">If <b>no INDEX</b> is given, but invoked in a <b>scalar</b>
         context, then INDEX simply defaults to 0:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Get the first 'Received:' entry (implicitly):
+    <pre>    ### Get the first 'Received:' entry (implicitly):
     my $most_recent = $head-&gt;get('received');
     </pre>
     <p class="Pp">If <b>no INDEX</b> is given, and invoked in an <b>array</b>
         context, then <i>all</i> occurrences of the field are returned:</p>
     <p class="Pp"></p>
-    <pre>
-    ### Get all 'Received:' entries:
+    <pre>    ### Get all 'Received:' entries:
     my @all_received = $head-&gt;get('received');
     </pre>
     <p class="Pp"><b>NOTE</b>: The header(s) returned may end with a newline. If
@@ -326,8 +296,7 @@
   <dd><i>Instance method.</i> Returns the list of <i>all</i> occurrences of the
       field, or the empty list if the field is not present:
     <p class="Pp"></p>
-    <pre>
-    ### How did it get here?
+    <pre>    ### How did it get here?
     @history = $head-&gt;get_all('Received');
     </pre>
     <p class="Pp"><b>Note:</b> I had originally experimented with having
@@ -335,8 +304,7 @@
         invoked in an array context... but that causes a lot of accidents when
         you get careless and do stuff like this:</p>
     <p class="Pp"></p>
-    <pre>
-    print &quot;\u$field: &quot;, $head-&gt;get($field);
+    <pre>    print &quot;\u$field: &quot;, $head-&gt;get($field);
     </pre>
     <p class="Pp">It also made the intuitive behaviour unclear if the INDEX
         argument was given in an array context. So I opted for an explicit
@@ -373,8 +341,7 @@
 <p class="Pp">All of the following methods extract information from the
     following fields:</p>
 <p class="Pp"></p>
-<pre>
-    Content-type
+<pre>    Content-type
     Content-transfer-encoding
     Content-disposition
 </pre>
@@ -395,30 +362,26 @@
   <dd>A quick-and-easy interface to set/get the attributes in structured MIME
       fields:
     <p class="Pp"></p>
-    <pre>
-    $head-&gt;mime_attr(&quot;content-type&quot;         =&gt; &quot;text/html&quot;);
+    <pre>    $head-&gt;mime_attr(&quot;content-type&quot;         =&gt; &quot;text/html&quot;);
     $head-&gt;mime_attr(&quot;content-type.charset&quot; =&gt; &quot;US-ASCII&quot;);
     $head-&gt;mime_attr(&quot;content-type.name&quot;    =&gt; &quot;homepage.html&quot;);
     </pre>
     <p class="Pp">This would cause the final output to look something like
       this:</p>
     <p class="Pp"></p>
-    <pre>
-    Content-type: text/html; charset=US-ASCII; name=&quot;homepage.html&quot;
+    <pre>    Content-type: text/html; charset=US-ASCII; name=&quot;homepage.html&quot;
     </pre>
     <p class="Pp">Note that the special empty sub-field tag indicates the
         anonymous first sub-field.</p>
     <p class="Pp"><b>Giving VALUE as undefined</b> will cause the contents of
         the named subfield to be deleted:</p>
     <p class="Pp"></p>
-    <pre>
-    $head-&gt;mime_attr(&quot;content-type.charset&quot; =&gt; undef);
+    <pre>    $head-&gt;mime_attr(&quot;content-type.charset&quot; =&gt; undef);
     </pre>
     <p class="Pp"><b>Supplying no VALUE argument</b> just returns the
         attribute's value, or undefined if it isn't there:</p>
     <p class="Pp"></p>
-    <pre>
-    $type = $head-&gt;mime_attr(&quot;content-type&quot;);      ### text/html
+    <pre>    $type = $head-&gt;mime_attr(&quot;content-type&quot;);      ### text/html
     $name = $head-&gt;mime_attr(&quot;content-type.name&quot;); ### homepage.html
     </pre>
     <p class="Pp">In all cases, the new/current value is returned.</p>
@@ -432,8 +395,7 @@
         <span class="Li">&quot;7bit&quot;</span> is returned I quote from RFC
         2045 section 6.1:</p>
     <p class="Pp"></p>
-    <pre>
-    This is the default value -- that is, &quot;Content-Transfer-Encoding: 7BIT&quot;
+    <pre>    This is the default value -- that is, &quot;Content-Transfer-Encoding: 7BIT&quot;
     is assumed if the Content-Transfer-Encoding header field is not present.
     </pre>
     <p class="Pp">I do one other form of fixup: &quot;7_bit&quot;,
@@ -452,13 +414,10 @@
       <span class="Li">&quot;text/plain&quot;</span>) is returned. From RFC 2045
       section 5.2:
     <p class="Pp"></p>
-    <pre>
-   Default RFC 822 messages without a MIME Content-Type header are
+    <pre>   Default RFC 822 messages without a MIME Content-Type header are
    taken by this protocol to be plain text in the US-ASCII character
    set, which can be explicitly specified as:
-
       Content-type: text/plain; charset=us-ascii
-
    This default is assumed if no Content-Type header field is specified.
     </pre>
     <p class="Pp">Unless this is a part of a &quot;multipart/digest&quot;, in
@@ -476,8 +435,7 @@
     <p class="Pp">Well, <i>almost</i> exactly... this passage from RFC 2046
         dictates that we remove any trailing spaces:</p>
     <p class="Pp"></p>
-    <pre>
-   If a boundary appears to end with white space, the white space
+    <pre>   If a boundary appears to end with white space, the white space
    must be presumed to have been added by a gateway, and must be deleted.
     </pre>
     <p class="Pp">Returns undef (<b>not</b> the empty string) if either the
@@ -505,11 +463,9 @@
       the word &quot;header&quot; where I would use &quot;field&quot;; e.g., to
       refer to &quot;Subject:&quot;, &quot;Content-type:&quot;, etc.):
     <p class="Pp"></p>
-    <pre>
-    There is also IMHO no requirement [for] MIME::Heads to look
+    <pre>    There is also IMHO no requirement [for] MIME::Heads to look
     like [email] headers; so to speak, the MIME::Head [simply stores]
     the attributes of a complex object, e.g.:
-
         new MIME::Head type =&gt; &quot;text/plain&quot;,
                        charset =&gt; ...,
                        disposition =&gt; ..., ... ;
@@ -520,8 +476,7 @@
     <p class="Pp">In my mind's eye, I see an abstract class, call it
         MIME::Attrs, which does what Achim suggests... so you could say:</p>
     <p class="Pp"></p>
-    <pre>
-     my $attrs = new MIME::Attrs type =&gt; &quot;text/plain&quot;,
+    <pre>     my $attrs = new MIME::Attrs type =&gt; &quot;text/plain&quot;,
                                  charset =&gt; ...,
                                  disposition =&gt; ..., ... ;
     </pre>
@@ -546,8 +501,7 @@
         <span class="Li">&quot;To:&quot;</span>, etc.) will often have multiple
         occurrences; e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-    Received: from gsfc.nasa.gov by eryq.pr.mcs.net  with smtp
+    <pre>    Received: from gsfc.nasa.gov by eryq.pr.mcs.net  with smtp
         (Linux Smail3.1.28.1 #5) id m0tStZ7-0007X4C;
          Thu, 21 Dec 95 16:34 CST
     Received: from rhine.gsfc.nasa.gov by gsfc.nasa.gov

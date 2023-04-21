@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Uncompress::Bunzip2(3pm)</title>
 </head>
@@ -28,15 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
-
+<pre>    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
     my $status = bunzip2 $input =&gt; $output [,OPTS]
         or die &quot;bunzip2 failed: $Bunzip2Error\n&quot;;
-
     my $z = new IO::Uncompress::Bunzip2 $input [OPTS]
         or die &quot;bunzip2 failed: $Bunzip2Error\n&quot;;
-
     $status = $z-&gt;read($buffer)
     $status = $z-&gt;read($buffer, $length)
     $status = $z-&gt;read($buffer, $length, $offset)
@@ -44,7 +41,6 @@
     $char = $z-&gt;getc()
     $char = $z-&gt;ungetc()
     $char = $z-&gt;opened()
-
     $data = $z-&gt;trailingData()
     $status = $z-&gt;nextStream()
     $data = $z-&gt;getHeaderInfo()
@@ -54,11 +50,8 @@
     $z-&gt;fileno()
     $z-&gt;eof()
     $z-&gt;close()
-
     $Bunzip2Error ;
-
     # IO::File mode
-
     &lt;$z&gt;
     read($z, $buffer);
     read($z, $buffer, $length);
@@ -86,9 +79,7 @@
     and/or files. For finer control over the uncompression process, see the
     &quot;OO Interface&quot; section.</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
-
+<pre>    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
     bunzip2 $input_filename_or_reference =&gt; $output_filename_or_reference [,OPTS]
         or die &quot;bunzip2 failed: $Bunzip2Error\n&quot;;
 </pre>
@@ -100,8 +91,9 @@
 <p class="Pp"><span class="Li">&quot;bunzip2&quot;</span> expects at least two
     parameters, <span class="Li">$input_filename_or_reference</span> and
     <span class="Li">$output_filename_or_reference</span>.</p>
-<p class="Pp"><i>The </i><i>$input_filename_or_reference</i><i>
-  parameter</i></p>
+<p class="Pp"><i>The
+    </i><span class="Li"><i>$input_filename_or_reference</i></span><i>
+    parameter</i></p>
 <p class="Pp">The parameter,
     <span class="Li">$input_filename_or_reference</span>, is used to define the
     source of the compressed data.</p>
@@ -139,8 +131,9 @@
 <p class="Pp">If the <span class="Li">$input_filename_or_reference</span>
     parameter is any other type, <span class="Li">&quot;undef&quot;</span> will
     be returned.</p>
-<p class="Pp"><i>The </i><i>$output_filename_or_reference</i><i>
-  parameter</i></p>
+<p class="Pp"><i>The
+    </i><span class="Li"><i>$output_filename_or_reference</i></span><i>
+    parameter</i></p>
 <p class="Pp">The parameter
     <span class="Li">$output_filename_or_reference</span> is used to control the
     destination of the uncompressed data. This parameter can take one of these
@@ -286,11 +279,9 @@
     <span class="Li">&quot;file1.txt.bz2&quot;</span> and write the uncompressed
     data to the file <span class="Li">&quot;file1.txt&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
-
     my $input = &quot;file1.txt.bz2&quot;;
     my $output = &quot;file1.txt&quot;;
     bunzip2 $input =&gt; $output
@@ -300,12 +291,10 @@
     <span class="Li">$input</span>, and write the uncompressed data to a buffer,
     <span class="Li">$buffer</span>.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
     use IO::File ;
-
     my $input = new IO::File &quot;&lt;file1.txt.bz2&quot;
         or die &quot;Cannot open 'file1.txt.bz2': $!\n&quot; ;
     my $buffer ;
@@ -316,22 +305,18 @@
     match &quot;*.txt.bz2&quot; and store the compressed data in the same
     directory</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
-
     bunzip2 '&lt;/my/home/*.txt.bz2&gt;' =&gt; '&lt;/my/home/#1.txt&gt;'
         or die &quot;bunzip2 failed: $Bunzip2Error\n&quot;;
 </pre>
 <p class="Pp">and if you want to compress each file one at a time, this will do
     the trick</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use warnings ;
     use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
-
     for my $input ( glob &quot;/my/home/*.txt.bz2&quot; )
     {
         my $output = $input;
@@ -350,8 +335,7 @@
 <p class="Pp">The format of the constructor for IO::Uncompress::Bunzip2 is shown
     below</p>
 <p class="Pp"></p>
-<pre>
-    my $z = new IO::Uncompress::Bunzip2 $input [OPTS]
+<pre>    my $z = new IO::Uncompress::Bunzip2 $input [OPTS]
         or die &quot;IO::Uncompress::Bunzip2 failed: $Bunzip2Error\n&quot;;
 </pre>
 <p class="Pp">Returns an
@@ -366,8 +350,7 @@
     example, to read a line from a compressed file/buffer you can use either of
     these forms</p>
 <p class="Pp"></p>
-<pre>
-    $line = $z-&gt;getline();
+<pre>    $line = $z-&gt;getline();
     $line = &lt;$z&gt;;
 </pre>
 <p class="Pp">The mandatory parameter <span class="Li">$input</span> is used to
@@ -393,8 +376,7 @@
 <p class="Pp">The option names defined below are case insensitive and can be
     optionally prefixed by a '-'. So all of the following are valid</p>
 <p class="Pp"></p>
-<pre>
-    -AutoClose
+<pre>    -AutoClose
     -autoclose
     AUTOCLOSE
     autoclose
@@ -483,8 +465,7 @@
 <h2 class="Ss" id="read"><a class="permalink" href="#read">read</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $status = $z-&gt;read($buffer)
+<pre>    $status = $z-&gt;read($buffer)
 </pre>
 <p class="Pp">Reads a block of compressed data (the size of the compressed block
     is determined by the <span class="Li">&quot;Buffer&quot;</span> option in
@@ -502,10 +483,8 @@
 <h2 class="Ss" id="read~2"><a class="permalink" href="#read~2">read</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $status = $z-&gt;read($buffer, $length)
+<pre>    $status = $z-&gt;read($buffer, $length)
     $status = $z-&gt;read($buffer, $length, $offset)
-
     $status = read($z, $buffer, $length)
     $status = read($z, $buffer, $length, $offset)
 </pre>
@@ -524,8 +503,7 @@
 <h2 class="Ss" id="getline"><a class="permalink" href="#getline">getline</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $line = $z-&gt;getline()
+<pre>    $line = $z-&gt;getline()
     $line = &lt;$z&gt;
 </pre>
 <p class="Pp">Reads a single line.</p>
@@ -540,8 +518,7 @@
 <h2 class="Ss" id="getc"><a class="permalink" href="#getc">getc</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $char = $z-&gt;getc()
+<pre>    $char = $z-&gt;getc()
 </pre>
 <p class="Pp">Read a single character.</p>
 </section>
@@ -549,16 +526,14 @@
 <h2 class="Ss" id="ungetc"><a class="permalink" href="#ungetc">ungetc</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $char = $z-&gt;ungetc($string)
+<pre>    $char = $z-&gt;ungetc($string)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="getHeaderInfo"><a class="permalink" href="#getHeaderInfo">getHeaderInfo</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $hdr  = $z-&gt;getHeaderInfo();
+<pre>    $hdr  = $z-&gt;getHeaderInfo();
     @hdrs = $z-&gt;getHeaderInfo();
 </pre>
 <p class="Pp">This method returns either a hash reference (in scalar context) or
@@ -569,8 +544,7 @@
 <h2 class="Ss" id="tell"><a class="permalink" href="#tell">tell</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $z-&gt;tell()
+<pre>    $z-&gt;tell()
     tell $z
 </pre>
 <p class="Pp">Returns the uncompressed file offset.</p>
@@ -579,8 +553,7 @@
 <h2 class="Ss" id="eof"><a class="permalink" href="#eof">eof</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $z-&gt;eof();
+<pre>    $z-&gt;eof();
     eof($z);
 </pre>
 <p class="Pp">Returns true if the end of the compressed input stream has been
@@ -588,8 +561,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="seek"><a class="permalink" href="#seek">seek</a></h2>
-<pre>
-    $z-&gt;seek($position, $whence);
+<pre>    $z-&gt;seek($position, $whence);
     seek($z, $position, $whence);
 </pre>
 <p class="Pp">Provides a sub-set of the <span class="Li">&quot;seek&quot;</span>
@@ -611,24 +583,21 @@
 <h2 class="Ss" id="binmode"><a class="permalink" href="#binmode">binmode</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    $z-&gt;binmode
+<pre>    $z-&gt;binmode
     binmode $z ;
 </pre>
 <p class="Pp">This is a noop provided for completeness.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="opened"><a class="permalink" href="#opened">opened</a></h2>
-<pre>
-    $z-&gt;opened()
+<pre>    $z-&gt;opened()
 </pre>
 <p class="Pp">Returns true if the object currently refers to a opened
     file/buffer.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="autoflush"><a class="permalink" href="#autoflush">autoflush</a></h2>
-<pre>
-    my $prev = $z-&gt;autoflush()
+<pre>    my $prev = $z-&gt;autoflush()
     my $prev = $z-&gt;autoflush(EXPR)
 </pre>
 <p class="Pp">If the <span class="Li">$z</span> object is associated with a file
@@ -644,8 +613,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="input_line_number"><a class="permalink" href="#input_line_number">input_line_number</a></h2>
-<pre>
-    $z-&gt;input_line_number()
+<pre>    $z-&gt;input_line_number()
     $z-&gt;input_line_number(EXPR)
 </pre>
 <p class="Pp">Returns the current uncompressed line number. If
@@ -657,8 +625,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="fileno"><a class="permalink" href="#fileno">fileno</a></h2>
-<pre>
-    $z-&gt;fileno()
+<pre>    $z-&gt;fileno()
     fileno($z)
 </pre>
 <p class="Pp">If the <span class="Li">$z</span> object is associated with a file
@@ -673,8 +640,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="close"><a class="permalink" href="#close">close</a></h2>
-<pre>
-    $z-&gt;close() ;
+<pre>    $z-&gt;close() ;
     close $z ;
 </pre>
 <p class="Pp">Closes the output file/buffer.</p>
@@ -698,8 +664,7 @@
 <h2 class="Ss" id="nextStream"><a class="permalink" href="#nextStream">nextStream</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    my $status = $z-&gt;nextStream();
+<pre>    my $status = $z-&gt;nextStream();
 </pre>
 <p class="Pp">Skips to the next compressed data stream in the input file/buffer.
     If a new compressed data stream is found, the eof marker will be cleared and
@@ -711,8 +676,7 @@
 <h2 class="Ss" id="trailingData"><a class="permalink" href="#trailingData">trailingData</a></h2>
 <p class="Pp">Usage is</p>
 <p class="Pp"></p>
-<pre>
-    my $data = $z-&gt;trailingData();
+<pre>    my $data = $z-&gt;trailingData();
 </pre>
 <p class="Pp">Returns the data, if any, that is present immediately after the
     compressed data stream once uncompression is complete. It only makes sense
@@ -748,8 +712,7 @@
   <dd>Imports <span class="Li">&quot;bunzip2&quot;</span> and
       <span class="Li">$Bunzip2Error</span>. Same as doing this
     <p class="Pp"></p>
-    <pre>
-    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
+    <pre>    use IO::Uncompress::Bunzip2 qw(bunzip2 $Bunzip2Error) ;
     </pre>
   </dd>
 </dl>

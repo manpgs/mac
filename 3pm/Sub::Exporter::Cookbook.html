@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sub::Exporter::Cookbook(3)</title>
 </head>
@@ -52,9 +53,7 @@
     Sub::Exporter::Util, a method can be exported with the invocant built
   in.</p>
 <p class="Pp"></p>
-<pre>
-  package Object::Strenuous;
-
+<pre>  package Object::Strenuous;
   use Sub::Exporter::Util 'curry_method';
   use Sub::Exporter -setup =&gt; {
     exports =&gt; [ objection =&gt; curry_method('new') ],
@@ -62,20 +61,17 @@
 </pre>
 <p class="Pp">With this configuration, the importing code may contain:</p>
 <p class="Pp"></p>
-<pre>
-  my $obj = objection(&quot;irrelevant&quot;);
+<pre>  my $obj = objection(&quot;irrelevant&quot;);
 </pre>
 <p class="Pp">...and this will be equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  my $obj = Object::Strenuous-&gt;new(&quot;irrelevant&quot;);
+<pre>  my $obj = Object::Strenuous-&gt;new(&quot;irrelevant&quot;);
 </pre>
 <p class="Pp">The built-in invocant is determined by the invocant for the
     <span class="Li">&quot;import&quot;</span> method. That means that if we
     were to subclass Object::Strenuous as follows:</p>
 <p class="Pp"></p>
-<pre>
-  package Object::Strenuous::Repeated;
+<pre>  package Object::Strenuous::Repeated;
   @ISA = 'Object::Strenuous';
 </pre>
 <p class="Pp">...then importing <span class="Li">&quot;objection&quot;</span>
@@ -83,8 +79,7 @@
 <p class="Pp">Finally, since the invocant can be an object, you can write
     something like this:</p>
 <p class="Pp"></p>
-<pre>
-  package Cypher;
+<pre>  package Cypher;
   use Sub::Exporter::Util 'curry_method';
   use Sub::Exporter -setup =&gt; {
     exports =&gt; [ encypher =&gt; curry_method ],
@@ -94,8 +89,7 @@
     <span class="Li">&quot;import&quot;</span> will be called on an instantiated
     Cypher object:</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN {
+<pre>  BEGIN {
     my $cypher = Cypher-&gt;new( ... );
     $cypher-&gt;import('encypher');
   }
@@ -112,15 +106,11 @@
     be called as methods on the importing package or its objects.</p>
 <p class="Pp">Here's a trivial (and naive) example:</p>
 <p class="Pp"></p>
-<pre>
-  package Mixin::DumpObj;
-
+<pre>  package Mixin::DumpObj;
   use Data::Dumper;
-
   use Sub::Exporter -setup =&gt; {
     exports =&gt; [ qw(dump) ]
   };
-
   sub dump {
     my ($self) = @_;
     return Dumper($self);
@@ -130,20 +120,17 @@
     <span class="Li">&quot;dump&quot;</span> to be used as a method, called like
     so:</p>
 <p class="Pp"></p>
-<pre>
-  $object-&gt;dump;
+<pre>  $object-&gt;dump;
 </pre>
 <p class="Pp">By assuming that the importing class will provide a certain
     interface, a method-exporting module can be used as a simple plugin:</p>
 <p class="Pp"></p>
-<pre>
-  package Number::Plugin::Upto;
+<pre>  package Number::Plugin::Upto;
   use Sub::Exporter -setup =&gt; {
     into    =&gt; 'Number',
     exports =&gt; [ qw(upto) ],
     groups  =&gt; [ default =&gt; [ qw(upto) ] ],
   };
-
   sub upto {
     my ($self) = @_;
     return 1 .. abs($self-&gt;as_integer);
@@ -157,8 +144,7 @@
     one it expects. To import it to a different destination, one can just
   write:</p>
 <p class="Pp"></p>
-<pre>
-  use Number::Plugin::Upto { into =&gt; 'Quantity' };
+<pre>  use Number::Plugin::Upto { into =&gt; 'Quantity' };
 </pre>
 </section>
 <section class="Ss">
@@ -171,25 +157,18 @@
     well-structured package.</p>
 <p class="Pp">Here is a very small example:</p>
 <p class="Pp"></p>
-<pre>
-  package Data::Analyzer;
-
+<pre>  package Data::Analyzer;
   use Sub::Exporter -setup =&gt; {
     exports =&gt; [ analyze =&gt; \'_generate_analyzer' ],
   };
-
   sub _generate_analyzer {
     my ($mixin, $name, $arg, $col) = @_;
-
     return sub {
       my ($self) = @_;
-
       my $values = [ $self-&gt;values ];
-
       my $analyzer = $mixin-&gt;new($values);
       $analyzer-&gt;perform_analysis;
       $analyzer-&gt;aggregate_results;
-
       return $analyzer-&gt;summary;
     };
   }
@@ -213,8 +192,7 @@
     easy to export constants by using one of its sister modules,
     Package::Generator.</p>
 <p class="Pp"></p>
-<pre>
-  package Important::Constants;
+<pre>  package Important::Constants;
  
   use Sub::Exporter -setup =&gt; {
     collectors =&gt; [ constants =&gt; \'_set_constants' ],
@@ -231,14 +209,12 @@
         FACTORS         =&gt; [ 6, 9 ],
       ],
     );
-
     return 1;
   }
 </pre>
 <p class="Pp">Then, someone can write:</p>
 <p class="Pp"></p>
-<pre>
-  use Important::Constants 'constants';
+<pre>  use Important::Constants 'constants';
   
   print &quot;The factors @FACTORS produce $MEANING_OF_LIFE in $ONE_TRUE_BASE.&quot;;
 </pre>
@@ -252,50 +228,40 @@
 <p class="Pp">It's trivial to make a collector that changes the inheritance of
     an importing package:</p>
 <p class="Pp"></p>
-<pre>
-  use Sub::Exporter -setup =&gt; {
+<pre>  use Sub::Exporter -setup =&gt; {
     collectors =&gt; { -base =&gt; \'_make_base' },
   };
-
   sub _make_base {
     my ($class, $value, $data) = @_;
-
     my $target = $data-&gt;{into};
     push @{&quot;$target\::ISA&quot;}, $class;
   }
 </pre>
 <p class="Pp">Then, the user of your class can write:</p>
 <p class="Pp"></p>
-<pre>
-  use Some::Class -base;
+<pre>  use Some::Class -base;
 </pre>
 <p class="Pp">and become a subclass. This can be quite useful in building, for
     example, a module that helps build plugins. We may want a few utilities
     imported, but we also want to inherit behavior from some base plugin
   class;</p>
 <p class="Pp"></p>
-<pre>
-  package Framework::Util;
-
+<pre>  package Framework::Util;
   use Sub::Exporter -setup =&gt; {
     exports    =&gt; [ qw(log global_config) ],
     groups     =&gt; [ _plugin =&gt; [ qw(log global_config) ]
     collectors =&gt; { '-plugin' =&gt; \'_become_plugin' },
   };
-
   sub _become_plugin {
     my ($class, $value, $data) = @_;
-
     my $target = $data-&gt;{into};
     push @{&quot;$target\::ISA&quot;}, $class-&gt;plugin_base_class;
-
     push @{ $data-&gt;{import_args} }, '-_plugin';
   }
 </pre>
 <p class="Pp">Now, you can write a plugin like this:</p>
 <p class="Pp"></p>
-<pre>
-  package Framework::Plugin::AirFreshener;
+<pre>  package Framework::Plugin::AirFreshener;
   use Framework::Util -plugin;
 </pre>
 </section>
@@ -305,13 +271,10 @@
 <p class="Pp">You probably shouldn't actually do this in production. It's
     offered more as a demonstration than a suggestion.</p>
 <p class="Pp"></p>
-<pre>
- sub exporter_upgrade {
+<pre> sub exporter_upgrade {
    my ($pkg) = @_;
    my $new_pkg = &quot;$pkg\::UsingSubExporter&quot;;
-
    return $new_pkg if $new_pkg-&gt;isa($pkg);
-
    Sub::Exporter::setup_exporter({
      as      =&gt; 'import',
      into    =&gt; $new_pkg,
@@ -321,7 +284,6 @@
        default =&gt; [ @{&quot;$pkg\::EXPORTS&quot;} ],
      },
    });
-
    @{&quot;$new_pkg\::ISA&quot;} = $pkg;
    return $new_pkg;
  }
@@ -334,8 +296,7 @@
     package with the name <span class="Li">&quot;foo&quot;</span> by
   writing:</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN {
+<pre>  BEGIN {
     require Toolkit;
     exporter_upgrade('Toolkit')-&gt;import(exported_sub =&gt; { -as =&gt; 'foo' })
   }
@@ -343,8 +304,7 @@
 <p class="Pp">If you're feeling particularly naughty, this routine could have
     been declared in the UNIVERSAL package, meaning you could write:</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN {
+<pre>  BEGIN {
     require Toolkit;
     Toolkit-&gt;exporter_upgrade-&gt;import(exported_sub =&gt; { -as =&gt; 'foo' })
   }

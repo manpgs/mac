@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Module::Build::Cookbook(3)</title>
 </head>
@@ -41,8 +42,7 @@
   modules that use Module::Build</a></h2>
 <p class="Pp">In most cases, you can just issue the following commands:</p>
 <p class="Pp"></p>
-<pre>
-  perl Build.PL
+<pre>  perl Build.PL
   ./Build
   ./Build test
   ./Build install
@@ -55,8 +55,7 @@
     installed, you can install to one particular perl's library directories like
     so:</p>
 <p class="Pp"></p>
-<pre>
-  /usr/bin/perl5.8.1 Build.PL
+<pre>  /usr/bin/perl5.8.1 Build.PL
   ./Build
   ./Build test
   ./Build install
@@ -64,8 +63,7 @@
 <p class="Pp">If you're on Windows where the current directory is always
     searched first for scripts, you'll probably do something like this:</p>
 <p class="Pp"></p>
-<pre>
-  perl Build.PL
+<pre>  perl Build.PL
   Build
   Build test
   Build install
@@ -100,16 +98,14 @@
     arguments for the <span class="Li">&quot;--config&quot;</span> parameter on
     the command line:</p>
 <p class="Pp"></p>
-<pre>
-  perl Build.PL --config cc=gcc --config ld=gcc
+<pre>  perl Build.PL --config cc=gcc --config ld=gcc
 </pre>
 <p class="Pp">Inside the <span class="Li">&quot;Build.PL&quot;</span> script the
     same thing can be accomplished by passing values for the
     <span class="Li">&quot;config&quot;</span> parameter to
     <span class="Li">&quot;new()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
- my $build = Module::Build-&gt;new
+<pre> my $build = Module::Build-&gt;new
    (
     ...
     config =&gt; { cc =&gt; 'gcc', ld =&gt; 'gcc' },
@@ -119,8 +115,7 @@
 <p class="Pp">In custom build code, the same thing can be accomplished by
     calling the &quot;config&quot; in Module::Build method:</p>
 <p class="Pp"></p>
-<pre>
- $build-&gt;config( cc =&gt; 'gcc' );     # Set
+<pre> $build-&gt;config( cc =&gt; 'gcc' );     # Set
  $build-&gt;config( ld =&gt; 'gcc' );     # Set
  ...
  my $linker = $build-&gt;config('ld'); # Get
@@ -136,8 +131,7 @@
     then invoke its <span class="Li">&quot;dispatch()&quot;</span> method to run
     various actions.</p>
 <p class="Pp"></p>
-<pre>
-  my $build = Module::Build-&gt;new
+<pre>  my $build = Module::Build-&gt;new
     (
      module_name =&gt; 'Foo::Bar',
      license     =&gt; 'perl',
@@ -164,8 +158,7 @@
     <span class="Li">&quot;destdir&quot;</span> parameter to the
     <span class="Li">&quot;install&quot;</span> action:</p>
 <p class="Pp"></p>
-<pre>
-  ./Build install --destdir /tmp/my-package-1.003
+<pre>  ./Build install --destdir /tmp/my-package-1.003
 </pre>
 <p class="Pp">This essentially just prepends all the installation paths with the
     <i>/tmp/my-package-1.003</i> directory.</p>
@@ -178,8 +171,7 @@
     <span class="Li">&quot;install_base&quot;</span> or
     <span class="Li">&quot;prefix&quot;</span> parameters:</p>
 <p class="Pp"></p>
-<pre>
-  ./Build install --install_base /foo/bar
+<pre>  ./Build install --install_base /foo/bar
 </pre>
 <p class="Pp">See &quot;INSTALL PATHS&quot; in Module::Build for a much more
     complete discussion of how installation paths are determined.</p>
@@ -200,8 +192,7 @@
     <span class="Li">&quot;ExtUtils::MakeMaker&quot;</span> and
     <span class="Li">&quot;Module::Build&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    MakeMaker             Module::Build
+<pre>    MakeMaker             Module::Build
     PREFIX=...            --prefix ...
     INSTALL_BASE=...      --install_base ...
     DESTDIR=...           --destdir ...
@@ -215,21 +206,19 @@
 <p class="Pp">For example, if you are currently installing
     <span class="Li">&quot;MakeMaker&quot;</span> modules with this command:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL PREFIX=~
+<pre>    perl Makefile.PL PREFIX=~
     make test
     make install UNINST=1
 </pre>
 <p class="Pp">You can install into the same location with Module::Build using
     this:</p>
 <p class="Pp"></p>
-<pre>
-    perl Build.PL --prefix ~
+<pre>    perl Build.PL --prefix ~
     ./Build test
     ./Build install --uninst 1
 </pre>
-<p class="Pp"><i></i><i>&quot;prefix&quot;</i><i> vs
-    </i><i>&quot;install_base&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;prefix&quot;</i></span><i> vs
+    </i><span class="Li"><i>&quot;install_base&quot;</i></span><i></i></p>
 <p class="Pp">The behavior of <span class="Li">&quot;prefix&quot;</span> is
     complicated and depends on how your Perl is configured. The resulting
     installation locations will vary from machine to machine and even different
@@ -256,20 +245,17 @@
     a single test, which enables you to track down errors more quickly. Use the
     following format:</p>
 <p class="Pp"></p>
-<pre>
-  ./Build test --test_files t/mytest.t
+<pre>  ./Build test --test_files t/mytest.t
 </pre>
 <p class="Pp">In addition, you may want to run the test in verbose mode to get
     more informative output:</p>
 <p class="Pp"></p>
-<pre>
-  ./Build test --test_files t/mytest.t --verbose 1
+<pre>  ./Build test --test_files t/mytest.t --verbose 1
 </pre>
 <p class="Pp">I run this so frequently that I define the following shell
   alias:</p>
 <p class="Pp"></p>
-<pre>
-  alias t './Build test --verbose 1 --test_files'
+<pre>  alias t './Build test --verbose 1 --test_files'
 </pre>
 <p class="Pp">So then I can just execute <span class="Li">&quot;t
     t/mytest.t&quot;</span> to run a single test.</p>
@@ -306,8 +292,7 @@
     take when building a distribution. To change the build order, change the
     order of the entries in that property:</p>
 <p class="Pp"></p>
-<pre>
-  # Process pod files first
+<pre>  # Process pod files first
   my @e = @{$build-&gt;build_elements};
   my ($i) = grep {$e[$_] eq 'pod'} 0..$#e;
   unshift @e, splice @e, $i, 1;
@@ -315,8 +300,7 @@
 <p class="Pp">Currently, <span class="Li">&quot;build_elements&quot;</span> has
     the following default value:</p>
 <p class="Pp"></p>
-<pre>
-  [qw( PL support pm xs pod script )]
+<pre>  [qw( PL support pm xs pod script )]
 </pre>
 <p class="Pp">Do take care when altering this property, since there may be
     non-obvious (and non-documented!) ordering dependencies in the
@@ -336,8 +320,7 @@
     <span class="Li">&quot;Build.PL&quot;</span> file demonstrates how to
     accomplish this:</p>
 <p class="Pp"></p>
-<pre>
-  use Module::Build;
+<pre>  use Module::Build;
   my $build = Module::Build-&gt;new
     (
      module_name =&gt; 'Foo::Bar',
@@ -355,8 +338,7 @@
     can explicitly say where they are, just as you'd do with <i>.pm</i> or
     <i>.pod</i> files:</p>
 <p class="Pp"></p>
-<pre>
-  use Module::Build;
+<pre>  use Module::Build;
   my $build = new Module::Build
     (
      module_name =&gt; 'Foo::Bar',
@@ -372,8 +354,7 @@
     and create a special method to process them, named
     <span class="Li">&quot;process_${kind}_files()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  use Module::Build;
+<pre>  use Module::Build;
   my $class = Module::Build-&gt;subclass(code =&gt; &lt;&lt;'EOF');
     sub process_dat_files {
       my $self = shift;
@@ -412,8 +393,7 @@
     this, use the <span class="Li">&quot;install_path&quot;</span> parameter to
     the <span class="Li">&quot;new()&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-  my $build = Module::Build-&gt;new
+<pre>  my $build = Module::Build-&gt;new
     (
      ...other stuff here...
      install_path =&gt; { conf =&gt; $installation_path }
@@ -422,13 +402,11 @@
 <p class="Pp">Or you can call the
     <span class="Li">&quot;install_path()&quot;</span> method later:</p>
 <p class="Pp"></p>
-<pre>
-  $build-&gt;install_path(conf =&gt; $installation_path);
+<pre>  $build-&gt;install_path(conf =&gt; $installation_path);
 </pre>
 <p class="Pp">The user may also specify the path on the command line:</p>
 <p class="Pp"></p>
-<pre>
-  perl Build.PL --install_path conf=/foo/path/etc
+<pre>  perl Build.PL --install_path conf=/foo/path/etc
 </pre>
 <p class="Pp">The important part, though, is that <i>somehow</i> the install
     path needs to be set, or else nothing in the <i>blib/conf/</i> directory
@@ -484,20 +462,17 @@
     an example of how it would work for the
     <span class="Li">&quot;install&quot;</span> action:</p>
 <p class="Pp"></p>
-<pre>
-  # Build.PL
+<pre>  # Build.PL
   use Module::Build;
   my $class = Module::Build-&gt;subclass(
       class =&gt; &quot;Module::Build::Custom&quot;,
       code =&gt; &lt;&lt;'SUBCLASS' );
-
   sub ACTION_install {
       my $self = shift;
       # YOUR CODE HERE
       $self-&gt;SUPER::ACTION_install;
   }
   SUBCLASS
-
   $class-&gt;new(
       module_name =&gt; 'Your::Module',
       # rest of the usual Module::Build parameters
@@ -515,16 +490,13 @@
     <span class="Li">&quot;./Build</span> <span class="Li">commit&quot;</span>
     to test your code and commit it to Subversion.</p>
 <p class="Pp"></p>
-<pre>
-  # Build.PL
+<pre>  # Build.PL
   use Module::Build;
   my $class = Module::Build-&gt;subclass(
       class =&gt; &quot;Module::Build::Custom&quot;,
       code =&gt; &lt;&lt;'SUBCLASS' );
-
   sub ACTION_commit {
       my $self = shift;
-
       $self-&gt;depends_on(&quot;test&quot;);
       $self-&gt;do_system(qw(svn commit));
   }
@@ -549,8 +521,7 @@
     <i>Your-Project/inc/Module-Build</i>. CPAN will not index anything in the
     <i>inc</i> directory so this copy will not show up in CPAN searches.</p>
 <p class="Pp"></p>
-<pre>
-    cd Module-Build
+<pre>    cd Module-Build
     perl Build.PL --install_base /path/to/Your-Project/inc/Module-Build
     ./Build test
     ./Build install
@@ -559,22 +530,16 @@
     <i>Your-Project/inc/Module-Build/lib/perl5</i>.</p>
 <p class="Pp">Next, add this to the top of your <i>Build.PL</i>.</p>
 <p class="Pp"></p>
-<pre>
-    my $Bundled_MB = 0.30;  # or whatever version it was.
-
+<pre>    my $Bundled_MB = 0.30;  # or whatever version it was.
     # Find out what version of Module::Build is installed or fail quietly.
     # This should be cross-platform.
     my $Installed_MB =
         `$^X -e &quot;eval q{require Module::Build; print Module::Build-&gt;VERSION} or exit 1&quot;`;
-
     # some operating systems put a newline at the end of every print.
     chomp $Installed_MB;
-
     $Installed_MB = 0 if $?;
-
     # Use our bundled copy of Module::Build if it's newer than the installed.
     unshift @INC, &quot;inc/Module-Build/lib/perl5&quot; if $Bundled_MB &gt; $Installed_MB;
-
     require Module::Build;
 </pre>
 <p class="Pp">And write the rest of your <i>Build.PL</i> normally. Module::Build
@@ -605,7 +570,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

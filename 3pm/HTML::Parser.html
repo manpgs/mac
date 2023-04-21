@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Parser(3)</title>
 </head>
@@ -28,22 +29,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use HTML::Parser ();
-
+<pre> use HTML::Parser ();
  # Create parser object
  $p = HTML::Parser-&gt;new( api_version =&gt; 3,
                          start_h =&gt; [\&amp;start, &quot;tagname, attr&quot;],
                          end_h   =&gt; [\&amp;end,   &quot;tagname&quot;],
                          marked_sections =&gt; 1,
                        );
-
  # Parse document text chunk by chunk
  $p-&gt;parse($chunk1);
  $p-&gt;parse($chunk2);
  #...
  $p-&gt;eof;                 # signal end of document
-
  # Parse directly from file
  $p-&gt;parse_file(&quot;foo.html&quot;);
  # or
@@ -100,24 +97,21 @@
         mode.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
- $p = HTML::Parser-&gt;new(api_version =&gt; 3,
+    <pre> $p = HTML::Parser-&gt;new(api_version =&gt; 3,
                         text_h =&gt; [ sub {...}, &quot;dtext&quot; ]);
     </pre>
     <p class="Pp">This creates a new parser object with a text event handler
         subroutine that receives the original text with general entities
         decoded.</p>
     <p class="Pp"></p>
-    <pre>
- $p = HTML::Parser-&gt;new(api_version =&gt; 3,
+    <pre> $p = HTML::Parser-&gt;new(api_version =&gt; 3,
                         start_h =&gt; [ 'my_start', &quot;self,tokens&quot; ]);
     </pre>
     <p class="Pp">This creates a new parser object with a start event handler
         method that receives the <span class="Li">$p</span> and the tokens
         array.</p>
     <p class="Pp"></p>
-    <pre>
- $p = HTML::Parser-&gt;new(api_version =&gt; 3,
+    <pre> $p = HTML::Parser-&gt;new(api_version =&gt; 3,
                         handlers =&gt; { text =&gt; [\@array, &quot;event,text&quot;],
                                       comment =&gt; [\@array, &quot;event,text&quot;],
                                     });
@@ -150,8 +144,7 @@
         <span class="Li">$p</span>-&gt;eof.</p>
     <p class="Pp">The effect of this is the same as:</p>
     <p class="Pp"></p>
-    <pre>
- while (1) {
+    <pre> while (1) {
     my $chunk = &amp;$code_ref();
     if (!defined($chunk) || !length($chunk)) {
         $p-&gt;eof;
@@ -283,8 +276,7 @@
     <p class="Pp">Enabling of 'strict_comment' also disables recognizing these
         forms as comments:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;/ comment&gt;
+    <pre>  &lt;/ comment&gt;
   &lt;! comment&gt;
     </pre>
   </dd>
@@ -304,8 +296,7 @@
       the behaviour of most popular browsers and allows us to parse some broken
       tags with invalid attribute values like:
     <p class="Pp"></p>
-    <pre>
-   &lt;IMG SRC=newprevlstGr.gif ALT=[PREV LIST] BORDER=0&gt;
+    <pre>   &lt;IMG SRC=newprevlstGr.gif ALT=[PREV LIST] BORDER=0&gt;
     </pre>
     <p class="Pp">By default, &quot;LIST]&quot; is parsed as a boolean
         attribute, not as part of the ALT value as was clearly intended. This is
@@ -347,8 +338,7 @@
         represented by the entity &quot;&amp;hearts;&quot; or
         &quot;&amp;#x2665&quot;. If we feed the parser:</p>
     <p class="Pp"></p>
-    <pre>
-  $p-&gt;parse(&quot;\xE2\x99\xA5&amp;hearts;&quot;);
+    <pre>  $p-&gt;parse(&quot;\xE2\x99\xA5&amp;hearts;&quot;);
     </pre>
     <p class="Pp">then <span class="Li">&quot;dtext&quot;</span> will be
         reported as &quot;\xE2\x99\xA5\x{2665}&quot; without
@@ -423,30 +413,26 @@
         will be raised if it tries.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
-    $p-&gt;handler(start =&gt;  &quot;start&quot;, 'self, attr, attrseq, text' );
+    <pre>    $p-&gt;handler(start =&gt;  &quot;start&quot;, 'self, attr, attrseq, text' );
     </pre>
     <p class="Pp">This causes the &quot;start&quot; method of object
         <span class="Li">$p</span> to be called for 'start' events. The callback
         signature is <span class="Li">$p</span>-&gt;start(\%attr, \@attr_seq,
         <span class="Li">$text</span>).</p>
     <p class="Pp"></p>
-    <pre>
-    $p-&gt;handler(start =&gt;  \&amp;start, 'attr, attrseq, text' );
+    <pre>    $p-&gt;handler(start =&gt;  \&amp;start, 'attr, attrseq, text' );
     </pre>
     <p class="Pp">This causes subroutine <b>start()</b> to be called for 'start'
         events. The callback signature is start(\%attr, \@attr_seq,
         <span class="Li">$text</span>).</p>
     <p class="Pp"></p>
-    <pre>
-    $p-&gt;handler(start =&gt;  \@accum, '&quot;S&quot;, attr, attrseq, text' );
+    <pre>    $p-&gt;handler(start =&gt;  \@accum, '&quot;S&quot;, attr, attrseq, text' );
     </pre>
     <p class="Pp">This causes 'start' event information to be saved in
         <span class="Li">@accum</span>. The array elements will be ['S', \%attr,
         \@attr_seq, <span class="Li">$text</span>].</p>
     <p class="Pp"></p>
-    <pre>
-   $p-&gt;handler(start =&gt; &quot;&quot;);
+    <pre>   $p-&gt;handler(start =&gt; &quot;&quot;);
     </pre>
     <p class="Pp">This causes 'start' events to be ignored. It also suppresses
         invocations of any default handler for start events. It is in most cases
@@ -455,8 +441,7 @@
         in that <span class="Li">&quot;skipped_text&quot;</span> is not reset by
         it.</p>
     <p class="Pp"></p>
-    <pre>
-   $p-&gt;handler(start =&gt; undef);
+    <pre>   $p-&gt;handler(start =&gt; undef);
     </pre>
     <p class="Pp">This causes no handler to be associated with start events. If
         there is a default handler it will be invoked.</p>
@@ -474,8 +459,7 @@
       would be reported in between are suppressed. The ignored elements can
       contain nested occurrences of itself. Example:
     <p class="Pp"></p>
-    <pre>
-   $p-&gt;ignore_elements(qw(script style));
+    <pre>   $p-&gt;ignore_elements(qw(script style));
     </pre>
     <p class="Pp">The <span class="Li">&quot;script&quot;</span> and
         <span class="Li">&quot;style&quot;</span> tags will always nest properly
@@ -506,8 +490,7 @@
     <span class="Li">&quot;report_tags&quot;</span>.</p>
 <p class="Pp">Examples:</p>
 <p class="Pp"></p>
-<pre>
-   $p-&gt;ignore_tags(qw(style));
+<pre>   $p-&gt;ignore_tags(qw(style));
    $p-&gt;report_tags(qw(script style));
 </pre>
 <p class="Pp">results in only <span class="Li">&quot;script&quot;</span> events
@@ -540,8 +523,7 @@
       the attributes is kept. The parameters passed will be the same as the
       <span class="Li">@attr</span> calculated here:
     <p class="Pp"></p>
-    <pre>
-   @attr = map { $_ =&gt; $attr-&gt;{$_} } @$attrseq;
+    <pre>   @attr = map { $_ =&gt; $attr-&gt;{$_} } @$attrseq;
     </pre>
     <p class="Pp">assuming <span class="Li">$attr</span> and
         <span class="Li">$attrseq</span> here are the hash and array passed as
@@ -736,8 +718,7 @@
     should be flattened. This only makes a difference if an array reference is
     used as the handler target. Consider this example:</p>
 <p class="Pp"></p>
-<pre>
-   $p-&gt;handler(text =&gt; [], 'text');
+<pre>   $p-&gt;handler(text =&gt; [], 'text');
    $p-&gt;handler(text =&gt; [], '@{text}']);
 </pre>
 <p class="Pp">With two text events; <span class="Li">&quot;foo&quot;</span>,
@@ -753,8 +734,7 @@
   <dd>This event is triggered when a markup comment is recognized.
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;!-- This is a comment -- -- So is this --&gt;
+    <pre>  &lt;!-- This is a comment -- -- So is this --&gt;
     </pre>
   </dd>
   <dt>&quot;declaration&quot;</dt>
@@ -763,8 +743,7 @@
         likely to find is &lt;!DOCTYPE ...&gt;.</p>
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot;
+    <pre>  &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot;
       &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
     </pre>
     <p class="Pp">DTDs inside &lt;!DOCTYPE ...&gt; will confuse
@@ -778,8 +757,7 @@
   <dd>This event is triggered when an end tag is recognized.
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;/A&gt;
+    <pre>  &lt;/A&gt;
     </pre>
   </dd>
   <dt>&quot;end_document&quot;</dt>
@@ -793,8 +771,7 @@
         and application dependent.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;? HTML processing instructions &gt;
+    <pre>  &lt;? HTML processing instructions &gt;
   &lt;? XML processing instructions ?&gt;
     </pre>
   </dd>
@@ -802,8 +779,7 @@
   <dd>This event is triggered when a start tag is recognized.
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;A HREF=&quot;http://www.perl.com/&quot;&gt;
+    <pre>  &lt;A HREF=&quot;http://www.perl.com/&quot;&gt;
     </pre>
   </dd>
   <dt>&quot;start_document&quot;</dt>
@@ -841,8 +817,7 @@
     better is to open the file with the UTF-8 layer so that it is decoded
     properly:</p>
 <p class="Pp"></p>
-<pre>
-   open(my $fh, &quot;&lt;:utf8&quot;, &quot;index.html&quot;) || die &quot;...: $!&quot;;
+<pre>   open(my $fh, &quot;&lt;:utf8&quot;, &quot;index.html&quot;) || die &quot;...: $!&quot;;
    $p-&gt;parse_file($fh);
 </pre>
 <p class="Pp">If the file contains text encoded in a charset besides ASCII,
@@ -857,8 +832,7 @@
     that is compatible with the old HTML::Parser version 2 callback methods.</p>
 <p class="Pp">This is equivalent to the following method calls:</p>
 <p class="Pp"></p>
-<pre>
-   $p-&gt;handler(start   =&gt; &quot;start&quot;,   &quot;self, tagname, attr, attrseq, text&quot;);
+<pre>   $p-&gt;handler(start   =&gt; &quot;start&quot;,   &quot;self, tagname, attr, attrseq, text&quot;);
    $p-&gt;handler(end     =&gt; &quot;end&quot;,     &quot;self, tagname, text&quot;);
    $p-&gt;handler(text    =&gt; &quot;text&quot;,    &quot;self, text, is_cdata&quot;);
    $p-&gt;handler(process =&gt; &quot;process&quot;, &quot;self, token0, text&quot;);
@@ -891,16 +865,14 @@
     from an HTML document. We achieve this by setting up a comment handler that
     does nothing and a default handler that will print out anything else:</p>
 <p class="Pp"></p>
-<pre>
-  use HTML::Parser;
+<pre>  use HTML::Parser;
   HTML::Parser-&gt;new(default_h =&gt; [sub { print shift }, 'text'],
                     comment_h =&gt; [&quot;&quot;],
                    )-&gt;parse_file(shift || die) || die $!;
 </pre>
 <p class="Pp">An alternative implementation is:</p>
 <p class="Pp"></p>
-<pre>
-  use HTML::Parser;
+<pre>  use HTML::Parser;
   HTML::Parser-&gt;new(end_document_h =&gt; [sub { print shift },
                                        'skipped_text'],
                     comment_h      =&gt; [&quot;&quot;],
@@ -914,9 +886,7 @@
     that prints any text found and an end handler that will terminate parsing as
     soon as the title end tag is seen:</p>
 <p class="Pp"></p>
-<pre>
-  use HTML::Parser ();
-
+<pre>  use HTML::Parser ();
   sub start_handler
   {
     return if shift ne &quot;title&quot;;
@@ -925,7 +895,6 @@
     $self-&gt;handler(end  =&gt; sub { shift-&gt;eof if shift eq &quot;title&quot;; },
                            &quot;tagname,self&quot;);
   }
-
   my $p = HTML::Parser-&gt;new(api_version =&gt; 3);
   $p-&gt;handler( start =&gt; \&amp;start_handler, &quot;tagname,self&quot;);
   $p-&gt;parse_file(shift || die) || die $!;
@@ -1084,8 +1053,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<pre>
- Copyright 1996-2016 Gisle Aas. All rights reserved.
+<pre> Copyright 1996-2016 Gisle Aas. All rights reserved.
  Copyright 1999-2000 Michael A. Chase.  All rights reserved.
 </pre>
 <p class="Pp">This library is free software; you can redistribute it and/or

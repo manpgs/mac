@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Sys::Syslog(3pm)</title>
 </head>
@@ -32,10 +33,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Sys::Syslog;                        # all except setlogsock()
+<pre>    use Sys::Syslog;                        # all except setlogsock()
     use Sys::Syslog qw(:standard :macros);  # standard functions &amp; macros
-
     openlog($ident, $logopt, $facility);    # don't forget this
     syslog($priority, $format, @args);
     $oldmask = setlogmask($mask_priority);
@@ -58,15 +57,13 @@
   <li><span class="Li">&quot;:standard&quot;</span> exports the standard
       <span class="Li">syslog(3)</span> functions:
     <p class="Pp"></p>
-    <pre>
-    openlog closelog setlogmask syslog
+    <pre>    openlog closelog setlogmask syslog
     </pre>
   </li>
   <li><span class="Li">&quot;:extended&quot;</span> exports the Perl specific
       functions for <span class="Li">syslog(3)</span>:
     <p class="Pp"></p>
-    <pre>
-    setlogsock
+    <pre>    setlogsock
     </pre>
   </li>
   <li><span class="Li">&quot;:macros&quot;</span> exports the symbols
@@ -83,7 +80,8 @@
 <h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
 <dl class="Bl-tag">
   <dt id="openlog($ident,"><a class="permalink" href="#openlog($ident,"><b>openlog($ident,
-    </b><b>$logopt</b><b>, </b><b>$facility</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$logopt</b></span><b>,
+    </b><span class="Li"><b>$facility</b></span><b>)</b></a></dt>
   <dd>Opens the syslog. <span class="Li">$ident</span> is prepended to every
       message. <span class="Li">$logopt</span> contains zero or more of the
       options detailed below. <span class="Li">$facility</span> specifies the
@@ -98,8 +96,10 @@
         daemon.</p>
     <p class="Pp">Note that <span class="Li">&quot;openlog()&quot;</span> now
         takes three arguments, just like <span class="Li">openlog(3)</span>.</p>
-    <p class="Pp"><b>You should use </b><b>&quot;openlog()&quot;</b><b> before
-        calling </b><b>&quot;syslog()&quot;</b><b>.</b></p>
+    <p class="Pp"><b>You should use
+        </b><span class="Li"><b>&quot;openlog()&quot;</b></span><b> before
+        calling
+      </b><span class="Li"><b>&quot;syslog()&quot;</b></span><b>.</b></p>
     <p class="Pp"><b>Options</b></p>
   </dd>
 </dl>
@@ -143,22 +143,21 @@
     <span class="Li">&quot;pid&quot;</span>, and with facility
     <span class="Li">&quot;LOCAL0&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    openlog($name, &quot;ndelay,pid&quot;, &quot;local0&quot;);
+<pre>    openlog($name, &quot;ndelay,pid&quot;, &quot;local0&quot;);
 </pre>
 <p class="Pp">Same thing, but this time using the macro corresponding to
     <span class="Li">&quot;LOCAL0&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    openlog($name, &quot;ndelay,pid&quot;, LOG_LOCAL0);
+<pre>    openlog($name, &quot;ndelay,pid&quot;, LOG_LOCAL0);
 </pre>
 </div>
 <dl class="Bl-tag">
   <dt id="syslog($priority,"><a class="permalink" href="#syslog($priority,"><b>syslog($priority,
-    </b><b>$message</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$message</b></span><b>)</b></a></dt>
   <dd></dd>
   <dt id="syslog($priority,~2"><a class="permalink" href="#syslog($priority,~2"><b>syslog($priority,
-    </b><b>$format</b><b>, </b><b>@args</b><b>)</b></a></dt>
+    </b><span class="Li"><b>$format</b></span><b>,
+    </b><span class="Li"><b>@args</b></span><b>)</b></a></dt>
   <dd>If <span class="Li">$priority</span> permits, logs
       <span class="Li">$message</span> or
       <span class="Li">&quot;sprintf($format, @args)&quot;</span> with the
@@ -187,11 +186,9 @@
         <span class="Li">&quot;:&quot;</span>.</p>
     <p class="Pp"><b>Examples</b></p>
     <p class="Pp"></p>
-    <pre>
-    # informational level
+    <pre>    # informational level
     syslog(&quot;info&quot;, $message);
     syslog(LOG_INFO, $message);
-
     # information level, Local0 facility
     syslog(&quot;info|local0&quot;, $message);
     syslog(LOG_INFO|LOG_LOCAL0, $message);
@@ -228,25 +225,21 @@
     <p class="Pp"><b>Examples</b></p>
     <p class="Pp">Only log errors:</p>
     <p class="Pp"></p>
-    <pre>
-    setlogmask( LOG_MASK(LOG_ERR) );
+    <pre>    setlogmask( LOG_MASK(LOG_ERR) );
     </pre>
     <p class="Pp">Log everything except informational messages:</p>
     <p class="Pp"></p>
-    <pre>
-    setlogmask( ~(LOG_MASK(LOG_INFO)) );
+    <pre>    setlogmask( ~(LOG_MASK(LOG_INFO)) );
     </pre>
     <p class="Pp">Log critical messages, errors and warnings:</p>
     <p class="Pp"></p>
-    <pre>
-    setlogmask( LOG_MASK(LOG_CRIT)
+    <pre>    setlogmask( LOG_MASK(LOG_CRIT)
               | LOG_MASK(LOG_ERR)
               | LOG_MASK(LOG_WARNING) );
     </pre>
     <p class="Pp">Log all messages up to debug:</p>
     <p class="Pp"></p>
-    <pre>
-    setlogmask( LOG_UPTO(LOG_DEBUG) );
+    <pre>    setlogmask( LOG_UPTO(LOG_DEBUG) );
     </pre>
   </dd>
   <dt id="setlogsock()"><a class="permalink" href="#setlogsock()"><b></b><b>setlogsock()</b><b></b></a></dt>
@@ -360,23 +353,19 @@
 <p class="Pp"><b>Examples</b></p>
 <p class="Pp">Select the UDP socket mechanism:</p>
 <p class="Pp"></p>
-<pre>
-    setlogsock(&quot;udp&quot;);
+<pre>    setlogsock(&quot;udp&quot;);
 </pre>
 <p class="Pp">Send messages using the TCP socket mechanism on a custom port:</p>
 <p class="Pp"></p>
-<pre>
-    setlogsock({ type =&gt; &quot;tcp&quot;, port =&gt; 2486 });
+<pre>    setlogsock({ type =&gt; &quot;tcp&quot;, port =&gt; 2486 });
 </pre>
 <p class="Pp">Send messages to a remote host using the TCP socket mechanism:</p>
 <p class="Pp"></p>
-<pre>
-    setlogsock({ type =&gt; &quot;tcp&quot;, host =&gt; $loghost });
+<pre>    setlogsock({ type =&gt; &quot;tcp&quot;, host =&gt; $loghost });
 </pre>
 <p class="Pp">Try the native, UDP socket then UNIX domain socket mechanisms:</p>
 <p class="Pp"></p>
-<pre>
-    setlogsock([&quot;native&quot;, &quot;udp&quot;, &quot;unix&quot;]);
+<pre>    setlogsock([&quot;native&quot;, &quot;udp&quot;, &quot;unix&quot;]);
 </pre>
 <dl class="Bl-tag">
   <dt id="Note~2"><a class="permalink" href="#Note~2"><b>Note</b></a></dt>
@@ -422,31 +411,26 @@
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <p class="Pp">An example:</p>
 <p class="Pp"></p>
-<pre>
-    openlog($program, 'cons,pid', 'user');
+<pre>    openlog($program, 'cons,pid', 'user');
     syslog('info', '%s', 'this is another test');
     syslog('mail|warning', 'this is a better test: %d', time);
     closelog();
-
     syslog('debug', 'this is the last test');
 </pre>
 <p class="Pp">Another example:</p>
 <p class="Pp"></p>
-<pre>
-    openlog(&quot;$program $$&quot;, 'ndelay', 'user');
+<pre>    openlog(&quot;$program $$&quot;, 'ndelay', 'user');
     syslog('notice', 'fooprogram: this is really done');
 </pre>
 <p class="Pp">Example of use of <span class="Li">%m</span>:</p>
 <p class="Pp"></p>
-<pre>
-    $! = 55;
+<pre>    $! = 55;
     syslog('info', 'problem was %m');   # %m == $! in syslog(3)
 </pre>
 <p class="Pp">Log to UDP port on <span class="Li">$remotehost</span> instead of
     logging locally:</p>
 <p class="Pp"></p>
-<pre>
-    setlogsock(&quot;udp&quot;, $remotehost);
+<pre>    setlogsock(&quot;udp&quot;, $remotehost);
     openlog($program, 'ndelay', 'user');
     syslog('info', 'something happened over here');
 </pre>
@@ -576,8 +560,7 @@
     a small table with the matching Perl and
     <span class="Li">&quot;Sys::Syslog&quot;</span> versions.</p>
 <p class="Pp"></p>
-<pre>
-    Sys::Syslog     Perl
+<pre>    Sys::Syslog     Perl
     -----------     ----
        undef        5.0.0 ~ 5.5.4
        0.01         5.6.*
@@ -692,8 +675,7 @@
 <p class="Pp">You can find documentation for this module with the perldoc
     command.</p>
 <p class="Pp"></p>
-<pre>
-    perldoc Sys::Syslog
+<pre>    perldoc Sys::Syslog
 </pre>
 <p class="Pp">You can also look for information at:</p>
 <ul class="Bl-bullet">

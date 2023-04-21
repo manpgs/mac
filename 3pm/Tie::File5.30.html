@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Tie::File(3pm)</title>
 </head>
@@ -28,32 +29,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- # This file documents Tie::File version 0.98
+<pre> # This file documents Tie::File version 0.98
  use Tie::File;
-
  tie @array, 'Tie::File', filename or die ...;
-
  $array[13] = 'blah';     # line 13 of the file is now 'blah'
  print $array[42];        # display line 42 of the file
-
  $n_recs = @array;        # how many records are in the file?
  $#array -= 2;            # chop two records off the end
-
-
  for (@array) {
    s/PERL/Perl/g;        # Replace PERL with Perl everywhere in the file
  }
-
  # These are just like regular push, pop, unshift, shift, and splice
  # Except that they modify the file in the way you would expect
-
  push @array, new recs...;
  my $r1 = pop @array;
  unshift @array, new recs...;
  my $r2 = shift @array;
  @old_recs = splice @array, 3, 7, new recs...;
-
  untie @array;            # all finished
 </pre>
 </section>
@@ -79,21 +71,18 @@
     <span class="Li">&quot;recsep&quot;</span> option in the
     <span class="Li">&quot;tie&quot;</span> call:</p>
 <p class="Pp"></p>
-<pre>
-        tie @array, 'Tie::File', $file, recsep =&gt; 'es';
+<pre>        tie @array, 'Tie::File', $file, recsep =&gt; 'es';
 </pre>
 <p class="Pp">This says that records are delimited by the string
     <span class="Li">&quot;es&quot;</span>. If the file contained the following
     data:</p>
 <p class="Pp"></p>
-<pre>
-        Curse these pesky flies!\n
+<pre>        Curse these pesky flies!\n
 </pre>
 <p class="Pp">then the <span class="Li">@array</span> would appear to have four
     elements:</p>
 <p class="Pp"></p>
-<pre>
-        &quot;Curse th&quot;
+<pre>        &quot;Curse th&quot;
         &quot;e p&quot;
         &quot;ky fli&quot;
         &quot;!\n&quot;
@@ -104,8 +93,7 @@
 <p class="Pp">Records read from the tied array do not have the record separator
     string on the end; this is to allow</p>
 <p class="Pp"></p>
-<pre>
-        $array[17] .= &quot;extra&quot;;
+<pre>        $array[17] .= &quot;extra&quot;;
 </pre>
 <p class="Pp">to work as expected.</p>
 <p class="Pp">(See &quot;autochomp&quot;, below.) Records stored into the array
@@ -114,16 +102,14 @@
     separator string is <span class="Li">&quot;\n&quot;</span>, then the
     following two lines do exactly the same thing:</p>
 <p class="Pp"></p>
-<pre>
-        $array[17] = &quot;Cherry pie&quot;;
+<pre>        $array[17] = &quot;Cherry pie&quot;;
         $array[17] = &quot;Cherry pie\n&quot;;
 </pre>
 <p class="Pp">The result is that the contents of line 17 of the file will be
     replaced with &quot;Cherry pie&quot;; a newline character will separate line
     17 from line 18. This means that this code will do nothing:</p>
 <p class="Pp"></p>
-<pre>
-        chomp $array[17];
+<pre>        chomp $array[17];
 </pre>
 <p class="Pp">Because the <span class="Li">&quot;chomp&quot;</span>ed value will
     have the separator reattached when it is written back to the file. There is
@@ -139,8 +125,7 @@
 <p class="Pp">Normally, array elements have the record separator removed, so
     that if the file contains the text</p>
 <p class="Pp"></p>
-<pre>
-        Gold
+<pre>        Gold
         Frankincense
         Myrrh
 </pre>
@@ -150,8 +135,7 @@
     <span class="Li">&quot;autochomp&quot;</span> to a false value, the record
     separator will not be removed. If the file above was tied with</p>
 <p class="Pp"></p>
-<pre>
-        tie @gifts, &quot;Tie::File&quot;, $gifts, autochomp =&gt; 0;
+<pre>        tie @gifts, &quot;Tie::File&quot;, $gifts, autochomp =&gt; 0;
 </pre>
 <p class="Pp">then the array <span class="Li">@gifts</span> would appear to
     contain <span class="Li">&quot;(&quot;Gold\n&quot;,</span>
@@ -171,15 +155,12 @@
     <span class="Li">&quot;mode&quot;</span> option. See Fcntl for a listing of
     available flags. For example:</p>
 <p class="Pp"></p>
-<pre>
-        # open the file if it exists, but fail if it does not exist
+<pre>        # open the file if it exists, but fail if it does not exist
         use Fcntl 'O_RDWR';
         tie @array, 'Tie::File', $file, mode =&gt; O_RDWR;
-
         # create the file if it does not exist
         use Fcntl 'O_RDWR', 'O_CREAT';
         tie @array, 'Tie::File', $file, mode =&gt; O_RDWR | O_CREAT;
-
         # open an existing file in read-only mode
         use Fcntl 'O_RDONLY';
         tie @array, 'Tie::File', $file, mode =&gt; O_RDONLY;
@@ -205,8 +186,7 @@
     cache size by supplying the <span class="Li">&quot;memory&quot;</span>
     option. The argument is the desired cache size, in bytes.</p>
 <p class="Pp"></p>
-<pre>
- # I have a lot of memory, so use a large cache to speed up access
+<pre> # I have a lot of memory, so use a large cache to speed up access
  tie @array, 'Tie::File', $file, memory =&gt; 20_000_000;
 </pre>
 <p class="Pp">Setting the memory limit to 0 will inhibit caching; records will
@@ -261,8 +241,7 @@
 <p class="Pp">The <span class="Li">&quot;tie&quot;</span> call returns an
     object, say <span class="Li">$o</span>. You may call</p>
 <p class="Pp"></p>
-<pre>
-        $rec = $o-&gt;FETCH($n);
+<pre>        $rec = $o-&gt;FETCH($n);
         $o-&gt;STORE($n, $rec);
 </pre>
 <p class="Pp">to fetch or store the record at line <span class="Li">$n</span>,
@@ -270,8 +249,7 @@
     details.) You may also call the following methods on this object:</p>
 <section class="Ss">
 <h2 class="Ss" id="_flock_"><a class="permalink" href="#_flock_">&quot;flock&quot;</a></h2>
-<pre>
-        $o-&gt;flock(MODE)
+<pre>        $o-&gt;flock(MODE)
 </pre>
 <p class="Pp">will lock the tied file. <span class="Li">&quot;MODE&quot;</span>
     has the same meaning as the second argument to the Perl built-in
@@ -294,8 +272,7 @@
 <p class="Pp"><span class="Li">&quot;Tie::File&quot;</span> promises that the
     following sequence of operations will be safe:</p>
 <p class="Pp"></p>
-<pre>
-        my $o = tie @array, &quot;Tie::File&quot;, $filename;
+<pre>        my $o = tie @array, &quot;Tie::File&quot;, $filename;
         $o-&gt;flock;
 </pre>
 <p class="Pp">In particular, <span class="Li">&quot;Tie::File&quot;</span> will
@@ -323,10 +300,8 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_autochomp_~2"><a class="permalink" href="#_autochomp_~2">&quot;autochomp&quot;</a></h2>
-<pre>
-        my $old_value = $o-&gt;autochomp(0);    # disable autochomp option
+<pre>        my $old_value = $o-&gt;autochomp(0);    # disable autochomp option
         my $old_value = $o-&gt;autochomp(1);    #  enable autochomp option
-
         my $ac = $o-&gt;autochomp();   # recover current value
 </pre>
 <p class="Pp">See &quot;autochomp&quot;, above.</p>
@@ -338,8 +313,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_offset_"><a class="permalink" href="#_offset_">&quot;offset&quot;</a></h2>
-<pre>
-        $off = $o-&gt;offset($n);
+<pre>        $off = $o-&gt;offset($n);
 </pre>
 <p class="Pp">This method returns the byte offset of the start of the
     <span class="Li">$n</span>th record in the file. If there is no such record,
@@ -353,16 +327,14 @@
     returned by <span class="Li">&quot;IO::File&quot;</span> or one of the other
     <span class="Li">&quot;IO&quot;</span> modules, you may use:</p>
 <p class="Pp"></p>
-<pre>
-        tie @array, 'Tie::File', $fh, ...;
+<pre>        tie @array, 'Tie::File', $fh, ...;
 </pre>
 <p class="Pp">Similarly if you opened that handle
     <span class="Li">&quot;FH&quot;</span> with regular
     <span class="Li">&quot;open&quot;</span> or
     <span class="Li">&quot;sysopen&quot;</span>, you may use:</p>
 <p class="Pp"></p>
-<pre>
-        tie @array, 'Tie::File', \*FH, ...;
+<pre>        tie @array, 'Tie::File', \*FH, ...;
 </pre>
 <p class="Pp">Handles that were opened write-only won't work. Handles that were
     opened read-only will work as long as you don't try to modify the array.
@@ -392,8 +364,7 @@
     excessively slow. For example, suppose you have a million-record file, and
     you want to do:</p>
 <p class="Pp"></p>
-<pre>
-        for (@FILE) {
+<pre>        for (@FILE) {
           $_ = &quot;&gt; $_&quot;;
         }
 </pre>
@@ -406,8 +377,7 @@
     the actual writing, and then have it done all at once. The following loop
     will perform much better for large files:</p>
 <p class="Pp"></p>
-<pre>
-        (tied @a)-&gt;defer;
+<pre>        (tied @a)-&gt;defer;
         for (@a) {
           $_ = &quot;&gt; $_&quot;;
         }
@@ -461,8 +431,7 @@
     deferred writing might be helpful, and to turn it on and off
   automatically.</p>
 <p class="Pp"></p>
-<pre>
-        for (@a) {
+<pre>        for (@a) {
           $_ = &quot;&gt; $_&quot;;
         }
 </pre>
@@ -474,13 +443,11 @@
     fine control over which writes are deferred, or may require that all writes
     be immediate. To disable the autodeferment feature, use</p>
 <p class="Pp"></p>
-<pre>
-        (tied @o)-&gt;autodefer(0);
+<pre>        (tied @o)-&gt;autodefer(0);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-        tie @array, 'Tie::File', $file, autodefer =&gt; 0;
+<pre>        tie @array, 'Tie::File', $file, autodefer =&gt; 0;
 </pre>
 <p class="Pp">Similarly, <span class="Li">&quot;-&gt;autodefer(1)&quot;</span>
     re-enables autodeferment, and
@@ -512,8 +479,7 @@
   <li>The behavior of tied arrays is not precisely the same as for regular
       arrays. For example:
     <p class="Pp"></p>
-    <pre>
-        # This DOES print &quot;How unusual!&quot;
+    <pre>        # This DOES print &quot;How unusual!&quot;
         undef $a[10];  print &quot;How unusual!\n&quot; if defined $a[10];
     </pre>
     <p class="Pp"><span class="Li">&quot;undef&quot;</span>-ing a
@@ -524,8 +490,7 @@
         defined. Similarly, if you have
         <span class="Li">&quot;autochomp&quot;</span> disabled, then</p>
     <p class="Pp"></p>
-    <pre>
-        # This DOES print &quot;How unusual!&quot; if 'autochomp' is disabled
+    <pre>        # This DOES print &quot;How unusual!&quot; if 'autochomp' is disabled
         undef $a[10];
         print &quot;How unusual!\n&quot; if $a[10];
     </pre>
@@ -588,8 +553,7 @@
 <p class="Pp">The most recent version of this module, including documentation
     and any news of importance, will be available at</p>
 <p class="Pp"></p>
-<pre>
-        http://perl.plover.com/TieFile/
+<pre>        http://perl.plover.com/TieFile/
 </pre>
 </section>
 <section class="Sh">
@@ -613,8 +577,7 @@
     02110-1301, USA</p>
 <p class="Pp">For licensing inquiries, contact the author at:</p>
 <p class="Pp"></p>
-<pre>
-        Mark Jason Dominus
+<pre>        Mark Jason Dominus
         255 S. Warnock St.
         Philadelphia, PA 19107
 </pre>

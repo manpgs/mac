@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Path::Class::Dir(3)</title>
 </head>
@@ -32,8 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Path::Class;  # Exports dir() by default
+<pre>  use Path::Class;  # Exports dir() by default
   
   my $dir = dir('foo', 'bar');       # Path::Class::Dir object
   my $dir = Path::Class::Dir-&gt;new('foo', 'bar');  # Same thing
@@ -60,7 +60,6 @@
   
   print $dir-&gt;as_foreign('Mac');   # :foo:bar:
   print $dir-&gt;as_foreign('Win32'); #  foo\bar
-
   # Iterate with IO::Dir methods:
   my $handle = $dir-&gt;open;
   while (my $file = $handle-&gt;read) {
@@ -93,30 +92,25 @@
       as the first argument, or as part of the first argument. You can use
       platform-neutral syntax:
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir( 'foo', 'bar', 'baz' );
+    <pre>  my $dir = dir( 'foo', 'bar', 'baz' );
     </pre>
     <p class="Pp">or platform-native syntax:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir( 'foo/bar/baz' );
+    <pre>  my $dir = dir( 'foo/bar/baz' );
     </pre>
     <p class="Pp">or a mixture of the two:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir( 'foo/bar', 'baz' );
+    <pre>  my $dir = dir( 'foo/bar', 'baz' );
     </pre>
     <p class="Pp">All three of the above examples create relative paths. To
         create an absolute path, either use the platform native syntax for doing
         so:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir( '/var/tmp' );
+    <pre>  my $dir = dir( '/var/tmp' );
     </pre>
     <p class="Pp">or use an empty string as the first argument:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir( '', 'var', 'tmp' );
+    <pre>  my $dir = dir( '', 'var', 'tmp' );
     </pre>
     <p class="Pp">If the second form seems awkward, that's somewhat intentional
         - paths like <span class="Li">&quot;/var/tmp&quot;</span> or
@@ -144,8 +138,7 @@
       <span class="Li">&quot;Path::Class::Dir&quot;</span> object is used in a
       string context, so the following are equivalent:
     <p class="Pp"></p>
-    <pre>
-  $string = $dir-&gt;stringify;
+    <pre>  $string = $dir-&gt;stringify;
   $string = &quot;$dir&quot;;
     </pre>
   </dd>
@@ -173,16 +166,14 @@
   <dt>$dir-&gt;cleanup</dt>
   <dd>Performs a logical cleanup of the file path. For instance:
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir('/foo//baz/./foo')-&gt;cleanup;
+    <pre>  my $dir = dir('/foo//baz/./foo')-&gt;cleanup;
   # $dir now represents '/foo/baz/foo';
     </pre>
   </dd>
   <dt>$dir-&gt;resolve</dt>
   <dd>Performs a physical cleanup of the file path. For instance:
     <p class="Pp"></p>
-    <pre>
-  my $dir = dir('/foo//baz/../foo')-&gt;resolve;
+    <pre>  my $dir = dir('/foo//baz/../foo')-&gt;resolve;
   # $dir now represents '/foo/foo', assuming no symlinks
     </pre>
     <p class="Pp">This actually consults the filesystem to verify the validity
@@ -206,8 +197,7 @@
     <p class="Pp">The following code demonstrates the behavior on absolute and
         relative directories:</p>
     <p class="Pp"></p>
-    <pre>
-  $dir = dir('/foo/bar');
+    <pre>  $dir = dir('/foo/bar');
   for (1..6) {
     print &quot;Absolute: $dir\n&quot;;
     $dir = $dir-&gt;parent;
@@ -251,8 +241,7 @@
         want all directory entries including these special ones, pass a true
         value for the <span class="Li">&quot;all&quot;</span> parameter:</p>
     <p class="Pp"></p>
-    <pre>
-  @c = $dir-&gt;children(); # Just the children
+    <pre>  @c = $dir-&gt;children(); # Just the children
   @c = $dir-&gt;children(all =&gt; 1); # All entries
     </pre>
     <p class="Pp">In addition, there's a
@@ -261,8 +250,7 @@
         excluding all entries that begin with a dot
         (<span class="Li">&quot;.&quot;</span>):</p>
     <p class="Pp"></p>
-    <pre>
-  @c = $dir-&gt;children(no_hidden =&gt; 1); # Just normally-visible entries
+    <pre>  @c = $dir-&gt;children(no_hidden =&gt; 1); # Just normally-visible entries
     </pre>
   </dd>
   <dt>$abs = $dir-&gt;absolute</dt>
@@ -289,8 +277,7 @@
         Path::Class::File object, or a string. In the latter case, we assume
         it's a directory.</p>
     <p class="Pp"></p>
-    <pre>
-  # Examples:
+    <pre>  # Examples:
   dir('foo/bar' )-&gt;subsumes(dir('foo/bar/baz'))  # True
   dir('/foo/bar')-&gt;subsumes(dir('/foo/bar/baz')) # True
   dir('foo/..')-&gt;subsumes(dir('foo/../bar))      # True
@@ -403,8 +390,7 @@
         race conditions, won't leave yucky tempfiles around on your filesystem,
         etc.:</p>
     <p class="Pp"></p>
-    <pre>
-  my $fh = $dir-&gt;tempfile;
+    <pre>  my $fh = $dir-&gt;tempfile;
   print $fh &quot;Here's some data...\n&quot;;
   seek($fh, 0, 0);
   while (&lt;$fh&gt;) { do something... }
@@ -412,8 +398,7 @@
     <p class="Pp">Or in combination with a
         <span class="Li">&quot;fork&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-  my $fh = $dir-&gt;tempfile;
+    <pre>  my $fh = $dir-&gt;tempfile;
   print $fh &quot;Here's some more data...\n&quot;;
   seek($fh, 0, 0);
   if ($pid=fork()) {
@@ -435,8 +420,7 @@
       then the undefined value is returned. For example, to iterate over all the
       regular files in a directory:
     <p class="Pp"></p>
-    <pre>
-  while (my $file = $dir-&gt;next) {
+    <pre>  while (my $file = $dir-&gt;next) {
     next unless -f $file;
     my $fh = $file-&gt;open('r') or die &quot;Can't read $file: $!&quot;;
     ...
@@ -452,8 +436,7 @@
       which, when called, will call this recursively on each of its children.
       The callback function should be of the form:
     <p class="Pp"></p>
-    <pre>
-  sub {
+    <pre>  sub {
     my ($child, $cont, @args) = @_;
     # ...
   }
@@ -461,16 +444,14 @@
     <p class="Pp">For instance, to calculate the number of files in a directory,
         you can do this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $nfiles = $dir-&gt;traverse(sub {
+    <pre>  my $nfiles = $dir-&gt;traverse(sub {
     my ($child, $cont) = @_;
     return sum($cont-&gt;(), ($child-&gt;is_dir ? 0 : 1));
   });
     </pre>
     <p class="Pp">or to calculate the maximum depth of a directory:</p>
     <p class="Pp"></p>
-    <pre>
-  my $depth = $dir-&gt;traverse(sub {
+    <pre>  my $depth = $dir-&gt;traverse(sub {
     my ($child, $cont, $depth) = @_;
     return max($cont-&gt;($depth + 1), $depth);
   }, 0);
@@ -478,8 +459,7 @@
     <p class="Pp">You can also choose not to call the callback in certain
         situations:</p>
     <p class="Pp"></p>
-    <pre>
-  $dir-&gt;traverse(sub {
+    <pre>  $dir-&gt;traverse(sub {
     my ($child, $cont) = @_;
     return if -l $child; # don't follow symlinks
     # do something with $child
@@ -493,8 +473,7 @@
       directories.
     <p class="Pp">Canonical example:</p>
     <p class="Pp"></p>
-    <pre>
-  $dir-&gt;traverse_if(
+    <pre>  $dir-&gt;traverse_if(
     sub {
        my ($child, $cont) = @_;
        # do something with $child
@@ -575,7 +554,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

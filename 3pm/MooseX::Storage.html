@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Storage(3)</title>
 </head>
@@ -32,44 +33,30 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Point;
+<pre>  package Point;
   use Moose;
   use MooseX::Storage;
-
   with Storage('format' =&gt; 'JSON', 'io' =&gt; 'File');
-
   has 'x' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
   has 'y' =&gt; (is =&gt; 'rw', isa =&gt; 'Int');
-
   1;
-
   my $p = Point-&gt;new(x =&gt; 10, y =&gt; 10);
-
   ## methods to pack/unpack an
   ## object in perl data structures
-
   # pack the class into a hash
   $p-&gt;pack(); # { __CLASS__ =&gt; 'Point-0.01', x =&gt; 10, y =&gt; 10 }
-
   # unpack the hash into a class
   my $p2 = Point-&gt;unpack({ __CLASS__ =&gt; 'Point-0.01', x =&gt; 10, y =&gt; 10 });
-
   ## methods to freeze/thaw into
   ## a specified serialization format
   ## (in this case JSON)
-
   # pack the class into a JSON string
   $p-&gt;freeze(); # { &quot;__CLASS__&quot; : &quot;Point-0.01&quot;, &quot;x&quot; : 10, &quot;y&quot; : 10 }
-
   # unpack the JSON string into a class
   my $p2 = Point-&gt;thaw('{ &quot;__CLASS__&quot; : &quot;Point-0.01&quot;, &quot;x&quot; : 10, &quot;y&quot; : 10 }');
-
   ## methods to load/store a class
   ## on the file system
-
   $p-&gt;store('my_point.json');
-
   my $p2 = Point-&gt;load('my_point.json');
 </pre>
 </section>
@@ -128,12 +115,9 @@
     individual attribute.</p>
 <p class="Pp">This can be done as follows:</p>
 <p class="Pp"></p>
-<pre>
-  use MooseX::Storage;
-
+<pre>  use MooseX::Storage;
   # adjust behaviour for the entire class
   with Storage( traits =&gt; [Trait1, Trait2,...] );
-
   # adjust behaviour for an attribute
   has my_attr =&gt; (
     traits =&gt; [Trait1, Trait2, ...],
@@ -223,22 +207,19 @@
     <p class="Pp">By default, options are assumed to be short forms. For
         example, this:</p>
     <p class="Pp"></p>
-    <pre>
-  Storage(format =&gt; 'JSON');
+    <pre>  Storage(format =&gt; 'JSON');
     </pre>
     <p class="Pp">...will result in looking for MooseX::Storage::Format::JSON.
         To use a role that is not under the default namespace prefix, start with
         an equal sign:</p>
     <p class="Pp"></p>
-    <pre>
-  Storage(format =&gt; '=My::Private::JSONFormat');
+    <pre>  Storage(format =&gt; '=My::Private::JSONFormat');
     </pre>
     <p class="Pp">To use a parameterized role (for which, see
         MooseX::Role::Parameterized) you can pass an arrayref of the role name
         (in short or long form, as above) and its parameters:</p>
     <p class="Pp"></p>
-    <pre>
-  Storage(format =&gt; [ JSONpm =&gt; { json_opts =&gt; { pretty =&gt; 1 } } ]);
+    <pre>  Storage(format =&gt; [ JSONpm =&gt; { json_opts =&gt; { pretty =&gt; 1 } } ]);
     </pre>
   </dd>
 </dl>

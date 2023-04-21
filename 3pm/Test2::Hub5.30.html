@@ -9,15 +9,16 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>Test2::Hub(3)</title>
+  <title>Test2::Hub(3pm)</title>
 </head>
 <body>
 <table class="head">
   <tr>
-    <td class="head-ltitle">Test2::Hub(3)</td>
-    <td class="head-vol">User Contributed Perl Documentation</td>
-    <td class="head-rtitle">Test2::Hub(3)</td>
+    <td class="head-ltitle">Test2::Hub(3pm)</td>
+    <td class="head-vol">Perl Programmers Reference Guide</td>
+    <td class="head-rtitle">Test2::Hub(3pm)</td>
   </tr>
 </table>
 <div class="manual-text">
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Test2::Hub;
-
+<pre>    use Test2::Hub;
     my $hub = Test2::Hub-&gt;new();
     $hub-&gt;send(...);
 </pre>
@@ -46,8 +45,7 @@
   TASKS</a></h1>
 <section class="Ss">
 <h2 class="Ss">SENDING EVENTS</h2>
-<pre>
-    $hub-&gt;send($event)
+<pre>    $hub-&gt;send($event)
 </pre>
 <p class="Pp">The <span class="Li">&quot;send()&quot;</span> method is used to
     issue an event to the hub. This method will handle thread/fork sync,
@@ -60,24 +58,18 @@
     Both have identical syntax, so only
     <span class="Li">&quot;filter()&quot;</span> is shown here.</p>
 <p class="Pp"></p>
-<pre>
-    $hub-&gt;filter(sub {
+<pre>    $hub-&gt;filter(sub {
         my ($hub, $event) = @_;
-
         my $action = get_action($event);
-
         # No action should be taken
         return $event if $action eq 'none';
-
         # You want your filter to remove the event
         return undef if $action eq 'delete';
-
         if ($action eq 'do_it') {
             my $new_event = copy_event($event);
             ... Change your copy of the event ...
             return $new_event;
         }
-
         die &quot;Should not happen&quot;;
     });
 </pre>
@@ -86,18 +78,14 @@
     this behavior with the <span class="Li">&quot;inherit&quot;</span>
     parameter:</p>
 <p class="Pp"></p>
-<pre>
-    $hub-&gt;filter(sub { ... }, inherit =&gt; 1);
+<pre>    $hub-&gt;filter(sub { ... }, inherit =&gt; 1);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss">LISTENING FOR EVENTS</h2>
-<pre>
-    $hub-&gt;listen(sub {
+<pre>    $hub-&gt;listen(sub {
         my ($hub, $event, $number) = @_;
-
         ... do whatever you want with the event ...
-
         # return is ignored
     });
 </pre>
@@ -106,19 +94,15 @@
     change this behavior with the <span class="Li">&quot;inherit&quot;</span>
     parameter:</p>
 <p class="Pp"></p>
-<pre>
-    $hub-&gt;listen(sub { ... }, inherit =&gt; 1);
+<pre>    $hub-&gt;listen(sub { ... }, inherit =&gt; 1);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="POST-TEST_"><a class="permalink" href="#POST-TEST_">POST-TEST
   BEHAVIORS</a></h2>
-<pre>
-    $hub-&gt;follow_up(sub {
+<pre>    $hub-&gt;follow_up(sub {
         my ($trace, $hub) = @_;
-
         ... do whatever you need to ...
-
         # Return is ignored
     });
 </pre>
@@ -130,8 +114,7 @@
 <p class="Pp">By default an instance of Test2::Formatter::TAP is created and
     used.</p>
 <p class="Pp"></p>
-<pre>
-    my $old = $hub-&gt;format(My::Formatter-&gt;new);
+<pre>    my $old = $hub-&gt;format(My::Formatter-&gt;new);
 </pre>
 <p class="Pp">Setting the formatter will REPLACE any existing formatter. You may
     set the formatter to undef to prevent output. The old formatter will be
@@ -157,12 +140,9 @@
       formatter. No changes made here will be meaningful, except possibly to
       other listeners.
     <p class="Pp"></p>
-    <pre>
-    $hub-&gt;listen(sub {
+    <pre>    $hub-&gt;listen(sub {
         my ($hub, $event, $number) = @_;
-
         ... do whatever you want with the event ...
-
         # return is ignored
     });
     </pre>
@@ -179,14 +159,11 @@
   <dd>These can be used to add filters. Filters can modify, replace, or remove
       events before anything else can see them.
     <p class="Pp"></p>
-    <pre>
-    $hub-&gt;filter(
+    <pre>    $hub-&gt;filter(
         sub {
             my ($hub, $event) = @_;
-
             return $event;    # No Changes
             return;           # Remove the event
-
             # Or you can modify an event before returning it.
             $event-&gt;modify;
             return $event;
@@ -216,12 +193,9 @@
       finalized. The only argument to your codeblock will be a
       Test2::EventFacet::Trace instance.
     <p class="Pp"></p>
-    <pre>
-    $hub-&gt;follow_up(sub {
+    <pre>    $hub-&gt;follow_up(sub {
         my ($trace, $hub) = @_;
-
         ... do whatever you need to ...
-
         # Return is ignored
     });
     </pre>
@@ -234,8 +208,7 @@
       being used the construct the context. This is your chance to change the
       parameters by directly altering the hash.
     <p class="Pp"></p>
-    <pre>
-    test2_add_callback_context_acquire(sub {
+    <pre>    test2_add_callback_context_acquire(sub {
         my $params = shift;
         $params-&gt;{level}++;
     });
@@ -292,7 +265,7 @@
   <dt>$bool = $hub-&gt;no_ending</dt>
   <dd>This can be used to disable auto-ending behavior for a hub. The
       auto-ending behavior is triggered by an end block and is used to cull IPC
-      events, and output the final plan if the plan was 'NO PLAN'.</dd>
+      events, and output the final plan if the plan was 'no_plan'.</dd>
   <dt>$bool = $hub-&gt;active</dt>
   <dd></dd>
   <dt>$hub-&gt;set_active($bool)</dt>
@@ -325,7 +298,7 @@
   <dd></dd>
   <dt>$plan = $hub-&gt;plan</dt>
   <dd>Get or set the plan. The plan must be an integer larger than 0, the string
-      'NO PLAN', or the string 'SKIP'.</dd>
+      'no_plan', or the string 'skip_all'.</dd>
   <dt>$bool = $hub-&gt;check_plan</dt>
   <dd>Check if the plan and counts match, but only if the tests have ended. If
       tests have not ended this will return undef, otherwise it will be a
@@ -363,7 +336,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<p class="Pp">Copyright 2020 Chad Granum &lt;exodist@cpan.org&gt;.</p>
+<p class="Pp">Copyright 2019 Chad Granum &lt;exodist@cpan.org&gt;.</p>
 <p class="Pp">This program is free software; you can redistribute it and/or
     modify it under the same terms as Perl itself.</p>
 <p class="Pp">See <i>http://dev.perl.org/licenses/</i></p>
@@ -371,8 +344,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2020-10-22</td>
-    <td class="foot-os">perl v5.30.2</td>
+    <td class="foot-date">2019-10-21</td>
+    <td class="foot-os">perl v5.30.3</td>
   </tr>
 </table>
 </body>

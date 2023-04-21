@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::FAQ(3)</title>
 </head>
@@ -88,8 +89,7 @@
       databases at once, then so can DBIx::Class. All you need to do is make
       sure you write the database name as part of the table call. Eg:
     <p class="Pp"></p>
-    <pre>
-  __PACKAGE__-&gt;table('mydb.mytablename');
+    <pre>  __PACKAGE__-&gt;table('mydb.mytablename');
     </pre>
     <p class="Pp">And load all the Result classes for both / all databases by
         calling &quot;load_namespaces&quot; in DBIx::Class::Schema.</p>
@@ -172,16 +172,14 @@
   <dt>.. search using database functions?</dt>
   <dd>Supplying something like:
     <p class="Pp"></p>
-    <pre>
- -&gt;search({'mydatefield' =&gt; 'now()'})
+    <pre> -&gt;search({'mydatefield' =&gt; 'now()'})
     </pre>
     <p class="Pp">to search, will probably not do what you expect. It will quote
         the text &quot;<b>now()</b>&quot;, instead of trying to call the
         function. To provide literal, unquoted text you need to pass in a scalar
         reference, like so:</p>
     <p class="Pp"></p>
-    <pre>
- -&gt;search({'mydatefield' =&gt; \'now()'})
+    <pre> -&gt;search({'mydatefield' =&gt; \'now()'})
     </pre>
   </dd>
   <dt>.. sort the results of my search?</dt>
@@ -203,14 +201,12 @@
   <dd>The first argument to <span class="Li">&quot;search&quot;</span> is a
       hashref of accessor names and values to filter them by, for example:
     <p class="Pp"></p>
-    <pre>
- -&gt;search({'created_time' =&gt; { '&gt;=', '2006-06-01 00:00:00' } })
+    <pre> -&gt;search({'created_time' =&gt; { '&gt;=', '2006-06-01 00:00:00' } })
     </pre>
     <p class="Pp">Note that to use a function here you need to make it a scalar
         reference:</p>
     <p class="Pp"></p>
-    <pre>
- -&gt;search({'created_time' =&gt; { '&gt;=', \'yesterday()' } })
+    <pre> -&gt;search({'created_time' =&gt; { '&gt;=', \'yesterday()' } })
     </pre>
   </dd>
   <dt>.. search in several tables simultaneously?</dt>
@@ -221,8 +217,7 @@
       example when searching in the Books table for all the books by the author
       &quot;Fred Bloggs&quot;:
     <p class="Pp"></p>
-    <pre>
- -&gt;search({'authors.name' =&gt; 'Fred Bloggs'}, { join =&gt; 'authors' })
+    <pre> -&gt;search({'authors.name' =&gt; 'Fred Bloggs'}, { join =&gt; 'authors' })
     </pre>
     <p class="Pp">The type of join created in your SQL depends on the type of
         relationship between the two tables, see DBIx::Class::Relationship for
@@ -239,8 +234,7 @@
   <dd>To use an SQL function on the left hand side of a comparison you currently
       need to resort to literal SQL:
     <p class="Pp"></p>
-    <pre>
- -&gt;search( \[ 'YEAR(date_of_birth) = ?', 1979 ] );
+    <pre> -&gt;search( \[ 'YEAR(date_of_birth) = ?', 1979 ] );
     </pre>
   </dd>
   <dt>.. find more help on constructing searches?</dt>
@@ -252,8 +246,7 @@
   <dd>To make Oracle behave like most RDBMS use on_connect_do to issue alter
       session statements on database connection establishment:
     <p class="Pp"></p>
-    <pre>
- -&gt;on_connect_do(&quot;ALTER SESSION SET NLS_COMP = 'LINGUISTIC'&quot;);
+    <pre> -&gt;on_connect_do(&quot;ALTER SESSION SET NLS_COMP = 'LINGUISTIC'&quot;);
  -&gt;on_connect_do(&quot;ALTER SESSION SET NLS_SORT = '&lt;NLS&gt;_CI'&quot;);
  e.g.
  -&gt;on_connect_do(&quot;ALTER SESSION SET NLS_SORT = 'BINARY_CI'&quot;);
@@ -268,8 +261,7 @@
         to return the object that would normally do this, so it's easy to do it
         manually:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dtf = $schema-&gt;storage-&gt;datetime_parser;
+    <pre>  my $dtf = $schema-&gt;storage-&gt;datetime_parser;
   my $rs = $schema-&gt;resultset('users')-&gt;search(
     {
       signup_date =&gt; {
@@ -284,8 +276,7 @@
     <p class="Pp">With in a Result Class method, you can get this from the
         <span class="Li">&quot;result_source&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-  my $dtf = $self-&gt;result_source-&gt;storage-&gt;datetime_parser;
+    <pre>  my $dtf = $self-&gt;result_source-&gt;storage-&gt;datetime_parser;
     </pre>
     <p class="Pp">This kludge is necessary only for conditions passed to search
         and &quot;find&quot; in DBIx::Class::ResultSet, whereas create and
@@ -309,8 +300,7 @@
   <dd>In your table schema class, create a &quot;private&quot; column accessor
       with:
     <p class="Pp"></p>
-    <pre>
-  __PACKAGE__-&gt;add_columns(my_column =&gt; { accessor =&gt; '_hidden_my_column' });
+    <pre>  __PACKAGE__-&gt;add_columns(my_column =&gt; { accessor =&gt; '_hidden_my_column' });
     </pre>
     <p class="Pp">Then, in the same class, implement a subroutine called
         &quot;my_column&quot; that fetches the real value and does the
@@ -326,8 +316,7 @@
     <p class="Pp">A less readable way is to ask a regular search to return 1
         row, using &quot;slice&quot; in DBIx::Class::ResultSet:</p>
     <p class="Pp"></p>
-    <pre>
-  -&gt;search-&gt;(undef, { order_by =&gt; &quot;id DESC&quot; })-&gt;slice(0)
+    <pre>  -&gt;search-&gt;(undef, { order_by =&gt; &quot;id DESC&quot; })-&gt;slice(0)
     </pre>
     <p class="Pp">which (if supported by the database) will use LIMIT/OFFSET to
         hint to the database that we really only need one row. This can result
@@ -339,8 +328,7 @@
   <dt>.. refresh a row from storage?</dt>
   <dd>Use &quot;discard_changes&quot; in DBIx::Class::Row.
     <p class="Pp"></p>
-    <pre>
-  $result-&gt;discard_changes
+    <pre>  $result-&gt;discard_changes
     </pre>
     <p class="Pp">Discarding changes and refreshing from storage are two sides
         of the same coin. When you want to discard your local changes, just
@@ -353,8 +341,7 @@
   <dd>Pass the <span class="Li">&quot;rows&quot;</span> and
       <span class="Li">&quot;page&quot;</span> attributes to your search, eg:
     <p class="Pp"></p>
-    <pre>
-  -&gt;search({}, { rows =&gt; 10, page =&gt; 1});
+    <pre>  -&gt;search({}, { rows =&gt; 10, page =&gt; 1});
     </pre>
   </dd>
   <dt>.. get a count of all rows even when paging?</dt>
@@ -383,8 +370,7 @@
       <span class="Li">&quot;column_info&quot;</span> supplied with
       <span class="Li">&quot;add_columns&quot;</span>.
     <p class="Pp"></p>
-    <pre>
- -&gt;add_columns({ id =&gt; { sequence =&gt; 'mysequence', auto_nextval =&gt; 1 } });
+    <pre> -&gt;add_columns({ id =&gt; { sequence =&gt; 'mysequence', auto_nextval =&gt; 1 } });
     </pre>
   </dd>
   <dt>.. insert many rows of data efficiently?</dt>
@@ -405,28 +391,23 @@
       the right hand side is an SQL identifier (it will be quoted properly if
       you have quoting enabled):
     <p class="Pp"></p>
-    <pre>
- -&gt;update({ somecolumn =&gt; { -ident =&gt; 'othercolumn' } })
+    <pre> -&gt;update({ somecolumn =&gt; { -ident =&gt; 'othercolumn' } })
     </pre>
     <p class="Pp">This method will not retrieve the new value and put it in your
         Row object. To fetch the new value, use the
         <span class="Li">&quot;discard_changes&quot;</span> method on the
       Row.</p>
     <p class="Pp"></p>
-    <pre>
-  # will return the scalar reference:
+    <pre>  # will return the scalar reference:
   $result-&gt;somecolumn()
-
   # issue a select using the PK to re-fetch the row data:
   $result-&gt;discard_changes();
-
   # Now returns the correct new value:
   $result-&gt;somecolumn()
     </pre>
     <p class="Pp">To update and refresh at once, chain your calls:</p>
     <p class="Pp"></p>
-    <pre>
-  $result-&gt;update({ 'somecolumn' =&gt; { -ident =&gt; 'othercolumn' } })-&gt;discard_changes;
+    <pre>  $result-&gt;update({ 'somecolumn' =&gt; { -ident =&gt; 'othercolumn' } })-&gt;discard_changes;
     </pre>
   </dd>
   <dt>.. store JSON/YAML in a column and have it deflate/inflate
@@ -436,9 +417,7 @@
     <p class="Pp">If you want to use JSON, then in your table schema class, do
         the following:</p>
     <p class="Pp"></p>
-    <pre>
- use JSON;
-
+    <pre> use JSON;
  __PACKAGE__-&gt;add_columns(qw/ ... my_column ../)
  __PACKAGE__-&gt;inflate_column('my_column', {
      inflate =&gt; sub { jsonToObj(shift) },
@@ -447,9 +426,7 @@
     </pre>
     <p class="Pp">For YAML, in your table schema class, do the following:</p>
     <p class="Pp"></p>
-    <pre>
- use YAML;
-
+    <pre> use YAML;
  __PACKAGE__-&gt;add_columns(qw/ ... my_column ../)
  __PACKAGE__-&gt;inflate_column('my_column', {
      inflate =&gt; sub { YAML::Load(shift) },
@@ -472,16 +449,14 @@
     <span class="Li">&quot;$book-&gt;foo()&quot;</span> method which searches
     the cd table, you'd could add this to Book.pm:</p>
 <p class="Pp"></p>
-<pre>
-  sub foo {
+<pre>  sub foo {
     my ($self, $col_data) = @_;
     return $self-&gt;result_source-&gt;schema-&gt;resultset('cd')-&gt;search($col_data);
   }
 </pre>
 <p class="Pp">And invoke that on any Book Result object like so:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $book-&gt;foo({ title =&gt; 'Down to Earth' });
+<pre>  my $rs = $book-&gt;foo({ title =&gt; 'Down to Earth' });
 </pre>
 <p class="Pp">When two tables ARE related, DBIx::Class::Relationship::Base
     provides many methods to find or create data in related tables for you. But
@@ -491,16 +466,14 @@
     implement what <b>create_related()</b> from DBIx::Class::Relationship::Base
     does, you could add this to Book.pm:</p>
 <p class="Pp"></p>
-<pre>
-  sub foo {
+<pre>  sub foo {
     my ($self, $rel_name, $col_data) = @_;
     return $self-&gt;related_resultset($rel_name)-&gt;create($col_data);
   }
 </pre>
 <p class="Pp">Invoked like this:</p>
 <p class="Pp"></p>
-<pre>
-  my $author = $book-&gt;foo('author', { name =&gt; 'Fred' });
+<pre>  my $author = $book-&gt;foo('author', { name =&gt; 'Fred' });
 </pre>
 </section>
 <section class="Ss">
@@ -512,41 +485,28 @@
     <p class="Pp">One method is to use the built in mk_group_accessors (via
         Class::Accessor::Grouped)</p>
     <p class="Pp"></p>
-    <pre>
-        package App::Schema::Result::MyTable;
-
+    <pre>        package App::Schema::Result::MyTable;
         use parent 'DBIx::Class::Core';
-
         __PACKAGE__-&gt;table('foo'); #etc
         __PACKAGE__-&gt;mk_group_accessors('simple' =&gt; qw/non_column_data/); # must use simple group
     </pre>
     <p class="Pp">An another method is to use Moose with your DBIx::Class
         package.</p>
     <p class="Pp"></p>
-    <pre>
-        package App::Schema::Result::MyTable;
-
+    <pre>        package App::Schema::Result::MyTable;
         use Moose; # import Moose
         use Moose::Util::TypeConstraint; # import Moose accessor type constraints
-
         extends 'DBIx::Class::Core'; # Moose changes the way we define our parent (base) package
-
         has 'non_column_data' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str' ); # define a simple attribute
-
         __PACKAGE__-&gt;table('foo'); # etc
     </pre>
     <p class="Pp">With either of these methods the resulting use of the accessor
         would be</p>
     <p class="Pp"></p>
-    <pre>
-        my $result;
-
+    <pre>        my $result;
         # assume that somewhere in here $result will get assigned to a MyTable row
-
         $result-&gt;non_column_data('some string'); # would set the non_column_data accessor
-
         # some other stuff happens here
-
         $result-&gt;update(); # would not inline the non_column_data accessor into the update
     </pre>
   </dd>
@@ -585,8 +545,7 @@
       the row, so you can tell DBIx::Class::ResultSource these columns act as a
       primary key, even if they don't from the database's point of view:
     <p class="Pp"></p>
-    <pre>
- $resultset-&gt;set_primary_key(@column);
+    <pre> $resultset-&gt;set_primary_key(@column);
     </pre>
   </dd>
   <dt id="How~4"><a class="permalink" href="#How~4">How do I make my program
@@ -606,21 +565,16 @@
       Moose::Manual::MethodModifiers or Class::Method::Modifiers. The code
       example works for both modules:
     <p class="Pp"></p>
-    <pre>
-    package Your::Schema::Group;
+    <pre>    package Your::Schema::Group;
     use Class::Method::Modifiers;
-
     # ... declare columns ...
-
     __PACKAGE__-&gt;has_many('group_servers', 'Your::Schema::GroupServer', 'group_id');
     __PACKAGE__-&gt;many_to_many('servers', 'group_servers', 'server');
-
     # if the server group is a &quot;super group&quot;, then return all servers
     # otherwise return only servers that belongs to the given group
     around 'servers' =&gt; sub {
         my $orig = shift;
         my $self = shift;
-
         return $self-&gt;$orig(@_) unless $self-&gt;is_super_group;
         return $self-&gt;result_source-&gt;schema-&gt;resultset('Server')-&gt;all;
     };
@@ -631,15 +585,11 @@
         work for you, or do it the &quot;dirty way&quot;.</p>
     <p class="Pp">Method::Signatures::Simple way:</p>
     <p class="Pp"></p>
-    <pre>
-    package Your::Schema::Group;
+    <pre>    package Your::Schema::Group;
     use Method::Signatures::Simple;
-
     # ... declare columns ...
-
     __PACKAGE__-&gt;has_many('group_servers', 'Your::Schema::GroupServer', 'group_id');
     __PACKAGE__-&gt;many_to_many('servers', 'group_servers', 'server');
-
     # The method keyword automatically injects the annoying my $self = shift; for you.
     method servers {
         return $self-&gt;result_source-&gt;schema-&gt;resultset('Server')-&gt;search({ ... });
@@ -647,15 +597,11 @@
     </pre>
     <p class="Pp">The dirty way:</p>
     <p class="Pp"></p>
-    <pre>
-    package Your::Schema::Group;
+    <pre>    package Your::Schema::Group;
     use Sub::Name;
-
     # ... declare columns ...
-
     __PACKAGE__-&gt;has_many('group_servers', 'Your::Schema::GroupServer', 'group_id');
     __PACKAGE__-&gt;many_to_many('servers', 'group_servers', 'server');
-
     *servers = subname servers =&gt; sub {
         my $self = shift;
         return $self-&gt;result_source-&gt;schema-&gt;resultset('Server')-&gt;search({ ... });
@@ -681,8 +627,7 @@
     postgresql!</a></dt>
   <dd>If you get an error such as:
     <p class="Pp"></p>
-    <pre>
-  DBI connect('dbname=dbic','user',...) failed: could not connect to server:
+    <pre>  DBI connect('dbname=dbic','user',...) failed: could not connect to server:
   No such file or directory Is the server running locally and accepting
   connections on Unix domain socket &quot;/var/run/postgresql/.s.PGSQL.5432&quot;?
     </pre>
@@ -697,8 +642,7 @@
   <dd>Stop mysqld and restart it with the --skip-grant-tables option.
     <p class="Pp">Issue the following statements in the mysql client.</p>
     <p class="Pp"></p>
-    <pre>
-  UPDATE mysql.user SET Password=PASSWORD('MyNewPass') WHERE User='root';
+    <pre>  UPDATE mysql.user SET Password=PASSWORD('MyNewPass') WHERE User='root';
   FLUSH PRIVILEGES;
     </pre>
     <p class="Pp">Restart mysql.</p>

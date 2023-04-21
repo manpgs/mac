@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>curl_easy_getinfo(3)</title>
 </head>
@@ -44,10 +47,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp"><b>#include &lt;curl/curl.h&gt;</b></p>
-<p class="Pp"><b>CURLcode curl_easy_getinfo(CURL *curl, CURLINFO info, ...
-    );</b></p>
-<p class="Pp"></p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_getinfo(CURL *curl, CURLINFO info, ... );</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -217,6 +218,12 @@
   <dt id="CURLINFO_FTP_ENTRY_PATH"><a class="permalink" href="#CURLINFO_FTP_ENTRY_PATH">CURLINFO_FTP_ENTRY_PATH</a></dt>
   <dd>The entry path after logging in to an FTP server. See
       <i>CURLINFO_FTP_ENTRY_PATH(3)</i></dd>
+  <dt id="CURLINFO_CAPATH"><a class="permalink" href="#CURLINFO_CAPATH">CURLINFO_CAPATH</a></dt>
+  <dd>Get the default value for <i>CURLOPT_CAPATH(3)</i>. See
+      <i>CURLINFO_CAPATH(3)</i></dd>
+  <dt id="CURLINFO_CAINFO"><a class="permalink" href="#CURLINFO_CAINFO">CURLINFO_CAINFO</a></dt>
+  <dd>Get the default value for <i>CURLOPT_CAINFO(3)</i>. See
+      <i>CURLINFO_CAINFO(3)</i></dd>
   <dt id="CURLINFO_CERTINFO"><a class="permalink" href="#CURLINFO_CERTINFO">CURLINFO_CERTINFO</a></dt>
   <dd>Certificate chain. See <i>CURLINFO_CERTINFO(3)</i></dd>
   <dt id="CURLINFO_TLS_SSL_PTR"><a class="permalink" href="#CURLINFO_TLS_SSL_PTR">CURLINFO_TLS_SSL_PTR</a></dt>
@@ -249,8 +256,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="TIMES"><a class="permalink" href="#TIMES">TIMES</a></h1>
-<pre>
-An overview of the six time values available from curl_easy_getinfo()
+<pre>An overview of the six time values available from curl_easy_getinfo()
 curl_easy_perform()
     |
     |--NAMELOOKUP
@@ -259,8 +265,7 @@ curl_easy_perform()
     |--|--|--|--PRETRANSFER
     |--|--|--|--|--STARTTRANSFER
     |--|--|--|--|--|--TOTAL
-    |--|--|--|--|--|--REDIRECT
-</pre>
+    |--|--|--|--|--|--REDIRECT</pre>
 <dl class="Bl-tag">
   <dt id="NAMELOOKUP"><a class="permalink" href="#NAMELOOKUP">NAMELOOKUP</a></dt>
   <dd><i>CURLINFO_NAMELOOKUP_TIME</i> and <i>CURLINFO_NAMELOOKUP_TIME_T</i>. The
@@ -294,6 +299,28 @@ curl_easy_perform()
 </dl>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+  curl = curl_easy_init();
+  if(curl) {
+    curl_easy_setopt(curl, CURLOPT_URL, &quot;https://www.example.com/&quot;);
+    res = curl_easy_perform(curl);
+    if(CURLE_OK == res) {
+      char *ct;
+      /* ask for the content-type */
+      res = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &amp;ct);
+      if((CURLE_OK == res) &amp;&amp; ct)
+        printf(&quot;We received Content-Type: %s\n&quot;, ct);
+    }
+    /* always cleanup */
+    curl_easy_cleanup(curl);
+  }</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.4.1</p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
   VALUE</a></h1>
 <p class="Pp">If the operation was successful, CURLE_OK is returned. Otherwise
@@ -307,8 +334,8 @@ curl_easy_perform()
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">February 19, 2021</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

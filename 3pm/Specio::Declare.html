@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Specio::Declare(3)</title>
 </head>
@@ -32,73 +33,57 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package MyApp::Type::Library;
-
+<pre>    package MyApp::Type::Library;
     use parent 'Specio::Exporter';
-
     use Specio::Declare;
     use Specio::Library::Builtins;
-
     declare(
         'Foo',
         parent =&gt; t('Str'),
         where  =&gt; sub { $_[0] =~ /foo/i },
     );
-
     declare(
         'ArrayRefOfInt',
         parent =&gt; t( 'ArrayRef', of =&gt; t('Int') ),
     );
-
     my $even = anon(
         parent =&gt; t('Int'),
         inline =&gt; sub {
             my $type      = shift;
             my $value_var = shift;
-
             return $value_var . ' % 2 == 0';
         },
     );
-
     coerce(
         t('ArrayRef'),
         from  =&gt; t('Foo'),
         using =&gt; sub { [ $_[0] ] },
     );
-
     coerce(
         $even,
         from  =&gt; t('Int'),
         using =&gt; sub { $_[0] % 2 ? $_[0] + 1 : $_[0] },
     );
-
     # Specio name is DateTime
     any_isa_type('DateTime');
-
     # Specio name is DateTimeObject
     object_isa_type( 'DateTimeObject', class =&gt; 'DateTime' );
-
     any_can_type(
         'Duck',
         methods =&gt; [ 'duck_walk', 'quack' ],
     );
-
     object_can_type(
         'DuckObject',
         methods =&gt; [ 'duck_walk', 'quack' ],
     );
-
     enum(
         'Colors',
         values =&gt; [qw( blue green red )],
     );
-
     intersection(
         'HashRefAndArrayRef',
         of =&gt; [ t('HashRef'), t('ArrayRef') ],
     );
-
     union(
         'IntOrArrayRef',
         of =&gt; [ t('Int'), t('ArrayRef') ],
@@ -160,19 +145,16 @@
         both the current type and all its parents. Typically, the easiest way to
         do this is to write a subroutine something like this:</p>
     <p class="Pp"></p>
-    <pre>
-  sub {
+    <pre>  sub {
       my $self = shift;
       my $var  = shift;
-
       return $self-&gt;parent-&gt;inline_check($var)
           . ' and more checking code goes here';
   }
     </pre>
     <p class="Pp">Or, more concisely:</p>
     <p class="Pp"></p>
-    <pre>
-  sub { $_[0]-&gt;parent-&gt;inline_check( $_[1] ) . 'more code that checks $_[1]' }
+    <pre>  sub { $_[0]-&gt;parent-&gt;inline_check( $_[1] ) . 'more code that checks $_[1]' }
     </pre>
     <p class="Pp">The <span class="Li">&quot;inline&quot;</span> parameter is
         mutually exclusive with the <span class="Li">&quot;where&quot;</span>
@@ -339,9 +321,7 @@
     <span class="Li">&quot;t&quot;</span> with additional parameters, like
   this:</p>
 <p class="Pp"></p>
-<pre>
-  my $arrayref_of_int = t( 'ArrayRef', of =&gt; t('Int') );
-
+<pre>  my $arrayref_of_int = t( 'ArrayRef', of =&gt; t('Int') );
   my $arrayref_of_hashref_of_int = t(
       'ArrayRef',
       of =&gt; t(
@@ -381,8 +361,7 @@
 <p class="Pp">This software is Copyright (c) 2012 - 2020 by Dave Rolsky.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The Artistic License 2.0 (GPL Compatible)
+<pre>  The Artistic License 2.0 (GPL Compatible)
 </pre>
 <p class="Pp">The full text of the license can be found in the <i>LICENSE</i>
     file included with this distribution.</p>

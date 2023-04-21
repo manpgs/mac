@@ -30,6 +30,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>SmartCardServices(7)</title>
 </head>
@@ -69,20 +70,19 @@
   <dt id="Card"><a class="permalink" href="#Card"><i class="Em">Card
     Provisioning</i></a></dt>
   <dd>In order to use smartcards with macOS, identities must be populated into
-      Slot 9a, PIV Authentication, and 9d, Key Managment(KMK, Encryption), and
-      optionally 9c, if signing functions such as mail are to be used.</dd>
+      Slot 9a (PIV Authentication) and 9d (Key Managment), and optionally 9c, if
+      signing functions such as e-mail signing are to be used.</dd>
   <dt id="Supported"><a class="permalink" href="#Supported"><i class="Em">Supported
     Services</i></a></dt>
   <dd><a class="permalink" href="#Authentication"><i class="Em" id="Authentication">Authentication</i></a>
-      (Loginwindow, ScreenSaver, ssh, sudo, Safari, PAM Authorization, login,
-      su, Finder)
+      Login, Screen Saver, ssh, sudo, Safari, PAM Authorization, su, Finder
     <p class="Pp">Authentication is performed using the PIV Authentication
-        Identity. For login, the Key management Key (9d, encryption) is used to
-        unlock the keychain</p>
-    <p class="Pp"><a class="permalink" href="#Encryption"><i class="Em" id="Encryption">Encryption</i></a>
-        (Mail, Keychain)</p>
-    <p class="Pp"><a class="permalink" href="#Signing"><i class="Em" id="Signing">Signing</i></a>
-        (Requires signing certificate- Mail, code signing)</p>
+        Identity (9a). For login, the Key Management key (9d) is used to unlock
+        the encrypted harddrive (Apple Silicon devices) and to unlock
+      Keychain.</p>
+    <p class="Pp"><a class="permalink" href="#Encryption"><i class="Em" id="Encryption">Encryption
+        and Signing</i></a> Mail and code signing</p>
+    <p class="Pp">Requires signing certificate.</p>
     <p class="Pp">Mail in macOS will use Digital Signing and Encryption
         Identities on an attached smartcard. Signing and Encryption buttons will
         appear in the toolbar when a case-sensitive email address matches the
@@ -99,10 +99,8 @@
     notification dialog which automatically appears when an unassociated
     SmartCard is inserted into a reader. This dialog can be globally suppressed
     by:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard UserPairing -bool NO
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard UserPairing -bool NO</pre>
 </div>
 <p class="Pp">To configure attribute mapping, use the appropriate
     <i class="Em">AttributeMapping</i> section in the configuration file as
@@ -114,9 +112,8 @@ sudo defaults write /Library/Preferences/com.apple.security.smartcard UserPairin
 <p class="Pp">By default, certificates do not need to be trusted to allow
     pairing. Certificate trust can be globally modified using the
     <i class="Em">checkCertificateTrust</i> setting:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard checkCertificateTrust -int &lt;level&gt;
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard checkCertificateTrust -int &lt;level&gt;
 
 </pre>
 </div>
@@ -218,10 +215,8 @@ Possible trust level values are:
     <p class="Pp"></p>
     <p class="Pp">In addition, the system must be configured to allow users who
         are not paired with SmartCard to login with password:</p>
-    <div class="Bd Pp Bd-indent">
-    <pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1
-    </pre>
+    <div class="Bd Pp Bd-indent Li">
+    <pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1</pre>
     </div>
     <p class="Pp"></p>
     <p class="Pp">Remember to update the FileVault Login settings using the
@@ -364,19 +359,15 @@ sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmap
 <p class="Pp">There may be a requirement to use a SmartCard for user
     authentication in your environment. Enforcing the use of the SmartCard for
     the entire system can be done using MDM or a command:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard enforceSmartCard -bool true
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard enforceSmartCard -bool true</pre>
 </div>
 <p class="Pp">In addition, the system might be configured to allow users who are
     not paired with SmartCard to login with password using MDM or the
   command:</p>
 <p class="Pp"></p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmappedUsers -int 1</pre>
 </div>
 <p class="Pp">Remember to update the FileVault Login settings using the
     <i class="Em">diskutil apfs updatePreboot</i> command.</p>
@@ -406,10 +397,8 @@ sudo defaults write /Library/Preferences/com.apple.security.smartcard allowUnmap
     this cannot be used, the following command can be used to enable password
     login once:</p>
 <p class="Pp"></p>
-<div class="Bd Pp Bd-indent">
-<pre>
-security filevault skip-sc-enforcement
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>security filevault skip-sc-enforcement</pre>
 </div>
 <p class="Pp">For more details please see the man page of the
     <i class="Em">security</i> command.</p>
@@ -444,10 +433,8 @@ security filevault skip-sc-enforcement
   To enable the app extension and make the token available to the system for
     authentication, launch the sc_auth command line tool with value of
     '&#x2018;com.apple.ctk.class-id&#x2019; from Info.plist:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo sc_auth enable_for_login -t  com.example.HostApp.TokenExtension
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo sc_auth enable_for_login -t  com.example.HostApp.TokenExtension</pre>
 </div>
 </section>
 <section class="Sh">
@@ -455,10 +442,8 @@ sudo sc_auth enable_for_login -t  com.example.HostApp.TokenExtension
   REPORT</a></h1>
 <p class="Pp">It is possible to show the current status of SmartCardServices by
     command:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-system_profiler SPSmartCardsDataType
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>system_profiler SPSmartCardsDataType</pre>
 </div>
 <p class="Pp">Information presented includes reader, reader driver, card, card
     driver, available smartcards and provisioned certificates.</p>
@@ -480,10 +465,8 @@ system_profiler SPSmartCardsDataType
   CARD APDU LOGGING</a></h1>
 <p class="Pp">It is possible to turn on logging for SmartCards by setting the
     global preference:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard Logging -bool yes
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard Logging -bool yes</pre>
 </div>
 <p class="Pp" id="com.apple.CryptoTokenKit">After a SmartCard reader is
     connected (or after reboot) all operations including contents of sent and
@@ -494,10 +477,8 @@ sudo defaults write /Library/Preferences/com.apple.security.smartcard Logging -b
     <a class="permalink" href="#APDULog"><i class="Em" id="APDULog">APDULog</i></a>
     so it is possible to set up logging with a predicate (see
     <a class="Xr" href="../1/log">log(1)</a> ). Example:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-log show --predicate '(subsystem == &quot;com.apple.CryptoTokenKit&quot;) &amp;&amp; (category == &quot;APDULog&quot;)'
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>log show --predicate '(subsystem == &quot;com.apple.CryptoTokenKit&quot;) &amp;&amp; (category == &quot;APDULog&quot;)'</pre>
 </div>
 <p class="Pp">To avoid security and privacy risks that could occur if logging is
     turned on indefinitely, the logging setting is one-shot - it must be turned
@@ -511,10 +492,8 @@ log show --predicate '(subsystem == &quot;com.apple.CryptoTokenKit&quot;) &amp;&
   SMART CARD DRIVERS</a></h1>
 <p class="Pp">It is possible to turn off token drivers by setting the global
     preference:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-sudo defaults write /Library/Preferences/com.apple.security.smartcard DisabledTokens -array com.apple.CryptoTokenKit.pivtoken
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>sudo defaults write /Library/Preferences/com.apple.security.smartcard DisabledTokens -array com.apple.CryptoTokenKit.pivtoken</pre>
 </div>
 <p class="Pp">This statement disables built-in PIV SmartCard driver, but it can
     be used to disable any token driver or set of token drivers just by

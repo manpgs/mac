@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Meta::GlobRef_InstanceMetaclass(3)</title>
 </head>
@@ -33,66 +34,50 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package My::Meta::Instance;
-
+<pre>  package My::Meta::Instance;
   use Scalar::Util qw( weaken );
   use Symbol qw( gensym );
-
   use Moose::Role;
-
   sub create_instance {
       my $self = shift;
       my $sym = gensym();
       bless $sym, $self-&gt;_class_name;
   }
-
   sub clone_instance {
       my ( $self, $instance ) = @_;
-
       my $new_sym = gensym();
       %{*$new_sym} = %{*$instance};
-
       bless $new_sym, $self-&gt;_class_name;
   }
-
   sub get_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
       return *$instance-&gt;{$slot_name};
   }
-
   sub set_slot_value {
       my ( $self, $instance, $slot_name, $value ) = @_;
       *$instance-&gt;{$slot_name} = $value;
   }
-
   sub deinitialize_slot {
       my ( $self, $instance, $slot_name ) = @_;
       delete *$instance-&gt;{$slot_name};
   }
-
   sub is_slot_initialized {
       my ( $self, $instance, $slot_name ) = @_;
       exists *$instance-&gt;{$slot_name};
   }
-
   sub weaken_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
       weaken *$instance-&gt;{$slot_name};
   }
-
   sub inline_create_instance {
       my ( $self, $class_variable ) = @_;
       return 'do { my $sym = Symbol::gensym(); bless $sym, ' . $class_variable . ' }';
   }
-
   sub inline_slot_access {
       my ( $self, $instance, $slot_name ) = @_;
       return '*{' . $instance . '}-&gt;{' . $slot_name . '}';
   }
-
   package MyApp::User;
-
   use Moose;
   Moose::Util::MetaRole::apply_metaroles(
       for =&gt; __PACKAGE__,
@@ -100,12 +85,10 @@
           instance =&gt; ['My::Meta::Instance'],
       },
   );
-
   has 'name' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
   );
-
   has 'email' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Str',
@@ -127,8 +110,7 @@
 <p class="Pp">The first method we override is
     <span class="Li">&quot;create_instance&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  sub create_instance {
+<pre>  sub create_instance {
       my $self = shift;
       my $sym = gensym();
       bless $sym, $self-&gt;_class_name;
@@ -140,13 +122,10 @@
     <span class="Li">&quot;clone_instance&quot;</span> to create a new array
     reference:</p>
 <p class="Pp"></p>
-<pre>
-  sub clone_instance {
+<pre>  sub clone_instance {
       my ( $self, $instance ) = @_;
-
       my $new_sym = gensym();
       %{*$new_sym} = %{*$instance};
-
       bless $new_sym, $self-&gt;_class_name;
   }
 </pre>
@@ -155,8 +134,7 @@
     default instance class, these expect the object to be a hash reference, but
     we need to change this to expect a glob reference instead.</p>
 <p class="Pp"></p>
-<pre>
-  sub get_slot_value {
+<pre>  sub get_slot_value {
       my ( $self, $instance, $slot_name ) = @_;
       *$instance-&gt;{$slot_name};
   }
@@ -165,8 +143,7 @@
     <i>slower</i> than the default. However, when attribute access is inlined,
     this lookup will be cached:</p>
 <p class="Pp"></p>
-<pre>
-  sub inline_slot_access {
+<pre>  sub inline_slot_access {
       my ( $self, $instance, $slot_name ) = @_;
       return '*{' . $instance . '}-&gt;{' . $slot_name . '}';
   }
@@ -177,8 +154,7 @@
 <p class="Pp">Finally, we use this meta-instance in our
     <span class="Li">&quot;MyApp::User&quot;</span> class:</p>
 <p class="Pp"></p>
-<pre>
-  Moose::Util::MetaRole::apply_metaroles(
+<pre>  Moose::Util::MetaRole::apply_metaroles(
       for =&gt; __PACKAGE__,
       class_metaroles =&gt; {
           instance =&gt; ['My::Meta::Instance'],

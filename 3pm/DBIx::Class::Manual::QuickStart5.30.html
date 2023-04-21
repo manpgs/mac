@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::QuickStart(3)</title>
 </head>
@@ -47,14 +48,12 @@
     subdirectory mentioned earlier, the next command will download and unpack
     it:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -mCPAN -e'CPAN::Shell-&gt;look(&quot;DBIx::Class&quot;)'
+<pre>    $ perl -mCPAN -e'CPAN::Shell-&gt;look(&quot;DBIx::Class&quot;)'
     DBIx-Class$ cd examples/Schema
 </pre>
 <p class="Pp">Inspect the database:</p>
 <p class="Pp"></p>
-<pre>
-    DBIx-Class/examples/Schema$ sqlite3 db/example.db .dump
+<pre>    DBIx-Class/examples/Schema$ sqlite3 db/example.db .dump
 </pre>
 <p class="Pp">You can also use a GUI database browser such as SQLite Manager
     &lt;https://addons.mozilla.org/firefox/addon/sqlite-manager&gt;.</p>
@@ -74,8 +73,7 @@
   to the database</a></h2>
 <p class="Pp">A schema object represents the database.</p>
 <p class="Pp"></p>
-<pre>
-    use MyApp::Schema qw();
+<pre>    use MyApp::Schema qw();
     my $schema = MyApp::Schema-&gt;connect('dbi:SQLite:db/example.db');
 </pre>
 <p class="Pp">The first four arguments are the same as for &quot;connect&quot;
@@ -88,8 +86,7 @@
 <p class="Pp"><i>Adding data</i></p>
 <p class="Pp">Via intermediate result objects:</p>
 <p class="Pp"></p>
-<pre>
-    my $artist_ma = $schema-&gt;resultset('Artist')-&gt;create({
+<pre>    my $artist_ma = $schema-&gt;resultset('Artist')-&gt;create({
         name =&gt; 'Massive Attack',
     });
     my $cd_mezz = $artist_ma-&gt;create_related(cds =&gt; {
@@ -103,8 +100,7 @@
 </pre>
 <p class="Pp">Via relation accessors:</p>
 <p class="Pp"></p>
-<pre>
-    $schema-&gt;resultset('Artist')-&gt;create({
+<pre>    $schema-&gt;resultset('Artist')-&gt;create({
         name =&gt; 'Metallica',
         cds =&gt; [
             {
@@ -139,8 +135,7 @@
 <p class="Pp"><i>Retrieving data</i></p>
 <p class="Pp">Set up a condition.</p>
 <p class="Pp"></p>
-<pre>
-    my $artists_starting_with_m = $schema-&gt;resultset('Artist')-&gt;search(
+<pre>    my $artists_starting_with_m = $schema-&gt;resultset('Artist')-&gt;search(
         {
             name =&gt; { like =&gt; 'M%' }
         }
@@ -151,16 +146,14 @@
     objects represent a row and automatically get accessors for their column
     names.</p>
 <p class="Pp"></p>
-<pre>
-    for my $artist ($artists_starting_with_m-&gt;all) {
+<pre>    for my $artist ($artists_starting_with_m-&gt;all) {
         say $artist-&gt;name;
     }
 </pre>
 <p class="Pp"><i>Changing data</i></p>
 <p class="Pp">Change the release year of all CDs titled <i>ReLoad</i>.</p>
 <p class="Pp"></p>
-<pre>
-    $schema-&gt;resultset('Cd')-&gt;search(
+<pre>    $schema-&gt;resultset('Cd')-&gt;search(
         {
             title =&gt; 'ReLoad',
         }
@@ -174,8 +167,7 @@
 <p class="Pp">Removes all tracks titled <i>Fuel</i> regardless of which CD the
     belong to.</p>
 <p class="Pp"></p>
-<pre>
-    $schema-&gt;resultset('Track')-&gt;search(
+<pre>    $schema-&gt;resultset('Track')-&gt;search(
         {
             title =&gt; 'Fuel',
         }
@@ -189,15 +181,13 @@
     REPL or during explorative programming.</p>
 <p class="Pp">From the root to the details:</p>
 <p class="Pp"></p>
-<pre>
-    $schema-&gt;sources;                       # returns qw(Cd Track Artist)
+<pre>    $schema-&gt;sources;                       # returns qw(Cd Track Artist)
     $schema-&gt;source('Cd')-&gt;columns;         # returns qw(cdid artist title year)
     $schema-&gt;source('Cd')-&gt;relationships;   # returns qw(artist tracks)
 </pre>
 <p class="Pp">From a detail to the root:</p>
 <p class="Pp"></p>
-<pre>
-    $some_result-&gt;result_source;            # returns appropriate source
+<pre>    $some_result-&gt;result_source;            # returns appropriate source
     $some_resultset-&gt;result_source;
     $some_resultsource-&gt;schema;             # returns appropriate schema
 </pre>
@@ -205,19 +195,14 @@
 <section class="Ss">
 <h2 class="Ss" id="Resetting_the_database"><a class="permalink" href="#Resetting_the_database">Resetting
   the database</a></h2>
-<pre>
-    # delete database file
+<pre>    # delete database file
     DBIx-Class/examples/Schema$ rm -f db/example.db
-
     # create database and set up tables from definition
     DBIx-Class/examples/Schema$ sqlite3 db/example.db &lt; db/example.sql
-
     # fill them with data
     DBIx-Class/examples/Schema$ perl ./insertdb.pl
-
     # delete the schema classes files
     DBIx-Class/examples/Schema$ rm -rf MyApp
-
     # recreate schema classes files from database file
     DBIx-Class/examples/Schema$ dbicdump \
         -o dump_directory=. MyApp::Schema dbi:SQLite:db/example.db

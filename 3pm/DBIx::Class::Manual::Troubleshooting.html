@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Manual::Troubleshooting(3)</title>
 </head>
@@ -40,25 +41,21 @@
 <p class="Pp">The <span class="Li">&quot;DBIC_TRACE&quot;</span> environment
     variable controls SQL tracing, so to see what is happening try</p>
 <p class="Pp"></p>
-<pre>
-  export DBIC_TRACE=1
+<pre>  export DBIC_TRACE=1
 </pre>
 <p class="Pp">Alternatively use the
     <span class="Li">&quot;storage-&gt;debug&quot;</span> class method:-</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;storage-&gt;debug(1);
+<pre>  $schema-&gt;storage-&gt;debug(1);
 </pre>
 <p class="Pp">To send the output somewhere else set debugfh:-</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;storage-&gt;debugfh(IO::File-&gt;new('/tmp/trace.out', 'w'));
+<pre>  $schema-&gt;storage-&gt;debugfh(IO::File-&gt;new('/tmp/trace.out', 'w'));
 </pre>
 <p class="Pp">Alternatively you can do this with the environment variable,
   too:-</p>
 <p class="Pp"></p>
-<pre>
-  export DBIC_TRACE=&quot;1=/tmp/trace.out&quot;
+<pre>  export DBIC_TRACE=&quot;1=/tmp/trace.out&quot;
 </pre>
 </section>
 <section class="Ss">
@@ -76,8 +73,7 @@
     that uses auto-incrementing primary key columns to fail with a message such
     as:</p>
 <p class="Pp"></p>
-<pre>
-  Can't get last insert id at /.../DBIx/Class/Row.pm line 95
+<pre>  Can't get last insert id at /.../DBIx/Class/Row.pm line 95
 </pre>
 <p class="Pp">In particular the RHEL 4 and FC3 Linux distributions both ship
     with combinations of DBI and DBD::Pg modules that do not work correctly.</p>
@@ -98,15 +94,13 @@
 <p class="Pp">This can happen if you have a relation whose name is a word
     reserved by your database, e.g. &quot;user&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  package My::Schema::User;
+<pre>  package My::Schema::User;
   ...
   __PACKAGE__-&gt;table('users');
   __PACKAGE__-&gt;add_columns(qw/ id name /);
   __PACKAGE__-&gt;set_primary_key('id');
   ...
   1;
-
   package My::Schema::ACL;
   ...
   __PACKAGE__-&gt;table('acl');
@@ -114,7 +108,6 @@
   __PACKAGE__-&gt;belongs_to( 'user' =&gt; 'My::Schema::User', 'user_id' );
   ...
   1;
-
   $schema-&gt;resultset('ACL')-&gt;search(
     {},
     {
@@ -125,8 +118,7 @@
 </pre>
 <p class="Pp">The SQL generated would resemble something like:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT me.user_id, user.name FROM acl me
+<pre>  SELECT me.user_id, user.name FROM acl me
   JOIN users user ON me.user_id = user.id
 </pre>
 <p class="Pp">If, as is likely, your database treats &quot;user&quot; as a
@@ -144,14 +136,12 @@
 <p class="Pp">This can happen if you are still using the obsolete order hack,
     and also happen to turn on SQL-quoting.</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;search( {}, { order_by =&gt; [ 'name DESC' ] } );
+<pre>  $rs-&gt;search( {}, { order_by =&gt; [ 'name DESC' ] } );
 </pre>
 <p class="Pp">Since DBIx::Class &gt;= 0.08100 and SQL::Abstract &gt;= 1.50 the
     above should be written as:</p>
 <p class="Pp"></p>
-<pre>
-  $rs-&gt;search( {}, { order_by =&gt; { -desc =&gt; 'name' } } );
+<pre>  $rs-&gt;search( {}, { order_by =&gt; { -desc =&gt; 'name' } } );
 </pre>
 <p class="Pp">For more ways to express order clauses refer to &quot;ORDER BY
     CLAUSES&quot; in SQL::Abstract</p>
@@ -170,8 +160,7 @@
     and so free of this performance issue (this means all Fedora and RHEL5
     systems with full current updates will not be subject to this problem):-</p>
 <p class="Pp"></p>
-<pre>
-  Fedora 8     - perl-5.8.8-41.fc8
+<pre>  Fedora 8     - perl-5.8.8-41.fc8
   RHEL5        - perl-5.8.8-15.el5_2.1
 </pre>
 <p class="Pp">This issue is due to perl doing an exhaustive search of blessed

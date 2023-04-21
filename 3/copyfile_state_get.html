@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2021 Apple Computer, Inc.  All rights reserved.
+   Copyright (c) 2022 Apple Computer, Inc.  All rights reserved.
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>COPYFILE(3)</title>
 </head>
@@ -339,7 +340,9 @@
   <dd>The object being copied is a directory, and all of the objects contained
       have been copied. At this stage, the destination directory being copied
       will have any extra permissions that were added to allow the copying will
-      be removed.</dd>
+      be removed (by a final <code class="Dv">COPYFILE_STAT</code> operation -
+      note that this occurs even if the <code class="Dv">COPYFILE_STAT</code>
+      flag was not passed to the recursive copy).</dd>
   <dt id="COPYFILE_RECURSE_ERROR"><a class="permalink" href="#COPYFILE_RECURSE_ERROR"><code class="Dv">COPYFILE_RECURSE_ERROR</code></a></dt>
   <dd>There was an error in processing an element of the source hierarchy; this
       happens when <a class="Xr" href="../3/fts">fts(3)</a> returns an error or
@@ -503,12 +506,18 @@
     does not reset the seek position for either source or destination. This can
     result in the destination file being a different size than the source
   file.</p>
+<p class="Pp" id="copyfile~7">Both
+    <a class="permalink" href="#copyfile~7"><code class="Fn">copyfile</code></a>()
+    and <code class="Fn">fcopyfile</code>() will temporarily mark an unwritable
+    destination writable for the duration of the copy. After the copy is
+    performed (except when the <code class="Dv">COPYFILE_STAT</code> flag is
+    passed in), an attempt is made to revert the destination's permissions to
+    their starting state.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
-<div class="Bd Bd-indent">
-<pre>
-/* Initialize a state variable */
+<div class="Bd Bd-indent Li">
+<pre>/* Initialize a state variable */
 copyfile_state_t s;
 s = copyfile_state_alloc();
 /* Copy the data and extended attributes of one file to another */
@@ -526,8 +535,7 @@ copyfile(NULL, &quot;/tmp/bar&quot;, s, COPYFILE_ALL);
 copyfile(NULL, &quot;/tmp/car&quot;, s, COPYFILE_ALL);
 copyfile_state_free(s);
 /* Remove extended attributes from a file */
-copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);
-</pre>
+copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);</pre>
 </div>
 </section>
 <section class="Sh">
@@ -593,8 +601,8 @@ copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">May 19, 2021</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-date">March 30, 2022</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

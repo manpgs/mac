@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLREGUTS(1)</title>
 </head>
@@ -103,8 +104,7 @@
     <span class="Li">&quot;/foo(?:\w+|\d+|\s+)bar/&quot;</span> can be thought
     of as the following chart:</p>
 <p class="Pp"></p>
-<pre>
-                      [start]
+<pre>                      [start]
                          |
                        &lt;foo&gt;
                          |
@@ -156,8 +156,7 @@
 <p class="Pp">The base structure of a regop is defined in <i>regexp.h</i> as
     follows:</p>
 <p class="Pp"></p>
-<pre>
-    struct regnode {
+<pre>    struct regnode {
         U8  flags;    /* Various purposes, sometimes overridden */
         U8  type;     /* Opcode value as specified by regnodes.h */
         U16 next_off; /* Offset in size regnode */
@@ -179,8 +178,7 @@
       <span class="Li">&quot;regnode_2&quot;</span> structures contain two
       two-byte arguments instead:
     <p class="Pp"></p>
-    <pre>
-    regnode_1                U32 arg1;
+    <pre>    regnode_1                U32 arg1;
     regnode_2                U16 arg1;  U16 arg2;
     </pre>
   </dd>
@@ -190,8 +188,7 @@
       string data. Strings are padded on the end with zero bytes so that the
       total length of the node is a multiple of four bytes:
     <p class="Pp"></p>
-    <pre>
-    regnode_string           char string[1];
+    <pre>    regnode_string           char string[1];
                              U8 str_len; /* overrides flags */
     </pre>
   </dd>
@@ -201,8 +198,7 @@
       have a four-byte argument and then a 32-byte (256-bit) bitmap indicating
       which characters in the Latin1 range are included in the class.
     <p class="Pp"></p>
-    <pre>
-    regnode_charclass        U32 arg1;
+    <pre>    regnode_charclass        U32 arg1;
                              char bitmap[ANYOF_BITMAP_SIZE];
     </pre>
     <p class="Pp">Various flags whose names begin with
@@ -217,8 +213,7 @@
       has an additional 32-bit bitmap indicating which POSIX char classes have
       been included.
     <p class="Pp"></p>
-    <pre>
-   regnode_charclass_posixl U32 arg1;
+    <pre>   regnode_charclass_posixl U32 arg1;
                             char bitmap[ANYOF_BITMAP_SIZE];
                             U32 classflags;
     </pre>
@@ -392,8 +387,7 @@
 <p class="Pp"><i>Parse Call Graph and a Grammar</i></p>
 <p class="Pp">The call graph looks like this:</p>
 <p class="Pp"></p>
-<pre>
- reg()                        # parse a top level regex, or inside of
+<pre> reg()                        # parse a top level regex, or inside of
                               # parens
      regbranch()              # parse a single branch of an alternation
          regpiece()           # parse a pattern followed by a quantifier
@@ -413,8 +407,7 @@
 </pre>
 <p class="Pp">A grammar form might be something like this:</p>
 <p class="Pp"></p>
-<pre>
-    atom  : constant | class
+<pre>    atom  : constant | class
     quant : '*' | '+' | '?' | '{min,max}'
     _branch: piece
            | piece _branch
@@ -500,8 +493,7 @@
     <span class="Li">&quot;regtail()&quot;</span> which does some extra
     analysis.</p>
 <p class="Pp"></p>
-<pre>
- &gt;foo&lt;             1    reg
+<pre> &gt;foo&lt;             1    reg
                           brnc
                             piec
                               atom
@@ -510,8 +502,7 @@
 </pre>
 <p class="Pp">The resulting program then looks like:</p>
 <p class="Pp"></p>
-<pre>
-   1: EXACT &lt;foo&gt;(3)
+<pre>   1: EXACT &lt;foo&gt;(3)
    3: END(0)
 </pre>
 <p class="Pp">As you can see, even though we parsed out a branch and a piece, it
@@ -529,8 +520,7 @@
     that <span class="Li">&quot;regbranch()&quot;</span> calls
     <span class="Li">&quot;regpiece()&quot;</span> twice.</p>
 <p class="Pp"></p>
-<pre>
- &gt;foo+&lt;            1    reg
+<pre> &gt;foo+&lt;            1    reg
                           brnc
                             piec
                               atom
@@ -543,8 +533,7 @@
 </pre>
 <p class="Pp">And we end up with the program:</p>
 <p class="Pp"></p>
-<pre>
-   1: EXACT &lt;fo&gt;(3)
+<pre>   1: EXACT &lt;fo&gt;(3)
    3: PLUS(6)
    4:   EXACT &lt;o&gt;(0)
    6: END(0)
@@ -560,8 +549,7 @@
 <p class="Pp">Now for something much more complex:
     <span class="Li">&quot;/x(?:foo*|b[a][rR])(foo|bar)$/&quot;</span></p>
 <p class="Pp"></p>
-<pre>
- &gt;x(?:foo*|b...    1    reg
+<pre> &gt;x(?:foo*|b...    1    reg
                           brnc
                             piec
                               atom
@@ -635,8 +623,7 @@
 </pre>
 <p class="Pp">Resulting in the program</p>
 <p class="Pp"></p>
-<pre>
-   1: EXACT &lt;x&gt;(3)
+<pre>   1: EXACT &lt;x&gt;(3)
    3: BRANCH(9)
    4:   EXACT &lt;fo&gt;(6)
    6:   STAR(26)
@@ -678,8 +665,7 @@
     to find a match, and even more to decide that no match is possible. Consider
     a situation like the following pattern.</p>
 <p class="Pp"></p>
-<pre>
-   'ababababababababababab' =~ /(a|b)*z/
+<pre>   'ababababababababababab' =~ /(a|b)*z/
 </pre>
 <p class="Pp">The <span class="Li">&quot;(a|b)*&quot;</span> part can match at
     every char in the string, and then fail every time because there is no
@@ -688,8 +674,7 @@
     <span class="Li">&quot;z&quot;</span> in the string. Likewise in a pattern
     like:</p>
 <p class="Pp"></p>
-<pre>
-   /foo(\w+)bar/
+<pre>   /foo(\w+)bar/
 </pre>
 <p class="Pp">In this case we know that the string must contain a
     <span class="Li">&quot;foo&quot;</span> which must be followed by
@@ -882,14 +867,14 @@
     <span class="Li">&quot;pprivate&quot;</span> will be a pointer to a
     regexp_internal structure which holds the compiled program and any
     additional data that is private to the regex engine implementation.</p>
-<p class="Pp"><i>Perl's </i><i>&quot;pprivate&quot;</i><i> structure</i></p>
+<p class="Pp"><i>Perl's
+    </i><span class="Li"><i>&quot;pprivate&quot;</i></span><i> structure</i></p>
 <p class="Pp">The following structure is used as the
     <span class="Li">&quot;pprivate&quot;</span> struct by perl's regex engine.
     Since it is specific to perl it is only of curiosity value to other engine
     implementations.</p>
 <p class="Pp"></p>
-<pre>
- typedef struct regexp_internal {
+<pre> typedef struct regexp_internal {
          U32 *offsets;           /* offset annotations 20001228 MJD
                                   * data about mapping the program to
                                   * the string*/
@@ -926,8 +911,7 @@
   <dd>This field points at a <span class="Li">&quot;reg_data&quot;</span>
       structure, which is defined as follows
     <p class="Pp"></p>
-    <pre>
-    struct reg_data {
+    <pre>    struct reg_data {
         U32 count;
         U8 *what;
         void* data[1];

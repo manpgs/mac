@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>FreezeThaw(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use FreezeThaw qw(freeze thaw cmpStr safeFreeze cmpStrHard);
+<pre>  use FreezeThaw qw(freeze thaw cmpStr safeFreeze cmpStrHard);
   $string = freeze $data1, $data2, $data3;
   ...
   ($olddata1, $olddata2, $olddata3) = thaw $string;
@@ -103,20 +103,17 @@
     &quot;content&quot; of an object is an address of some <b>C</b> data). The
     methods are called like</p>
 <p class="Pp"></p>
-<pre>
-  $newcooky = $obj-&gt;Freeze($cooky);
+<pre>  $newcooky = $obj-&gt;Freeze($cooky);
   $obj = Package-&gt;Thaw($content,$cooky);
 </pre>
 <p class="Pp">To save and restore the data the following method are
   applicable:</p>
 <p class="Pp"></p>
-<pre>
-  $cooky-&gt;FreezeScalar($data,$ignorePackage,$noduplicate);
+<pre>  $cooky-&gt;FreezeScalar($data,$ignorePackage,$noduplicate);
 </pre>
 <p class="Pp">during <b>Freeze()</b>ing, and</p>
 <p class="Pp"></p>
-<pre>
-  $data = $cooky-&gt;ThawScalar;
+<pre>  $data = $cooky-&gt;ThawScalar;
 </pre>
 <p class="Pp">Two optional arguments <span class="Li">$ignorePackage</span> and
     <span class="Li">$noduplicate</span> regulate whether the freezing should
@@ -124,12 +121,10 @@
     a blessed object, and whether the data should not be marked as seen already
     even if it was seen before. The default methods</p>
 <p class="Pp"></p>
-<pre>
-  sub UNIVERSAL::Freeze {
+<pre>  sub UNIVERSAL::Freeze {
     my ($obj, $cooky) = (shift, shift);
     $cooky-&gt;FreezeScalar($obj,1,1);
   }
-
   sub UNIVERSAL::Thaw {
     my ($package, $cooky) = (shift, shift);
     my $obj = $cooky-&gt;ThawScalar;
@@ -147,8 +142,7 @@
 <p class="Pp">Freezing and thawing <span class="Li">$cooky</span> also allows
     the following additional methods:</p>
 <p class="Pp"></p>
-<pre>
-  $cooky-&gt;isSafe;
+<pre>  $cooky-&gt;isSafe;
 </pre>
 <p class="Pp">to find out whether the current freeze was initiated by
     <span class="Li">&quot;freeze&quot;</span> or
@@ -157,23 +151,20 @@
     operation is considered safe (i.e., either does not contain cached elsewhere
     data, or comes from the same application). You can use</p>
 <p class="Pp"></p>
-<pre>
-  $cooky-&gt;makeSafe;
+<pre>  $cooky-&gt;makeSafe;
 </pre>
 <p class="Pp">to prohibit cached data for the duration of the rest of freezing
     or thawing of current object.</p>
 <p class="Pp">Two methods</p>
 <p class="Pp"></p>
-<pre>
-  $value = $cooky-&gt;repeatedOK;
+<pre>  $value = $cooky-&gt;repeatedOK;
   $cooky-&gt;noRepeated;           # Now repeated are prohibited
 </pre>
 <p class="Pp">allow to find out/change the current setting for allowing repeated
     references.</p>
 <p class="Pp">If you want to flush the cache of saved objects you can use</p>
 <p class="Pp"></p>
-<pre>
-  FreezeThaw-&gt;flushCache;
+<pre>  FreezeThaw-&gt;flushCache;
 </pre>
 <p class="Pp">this can invalidate some frozen string, so that thawing them will
     result in fatal error.</p>
@@ -195,16 +186,14 @@
     way such that the references to this object remain valid.</p>
 <p class="Pp">The methods are called like this:</p>
 <p class="Pp"></p>
-<pre>
-  $pre_object_ref = Package-&gt;Allocate($pre_pre_object_ref);
+<pre>  $pre_object_ref = Package-&gt;Allocate($pre_pre_object_ref);
         # Returns reference
   Package-&gt;Instantiate($pre_object_ref,$cooky);
         # Converts into reference to blessed object
 </pre>
 <p class="Pp">The reverse operations are</p>
 <p class="Pp"></p>
-<pre>
-  $object_ref-&gt;FreezeEmpty($cooky);
+<pre>  $object_ref-&gt;FreezeEmpty($cooky);
   $object_ref-&gt;FreezeInstance($cooky);
 </pre>
 <p class="Pp">during these calls object can
@@ -220,8 +209,7 @@
     different objects will not share the same references. Example of bad
   result:</p>
 <p class="Pp"></p>
-<pre>
-  $o1-&gt;FreezeEmpty($cooky)
+<pre>  $o1-&gt;FreezeEmpty($cooky)
 </pre>
 <p class="Pp">freezes <span class="Li">&quot;{}&quot;</span>, and
     <span class="Li">&quot;$o2-&gt;FreezeEmpty($cooky)&quot;</span> makes the
@@ -236,8 +224,7 @@
     <span class="Li">&quot;FreezeThaw::copyContents&quot;</span> is provided for
     simplification of instantiation. The syntax is</p>
 <p class="Pp"></p>
-<pre>
-  FreezeThaw::copyContents $to, $from;
+<pre>  FreezeThaw::copyContents $to, $from;
 </pre>
 <p class="Pp">The function copies contents the object
     <span class="Li">$from</span> point to into what the object
@@ -271,20 +258,17 @@
     must also survive a change of a &quot;member&quot; to an equal member. Say,
     after</p>
 <p class="Pp"></p>
-<pre>
-  $a = [a =&gt; 3];
+<pre>  $a = [a =&gt; 3];
   $a-&gt;{b} = \ $a-&gt;{a};
 </pre>
 <p class="Pp"><span class="Li">$a</span> satisfies</p>
 <p class="Pp"></p>
-<pre>
-  $a-&gt;{b} == \ $a-&gt;{a}
+<pre>  $a-&gt;{b} == \ $a-&gt;{a}
 </pre>
 <p class="Pp">This property will be broken by <b>freeze()</b>/<b>thaw()</b>, but
     it is also broken by</p>
 <p class="Pp"></p>
-<pre>
-  $a-&gt;{a} = delete $a-&gt;{a};
+<pre>  $a-&gt;{a} = delete $a-&gt;{a};
 </pre>
 </section>
 </div>

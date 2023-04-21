@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Socket(3pm)</title>
 </head>
@@ -35,16 +36,12 @@
     likely use the higher-level API provided by
     <span class="Li">&quot;IO::Socket&quot;</span> or similar instead.</p>
 <p class="Pp"></p>
-<pre>
- use Socket qw(PF_INET SOCK_STREAM pack_sockaddr_in inet_aton);
-
+<pre> use Socket qw(PF_INET SOCK_STREAM pack_sockaddr_in inet_aton);
  socket(my $socket, PF_INET, SOCK_STREAM, 0)
      or die &quot;socket: $!&quot;;
-
  my $port = getservbyname &quot;echo&quot;, &quot;tcp&quot;;
  connect($socket, pack_sockaddr_in($port, inet_aton(&quot;localhost&quot;)))
      or die &quot;connect: $!&quot;;
-
  print $socket &quot;Hello, world!\n&quot;;
  print &lt;$socket&gt;;
 </pre>
@@ -78,9 +75,7 @@
     They are not exported by default, but can be imported individually, and with
     the <span class="Li">&quot;:crlf&quot;</span> export tag:</p>
 <p class="Pp"></p>
-<pre>
- use Socket qw(:DEFAULT :crlf);
-
+<pre> use Socket qw(:DEFAULT :crlf);
  $sock-&gt;print(&quot;GET / HTTP/1.0$CRLF&quot;);
 </pre>
 <p class="Pp">The entire <b>getaddrinfo()</b> subsystem can be exported using
@@ -124,8 +119,7 @@
     <span class="Li">&quot;FD_CLOEXEC&quot;</span> flags during a
     <span class="Li">socket(2)</span> call.</p>
 <p class="Pp"></p>
-<pre>
- socket( my $sockh, PF_INET, SOCK_DGRAM|SOCK_NONBLOCK, 0 )
+<pre> socket( my $sockh, PF_INET, SOCK_DGRAM|SOCK_NONBLOCK, 0 )
 </pre>
 </section>
 <section class="Ss">
@@ -608,31 +602,22 @@
     service name into a list of structures, each containing a potential way to
     <b>connect()</b> to the named service on the named host.</p>
 <p class="Pp"></p>
-<pre>
- use IO::Socket;
+<pre> use IO::Socket;
  use Socket qw(SOCK_STREAM getaddrinfo);
-
  my %hints = (socktype =&gt; SOCK_STREAM);
  my ($err, @res) = getaddrinfo(&quot;localhost&quot;, &quot;echo&quot;, \%hints);
  die &quot;Cannot getaddrinfo - $err&quot; if $err;
-
  my $sock;
-
  foreach my $ai (@res) {
      my $candidate = IO::Socket-&gt;new();
-
      $candidate-&gt;socket($ai-&gt;{family}, $ai-&gt;{socktype}, $ai-&gt;{protocol})
          or next;
-
      $candidate-&gt;connect($ai-&gt;{addr})
          or next;
-
      $sock = $candidate;
      last;
  }
-
  die &quot;Cannot connect to localhost:echo&quot; unless $sock;
-
  $sock-&gt;print(&quot;Hello, world!\n&quot;);
  print &lt;$sock&gt;;
 </pre>
@@ -652,27 +637,20 @@
     as returned by <b>getsockname()</b> or <b>getpeername()</b>, into a pair of
     human-readable strings representing the address and service name.</p>
 <p class="Pp"></p>
-<pre>
- use IO::Socket::IP;
+<pre> use IO::Socket::IP;
  use Socket qw(getnameinfo);
-
  my $server = IO::Socket::IP-&gt;new(LocalPort =&gt; 12345, Listen =&gt; 1) or
      die &quot;Cannot listen - $@&quot;;
-
  my $socket = $server-&gt;accept or die &quot;accept: $!&quot;;
-
  my ($err, $hostname, $servicename) = getnameinfo($socket-&gt;peername);
  die &quot;Cannot getnameinfo - $err&quot; if $err;
-
  print &quot;The peer is connected from $hostname\n&quot;;
 </pre>
 <p class="Pp">Since in this example only the hostname was used, the redundant
     conversion of the port number into a service name may be omitted by passing
     the <span class="Li">&quot;NIx_NOSERV&quot;</span> flag.</p>
 <p class="Pp"></p>
-<pre>
- use Socket qw(getnameinfo NIx_NOSERV);
-
+<pre> use Socket qw(getnameinfo NIx_NOSERV);
  my ($err, $hostname) = getnameinfo($socket-&gt;peername, 0, NIx_NOSERV);
 </pre>
 <p class="Pp">This function performs the work of the legacy functions
@@ -688,16 +666,12 @@
     then <b>getnameinfo()</b> on each one to make it a readable IP address
     again.</p>
 <p class="Pp"></p>
-<pre>
- use Socket qw(:addrinfo SOCK_RAW);
-
+<pre> use Socket qw(:addrinfo SOCK_RAW);
  my ($err, @res) = getaddrinfo($hostname, &quot;&quot;, {socktype =&gt; SOCK_RAW});
  die &quot;Cannot getaddrinfo - $err&quot; if $err;
-
  while( my $ai = shift @res ) {
      my ($err, $ipaddr) = getnameinfo($ai-&gt;{addr}, NI_NUMERICHOST, NIx_NOSERV);
      die &quot;Cannot getnameinfo - $err&quot; if $err;
-
      print &quot;$ipaddr\n&quot;;
  }
 </pre>
@@ -720,19 +694,14 @@
     constants provide the socket option names for <b>getsockopt()</b> and
     <b>setsockopt()</b>.</p>
 <p class="Pp"></p>
-<pre>
- use IO::Socket::INET;
+<pre> use IO::Socket::INET;
  use Socket qw(SOL_SOCKET SO_RCVBUF IPPROTO_IP IP_TTL);
-
  my $socket = IO::Socket::INET-&gt;new(LocalPort =&gt; 0, Proto =&gt; 'udp')
      or die &quot;Cannot create socket: $@&quot;;
-
  $socket-&gt;setsockopt(SOL_SOCKET, SO_RCVBUF, 64*1024) or
      die &quot;setsockopt: $!&quot;;
-
  print &quot;Receive buffer is &quot;, $socket-&gt;getsockopt(SOL_SOCKET, SO_RCVBUF),
      &quot; bytes\n&quot;;
-
  print &quot;IP TTL is &quot;, $socket-&gt;getsockopt(IPPROTO_IP, IP_TTL), &quot;\n&quot;;
 </pre>
 <p class="Pp">As a convenience, IO::Socket's <b>setsockopt()</b> method will

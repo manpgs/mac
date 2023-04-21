@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Parser(3)</title>
 </head>
@@ -28,29 +29,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use XML::Parser;
-
+<pre>  use XML::Parser;
   $p1 = XML::Parser-&gt;new(Style =&gt; 'Debug');
   $p1-&gt;parsefile('REC-xml-19980210.xml');
   $p1-&gt;parse('&lt;foo id=&quot;me&quot;&gt;Hello World&lt;/foo&gt;');
-
   # Alternative
   $p2 = XML::Parser-&gt;new(Handlers =&gt; {Start =&gt; \&amp;handle_start,
                                      End   =&gt; \&amp;handle_end,
                                      Char  =&gt; \&amp;handle_char});
   $p2-&gt;parse($socket);
-
   # Another alternative
   $p3 = XML::Parser-&gt;new(ErrorContext =&gt; 2);
-
   $p3-&gt;setHandlers(Char    =&gt; \&amp;text,
                    Default =&gt; \&amp;other);
-
   open(my $fh, 'xmlgenerator |');
   $p3-&gt;parse($foo, ProtocolEncoding =&gt; 'ISO-8859-1');
   close($foo);
-
   $p3-&gt;parsefile('junk.xml', ErrorContext =&gt; 3);
 </pre>
 </section>
@@ -438,13 +432,11 @@
     element.</p>
 <p class="Pp">So for example the result of parsing:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;foo&gt;&lt;head id=&quot;a&quot;&gt;Hello &lt;em&gt;there&lt;/em&gt;&lt;/head&gt;&lt;bar&gt;Howdy&lt;ref/&gt;&lt;/bar&gt;do&lt;/foo&gt;
+<pre>  &lt;foo&gt;&lt;head id=&quot;a&quot;&gt;Hello &lt;em&gt;there&lt;/em&gt;&lt;/head&gt;&lt;bar&gt;Howdy&lt;ref/&gt;&lt;/bar&gt;do&lt;/foo&gt;
 </pre>
 <p class="Pp">would be:</p>
 <p class="Pp"></p>
-<pre>
-             Tag   Content
+<pre>             Tag   Content
   ==================================================================
   [foo, [{}, head, [{id =&gt; &quot;a&quot;}, 0, &quot;Hello &quot;,  em, [{}, 0, &quot;there&quot;]],
               bar, [         {}, 0, &quot;Howdy&quot;,  ref, [{}]],

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ModPerl::Code(3)</title>
 </head>
@@ -33,26 +34,22 @@
 <h1 class="Sh" id="CONSTANTS"><a class="permalink" href="#CONSTANTS">CONSTANTS</a></h1>
 <p class="Pp">EOF</p>
 <p class="Pp"></p>
-<pre>
-        my $groups = $data{$class};
+<pre>        my $groups = $data{$class};
         for my $group (sort keys %$groups) {
             print $fh &lt;&lt;&quot;EOF&quot;;
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="_:$group_"><a class="permalink" href="#_:$group_">&quot;:$group&quot;</a></h2>
-<pre>
-  use $class\::Const -compile qw(:$group);
+<pre>  use $class\::Const -compile qw(:$group);
 </pre>
 <p class="Pp">The <span class="Li">&quot;:$group&quot;</span> group is for XXX
     constants.</p>
 <p class="Pp">EOF</p>
 <p class="Pp"></p>
-<pre>
-            for my $const (sort @{ $groups-&gt;{$group} }) {
+<pre>            for my $const (sort @{ $groups-&gt;{$group} }) {
                 print $fh &quot;=head3 C&lt;$class\::$const&gt;\n\n\n&quot;;
             }
         }
-
         print $fh &quot;=cut\n&quot;;
     }
 }
@@ -61,11 +58,9 @@
   <br/>
    my ($data) = <span class="Li">@_</span>;</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $class (sort keys %$Apache2::ConstantsTable) {
+<pre>    foreach my $class (sort keys %$Apache2::ConstantsTable) {
         my $groups = $Apache2::ConstantsTable-&gt;{$class};
         my $constants = [sort map { @$_ } values %$groups];
-
         constants_lookup_code_doc($constants, $class, $data);
     }
 }
@@ -74,8 +69,7 @@
   <br/>
    my ($data) = <span class="Li">@_</span>;</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $class (sort keys %$Apache2::ConstantsTable) {
+<pre>    foreach my $class (sort keys %$Apache2::ConstantsTable) {
         my $groups = $Apache2::ConstantsTable-&gt;{$class};
         constants_group_lookup_code_doc($class, $groups, $data);
     }
@@ -90,8 +84,7 @@
   <br/>
    my <span class="Li">@code</span>;</p>
 <p class="Pp"></p>
-<pre>
-    while (my ($group, $constants) = each %$groups) {
+<pre>    while (my ($group, $constants) = each %$groups) {
         $data-&gt;{$class}{$group} = [
             map {
                 my @ifdef = constants_ifdef($_);
@@ -108,17 +101,12 @@
    my ($constants, <span class="Li">$class</span>,
     <span class="Li">$data</span>) = <span class="Li">@_</span>;</p>
 <p class="Pp"></p>
-<pre>
-    my (%switch, %alias);
-
+<pre>    my (%switch, %alias);
     %alias = %shortcuts;
-
     my $postfix = lc $class;
     my $package = $class . '::';
     my $package_len = length $package;
-
     my $func = canon_func(qw(constants lookup), $postfix);
-
     for (@$constants) {
         if (s/^($constant_prefixes)(_)?//o) {
             $alias{$_} = join $2 || &quot;&quot;, $1, $_;
@@ -129,7 +117,6 @@
         next unless /^([A-Z])/;
         push @{ $switch{$1} }, $_;
     }
-
     for my $key (sort keys %switch) {
         my $names = $switch{$key};
         for my $name (@$names) {
@@ -162,8 +149,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS~2"><a class="permalink" href="#SYNOPSIS~2">SYNOPSIS</a></h1>
-<pre>
-  use ModPerl::Code ();
+<pre>  use ModPerl::Code ();
   my $code = ModPerl::Code-&gt;new;
   $code-&gt;generate;
 </pre>

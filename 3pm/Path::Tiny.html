@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Path::Tiny(3)</title>
 </head>
@@ -32,42 +33,27 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Path::Tiny;
-
+<pre>  use Path::Tiny;
   # creating Path::Tiny objects
-
   $dir = path(&quot;/tmp&quot;);
   $foo = path(&quot;foo.txt&quot;);
-
   $subdir = $dir-&gt;child(&quot;foo&quot;);
   $bar = $subdir-&gt;child(&quot;bar.txt&quot;);
-
   # stringifies as cleaned up path
-
   $file = path(&quot;./foo.txt&quot;);
   print $file; # &quot;foo.txt&quot;
-
   # reading files
-
   $guts = $file-&gt;slurp;
   $guts = $file-&gt;slurp_utf8;
-
   @lines = $file-&gt;lines;
   @lines = $file-&gt;lines_utf8;
-
   ($head) = $file-&gt;lines( {count =&gt; 1} );
   ($tail) = $file-&gt;lines( {count =&gt; -1} );
-
   # writing files
-
   $bar-&gt;spew( @data );
   $bar-&gt;spew_utf8( @data );
-
   # reading directories
-
   for ( $dir-&gt;children ) { ... }
-
   $iter = $dir-&gt;iterator;
   while ( my $next = $iter-&gt;() ) { ... }
 </pre>
@@ -105,8 +91,7 @@
 <h1 class="Sh" id="CONSTRUCTORS"><a class="permalink" href="#CONSTRUCTORS">CONSTRUCTORS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="path"><a class="permalink" href="#path">path</a></h2>
-<pre>
-    $path = path(&quot;foo/bar&quot;);
+<pre>    $path = path(&quot;foo/bar&quot;);
     $path = path(&quot;/tmp&quot;, &quot;file.txt&quot;); # list
     $path = path(&quot;.&quot;);                # cwd
     $path = path(&quot;~user/file.txt&quot;);   # tilde processing
@@ -137,10 +122,8 @@
     returned unless the original is holding a temporary file or directory
     reference in which case a stringified copy is made.</p>
 <p class="Pp"></p>
-<pre>
-    $path = path(&quot;foo/bar&quot;);
+<pre>    $path = path(&quot;foo/bar&quot;);
     $temp = Path::Tiny-&gt;tempfile;
-
     $p2 = path($path); # like $p2 = $path
     $t2 = path($temp); # like $t2 = path( &quot;$temp&quot; )
 </pre>
@@ -150,8 +133,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-    $path = Path::Tiny-&gt;new(&quot;foo/bar&quot;);
+<pre>    $path = Path::Tiny-&gt;new(&quot;foo/bar&quot;);
 </pre>
 <p class="Pp">This is just like <span class="Li">&quot;path&quot;</span>, but
     with method call overhead. (Why would you do that?)</p>
@@ -159,8 +141,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="cwd"><a class="permalink" href="#cwd">cwd</a></h2>
-<pre>
-    $path = Path::Tiny-&gt;cwd; # path( Cwd::getcwd )
+<pre>    $path = Path::Tiny-&gt;cwd; # path( Cwd::getcwd )
     $path = cwd; # optional export
 </pre>
 <p class="Pp">Gives you the absolute path to the current directory as a
@@ -173,8 +154,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="rootdir"><a class="permalink" href="#rootdir">rootdir</a></h2>
-<pre>
-    $path = Path::Tiny-&gt;rootdir; # /
+<pre>    $path = Path::Tiny-&gt;rootdir; # /
     $path = rootdir;             # optional export
 </pre>
 <p class="Pp">Gives you
@@ -188,8 +168,7 @@
 <section class="Ss">
 <h2 class="Ss" id="tempfile,_tempdir"><a class="permalink" href="#tempfile,_tempdir">tempfile,
   tempdir</a></h2>
-<pre>
-    $temp = Path::Tiny-&gt;tempfile( @options );
+<pre>    $temp = Path::Tiny-&gt;tempfile( @options );
     $temp = Path::Tiny-&gt;tempdir( @options );
     $temp = tempfile( @options ); # optional export
     $temp = tempdir( @options );  # optional export
@@ -211,8 +190,7 @@
     <span class="Li">&quot;TEMPLATE&quot;</span> option and does the right
     thing.</p>
 <p class="Pp"></p>
-<pre>
-    $temp = Path::Tiny-&gt;tempfile( &quot;customXXXXXXXX&quot; );             # ok
+<pre>    $temp = Path::Tiny-&gt;tempfile( &quot;customXXXXXXXX&quot; );             # ok
     $temp = Path::Tiny-&gt;tempfile( TEMPLATE =&gt; &quot;customXXXXXXXX&quot; ); # ok
 </pre>
 <p class="Pp">The tempfile path object will be normalized to have an absolute
@@ -221,8 +199,7 @@
     <span class="Li">&quot;realpath&quot;</span> instead, pass a leading options
     hash like this:</p>
 <p class="Pp"></p>
-<pre>
-    $real_temp = tempfile({realpath =&gt; 1}, @options);
+<pre>    $real_temp = tempfile({realpath =&gt; 1}, @options);
 </pre>
 <p class="Pp"><span class="Li">&quot;tempdir&quot;</span> is just like
     <span class="Li">&quot;tempfile&quot;</span>, except it calls
@@ -243,8 +220,7 @@
 <p class="Pp"><b>Note 3</b>: Don't lose the temporary object by chaining a
     method call instead of storing it:</p>
 <p class="Pp"></p>
-<pre>
-    my $lost = tempdir()-&gt;child(&quot;foo&quot;); # tempdir cleaned up right away
+<pre>    my $lost = tempdir()-&gt;child(&quot;foo&quot;); # tempdir cleaned up right away
 </pre>
 <p class="Pp"><b>Note 4</b>: The cached object may be accessed with the
     &quot;cached_temp&quot; method. Keeping a reference to, or modifying the
@@ -257,8 +233,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="absolute"><a class="permalink" href="#absolute">absolute</a></h2>
-<pre>
-    $abs = path(&quot;foo/bar&quot;)-&gt;absolute;
+<pre>    $abs = path(&quot;foo/bar&quot;)-&gt;absolute;
     $abs = path(&quot;foo/bar&quot;)-&gt;absolute(&quot;/tmp&quot;);
 </pre>
 <p class="Pp">Returns a new <span class="Li">&quot;Path::Tiny&quot;</span>
@@ -278,8 +253,7 @@
 <section class="Ss">
 <h2 class="Ss" id="append,_append_raw,_append_utf8"><a class="permalink" href="#append,_append_raw,_append_utf8">append,
   append_raw, append_utf8</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;append(@data);
+<pre>    path(&quot;foo.txt&quot;)-&gt;append(@data);
     path(&quot;foo.txt&quot;)-&gt;append(\@data);
     path(&quot;foo.txt&quot;)-&gt;append({binmode =&gt; &quot;:raw&quot;}, @data);
     path(&quot;foo.txt&quot;)-&gt;append_raw(@data);
@@ -316,8 +290,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="assert"><a class="permalink" href="#assert">assert</a></h2>
-<pre>
-    $path = path(&quot;foo.txt&quot;)-&gt;assert( sub { $_-&gt;exists } );
+<pre>    $path = path(&quot;foo.txt&quot;)-&gt;assert( sub { $_-&gt;exists } );
 </pre>
 <p class="Pp">Returns the invocant after asserting that a code reference
     argument returns true. When the assertion code reference runs, it will have
@@ -330,8 +303,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="basename"><a class="permalink" href="#basename">basename</a></h2>
-<pre>
-    $name = path(&quot;foo/bar.txt&quot;)-&gt;basename;        # bar.txt
+<pre>    $name = path(&quot;foo/bar.txt&quot;)-&gt;basename;        # bar.txt
     $name = path(&quot;foo.txt&quot;)-&gt;basename('.txt');    # foo
     $name = path(&quot;foo.txt&quot;)-&gt;basename(qr/.txt/);  # foo
     $name = path(&quot;foo.txt&quot;)-&gt;basename(@suffixes);
@@ -344,8 +316,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="canonpath"><a class="permalink" href="#canonpath">canonpath</a></h2>
-<pre>
-    $canonical = path(&quot;foo/bar&quot;)-&gt;canonpath; # foo\bar on Windows
+<pre>    $canonical = path(&quot;foo/bar&quot;)-&gt;canonpath; # foo\bar on Windows
 </pre>
 <p class="Pp">Returns a string with the canonical format of the path name for
     the platform. In particular, this means directory separators will be
@@ -368,8 +339,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="child"><a class="permalink" href="#child">child</a></h2>
-<pre>
-    $file = path(&quot;/tmp&quot;)-&gt;child(&quot;foo.txt&quot;); # &quot;/tmp/foo.txt&quot;
+<pre>    $file = path(&quot;/tmp&quot;)-&gt;child(&quot;foo.txt&quot;); # &quot;/tmp/foo.txt&quot;
     $file = path(&quot;/tmp&quot;)-&gt;child(@parts);
 </pre>
 <p class="Pp">Returns a new <span class="Li">&quot;Path::Tiny&quot;</span>
@@ -386,8 +356,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="children"><a class="permalink" href="#children">children</a></h2>
-<pre>
-    @paths = path(&quot;/tmp&quot;)-&gt;children;
+<pre>    @paths = path(&quot;/tmp&quot;)-&gt;children;
     @paths = path(&quot;/tmp&quot;)-&gt;children( qr/\.txt\z/ );
 </pre>
 <p class="Pp">Returns a list of <span class="Li">&quot;Path::Tiny&quot;</span>
@@ -397,16 +366,14 @@
     is provided, it only returns objects for child names that match the given
     regular expression. Only the base name is used for matching:</p>
 <p class="Pp"></p>
-<pre>
-    @paths = path(&quot;/tmp&quot;)-&gt;children( qr/^foo/ );
+<pre>    @paths = path(&quot;/tmp&quot;)-&gt;children( qr/^foo/ );
     # matches children like the glob foo*
 </pre>
 <p class="Pp">Current API available since 0.028.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="chmod"><a class="permalink" href="#chmod">chmod</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;chmod(0777);
+<pre>    path(&quot;foo.txt&quot;)-&gt;chmod(0777);
     path(&quot;foo.txt&quot;)-&gt;chmod(&quot;0755&quot;);
     path(&quot;foo.txt&quot;)-&gt;chmod(&quot;go-w&quot;);
     path(&quot;foo.txt&quot;)-&gt;chmod(&quot;a=r,u+wx&quot;);
@@ -426,8 +393,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="copy"><a class="permalink" href="#copy">copy</a></h2>
-<pre>
-    path(&quot;/tmp/foo.txt&quot;)-&gt;copy(&quot;/tmp/bar.txt&quot;);
+<pre>    path(&quot;/tmp/foo.txt&quot;)-&gt;copy(&quot;/tmp/bar.txt&quot;);
 </pre>
 <p class="Pp">Copies the current path to the given destination using
     File::Copy's <span class="Li">&quot;copy&quot;</span> function. Upon
@@ -437,8 +403,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="digest"><a class="permalink" href="#digest">digest</a></h2>
-<pre>
-    $obj = path(&quot;/tmp/foo.txt&quot;)-&gt;digest;        # SHA-256
+<pre>    $obj = path(&quot;/tmp/foo.txt&quot;)-&gt;digest;        # SHA-256
     $obj = path(&quot;/tmp/foo.txt&quot;)-&gt;digest(&quot;MD5&quot;); # user-selected
     $obj = path(&quot;/tmp/foo.txt&quot;)-&gt;digest( { chunk_size =&gt; 1e6 }, &quot;MD5&quot; );
 </pre>
@@ -456,8 +421,7 @@
 <section class="Ss">
 <h2 class="Ss" id="dirname_(deprecated)"><a class="permalink" href="#dirname_(deprecated)">dirname
   (deprecated)</a></h2>
-<pre>
-    $name = path(&quot;/tmp/foo.txt&quot;)-&gt;dirname; # &quot;/tmp/&quot;
+<pre>    $name = path(&quot;/tmp/foo.txt&quot;)-&gt;dirname; # &quot;/tmp/&quot;
 </pre>
 <p class="Pp">Returns the directory portion you would get from calling
     <span class="Li">&quot;File::Spec-&gt;splitpath( $path-&gt;stringify
@@ -473,8 +437,7 @@
 <section class="Ss">
 <h2 class="Ss" id="edit,_edit_raw,_edit_utf8"><a class="permalink" href="#edit,_edit_raw,_edit_utf8">edit,
   edit_raw, edit_utf8</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;edit( \&amp;callback, $options );
+<pre>    path(&quot;foo.txt&quot;)-&gt;edit( \&amp;callback, $options );
     path(&quot;foo.txt&quot;)-&gt;edit_utf8( \&amp;callback );
     path(&quot;foo.txt&quot;)-&gt;edit_raw( \&amp;callback );
 </pre>
@@ -497,8 +460,7 @@
 <section class="Ss">
 <h2 class="Ss" id="edit_lines,_edit_lines_utf8,_edit_lines_raw"><a class="permalink" href="#edit_lines,_edit_lines_utf8,_edit_lines_raw">edit_lines,
   edit_lines_utf8, edit_lines_raw</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;edit_lines( \&amp;callback, $options );
+<pre>    path(&quot;foo.txt&quot;)-&gt;edit_lines( \&amp;callback, $options );
     path(&quot;foo.txt&quot;)-&gt;edit_lines_utf8( \&amp;callback );
     path(&quot;foo.txt&quot;)-&gt;edit_lines_raw( \&amp;callback );
 </pre>
@@ -520,8 +482,7 @@
 <section class="Ss">
 <h2 class="Ss" id="exists,_is_file,_is_dir"><a class="permalink" href="#exists,_is_file,_is_dir">exists,
   is_file, is_dir</a></h2>
-<pre>
-    if ( path(&quot;/tmp&quot;)-&gt;exists ) { ... }     # -e
+<pre>    if ( path(&quot;/tmp&quot;)-&gt;exists ) { ... }     # -e
     if ( path(&quot;/tmp&quot;)-&gt;is_dir ) { ... }     # -d
     if ( path(&quot;/tmp&quot;)-&gt;is_file ) { ... }    # -e &amp;&amp; ! -d
 </pre>
@@ -540,8 +501,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="filehandle"><a class="permalink" href="#filehandle">filehandle</a></h2>
-<pre>
-    $fh = path(&quot;/tmp/foo.txt&quot;)-&gt;filehandle($mode, $binmode);
+<pre>    $fh = path(&quot;/tmp/foo.txt&quot;)-&gt;filehandle($mode, $binmode);
     $fh = path(&quot;/tmp/foo.txt&quot;)-&gt;filehandle({ locked =&gt; 1 }, $mode, $binmode);
     $fh = path(&quot;/tmp/foo.txt&quot;)-&gt;filehandle({ exclusive =&gt; 1  }, $mode, $binmode);
 </pre>
@@ -573,8 +533,7 @@
 <section class="Ss">
 <h2 class="Ss" id="is_absolute,_is_relative"><a class="permalink" href="#is_absolute,_is_relative">is_absolute,
   is_relative</a></h2>
-<pre>
-    if ( path(&quot;/tmp&quot;)-&gt;is_absolute ) { ... }
+<pre>    if ( path(&quot;/tmp&quot;)-&gt;is_absolute ) { ... }
     if ( path(&quot;/tmp&quot;)-&gt;is_relative ) { ... }
 </pre>
 <p class="Pp">Booleans for whether the path appears absolute or relative.</p>
@@ -582,8 +541,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="is_rootdir"><a class="permalink" href="#is_rootdir">is_rootdir</a></h2>
-<pre>
-    while ( ! $path-&gt;is_rootdir ) {
+<pre>    while ( ! $path-&gt;is_rootdir ) {
         $path = $path-&gt;parent;
         ...
     }
@@ -596,23 +554,20 @@
 <p class="Pp">This works even on <span class="Li">&quot;MSWin32&quot;</span>
     with drives and UNC volumes:</p>
 <p class="Pp"></p>
-<pre>
-    path(&quot;C:/&quot;)-&gt;is_rootdir;             # true
+<pre>    path(&quot;C:/&quot;)-&gt;is_rootdir;             # true
     path(&quot;//server/share/&quot;)-&gt;is_rootdir; #true
 </pre>
 <p class="Pp">Current API available since 0.038.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="iterator"><a class="permalink" href="#iterator">iterator</a></h2>
-<pre>
-    $iter = path(&quot;/tmp&quot;)-&gt;iterator( \%options );
+<pre>    $iter = path(&quot;/tmp&quot;)-&gt;iterator( \%options );
 </pre>
 <p class="Pp">Returns a code reference that walks a directory lazily. Each
     invocation returns a <span class="Li">&quot;Path::Tiny&quot;</span> object
     or undef when the iterator is exhausted.</p>
 <p class="Pp"></p>
-<pre>
-    $iter = path(&quot;/tmp&quot;)-&gt;iterator;
+<pre>    $iter = path(&quot;/tmp&quot;)-&gt;iterator;
     while ( $path = $iter-&gt;() ) {
         ...
     }
@@ -627,8 +582,7 @@
     followed.</p>
 <p class="Pp">The default is the same as:</p>
 <p class="Pp"></p>
-<pre>
-    $iter = path(&quot;/tmp&quot;)-&gt;iterator( {
+<pre>    $iter = path(&quot;/tmp&quot;)-&gt;iterator( {
         recurse         =&gt; 0,
         follow_symlinks =&gt; 0,
     } );
@@ -641,12 +595,10 @@
 <section class="Ss">
 <h2 class="Ss" id="lines,_lines_raw,_lines_utf8"><a class="permalink" href="#lines,_lines_raw,_lines_utf8">lines,
   lines_raw, lines_utf8</a></h2>
-<pre>
-    @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines;
+<pre>    @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines;
     @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines(\%options);
     @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines_raw;
     @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines_utf8;
-
     @contents = path(&quot;/tmp/foo.txt&quot;)-&gt;lines( { chomp =&gt; 1, count =&gt; 4 } );
 </pre>
 <p class="Pp">Returns a list of lines from a file. Optionally takes a
@@ -671,8 +623,7 @@
     <span class="Li">&quot;lines&quot;</span> in scalar context will return the
     number of lines (and throw away the data).</p>
 <p class="Pp"></p>
-<pre>
-    $number_of_lines = path(&quot;/tmp/foo.txt&quot;)-&gt;lines;
+<pre>    $number_of_lines = path(&quot;/tmp/foo.txt&quot;)-&gt;lines;
 </pre>
 <p class="Pp"><span class="Li">&quot;lines_raw&quot;</span> is like
     <span class="Li">&quot;lines&quot;</span> with a
@@ -695,8 +646,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="mkpath"><a class="permalink" href="#mkpath">mkpath</a></h2>
-<pre>
-    path(&quot;foo/bar/baz&quot;)-&gt;mkpath;
+<pre>    path(&quot;foo/bar/baz&quot;)-&gt;mkpath;
     path(&quot;foo/bar/baz&quot;)-&gt;mkpath( \%options );
 </pre>
 <p class="Pp">Like calling <span class="Li">&quot;make_path&quot;</span> from
@@ -709,8 +659,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="move"><a class="permalink" href="#move">move</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;move(&quot;bar.txt&quot;);
+<pre>    path(&quot;foo.txt&quot;)-&gt;move(&quot;bar.txt&quot;);
 </pre>
 <p class="Pp">Move the current path to the given destination path using Perl's
     built-in rename function. Returns the result of the
@@ -721,19 +670,15 @@
 <section class="Ss">
 <h2 class="Ss" id="openr,_openw,_openrw,_opena"><a class="permalink" href="#openr,_openw,_openrw,_opena">openr,
   openw, openrw, opena</a></h2>
-<pre>
-    $fh = path(&quot;foo.txt&quot;)-&gt;openr($binmode);  # read
+<pre>    $fh = path(&quot;foo.txt&quot;)-&gt;openr($binmode);  # read
     $fh = path(&quot;foo.txt&quot;)-&gt;openr_raw;
     $fh = path(&quot;foo.txt&quot;)-&gt;openr_utf8;
-
     $fh = path(&quot;foo.txt&quot;)-&gt;openw($binmode);  # write
     $fh = path(&quot;foo.txt&quot;)-&gt;openw_raw;
     $fh = path(&quot;foo.txt&quot;)-&gt;openw_utf8;
-
     $fh = path(&quot;foo.txt&quot;)-&gt;opena($binmode);  # append
     $fh = path(&quot;foo.txt&quot;)-&gt;opena_raw;
     $fh = path(&quot;foo.txt&quot;)-&gt;opena_utf8;
-
     $fh = path(&quot;foo.txt&quot;)-&gt;openrw($binmode); # read/write
     $fh = path(&quot;foo.txt&quot;)-&gt;openrw_raw;
     $fh = path(&quot;foo.txt&quot;)-&gt;openrw_utf8;
@@ -752,18 +697,15 @@
     <span class="Li">&quot;LOCK_EX&quot;</span>; otherwise, they are locked for
     <span class="Li">&quot;LOCK_SH&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    $fh = path(&quot;foo.txt&quot;)-&gt;openrw_utf8( { locked =&gt; 1 } );
+<pre>    $fh = path(&quot;foo.txt&quot;)-&gt;openrw_utf8( { locked =&gt; 1 } );
 </pre>
 <p class="Pp">See &quot;filehandle&quot; for more on locking.</p>
 <p class="Pp">Current API available since 0.011.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="parent"><a class="permalink" href="#parent">parent</a></h2>
-<pre>
-    $parent = path(&quot;foo/bar/baz&quot;)-&gt;parent; # foo/bar
+<pre>    $parent = path(&quot;foo/bar/baz&quot;)-&gt;parent; # foo/bar
     $parent = path(&quot;foo/wibble.txt&quot;)-&gt;parent; # foo
-
     $parent = path(&quot;foo/bar/baz&quot;)-&gt;parent(2); # foo
 </pre>
 <p class="Pp">Returns a <span class="Li">&quot;Path::Tiny&quot;</span> object
@@ -775,8 +717,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="realpath"><a class="permalink" href="#realpath">realpath</a></h2>
-<pre>
-    $real = path(&quot;/baz/foo/../bar&quot;)-&gt;realpath;
+<pre>    $real = path(&quot;/baz/foo/../bar&quot;)-&gt;realpath;
     $real = path(&quot;foo/../bar&quot;)-&gt;realpath;
 </pre>
 <p class="Pp">Returns a new <span class="Li">&quot;Path::Tiny&quot;</span>
@@ -787,15 +728,13 @@
 <p class="Pp">If the parent path can't be resolved (e.g. if it includes
     directories that don't exist), an exception will be thrown:</p>
 <p class="Pp"></p>
-<pre>
-    $real = path(&quot;doesnt_exist/foo&quot;)-&gt;realpath; # dies
+<pre>    $real = path(&quot;doesnt_exist/foo&quot;)-&gt;realpath; # dies
 </pre>
 <p class="Pp">However, if the parent path exists and only the last component
     (e.g. filename) doesn't exist, the realpath will be the realpath of the
     parent plus the non-existent last component:</p>
 <p class="Pp"></p>
-<pre>
-    $real = path(&quot;./aasdlfasdlf&quot;)-&gt;realpath; # works
+<pre>    $real = path(&quot;./aasdlfasdlf&quot;)-&gt;realpath; # works
 </pre>
 <p class="Pp">The underlying Cwd module usually worked this way on Unix, but
     died on Windows (and some Unixes) if the full path didn't exist. As of
@@ -804,8 +743,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="relative"><a class="permalink" href="#relative">relative</a></h2>
-<pre>
-    $rel = path(&quot;/tmp/foo/bar&quot;)-&gt;relative(&quot;/tmp&quot;); # foo/bar
+<pre>    $rel = path(&quot;/tmp/foo/bar&quot;)-&gt;relative(&quot;/tmp&quot;); # foo/bar
 </pre>
 <p class="Pp">Returns a <span class="Li">&quot;Path::Tiny&quot;</span> object
     with a path relative to a new base path given as an argument. If no argument
@@ -846,8 +784,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="remove"><a class="permalink" href="#remove">remove</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;remove;
+<pre>    path(&quot;foo.txt&quot;)-&gt;remove;
 </pre>
 <p class="Pp">This is just like <span class="Li">&quot;unlink&quot;</span>,
     except for its error handling: if the path does not exist, it returns false;
@@ -856,8 +793,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="remove_tree"><a class="permalink" href="#remove_tree">remove_tree</a></h2>
-<pre>
-    # directory
+<pre>    # directory
     path(&quot;foo/bar/baz&quot;)-&gt;remove_tree;
     path(&quot;foo/bar/baz&quot;)-&gt;remove_tree( \%options );
     path(&quot;foo/bar/baz&quot;)-&gt;remove_tree( { safe =&gt; 0 } ); # force remove
@@ -871,15 +807,13 @@
 <p class="Pp">If you want to remove a directory only if it is empty, use the
     built-in <span class="Li">&quot;rmdir&quot;</span> function instead.</p>
 <p class="Pp"></p>
-<pre>
-    rmdir path(&quot;foo/bar/baz/&quot;);
+<pre>    rmdir path(&quot;foo/bar/baz/&quot;);
 </pre>
 <p class="Pp">Current API available since 0.013.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="sibling"><a class="permalink" href="#sibling">sibling</a></h2>
-<pre>
-    $foo = path(&quot;/tmp/foo.txt&quot;);
+<pre>    $foo = path(&quot;/tmp/foo.txt&quot;);
     $sib = $foo-&gt;sibling(&quot;bar.txt&quot;);        # /tmp/bar.txt
     $sib = $foo-&gt;sibling(&quot;baz&quot;, &quot;bam.txt&quot;); # /tmp/baz/bam.txt
 </pre>
@@ -892,8 +826,7 @@
 <section class="Ss">
 <h2 class="Ss" id="slurp,_slurp_raw,_slurp_utf8"><a class="permalink" href="#slurp,_slurp_raw,_slurp_utf8">slurp,
   slurp_raw, slurp_utf8</a></h2>
-<pre>
-    $data = path(&quot;foo.txt&quot;)-&gt;slurp;
+<pre>    $data = path(&quot;foo.txt&quot;)-&gt;slurp;
     $data = path(&quot;foo.txt&quot;)-&gt;slurp( {binmode =&gt; &quot;:raw&quot;} );
     $data = path(&quot;foo.txt&quot;)-&gt;slurp_raw;
     $data = path(&quot;foo.txt&quot;)-&gt;slurp_utf8;
@@ -922,8 +855,7 @@
     created with File::Temp, be sure to close other handles or open without
     locking to avoid a deadlock:</p>
 <p class="Pp"></p>
-<pre>
-    my $tempfile = File::Temp-&gt;new(EXLOCK =&gt; 0);
+<pre>    my $tempfile = File::Temp-&gt;new(EXLOCK =&gt; 0);
     my $guts = path($tempfile)-&gt;slurp;
 </pre>
 <p class="Pp">Current API available since 0.004.</p>
@@ -931,8 +863,7 @@
 <section class="Ss">
 <h2 class="Ss" id="spew,_spew_raw,_spew_utf8"><a class="permalink" href="#spew,_spew_raw,_spew_utf8">spew,
   spew_raw, spew_utf8</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;spew(@data);
+<pre>    path(&quot;foo.txt&quot;)-&gt;spew(@data);
     path(&quot;foo.txt&quot;)-&gt;spew(\@data);
     path(&quot;foo.txt&quot;)-&gt;spew({binmode =&gt; &quot;:raw&quot;}, @data);
     path(&quot;foo.txt&quot;)-&gt;spew_raw(@data);
@@ -967,8 +898,7 @@
 <section class="Ss">
 <h2 class="Ss" id="stat,_lstat"><a class="permalink" href="#stat,_lstat">stat,
   lstat</a></h2>
-<pre>
-    $stat = path(&quot;foo.txt&quot;)-&gt;stat;
+<pre>    $stat = path(&quot;foo.txt&quot;)-&gt;stat;
     $stat = path(&quot;/some/symlink&quot;)-&gt;lstat;
 </pre>
 <p class="Pp">Like calling <span class="Li">&quot;stat&quot;</span> or
@@ -977,8 +907,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="stringify"><a class="permalink" href="#stringify">stringify</a></h2>
-<pre>
-    $path = path(&quot;foo.txt&quot;);
+<pre>    $path = path(&quot;foo.txt&quot;);
     say $path-&gt;stringify; # same as &quot;$path&quot;
 </pre>
 <p class="Pp">Returns a string representation of the path. Unlike
@@ -989,8 +918,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="subsumes"><a class="permalink" href="#subsumes">subsumes</a></h2>
-<pre>
-    path(&quot;foo/bar&quot;)-&gt;subsumes(&quot;foo/bar/baz&quot;); # true
+<pre>    path(&quot;foo/bar&quot;)-&gt;subsumes(&quot;foo/bar/baz&quot;); # true
     path(&quot;/foo/bar&quot;)-&gt;subsumes(&quot;/foo/baz&quot;);   # false
 </pre>
 <p class="Pp">Returns true if the first path is a prefix of the second path at a
@@ -998,15 +926,13 @@
 <p class="Pp">This <b>does not</b> resolve parent directory entries
     (<span class="Li">&quot;..&quot;</span>) or symlinks:</p>
 <p class="Pp"></p>
-<pre>
-    path(&quot;foo/bar&quot;)-&gt;subsumes(&quot;foo/bar/../baz&quot;); # true
+<pre>    path(&quot;foo/bar&quot;)-&gt;subsumes(&quot;foo/bar/../baz&quot;); # true
 </pre>
 <p class="Pp">If such things are important to you, ensure that both paths are
     resolved to the filesystem with
     <span class="Li">&quot;realpath&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    my $p1 = path(&quot;foo/bar&quot;)-&gt;realpath;
+<pre>    my $p1 = path(&quot;foo/bar&quot;)-&gt;realpath;
     my $p2 = path(&quot;foo/bar/../baz&quot;)-&gt;realpath;
     if ( $p1-&gt;subsumes($p2) ) { ... }
 </pre>
@@ -1014,8 +940,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="touch"><a class="permalink" href="#touch">touch</a></h2>
-<pre>
-    path(&quot;foo.txt&quot;)-&gt;touch;
+<pre>    path(&quot;foo.txt&quot;)-&gt;touch;
     path(&quot;foo.txt&quot;)-&gt;touch($epoch_secs);
 </pre>
 <p class="Pp">Like the Unix <span class="Li">&quot;touch&quot;</span> utility.
@@ -1025,16 +950,14 @@
 <p class="Pp">Returns the path object so it can be easily chained with other
     methods:</p>
 <p class="Pp"></p>
-<pre>
-    # won't die if foo.txt doesn't exist
+<pre>    # won't die if foo.txt doesn't exist
     $content = path(&quot;foo.txt&quot;)-&gt;touch-&gt;slurp;
 </pre>
 <p class="Pp">Current API available since 0.015.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="touchpath"><a class="permalink" href="#touchpath">touchpath</a></h2>
-<pre>
-    path(&quot;bar/baz/foo.txt&quot;)-&gt;touchpath;
+<pre>    path(&quot;bar/baz/foo.txt&quot;)-&gt;touchpath;
 </pre>
 <p class="Pp">Combines <span class="Li">&quot;mkpath&quot;</span> and
     <span class="Li">&quot;touch&quot;</span>. Creates the parent directory if
@@ -1044,8 +967,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="visit"><a class="permalink" href="#visit">visit</a></h2>
-<pre>
-    path(&quot;/tmp&quot;)-&gt;visit( \&amp;callback, \%options );
+<pre>    path(&quot;/tmp&quot;)-&gt;visit( \&amp;callback, \%options );
 </pre>
 <p class="Pp">Executes a callback for each child of a directory. It returns a
     hash reference with any state accumulated during iteration.</p>
@@ -1058,8 +980,7 @@
     and a hash reference to accumulate state as the second argument. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-    # collect files sizes
+<pre>    # collect files sizes
     my $sizes = path(&quot;/tmp&quot;)-&gt;visit(
         sub {
             my ($path, $state) = @_;
@@ -1073,8 +994,7 @@
     <span class="Li">&quot;Path::Tiny&quot;</span> object will also be locally
     aliased as the <span class="Li">$_</span> global variable:</p>
 <p class="Pp"></p>
-<pre>
-    # print paths matching /foo/
+<pre>    # print paths matching /foo/
     path(&quot;/tmp&quot;)-&gt;visit( sub { say if /foo/ }, { recurse =&gt; 1} );
 </pre>
 <p class="Pp">If the callback returns a <b>reference</b> to a false scalar
@@ -1082,8 +1002,7 @@
     a directory search; this just stops all iteration and returns the state hash
     reference.</p>
 <p class="Pp"></p>
-<pre>
-    # find up to 10 files larger than 100K
+<pre>    # find up to 10 files larger than 100K
     my $files = path(&quot;/tmp&quot;)-&gt;visit(
         sub {
             my ($path, $state) = @_;
@@ -1099,8 +1018,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="volume"><a class="permalink" href="#volume">volume</a></h2>
-<pre>
-    $vol = path(&quot;/tmp/foo.txt&quot;)-&gt;volume;   # &quot;&quot;
+<pre>    $vol = path(&quot;/tmp/foo.txt&quot;)-&gt;volume;   # &quot;&quot;
     $vol = path(&quot;C:/tmp/foo.txt&quot;)-&gt;volume; # &quot;C:&quot;
 </pre>
 <p class="Pp">Returns the volume portion of the path. This is equivalent to what
@@ -1162,8 +1080,7 @@
     If you want this failure to be fatal, you can fatalize the 'flock' warnings
     category:</p>
 <p class="Pp"></p>
-<pre>
-    use warnings FATAL =&gt; 'flock';
+<pre>    use warnings FATAL =&gt; 'flock';
 </pre>
 <p class="Pp">See additional caveats below.</p>
 <p class="Pp"><i>NFS and BSD</i></p>
@@ -1206,8 +1123,7 @@
     CRLF translation, use the regular input/output methods with an appropriate
     binmode:</p>
 <p class="Pp"></p>
-<pre>
-  $path-&gt;spew_utf8($data);                            # raw
+<pre>  $path-&gt;spew_utf8($data);                            # raw
   $path-&gt;spew({binmode =&gt; &quot;:encoding(UTF-8)&quot;}, $data; # LF -&gt; CRLF
 </pre>
 </section>
@@ -1271,8 +1187,7 @@
     public review and contribution under the terms of the license.</p>
 <p class="Pp">&lt;https://github.com/dagolden/Path-Tiny&gt;</p>
 <p class="Pp"></p>
-<pre>
-  git clone https://github.com/dagolden/Path-Tiny.git
+<pre>  git clone https://github.com/dagolden/Path-Tiny.git
 </pre>
 </section>
 </section>
@@ -1323,8 +1238,7 @@
 <p class="Pp">This software is Copyright (c) 2014 by David Golden.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The Apache License, Version 2.0, January 2004
+<pre>  The Apache License, Version 2.0, January 2004
 </pre>
 </section>
 </div>

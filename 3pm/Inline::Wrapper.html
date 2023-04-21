@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline::Wrapper(3)</title>
 </head>
@@ -31,26 +32,19 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">sample.pl:</p>
 <p class="Pp"></p>
-<pre>
- use Inline::Wrapper;
-
+<pre> use Inline::Wrapper;
  my $inline = Inline::Wrapper-&gt;new(
     language    =&gt; 'C',
     base_dir    =&gt; '.',
  );
-
  my @symbols = $inline-&gt;load( 'answer' );
-
  my @retvals = $inline-&gt;run( 'answer', 'the_answer', 3, 56 );
-
  print &quot;The answer is: &quot;, $retvals[0], &quot;\n&quot;;
-
  exit(0);
 </pre>
 <p class="Pp">answer.c:</p>
 <p class="Pp"></p>
-<pre>
- int the_answer( int arg1, int arg2 ) {
+<pre> int the_answer( int arg1, int arg2 ) {
      return ( arg1 * arg2 ) &gt;&gt; 2;
  }
 </pre>
@@ -86,8 +80,7 @@
 <h1 class="Sh" id="CONSTRUCTOR"><a class="permalink" href="#CONSTRUCTOR">CONSTRUCTOR</a></h1>
 <section class="Ss">
 <h2 class="Ss"><b>new()</b></h2>
-<pre>
-    my $wrapper = Inline::Wrapper-&gt;new(
+<pre>    my $wrapper = Inline::Wrapper-&gt;new(
           language        =&gt; 'C',
           base_dir        =&gt; 'src/code/C',
           auto_reload     =&gt; 1,
@@ -132,8 +125,7 @@
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
 <h2 class="Ss"><b>initialize()</b></h2>
-<pre>
-    $obj-&gt;initialize();
+<pre>    $obj-&gt;initialize();
 </pre>
 <p class="Pp">Initialize arguments. If you are subclassing, overload this, not
     &quot;<b>new()</b>&quot;.</p>
@@ -141,26 +133,26 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>load()</b></h2>
-<pre>
-    my @functions = $obj-&gt;load( $modname, %arguments );
+<pre>    my @functions = $obj-&gt;load( $modname, %arguments );
 </pre>
 <p class="Pp">The workhorse. Loads the actual module referred to by
-    <i></i><i>$modname</i><i></i>, imports its symbols into a private namespace,
-    and makes them available to call via &quot;<b>run()</b>&quot;.</p>
+    <i></i><span class="Li"><i>$modname</i></span><i></i>, imports its symbols
+    into a private namespace, and makes them available to call via
+    &quot;<b>run()</b>&quot;.</p>
 <p class="Pp"><b>ARGUMENTS:</b></p>
-<p class="Pp"><i></i><i>$modname</i><i></i> is REQUIRED. It corresponds to the
-    base filename, without extension, loaded from the <i>base_dir</i>. See the
-    &quot;Details of steps taken by <b>load()</b>&quot; section, Step 3, for
-    clarification of how pathname resolution is done.
-    <i></i><i>$modname</i><i></i> is also how you will refer to this particular
-    module from your program, so keep track of it.</p>
+<p class="Pp"><i></i><span class="Li"><i>$modname</i></span><i></i> is REQUIRED.
+    It corresponds to the base filename, without extension, loaded from the
+    <i>base_dir</i>. See the &quot;Details of steps taken by <b>load()</b>&quot;
+    section, Step 3, for clarification of how pathname resolution is done.
+    <i></i><span class="Li"><i>$modname</i></span><i></i> is also how you will
+    refer to this particular module from your program, so keep track of it.</p>
 <p class="Pp">This method accepts all of the same arguments as
     &quot;<b>new()</b>&quot;. Thus, you can set the defaults via
     &quot;<b>new()</b>&quot;, yet still individually configure module components
     differently from the defaults, if desired.</p>
 <p class="Pp">Returns a list of <span class="Li">@functions</span> made
-    available by loading <i></i><i>$modname</i><i></i>, or warns and returns an
-    empty list if unsuccessful.</p>
+    available by loading <i></i><span class="Li"><i>$modname</i></span><i></i>,
+    or warns and returns an empty list if unsuccessful.</p>
 <p class="Pp"><i>Details of steps taken by </i><b><i>load()</i></b><i></i></p>
 <p class="Pp">Since this is the real guts of this module, here are the exact
     steps taken when loading the module, doing pathname resolution, etc.</p>
@@ -175,27 +167,28 @@
   <dd></dd>
   <dt>3. Constructs a path to the specified $modname, roughly as follows:</dt>
   <dd>
-    <pre>
-    join( $PATH_SEP, $base_dir , $modname . $lang_ext );
+    <pre>    join( $PATH_SEP, $base_dir , $modname . $lang_ext );
     </pre>
   </dd>
 </dl>
 <div class="Bd-indent">
 <dl class="Bl-tag">
-  <dt><i></i><i>$base_dir</i><i></i> is taken either from the default created
-    with &quot;<b>new()</b>&quot;, or the explicitly supplied <i>base_dir</i>
-    argument to &quot;<b>load()</b>&quot;.</dt>
+  <dt><i></i><span class="Li"><i>$base_dir</i></span><i></i> is taken either
+    from the default created with &quot;<b>new()</b>&quot;, or the explicitly
+    supplied <i>base_dir</i> argument to &quot;<b>load()</b>&quot;.</dt>
   <dd></dd>
-  <dt><i></i><i>$path_separator</i><i></i> is just the appropriate path
-    separator for your OS.</dt>
+  <dt><i></i><span class="Li"><i>$path_separator</i></span><i></i> is just the
+    appropriate path separator for your OS.</dt>
   <dd></dd>
-  <dt><i></i><i>$modname</i><i></i> is your supplied module name. Note that this
-    means that you can supply your own subdirectories, as well; i.e.
-    <i>'foo'</i> is just as valid as <i>'foo/bar/baz'</i>.</dt>
+  <dt><i></i><span class="Li"><i>$modname</i></span><i></i> is your supplied
+    module name. Note that this means that you can supply your own
+    subdirectories, as well; i.e. <i>'foo'</i> is just as valid as
+    <i>'foo/bar/baz'</i>.</dt>
   <dd></dd>
-  <dt><i></i><i>$lang_ext</i><i></i> is taken from a data structure that
-    defaults to common filename extensions on a per-language basis. Any of these
-    can be overridden via the &quot;<b>add_language()</b>&quot; method.</dt>
+  <dt><i></i><span class="Li"><i>$lang_ext</i></span><i></i> is taken from a
+    data structure that defaults to common filename extensions on a per-language
+    basis. Any of these can be overridden via the
+    &quot;<b>add_language()</b>&quot; method.</dt>
   <dd></dd>
 </dl>
 </div>
@@ -216,24 +209,24 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>unload()</b></h2>
-<pre>
-    $obj-&gt;unload( $modname );
+<pre>    $obj-&gt;unload( $modname );
 </pre>
 <p class="Pp">Completely unload the module identified by
-    <i></i><i>$modname</i><i></i>, and render its functions uncallable.</p>
+    <i></i><span class="Li"><i>$modname</i></span><i></i>, and render its
+    functions uncallable.</p>
 <p class="Pp">This will actually go destroy the Inline::Wrapper::Module object,
     as well as the code module's corresponding private namespace.</p>
-<p class="Pp">Returns <i></i><i>$modname</i><i></i> (TRUE) upon success, carps
-    and returns undef on failure.</p>
+<p class="Pp">Returns <i></i><span class="Li"><i>$modname</i></span><i></i>
+    (TRUE) upon success, carps and returns undef on failure.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>run()</b></h2>
-<pre>
-    my @retvals = $obj-&gt;run( $modname, $function, @arguments );
+<pre>    my @retvals = $obj-&gt;run( $modname, $function, @arguments );
 </pre>
-<p class="Pp">Run the named <i></i><i>$function</i><i></i> that you loaded from
-    <i></i><i>$modname</i><i></i>, with the specified
-    <i></i><i>@arguments</i><i></i> (if any).</p>
+<p class="Pp">Run the named
+    <i></i><span class="Li"><i>$function</i></span><i></i> that you loaded from
+    <i></i><span class="Li"><i>$modname</i></span><i></i>, with the specified
+    <i></i><span class="Li"><i>@arguments</i></span><i></i> (if any).</p>
 <p class="Pp"><b>NOTE:</b> If the <i>auto_reload</i> option is TRUE,
     <b>run()</b> will also attempt to reload the source script from disk before
     running the function, if the ctime of the file has changed since the last
@@ -243,25 +236,25 @@
     syntax and everything is up to the function provided. This simply executes
     the sub that Inline loaded as-is, but in its own private namespace to keep
     your app clean.</p>
-<p class="Pp">Returns <i></i><i>@retvals</i><i></i>, consisting of the actual
-    return values provided by the module function itself. Whatever the function
-    returns, that's what you get.</p>
+<p class="Pp">Returns <i></i><span class="Li"><i>@retvals</i></span><i></i>,
+    consisting of the actual return values provided by the module function
+    itself. Whatever the function returns, that's what you get.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>modules()</b></h2>
-<pre>
-    my @modules = $obj-&gt;modules();
+<pre>    my @modules = $obj-&gt;modules();
 </pre>
 <p class="Pp">Returns a list of loaded module names, or the empty list if no
     modules have been (successfully) loaded.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>functions()</b></h2>
-<pre>
-    my @functions = $obj-&gt;functions( $modname );
+<pre>    my @functions = $obj-&gt;functions( $modname );
 </pre>
-<p class="Pp">Returns a list of loaded <i></i><i>@functions</i><i></i>, which
-    were made available by loading <i></i><i>$modname</i><i></i>.</p>
+<p class="Pp">Returns a list of loaded
+    <i></i><span class="Li"><i>@functions</i></span><i></i>, which were made
+    available by loading
+  <i></i><span class="Li"><i>$modname</i></span><i></i>.</p>
 </section>
 </section>
 <section class="Sh">
@@ -270,15 +263,13 @@
     settings after creating the object.</p>
 <section class="Ss">
 <h2 class="Ss"><b>base_dir()</b></h2>
-<pre>
-    my $base_dir = $obj-&gt;base_dir();
+<pre>    my $base_dir = $obj-&gt;base_dir();
 </pre>
 <p class="Pp">Returns the default <i>base_dir</i> attribute from the object.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>set_base_dir()</b></h2>
-<pre>
-    $obj-&gt;set_base_dir( '/some/path' );
+<pre>    $obj-&gt;set_base_dir( '/some/path' );
 </pre>
 <p class="Pp">Sets the default <i>base_dir</i> attribute of the object, and
     returns whatever it ended up being set to.</p>
@@ -287,16 +278,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>auto_reload()</b></h2>
-<pre>
-    my $bool = $obj-&gt;auto_reload();
+<pre>    my $bool = $obj-&gt;auto_reload();
 </pre>
 <p class="Pp">Returns a <span class="Li">$boolean</span> as to whether or not
     the default <i>auto_reload</i> setting is enabled for new modules.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>set_auto_reload()</b></h2>
-<pre>
-    $obj-&gt;set_auto_reload( 1 );
+<pre>    $obj-&gt;set_auto_reload( 1 );
 </pre>
 <p class="Pp">Sets the default <i>auto_reload</i> attribute of the object, and
     returns whatever it ended up being set to.</p>
@@ -305,15 +294,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>language()</b></h2>
-<pre>
-    my $lang = $obj-&gt;language();
+<pre>    my $lang = $obj-&gt;language();
 </pre>
 <p class="Pp">Returns the default <i>language</i> attribute of the object.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>set_language()</b></h2>
-<pre>
-    $obj-&gt;set_language( 'C' );
+<pre>    $obj-&gt;set_language( 'C' );
 </pre>
 <p class="Pp">Sets the default <i>language</i> attribute of the object, and
     returns whatever it ended up being set to.</p>
@@ -326,16 +313,17 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><b>add_language()</b></h2>
-<pre>
-    $obj-&gt;add_language( 'Lojban' =&gt; '.xkcd' );
+<pre>    $obj-&gt;add_language( 'Lojban' =&gt; '.xkcd' );
 </pre>
 <p class="Pp">Adds a language to the &quot;known languages&quot; table, allowing
     you to later use &quot;<b>set_language()</b>&quot;.</p>
 <p class="Pp">This can also be used to set a new file extension for an existing
     language.</p>
-<p class="Pp">REQUIRES a <i></i><i>$language</i><i></i> name (e.g. 'Python') and
-    a filename <i></i><i>$extension</i><i></i> (e.g. '.py'), which will be used
-    in pathname resolution, as described under &quot;<b>load()</b>&quot;.</p>
+<p class="Pp">REQUIRES a <i></i><span class="Li"><i>$language</i></span><i></i>
+    name (e.g. 'Python') and a filename
+    <i></i><span class="Li"><i>$extension</i></span><i></i> (e.g. '.py'), which
+    will be used in pathname resolution, as described under
+    &quot;<b>load()</b>&quot;.</p>
 <p class="Pp">Returns TRUE if successful, carps and returns FALSE otherwise.</p>
 </section>
 </section>

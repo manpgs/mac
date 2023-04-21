@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::MOP::Attribute(3)</title>
 </head>
@@ -32,8 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  Class::MOP::Attribute-&gt;new(
+<pre>  Class::MOP::Attribute-&gt;new(
       foo =&gt; (
           accessor  =&gt; 'foo',           # dual purpose get/set accessor
           predicate =&gt; 'has_foo',       # predicate check for defined-ness
@@ -41,7 +41,6 @@
           default   =&gt; 'BAR IS BAZ!'    # if no -foo key is provided, use this
       )
   );
-
   Class::MOP::Attribute-&gt;new(
       bar =&gt; (
           reader    =&gt; 'bar',           # getter
@@ -83,8 +82,7 @@
         <span class="Li">&quot;-foo&quot;</span>, then the following code will
         Just Work.</p>
     <p class="Pp"></p>
-    <pre>
-  MyClass-&gt;meta-&gt;new_object( -foo =&gt; 'Hello There' );
+    <pre>  MyClass-&gt;meta-&gt;new_object( -foo =&gt; 'Hello There' );
     </pre>
     <p class="Pp">If an init_arg is not assigned, it will automatically use the
         attribute's name. If <span class="Li">&quot;init_arg&quot;</span> is
@@ -107,15 +105,12 @@
         HASH or ARRAY ref, then you need to wrap that inside a subroutine
         reference:</p>
     <p class="Pp"></p>
-    <pre>
-  Class::MOP::Attribute-&gt;new(
+    <pre>  Class::MOP::Attribute-&gt;new(
       'foo' =&gt; (
           default =&gt; sub { [] },
       )
   );
-
   # or ...
-
   Class::MOP::Attribute-&gt;new(
       'foo' =&gt; (
           default =&gt; sub { {} },
@@ -126,8 +121,7 @@
         reference itself, then you need to wrap that in a subroutine as
       well:</p>
     <p class="Pp"></p>
-    <pre>
-  Class::MOP::Attribute-&gt;new(
+    <pre>  Class::MOP::Attribute-&gt;new(
       'foo' =&gt; (
           default =&gt; sub {
               sub { print &quot;Hello World&quot; }
@@ -140,8 +134,7 @@
         of the fact that when the <span class="Li">&quot;default&quot;</span>
         value is called as a method:</p>
     <p class="Pp"></p>
-    <pre>
-  Class::MOP::Attribute-&gt;new(
+    <pre>  Class::MOP::Attribute-&gt;new(
       'object_identity' =&gt; (
           default =&gt; sub { Scalar::Util::refaddr( $_[0] ) },
       )
@@ -166,8 +159,7 @@
     <p class="Pp">This contrived example shows an initializer that sets the
         attribute to twice the given value.</p>
     <p class="Pp"></p>
-    <pre>
-  Class::MOP::Attribute-&gt;new(
+    <pre>  Class::MOP::Attribute-&gt;new(
       'doubled' =&gt; (
           initializer =&gt; sub {
               my ( $self, $value, $set, $attr ) = @_;
@@ -179,8 +171,7 @@
     <p class="Pp">Since an initializer can be a method name, you can easily make
         attribute initialization use the writer:</p>
     <p class="Pp"></p>
-    <pre>
-  Class::MOP::Attribute-&gt;new(
+    <pre>  Class::MOP::Attribute-&gt;new(
       'some_attr' =&gt; (
           writer      =&gt; 'some_attr',
           initializer =&gt; 'some_attr',
@@ -191,23 +182,18 @@
         method modifications) will need to examine <span class="Li">@_</span>
         and determine under which context it is being called:</p>
     <p class="Pp"></p>
-    <pre>
-  around 'some_attr' =&gt; sub {
+    <pre>  around 'some_attr' =&gt; sub {
       my $orig = shift;
       my $self = shift;
       # $value is not defined if being called as a reader
       # $setter and $attr are only defined if being called as an initializer
       my ($value, $setter, $attr) = @_;
-
       # the reader behaves normally
       return $self-&gt;$orig if not @_;
-
       # mutate $value as desired
       # $value = &lt;something($value);
-
       # if called as an initializer, set the value and we're done
       return $setter-&gt;($row) if $setter;
-
       # otherwise, call the real writer with the new value
       $self-&gt;$orig($row);
   };
@@ -235,8 +221,7 @@
     <p class="Pp">Note that <span class="Li">&quot;undef&quot;</span> is a
         legitimate value, so this will work:</p>
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;set_something(undef);
+    <pre>  $object-&gt;set_something(undef);
     </pre>
   </li>
   <li>reader
@@ -249,8 +234,7 @@
     <p class="Pp">Note that <span class="Li">&quot;undef&quot;</span> is a
         legitimate value, so this will work:</p>
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;set_something(undef);
+    <pre>  $object-&gt;set_something(undef);
     </pre>
   </li>
   <li>predicate
@@ -281,7 +265,7 @@
 </div>
 <div class="Bd-indent"></div>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;clone(%options)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;clone(%options)</b></dt>
   <dd>This clones the attribute. Any options you provide will override the
       settings of the original attribute. You can change the name of the new
       attribute by passing a <span class="Li">&quot;name&quot;</span> key in
@@ -293,17 +277,17 @@
 <p class="Pp">These are all basic read-only accessors for the values passed into
     the constructor.</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;name</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;name</b></dt>
   <dd>Returns the attribute's name.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;accessor</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;accessor</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;reader</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;reader</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;writer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;writer</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;predicate</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;predicate</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;clearer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;clearer</b></dt>
   <dd>The <span class="Li">&quot;accessor&quot;</span>,
       <span class="Li">&quot;reader&quot;</span>,
       <span class="Li">&quot;writer&quot;</span>,
@@ -311,16 +295,16 @@
       <span class="Li">&quot;clearer&quot;</span> methods all return exactly
       what was passed to the constructor, so it can be either a string
       containing a method name, or a hash reference.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;initializer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;initializer</b></dt>
   <dd>Returns the initializer as passed to the constructor, so this may be
       either a method name or a subroutine reference.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;init_arg</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;init_arg</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;is_default_a_coderef</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;is_default_a_coderef</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;builder</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;builder</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;default($instance)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;default($instance)</b></dt>
   <dd>The <span class="Li">$instance</span> argument is optional. If you don't
       pass it, the return value for this method is exactly what was passed to
       the constructor, either a simple scalar or a subroutine reference.
@@ -329,33 +313,33 @@
         method on the <span class="Li">$instance</span> and the generated value
         is returned.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;slots</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;slots</b></dt>
   <dd>Return a list of slots required by the attribute. This is usually just
       one, the name of the attribute.
     <p class="Pp">A slot is the name of the hash key used to store the attribute
         in an object instance.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_read_method</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_read_method</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_write_method</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_write_method</b></dt>
   <dd>Returns the name of a method suitable for reading or writing the value of
       the attribute in the associated class.
     <p class="Pp">If an attribute is read- or write-only, then these methods can
         return <span class="Li">&quot;undef&quot;</span> as appropriate.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_read_method</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_read_method</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_write_method</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_write_method</b></dt>
   <dd>This returns a boolean indicating whether the attribute has a <i>named</i>
       read or write method.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_read_method_ref</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_read_method_ref</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_write_method_ref</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_write_method_ref</b></dt>
   <dd>Returns the subroutine reference of a method suitable for reading or
       writing the attribute's value in the associated class. These methods
       always return a subroutine reference, regardless of whether or not the
       attribute is read- or write-only.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;insertion_order</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;insertion_order</b></dt>
   <dd>If this attribute has been inserted into a class, this returns a zero
       based index regarding the order of insertion.</dd>
 </dl>
@@ -366,31 +350,31 @@
 <p class="Pp">These are all basic predicate methods for the values passed into
     <span class="Li">&quot;new&quot;</span>.</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;has_accessor</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_accessor</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_reader</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_reader</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_writer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_writer</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_predicate</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_predicate</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_clearer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_clearer</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_initializer</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_initializer</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_init_arg</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_init_arg</b></dt>
   <dd>This will be <i>false</i> if the
       <span class="Li">&quot;init_arg&quot;</span> was set to
       <span class="Li">&quot;undef&quot;</span>.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_default</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_default</b></dt>
   <dd>This will be <i>false</i> if the
       <span class="Li">&quot;default&quot;</span> was set to
       <span class="Li">&quot;undef&quot;</span>, since
       <span class="Li">&quot;undef&quot;</span> is the default
       <span class="Li">&quot;default&quot;</span> anyway.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_builder</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_builder</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_insertion_order</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_insertion_order</b></dt>
   <dd>This will be <i>false</i> if this attribute has not be inserted into a
       class</dd>
 </dl>
@@ -404,8 +388,9 @@
 <p class="Pp">These methods are not for general use, and should only be used if
     you really know what you are doing.</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;initialize_instance_slot($meta_instance,
-    </b><b>$instance</b><b>, </b><b>$params</b><b>)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;initialize_instance_slot($meta_instance,
+    </b><span class="Li"><b>$instance</b></span><b>,
+    </b><span class="Li"><b>$params</b></span><b>)</b></dt>
   <dd>This method is used internally to initialize the attribute's slot in the
       object <span class="Li">$instance</span>.
     <p class="Pp">The <span class="Li">$params</span> is a hash reference of the
@@ -413,33 +398,33 @@
     <p class="Pp">It's unlikely that you'll need to call this method
       yourself.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;set_value($instance,
-    </b><b>$value</b><b>)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;set_value($instance,
+    </b><span class="Li"><b>$value</b></span><b>)</b></dt>
   <dd>Sets the value without going through the accessor. Note that this works
       even with read-only attributes.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;set_raw_value($instance,
-    </b><b>$value</b><b>)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;set_raw_value($instance,
+    </b><span class="Li"><b>$value</b></span><b>)</b></dt>
   <dd>Sets the value with no side effects such as a trigger.
     <p class="Pp">This doesn't actually apply to Class::MOP attributes, only to
         subclasses.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;set_initial_value($instance,
-    </b><b>$value</b><b>)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;set_initial_value($instance,
+    </b><span class="Li"><b>$value</b></span><b>)</b></dt>
   <dd>Sets the value without going through the accessor. This method is only
       called when the instance is first being initialized.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_value($instance)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_value($instance)</b></dt>
   <dd>Returns the value without going through the accessor. Note that this works
       even with write-only accessors.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;get_raw_value($instance)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;get_raw_value($instance)</b></dt>
   <dd>Returns the value without any side effects such as lazy attributes.
     <p class="Pp">Doesn't actually apply to Class::MOP attributes, only to
         subclasses.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;has_value($instance)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;has_value($instance)</b></dt>
   <dd>Return a boolean indicating whether the attribute has been set in
       <span class="Li">$instance</span>. This how the default
       <span class="Li">&quot;predicate&quot;</span> method works.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;clear_value($instance)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;clear_value($instance)</b></dt>
   <dd>This will clear the attribute's value in
       <span class="Li">$instance</span>. This is what the default
       <span class="Li">&quot;clearer&quot;</span> calls.
@@ -456,10 +441,10 @@
     are they very magical, they are mostly used internally and by metaclass
     instances.</p>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;associated_class</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;associated_class</b></dt>
   <dd>This returns the Class::MOP::Class with which this attribute is
       associated, if any.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;attach_to_class($metaclass)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;attach_to_class($metaclass)</b></dt>
   <dd>This method stores a weakened reference to the
       <span class="Li">$metaclass</span> object internally.
     <p class="Pp">This method does not remove the attribute from its old class,
@@ -467,7 +452,7 @@
     <p class="Pp">It is probably best to use the Class::MOP::Class
         <span class="Li">&quot;add_attribute&quot;</span> method instead.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;detach_from_class</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;detach_from_class</b></dt>
   <dd>This method removes the associate metaclass object from the attribute it
       has one.
     <p class="Pp">This method does not remove the attribute itself from the
@@ -481,32 +466,32 @@
 <h2 class="Ss" id="Attribute_Accessor_generation"><a class="permalink" href="#Attribute_Accessor_generation">Attribute
   Accessor generation</a></h2>
 <dl class="Bl-tag">
-  <dt><b></b><b>$attr</b><b>-&gt;accessor_metaclass</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;accessor_metaclass</b></dt>
   <dd>Accessor methods are generated using an accessor metaclass. By default,
       this is Class::MOP::Method::Accessor. This method returns the name of the
       accessor metaclass that this attribute uses.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;associate_method($method)</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;associate_method($method)</b></dt>
   <dd>This associates a Class::MOP::Method object with the attribute. Typically,
       this is called internally when an attribute generates its accessors.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;associated_methods</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;associated_methods</b></dt>
   <dd>This returns the list of methods which have been associated with the
       attribute.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;install_accessors</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;install_accessors</b></dt>
   <dd>This method generates and installs code the attributes various accessors.
       It is typically called from the Class::MOP::Class
       <span class="Li">&quot;add_attribute&quot;</span> method.</dd>
-  <dt><b></b><b>$attr</b><b>-&gt;remove_accessors</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;remove_accessors</b></dt>
   <dd>This method removes all of the accessors associated with the attribute.
     <p class="Pp">This does not currently remove methods from the list returned
         by <span class="Li">&quot;associated_methods&quot;</span>.</p>
   </dd>
-  <dt><b></b><b>$attr</b><b>-&gt;inline_get</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;inline_get</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;inline_set</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;inline_set</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;inline_has</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;inline_has</b></dt>
   <dd></dd>
-  <dt><b></b><b>$attr</b><b>-&gt;inline_clear</b></dt>
+  <dt><b></b><span class="Li"><b>$attr</b></span><b>-&gt;inline_clear</b></dt>
   <dd>These methods return a code snippet suitable for inlining the relevant
       operation. They expect strings containing variable names to be used in the
       inlining, like <span class="Li">'$self'</span> or

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::Company_Subtypes(3)</title>
 </head>
@@ -34,14 +35,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Address;
+<pre>  package Address;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   use Locale::US;
   use Regexp::Common 'zip';
-
   my $STATES = Locale::US-&gt;new;
   subtype 'USState'
       =&gt; as Str
@@ -49,22 +47,18 @@
              (    exists $STATES-&gt;{code2state}{ uc($_) }
                || exists $STATES-&gt;{state2code}{ uc($_) } );
          };
-
   subtype 'USZipCode'
       =&gt; as Value
       =&gt; where {
              /^$RE{zip}{US}{-extended =&gt; 'allow'}$/;
          };
-
   has 'street'   =&gt; ( is =&gt; 'rw', isa =&gt; 'Str' );
   has 'city'     =&gt; ( is =&gt; 'rw', isa =&gt; 'Str' );
   has 'state'    =&gt; ( is =&gt; 'rw', isa =&gt; 'USState' );
   has 'zip_code' =&gt; ( is =&gt; 'rw', isa =&gt; 'USZipCode' );
-
   package Company;
   use Moose;
   use Moose::Util::TypeConstraints;
-
   has 'name' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1 );
   has 'address'   =&gt; ( is =&gt; 'rw', isa =&gt; 'Address' );
   has 'employees' =&gt; (
@@ -72,14 +66,12 @@
       isa     =&gt; 'ArrayRef[Employee]',
       default =&gt; sub { [] },
   );
-
   sub BUILD {
       my ( $self, $params ) = @_;
       foreach my $employee ( @{ $self-&gt;employees } ) {
           $employee-&gt;employer($self);
       }
   }
-
   after 'employees' =&gt; sub {
       my ( $self, $employees ) = @_;
       return unless $employees;
@@ -87,10 +79,8 @@
           $employee-&gt;employer($self);
       }
   };
-
   package Person;
   use Moose;
-
   has 'first_name' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1 );
   has 'last_name'  =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1 );
   has 'middle_initial' =&gt; (
@@ -98,7 +88,6 @@
       predicate =&gt; 'has_middle_initial'
   );
   has 'address' =&gt; ( is =&gt; 'rw', isa =&gt; 'Address' );
-
   sub full_name {
       my $self = shift;
       return $self-&gt;first_name
@@ -108,15 +97,11 @@
           : ' '
           ) . $self-&gt;last_name;
   }
-
   package Employee;
   use Moose;
-
   extends 'Person';
-
   has 'title'    =&gt; ( is =&gt; 'rw', isa =&gt; 'Str',     required =&gt; 1 );
   has 'employer' =&gt; ( is =&gt; 'rw', isa =&gt; 'Company', weak_ref =&gt; 1 );
-
   override 'full_name' =&gt; sub {
       my $self = shift;
       super() . ', ' . $self-&gt;title;
@@ -150,8 +135,7 @@
 <p class="Pp">We can now use the <span class="Li">&quot;USState&quot;</span>
     type just like Moose's builtin types:</p>
 <p class="Pp"></p>
-<pre>
-  has 'state'    =&gt; ( is =&gt; 'rw', isa =&gt; 'USState' );
+<pre>  has 'state'    =&gt; ( is =&gt; 'rw', isa =&gt; 'USState' );
 </pre>
 <p class="Pp">When the <span class="Li">&quot;state&quot;</span> attribute is
     set, the value is checked against the
@@ -163,8 +147,7 @@
     constraint for the <span class="Li">&quot;zip_code&quot;</span>
   attribute.</p>
 <p class="Pp"></p>
-<pre>
-  subtype 'USZipCode'
+<pre>  subtype 'USZipCode'
       =&gt; as Value
       =&gt; where {
              /^$RE{zip}{US}{-extended =&gt; 'allow'}$/;
@@ -187,13 +170,11 @@
     that for the <span class="Li">&quot;Company&quot;</span> class's
     <span class="Li">&quot;address&quot;</span> attribute:</p>
 <p class="Pp"></p>
-<pre>
-  has 'address'   =&gt; ( is =&gt; 'rw', isa =&gt; 'Address' );
+<pre>  has 'address'   =&gt; ( is =&gt; 'rw', isa =&gt; 'Address' );
 </pre>
 <p class="Pp">A company also needs a name:</p>
 <p class="Pp"></p>
-<pre>
-  has 'name' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1 );
+<pre>  has 'name' =&gt; ( is =&gt; 'rw', isa =&gt; 'Str', required =&gt; 1 );
 </pre>
 <p class="Pp">This introduces a new attribute option,
     <span class="Li">&quot;required&quot;</span>. If an attribute is required,
@@ -205,8 +186,7 @@
 <p class="Pp">The next attribute, <span class="Li">&quot;employees&quot;</span>,
     uses a <i>parameterized</i> type constraint:</p>
 <p class="Pp"></p>
-<pre>
-  has 'employees' =&gt; (
+<pre>  has 'employees' =&gt; (
       is      =&gt; 'rw',
       isa     =&gt; 'ArrayRef[Employee]'
       default =&gt; sub { [] },
@@ -248,8 +228,7 @@
     <span class="Li">&quot;Company&quot;</span> object in its
     <span class="Li">&quot;employer&quot;</span> attribute:</p>
 <p class="Pp"></p>
-<pre>
-  sub BUILD {
+<pre>  sub BUILD {
       my ( $self, $params ) = @_;
       foreach my $employee ( @{ $self-&gt;employees } ) {
           $employee-&gt;employer($self);
@@ -268,8 +247,7 @@
 <p class="Pp">To do this we can use an <span class="Li">&quot;after&quot;</span>
     modifier:</p>
 <p class="Pp"></p>
-<pre>
-  after 'employees' =&gt; sub {
+<pre>  after 'employees' =&gt; sub {
       my ( $self, $employees ) = @_;
       return unless $employees;
       foreach my $employee ( @$employees ) {
@@ -292,8 +270,7 @@
     <span class="Li">&quot;Employee&quot;</span> class is the
     <span class="Li">&quot;override&quot;</span> method modifier:</p>
 <p class="Pp"></p>
-<pre>
-  override 'full_name' =&gt; sub {
+<pre>  override 'full_name' =&gt; sub {
       my $self = shift;
       super() . ', ' . $self-&gt;title;
   };

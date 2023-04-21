@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Socket::SSL(3)</title>
 </head>
@@ -28,15 +29,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use strict;
+<pre>    use strict;
     use IO::Socket::SSL;
-
     # simple client
     my $cl = IO::Socket::SSL-&gt;new('www.google.com:443');
     print $cl &quot;GET / HTTP/1.0\r\n\r\n&quot;;
     print &lt;$cl&gt;;
-
     # simple server
     my $srv = IO::Socket::SSL-&gt;new(
         LocalAddr =&gt; '0.0.0.0:1234',
@@ -172,8 +170,7 @@
   SSL Client</a></h1>
 <p class="Pp">A basic SSL client is simple:</p>
 <p class="Pp"></p>
-<pre>
-    my $client = IO::Socket::SSL-&gt;new('www.example.com:443')
+<pre>    my $client = IO::Socket::SSL-&gt;new('www.example.com:443')
         or die &quot;error=$!, ssl_error=$SSL_ERROR&quot;;
 </pre>
 <p class="Pp">This will take the OpenSSL default CA store as the store for the
@@ -193,8 +190,7 @@
 <p class="Pp">With protocols like SMTP it is necessary to upgrade an existing
     socket to SSL. This can be done like this:</p>
 <p class="Pp"></p>
-<pre>
-    my $client = IO::Socket::INET-&gt;new('mx.example.com:25') or die $!;
+<pre>    my $client = IO::Socket::INET-&gt;new('mx.example.com:25') or die $!;
     # .. read greeting from server
     # .. send EHLO and read response
     # .. send STARTTLS command and read response
@@ -206,35 +202,27 @@
 </pre>
 <p class="Pp">A more complete example for a simple HTTP client:</p>
 <p class="Pp"></p>
-<pre>
-    my $client = IO::Socket::SSL-&gt;new(
+<pre>    my $client = IO::Socket::SSL-&gt;new(
         # where to connect
         PeerHost =&gt; &quot;www.example.com&quot;,
         PeerPort =&gt; &quot;https&quot;,
-
         # certificate verification - VERIFY_PEER is default
         SSL_verify_mode =&gt; SSL_VERIFY_PEER,
-
         # location of CA store
         # need only be given if default store should not be used
         SSL_ca_path =&gt; '/etc/ssl/certs', # typical CA path on Linux
         SSL_ca_file =&gt; '/etc/ssl/cert.pem', # typical CA file on BSD
-
         # or just use default path on system:
         IO::Socket::SSL::default_ca(), # either explicitly
         # or implicitly by not giving SSL_ca_*
-
         # easy hostname verification
         # It will use PeerHost as default name a verification
         # scheme as default, which is safe enough for most purposes.
         SSL_verifycn_name =&gt; 'foo.bar',
         SSL_verifycn_scheme =&gt; 'http',
-
         # SNI support - defaults to PeerHost
         SSL_hostname =&gt; 'foo.bar',
-
     ) or die &quot;failed connect or ssl handshake: $!,$SSL_ERROR&quot;;
-
     # send and receive over SSL connection
     print $client &quot;GET / HTTP/1.0\r\n\r\n&quot;;
     print &lt;$client&gt;;
@@ -242,16 +230,13 @@
 <p class="Pp">And to do revocation checks with OCSP (only available with OpenSSL
     1.0.0 or higher and Net::SSLeay 1.59 or higher):</p>
 <p class="Pp"></p>
-<pre>
-    # default will try OCSP stapling and check only leaf certificate
+<pre>    # default will try OCSP stapling and check only leaf certificate
     my $client = IO::Socket::SSL-&gt;new($dst);
-
     # better yet: require checking of full chain
     my $client = IO::Socket::SSL-&gt;new(
         PeerAddr =&gt; $dst,
         SSL_ocsp_mode =&gt; SSL_OCSP_FULL_CHAIN,
     );
-
     # even better: make OCSP errors fatal
     # (this will probably fail with lots of sites because of bad OCSP setups)
     # also use common OCSP response cache
@@ -261,13 +246,11 @@
         SSL_ocsp_mode =&gt; SSL_OCSP_FULL_CHAIN|SSL_OCSP_FAIL_HARD,
         SSL_ocsp_cache =&gt; $ocsp_cache,
     );
-
     # disable OCSP stapling in case server has problems with it
     my $client = IO::Socket::SSL-&gt;new(
         PeerAddr =&gt; $dst,
         SSL_ocsp_mode =&gt; SSL_OCSP_NO_STAPLE,
     );
-
     # check any certificates which are not yet checked by OCSP stapling or
     # where we have already cached results. For your own resolving combine
     # $ocsp-&gt;requests with $ocsp-&gt;add_response(uri,response).
@@ -285,20 +268,17 @@
 <p class="Pp">A basic SSL server looks similar to other IO::Socket servers, only
     that it also contains settings for certificate and key:</p>
 <p class="Pp"></p>
-<pre>
-    # simple server
+<pre>    # simple server
     my $server = IO::Socket::SSL-&gt;new(
         # where to listen
         LocalAddr =&gt; '127.0.0.1',
         LocalPort =&gt; 8080,
         Listen =&gt; 10,
-
         # which certificate to offer
         # with SNI support there can be different certificates per hostname
         SSL_cert_file =&gt; 'cert.pem',
         SSL_key_file =&gt; 'key.pem',
     ) or die &quot;failed to listen: $!&quot;;
-
     # accept client
     my $client = $server-&gt;accept or die
         &quot;failed to accept or ssl handshake: $!,$SSL_ERROR&quot;;
@@ -312,18 +292,15 @@
     or slow SSL handshake could make the server block in the handshake which
     would be bad to do on the listening socket:</p>
 <p class="Pp"></p>
-<pre>
-    # inet server
+<pre>    # inet server
     my $server = IO::Socket::INET-&gt;new(
         # where to listen
         LocalAddr =&gt; '127.0.0.1',
         LocalPort =&gt; 8080,
         Listen =&gt; 10,
     );
-
     # accept client
     my $client = $server-&gt;accept or die;
-
     # SSL upgrade client (in new process/thread)
     IO::Socket::SSL-&gt;start_SSL($client,
         SSL_server =&gt; 1,
@@ -597,8 +574,7 @@
     <span class="Li">&quot;start_SSL&quot;</span> and
     <span class="Li">&quot;accept_SSL&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    my $cl = IO::Socket::SSL-&gt;new($dst);
+<pre>    my $cl = IO::Socket::SSL-&gt;new($dst);
     $cl-&gt;blocking(0);
     my $sel = IO::Select-&gt;new($cl);
     while (1) {
@@ -606,10 +582,8 @@
         # bytes from the socket, but instead it must read at least one full SSL
         # frame. If the socket has no new bytes, but there are unprocessed data
         # from the SSL frame can_read will block!
-
         # wait for data on socket
         $sel-&gt;can_read();
-
         # new data on socket or eof
         READ:
         # this does not read only 1 byte from socket, but reads the complete SSL
@@ -685,8 +659,7 @@
     use <span class="Li">&quot;start_SSL&quot;</span> to upgrade and stop_SSL to
     downgrade:</p>
 <p class="Pp"></p>
-<pre>
-    my $sock = IO::Socket::INET-&gt;new(...) or die $!;
+<pre>    my $sock = IO::Socket::INET-&gt;new(...) or die $!;
     ... exchange plain data on $sock until starttls command ...
     IO::Socket::SSL-&gt;start_SSL($sock,%sslargs) or die $SSL_ERROR;
     ... now $sock is an IO::Socket::SSL object ...
@@ -703,8 +676,7 @@
     enable SSL and <span class="Li">&quot;stop_SSL&quot;</span> to talk plain
     again:</p>
 <p class="Pp"></p>
-<pre>
-    my $sock = IO::Socket::SSL-&gt;new(
+<pre>    my $sock = IO::Socket::SSL-&gt;new(
         PeerAddr =&gt; ...
         SSL_startHandshake =&gt; 0,
         %sslargs
@@ -915,10 +887,8 @@
       CA&quot;.</p>
     <p class="Pp">Examples:</p>
     <p class="Pp"></p>
-    <pre>
- SSL_cert_file =&gt; 'mycert.pem',
+    <pre> SSL_cert_file =&gt; 'mycert.pem',
  SSL_key_file =&gt; 'mykey.pem',
-
  SSL_cert_file =&gt; {
     &quot;foo.example.org&quot; =&gt; 'foo-cert.pem',
     &quot;foo.example.org%ecc&quot; =&gt; 'foo-ecc-cert.pem',
@@ -1226,8 +1196,7 @@
       with the CTX object from Net::SSLeay as the single argument.
     <p class="Pp">Example for limiting the server session cache size:</p>
     <p class="Pp"></p>
-    <pre>
-  SSL_create_ctx_callback =&gt; sub {
+    <pre>  SSL_create_ctx_callback =&gt; sub {
       my $ctx = shift;
       Net::SSLeay::CTX_sess_set_cache_size($ctx,128);
   }
@@ -1352,34 +1321,27 @@
 <div class="Bd-indent">
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-    Net::SSLeay::RAND_bytes(my $oldkey,32);
+<pre>    Net::SSLeay::RAND_bytes(my $oldkey,32);
     Net::SSLeay::RAND_bytes(my $newkey,32);
     my $oldkey_name = pack(&quot;a16&quot;,'oldsecret');
     my $newkey_name = pack(&quot;a16&quot;,'newsecret');
-
     my @keys = (
        [ $newkey_name, $newkey ], # current active key
        [ $oldkey_name, $oldkey ], # already expired
     );
-
     my $keycb = [ sub {
        my ($mykeys,$name) = @_;
-
        # return (current_key, current_key_name) if no name given
        return ($mykeys-&gt;[0][1],$mykeys-&gt;[0][0]) if ! $name;
-
        # return (matching_key, current_key_name) if we find a key matching
        # the given name
        for(my $i = 0; $i&lt;@$mykeys; $i++) {
            next if $name ne $mykeys-&gt;[$i][0];
            return ($mykeys-&gt;[$i][1],$mykeys-&gt;[0][0]);
        }
-
        # no matching key found
        return;
     },\@keys ];
-
     my $srv = IO::Socket::SSL-&gt;new(..., SSL_ticket_keycb =&gt; $keycb);
 </pre>
 </div>
@@ -1548,11 +1510,11 @@
   <dt id="sock_certificate($field)"><a class="permalink" href="#sock_certificate($field)"><b>sock_certificate($field)</b></a></dt>
   <dd>This is similar to <span class="Li">&quot;peer_certificate&quot;</span>
       but will return the sites own certificate. The same arguments for
-      <b></b><b>$field</b><b></b> can be used. If no <b></b><b>$field</b><b></b>
-      is given the certificate handle from the underlying OpenSSL will be
-      returned. This handle will only be valid as long as the SSL connection
-      exists and if used afterwards it might result in strange crashes of the
-      application.</dd>
+      <b></b><span class="Li"><b>$field</b></span><b></b> can be used. If no
+      <b></b><span class="Li"><b>$field</b></span><b></b> is given the
+      certificate handle from the underlying OpenSSL will be returned. This
+      handle will only be valid as long as the SSL connection exists and if used
+      afterwards it might result in strange crashes of the application.</dd>
   <dt id="peer_certificates"><a class="permalink" href="#peer_certificates"><b>peer_certificates</b></a></dt>
   <dd>This returns all the certificates send by the peer, e.g. first the peers
       own certificate and then the rest of the chain. You might use
@@ -1819,7 +1781,7 @@
 <div class="Bd-indent"></div>
 <dl class="Bl-tag">
   <dt id="IO::Socket::SSL~2"><a class="permalink" href="#IO::Socket::SSL~2"><b>IO::Socket::SSL-&gt;new_from_fd($fd,
-    [mode], </b><b>%sslargs</b><b>)</b></a></dt>
+    [mode], </b><span class="Li"><b>%sslargs</b></span><b>)</b></a></dt>
   <dd>This will convert a socket identified via a file descriptor into an SSL
       socket. Note that the argument list does not include a &quot;MODE&quot;
       argument; if you supply one, it will be thoughtfully ignored (for
@@ -1907,8 +1869,7 @@
       versions. With this hack it is possible to override these settings and
       restore sanity. Example:
     <p class="Pp"></p>
-    <pre>
-    IO::Socket::SSL::set_args_filter_hack( sub {
+    <pre>    IO::Socket::SSL::set_args_filter_hack( sub {
         my ($is_server,$args) = @_;
         if ( ! $is_server ) {
             # client settings - enable verification with default CA

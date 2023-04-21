@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2021, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_ALTSVC(3)</title>
 </head>
@@ -44,10 +47,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-#include &lt;curl/curl.h&gt;
-CURLcode curl_easy_setopt(CURL *handle, CURLOPT_ALTSVC, char *filename);
-</pre>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_ALTSVC, char *filename);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -68,14 +69,45 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_ALTSVC, char *filename);
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 if(curl) {
   curl_easy_setopt(curl, CURLOPT_ALTSVC_CTRL, CURLALTSVC_H1);
   curl_easy_setopt(curl, CURLOPT_ALTSVC, &quot;altsvc-cache.txt&quot;);
   curl_easy_perform(curl);
-}
-</pre>
+}</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FILE_FORMAT"><a class="permalink" href="#FILE_FORMAT">FILE
+  FORMAT</a></h1>
+<p class="Pp">A text based file with one line per alt-svc entry and each line
+    consists of nine space-separated fields.</p>
+<p class="Pp">An example line could look like</p>
+<p class="Pp">
+  <br/>
+   h2 www.example 8443 h3 quic.example 443 &quot;20190808 06:18:37&quot; 1 0</p>
+<p class="Pp">The fields of that line are:</p>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="h2"><a class="permalink" href="#h2">h2</a></dt>
+  <dd>ALPN id for the source origin</dd>
+  <dt id="www.example"><a class="permalink" href="#www.example">www.example</a></dt>
+  <dd>Host name for the source origin</dd>
+  <dt>8443</dt>
+  <dd>Port number for the source origin</dd>
+  <dt id="h3"><a class="permalink" href="#h3">h3</a></dt>
+  <dd>ALPN id for the destination host</dd>
+  <dt id="quic.example"><a class="permalink" href="#quic.example">quic.example</a></dt>
+  <dd>Host name for the destination host</dd>
+  <dt>443</dt>
+  <dd>Port number for the destination host</dd>
+  <dt>2019*</dt>
+  <dd>Expiration date and time of this entry within double quotes. The date
+      format is &quot;YYYYMMDD HH:MM:SS&quot; and the time zone is GMT.</dd>
+  <dt>1</dt>
+  <dd>Boolean (1 or 0) if &quot;persist&quot; was set for this entry</dd>
+  <dt>0</dt>
+  <dd>Integer priority value (not currently used)</dd>
+</dl>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -96,8 +128,8 @@ if(curl) {
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 8, 2021</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">June 21, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>LibXML(3)</title>
 </head>
@@ -28,12 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use XML::LibXML;
+<pre>  use XML::LibXML;
   my $dom = XML::LibXML-&gt;load_xml(string =&gt; &lt;&lt;'EOT');
   &lt;some-xml/&gt;
   EOT
-
   $Version_String = XML::LibXML::LIBXML_DOTTED_VERSION;
   $Version_ID = XML::LibXML::LIBXML_VERSION;
   $DLL_Version = XML::LibXML::LIBXML_RUNTIME_VERSION;
@@ -135,13 +134,11 @@
       version=&quot;1.0&quot; encoding=&quot;...&quot;?&gt;&quot;</span>
       declaration. Here is an example to follow:
     <p class="Pp"></p>
-    <pre>
-  use XML::LibXML;
+    <pre>  use XML::LibXML;
   # load
   open my $fh, '&lt;', 'file.xml';
   binmode $fh; # drop all PerlIO layers possibly created by a use open pragma
   $doc = XML::LibXML-&gt;load_xml(IO =&gt; $fh);
-
   # save
   open my $out, '&gt;', 'out.xml';
   binmode $out; # as above
@@ -154,8 +151,7 @@
   <dd>All functions working with DOM accept and return character strings (UTF-8
       encoded with UTF8 flag on). E.g.
     <p class="Pp"></p>
-    <pre>
-  my $doc = XML::LibXML::Document-&gt;new('1.0',$some_encoding);
+    <pre>  my $doc = XML::LibXML::Document-&gt;new('1.0',$some_encoding);
   my $element = $doc-&gt;createElement($name);
   $element-&gt;appendText($text);
   $xml_fragment = $element-&gt;toString(); # returns a character string
@@ -169,8 +165,7 @@
         character string if applied to other node than the Document node and a
         byte string containing the appropriate</p>
     <p class="Pp"></p>
-    <pre>
-  &lt;?xml version=&quot;1.0&quot; encoding=&quot;...&quot;?&gt;
+    <pre>  &lt;?xml version=&quot;1.0&quot; encoding=&quot;...&quot;?&gt;
     </pre>
     <p class="Pp">declaration if applied to a XML::LibXML::Document.</p>
   </dd>
@@ -180,8 +175,7 @@
       attached to any document). Exploiting this feature is NOT RECOMMENDED
       since it is considered bad practice.
     <p class="Pp"></p>
-    <pre>
-  my $doc = XML::LibXML::Document-&gt;new('1.0','iso-8859-2');
+    <pre>  my $doc = XML::LibXML::Document-&gt;new('1.0','iso-8859-2');
   my $text = $doc-&gt;createTextNode($some_latin2_encoded_byte_string);
   # WORKS, BUT NOT RECOMMENDED!
     </pre>
@@ -206,16 +200,14 @@
     safest way to work with XML::LibXML in threads.</p>
 <p class="Pp">Alternatively, one may use</p>
 <p class="Pp"></p>
-<pre>
-  use threads;
+<pre>  use threads;
   use XML::LibXML qw(:threads_shared);
 </pre>
 <p class="Pp">to indicate, that all XML::LibXML node and parser objects should
     be shared between the main thread and any thread spawn from there. For
     example, in</p>
 <p class="Pp"></p>
-<pre>
-  my $doc = XML::LibXML-&gt;load_xml(location =&gt; $filename);
+<pre>  my $doc = XML::LibXML-&gt;load_xml(location =&gt; $filename);
   my $thr = threads-&gt;new(sub{
     # code working with $doc
     1;
@@ -235,8 +227,7 @@
     creating a mutex lock and using it in <i>both</i> in the thread that
     modifies and the thread that reads:</p>
 <p class="Pp"></p>
-<pre>
-  my $doc = XML::LibXML-&gt;load_xml(location =&gt; $filename);
+<pre>  my $doc = XML::LibXML-&gt;load_xml(location =&gt; $filename);
   my $mutex : shared;
   my $thr = threads-&gt;new(sub{
      lock $mutex;
@@ -271,8 +262,7 @@
 <dl class="Bl-tag">
   <dt id="XML::LibXML::LIBXML_DOTTED_VERSION"><a class="permalink" href="#XML::LibXML::LIBXML_DOTTED_VERSION">XML::LibXML::LIBXML_DOTTED_VERSION</a></dt>
   <dd>
-    <pre>
-  $Version_String = XML::LibXML::LIBXML_DOTTED_VERSION;
+    <pre>  $Version_String = XML::LibXML::LIBXML_DOTTED_VERSION;
     </pre>
     <p class="Pp">Returns the version string of the libxml2 version XML::LibXML
         was compiled for. This will be &quot;2.6.2&quot; for &quot;libxml2
@@ -280,8 +270,7 @@
   </dd>
   <dt id="XML::LibXML::LIBXML_VERSION"><a class="permalink" href="#XML::LibXML::LIBXML_VERSION">XML::LibXML::LIBXML_VERSION</a></dt>
   <dd>
-    <pre>
-  $Version_ID = XML::LibXML::LIBXML_VERSION;
+    <pre>  $Version_ID = XML::LibXML::LIBXML_VERSION;
     </pre>
     <p class="Pp">Returns the version id of the libxml2 version XML::LibXML was
         compiled for. This will be &quot;20602&quot; for &quot;libxml2
@@ -292,8 +281,7 @@
   </dd>
   <dt id="XML::LibXML::LIBXML_RUNTIME_VERSION"><a class="permalink" href="#XML::LibXML::LIBXML_RUNTIME_VERSION">XML::LibXML::LIBXML_RUNTIME_VERSION</a></dt>
   <dd>
-    <pre>
-  $DLL_Version = XML::LibXML::LIBXML_RUNTIME_VERSION;
+    <pre>  $DLL_Version = XML::LibXML::LIBXML_RUNTIME_VERSION;
     </pre>
     <p class="Pp">Returns a version string of the libxml2 which is (usually
         dynamically) linked by XML::LibXML. This will be &quot;20602&quot; for
@@ -321,8 +309,7 @@
   <dt>&quot;:libxml&quot;</dt>
   <dd>Exports integer constants for DOM node types.
     <p class="Pp"></p>
-    <pre>
-  XML_ELEMENT_NODE            =&gt; 1
+    <pre>  XML_ELEMENT_NODE            =&gt; 1
   XML_ATTRIBUTE_NODE          =&gt; 2
   XML_TEXT_NODE               =&gt; 3
   XML_CDATA_SECTION_NODE      =&gt; 4
@@ -347,8 +334,7 @@
   <dt>&quot;:encoding&quot;</dt>
   <dd>Exports two encoding conversion functions from XML::LibXML::Common.
     <p class="Pp"></p>
-    <pre>
-  encodeToUTF8()
+    <pre>  encodeToUTF8()
   decodeFromUTF8()
     </pre>
   </dd>
@@ -358,8 +344,7 @@
       namespace for the reserved <span class="Li">&quot;xmlns:&quot;</span>
       prefix.
     <p class="Pp"></p>
-    <pre>
-  XML_XML_NS    =&gt; 'http://www.w3.org/XML/1998/namespace'
+    <pre>  XML_XML_NS    =&gt; 'http://www.w3.org/XML/1998/namespace'
   XML_XMLNS_NS  =&gt; 'http://www.w3.org/2000/xmlns/'
     </pre>
   </dd>
@@ -411,16 +396,14 @@
 <dl class="Bl-tag">
   <dt id="import_GDOME"><a class="permalink" href="#import_GDOME">import_GDOME</a></dt>
   <dd>
-    <pre>
-  $libxmlnode = XML::LibXML-&gt;import_GDOME( $node, $deep );
+    <pre>  $libxmlnode = XML::LibXML-&gt;import_GDOME( $node, $deep );
     </pre>
     <p class="Pp">This clones an XML::GDOME node to an XML::LibXML node
         explicitly.</p>
   </dd>
   <dt id="export_GDOME"><a class="permalink" href="#export_GDOME">export_GDOME</a></dt>
   <dd>
-    <pre>
-  $gdomenode = XML::LibXML-&gt;export_GDOME( $node, $deep );
+    <pre>  $gdomenode = XML::LibXML-&gt;export_GDOME( $node, $deep );
     </pre>
     <p class="Pp">Allows one to clone an XML::LibXML node into an XML::GDOME
         node.</p>

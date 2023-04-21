@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::ProfileDumper(3)</title>
 </head>
@@ -33,33 +34,26 @@
     DBI_PROFILE environment variable and run your program as usual. For example,
     using bash:</p>
 <p class="Pp"></p>
-<pre>
-  DBI_PROFILE=2/DBI::ProfileDumper program.pl
+<pre>  DBI_PROFILE=2/DBI::ProfileDumper program.pl
 </pre>
 <p class="Pp">Then analyze the generated file (<i>dbi.prof</i>) with
   dbiprof:</p>
 <p class="Pp"></p>
-<pre>
-  dbiprof
+<pre>  dbiprof
 </pre>
 <p class="Pp">You can also activate DBI::ProfileDumper from within your
   code:</p>
 <p class="Pp"></p>
-<pre>
-  use DBI;
-
+<pre>  use DBI;
   # profile with default path (2) and output file (dbi.prof)
   $dbh-&gt;{Profile} = &quot;!Statement/DBI::ProfileDumper&quot;;
-
   # same thing, spelled out
   $dbh-&gt;{Profile} = &quot;!Statement/DBI::ProfileDumper/File:dbi.prof&quot;;
-
   # another way to say it
   use DBI::ProfileDumper;
   $dbh-&gt;{Profile} = DBI::ProfileDumper-&gt;new(
                         Path =&gt; [ '!Statement' ],
                         File =&gt; 'dbi.prof' );
-
   # using a custom path
   $dbh-&gt;{Profile} = DBI::ProfileDumper-&gt;new(
       Path =&gt; [ &quot;foo&quot;, &quot;bar&quot; ],
@@ -81,15 +75,13 @@
 <p class="Pp">One way to use this module is just to enable it in your
     <span class="Li">$dbh</span>:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{Profile} = &quot;1/DBI::ProfileDumper&quot;;
+<pre>  $dbh-&gt;{Profile} = &quot;1/DBI::ProfileDumper&quot;;
 </pre>
 <p class="Pp">This will write out profile data by statement into a file called
     <i>dbi.prof</i>. If you want to modify either of these properties, you can
     construct the DBI::ProfileDumper object yourself:</p>
 <p class="Pp"></p>
-<pre>
-  use DBI::ProfileDumper;
+<pre>  use DBI::ProfileDumper;
   $dbh-&gt;{Profile} = DBI::ProfileDumper-&gt;new(
       Path =&gt; [ '!Statement' ],
       File =&gt; 'dbi.prof'
@@ -102,8 +94,7 @@
 <p class="Pp">You can also activate this module by setting the DBI_PROFILE
     environment variable:</p>
 <p class="Pp"></p>
-<pre>
-  $ENV{DBI_PROFILE} = &quot;!Statement/DBI::ProfileDumper&quot;;
+<pre>  $ENV{DBI_PROFILE} = &quot;!Statement/DBI::ProfileDumper&quot;;
 </pre>
 <p class="Pp">This will cause all DBI handles to share the same profiling
     object.</p>
@@ -114,13 +105,11 @@
     object. You can get access to the profile object from the Profile key in any
     DBI handle:</p>
 <p class="Pp"></p>
-<pre>
-  my $profile = $dbh-&gt;{Profile};
+<pre>  my $profile = $dbh-&gt;{Profile};
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="flush_to_disk"><a class="permalink" href="#flush_to_disk">flush_to_disk</a></h2>
-<pre>
-  $profile-&gt;flush_to_disk()
+<pre>  $profile-&gt;flush_to_disk()
 </pre>
 <p class="Pp">Flushes all collected profile data to disk and empties the Data
     hash. Returns the filename written to. If no profile data has been collected
@@ -134,15 +123,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="empty"><a class="permalink" href="#empty">empty</a></h2>
-<pre>
-  $profile-&gt;empty()
+<pre>  $profile-&gt;empty()
 </pre>
 <p class="Pp">Clears the Data hash without writing to disk.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="filename"><a class="permalink" href="#filename">filename</a></h2>
-<pre>
-  $filename = $profile-&gt;filename();
+<pre>  $filename = $profile-&gt;filename();
 </pre>
 <p class="Pp">Get or set the filename.</p>
 <p class="Pp">The filename can be specified as a CODE reference, in which case
@@ -158,11 +145,9 @@
     block of variable declarations describes the profile. After two newlines,
     the profile data forms the body of the file. For example:</p>
 <p class="Pp"></p>
-<pre>
-  DBI::ProfileDumper 2.003762
+<pre>  DBI::ProfileDumper 2.003762
   Path = [ '!Statement', '!MethodName' ]
   Program = t/42profile_data.t
-
   + 1 SELECT name FROM users WHERE id = ?
   + 2 prepare
   = 1 0.0312958955764771 0.000490069389343262 0.000176072120666504 0.00140702724456787 1023115819.83019 1023115819.86576

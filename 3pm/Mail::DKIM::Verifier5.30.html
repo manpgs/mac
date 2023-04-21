@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Mail::DKIM::Verifier(3)</title>
 </head>
@@ -28,37 +29,29 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Mail::DKIM::Verifier;
-
+<pre>  use Mail::DKIM::Verifier;
   # create a verifier object
   my $dkim = Mail::DKIM::Verifier-&gt;new();
-
   # read an email from a file handle
   $dkim-&gt;load(*STDIN);
-
   # or read an email and pass it into the verifier, incrementally
   while (&lt;STDIN&gt;)
   {
       # remove local line terminators
       chomp;
       s/\015$//;
-
       # use SMTP line terminators
       $dkim-&gt;PRINT(&quot;$_\015\012&quot;);
   }
   $dkim-&gt;CLOSE;
-
   # what is the result of the verify?
   my $result = $dkim-&gt;result;
-
   # there might be multiple signatures, what is the result per signature?
   foreach my $signature ($dkim-&gt;signatures)
   {
       print 'signature identity: ' . $signature-&gt;identity . &quot;\n&quot;;
       print 'verify result: ' . $signature-&gt;result_detail . &quot;\n&quot;;
   }
-
   # the alleged author of the email may specify how to handle email
   foreach my $policy ($dkim-&gt;policies)
   {
@@ -77,8 +70,7 @@
     &quot;feeding&quot; it the email message to be verified. When all the
     _headers_ have been read, the verifier:</p>
 <p class="Pp"></p>
-<pre>
- 1. checks whether any DomainKeys/DKIM signatures were found
+<pre> 1. checks whether any DomainKeys/DKIM signatures were found
  2. queries for the public keys needed to verify the signatures
  3. sets up the appropriate algorithms and canonicalization objects
  4. canonicalizes the headers and computes the header hash
@@ -97,9 +89,7 @@
 <h2 class="Ss"><b>new()</b></h2>
 <p class="Pp">Constructs an object-oriented verifier.</p>
 <p class="Pp"></p>
-<pre>
-  my $dkim = Mail::DKIM::Verifier-&gt;new();
-
+<pre>  my $dkim = Mail::DKIM::Verifier-&gt;new();
   my $dkim = Mail::DKIM::Verifier-&gt;new(%options);
 </pre>
 <p class="Pp">The only options supported at this time are:</p>
@@ -118,8 +108,7 @@
 <h2 class="Ss"><b>PRINT()</b></h2>
 <p class="Pp">Feeds part of the message to the verifier.</p>
 <p class="Pp"></p>
-<pre>
-  $dkim-&gt;PRINT(&quot;a line of the message\015\012&quot;);
+<pre>  $dkim-&gt;PRINT(&quot;a line of the message\015\012&quot;);
   $dkim-&gt;PRINT('more of');
   $dkim-&gt;PRINT(&quot; the message\015\012bye\015\012&quot;);
 </pre>
@@ -136,8 +125,7 @@
 <h2 class="Ss"><b>CLOSE()</b></h2>
 <p class="Pp">Call this when finished feeding in the message.</p>
 <p class="Pp"></p>
-<pre>
-  $dkim-&gt;CLOSE;
+<pre>  $dkim-&gt;CLOSE;
 </pre>
 <p class="Pp">This method finishes the canonicalization process, computes a
     hash, and verifies the signature.</p>
@@ -146,8 +134,7 @@
 <h2 class="Ss"><b>fetch_author_domain_policies()</b></h2>
 <p class="Pp">Retrieves ADSP records from DNS.</p>
 <p class="Pp"></p>
-<pre>
-  my @policies = $dkim-&gt;fetch_author_domain_policies;
+<pre>  my @policies = $dkim-&gt;fetch_author_domain_policies;
   foreach my $policy (@policies)
   {
       my $policy_result = $policy-&gt;apply($dkim);
@@ -167,8 +154,7 @@
 <h2 class="Ss"><b>fetch_author_policy()</b></h2>
 <p class="Pp">Retrieves a signing policy from DNS.</p>
 <p class="Pp"></p>
-<pre>
-  my $policy = $dkim-&gt;fetch_author_policy;
+<pre>  my $policy = $dkim-&gt;fetch_author_policy;
   my $policy_result = $policy-&gt;apply($dkim);
 </pre>
 <p class="Pp">This method retrieves the DKIM Sender Signing Practices record as
@@ -181,8 +167,7 @@
 <h2 class="Ss"><b>fetch_sender_policy()</b></h2>
 <p class="Pp">Retrieves a signing policy from DNS.</p>
 <p class="Pp"></p>
-<pre>
-  my $policy = $dkim-&gt;fetch_sender_policy;
+<pre>  my $policy = $dkim-&gt;fetch_sender_policy;
   my $policy_result = $policy-&gt;apply($dkim);
 </pre>
 <p class="Pp">The &quot;sender&quot; policy is the sender signing policy as
@@ -202,8 +187,7 @@
 <h2 class="Ss"><b>load()</b></h2>
 <p class="Pp">Load the entire message from a file handle.</p>
 <p class="Pp"></p>
-<pre>
-  $dkim-&gt;load($file_handle);
+<pre>  $dkim-&gt;load($file_handle);
 </pre>
 <p class="Pp">Reads a complete message from the designated file handle, feeding
     it into the verifier. The message must use &lt;CRLF&gt; line terminators
@@ -213,8 +197,7 @@
 <h2 class="Ss"><b>message_originator()</b></h2>
 <p class="Pp">Access the &quot;From&quot; header.</p>
 <p class="Pp"></p>
-<pre>
-  my $address = $dkim-&gt;message_originator;
+<pre>  my $address = $dkim-&gt;message_originator;
 </pre>
 <p class="Pp">Returns the &quot;originator address&quot; found in the message,
     as a Mail::Address object. This is typically the (first) name and email
@@ -222,8 +205,7 @@
     empty Mail::Address object is returned.</p>
 <p class="Pp">To get just the email address part, do:</p>
 <p class="Pp"></p>
-<pre>
-  my $email = $dkim-&gt;message_originator-&gt;address;
+<pre>  my $email = $dkim-&gt;message_originator-&gt;address;
 </pre>
 <p class="Pp">See also &quot;<b>message_sender()</b>&quot;.</p>
 </section>
@@ -231,8 +213,7 @@
 <h2 class="Ss"><b>message_sender()</b></h2>
 <p class="Pp">Access the &quot;From&quot; or &quot;Sender&quot; header.</p>
 <p class="Pp"></p>
-<pre>
-  my $address = $dkim-&gt;message_sender;
+<pre>  my $address = $dkim-&gt;message_sender;
 </pre>
 <p class="Pp">Returns the &quot;sender&quot; found in the message, as a
     Mail::Address object. This is typically the (first) name and email address
@@ -241,8 +222,7 @@
     then an empty Mail::Address object is returned.</p>
 <p class="Pp">To get just the email address part, do:</p>
 <p class="Pp"></p>
-<pre>
-  my $email = $dkim-&gt;message_sender-&gt;address;
+<pre>  my $email = $dkim-&gt;message_sender-&gt;address;
 </pre>
 <p class="Pp">The &quot;sender&quot; is the mailbox of the agent responsible for
     the actual transmission of the message. For example, if a secretary were to
@@ -253,8 +233,7 @@
 <h2 class="Ss"><b>policies()</b></h2>
 <p class="Pp">Retrieves applicable signing policies from DNS.</p>
 <p class="Pp"></p>
-<pre>
-  my @policies = $dkim-&gt;policies;
+<pre>  my @policies = $dkim-&gt;policies;
   foreach my $policy (@policies)
   {
       $policy_result = $policy-&gt;apply($dkim);
@@ -277,8 +256,7 @@
 <h2 class="Ss"><b>result()</b></h2>
 <p class="Pp">Access the result of the verification.</p>
 <p class="Pp"></p>
-<pre>
-  my $result = $dkim-&gt;result;
+<pre>  my $result = $dkim-&gt;result;
 </pre>
 <p class="Pp">Gives the result of the verification. The following values are
     possible:</p>
@@ -311,8 +289,7 @@
 <h2 class="Ss"><b>result_detail()</b></h2>
 <p class="Pp">Access the result, plus details if available.</p>
 <p class="Pp"></p>
-<pre>
-  my $detail = $dkim-&gt;result_detail;
+<pre>  my $detail = $dkim-&gt;result_detail;
 </pre>
 <p class="Pp">The detail is constructed by taking the result (e.g.
     &quot;pass&quot;, &quot;fail&quot;, &quot;invalid&quot; or &quot;none&quot;)
@@ -321,8 +298,7 @@
 <p class="Pp">The following are possible results from the <b>result_detail()</b>
     method:</p>
 <p class="Pp"></p>
-<pre>
-  pass
+<pre>  pass
   fail (bad RSA signature)
   fail (OpenSSL error: ...)
   fail (message has been altered)
@@ -358,8 +334,7 @@
 <h2 class="Ss"><b>signature()</b></h2>
 <p class="Pp">Access the message's DKIM signature.</p>
 <p class="Pp"></p>
-<pre>
-  my $sig = $dkim-&gt;signature;
+<pre>  my $sig = $dkim-&gt;signature;
 </pre>
 <p class="Pp">Accesses the signature found and verified in this message. The
     returned object is of type Mail::DKIM::Signature.</p>
@@ -372,8 +347,7 @@
 <h2 class="Ss"><b>signatures()</b></h2>
 <p class="Pp">Access all of this message's signatures.</p>
 <p class="Pp"></p>
-<pre>
-  my @all_signatures = $dkim-&gt;signatures;
+<pre>  my @all_signatures = $dkim-&gt;signatures;
 </pre>
 <p class="Pp">Use <span class="Li">$signature</span>-&gt;result or
     <span class="Li">$signature</span>-&gt;result_detail to access the

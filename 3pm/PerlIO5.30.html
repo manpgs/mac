@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PerlIO(3pm)</title>
 </head>
@@ -29,13 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  open($fh, &quot;&lt;:crlf&quot;, &quot;my.txt&quot;); # support platform-native and 
+<pre>  open($fh, &quot;&lt;:crlf&quot;, &quot;my.txt&quot;); # support platform-native and 
                                  # CRLF text files
-
   open($fh, &quot;&lt;&quot;, &quot;his.jpg&quot;); # portably open a binary file for reading
   binmode($fh);
-
   Shell:
     PERLIO=perlio perl ....
 </pre>
@@ -47,14 +45,12 @@
     <span class="Li">&quot;binmode&quot;</span> layer specification then C code
     performs the equivalent of:</p>
 <p class="Pp"></p>
-<pre>
-  use PerlIO 'foo';
+<pre>  use PerlIO 'foo';
 </pre>
 <p class="Pp">The perl code in PerlIO.pm then attempts to locate a layer by
     doing</p>
 <p class="Pp"></p>
-<pre>
-  require PerlIO::foo;
+<pre>  require PerlIO::foo;
 </pre>
 <p class="Pp">Otherwise the <span class="Li">&quot;PerlIO&quot;</span> package
     is a place holder for additional PerlIO related functions.</p>
@@ -104,11 +100,9 @@
     <p class="Pp">Here is how to write your native data out using UTF-8 (or
         UTF-EBCDIC) and then read it back in.</p>
     <p class="Pp"></p>
-    <pre>
-        open(F, &quot;&gt;:utf8&quot;, &quot;data.utf&quot;);
+    <pre>        open(F, &quot;&gt;:utf8&quot;, &quot;data.utf&quot;);
         print F $out;
         close(F);
-
         open(F, &quot;&lt;:utf8&quot;, &quot;data.utf&quot;);
         $in = &lt;F&gt;;
         close(F);
@@ -147,8 +141,7 @@
         layer specification. When used as the first element it provides a known
         base on which to build e.g.</p>
     <p class="Pp"></p>
-    <pre>
-    open($fh,&quot;:raw:utf8&quot;,...)
+    <pre>    open($fh,&quot;:raw:utf8&quot;,...)
     </pre>
     <p class="Pp">will construct a &quot;binary&quot; stream, but then enable
         UTF-8 translation.</p>
@@ -161,8 +154,7 @@
       <span class="Li">&quot;:utf8&quot;</span>. An example of a possible use
       might be:
     <p class="Pp"></p>
-    <pre>
-    open($fh,...)
+    <pre>    open($fh,...)
     ...
     binmode($fh,&quot;:encoding(...)&quot;);  # next chunk is encoded
     ...
@@ -220,8 +212,7 @@
   to raw</a></h2>
 <p class="Pp">To get a binary stream an alternate method is to use:</p>
 <p class="Pp"></p>
-<pre>
-    open($fh,&quot;whatever&quot;)
+<pre>    open($fh,&quot;whatever&quot;)
     binmode($fh);
 </pre>
 <p class="Pp">this has the advantage of being backward compatible with how such
@@ -229,8 +220,7 @@
 <p class="Pp">To get an unbuffered stream specify an unbuffered layer (e.g.
     <span class="Li">&quot;:unix&quot;</span>) in the open call:</p>
 <p class="Pp"></p>
-<pre>
-    open($fh,&quot;&lt;:unix&quot;,$path)
+<pre>    open($fh,&quot;&lt;:unix&quot;,$path)
 </pre>
 </section>
 <section class="Ss">
@@ -239,8 +229,7 @@
 <p class="Pp">If the platform is MS-DOS like and normally does CRLF to
     &quot;\n&quot; translation for text files then the default layers are :</p>
 <p class="Pp"></p>
-<pre>
-  unix crlf
+<pre>  unix crlf
 </pre>
 <p class="Pp">(The low level &quot;unix&quot; layer may be replaced by a
     platform specific low level layer.)</p>
@@ -248,13 +237,11 @@
     out how to do &quot;fast&quot; IO using the system's stdio, then the default
     layers are:</p>
 <p class="Pp"></p>
-<pre>
-  unix stdio
+<pre>  unix stdio
 </pre>
 <p class="Pp">Otherwise the default layers are</p>
 <p class="Pp"></p>
-<pre>
-  unix perlio
+<pre>  unix perlio
 </pre>
 <p class="Pp">These defaults may change once perlio has been better tested and
     tuned.</p>
@@ -265,8 +252,7 @@
 <p class="Pp">This can be used to see the effect of/bugs in the various layers
     e.g.</p>
 <p class="Pp"></p>
-<pre>
-  cd .../perl/t
+<pre>  cd .../perl/t
   PERLIO=stdio  ./perl harness
   PERLIO=perlio ./perl harness
 </pre>
@@ -279,8 +265,7 @@
 <p class="Pp">The following returns the <b>names</b> of the PerlIO layers on a
     filehandle.</p>
 <p class="Pp"></p>
-<pre>
-   my @layers = PerlIO::get_layers($fh); # Or FH, *FH, &quot;FH&quot;.
+<pre>   my @layers = PerlIO::get_layers($fh); # Or FH, *FH, &quot;FH&quot;.
 </pre>
 <p class="Pp">The layers are returned in the order an <b>open()</b> or
     <b>binmode()</b> call would use them. Note that the &quot;default
@@ -290,13 +275,11 @@
     DOS-like platforms and depending on the setting of
     <span class="Li">$ENV{PERLIO}</span>:</p>
 <p class="Pp"></p>
-<pre>
- PERLIO     UNIX-like                   DOS-like
+<pre> PERLIO     UNIX-like                   DOS-like
  ------     ---------                   --------
  unset / &quot;&quot; unix perlio / stdio [1]     unix crlf
  stdio      unix perlio / stdio [1]     stdio
  perlio     unix perlio                 unix perlio
-
  # [1] &quot;stdio&quot; if Configure found out how to do &quot;fast stdio&quot; (depends
  # on the stdio implementation) and in Perl 5.8, otherwise &quot;unix perlio&quot;
 </pre>
@@ -304,8 +287,7 @@
     returned; to get the output side, use the optional
     <span class="Li">&quot;output&quot;</span> argument:</p>
 <p class="Pp"></p>
-<pre>
-   my @layers = PerlIO::get_layers($fh, output =&gt; 1);
+<pre>   my @layers = PerlIO::get_layers($fh, output =&gt; 1);
 </pre>
 <p class="Pp">(Usually the layers are identical on either side of a filehandle
     but for example with sockets there may be differences, or if you have been
@@ -323,8 +305,7 @@
     flags on real layers; to get all of these returned separately, use the
     optional <span class="Li">&quot;details&quot;</span> argument:</p>
 <p class="Pp"></p>
-<pre>
-   my @layer_and_args_and_flags = PerlIO::get_layers($fh, details =&gt; 1);
+<pre>   my @layer_and_args_and_flags = PerlIO::get_layers($fh, details =&gt; 1);
 </pre>
 <p class="Pp">The result will be up to be three times the number of layers: the
     first element will be a name, the second element the arguments (unspecified

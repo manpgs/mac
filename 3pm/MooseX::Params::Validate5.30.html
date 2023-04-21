@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Params::Validate(3)</title>
 </head>
@@ -33,11 +34,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Foo;
+<pre>  package Foo;
   use Moose;
   use MooseX::Params::Validate;
-
   sub foo {
       my ( $self, %params ) = validated_hash(
           \@_,
@@ -45,7 +44,6 @@
       );
       return &quot;Hooray for $params{bar}!&quot;;
   }
-
   sub bar {
       my $self = shift;
       my ( $foo, $baz, $gorch ) = validated_list(
@@ -77,7 +75,7 @@
 <h1 class="Sh" id="EXPORTS"><a class="permalink" href="#EXPORTS">EXPORTS</a></h1>
 <dl class="Bl-tag">
   <dt id="validated_hash("><a class="permalink" href="#validated_hash("><b>validated_hash(
-    \@_, </b><b>%parameter_spec</b><b> )</b></a></dt>
+    \@_, </b><span class="Li"><b>%parameter_spec</b></span><b> )</b></a></dt>
   <dd>This behaves similarly to the standard Params::Validate
       <span class="Li">&quot;validate&quot;</span> function and returns the
       captured values in a HASH. The one exception is where if it spots an
@@ -119,13 +117,12 @@
 </div>
 <dl class="Bl-tag">
   <dt id="validated_list("><a class="permalink" href="#validated_list("><b>validated_list(
-    \@_, </b><b>%parameter_spec</b><b> )</b></a></dt>
+    \@_, </b><span class="Li"><b>%parameter_spec</b></span><b> )</b></a></dt>
   <dd>The <span class="Li">%parameter_spec</span> accepts the same options as
       above, but returns the parameters as positional values instead of a HASH.
       This is best explained by example:
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
       my ( $self, $foo, $bar ) = validated_list(
           \@_,
           foo =&gt; { isa =&gt; 'Foo' },
@@ -148,20 +145,19 @@
         <span class="Li">&quot;validatep&quot;</span>.</p>
   </dd>
   <dt id="pos_validated_list("><a class="permalink" href="#pos_validated_list("><b>pos_validated_list(
-    \@_, </b><b>$spec</b><b>, </b><b>$spec</b><b>, ... )</b></a></dt>
+    \@_, </b><span class="Li"><b>$spec</b></span><b>,
+    </b><span class="Li"><b>$spec</b></span><b>, ... )</b></a></dt>
   <dd>This function validates a list of positional parameters. Each
       <span class="Li">$spec</span> should validate one of the parameters in the
       list:
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
       my $self = shift;
       my ( $foo, $bar ) = pos_validated_list(
           \@_,
           { isa =&gt; 'Foo' },
           { isa =&gt; 'Bar' },
       );
-
       ...
   }
     </pre>
@@ -178,8 +174,7 @@
         described below, simply pass them after the list of parameter validation
         specs:</p>
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
       my $self = shift;
       my ( $foo, $bar ) = pos_validated_list(
           \@_,
@@ -187,7 +182,6 @@
           { isa =&gt; 'Bar' },
           MX_PARAMS_VALIDATE_NO_CACHE =&gt; 1,
       );
-
       ...
   }
     </pre>
@@ -248,14 +242,12 @@
       <span class="Li">&quot;MX_PARAMS_VALIDATE_NO_CACHE&quot;</span> flag in
       the parameter spec this will prevent the parameter spec from being cached.
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
       my ( $self, %params ) = validated_hash(
           \@_,
           foo                         =&gt; { isa =&gt; 'Foo' },
           MX_PARAMS_VALIDATE_NO_CACHE =&gt; 1,
       );
-
   }
     </pre>
   </li>
@@ -264,14 +256,12 @@
       value to be used as the cache key will bypass the normal cache key
       generation.
     <p class="Pp"></p>
-    <pre>
-  sub foo {
+    <pre>  sub foo {
       my ( $self, %params ) = validated_hash(
           \@_,
           foo                          =&gt; { isa =&gt; 'Foo' },
           MX_PARAMS_VALIDATE_CACHE_KEY =&gt; 'foo-42',
       );
-
   }
     </pre>
   </li>

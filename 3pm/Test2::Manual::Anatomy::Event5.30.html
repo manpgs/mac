@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Manual::Anatomy::Event(3)</title>
 </head>
@@ -56,26 +57,19 @@
     implement both APIs directly in your event.</p>
 <p class="Pp">Here is a good template for a new event:</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::Event::Mine;
+<pre>    package Test2::Event::Mine;
     use strict;
     use warnings;
-
     use parent 'Test2::Event';
     use Test2::Util::Facets2Legacy ':ALL';
-
     sub facet_data {
         my $self = shift;
-
         # Adds 'about', 'amnesty', and 'trace' facets
         my $out = $self-&gt;common_facet_data;
-
         # Add any additional facets to the $out hashref
         ...
-
         return $out;
     }
-
     1;
 </pre>
 </section>
@@ -221,14 +215,10 @@
     facet. The package should be proper object, and may have additional methods
     to help work with your facet.</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::EventFacet::MyFacet;
-
+<pre>    package Test2::EventFacet::MyFacet;
     use parent 'Test2::EventFacet';
-
     sub facet_key { 'myfacet' }
     sub is_list { 0 }
-
     1;
 </pre>
 <p class="Pp">Your facet package should always be under the Test2::EventFacet::
@@ -243,14 +233,12 @@
   <dt>$bool = $facet_class-&gt;is_list</dt>
   <dd>True if an event should put these facets in a list:
     <p class="Pp"></p>
-    <pre>
-    { myfacet =&gt; [{}, {}] }
+    <pre>    { myfacet =&gt; [{}, {}] }
     </pre>
     <p class="Pp">False if an event may only have one of this type of facet at a
         time:</p>
     <p class="Pp"></p>
-    <pre>
-    { myfacet =&gt; {} }
+    <pre>    { myfacet =&gt; {} }
     </pre>
   </dd>
 </dl>
@@ -258,16 +246,14 @@
 <p class="Pp">The assert facet is not a list type, so its implementation would
     look like this:</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::EventFacet::Assert;
+<pre>    package Test2::EventFacet::Assert;
     sub facet_key { 'assert' }
     sub is_list { 0 }
 </pre>
 <p class="Pp">The amnesty facet is a list type, but amnesty does not need 's'
     appended to make it plural:</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::EventFacet::Amnesty;
+<pre>    package Test2::EventFacet::Amnesty;
     sub facet_key { 'amnesty' }
     sub is_list { 1 }
 </pre>
@@ -275,8 +261,7 @@
     plural as errors. This means the package name is '::Error', but the key is
     'errors'.</p>
 <p class="Pp"></p>
-<pre>
-    package Test2::EventFacet::Error;
+<pre>    package Test2::EventFacet::Error;
     sub facet_key { 'errors' }
     sub is_list { 1 }
 </pre>

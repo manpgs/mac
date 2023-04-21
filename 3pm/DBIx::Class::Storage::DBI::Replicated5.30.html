@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Storage::DBI::Replicated(3)</title>
 </head>
@@ -36,8 +37,7 @@
     You should also define your arguments, such as which balancer you want and
     any arguments that the Pool object should get.</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = Schema::Class-&gt;clone;
+<pre>  my $schema = Schema::Class-&gt;clone;
   $schema-&gt;storage_type(['::DBI::Replicated', { balancer_type =&gt; '::Random' }]);
   $schema-&gt;connection(...);
 </pre>
@@ -46,8 +46,7 @@
     Think of these arguments as what you'd pass to the 'normal'
     <span class="Li">$schema</span>-&gt;connect method.</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;storage-&gt;connect_replicants(
+<pre>  $schema-&gt;storage-&gt;connect_replicants(
     [$dsn1, $user, $pass, \%opts],
     [$dsn2, $user, $pass, \%opts],
     [$dsn3, $user, $pass, \%opts],
@@ -57,14 +56,12 @@
     would. Automatically all reads will be delegated to the replicants, while
     writes to the master.</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;resultset('Source')-&gt;search({name=&gt;'etc'});
+<pre>  $schema-&gt;resultset('Source')-&gt;search({name=&gt;'etc'});
 </pre>
 <p class="Pp">You can force a given query to use a particular storage using the
     search attribute 'force_pool'. For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Source')-&gt;search(undef, {force_pool=&gt;'master'});
+<pre>  my $rs = $schema-&gt;resultset('Source')-&gt;search(undef, {force_pool=&gt;'master'});
 </pre>
 <p class="Pp">Now <span class="Li">$rs</span> will force everything (both reads
     and writes) to use whatever was setup as the master storage. 'master' is
@@ -79,8 +76,7 @@
 <p class="Pp">If you have a multi-statement read only transaction you can force
     it to select a random server in the pool by:</p>
 <p class="Pp"></p>
-<pre>
-  my $rs = $schema-&gt;resultset('Source')-&gt;search( undef,
+<pre>  my $rs = $schema-&gt;resultset('Source')-&gt;search( undef,
     { force_pool =&gt; $db-&gt;storage-&gt;read_handler-&gt;next_storage }
   );
 </pre>
@@ -255,14 +251,12 @@
     the master), executes a coderef and then restores the original state.</p>
 <p class="Pp">Example:</p>
 <p class="Pp"></p>
-<pre>
-  my $reliably = sub {
+<pre>  my $reliably = sub {
     my $name = shift @_;
     $schema-&gt;resultset('User')-&gt;create({name=&gt;$name});
     my $user_rs = $schema-&gt;resultset('User')-&gt;find({name=&gt;$name});
     return $user_rs;
   };
-
   my $user_rs = $schema-&gt;storage-&gt;execute_reliably($reliably, 'John');
 </pre>
 <p class="Pp">Use this when you must be certain of your database state, such as
@@ -377,8 +371,7 @@
 <p class="Pp">Otherwise, you can force a single query to use the master with the
     'force_pool' attribute:</p>
 <p class="Pp"></p>
-<pre>
-  my $result = $resultset-&gt;search(undef, {force_pool=&gt;'master'})-&gt;find($pk);
+<pre>  my $result = $resultset-&gt;search(undef, {force_pool=&gt;'master'})-&gt;find($pk);
 </pre>
 <p class="Pp">This attribute will safely be ignored by non replicated storages,
     so you can use the same code for both types of systems.</p>
@@ -391,10 +384,8 @@
     application server. You can get around this limitation by using the Schema
     clone method.</p>
 <p class="Pp"></p>
-<pre>
-  my $new_schema = $schema-&gt;clone;
+<pre>  my $new_schema = $schema-&gt;clone;
   $new_schema-&gt;set_reliable_storage;
-
   ## $new_schema will use only the Master storage for all reads/writes while
   ## the $schema object will use replicated storage.
 </pre>

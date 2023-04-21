@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Warn(3)</title>
 </head>
@@ -28,28 +29,20 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Test::Warn;
-
+<pre>  use Test::Warn;
   warning_is    {foo(-dri =&gt; &quot;/&quot;)} &quot;Unknown Parameter 'dri'&quot;, &quot;dri != dir gives warning&quot;;
   warnings_are  {bar(1,1)} [&quot;Width very small&quot;, &quot;Height very small&quot;];
-
   warning_is    {add(2,2)} undef, &quot;No warnings for calc 2+2&quot;; # or
   warnings_are  {add(2,2)} [],    &quot;No warnings for calc 2+2&quot;; # whichever reads better :-)
-
   warning_like  {foo(-dri =&gt; &quot;/&quot;)} qr/unknown param/i, &quot;an unknown parameter test&quot;;
   warnings_like {bar(1,1)} [qr/width.*small/i, qr/height.*small/i];
-
   warning_is    {foo()} {carped =&gt; &quot;didn't find the right parameters&quot;};
   warnings_like {foo()} [qr/undefined/,qr/undefined/,{carped =&gt; qr/no result/i}];
-
   warning_like {foo(undef)}                 'uninitialized';
   warning_like {bar(file =&gt; '/etc/passwd')} 'io';
-
   warning_like {eval q/&quot;$x&quot;; $x;/}
                [qw/void uninitialized/],
                &quot;some warnings at compile time&quot;;
-
   warnings_exist {...} [qr/expected warning/], &quot;Expected warning is thrown&quot;;
 </pre>
 </section>
@@ -73,14 +66,12 @@
     <p class="Pp">Another way to say that there are no warnings in the block
       is:</p>
     <p class="Pp"></p>
-    <pre>
-  warnings_are {foo()} [], &quot;no warnings&quot;
+    <pre>  warnings_are {foo()} [], &quot;no warnings&quot;
     </pre>
     <p class="Pp">If you want to test for a warning given by Carp you have to
         write something like:</p>
     <p class="Pp"></p>
-    <pre>
-  warning_is {carp &quot;msg&quot;} {carped =&gt; 'msg'}, &quot;Test for a carped warning&quot;;
+    <pre>  warning_is {carp &quot;msg&quot;} {carped =&gt; 'msg'}, &quot;Test for a carped warning&quot;;
     </pre>
     <p class="Pp">The test will fail if a &quot;normal&quot; warning is found
         instead of a &quot;carped&quot; one.</p>
@@ -92,8 +83,7 @@
         &quot;foo&quot;, &quot;Foo succeeded&quot;&quot;</span>. If you need to
         test for a warning at an exact line, try something like:</p>
     <p class="Pp"></p>
-    <pre>
-  warning_like {warn &quot;foo&quot;} qr/at XYZ.dat line 5/
+    <pre>  warning_like {warn &quot;foo&quot;} qr/at XYZ.dat line 5/
     </pre>
     <p class="Pp">Warn messages with a trailing newline (like
         <span class="Li">&quot;warn &quot;foo\n&quot;&quot;</span>) don't
@@ -125,13 +115,11 @@
     <p class="Pp">If you want more than one test for carped warnings, try
       this:</p>
     <p class="Pp"></p>
-    <pre>
-  warnings_are {carp &quot;c1&quot;; carp &quot;c2&quot;} {carped =&gt; ['c1','c2'];
+    <pre>  warnings_are {carp &quot;c1&quot;; carp &quot;c2&quot;} {carped =&gt; ['c1','c2'];
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-  warnings_are {foo()} [&quot;Warning 1&quot;, {carped =&gt; [&quot;Carp 1&quot;, &quot;Carp 2&quot;]}, &quot;Warning 2&quot;];
+    <pre>  warnings_are {foo()} [&quot;Warning 1&quot;, {carped =&gt; [&quot;Carp 1&quot;, &quot;Carp 2&quot;]}, &quot;Warning 2&quot;];
     </pre>
     <p class="Pp">Note that <span class="Li">&quot;{carped =&gt;
         ...}&quot;</span> must always be a hash ref.</p>
@@ -147,8 +135,7 @@
         __LINE__&quot;</span>. So you can check for a warning in the file
         <span class="Li">&quot;Foo.pm&quot;</span> on line 5 with:</p>
     <p class="Pp"></p>
-    <pre>
-  warning_like {bar()} qr/at Foo.pm line 5/, &quot;Testname&quot;
+    <pre>  warning_like {bar()} qr/at Foo.pm line 5/, &quot;Testname&quot;
     </pre>
     <p class="Pp">I don't know whether it makes sense to do such a test :-(</p>
     <p class="Pp">However, you should be prepared as a matching with
@@ -167,8 +154,7 @@
         and <span class="Li">&quot;warnings_are()&quot;</span> you can test for
         warnings via <span class="Li">&quot;carp&quot;</span> with:</p>
     <p class="Pp"></p>
-    <pre>
-  warning_like {bar()} {carped =&gt; qr/bar called too early/i};
+    <pre>  warning_like {bar()} {carped =&gt; qr/bar called too early/i};
     </pre>
     <p class="Pp">Similar to <span class="Li">&quot;warning_is()&quot;</span>
         and <span class="Li">&quot;warnings_are()&quot;</span>,</p>
@@ -190,8 +176,7 @@
     <p class="Pp">Note, that warnings occurring at compile time can only be
         caught in an eval block. So</p>
     <p class="Pp"></p>
-    <pre>
-  warning_like {eval q/&quot;$x&quot;; $x;/}
+    <pre>  warning_like {eval q/&quot;$x&quot;; $x;/}
                 [qw/void uninitialized/],
                 &quot;some warnings at compile time&quot;;
     </pre>
@@ -211,8 +196,7 @@
         <span class="Li">&quot;carp&quot;</span> and for warning categories,
         too:</p>
     <p class="Pp"></p>
-    <pre>
-  warnings_like {foo()}
+    <pre>  warnings_like {foo()}
                 [qr/bar warning/,
                  qr/bar warning/,
                  {carped =&gt; qr/bar warning/i},
@@ -229,9 +213,7 @@
       specific warnings were generated, and couldn't care less if other warnings
       happened in the same block of code.
     <p class="Pp"></p>
-    <pre>
-  warnings_exist {...} [qr/expected warning/], &quot;Expected warning is thrown&quot;;
-
+    <pre>  warnings_exist {...} [qr/expected warning/], &quot;Expected warning is thrown&quot;;
   warnings_exist {...} ['uninitialized'], &quot;Expected warning is thrown&quot;;
     </pre>
   </dd>

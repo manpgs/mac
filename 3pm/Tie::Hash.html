@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Tie::Hash(3pm)</title>
 </head>
@@ -29,32 +30,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package NewHash;
+<pre>    package NewHash;
     require Tie::Hash;
-
     @ISA = qw(Tie::Hash);
-
     sub DELETE { ... }          # Provides needed method
     sub CLEAR { ... }           # Overrides inherited method
-
-
     package NewStdHash;
     require Tie::Hash;
-
     @ISA = qw(Tie::StdHash);
-
     # All methods provided by default, define
     # only those needing overrides
     # Accessors access the storage in %{$_[0]};
     # TIEHASH should return a reference to the actual storage
     sub DELETE { ... }
-
     package NewExtraHash;
     require Tie::Hash;
-
     @ISA = qw(Tie::ExtraHash);
-
     # All methods provided by default, define 
     # only those needing overrides
     # Accessors access the storage in %{$_[0][0]};
@@ -64,10 +55,7 @@
       $_[0][1]-&gt;('del', $_[0][0], $_[1]); # Call the report writer
       delete $_[0][0]-&gt;{$_[1]};           #  $_[0]-&gt;SUPER::DELETE($_[1])
     }
-
-
     package main;
-
     tie %new_hash, 'NewHash';
     tie %new_std_hash, 'NewStdHash';
     tie %new_extra_hash, 'NewExtraHash',
@@ -139,10 +127,8 @@
     reference, and the remaining methods should operate on the hash referenced
     by the first argument:</p>
 <p class="Pp"></p>
-<pre>
-  package ReportHash;
+<pre>  package ReportHash;
   our @ISA = 'Tie::StdHash';
-
   sub TIEHASH  {
     my $storage = bless {}, shift;
     warn &quot;New ReportHash created, stored in $storage.\n&quot;;
@@ -164,10 +150,8 @@
     remaining methods should operate on the hash <span class="Li">&quot;%{
     $_[0]-&gt;[0] }&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  package ReportHash;
+<pre>  package ReportHash;
   our @ISA = 'Tie::ExtraHash';
-
   sub TIEHASH  {
     my $class = shift;
     my $storage = bless [{}, @_], $class;

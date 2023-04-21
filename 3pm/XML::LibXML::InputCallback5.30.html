@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>XML::LibXML::InputCallback(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use XML::LibXML;
+<pre>  use XML::LibXML;
 </pre>
 </section>
 <section class="Sh">
@@ -103,15 +103,13 @@
 <p class="Pp">After object instantiation using the parameter-less constructor,
     you can register callback groups.</p>
 <p class="Pp"></p>
-<pre>
-  my $input_callbacks = XML::LibXML::InputCallback-&gt;new();
+<pre>  my $input_callbacks = XML::LibXML::InputCallback-&gt;new();
   $input_callbacks-&gt;register_callbacks([ $match_cb1, $open_cb1,
                                          $read_cb1, $close_cb1 ] );
   $input_callbacks-&gt;register_callbacks([ $match_cb2, $open_cb2,
                                          $read_cb2, $close_cb2 ] );
   $input_callbacks-&gt;register_callbacks( [ $match_cb3, $open_cb3,
                                           $read_cb3, $close_cb3 ] );
-
   $parser-&gt;input_callbacks( $input_callbacks );
   $parser-&gt;parse_file( $some_xml_file );
 </pre>
@@ -216,19 +214,16 @@
     MyScheme::Handler object that responds to methods similar to an
   IO::Handle.</p>
 <p class="Pp"></p>
-<pre>
-  # Define the four callback functions
+<pre>  # Define the four callback functions
   sub match_uri {
       my $uri = shift;
       return $uri =~ /^myscheme:/; # trigger our callback group at a 'myscheme' URIs
   }
-
   sub open_uri {
       my $uri = shift;
       my $handler = MyScheme::Handler-&gt;new($uri);
       return $handler;
   }
-
   # The returned $buffer will be parsed by the libxml2 parser
   sub read_uri {
       my $handler = shift;
@@ -237,21 +232,17 @@
       read($handler, $buffer, $length);
       return $buffer; # $buffer will be an empty string '' if read() is done
   }
-
   # Close the handle associated with the resource.
   sub close_uri {
       my $handler = shift;
       close($handler);
   }
-
   # Register them with a instance of XML::LibXML::InputCallback
   my $input_callbacks = XML::LibXML::InputCallback-&gt;new();
   $input_callbacks-&gt;register_callbacks([ \&amp;match_uri, \&amp;open_uri,
                                          \&amp;read_uri, \&amp;close_uri ] );
-
   # Register the callback group at a parser instance
   $parser-&gt;input_callbacks( $input_callbacks );
-
   # $some_xml_file will be parsed using our callbacks
   $parser-&gt;parse_file( $some_xml_file );
 </pre>

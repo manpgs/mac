@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::Pager(3)</title>
 </head>
@@ -29,52 +30,37 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # Select an appropriate pager and set the PAGER environment variable
+<pre>  # Select an appropriate pager and set the PAGER environment variable
   use IO::Pager;
-
   # TIMTOWTDI Object-oriented
   {
     # open()                           # Use all the defaults.
     my $object = new IO::Pager;
-
     # open FILEHANDLE                  # Unbuffered is default subclass
     my $object = new IO::Pager *STDOUT;
-
     # open FILEHANDLE,EXPR             # Specify subclass
     my $object = new IO::Pager *STDOUT,  'Unbuffered';
-
     # Direct subclass instantiation    # FH is optional
     use IO::Pager::Unbuffered;
     my $object = new IO::Pager::Unbuffered  *STDOUT;
-
-
     $object-&gt;print(&quot;OO shiny...\n&quot;) while 1;
     print &quot;Some other text sent to STODUT, perhaps from a foreign routine.&quot;
-
     # $object passes out of scope and filehandle is automagically closed
   }
-
   # TIMTOWTDI Procedural
   {
     # open FILEHANDLE                    # Unbuffered is default subclass
     my $token = IO::Pager::open *STDOUT;
-
     # open FILEHANDLE,EXPR               # Specify subclass
     my $token = IO::Pager::open *STDOUT,  'Unbuffered';
-
     # open FILEHANDLE,MODE,EXPR          # En lieu of a separate binmode()
     my $token = IO::Pager::open *STDOUT, '|-:utf8', 'Unbuffered';
-
-
     print &lt;&lt;&quot;  HEREDOC&quot; ;
     ...
     A bunch of text later
     HEREDOC
-
     # $token passes out of scope and filehandle is automagically closed
   }
-
   {
     # You can also use scalar filehandles...
     my $token = IO::Pager::open(my $FH) or warn($!); XXX
@@ -135,8 +121,7 @@
 <p class="Pp">You can also access the PID by numifying the instantiation token
     like so:</p>
 <p class="Pp"></p>
-<pre>
-  my $child = $token+0;
+<pre>  my $child = $token+0;
 </pre>
 </section>
 <section class="Ss">
@@ -148,14 +133,12 @@
 <p class="Pp">Alternatively, you may rely upon the implicit close of lexical
     handles as they pass out of scope e.g;</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
      IO::Pager::open local *RIBBIT;
      print RIBBIT &quot;No toad sexing allowed&quot;;
      ...
   }
   #The filehandle is closed to additional output
-
   {
      my $token = new IO::Pager::Buffered;
      $token-&gt;print(&quot;I like trains&quot;);
@@ -179,15 +162,13 @@
     existing file, or an explicit (<i>&gt;&gt;</i>) for appending to a log file.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-    binmode(*STDOUT, ':LOG(clobber.log)');
+<pre>    binmode(*STDOUT, ':LOG(clobber.log)');
     ...
     $STDOUT-&gt;binmode(':LOG(&gt;&gt;noclobber.log)');
 </pre>
 <p class="Pp">For full tee-style support, use PerlIO::Util like so:</p>
 <p class="Pp"></p>
-<pre>
-    binmode(*STDOUT, &quot;:tee(TH)&quot;);
+<pre>    binmode(*STDOUT, &quot;:tee(TH)&quot;);
     #OR
     $STDOUT-&gt;binmode(':tee(TH)');
 </pre>
@@ -197,14 +178,14 @@
   )</a></h2>
 <p class="Pp">Used in the eval-until-eof idiom below, <i>IO::Pager</i> will
     handle broken pipes from deceased children for you in one of two ways. If
-    <i></i><i>$ENV</i><i>{IP_EOF}</i> is false then program flow will pass out
-    of the loop on <i>SIGPIPE</i>, this is the default. If the variable is true,
-    then the program continues running with output for the previously paged
-    filehandle directed to the <i>STDOUT</i> stream; more accurately, the
-    filehandle is reopened to file descriptor 1.</p>
+    <i></i><span class="Li"><i>$ENV</i></span><i>{IP_EOF}</i> is false then
+    program flow will pass out of the loop on <i>SIGPIPE</i>, this is the
+    default. If the variable is true, then the program continues running with
+    output for the previously paged filehandle directed to the <i>STDOUT</i>
+    stream; more accurately, the filehandle is reopened to file descriptor
+  1.</p>
 <p class="Pp"></p>
-<pre>
-  use IO::Pager::Page; #or whichever you prefer;
+<pre>  use IO::Pager::Page; #or whichever you prefer;
   ...
   eval{
     say &quot;Producing prodigious portions of product&quot;;
@@ -214,8 +195,8 @@
 </pre>
 <p class="Pp">If using <b>eof()</b> with less, especially when IP_EOF is set,
     you may want to use the <i>--no-init</i> option by setting
-    <i></i><i>$ENV</i><i>{IP_EOF}='X'</i> to prevent the paged output from being
-    erased when the pager exits.</p>
+    <i></i><span class="Li"><i>$ENV</i></span><i>{IP_EOF}='X'</i> to prevent the
+    paged output from being erased when the pager exits.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="fileno(_"><a class="permalink" href="#fileno(_">fileno(
@@ -302,16 +283,13 @@
 <h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
 <p class="Pp">You probably want to do something with SIGPIPE eg;</p>
 <p class="Pp"></p>
-<pre>
-  eval {
+<pre>  eval {
     local $SIG{PIPE} = sub { die };
     local $STDOUT = IO::Pager::open(*STDOUT);
-
     while (1) {
       # Do something
     }
   }
-
   # Do something else
 </pre>
 </section>

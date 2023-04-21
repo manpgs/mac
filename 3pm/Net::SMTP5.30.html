@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::SMTP(3pm)</title>
 </head>
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Net::SMTP;
-
+<pre>    use Net::SMTP;
     # Constructors
     $smtp = Net::SMTP-&gt;new('mailhost');
     $smtp = Net::SMTP-&gt;new('mailhost', Timeout =&gt; 60);
@@ -52,11 +51,8 @@
 <p class="Pp">This example prints the mail domain name of the SMTP server known
     as mailhost:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/local/bin/perl -w
-
+<pre>    #!/usr/local/bin/perl -w
     use Net::SMTP;
-
     $smtp = Net::SMTP-&gt;new('mailhost');
     print $smtp-&gt;domain,&quot;\n&quot;;
     $smtp-&gt;quit;
@@ -64,13 +60,9 @@
 <p class="Pp">This example sends a small message to the postmaster at the SMTP
     server known as mailhost:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/local/bin/perl -w
-
+<pre>    #!/usr/local/bin/perl -w
     use Net::SMTP;
-
     my $smtp = Net::SMTP-&gt;new('mailhost');
-
     $smtp-&gt;mail($ENV{USER});
     if ($smtp-&gt;to('postmaster')) {
      $smtp-&gt;data();
@@ -81,7 +73,6 @@
     } else {
      print &quot;Error: &quot;, $smtp-&gt;message();
     }
-
     $smtp-&gt;quit;
 </pre>
 </section>
@@ -141,13 +132,11 @@
     <p class="Pp"><b>Debug</b> - Enable debugging information</p>
     <p class="Pp">Example:</p>
     <p class="Pp"></p>
-    <pre>
-    $smtp = Net::SMTP-&gt;new('mailhost',
+    <pre>    $smtp = Net::SMTP-&gt;new('mailhost',
                            Hello =&gt; 'my.mail.domain',
                            Timeout =&gt; 30,
                            Debug   =&gt; 1,
                           );
-
     # the same
     $smtp = Net::SMTP-&gt;new(
                            Host =&gt; 'mailhost',
@@ -155,7 +144,6 @@
                            Timeout =&gt; 30,
                            Debug   =&gt; 1,
                           );
-
     # the same with direct SSL
     $smtp = Net::SMTP-&gt;new('mailhost',
                            Hello =&gt; 'my.mail.domain',
@@ -163,7 +151,6 @@
                            Debug   =&gt; 1,
                            SSL     =&gt; 1,
                           );
-
     # Connect to the default server from Net::config
     $smtp = Net::SMTP-&gt;new(
                            Hello =&gt; 'my.mail.domain',
@@ -231,8 +218,7 @@
         additional ESMTP OPTIONS which is passed in hash like fashion, using key
         and value pairs. Possible options are:</p>
     <p class="Pp"></p>
-    <pre>
- Size        =&gt; &lt;bytes&gt;
+    <pre> Size        =&gt; &lt;bytes&gt;
  Return      =&gt; &quot;FULL&quot; | &quot;HDRS&quot;
  Bits        =&gt; &quot;7&quot; | &quot;8&quot; | &quot;binary&quot;
  Transaction =&gt; &lt;ADDRESS&gt;
@@ -264,8 +250,7 @@
         also pass additional case-sensitive OPTIONS as an anonymous hash using
         key and value pairs. Possible options are:</p>
     <p class="Pp"></p>
-    <pre>
-  Notify  =&gt; ['NEVER'] or ['SUCCESS','FAILURE','DELAY']  (see below)
+    <pre>  Notify  =&gt; ['NEVER'] or ['SUCCESS','FAILURE','DELAY']  (see below)
   ORcpt   =&gt; &lt;ORCPT&gt;
   SkipBad =&gt; 1        (to ignore bad addresses)
     </pre>
@@ -274,8 +259,7 @@
         when a bad address is encountered and it will return an array of
         addresses that did succeed.</p>
     <p class="Pp"></p>
-    <pre>
-  $smtp-&gt;recipient($recipient1,$recipient2);  # Good
+    <pre>  $smtp-&gt;recipient($recipient1,$recipient2);  # Good
   $smtp-&gt;recipient($recipient1,$recipient2, { SkipBad =&gt; 1 });  # Good
   $smtp-&gt;recipient($recipient1,$recipient2, { Notify =&gt; ['FAILURE','DELAY'], SkipBad =&gt; 1 });  # Good
   @goodrecips=$smtp-&gt;recipient(@recipients, { Notify =&gt; ['FAILURE'], SkipBad =&gt; 1 });  # Good
@@ -291,9 +275,7 @@
         Notify option and &quot;requests that a DSN not be returned to the
         sender under any conditions.&quot;</p>
     <p class="Pp"></p>
-    <pre>
-  {Notify =&gt; ['NEVER']}
-
+    <pre>  {Notify =&gt; ['NEVER']}
   $smtp-&gt;recipient(@recipients, { Notify =&gt; ['NEVER'], SkipBad =&gt; 1 });  # Good
     </pre>
     <p class="Pp">You may use any combination of these three values
@@ -312,9 +294,7 @@
         parameter requests that a &quot;delayed&quot; DSN NOT be issued under
         any conditions.&quot;</p>
     <p class="Pp"></p>
-    <pre>
-  {Notify =&gt; ['SUCCESS','FAILURE','DELAY']}
-
+    <pre>  {Notify =&gt; ['SUCCESS','FAILURE','DELAY']}
   $smtp-&gt;recipient(@recipients, { Notify =&gt; ['FAILURE','DELAY'], SkipBad =&gt; 1 });  # Good
     </pre>
     <p class="Pp">ORcpt is also part of the SMTP DSN extension according to
@@ -393,8 +373,7 @@
     the constructor, then addresses should be a valid rfc2821-quoted address,
     although Net::SMTP will accept the address surrounded by angle brackets.</p>
 <p class="Pp"></p>
-<pre>
- funny user@domain      WRONG
+<pre> funny user@domain      WRONG
  &quot;funny user&quot;@domain    RIGHT, recommended
  &lt;&quot;funny user&quot;@domain&gt;  OK
 </pre>

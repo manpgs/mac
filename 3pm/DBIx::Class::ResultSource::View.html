@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::ResultSource::View(3)</title>
 </head>
@@ -29,13 +30,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Schema::Result::Year2000CDs;
-
+<pre>  package MyApp::Schema::Result::Year2000CDs;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;table_class('DBIx::Class::ResultSource::View');
-
   __PACKAGE__-&gt;table('year2000cds');
   __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
   __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
@@ -78,8 +75,7 @@
 <p class="Pp">Having created the MyApp::Schema::Year2000CDs schema as shown in
     the SYNOPSIS above, you can then:</p>
 <p class="Pp"></p>
-<pre>
-  $2000_cds = $schema-&gt;resultset('Year2000CDs')
+<pre>  $2000_cds = $schema-&gt;resultset('Year2000CDs')
                      -&gt;search()
                      -&gt;all();
   $count    = $schema-&gt;resultset('Year2000CDs')
@@ -88,20 +84,17 @@
 </pre>
 <p class="Pp">If you modified the schema to include a placeholder</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
+<pre>  __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
       &quot;SELECT cdid, artist, title FROM cd WHERE year = ?&quot;
   );
 </pre>
 <p class="Pp">and ensuring you have is_virtual set to true:</p>
 <p class="Pp"></p>
-<pre>
-  __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
+<pre>  __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
 </pre>
 <p class="Pp">You could now say:</p>
 <p class="Pp"></p>
-<pre>
-  $2001_cds = $schema-&gt;resultset('Year2000CDs')
+<pre>  $2001_cds = $schema-&gt;resultset('Year2000CDs')
                      -&gt;search({}, { bind =&gt; [2001] })
                      -&gt;all();
   $count    = $schema-&gt;resultset('Year2000CDs')
@@ -113,21 +106,15 @@
 <h1 class="Sh" id="SQL_EXAMPLES"><a class="permalink" href="#SQL_EXAMPLES">SQL
   EXAMPLES</a></h1>
 <dl class="Bl-tag">
-  <dt id="is_virtual"><a class="permalink" href="#is_virtual">is_virtual set to
-    false</a></dt>
+  <dt>is_virtual set to false</dt>
   <dd>
-    <pre>
-  $schema-&gt;resultset('Year2000CDs')-&gt;all();
-
+    <pre>  $schema-&gt;resultset('Year2000CDs')-&gt;all();
   SELECT cdid, artist, title FROM year2000cds me
     </pre>
   </dd>
-  <dt id="is_virtual~2"><a class="permalink" href="#is_virtual~2">is_virtual set
-    to true</a></dt>
+  <dt>is_virtual set to true</dt>
   <dd>
-    <pre>
-  $schema-&gt;resultset('Year2000CDs')-&gt;all();
-
+    <pre>  $schema-&gt;resultset('Year2000CDs')-&gt;all();
   SELECT cdid, artist, title FROM
     (SELECT cdid, artist, title FROM cd WHERE year ='2000') me
     </pre>
@@ -137,17 +124,15 @@
 <section class="Sh">
 <h1 class="Sh" id="METHODS"><a class="permalink" href="#METHODS">METHODS</a></h1>
 <section class="Ss">
-<h2 class="Ss" id="is_virtual~3"><a class="permalink" href="#is_virtual~3">is_virtual</a></h2>
-<pre>
-  __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
+<h2 class="Ss" id="is_virtual"><a class="permalink" href="#is_virtual">is_virtual</a></h2>
+<pre>  __PACKAGE__-&gt;result_source_instance-&gt;is_virtual(1);
 </pre>
 <p class="Pp">Set to true for a virtual view, false or unset for a real
     database-based view.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="view_definition"><a class="permalink" href="#view_definition">view_definition</a></h2>
-<pre>
-  __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
+<pre>  __PACKAGE__-&gt;result_source_instance-&gt;view_definition(
       &quot;SELECT cdid, artist, title FROM cd WHERE year ='2000'&quot;
       );
 </pre>
@@ -156,8 +141,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="deploy_depends_on"><a class="permalink" href="#deploy_depends_on">deploy_depends_on</a></h2>
-<pre>
-  __PACKAGE__-&gt;result_source_instance-&gt;deploy_depends_on(
+<pre>  __PACKAGE__-&gt;result_source_instance-&gt;deploy_depends_on(
       [&quot;MyApp::Schema::Result::Year&quot;,&quot;MyApp::Schema::Result::CD&quot;]
       );
 </pre>

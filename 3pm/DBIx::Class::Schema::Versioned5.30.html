@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Schema::Versioned(3)</title>
 </head>
@@ -29,15 +30,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Schema;
+<pre>  package MyApp::Schema;
   use base qw/DBIx::Class::Schema/;
-
   our $VERSION = 0.001;
-
   # load MyApp::Schema::CD, MyApp::Schema::Book, MyApp::Schema::DVD
   __PACKAGE__-&gt;load_classes(qw/CD Book DVD/);
-
   __PACKAGE__-&gt;load_components(qw/Schema::Versioned/);
   __PACKAGE__-&gt;upgrade_directory('/path/to/upgrades/');
 </pre>
@@ -83,17 +80,14 @@
     and another to perform upgrades. Your creation script might look like a bit
     like this:</p>
 <p class="Pp"></p>
-<pre>
-  use strict;
+<pre>  use strict;
   use Pod::Usage;
   use Getopt::Long;
   use MyApp::Schema;
-
   my ( $preversion, $help );
   GetOptions(
     'p|preversion:s'  =&gt; \$preversion,
   ) or die pod2usage;
-
   my $schema = MyApp::Schema-&gt;connect(
     $dsn,
     $user,
@@ -105,16 +99,13 @@
 </pre>
 <p class="Pp">Then your upgrade script might look like so:</p>
 <p class="Pp"></p>
-<pre>
-  use strict;
+<pre>  use strict;
   use MyApp::Schema;
-
   my $schema = MyApp::Schema-&gt;connect(
     $dsn,
     $user,
     $password,
   );
-
   if (!$schema-&gt;get_db_version()) {
     # schema is unversioned
     $schema-&gt;deploy();
@@ -135,12 +126,10 @@
     version. Then hand check and if necessary edit the resulting diff to ensure
     that it will apply. Once you have done all that you can do this:</p>
 <p class="Pp"></p>
-<pre>
-  if (!$schema-&gt;get_db_version()) {
+<pre>  if (!$schema-&gt;get_db_version()) {
     # schema is unversioned
     $schema-&gt;install(&quot;0.000&quot;);
   }
-
   # this will now apply the 0.000 to current version diff
   $schema-&gt;upgrade();
 </pre>
@@ -258,8 +247,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="run_upgrade"><a class="permalink" href="#run_upgrade">run_upgrade</a></h2>
-<pre>
- $self-&gt;run_upgrade(qr/create/i);
+<pre> $self-&gt;run_upgrade(qr/create/i);
 </pre>
 <p class="Pp">Runs a set of SQL statements matching a passed in regular
     expression. The idea is that this method can be called any number of times
@@ -306,8 +294,7 @@
     DBIC_NO_VERSION_CHECK or alternatively you can set the ignore_version attr
     in the forth argument like so:</p>
 <p class="Pp"></p>
-<pre>
-  my $schema = MyApp::Schema-&gt;connect(
+<pre>  my $schema = MyApp::Schema-&gt;connect(
     $dsn,
     $user,
     $password,

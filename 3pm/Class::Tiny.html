@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Class::Tiny(3)</title>
 </head>
@@ -34,32 +35,23 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">In <i>Person.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package Person;
-
+<pre>  package Person;
   use Class::Tiny qw( name );
-
   1;
 </pre>
 <p class="Pp">In <i>Employee.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package Employee;
+<pre>  package Employee;
   use parent 'Person';
-
   use Class::Tiny qw( ssn ), {
     timestamp =&gt; sub { time }   # attribute with default
   };
-
   1;
 </pre>
 <p class="Pp">In <i>example.pl</i>:</p>
 <p class="Pp"></p>
-<pre>
-  use Employee;
-
+<pre>  use Employee;
   my $obj = Employee-&gt;new( name =&gt; &quot;Larry&quot;, ssn =&gt; &quot;111-22-3333&quot; );
-
   # unknown attributes are ignored
   my $obj = Employee-&gt;new( name =&gt; &quot;Larry&quot;, OS =&gt; &quot;Linux&quot; );
   # $obj-&gt;{OS} does not exist
@@ -103,9 +95,7 @@
   attributes</a></h2>
 <p class="Pp">Define attributes as a list of import arguments:</p>
 <p class="Pp"></p>
-<pre>
-    package Foo::Bar;
-
+<pre>    package Foo::Bar;
     use Class::Tiny qw(
         name
         id
@@ -116,8 +106,7 @@
 <p class="Pp">For each attribute, a read-write accessor is created unless a
     subroutine of that name already exists:</p>
 <p class="Pp"></p>
-<pre>
-    $obj-&gt;name;               # getter
+<pre>    $obj-&gt;name;               # getter
     $obj-&gt;name( &quot;John Doe&quot; ); # setter
 </pre>
 <p class="Pp">Attribute names must be valid subroutine identifiers or an
@@ -128,9 +117,7 @@
     value has been set. The object is passed as an argument to a code
   reference.</p>
 <p class="Pp"></p>
-<pre>
-    package Foo::WithDefaults;
-
+<pre>    package Foo::WithDefaults;
     use Class::Tiny qw/name id/, {
         title     =&gt; 'Peon',
         skills    =&gt; sub { [] },
@@ -143,13 +130,9 @@
 <p class="Pp">To make your own custom accessors, just pre-declare the method
     name before loading Class::Tiny:</p>
 <p class="Pp"></p>
-<pre>
-    package Foo::Bar;
-
+<pre>    package Foo::Bar;
     use subs 'id';
-
     use Class::Tiny qw( name id );
-
     sub id { ... }
 </pre>
 <p class="Pp">Even if you pre-declare a method name, you must include it in the
@@ -157,13 +140,9 @@
 <p class="Pp">If you set a default for a custom accessor, your accessor will
     need to retrieve the default and do something with it:</p>
 <p class="Pp"></p>
-<pre>
-    package Foo::Bar;
-
+<pre>    package Foo::Bar;
     use subs 'id';
-
     use Class::Tiny qw( name ), { id =&gt; sub { int(rand(2*31)) } };
-
     sub id {
         my $self = shift;
         if (@_) {
@@ -196,11 +175,8 @@
     parent or superclass before defining attributes with Class::Tiny so the
     <span class="Li">@ISA</span> array is already populated at compile-time:</p>
 <p class="Pp"></p>
-<pre>
-    package Foo::Bar::More;
-
+<pre>    package Foo::Bar::More;
     use parent 'Foo::Bar';
-
     use Class::Tiny qw( shoe_size );
 </pre>
 </section>
@@ -213,9 +189,7 @@
 <p class="Pp">Objects can be created with attributes given as a hash reference
     or as a list of key/value pairs:</p>
 <p class="Pp"></p>
-<pre>
-    $obj = Foo::Bar-&gt;new( name =&gt; &quot;David&quot; );
-
+<pre>    $obj = Foo::Bar-&gt;new( name =&gt; &quot;David&quot; );
     $obj = Foo::Bar-&gt;new( { name =&gt; &quot;David&quot; } );
 </pre>
 <p class="Pp">If a reference is passed as a single argument, it must be able to
@@ -229,13 +203,11 @@
     constructor arguments as they were provided and must return a hash reference
     of key/value pairs (or else throw an exception).</p>
 <p class="Pp"></p>
-<pre>
-    sub BUILDARGS {
+<pre>    sub BUILDARGS {
        my $class = shift;
        my $name = shift || &quot;John Doe&quot;;
        return { name =&gt; $name };
      };
-
      Foo::Bar-&gt;new( &quot;David&quot; );
      Foo::Bar-&gt;new(); # &quot;John Doe&quot;
 </pre>
@@ -253,16 +225,12 @@
     validation, checking required attributes or setting default values that
     depend on other attributes.</p>
 <p class="Pp"></p>
-<pre>
-    sub BUILD {
+<pre>    sub BUILD {
         my ($self, $args) = @_;
-
         for my $req ( qw/name age/ ) {
             croak &quot;$req attribute required&quot; unless defined $self-&gt;$req;
         }
-
         croak &quot;Age must be non-negative&quot; if $self-&gt;age &lt; 0;
-
         $self-&gt;msg( &quot;Hello &quot; . $self-&gt;name );
     }
 </pre>
@@ -279,8 +247,7 @@
     It is provided a single boolean argument indicating whether Perl is in
     global destruction. Return values and errors are ignored.</p>
 <p class="Pp"></p>
-<pre>
-    sub DEMOLISH {
+<pre>    sub DEMOLISH {
         my ($self, $global_destruct) = @_;
         $self-&gt;cleanup();
     }
@@ -293,8 +260,7 @@
     Class::Tiny for a class and its superclasses with the
     <span class="Li">&quot;get_all_attributes_for&quot;</span> class method.</p>
 <p class="Pp"></p>
-<pre>
-    my @attrs = Class::Tiny-&gt;get_all_attributes_for(&quot;Employee&quot;);
+<pre>    my @attrs = Class::Tiny-&gt;get_all_attributes_for(&quot;Employee&quot;);
     # returns qw/name ssn timestamp/
 </pre>
 <p class="Pp">Likewise, a hash reference of all valid attributes and default
@@ -303,8 +269,7 @@
     method. Any attributes without a default will be
     <span class="Li">&quot;undef&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    my $def = Class::Tiny-&gt;get_all_attribute_defaults_for(&quot;Employee&quot;);
+<pre>    my $def = Class::Tiny-&gt;get_all_attribute_defaults_for(&quot;Employee&quot;);
     # returns {
     #   name =&gt; undef,
     #   ssn =&gt; undef
@@ -348,8 +313,7 @@
     to Object::Tiny (&quot;O::T&quot;) and Class::Accessor
   (&quot;C::A&quot;):</p>
 <p class="Pp"></p>
-<pre>
- FEATURE                            C::T    O::T      C::A
+<pre> FEATURE                            C::T    O::T      C::A
  --------------------------------------------------------------
  attributes defined via import      yes     yes       no
  read/write accessors               yes     no        yes
@@ -397,8 +361,7 @@
     public review and contribution under the terms of the license.</p>
 <p class="Pp">&lt;https://github.com/dagolden/Class-Tiny&gt;</p>
 <p class="Pp"></p>
-<pre>
-  git clone https://github.com/dagolden/Class-Tiny.git
+<pre>  git clone https://github.com/dagolden/Class-Tiny.git
 </pre>
 </section>
 </section>
@@ -423,8 +386,7 @@
 <p class="Pp">This software is Copyright (c) 2013 by David Golden.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The Apache License, Version 2.0, January 2004
+<pre>  The Apache License, Version 2.0, January 2004
 </pre>
 </section>
 </div>

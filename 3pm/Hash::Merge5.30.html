@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Hash::Merge(3)</title>
 </head>
@@ -29,8 +30,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    my %a = (
+<pre>    my %a = (
         'foo'    =&gt; 1,
         'bar'    =&gt; [qw( a b e )],
         'querty' =&gt; { 'bob' =&gt; 'alice' },
@@ -74,12 +74,10 @@
     
     # All behavioral changes (e.g. $merge-&gt;set_behavior(...)), called on an object remain specific to that object
     # The legacy &quot;Global Setting&quot; behavior is respected only when new called as a non-OO function.
-
     # re-use globally specified behavior
     my $merger = Hash::Merge-&gt;new();
     $merger-&gt;add_behavior_spec(Hash::Merge::get_behavior_spec(&quot;My Behavior&quot;), &quot;My Behavior&quot;);
     my %c = %{ $merger-&gt;merge( \%a, \%b ) };
-
     # re-use externally specified behavior
     use Hash::Merge::Extra ();
     my $merger = Hash::Merge-&gt;new();
@@ -113,8 +111,7 @@
     <p class="Pp">The values buried in the left hash will never be lost; any
         values that can be added from the right hash will be attempted.</p>
     <p class="Pp"></p>
-    <pre>
-    my $merge = Hash::Merge-&gt;new();
+    <pre>    my $merge = Hash::Merge-&gt;new();
     my $merge = Hash::Merge-&gt;new('LEFT_PRECEDENT');
     $merge-&gt;set_behavior('LEFT_PRECEDENT');
     Hash::Merge::set_behavior('LEFT_PRECEDENT');
@@ -123,8 +120,7 @@
   <dt id="Right"><a class="permalink" href="#Right">Right Precedence</a></dt>
   <dd>Same as Left Precedence, but with the right hash values never being lost
     <p class="Pp"></p>
-    <pre>
-    my $merge = Hash::Merge-&gt;new('RIGHT_PRECEDENT');
+    <pre>    my $merge = Hash::Merge-&gt;new('RIGHT_PRECEDENT');
     $merge-&gt;set_behavior('RIGHT_PRECEDENT');
     Hash::Merge::set_behavior('RIGHT_PRECEDENT');
     </pre>
@@ -136,8 +132,7 @@
       The other medium will try to be fitted in the other, but if this isn't
       possible, the data is dropped.
     <p class="Pp"></p>
-    <pre>
-    my $merge = Hash::Merge-&gt;new('STORAGE_PRECEDENT');
+    <pre>    my $merge = Hash::Merge-&gt;new('STORAGE_PRECEDENT');
     $merge-&gt;set_behavior('STORAGE_PRECEDENT');
     Hash::Merge::set_behavior('STORAGE_PRECEDENT');
     </pre>
@@ -147,8 +142,7 @@
   <dd>No data will be lost; scalars will be joined with arrays, and scalars and
       arrays will be 'hashified' to fit them into a hash.
     <p class="Pp"></p>
-    <pre>
-    my $merge = Hash::Merge-&gt;new('RETAINMENT_PRECEDENT');
+    <pre>    my $merge = Hash::Merge-&gt;new('RETAINMENT_PRECEDENT');
     $merge-&gt;set_behavior('RETAINMENT_PRECEDENT');
     Hash::Merge::set_behavior('RETAINMENT_PRECEDENT');
     </pre>
@@ -201,8 +195,7 @@
       add the left SCALAR to the right ARRAY, you can have your behavior
       specification include:
     <p class="Pp"></p>
-    <pre>
-    %spec = ( ...SCALAR =&gt; { ARRAY =&gt; sub { [ $_[0], @$_[1] ] }, ... } } );
+    <pre>    %spec = ( ...SCALAR =&gt; { ARRAY =&gt; sub { [ $_[0], @$_[1] ] }, ... } } );
     </pre>
     <p class="Pp">Note that you can import _hashify and _merge_hashes into your
         program's namespace with the 'custom' tag.</p>
@@ -224,8 +217,7 @@
     <span class="Li">$a</span>, and the right as <span class="Li">$b</span>
     (these are either scalars or appropriate references)</p>
 <p class="Pp"></p>
-<pre>
-    LEFT TYPE    RIGHT TYPE    LEFT_PRECEDENT       RIGHT_PRECEDENT
+<pre>    LEFT TYPE    RIGHT TYPE    LEFT_PRECEDENT       RIGHT_PRECEDENT
      SCALAR       SCALAR        $a                   $b
      SCALAR       ARRAY         $a                   ( $a, @$b )
      SCALAR       HASH          $a                   %$b
@@ -235,7 +227,6 @@
      HASH         SCALAR        %$a                  $b
      HASH         ARRAY         %$a                  ( values %$a, @$b )
      HASH         HASH          merge( %$a, %$b )    merge( %$a, %$b )
-
     LEFT TYPE    RIGHT TYPE    STORAGE_PRECEDENT    RETAINMENT_PRECEDENT
      SCALAR       SCALAR        $a                   ( $a ,$b )
      SCALAR       ARRAY         ( $a, @$b )          ( $a, @$b )

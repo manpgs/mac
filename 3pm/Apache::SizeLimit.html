@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Apache::SizeLimit(3)</title>
 </head>
@@ -28,15 +29,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    PerlModule Apache::SizeLimit
-
+<pre>    PerlModule Apache::SizeLimit
     &lt;Perl&gt;
      Apache::SizeLimit-&gt;set_max_process_size(150_000);   # Max size in KB
      Apache::SizeLimit-&gt;set_min_shared_size(10_000);     # Min share in KB
      Apache::SizeLimit-&gt;set_max_unshared_size(120_000);  # Max unshared size in KB
     &lt;/Perl&gt;
-
     PerlCleanupHandler Apache::SizeLimit
 </pre>
 </section>
@@ -44,10 +42,8 @@
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">******************************** NOIICE *******************</p>
 <p class="Pp"></p>
-<pre>
-   This version is only for httpd 1.3.x and mod_perl 1.x
+<pre>   This version is only for httpd 1.3.x and mod_perl 1.x
    series.
-
    For httpd 2.x / mod_perl 2.x Apache2::SizeLimit 
    documentation please read the perldoc in 
    lib/Apache2/SizeLimit.pm
@@ -97,8 +93,7 @@
     <span class="Li">&quot;PerlCleanupHandler&quot;</span> in your Apache
     config:</p>
 <p class="Pp"></p>
-<pre>
-    PerlCleanupHandler Apache::SizeLimit
+<pre>    PerlCleanupHandler Apache::SizeLimit
 </pre>
 <p class="Pp">This will ensure that
     <span class="Li">&quot;Apache::SizeLimit-&gt;handler()&quot;</span> is run
@@ -107,8 +102,7 @@
     own, make sure that <span class="Li">&quot;Apache::SizeLimit&quot;</span> is
     the last handler run:</p>
 <p class="Pp"></p>
-<pre>
-    PerlCleanupHandler  Apache::SizeLimit My::CleanupHandler
+<pre>    PerlCleanupHandler  Apache::SizeLimit My::CleanupHandler
 </pre>
 <p class="Pp">Remember, mod_perl will run stacked handlers from right to left,
     as they're defined in your configuration.</p>
@@ -117,16 +111,12 @@
     <span class="Li">&quot;Apache::SizeLimit-&gt;handler()&quot;</span> function
     from your own cleanup handler:</p>
 <p class="Pp"></p>
-<pre>
-    package My::CleanupHandler
-
+<pre>    package My::CleanupHandler
     sub handler {
         my $r = shift;
-
         # Causes File::Temp to remove any temp dirs created during the
         # request
         File::Temp::cleanup();
-
         return Apache::SizeLimit-&gt;handler($r);
     }
 </pre>
@@ -210,15 +200,12 @@
 <p class="Pp"><i>Copy-on-write and Shared Memory</i></p>
 <p class="Pp">The following example shows the effect of copy-on-write:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;Perl&gt;
+<pre>  &lt;Perl&gt;
     require Apache::SizeLimit;
     package X;
     use strict;
     use Apache::Constants qw(OK);
-
     my $x = &quot;a&quot; x (1024*1024);
-
     sub handler {
       my $r = shift;
       my ($size, $shared) = $Apache::SizeLimit-&gt;_check_size();
@@ -230,7 +217,6 @@
       return OK;
     }
   &lt;/Perl&gt;
-
   &lt;Location /X&gt;
     SetHandler modperl
     PerlResponseHandler X
@@ -245,8 +231,7 @@
     between the parent and the child.</p>
 <p class="Pp">If <i>/proc/self/smaps</i> is available curl shows:</p>
 <p class="Pp"></p>
-<pre>
-  r2@s93:~/work/mp2&gt; curl http://localhost:8181/X
+<pre>  r2@s93:~/work/mp2&gt; curl http://localhost:8181/X
   1: size=13452 shared=7456
   2: size=13452 shared=6432
 </pre>
@@ -254,8 +239,7 @@
     unchanged.</p>
 <p class="Pp">Without <i>/proc/self/smaps</i> it says:</p>
 <p class="Pp"></p>
-<pre>
-  r2@s93:~/work/mp2&gt; curl http://localhost:8181/X
+<pre>  r2@s93:~/work/mp2&gt; curl http://localhost:8181/X
   1: size=13052 shared=3628
   2: size=13052 shared=3636
 </pre>

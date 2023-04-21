@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DateTime(3)</title>
 </head>
@@ -32,9 +33,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use DateTime;
-
+<pre>  use DateTime;
   $dt = DateTime-&gt;new(
       year       =&gt; 1964,
       month      =&gt; 10,
@@ -45,65 +44,42 @@
       nanosecond =&gt; 500000000,
       time_zone  =&gt; 'Asia/Taipei',
   );
-
   $dt = DateTime-&gt;from_epoch( epoch =&gt; $epoch );
   $dt = DateTime-&gt;now; # same as ( epoch =&gt; time() )
-
   $year   = $dt-&gt;year;
   $month  = $dt-&gt;month;          # 1-12
-
   $day    = $dt-&gt;day;            # 1-31
-
   $dow    = $dt-&gt;day_of_week;    # 1-7 (Monday is 1)
-
   $hour   = $dt-&gt;hour;           # 0-23
   $minute = $dt-&gt;minute;         # 0-59
-
   $second = $dt-&gt;second;         # 0-61 (leap seconds!)
-
   $doy    = $dt-&gt;day_of_year;    # 1-366 (leap years)
-
   $doq    = $dt-&gt;day_of_quarter; # 1..
-
   $qtr    = $dt-&gt;quarter;        # 1-4
-
   # all of the start-at-1 methods above have corresponding start-at-0
   # methods, such as $dt-&gt;day_of_month_0, $dt-&gt;month_0 and so on
-
   $ymd    = $dt-&gt;ymd;           # 2002-12-06
   $ymd    = $dt-&gt;ymd('/');      # 2002/12/06
-
   $mdy    = $dt-&gt;mdy;           # 12-06-2002
   $mdy    = $dt-&gt;mdy('/');      # 12/06/2002
-
   $dmy    = $dt-&gt;dmy;           # 06-12-2002
   $dmy    = $dt-&gt;dmy('/');      # 06/12/2002
-
   $hms    = $dt-&gt;hms;           # 14:02:29
   $hms    = $dt-&gt;hms('!');      # 14!02!29
-
   $is_leap  = $dt-&gt;is_leap_year;
-
   # these are localizable, see Locales section
   $month_name  = $dt-&gt;month_name; # January, February, ...
   $month_abbr  = $dt-&gt;month_abbr; # Jan, Feb, ...
   $day_name    = $dt-&gt;day_name;   # Monday, Tuesday, ...
   $day_abbr    = $dt-&gt;day_abbr;   # Mon, Tue, ...
-
   # May not work for all possible datetime, see the docs on this
   # method for more details.
   $epoch_time  = $dt-&gt;epoch;
-
   $dt2 = $dt + $duration_object;
-
   $dt3 = $dt - $duration_object;
-
   $duration_object = $dt - $dt2;
-
   $dt-&gt;set( year =&gt; 1882 );
-
   $dt-&gt;set_time_zone( 'America/Chicago' );
-
   $dt-&gt;set_formatter( $formatter );
 </pre>
 </section>
@@ -195,11 +171,8 @@
     make many objects for the local time zone, it is strongly recommended that
     you retrieve the local time zone once and cache it:</p>
 <p class="Pp"></p>
-<pre>
-  our $App::LocalTZ = DateTime::TimeZone-&gt;new( name =&gt; 'local' );
-
+<pre>  our $App::LocalTZ = DateTime::TimeZone-&gt;new( name =&gt; 'local' );
   ... # then everywhere else
-
   my $dt = DateTime-&gt;new( ..., time_zone =&gt; $App::LocalTZ );
 </pre>
 <p class="Pp">DateTime itself does not do this internally because local time
@@ -264,8 +237,7 @@
     <span class="Li">&quot;DateTime&quot;</span> category and can be suppressed
     with:</p>
 <p class="Pp"></p>
-<pre>
-    no warnings 'DateTime';
+<pre>    no warnings 'DateTime';
 </pre>
 <p class="Pp">This warning may be removed in the future if DateTime::TimeZone is
     made much faster.</p>
@@ -276,8 +248,7 @@
     &quot;nanosecond&quot;. It also accepts &quot;locale&quot;,
     &quot;time_zone&quot;, and &quot;formatter&quot; parameters.</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year       =&gt; 1966,
       month      =&gt; 10,
       day        =&gt; 25,
@@ -361,8 +332,7 @@
     simply subtract an hour to the object in order to move to saving time, for
     example:</p>
 <p class="Pp"></p>
-<pre>
-  # This object represent 01:30:00 standard time
+<pre>  # This object represent 01:30:00 standard time
   my $dt = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 10,
@@ -372,12 +342,9 @@
       second    =&gt; 0,
       time_zone =&gt; 'America/Chicago',
   );
-
   print $dt-&gt;hms;  # prints 01:30:00
-
   # Now the object represent 01:30:00 saving time
   $dt-&gt;subtract( hours =&gt; 1 );
-
   print $dt-&gt;hms;  # still prints 01:30:00
 </pre>
 <p class="Pp">Alternately, you could create the object with the UTC time zone,
@@ -393,8 +360,8 @@
     02:59:59 on April 6!</p>
 <p class="Pp">Attempting to create an invalid time currently causes a fatal
     error. This may change in future version of this module.</p>
-<p class="Pp"><i>DateTime-&gt;from_epoch( epoch =&gt; </i><i>$epoch</i><i>, ...
-    )</i></p>
+<p class="Pp"><i>DateTime-&gt;from_epoch( epoch =&gt;
+    </i><span class="Li"><i>$epoch</i></span><i>, ... )</i></p>
 <p class="Pp">This class method can be used to construct a new DateTime object
     from an epoch time instead of components. Just as with the
     <span class="Li">&quot;new()&quot;</span> method, it accepts
@@ -413,11 +380,10 @@
 <p class="Pp"><i>DateTime-&gt;today( ... )</i></p>
 <p class="Pp">This class method is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  DateTime-&gt;now(@_)-&gt;truncate( to =&gt; 'day' );
+<pre>  DateTime-&gt;now(@_)-&gt;truncate( to =&gt; 'day' );
 </pre>
-<p class="Pp"><i>DateTime-&gt;from_object( object =&gt; </i><i>$object</i><i>,
-    ... )</i></p>
+<p class="Pp"><i>DateTime-&gt;from_object( object =&gt;
+    </i><span class="Li"><i>$object</i></span><i>, ... )</i></p>
 <p class="Pp">This class method can be used to construct a new DateTime object
     from any object that implements the
     <span class="Li">&quot;utc_rd_values()&quot;</span> method. All
@@ -441,7 +407,7 @@
     accept a &quot;month&quot; or &quot;day&quot; argument. Instead, it requires
     both &quot;year&quot; and &quot;day_of_year&quot;. The day of year must be
     between 1 and 366, and 366 is only allowed for leap years.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>clone()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>clone()</i></b><i></i></p>
 <p class="Pp">This object method returns a new object that is replica of the
     object upon which the method is called.</p>
 </section>
@@ -450,86 +416,88 @@
   Methods</a></h2>
 <p class="Pp">This class has many methods for retrieving information about an
     object.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>year()</i></b><i></i></p>
 <p class="Pp">Returns the year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>ce_year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>ce_year()</i></b><i></i></p>
 <p class="Pp">Returns the year according to the BCE/CE numbering system. The
     year before year 1 in this system is year -1, aka &quot;1 BCE&quot;.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>era_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>era_name()</i></b><i></i></p>
 <p class="Pp">Returns the long name of the current era, something like
     &quot;Before Christ&quot;. See the Locales section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>era_abbr()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>era_abbr()</i></b><i></i></p>
 <p class="Pp">Returns the abbreviated name of the current era, something like
     &quot;BC&quot;. See the Locales section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>christian_era()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>christian_era()</i></b><i></i></p>
 <p class="Pp">Returns a string, either &quot;BC&quot; or &quot;AD&quot;,
     according to the year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>secular_era()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>secular_era()</i></b><i></i></p>
 <p class="Pp">Returns a string, either &quot;BCE&quot; or &quot;CE&quot;,
     according to the year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>year_with_era()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>year_with_era()</i></b><i></i></p>
 <p class="Pp">Returns a string containing the year immediately followed by its
     era abbreviation. The year is the absolute value of
     <span class="Li">&quot;ce_year()&quot;</span>, so that year 1 is
     &quot;1AD&quot; and year 0 is &quot;1BC&quot;.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>year_with_christian_era()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>year_with_christian_era()</i></b><i></i></p>
 <p class="Pp">Like <span class="Li">&quot;year_with_era()&quot;</span>, but uses
     the <b>christian_era()</b> method to get the era name.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>year_with_secular_era()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>year_with_secular_era()</i></b><i></i></p>
 <p class="Pp">Like <span class="Li">&quot;year_with_era()&quot;</span>, but uses
     the <b>secular_era()</b> method to get the era name.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>month()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>month()</i></b><i></i></p>
 <p class="Pp">Returns the month of the year, from 1..12.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;mon()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>month_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>month_name()</i></b><i></i></p>
 <p class="Pp">Returns the name of the current month. See the Locales section for
     more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>month_abbr()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>month_abbr()</i></b><i></i></p>
 <p class="Pp">Returns the abbreviated name of the current month. See the Locales
     section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day()</i></b><i></i></p>
 <p class="Pp">Returns the day of the month, from 1..31.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;mday()&quot;</span> and
     <span class="Li">&quot;$dt-&gt;day_of_month()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day_of_week()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day_of_week()</i></b><i></i></p>
 <p class="Pp">Returns the day of the week as a number, from 1..7, with 1 being
     Monday and 7 being Sunday.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;wday()&quot;</span> and
     <span class="Li">&quot;$dt-&gt;dow()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>local_day_of_week()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>local_day_of_week()</i></b><i></i></p>
 <p class="Pp">Returns the day of the week as a number, from 1..7. The day
     corresponding to 1 will vary based on the locale.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day_name()</i></b><i></i></p>
 <p class="Pp">Returns the name of the current day of the week. See the Locales
     section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day_abbr()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day_abbr()</i></b><i></i></p>
 <p class="Pp">Returns the abbreviated name of the current day of the week. See
     the Locales section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day_of_year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day_of_year()</i></b><i></i></p>
 <p class="Pp">Returns the day of the year.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;doy()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>quarter()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>quarter()</i></b><i></i></p>
 <p class="Pp">Returns the quarter of the year, from 1..4.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>quarter_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>quarter_name()</i></b><i></i></p>
 <p class="Pp">Returns the name of the current quarter. See the Locales section
     for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>quarter_abbr()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>quarter_abbr()</i></b><i></i></p>
 <p class="Pp">Returns the abbreviated name of the current quarter. See the
     Locales section for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>day_of_quarter()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>day_of_quarter()</i></b><i></i></p>
 <p class="Pp">Returns the day of the quarter.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;doq()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>weekday_of_month()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>weekday_of_month()</i></b><i></i></p>
 <p class="Pp">Returns a number from 1..5 indicating which week day of the month
     this is. For example, June 9, 2003 is the second Monday of the month, and so
     this method returns 2 for that day.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;ymd( </i><i>$optional_separator</i><i> ),
-    </i><i>$dt</i><i>-&gt;mdy(...), </i><i>$dt</i><i>-&gt;dmy(...)</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;ymd(
+    </i><span class="Li"><i>$optional_separator</i></span><i> ),
+    </i><span class="Li"><i>$dt</i></span><i>-&gt;mdy(...),
+    </i><span class="Li"><i>$dt</i></span><i>-&gt;dmy(...)</i></p>
 <p class="Pp">Each method returns the year, month, and day, in the order
     indicated by the method name. Years are zero-padded to four digits. Months
     and days are 0-padded to two digits.</p>
@@ -537,56 +505,55 @@
     be overridden by passing a value to the method.</p>
 <p class="Pp">The <span class="Li">&quot;$dt-&gt;ymd()&quot;</span> method is
     also available as <span class="Li">&quot;$dt-&gt;date()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>hour()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>hour()</i></b><i></i></p>
 <p class="Pp">Returns the hour of the day, from 0..23.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>hour_1()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>hour_1()</i></b><i></i></p>
 <p class="Pp">Returns the hour of the day, from 1..24.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>hour_12()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>hour_12()</i></b><i></i></p>
 <p class="Pp">Returns the hour of the day, from 1..12.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>hour_12_0()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>hour_12_0()</i></b><i></i></p>
 <p class="Pp">Returns the hour of the day, from 0..11.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>am_or_pm()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>am_or_pm()</i></b><i></i></p>
 <p class="Pp">Returns the appropriate localized abbreviation, depending on the
     current hour.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>minute()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>minute()</i></b><i></i></p>
 <p class="Pp">Returns the minute of the hour, from 0..59.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;min()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>second()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>second()</i></b><i></i></p>
 <p class="Pp">Returns the second, from 0..61. The values 60 and 61 are used for
     leap seconds.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;sec()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>fractional_second()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>fractional_second()</i></b><i></i></p>
 <p class="Pp">Returns the second, as a real number from 0.0 until
   61.999999999</p>
 <p class="Pp">The values 60 and 61 are used for leap seconds.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>millisecond()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>millisecond()</i></b><i></i></p>
 <p class="Pp">Returns the fractional part of the second as milliseconds (1E-3
     seconds).</p>
 <p class="Pp">Half a second is 500 milliseconds.</p>
 <p class="Pp">This value will always be rounded down to the nearest integer.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>microsecond()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>microsecond()</i></b><i></i></p>
 <p class="Pp">Returns the fractional part of the second as microseconds (1E-6
     seconds).</p>
 <p class="Pp">Half a second is 500_000 microseconds.</p>
 <p class="Pp">This value will always be rounded down to the nearest integer.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>nanosecond()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>nanosecond()</i></b><i></i></p>
 <p class="Pp">Returns the fractional part of the second as nanoseconds (1E-9
     seconds).</p>
 <p class="Pp">Half a second is 500_000_000 nanoseconds.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;hms( </i><i>$optional_separator</i><i>
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;hms(
+    </i><span class="Li"><i>$optional_separator</i></span><i> )</i></p>
 <p class="Pp">Returns the hour, minute, and second, all zero-padded to two
     digits. If no separator is specified, a colon (:) is used by default.</p>
 <p class="Pp">Also available as
     <span class="Li">&quot;$dt-&gt;time()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;datetime(
-    </i><i>$optional_separator</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;datetime(
+    </i><span class="Li"><i>$optional_separator</i></span><i> )</i></p>
 <p class="Pp">This method is equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  $dt-&gt;ymd('-') . 'T' . $dt-&gt;hms(':')
+<pre>  $dt-&gt;ymd('-') . 'T' . $dt-&gt;hms(':')
 </pre>
 <p class="Pp">The <span class="Li">$optional_separator</span> parameter allows
     you to override the separator between the date and time, for e.g.
@@ -597,35 +564,34 @@
     <span class="Li">&quot;$dt-&gt;iso8601()&quot;</span> you cannot change the
     separator, as ISO8601 specifies that &quot;T&quot; must be used to separate
     them.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>stringify()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>stringify()</i></b><i></i></p>
 <p class="Pp">This method returns a stringified version of the object. It is how
     stringification overloading is implemented. If the object has a formatter,
     then its <span class="Li">&quot;format_datetime()&quot;</span> method is
     used to produce a string. Otherwise, this method calls
     <span class="Li">&quot;$dt-&gt;iso8601()&quot;</span> to produce a string.
     See &quot;Formatters And Stringification&quot; for details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_leap_year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_leap_year()</i></b><i></i></p>
 <p class="Pp">This method returns a true or false value indicating whether or
     not the datetime object is in a leap year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_last_day_of_month()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_last_day_of_month()</i></b><i></i></p>
 <p class="Pp">This method returns a true or false value indicating whether or
     not the datetime object is the last day of the month.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_last_day_of_quarter()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_last_day_of_quarter()</i></b><i></i></p>
 <p class="Pp">This method returns a true or false value indicating whether or
     not the datetime object is the last day of the quarter.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_last_day_of_year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_last_day_of_year()</i></b><i></i></p>
 <p class="Pp">This method returns a true or false value indicating whether or
     not the datetime object is the last day of the year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>month_length()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>month_length()</i></b><i></i></p>
 <p class="Pp">This method returns the number of days in the current month.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>quarter_length()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>quarter_length()</i></b><i></i></p>
 <p class="Pp">This method returns the number of days in the current quarter.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>year_length()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>year_length()</i></b><i></i></p>
 <p class="Pp">This method returns the number of days in the current year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>week()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>week()</i></b><i></i></p>
 <p class="Pp"></p>
-<pre>
- ($week_year, $week_number) = $dt-&gt;week;
+<pre> ($week_year, $week_number) = $dt-&gt;week;
 </pre>
 <p class="Pp">Returns information about the calendar week which contains this
     datetime object. The values returned by this method are also available
@@ -637,45 +603,45 @@
     object is in, but dates at the very beginning of a calendar year often end
     up in the last week of the prior year, and similarly, the final few days of
     the year may be placed in the first week of the next year.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>week_year()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>week_year()</i></b><i></i></p>
 <p class="Pp">Returns the year of the week. See
     <span class="Li">&quot;$dt-&gt;week()&quot;</span> for details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>week_number()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>week_number()</i></b><i></i></p>
 <p class="Pp">Returns the week of the year, from 1..53. See
     <span class="Li">&quot;$dt-&gt;week()&quot;</span> for details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>week_of_month()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>week_of_month()</i></b><i></i></p>
 <p class="Pp">The week of the month, from 0..5. The first week of the month is
     the first week that contains a Thursday. This is based on the ICU definition
     of week of month, and correlates to the ISO8601 week of year definition. A
     day in the week <i>before</i> the week with the first Thursday will be week
     0.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>jd()</i></b><i>,
-    </i><i>$dt</i><i>-&gt;</i><b><i>mjd()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>jd()</i></b><i>,
+    </i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>mjd()</i></b><i></i></p>
 <p class="Pp">These return the Julian Day and Modified Julian Day, respectively.
     The value returned is a floating point number. The fractional portion of the
     number represents the time portion of the datetime.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>time_zone()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>time_zone()</i></b><i></i></p>
 <p class="Pp">This returns the
     <span class="Li">&quot;DateTime::TimeZone&quot;</span> object for the
     datetime object.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>offset()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>offset()</i></b><i></i></p>
 <p class="Pp">This returns the offset from UTC, in seconds, of the datetime
     object according to the time zone.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_dst()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_dst()</i></b><i></i></p>
 <p class="Pp">Returns a boolean indicating whether or not the datetime object is
     currently in Daylight Saving Time or not.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>time_zone_long_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>time_zone_long_name()</i></b><i></i></p>
 <p class="Pp">This is a shortcut for
     <span class="Li">&quot;$dt-&gt;time_zone-&gt;name&quot;</span>. It's
     provided so that one can use &quot;%{time_zone_long_name}&quot; as a
     strftime format specifier.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>time_zone_short_name()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>time_zone_short_name()</i></b><i></i></p>
 <p class="Pp">This method returns the time zone abbreviation for the current
     time zone, such as &quot;PST&quot; or &quot;GMT&quot;. These names are
     <b>not</b> definitive, and should not be used in any application intended
     for general use by users around the world.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;strftime( </i><i>$format</i><i>, ...
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;strftime(
+    </i><span class="Li"><i>$format</i></span><i>, ... )</i></p>
 <p class="Pp">This method implements functionality similar to the
     <span class="Li">&quot;strftime()&quot;</span> method in C. However, if
     given multiple format strings, then it will return multiple scalars, one for
@@ -688,8 +654,8 @@
     DateTime should match the output of
     <span class="Li">&quot;POSIX::strftime&quot;</span> for any given
   pattern.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;format_cldr( </i><i>$format</i><i>, ...
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;format_cldr(
+    </i><span class="Li"><i>$format</i></span><i>, ... )</i></p>
 <p class="Pp">This method implements formatting based on the CLDR date patterns.
     If given multiple format strings, then it will return multiple scalars, one
     for each format string.</p>
@@ -697,7 +663,7 @@
     possible CLDR patterns.</p>
 <p class="Pp">If you give a pattern that doesn't exist, then it is simply
     treated as text.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>epoch()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>epoch()</i></b><i></i></p>
 <p class="Pp">Returns the UTC epoch value for the datetime object. DateTimes
     before the start of the epoch will be returned as a negative number.</p>
 <p class="Pp">The return value from this method is always an integer number of
@@ -705,7 +671,7 @@
 <p class="Pp">Since the epoch does not account for leap seconds, the epoch time
     for 1972-12-31T23:59:60 (UTC) is exactly the same as that for
     1973-01-01T00:00:00.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>hires_epoch()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>hires_epoch()</i></b><i></i></p>
 <p class="Pp">Returns the epoch as a floating point number. The floating point
     portion of the value represents the nanosecond value of the object. This
     method is provided for compatibility with the
@@ -714,39 +680,38 @@
     point numbers, and the result may end up rounded to an arbitrary degree
     depending on your platform.</p>
 <p class="Pp"></p>
-<pre>
-    my $dt = DateTime-&gt;new( year =&gt; 2012, nanosecond =&gt; 4 );
+<pre>    my $dt = DateTime-&gt;new( year =&gt; 2012, nanosecond =&gt; 4 );
     say $dt-&gt;hires_epoch();
 </pre>
 <p class="Pp">On my system, this simply prints
     <span class="Li">1325376000</span> because adding
     <span class="Li">0.000000004</span> to <span class="Li">1325376000</span>
     returns <span class="Li">1325376000</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>is_finite()</i></b><i>,
-    </i><i>$dt</i><i>-&gt;</i><b><i>is_infinite()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_finite()</i></b><i>,
+    </i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>is_infinite()</i></b><i></i></p>
 <p class="Pp">These methods allow you to distinguish normal datetime objects
     from infinite ones. Infinite datetime objects are documented in
     DateTime::Infinite.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>utc_rd_values()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>utc_rd_values()</i></b><i></i></p>
 <p class="Pp">Returns the current UTC Rata Die days, seconds, and nanoseconds as
     a three element list. This exists primarily to allow other calendar modules
     to create objects based on the values provided by this object.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>local_rd_values()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>local_rd_values()</i></b><i></i></p>
 <p class="Pp">Returns the current local Rata Die days, seconds, and nanoseconds
     as a three element list. This exists for the benefit of other modules which
     might want to use this information for date math, such as
     <span class="Li">&quot;DateTime::Event::Recurrence&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>leap_seconds()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>leap_seconds()</i></b><i></i></p>
 <p class="Pp">Returns the number of leap seconds that have happened up to the
     datetime represented by the object. For floating datetimes, this always
     returns 0.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>utc_rd_as_seconds()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>utc_rd_as_seconds()</i></b><i></i></p>
 <p class="Pp">Returns the current UTC Rata Die days and seconds purely as
     seconds. This number ignores any fractional seconds stored in the object, as
     well as leap seconds.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>locale()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>locale()</i></b><i></i></p>
 <p class="Pp">Returns the current locale object.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>formatter()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>formatter()</i></b><i></i></p>
 <p class="Pp">Returns current formatter object or class. See &quot;Formatters
     And Stringification&quot; for details.</p>
 </section>
@@ -758,15 +723,13 @@
     specified, return the object itself, thus making method chaining possible.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;now-&gt;set_time_zone( 'Australia/Sydney' );
-
+<pre>  my $dt = DateTime-&gt;now-&gt;set_time_zone( 'Australia/Sydney' );
   my $first = DateTime
                 -&gt;last_day_of_month( year =&gt; 2003, month =&gt; 3 )
                 -&gt;add( days =&gt; 1 )
                 -&gt;subtract( seconds =&gt; 1 );
 </pre>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;set( .. )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;set( .. )</i></p>
 <p class="Pp">This method can be used to change the local components of a date
     time. This method accepts any parameter allowed by the
     <span class="Li">&quot;new()&quot;</span> method except for
@@ -776,10 +739,12 @@
 <p class="Pp">This method performs parameter validation just like the
     <span class="Li">&quot;new()&quot;</span> method.</p>
 <p class="Pp"><b>Do not use this method to do date math. Use the
-    </b><b>&quot;add()&quot;</b><b> and </b><b>&quot;subtract()&quot;</b><b></b>
-    <b>methods instead.</b></p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>set_year()</i></b><i>,
-    </i><i>$dt</i><i>-&gt;</i><b><i>set_month()</i></b><i>, etc.</i></p>
+    </b><span class="Li"><b>&quot;add()&quot;</b></span><b> and
+    </b><span class="Li"><b>&quot;subtract()&quot;</b></span><b></b> <b>methods
+    instead.</b></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>set_year()</i></b><i>,
+    </i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>set_month()</i></b><i>,
+    etc.</i></p>
 <p class="Pp">DateTime has a <span class="Li">&quot;set_*&quot;</span> method
     for every item that can be passed to the constructor:</p>
 <ul class="Bl-bullet">
@@ -794,7 +759,8 @@
 <p class="Pp">These are shortcuts to calling
     <span class="Li">&quot;set()&quot;</span> with a single key. They all take a
     single parameter.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;truncate( to =&gt; ... )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;truncate( to
+    =&gt; ... )</i></p>
 <p class="Pp">This method allows you to reset some of the local time components
     in the object to their &quot;zero&quot; values. The &quot;to&quot; parameter
     is used to specify which values to truncate, and it may be one of
@@ -809,13 +775,13 @@
     week is locale-dependent. For example, in the
     <span class="Li">&quot;en-US&quot;</span> locale, the first day of the week
     is Sunday.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;set_locale( </i><i>$locale</i><i>
-  )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;set_locale(
+    </i><span class="Li"><i>$locale</i></span><i> )</i></p>
 <p class="Pp">Sets the object's locale. You can provide either a locale code
     like &quot;en-US&quot; or an object returned by
     <span class="Li">&quot;DateTime::Locale-&gt;load&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;set_time_zone( </i><i>$tz</i><i>
-  )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;set_time_zone(
+    </i><span class="Li"><i>$tz</i></span><i> )</i></p>
 <p class="Pp">This method accepts either a time zone object or a string that can
     be passed as the &quot;name&quot; parameter to
     <span class="Li">&quot;DateTime::TimeZone-&gt;new()&quot;</span>. If the new
@@ -823,8 +789,7 @@
     <i>local</i> time is adjusted accordingly.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 2000,
       month     =&gt; 5,
       day       =&gt; 10,
@@ -832,11 +797,8 @@
       minute    =&gt; 15,
       time_zone =&gt; 'America/Los_Angeles',
   );
-
   print $dt-&gt;hour; # prints 15
-
   $dt-&gt;set_time_zone( 'America/Chicago' );
-
   print $dt-&gt;hour; # prints 17
 </pre>
 <p class="Pp">If the old time zone was a floating time zone, then no adjustments
@@ -846,14 +808,12 @@
 <p class="Pp">Fans of Tsai Ming-Liang's films will be happy to know that this
     does work:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;now( time_zone =&gt; 'Asia/Taipei' );
-
+<pre>  my $dt = DateTime-&gt;now( time_zone =&gt; 'Asia/Taipei' );
   $dt-&gt;set_time_zone( 'Europe/Paris' );
 </pre>
 <p class="Pp">Yes, now we can know &quot;ni3 na4 bian1 ji2dian3?&quot;</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;set_formatter( </i><i>$formatter</i><i>
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;set_formatter(
+    </i><span class="Li"><i>$formatter</i></span><i> )</i></p>
 <p class="Pp">Set the formatter for the object. See &quot;Formatters And
     Stringification&quot; for details.</p>
 <p class="Pp">You can set this to <span class="Li">&quot;undef&quot;</span> to
@@ -865,56 +825,54 @@
 <p class="Pp">Like the set methods, math related methods always return the
     object itself, to allow for chaining:</p>
 <p class="Pp"></p>
-<pre>
-  $dt-&gt;add( days =&gt; 1 )-&gt;subtract( seconds =&gt; 1 );
+<pre>  $dt-&gt;add( days =&gt; 1 )-&gt;subtract( seconds =&gt; 1 );
 </pre>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;</i><b><i>duration_class()</i></b><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;</i><b><i>duration_class()</i></b><i></i></p>
 <p class="Pp">This returns
     <span class="Li">&quot;DateTime::Duration&quot;</span>, but exists so that a
     subclass of <span class="Li">&quot;DateTime.pm&quot;</span> can provide a
     different value.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;add_duration(
-    </i><i>$duration_object</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;add_duration(
+    </i><span class="Li"><i>$duration_object</i></span><i> )</i></p>
 <p class="Pp">This method adds a
     <span class="Li">&quot;DateTime::Duration&quot;</span> to the current
     datetime. See the DateTime::Duration docs for more details.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;add( parameters for DateTime::Duration
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;add( parameters
+    for DateTime::Duration )</i></p>
 <p class="Pp">This method is syntactic sugar around the
     <span class="Li">&quot;add_duration()&quot;</span> method. It simply creates
     a new <span class="Li">&quot;DateTime::Duration&quot;</span> object using
     the parameters given, and then calls the
     <span class="Li">&quot;add_duration()&quot;</span> method.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;add( </i><i>$duration_object</i><i>
-  )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;add(
+    </i><span class="Li"><i>$duration_object</i></span><i> )</i></p>
 <p class="Pp">A synonym of <span class="Li">&quot;$dt-&gt;add_duration(
     $duration_object )&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;subtract_duration(
-    </i><i>$duration_object</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;subtract_duration(
+    </i><span class="Li"><i>$duration_object</i></span><i> )</i></p>
 <p class="Pp">When given a
     <span class="Li">&quot;DateTime::Duration&quot;</span> object, this method
     simply calls <span class="Li">&quot;inverse()&quot;</span> on that object
     and passes that new duration to the
     <span class="Li">&quot;add_duration&quot;</span> method.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;subtract( DateTime::Duration-&gt;new
-    parameters )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;subtract(
+    DateTime::Duration-&gt;new parameters )</i></p>
 <p class="Pp">Like <span class="Li">&quot;add()&quot;</span>, this is syntactic
     sugar for the <span class="Li">&quot;subtract_duration()&quot;</span>
     method.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;subtract( </i><i>$duration_object</i><i>
-    )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;subtract(
+    </i><span class="Li"><i>$duration_object</i></span><i> )</i></p>
 <p class="Pp">A synonym of <span class="Li">&quot;$dt-&gt;subtract_duration(
     $duration_object )&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;subtract_datetime(
-    </i><i>$datetime</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;subtract_datetime(
+    </i><span class="Li"><i>$datetime</i></span><i> )</i></p>
 <p class="Pp">This method returns a new
     <span class="Li">&quot;DateTime::Duration&quot;</span> object representing
     the difference between the two dates. The duration is <b>relative</b> to the
     object from which <span class="Li">$datetime</span> is subtracted. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-    2003-03-15 00:00:00.00000000
+<pre>    2003-03-15 00:00:00.00000000
  -  2003-02-15 00:00:00.00000000
  -------------------------------
  = 1 month
@@ -924,10 +882,10 @@
     well as due to the presence of leap seconds.</p>
 <p class="Pp">The returned duration may have deltas for months, days, minutes,
     seconds, and nanoseconds.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;delta_md( </i><i>$datetime</i><i>
-  )</i></p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;delta_days( </i><i>$datetime</i><i>
-  )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;delta_md(
+    </i><span class="Li"><i>$datetime</i></span><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;delta_days(
+    </i><span class="Li"><i>$datetime</i></span><i> )</i></p>
 <p class="Pp">Each of these methods returns a new
     <span class="Li">&quot;DateTime::Duration&quot;</span> object representing
     some portion of the difference between two datetimes. The
@@ -942,14 +900,14 @@
     the time zone.</p>
 <p class="Pp">Unlike the subtraction methods, <b>these methods always return
     a</b> <b>positive (or zero) duration</b>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;delta_ms( </i><i>$datetime</i><i>
-  )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;delta_ms(
+    </i><span class="Li"><i>$datetime</i></span><i> )</i></p>
 <p class="Pp">Returns a duration which contains only minutes and seconds. Any
     day and month differences to minutes are converted to minutes and seconds.
     This method also <b>always return a positive (or zero)</b>
   <b>duration</b>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;subtract_datetime_absolute(
-    </i><i>$datetime</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;subtract_datetime_absolute(
+    </i><span class="Li"><i>$datetime</i></span><i> )</i></p>
 <p class="Pp">This method returns a new
     <span class="Li">&quot;DateTime::Duration&quot;</span> object representing
     the difference between the two dates in seconds and nanoseconds. This is the
@@ -959,8 +917,9 @@
 <p class="Pp">Note that because of leap seconds, this may not return the same
     result as doing this math based on the value returned by
     <span class="Li">&quot;$dt-&gt;epoch()&quot;</span>.</p>
-<p class="Pp"><i></i><i>$dt</i><i>-&gt;is_between( </i><i>$lower</i><i>,
-    </i><i>$upper</i><i> )</i></p>
+<p class="Pp"><i></i><span class="Li"><i>$dt</i></span><i>-&gt;is_between(
+    </i><span class="Li"><i>$lower</i></span><i>,
+    </i><span class="Li"><i>$upper</i></span><i> )</i></p>
 <p class="Pp">Checks whether <span class="Li">$dt</span> is strictly between two
     other DateTime objects.</p>
 <p class="Pp">&quot;Strictly&quot; means that <span class="Li">$dt</span> must
@@ -971,16 +930,18 @@
 <section class="Ss">
 <h2 class="Ss" id="Class_Methods"><a class="permalink" href="#Class_Methods">Class
   Methods</a></h2>
-<p class="Pp"><i>DateTime-&gt;DefaultLocale( </i><i>$locale</i><i> )</i></p>
+<p class="Pp"><i>DateTime-&gt;DefaultLocale(
+    </i><span class="Li"><i>$locale</i></span><i> )</i></p>
 <p class="Pp">This can be used to specify the default locale to be used when
     creating DateTime objects. If unset, then &quot;en-US&quot; is used.</p>
-<p class="Pp"><i>DateTime-&gt;compare( </i><i>$dt1</i><i>, </i><i>$dt2</i><i> ),
-    DateTime-&gt;compare_ignore_floating( </i><i>$dt1</i><i>, </i><i>$dt2</i><i>
-    )</i></p>
+<p class="Pp"><i>DateTime-&gt;compare(
+    </i><span class="Li"><i>$dt1</i></span><i>,
+    </i><span class="Li"><i>$dt2</i></span><i> ),
+    DateTime-&gt;compare_ignore_floating(
+    </i><span class="Li"><i>$dt1</i></span><i>,
+    </i><span class="Li"><i>$dt2</i></span><i> )</i></p>
 <p class="Pp"></p>
-<pre>
-  $cmp = DateTime-&gt;compare( $dt1, $dt2 );
-
+<pre>  $cmp = DateTime-&gt;compare( $dt1, $dt2 );
   $cmp = DateTime-&gt;compare_ignore_floating( $dt1, $dt2 );
 </pre>
 <p class="Pp">Compare two DateTime objects. The semantics are compatible with
@@ -997,20 +958,17 @@
     number of objects, for example), you can use the
     <span class="Li">&quot;compare_ignore_floating()&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-  @dates = sort { DateTime-&gt;compare_ignore_floating($a, $b) } @dates;
+<pre>  @dates = sort { DateTime-&gt;compare_ignore_floating($a, $b) } @dates;
 </pre>
 <p class="Pp">In this case, objects with a floating time zone will be sorted as
     if they were UTC times.</p>
 <p class="Pp">Since DateTime objects overload comparison operators, this:</p>
 <p class="Pp"></p>
-<pre>
-  @dates = sort @dates;
+<pre>  @dates = sort @dates;
 </pre>
 <p class="Pp">is equivalent to this:</p>
 <p class="Pp"></p>
-<pre>
-  @dates = sort { DateTime-&gt;compare($a, $b) } @dates;
+<pre>  @dates = sort { DateTime-&gt;compare($a, $b) } @dates;
 </pre>
 <p class="Pp">DateTime objects can be compared to any other calendar class that
     implements the <span class="Li">&quot;utc_rd_values()&quot;</span>
@@ -1030,8 +988,7 @@
     inconvenient, you can also override
     <span class="Li">&quot;DateTime::_core_time()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    no warnings 'redefine';
+<pre>    no warnings 'redefine';
     local *DateTime::_core_time = sub { return 42 };
 </pre>
 <p class="Pp">DateTime is guaranteed to call this subroutine to get the current
@@ -1053,8 +1010,7 @@
     <p class="Pp">If you do not care about time zones or leap seconds, use the
         &quot;floating&quot; timezone:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dt = DateTime-&gt;now( time_zone =&gt; 'floating' );
+    <pre>  my $dt = DateTime-&gt;now( time_zone =&gt; 'floating' );
     </pre>
     <p class="Pp">Math done on two objects in the floating time zone produces
         very predictable results.</p>
@@ -1065,19 +1021,16 @@
     <p class="Pp">This means that passing the floating zone to a constructor may
         not do what you want.</p>
     <p class="Pp"></p>
-    <pre>
-  my $dt = DateTime-&gt;now( time_zone =&gt; 'floating' );
+    <pre>  my $dt = DateTime-&gt;now( time_zone =&gt; 'floating' );
     </pre>
     <p class="Pp">is equivalent to</p>
     <p class="Pp"></p>
-    <pre>
-  my $dt = DateTime-&gt;now( time_zone =&gt; 'UTC' )-&gt;set_time_zone('floating');
+    <pre>  my $dt = DateTime-&gt;now( time_zone =&gt; 'UTC' )-&gt;set_time_zone('floating');
     </pre>
     <p class="Pp">This might not be what you wanted. Instead, you may prefer to
         do this:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dt = DateTime-&gt;now( time_zone =&gt; 'local' )-&gt;set_time_zone('floating');
+    <pre>  my $dt = DateTime-&gt;now( time_zone =&gt; 'local' )-&gt;set_time_zone('floating');
     </pre>
   </li>
   <li>use UTC for all calculations
@@ -1086,12 +1039,9 @@
         only. Convert to UTC immediately and convert back to the local time zone
         for presentation:</p>
     <p class="Pp"></p>
-    <pre>
-  my $dt = DateTime-&gt;new( %user_input, time_zone =&gt; $user_tz );
+    <pre>  my $dt = DateTime-&gt;new( %user_input, time_zone =&gt; $user_tz );
   $dt-&gt;set_time_zone('UTC');
-
   # do various operations - store it, retrieve it, add, subtract, etc.
-
   $dt-&gt;set_time_zone($user_tz);
   print $dt-&gt;datetime;
     </pre>
@@ -1120,8 +1070,7 @@
         before doing date math if you want to make sure that the following
         formulas are always true:</p>
     <p class="Pp"></p>
-    <pre>
-  $dt2 - $dt1 = $dur
+    <pre>  $dt2 - $dt1 = $dur
   $dt1 + $dur = $dt2
   $dt2 - $dur = $dt1
     </pre>
@@ -1157,25 +1106,19 @@
 <p class="Pp">This means that adding one month and one day to February 28, 2003
     will produce the date April 1, 2003, not March 29, 2003.</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new( year =&gt; 2003, month =&gt; 2, day =&gt; 28 );
-
+<pre>  my $dt = DateTime-&gt;new( year =&gt; 2003, month =&gt; 2, day =&gt; 28 );
   $dt-&gt;add( months =&gt; 1, days =&gt; 1 );
-
   # 2003-04-01 - the result
 </pre>
 <p class="Pp">On the other hand, if we add months first, and then separately add
     days, we end up with March 29, 2003:</p>
 <p class="Pp"></p>
-<pre>
-  $dt-&gt;add( months =&gt; 1 )-&gt;add( days =&gt; 1 );
-
+<pre>  $dt-&gt;add( months =&gt; 1 )-&gt;add( days =&gt; 1 );
   # 2003-03-29
 </pre>
 <p class="Pp">We see similar strangeness when math crosses a DST boundary:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
@@ -1183,10 +1126,8 @@
       minute    =&gt; 58,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   $dt-&gt;add( days =&gt; 1, minutes =&gt; 3 );
   # 2003-04-06 02:01:00
-
   $dt-&gt;add( minutes =&gt; 3 )-&gt;add( days =&gt; 1 );
   # 2003-04-06 03:01:00
 </pre>
@@ -1195,10 +1136,8 @@
 <p class="Pp">If you want to know how many seconds a duration object represents,
     you have to add it to a datetime to find out, so you could do:</p>
 <p class="Pp"></p>
-<pre>
- my $now = DateTime-&gt;now( time_zone =&gt; 'UTC' );
+<pre> my $now = DateTime-&gt;now( time_zone =&gt; 'UTC' );
  my $later = $now-&gt;clone-&gt;add_duration($duration);
-
  my $seconds_dur = $later-&gt;subtract_datetime_absolute($now);
 </pre>
 <p class="Pp">This returns a duration which only contains seconds and
@@ -1210,13 +1149,10 @@
     in a day past the end of the month (for example, adding one month to January
     30).</p>
 <p class="Pp"></p>
-<pre>
- # 2010-08-31 + 1 month = 2010-10-01
+<pre> # 2010-08-31 + 1 month = 2010-10-01
  $dt-&gt;add( months =&gt; 1, end_of_month =&gt; 'wrap' );
-
  # 2010-01-30 + 1 month = 2010-02-28
  $dt-&gt;add( months =&gt; 1, end_of_month =&gt; 'limit' );
-
  # 2010-04-30 + 1 month = 2010-05-31
  $dt-&gt;add( months =&gt; 1, end_of_month =&gt; 'preserve' );
 </pre>
@@ -1242,33 +1178,27 @@
     through examples:</p>
 <p class="Pp">The first of these probably makes the most sense:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt1 = DateTime-&gt;new(
+<pre>  my $dt1 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 5,
       day       =&gt; 6,
       time_zone =&gt; 'America/Chicago',
   );
-
   # not DST
-
   my $dt2 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 11,
       day       =&gt; 6,
       time_zone =&gt; 'America/Chicago',
   );
-
   # is DST
-
   my $dur = $dt2-&gt;subtract_datetime($dt1);
   # 6 months
 </pre>
 <p class="Pp">Nice and simple.</p>
 <p class="Pp">This one is a little trickier, but still fairly logical:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt1 = DateTime-&gt;new(
+<pre>  my $dt1 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
@@ -1276,9 +1206,7 @@
       minute    =&gt; 58,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   # is DST
-
   my $dt2 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
@@ -1287,18 +1215,14 @@
       minute    =&gt; 1,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   # not DST
-
   my $dur = $dt2-&gt;subtract_datetime($dt1);
-
   # 2 days and 3 minutes
 </pre>
 <p class="Pp">Which contradicts the result this one gives, even though they both
     make sense:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt1 = DateTime-&gt;new(
+<pre>  my $dt1 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
@@ -1306,9 +1230,7 @@
       minute    =&gt; 58,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   # is DST
-
   my $dt2 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
@@ -1317,11 +1239,8 @@
       minute    =&gt; 1,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   # not DST
-
   my $dur = $dt2-&gt;subtract_datetime($dt1);
-
   # 1 day and 3 minutes
 </pre>
 <p class="Pp">This last example illustrates the &quot;DST&quot; exception
@@ -1329,17 +1248,14 @@
     23 hours.</p>
 <p class="Pp">And finally:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt2 = DateTime-&gt;new(
+<pre>  my $dt2 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 10,
       day       =&gt; 26,
       hour      =&gt; 1,
       time_zone =&gt; 'America/Chicago',
   );
-
   my $dt1 = $dt2-&gt;clone-&gt;subtract( hours =&gt; 1 );
-
   my $dur = $dt2-&gt;subtract_datetime($dt1);
   # 60 minutes
 </pre>
@@ -1358,8 +1274,7 @@
     or subtract that duration from one of the datetimes we just used, we
     sometimes get interesting results:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt1 = DateTime-&gt;new(
+<pre>  my $dt1 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
@@ -1367,7 +1282,6 @@
       minute    =&gt; 58,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   my $dt2 = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
@@ -1376,13 +1290,10 @@
       minute    =&gt; 1,
       time_zone =&gt; &quot;America/Chicago&quot;,
   );
-
   my $dur = $dt2-&gt;subtract_datetime($dt1);
   # 1 day and 3 minutes
-
   $dt1-&gt;add_duration($dur);
   # gives us $dt2
-
   $dt2-&gt;subtract_duration($dur);
   # gives us 2003-04-05 02:58:00 - 1 hour later than $dt1
 </pre>
@@ -1396,16 +1307,14 @@
     <span class="Li">&quot;calendar_duration()&quot;</span> and
     <span class="Li">&quot;clock_duration()&quot;</span> methods:</p>
 <p class="Pp"></p>
-<pre>
-  $dt2-&gt;subtract_duration( $dur-&gt;clock_duration )
+<pre>  $dt2-&gt;subtract_duration( $dur-&gt;clock_duration )
       -&gt;subtract_duration( $dur-&gt;calendar_duration );
 </pre>
 <p class="Pp"><i>Leap Seconds and Date Math</i></p>
 <p class="Pp">The presence of leap seconds can cause even more anomalies in date
     math. For example, the following is a legal datetime:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 1972,
       month     =&gt; 12,
       day       =&gt; 31,
@@ -1417,16 +1326,14 @@
 </pre>
 <p class="Pp">If we do the following:</p>
 <p class="Pp"></p>
-<pre>
- $dt-&gt;add( months =&gt; 1 );
+<pre> $dt-&gt;add( months =&gt; 1 );
 </pre>
 <p class="Pp">Then the datetime is now &quot;1973-02-01 00:00:00&quot;, because
     there is no 23:59:60 on 1973-01-31.</p>
 <p class="Pp">Leap seconds also force us to distinguish between minutes and
     seconds during date math. Given the following datetime:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 1972,
       month     =&gt; 12,
       day       =&gt; 31,
@@ -1441,15 +1348,11 @@
     beginning at 23:59:00, actually contains 61 seconds.</p>
 <p class="Pp">Here are the results we get:</p>
 <p class="Pp"></p>
-<pre>
-  # 1972-12-31 23:59:30 - our starting datetime
-
+<pre>  # 1972-12-31 23:59:30 - our starting datetime
   $dt-&gt;clone-&gt;add( minutes =&gt; 1 );
   # 1973-01-01 00:00:30 - one minute later
-
   $dt-&gt;clone-&gt;add( seconds =&gt; 60 );
   # 1973-01-01 00:00:29 - 60 seconds later
-
   $dt-&gt;clone-&gt;add( seconds =&gt; 61 );
   # 1973-01-01 00:00:30 - 61 seconds later
 </pre>
@@ -1458,30 +1361,26 @@
     have more or less than 24 hours.</p>
 <p class="Pp">For example, if you do this:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
       hour      =&gt; 2,
       time_zone =&gt; 'America/Chicago',
   );
-
   $dt-&gt;add( days =&gt; 1 );
 </pre>
 <p class="Pp">then you will produce an <i>invalid</i> local time, and therefore
     an exception will be thrown.</p>
 <p class="Pp">However, this works:</p>
 <p class="Pp"></p>
-<pre>
-  my $dt = DateTime-&gt;new(
+<pre>  my $dt = DateTime-&gt;new(
       year      =&gt; 2003,
       month     =&gt; 4,
       day       =&gt; 5,
       hour      =&gt; 2,
       time_zone =&gt; 'America/Chicago',
   );
-
   $dt-&gt;add( hours =&gt; 24 );
 </pre>
 <p class="Pp">and produces a datetime with the local time of
@@ -1499,13 +1398,9 @@
     (-), string and numeric comparison operators. This means that the following
     all do sensible things:</p>
 <p class="Pp"></p>
-<pre>
-  my $new_dt = $dt + $duration_obj;
-
+<pre>  my $new_dt = $dt + $duration_obj;
   my $new_dt = $dt - $duration_obj;
-
   my $duration_obj = $dt - $new_dt;
-
   foreach my $dt ( sort @dts ) { ... }
 </pre>
 <p class="Pp">Additionally, the fallback parameter is set to true, so other
@@ -1534,14 +1429,12 @@
 <p class="Pp">Any of the constructor methods can accept a formatter
   argument:</p>
 <p class="Pp"></p>
-<pre>
-  my $formatter = DateTime::Format::Strptime-&gt;new(...);
+<pre>  my $formatter = DateTime::Format::Strptime-&gt;new(...);
   my $dt = DateTime-&gt;new(year =&gt; 2004, formatter =&gt; $formatter);
 </pre>
 <p class="Pp">Or, you can set it afterwards:</p>
 <p class="Pp"></p>
-<pre>
-  $dt-&gt;set_formatter($formatter);
+<pre>  $dt-&gt;set_formatter($formatter);
   $formatter = $dt-&gt;formatter();
 </pre>
 <p class="Pp">Once you set the formatter, the overloaded stringification method
@@ -1565,8 +1458,7 @@
     surround them with single quotes ('). If you want to include a single quote,
     you must escape it as two single quotes ('').</p>
 <p class="Pp"></p>
-<pre>
-  'Today is ' EEEE
+<pre>  'Today is ' EEEE
   'It is now' h 'o''clock' a
 </pre>
 <p class="Pp">Spaces and any non-letter text will always be passed through
@@ -1827,8 +1719,7 @@
     <span class="Li">&quot;$locale-&gt;format_for&quot;</span> method. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-    say $dt-&gt;format_cldr( $dt-&gt;locale-&gt;format_for('MMMd') );
+<pre>    say $dt-&gt;format_cldr( $dt-&gt;locale-&gt;format_for('MMMd') );
 </pre>
 </section>
 <section class="Ss">
@@ -1920,8 +1811,7 @@
     <p class="Pp">The fractional seconds digits. Default is 9 digits
         (nanoseconds).</p>
     <p class="Pp"></p>
-    <pre>
-  %3N   milliseconds (3 digits)
+    <pre>  %3N   milliseconds (3 digits)
   %6N   microseconds (6 digits)
   %9N   nanoseconds  (9 digits)
     </pre>
@@ -2040,10 +1930,8 @@
     For example, DateTime::Format::HTTP parses dates according to the RFC 1123
     format:</p>
 <p class="Pp"></p>
-<pre>
-  my $datetime
+<pre>  my $datetime
       = DateTime::Format::HTTP-&gt;parse_datetime('Thu Feb  3 17:03:55 GMT 1994');
-
   print DateTime::Format::HTTP-&gt;format_datetime($datetime);
 </pre>
 <p class="Pp">Most format modules are suitable for use as a
@@ -2176,8 +2064,7 @@
 <p class="Pp">This software is Copyright (c) 2003 - 2020 by Dave Rolsky.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The Artistic License 2.0 (GPL Compatible)
+<pre>  The Artistic License 2.0 (GPL Compatible)
 </pre>
 <p class="Pp">The full text of the license can be found in the <i>LICENSE</i>
     file included with this distribution.</p>

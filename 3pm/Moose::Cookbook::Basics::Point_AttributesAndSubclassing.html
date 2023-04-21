@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::Point_AttributesAndSubclassing(3)</title>
 </head>
@@ -33,37 +34,27 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package Point;
+<pre>  package Point;
   use Moose;
-
   has 'x' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
   has 'y' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
-
   sub clear {
       my $self = shift;
       $self-&gt;x(0);
       $self-&gt;y(0);
   }
-
   package Point3D;
   use Moose;
-
   extends 'Point';
-
   has 'z' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
-
   after 'clear' =&gt; sub {
       my $self = shift;
       $self-&gt;z(0);
   };
-
   package main;
-
   # hash or hashrefs are ok for the constructor
   my $point1 = Point-&gt;new(x =&gt; 5, y =&gt; 7);
   my $point2 = Point-&gt;new({x =&gt; 5, y =&gt; 7});
-
   my $point3d = Point3D-&gt;new(x =&gt; 5, y =&gt; 42, z =&gt; -5);
 </pre>
 </section>
@@ -88,8 +79,7 @@
     <span class="Li">&quot;has&quot;</span>, which defines an instance attribute
     in our class:</p>
 <p class="Pp"></p>
-<pre>
-  has 'x' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
+<pre>  has 'x' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
 </pre>
 <p class="Pp">This will create an attribute named
     <span class="Li">&quot;x&quot;</span>. The
@@ -105,8 +95,7 @@
     Moose, as with regular Perl 5 OO, a method is just a subroutine defined
     within the package:</p>
 <p class="Pp"></p>
-<pre>
-  sub clear {
+<pre>  sub clear {
       my $self = shift;
       $self-&gt;x(0);
       $self-&gt;y(0);
@@ -117,8 +106,7 @@
     declare our superclass, we use the Moose keyword
     <span class="Li">&quot;extends&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  extends 'Point';
+<pre>  extends 'Point';
 </pre>
 <p class="Pp">The <span class="Li">&quot;extends&quot;</span> keyword works much
     like <span class="Li">&quot;use base&quot;</span>/<span class="Li">&quot;use
@@ -134,8 +122,7 @@
 <p class="Pp">Next we create a new attribute for <b>Point3D</b> called
     <span class="Li">&quot;z&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  has 'z' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
+<pre>  has 'z' =&gt; (isa =&gt; 'Int', is =&gt; 'rw', required =&gt; 1);
 </pre>
 <p class="Pp">This attribute is just like <b>Point</b>'s
     <span class="Li">&quot;x&quot;</span> and
@@ -144,8 +131,7 @@
     a Moose feature called &quot;method modifiers&quot; (or &quot;advice&quot;
     for the AOP inclined):</p>
 <p class="Pp"></p>
-<pre>
-  after 'clear' =&gt; sub {
+<pre>  after 'clear' =&gt; sub {
       my $self = shift;
       $self-&gt;z(0);
   };
@@ -161,8 +147,7 @@
     modifier is not the only way to accomplish this. This <b>is</b> Perl, right?
     You can get the same results with this code:</p>
 <p class="Pp"></p>
-<pre>
-  sub clear {
+<pre>  sub clear {
       my $self = shift;
       $self-&gt;SUPER::clear();
       $self-&gt;z(0);
@@ -171,8 +156,7 @@
 <p class="Pp">You could also use another Moose method modifier,
     <span class="Li">&quot;override&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  override 'clear' =&gt; sub {
+<pre>  override 'clear' =&gt; sub {
       my $self = shift;
       super();
       $self-&gt;z(0);
@@ -186,10 +170,8 @@
 <p class="Pp">Since <b>Point</b> inherits from Moose::Object, it will also
     inherit the default Moose::Object constructor:</p>
 <p class="Pp"></p>
-<pre>
-  my $point1 = Point-&gt;new(x =&gt; 5, y =&gt; 7);
+<pre>  my $point1 = Point-&gt;new(x =&gt; 5, y =&gt; 7);
   my $point2 = Point-&gt;new({x =&gt; 5, y =&gt; 7});
-
   my $point3d = Point3D-&gt;new(x =&gt; 5, y =&gt; 42, z =&gt; -5);
 </pre>
 <p class="Pp">The <span class="Li">&quot;new&quot;</span> constructor accepts a
@@ -198,8 +180,7 @@
     attributes are required, and calling <span class="Li">&quot;new&quot;</span>
     without them will throw an error.</p>
 <p class="Pp"></p>
-<pre>
-  my $point = Point-&gt;new( x =&gt; 5 ); # no y, kaboom!
+<pre>  my $point = Point-&gt;new( x =&gt; 5 ); # no y, kaboom!
 </pre>
 <p class="Pp">From here on, we can use <span class="Li">$point</span> and
     <span class="Li">$point3d</span> just as you would any other Perl 5 object.
@@ -238,8 +219,7 @@
       inheritance. Simply pass all of your superclasses to
       <span class="Li">&quot;extends&quot;</span> as a list:
     <p class="Pp"></p>
-    <pre>
-  extends 'Foo', 'Bar', 'Baz';
+    <pre>  extends 'Foo', 'Bar', 'Baz';
     </pre>
   </dd>
   <dt>(3)</dt>

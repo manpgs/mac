@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>BerkeleyDB(3)</title>
 </head>
@@ -29,37 +30,26 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use BerkeleyDB;
-
+<pre>  use BerkeleyDB;
   $env = new BerkeleyDB::Env [OPTIONS] ;
-
   $db  = tie %hash, 'BerkeleyDB::Hash', [OPTIONS] ;
   $db  = new BerkeleyDB::Hash [OPTIONS] ;
-
   $db  = tie %hash, 'BerkeleyDB::Btree', [OPTIONS] ;
   $db  = new BerkeleyDB::Btree [OPTIONS] ;
-
   $db  = tie @array, 'BerkeleyDB::Recno', [OPTIONS] ;
   $db  = new BerkeleyDB::Recno [OPTIONS] ;
-
   $db  = tie @array, 'BerkeleyDB::Queue', [OPTIONS] ;
   $db  = new BerkeleyDB::Queue [OPTIONS] ;
-
   $db  = new BerkeleyDB::Heap [OPTIONS] ;
-
   $db  = new BerkeleyDB::Unknown [OPTIONS] ;
-
   $status = BerkeleyDB::db_remove [OPTIONS]
   $status = BerkeleyDB::db_rename [OPTIONS]
   $status = BerkeleyDB::db_verify [OPTIONS]
-
   $hash{$key} = $value ;
   $value = $hash{$key} ;
   each %hash ;
   keys %hash ;
   values %hash ;
-
   $env = $db-&gt;Env()
   $status = $db-&gt;db_get()
   $status = $db-&gt;db_exists() ;
@@ -77,7 +67,6 @@
   $status = $db-&gt;compact($start, $stop, $c_data, $flags, $end);
   $status = $db-&gt;get_blob_threshold($t1) ;
   $status = $db-&gt;get_blob_dir($dir) ;
-
   $bool = $env-&gt;cds_enabled();
   $bool = $db-&gt;cds_enabled();
   $lock = $db-&gt;cds_lock();
@@ -85,7 +74,6 @@
   
   ($flag, $old_offset, $old_length) = $db-&gt;partial_set($offset, $length) ;
   ($flag, $old_offset, $old_length) = $db-&gt;partial_clear() ;
-
   $cursor = $db-&gt;db_cursor([$flags]) ;
   $newcursor = $cursor-&gt;c_dup([$flags]);
   $status = $cursor-&gt;c_get() ;
@@ -96,15 +84,12 @@
   $status = $cursor-&gt;status() ;
   $status = $cursor-&gt;c_close() ;
   $stream = $cursor-&gt;db_stream() ;
-
   $cursor = $db-&gt;db_join() ;
   $status = $cursor-&gt;c_get() ;
   $status = $cursor-&gt;c_close() ;
-
   $status = $stream-&gt;size($S);
   $status = $stream-&gt;read($data, $offset, $size);
   $status = $stream-&gt;write($data, $offset);
-
   $status = $env-&gt;txn_checkpoint()
   $hash_ref = $env-&gt;txn_stat()
   $status = $env-&gt;set_mutexlocks()
@@ -114,7 +99,6 @@
   $status = $env-&gt;lsn_reset()
   $status = $env-&gt;get_blob_threshold($t1) ;
   $status = $env-&gt;get_blob_dir($dir) ;
-
   $txn = $env-&gt;txn_begin() ;
   $db-&gt;Txn($txn);
   $txn-&gt;Txn($db1, $db2,...);
@@ -124,25 +108,20 @@
   $status = $txn-&gt;txn_id()
   $status = $txn-&gt;txn_discard()
   $status = $txn-&gt;set_timeout()
-
   $status = $env-&gt;set_lg_dir();
   $status = $env-&gt;set_lg_bsize();
   $status = $env-&gt;set_lg_max();
-
   $status = $env-&gt;set_data_dir() ;
   $status = $env-&gt;set_tmp_dir() ;
   $status = $env-&gt;set_verbose() ;
   $db_env_ptr = $env-&gt;DB_ENV() ;
-
   $BerkeleyDB::Error
   $BerkeleyDB::db_version
-
   # DBM Filters
   $old_filter = $db-&gt;filter_store_key  ( sub { ... } ) ;
   $old_filter = $db-&gt;filter_store_value( sub { ... } ) ;
   $old_filter = $db-&gt;filter_fetch_key  ( sub { ... } ) ;
   $old_filter = $db-&gt;filter_fetch_value( sub { ... } ) ;
-
   # deprecated, but supported
   $txn_mgr = $env-&gt;TxnMgr();
   $status = $txn_mgr-&gt;txn_checkpoint()
@@ -187,8 +166,7 @@
     <span class="Li">&quot;Flags&quot;</span> parameter, described below.</p>
 <section class="Ss">
 <h2 class="Ss" id="Synopsis"><a class="permalink" href="#Synopsis">Synopsis</a></h2>
-<pre>
-    $env = new BerkeleyDB::Env
+<pre>    $env = new BerkeleyDB::Env
              [ -Home         =&gt; $path, ]
              [ -Server       =&gt; $name, ]
              [ -CacheSize    =&gt; $number, ]
@@ -225,16 +203,13 @@
         but &quot;joe.db&quot; will be opened in &quot;/other&quot; because it
         was part of an absolute path.</p>
     <p class="Pp"></p>
-    <pre>
-    $env = new BerkeleyDB::Env
+    <pre>    $env = new BerkeleyDB::Env
              -Home         =&gt; &quot;/home/databases&quot;
     ...
-
     $db1 = new BerkeleyDB::Hash
              -Filename =&gt; &quot;fred.db&quot;,
              -Env =&gt; $env
     ...
-
     $db2 = new BerkeleyDB::Hash
              -Filename =&gt; &quot;/other/joe.db&quot;,
              -Env =&gt; $env
@@ -250,8 +225,7 @@
       written to the database. This parameters must be given a hash reference.
       The format is shown below.
     <p class="Pp"></p>
-    <pre>
-    -Encrypt =&gt; { -Password =&gt; &quot;abc&quot;, Flags =&gt; DB_ENCRYPT_AES }
+    <pre>    -Encrypt =&gt; { -Password =&gt; &quot;abc&quot;, Flags =&gt; DB_ENCRYPT_AES }
     </pre>
     <p class="Pp">Valid values for the Flags are 0 or
         <span class="Li">&quot;DB_ENCRYPT_AES&quot;</span>.</p>
@@ -312,8 +286,7 @@
         <b>DB_DATA_DIR</b>, <b>DB_LOG_DIR</b> and <b>DB_TMP_DIR</b></p>
     <p class="Pp">The code below shows an example of how it can be used.</p>
     <p class="Pp"></p>
-    <pre>
-    $env = new BerkeleyDB::Env
+    <pre>    $env = new BerkeleyDB::Env
              -Config =&gt; { DB_DATA_DIR =&gt; &quot;/home/databases&quot;,
                           DB_LOG_DIR  =&gt; &quot;/home/logs&quot;,
                           DB_TMP_DIR  =&gt; &quot;/home/tmp&quot;
@@ -326,13 +299,11 @@
       Berkeley DB will be logged to this file. A useful debug setting is to open
       environments with either
     <p class="Pp"></p>
-    <pre>
-    -ErrFile =&gt; *STDOUT
+    <pre>    -ErrFile =&gt; *STDOUT
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    -ErrFile =&gt; *STDERR
+    <pre>    -ErrFile =&gt; *STDERR
     </pre>
   </dd>
   <dt id="ErrPrefix"><a class="permalink" href="#ErrPrefix">-ErrPrefix</a></dt>
@@ -528,8 +499,7 @@
 <section class="Sh">
 <h1 class="Sh" id="Global_Classes"><a class="permalink" href="#Global_Classes">Global
   Classes</a></h1>
-<pre>
-  $status = BerkeleyDB::db_remove [OPTIONS]
+<pre>  $status = BerkeleyDB::db_remove [OPTIONS]
   $status = BerkeleyDB::db_rename [OPTIONS]
   $status = BerkeleyDB::db_verify [OPTIONS]
 </pre>
@@ -539,7 +509,7 @@
   DATABASE CLASSES</a></h1>
 <p class="Pp"><b>BerkeleyDB</b> supports the following database formats:</p>
 <dl class="Bl-tag">
-  <dt id="BerkeleyDB::Hash"><a class="permalink" href="#BerkeleyDB::Hash"><b>BerkeleyDB::Hash</b></a></dt>
+  <dt><b>BerkeleyDB::Hash</b></dt>
   <dd>This database type allows arbitrary key/value pairs to be stored in data
       files. This is equivalent to the functionality provided by other hashing
       packages like DBM, NDBM, ODBM, GDBM, and SDBM. Remember though, the files
@@ -550,20 +520,20 @@
         hashing algorithm it is possible to write your own in Perl and have
         <b>BerkeleyDB</b> use it instead.</p>
   </dd>
-  <dt id="BerkeleyDB::Btree"><a class="permalink" href="#BerkeleyDB::Btree"><b>BerkeleyDB::Btree</b></a></dt>
+  <dt><b>BerkeleyDB::Btree</b></dt>
   <dd>The Btree format allows arbitrary key/value pairs to be stored in a
       B+tree.
     <p class="Pp">As with the <b>BerkeleyDB::Hash</b> format, it is possible to
         provide a user defined Perl routine to perform the comparison of keys.
         By default, though, the keys are stored in lexical order.</p>
   </dd>
-  <dt id="BerkeleyDB::Recno"><a class="permalink" href="#BerkeleyDB::Recno"><b>BerkeleyDB::Recno</b></a></dt>
+  <dt><b>BerkeleyDB::Recno</b></dt>
   <dd>TODO.</dd>
-  <dt id="BerkeleyDB::Queue"><a class="permalink" href="#BerkeleyDB::Queue"><b>BerkeleyDB::Queue</b></a></dt>
+  <dt><b>BerkeleyDB::Queue</b></dt>
   <dd>TODO.</dd>
-  <dt id="BerkeleyDB::Heap"><a class="permalink" href="#BerkeleyDB::Heap"><b>BerkeleyDB::Heap</b></a></dt>
+  <dt><b>BerkeleyDB::Heap</b></dt>
   <dd>TODO.</dd>
-  <dt id="BerkeleyDB::Unknown"><a class="permalink" href="#BerkeleyDB::Unknown"><b>BerkeleyDB::Unknown</b></a></dt>
+  <dt><b>BerkeleyDB::Unknown</b></dt>
   <dd>This isn't a database format at all. It is used when you want to open an
       existing Berkeley DB database without having to know what type is it.</dd>
 </dl>
@@ -572,14 +542,13 @@
     the next sections.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Hash~2"><a class="permalink" href="#BerkeleyDB::Hash~2">BerkeleyDB::Hash</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Hash"><a class="permalink" href="#BerkeleyDB::Hash">BerkeleyDB::Hash</a></h1>
 <p class="Pp">Equivalent to calling <b>db_open</b> with type <b>DB_HASH</b> in
     Berkeley DB 2.x and calling <b>db_create</b> followed by <b>DB-&gt;open</b>
     with type <b>DB_HASH</b> in Berkeley DB 3.x or greater.</p>
 <p class="Pp">Two forms of constructor are supported:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Hash
+<pre>    $db = new BerkeleyDB::Hash
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -602,8 +571,7 @@
 </pre>
 <p class="Pp">and this</p>
 <p class="Pp"></p>
-<pre>
-    [$db =] tie %hash, 'BerkeleyDB::Hash', 
+<pre>    [$db =] tie %hash, 'BerkeleyDB::Hash', 
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -657,15 +625,13 @@
       default hash function is used. Here is a template for a user-defined hash
       function
     <p class="Pp"></p>
-    <pre>
-    sub hash
+    <pre>    sub hash
     {
         my ($data) = shift ;
         ...
         # return the hash value for $data
         return $hash ;
     }
-
     tie %h, &quot;BerkeleyDB::Hash&quot;, 
         -Filename =&gt; $filename, 
         -Hash     =&gt; \&amp;hash,
@@ -676,8 +642,7 @@
   <dt id="DupCompare"><a class="permalink" href="#DupCompare">-DupCompare</a></dt>
   <dd>Used in conjunction with the <b>DB_DUPOSRT</b> flag.
     <p class="Pp"></p>
-    <pre>
-    sub compare
+    <pre>    sub compare
     {
         my ($key, $key2) = @_ ;
         ...
@@ -686,7 +651,6 @@
         #         1 if $key1 gt $key2
         return (-1 , 0 or 1) ;
     }
-
     tie %h, &quot;BerkeleyDB::Hash&quot;, 
         -Filename   =&gt; $filename, 
         -Property   =&gt; DB_DUP|DB_DUPSORT,
@@ -704,40 +668,32 @@
 <section class="Ss">
 <h2 class="Ss" id="A_Simple_Tied_Hash_Example"><a class="permalink" href="#A_Simple_Tied_Hash_Example">A
   Simple Tied Hash Example</a></h2>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
     use vars qw( %h $k $v ) ;
-
     my $filename = &quot;fruit&quot; ;
     unlink $filename ;
     tie %h, &quot;BerkeleyDB::Hash&quot;,
                 -Filename =&gt; $filename,
                 -Flags    =&gt; DB_CREATE
         or die &quot;Cannot open file $filename: $! $BerkeleyDB::Error\n&quot; ;
-
     # Add a few key/value pairs to the file
     $h{&quot;apple&quot;} = &quot;red&quot; ;
     $h{&quot;orange&quot;} = &quot;orange&quot; ;
     $h{&quot;banana&quot;} = &quot;yellow&quot; ;
     $h{&quot;tomato&quot;} = &quot;red&quot; ;
-
     # Check for existence of a key
     print &quot;Banana Exists\n\n&quot; if $h{&quot;banana&quot;} ;
-
     # Delete a key/value pair.
     delete $h{&quot;apple&quot;} ;
-
     # print the contents of the file
     while (($k, $v) = each %h)
       { print &quot;$k -&gt; $v\n&quot; }
-
     untie %h ;
 </pre>
 <p class="Pp">here is the output:</p>
 <p class="Pp"></p>
-<pre>
-    Banana Exists
+<pre>    Banana Exists
     
     orange -&gt; orange
     tomato -&gt; red
@@ -751,35 +707,28 @@
   Simple Hash Example</a></h2>
 <p class="Pp">Do the same as the previous example but not using tie.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;fruit&quot; ;
     unlink $filename ;
     my $db = new BerkeleyDB::Hash
                 -Filename =&gt; $filename,
                 -Flags    =&gt; DB_CREATE
         or die &quot;Cannot open file $filename: $! $BerkeleyDB::Error\n&quot; ;
-
     # Add a few key/value pairs to the file
     $db-&gt;db_put(&quot;apple&quot;, &quot;red&quot;) ;
     $db-&gt;db_put(&quot;orange&quot;, &quot;orange&quot;) ;
     $db-&gt;db_put(&quot;banana&quot;, &quot;yellow&quot;) ;
     $db-&gt;db_put(&quot;tomato&quot;, &quot;red&quot;) ;
-
     # Check for existence of a key
     print &quot;Banana Exists\n\n&quot; if $db-&gt;db_get(&quot;banana&quot;, $v) == 0;
-
     # Delete a key/value pair.
     $db-&gt;db_del(&quot;apple&quot;) ;
-
     # print the contents of the file
     my ($k, $v) = (&quot;&quot;, &quot;&quot;) ;
     my $cursor = $db-&gt;db_cursor() ;
     while ($cursor-&gt;c_get($k, $v, DB_NEXT) == 0)
       { print &quot;$k -&gt; $v\n&quot; }
-
     undef $cursor ;
     undef $db ;
 </pre>
@@ -792,10 +741,8 @@
     fruit name. The <b>DB_DUP</b> flag has been specified to allow
   duplicates.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;fruit&quot; ;
     unlink $filename ;
     my $db = new BerkeleyDB::Hash
@@ -803,7 +750,6 @@
                 -Flags    =&gt; DB_CREATE,
                 -Property  =&gt; DB_DUP
         or die &quot;Cannot open file $filename: $! $BerkeleyDB::Error\n&quot; ;
-
     # Add a few key/value pairs to the file
     $db-&gt;db_put(&quot;red&quot;, &quot;apple&quot;) ;
     $db-&gt;db_put(&quot;orange&quot;, &quot;orange&quot;) ;
@@ -811,20 +757,17 @@
     $db-&gt;db_put(&quot;yellow&quot;, &quot;banana&quot;) ;
     $db-&gt;db_put(&quot;red&quot;, &quot;tomato&quot;) ;
     $db-&gt;db_put(&quot;green&quot;, &quot;apple&quot;) ;
-
     # print the contents of the file
     my ($k, $v) = (&quot;&quot;, &quot;&quot;) ;
     my $cursor = $db-&gt;db_cursor() ;
     while ($cursor-&gt;c_get($k, $v, DB_NEXT) == 0)
       { print &quot;$k -&gt; $v\n&quot; }
-
     undef $cursor ;
     undef $db ;
 </pre>
 <p class="Pp">here is the output:</p>
 <p class="Pp"></p>
-<pre>
-    orange -&gt; orange
+<pre>    orange -&gt; orange
     yellow -&gt; banana
     red -&gt; apple
     red -&gt; tomato
@@ -840,10 +783,8 @@
     identical to the previous example except the <b>DB_DUPSORT</b> flag is
     specified.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;fruit&quot; ;
     unlink $filename ;
     my $db = new BerkeleyDB::Hash
@@ -851,7 +792,6 @@
                 -Flags    =&gt; DB_CREATE,
                 -Property  =&gt; DB_DUP | DB_DUPSORT
         or die &quot;Cannot open file $filename: $! $BerkeleyDB::Error\n&quot; ;
-
     # Add a few key/value pairs to the file
     $db-&gt;db_put(&quot;red&quot;, &quot;apple&quot;) ;
     $db-&gt;db_put(&quot;orange&quot;, &quot;orange&quot;) ;
@@ -859,21 +799,18 @@
     $db-&gt;db_put(&quot;yellow&quot;, &quot;banana&quot;) ;
     $db-&gt;db_put(&quot;red&quot;, &quot;tomato&quot;) ;
     $db-&gt;db_put(&quot;green&quot;, &quot;apple&quot;) ;
-
     # print the contents of the file
     my ($k, $v) = (&quot;&quot;, &quot;&quot;) ;
     my $cursor = $db-&gt;db_cursor() ;
     while ($cursor-&gt;c_get($k, $v, DB_NEXT) == 0)
       { print &quot;$k -&gt; $v\n&quot; }
-
     undef $cursor ;
     undef $db ;
 </pre>
 <p class="Pp">Notice that in the output below the duplicate values are
   sorted.</p>
 <p class="Pp"></p>
-<pre>
-    orange -&gt; orange
+<pre>    orange -&gt; orange
     yellow -&gt; banana
     red -&gt; apple
     red -&gt; tomato
@@ -898,14 +835,13 @@
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Btree~2"><a class="permalink" href="#BerkeleyDB::Btree~2">BerkeleyDB::Btree</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Btree"><a class="permalink" href="#BerkeleyDB::Btree">BerkeleyDB::Btree</a></h1>
 <p class="Pp">Equivalent to calling <b>db_open</b> with type <b>DB_BTREE</b> in
     Berkeley DB 2.x and calling <b>db_create</b> followed by <b>DB-&gt;open</b>
     with type <b>DB_BTREE</b> in Berkeley DB 3.x or greater.</p>
 <p class="Pp">Two forms of constructor are supported:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Btree
+<pre>    $db = new BerkeleyDB::Btree
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -928,8 +864,7 @@
 </pre>
 <p class="Pp">and this</p>
 <p class="Pp"></p>
-<pre>
-    [$db =] tie %hash, 'BerkeleyDB::Btree', 
+<pre>    [$db =] tie %hash, 'BerkeleyDB::Btree', 
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -974,8 +909,7 @@
   <dd>Allow you to override the default sort order used in the database. See
       &quot;Changing the sort order&quot; for an example.
     <p class="Pp"></p>
-    <pre>
-    sub compare
+    <pre>    sub compare
     {
         my ($key, $key2) = @_ ;
         ...
@@ -984,7 +918,6 @@
         #         1 if $key1 gt $key2
         return (-1 , 0 or 1) ;
     }
-
     tie %h, &quot;BerkeleyDB::Hash&quot;, 
         -Filename   =&gt; $filename, 
         -Compare    =&gt; \&amp;compare,
@@ -993,8 +926,7 @@
   </dd>
   <dt id="Prefix"><a class="permalink" href="#Prefix">Prefix</a></dt>
   <dd>
-    <pre>
-    sub prefix
+    <pre>    sub prefix
     {
         my ($key, $key2) = @_ ;
         ...
@@ -1002,13 +934,11 @@
         # necessary to determine that it is greater than $key1
         return $bytes ;
     }
-
     tie %h, &quot;BerkeleyDB::Hash&quot;, 
         -Filename   =&gt; $filename, 
         -Prefix     =&gt; \&amp;prefix,
         ...
 =item DupCompare
-
     sub compare
     {
         my ($key, $key2) = @_ ;
@@ -1018,7 +948,6 @@
         #         1 if $key1 gt $key2
         return (-1 , 0 or 1) ;
     }
-
     tie %h, &quot;BerkeleyDB::Hash&quot;, 
         -Filename   =&gt; $filename, 
         -DupCompare =&gt; \&amp;compare,
@@ -1054,10 +983,8 @@
   Simple Btree Example</a></h2>
 <p class="Pp">The code below is a simple example of using a btree database.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;tree&quot; ;
     unlink $filename ;
     my %h ;
@@ -1065,29 +992,24 @@
                 -Filename   =&gt; $filename,
                 -Flags      =&gt; DB_CREATE
       or die &quot;Cannot open $filename: $! $BerkeleyDB::Error\n&quot; ;
-
     # Add a key/value pair to the file
     $h{'Wall'} = 'Larry' ;
     $h{'Smith'} = 'John' ;
     $h{'mouse'} = 'mickey' ;
     $h{'duck'}  = 'donald' ;
-
     # Delete
     delete $h{&quot;duck&quot;} ;
-
     # Cycle through the keys printing them in order.
     # Note it is not necessary to sort the keys as
     # the btree will have kept them in order automatically.
     foreach (keys %h)
       { print &quot;$_\n&quot; }
-
     untie %h ;
 </pre>
 <p class="Pp">Here is the output from the code above. The keys have been sorted
     using Berkeley DB's default sorting algorithm.</p>
 <p class="Pp"></p>
-<pre>
-    Smith
+<pre>    Smith
     Wall
     mouse
 </pre>
@@ -1099,10 +1021,8 @@
     that Berkeley DB used isn't suitable. The code below is identical to the
     previous example except for the case insensitive compare function.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;tree&quot; ;
     unlink $filename ;
     my %h ;
@@ -1111,28 +1031,23 @@
                 -Flags      =&gt; DB_CREATE,
                 -Compare    =&gt; sub { lc $_[0] cmp lc $_[1] }
       or die &quot;Cannot open $filename: $!\n&quot; ;
-
     # Add a key/value pair to the file
     $h{'Wall'} = 'Larry' ;
     $h{'Smith'} = 'John' ;
     $h{'mouse'} = 'mickey' ;
     $h{'duck'}  = 'donald' ;
-
     # Delete
     delete $h{&quot;duck&quot;} ;
-
     # Cycle through the keys printing them in order.
     # Note it is not necessary to sort the keys as
     # the btree will have kept them in order automatically.
     foreach (keys %h)
       { print &quot;$_\n&quot; }
-
     untie %h ;
 </pre>
 <p class="Pp">Here is the output from the code above.</p>
 <p class="Pp"></p>
-<pre>
-    mouse
+<pre>    mouse
     Smith
     Wall
 </pre>
@@ -1154,14 +1069,13 @@
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Recno~2"><a class="permalink" href="#BerkeleyDB::Recno~2">BerkeleyDB::Recno</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Recno"><a class="permalink" href="#BerkeleyDB::Recno">BerkeleyDB::Recno</a></h1>
 <p class="Pp">Equivalent to calling <b>db_open</b> with type <b>DB_RECNO</b> in
     Berkeley DB 2.x and calling <b>db_create</b> followed by <b>DB-&gt;open</b>
     with type <b>DB_RECNO</b> in Berkeley DB 3.x or greater.</p>
 <p class="Pp">Two forms of constructor are supported:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Recno
+<pre>    $db = new BerkeleyDB::Recno
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1182,8 +1096,7 @@
 </pre>
 <p class="Pp">and this</p>
 <p class="Pp"></p>
-<pre>
-    [$db =] tie @arry, 'BerkeleyDB::Recno', 
+<pre>    [$db =] tie @arry, 'BerkeleyDB::Recno', 
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1209,46 +1122,35 @@
     version of Perl earlier than 5.004_57 this example won't work -- see
     &quot;Extra RECNO Methods&quot; for a workaround).</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my $filename = &quot;text&quot; ;
     unlink $filename ;
-
     my @h ;
     tie @h, 'BerkeleyDB::Recno',
                 -Filename   =&gt; $filename,
                 -Flags      =&gt; DB_CREATE,
                 -Property   =&gt; DB_RENUMBER
       or die &quot;Cannot open $filename: $!\n&quot; ;
-
     # Add a few key/value pairs to the file
     $h[0] = &quot;orange&quot; ;
     $h[1] = &quot;blue&quot; ;
     $h[2] = &quot;yellow&quot; ;
-
     push @h, &quot;green&quot;, &quot;black&quot; ;
-
     my $elements = scalar @h ;
     print &quot;The array contains $elements entries\n&quot; ;
-
     my $last = pop @h ;
     print &quot;popped $last\n&quot; ;
-
     unshift @h, &quot;white&quot; ;
     my $first = shift @h ;
     print &quot;shifted $first\n&quot; ;
-
     # Check for existence of a key
     print &quot;Element 1 Exists with value $h[1]\n&quot; if $h[1] ;
-
     untie @h ;
 </pre>
 <p class="Pp">Here is the output from the script:</p>
 <p class="Pp"></p>
-<pre>
-    The array contains 5 entries
+<pre>    The array contains 5 entries
     popped black
     shifted white
     Element 1 Exists with value blue
@@ -1258,14 +1160,13 @@
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Queue~2"><a class="permalink" href="#BerkeleyDB::Queue~2">BerkeleyDB::Queue</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Queue"><a class="permalink" href="#BerkeleyDB::Queue">BerkeleyDB::Queue</a></h1>
 <p class="Pp">Equivalent to calling <b>db_create</b> followed by
     <b>DB-&gt;open</b> with type <b>DB_QUEUE</b> in Berkeley DB 3.x or greater.
     This database format isn't available if you use Berkeley DB 2.x.</p>
 <p class="Pp">Two forms of constructor are supported:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Queue
+<pre>    $db = new BerkeleyDB::Queue
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1285,8 +1186,7 @@
 </pre>
 <p class="Pp">and this</p>
 <p class="Pp"></p>
-<pre>
-    [$db =] tie @arry, 'BerkeleyDB::Queue', 
+<pre>    [$db =] tie @arry, 'BerkeleyDB::Queue', 
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1305,15 +1205,14 @@
 </pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Heap~2"><a class="permalink" href="#BerkeleyDB::Heap~2">BerkeleyDB::Heap</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Heap"><a class="permalink" href="#BerkeleyDB::Heap">BerkeleyDB::Heap</a></h1>
 <p class="Pp">Equivalent to calling <b>db_create</b> followed by
     <b>DB-&gt;open</b> with type <b>DB_HEAP</b> in Berkeley DB 5.2.x or greater.
     This database format isn't available if you use an older version of Berkeley
     DB.</p>
 <p class="Pp">One form of constructor is supported:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Heap
+<pre>    $db = new BerkeleyDB::Heap
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1334,7 +1233,7 @@
 </pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BerkeleyDB::Unknown~2"><a class="permalink" href="#BerkeleyDB::Unknown~2">BerkeleyDB::Unknown</a></h1>
+<h1 class="Sh" id="BerkeleyDB::Unknown"><a class="permalink" href="#BerkeleyDB::Unknown">BerkeleyDB::Unknown</a></h1>
 <p class="Pp">This class is used to open an existing database.</p>
 <p class="Pp">Equivalent to calling <b>db_open</b> with type <b>DB_UNKNOWN</b>
     in Berkeley DB 2.x and calling <b>db_create</b> followed by
@@ -1342,8 +1241,7 @@
     greater.</p>
 <p class="Pp">The constructor looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    $db = new BerkeleyDB::Unknown
+<pre>    $db = new BerkeleyDB::Unknown
                 [ -Filename      =&gt; &quot;filename&quot;, ]
                 [ -Subname       =&gt; &quot;sub-database name&quot;, ]
                 [ -Flags         =&gt; flags,]
@@ -1408,8 +1306,7 @@
       written to the database. This parameters must be given a hash reference.
       The format is shown below.
     <p class="Pp"></p>
-    <pre>
-    -Encrypt =&gt; { -Password =&gt; &quot;abc&quot;, Flags =&gt; DB_ENCRYPT_AES }
+    <pre>    -Encrypt =&gt; { -Password =&gt; &quot;abc&quot;, Flags =&gt; DB_ENCRYPT_AES }
     </pre>
     <p class="Pp">Valid values for the Flags are 0 or
         <span class="Li">&quot;DB_ENCRYPT_AES&quot;</span>.</p>
@@ -1438,8 +1335,9 @@
     value associated with it from the database. If it exists, the value read
     from the database is returned in the <span class="Li">$value</span>
     parameter.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is optional. If present,
-    it must be set to <b>one</b> of the following values:</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is optional. If present, it must be set to <b>one</b> of the following
+    values:</p>
 <dl class="Bl-tag">
   <dt id="DB_GET_BOTH"><a class="permalink" href="#DB_GET_BOTH"><b>DB_GET_BOTH</b></a></dt>
   <dd>When the <b>DB_GET_BOTH</b> flag is specified, <b>db_get</b> checks for
@@ -1449,7 +1347,7 @@
   <dd>TODO.</dd>
 </dl>
 <p class="Pp">In addition, the following value may be set by bitwise OR'ing it
-    into the <b></b><b>$flags</b><b></b> parameter:</p>
+    into the <b></b><span class="Li"><b>$flags</b></span><b></b> parameter:</p>
 <dl class="Bl-tag">
   <dt id="DB_RMW"><a class="permalink" href="#DB_RMW"><b>DB_RMW</b></a></dt>
   <dd>TODO</dd>
@@ -1457,8 +1355,7 @@
 <p class="Pp">The variant <span class="Li">&quot;db_pget&quot;</span> allows you
     to query a secondary database:</p>
 <p class="Pp"></p>
-<pre>
-        $status = $sdb-&gt;db_pget($skey, $pkey, $value);
+<pre>        $status = $sdb-&gt;db_pget($skey, $pkey, $value);
 </pre>
 <p class="Pp">using the key <span class="Li">$skey</span> in the secondary db to
     lookup <span class="Li">$pkey</span> and <span class="Li">$value</span> from
@@ -1474,8 +1371,9 @@
 <section class="Ss">
 <h2 class="Ss">$status = $db-&gt;db_put($key, $value [, $flags])</h2>
 <p class="Pp">Stores a key/value pair in the database.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is optional. If present
-    it must be set to <b>one</b> of the following values:</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is optional. If present it must be set to <b>one</b> of the following
+    values:</p>
 <dl class="Bl-tag">
   <dt id="DB_APPEND"><a class="permalink" href="#DB_APPEND"><b>DB_APPEND</b></a></dt>
   <dd>This flag is only applicable when accessing a <b>BerkeleyDB::Recno</b>
@@ -1494,8 +1392,8 @@
     <span class="Li">$key</span>. If duplicate keys are enabled in the database,
     <b>db_del</b> will delete <b>all</b> key/value pairs with key
     <span class="Li">$key</span>.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is optional and is
-    currently unused.</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is optional and is currently unused.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="$status_=_$env"><a class="permalink" href="#$status_=_$env">$status
@@ -1517,8 +1415,9 @@
 <p class="Pp">Creates a cursor object. This is used to access the contents of
     the database sequentially. See CURSORS for details of the methods available
     when working with cursors.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is optional. If present
-    it must be set to <b>one</b> of the following values:</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is optional. If present it must be set to <b>one</b> of the following
+    values:</p>
 <dl class="Bl-tag">
   <dt id="DB_RMW~2"><a class="permalink" href="#DB_RMW~2"><b>DB_RMW</b></a></dt>
   <dd>TODO.</dd>
@@ -1595,8 +1494,7 @@
     version of the Btree database. Assuming you called <b>db_stat</b> on a Btree
     database the equivalent field would be accessed as follows:</p>
 <p class="Pp"></p>
-<pre>
-    $version = $ref-&gt;{'bt_version'} ;
+<pre>    $version = $ref-&gt;{'bt_version'} ;
 </pre>
 <p class="Pp">If you are using Berkeley DB 3.x or better, this method will work
     will all database formats. When DB 2.x is used, it only works with
@@ -1623,8 +1521,7 @@
     <span class="Li">&quot;compact_fillpercent&quot;</span>, write you code like
     this</p>
 <p class="Pp"></p>
-<pre>
-    my %hash;
+<pre>    my %hash;
     $hash{compact_fillpercent} = 50;
     $db-&gt;compact(undef, undef, \%hash);
 </pre>
@@ -1678,19 +1575,15 @@
     <span class="Li">&quot;DB_FOREIGN_NULLIFY&quot;</span> the second parameter
     is a reference to a sub of the form</p>
 <p class="Pp"></p>
-<pre>
-    sub foreign_cb
+<pre>    sub foreign_cb
     {
         my $key = \$_[0];
         my $value = \$_[1];
         my $foreignkey = \$_[2];
         my $changed = \$_[3] ;
-
         # for ... set $$value and set $$changed to 1
-
         return 0;
     }
-
     $foreign_db-&gt;associate_foreign($secondary, \&amp;foreign_cb, DB_FOREIGN_NULLIFY);
 </pre>
 </section>
@@ -1758,15 +1651,17 @@
       <b>c_get</b> will return <b>DB_KEYEMPTY</b>.</dd>
   <dt id="DB_SET"><a class="permalink" href="#DB_SET"><b>DB_SET</b></a></dt>
   <dd>Set the cursor to point to the key/value pair referenced by
-      <b></b><b>$key</b><b></b> and return the value in
-      <b></b><b>$value</b><b></b>.</dd>
+      <b></b><span class="Li"><b>$key</b></span><b></b> and return the value in
+      <b></b><span class="Li"><b>$value</b></span><b></b>.</dd>
   <dt id="DB_SET_RANGE"><a class="permalink" href="#DB_SET_RANGE"><b>DB_SET_RANGE</b></a></dt>
   <dd>This flag is a variation on the <b>DB_SET</b> flag. As well as returning
-      the value, it also returns the key, via <b></b><b>$key</b><b></b>. When
-      used with a <b>BerkeleyDB::Btree</b> database the key matched by
-      <b>c_get</b> will be the shortest key (in length) which is greater than or
-      equal to the key supplied, via <b></b><b>$key</b><b></b>. This allows
-      partial key searches. See ??? for an example of how to use this flag.</dd>
+      the value, it also returns the key, via
+      <b></b><span class="Li"><b>$key</b></span><b></b>. When used with a
+      <b>BerkeleyDB::Btree</b> database the key matched by <b>c_get</b> will be
+      the shortest key (in length) which is greater than or equal to the key
+      supplied, via <b></b><span class="Li"><b>$key</b></span><b></b>. This
+      allows partial key searches. See ??? for an example of how to use this
+      flag.</dd>
   <dt id="DB_GET_BOTH~2"><a class="permalink" href="#DB_GET_BOTH~2"><b>DB_GET_BOTH</b></a></dt>
   <dd>Another variation on <b>DB_SET</b>. This one returns both the key and the
       value.</dd>
@@ -1776,7 +1671,7 @@
   <dd>TODO.</dd>
 </dl>
 <p class="Pp">In addition, the following value may be set by bitwise OR'ing it
-    into the <b></b><b>$flags</b><b></b> parameter:</p>
+    into the <b></b><span class="Li"><b>$flags</b></span><b></b> parameter:</p>
 <dl class="Bl-tag">
   <dt id="DB_RMW~3"><a class="permalink" href="#DB_RMW~3"><b>DB_RMW</b></a></dt>
   <dd>TODO.</dd>
@@ -1792,25 +1687,27 @@
   <dt id="DB_AFTER"><a class="permalink" href="#DB_AFTER"><b>DB_AFTER</b></a></dt>
   <dd>When used with a Btree or Hash database, a duplicate of the key referenced
       by the current cursor position will be created and the contents of
-      <b></b><b>$value</b><b></b> will be associated with it -
-      <b></b><b>$key</b><b></b> is ignored. The new key/value pair will be
-      stored immediately after the current cursor position. Obviously the
-      database has to have been opened with <b>DB_DUP</b>.
+      <b></b><span class="Li"><b>$value</b></span><b></b> will be associated
+      with it - <b></b><span class="Li"><b>$key</b></span><b></b> is ignored.
+      The new key/value pair will be stored immediately after the current cursor
+      position. Obviously the database has to have been opened with
+      <b>DB_DUP</b>.
     <p class="Pp">When used with a Recno ... TODO</p>
   </dd>
   <dt id="DB_BEFORE"><a class="permalink" href="#DB_BEFORE"><b>DB_BEFORE</b></a></dt>
   <dd>When used with a Btree or Hash database, a duplicate of the key referenced
       by the current cursor position will be created and the contents of
-      <b></b><b>$value</b><b></b> will be associated with it -
-      <b></b><b>$key</b><b></b> is ignored. The new key/value pair will be
-      stored immediately before the current cursor position. Obviously the
-      database has to have been opened with <b>DB_DUP</b>.
+      <b></b><span class="Li"><b>$value</b></span><b></b> will be associated
+      with it - <b></b><span class="Li"><b>$key</b></span><b></b> is ignored.
+      The new key/value pair will be stored immediately before the current
+      cursor position. Obviously the database has to have been opened with
+      <b>DB_DUP</b>.
     <p class="Pp">When used with a Recno ... TODO</p>
   </dd>
   <dt id="DB_CURRENT~2"><a class="permalink" href="#DB_CURRENT~2"><b>DB_CURRENT</b></a></dt>
   <dd>If the cursor has been initialised, replace the value of the key/value
       pair stored in the database with the contents of
-      <b></b><b>$value</b><b></b>.</dd>
+      <b></b><span class="Li"><b>$value</b></span><b></b>.</dd>
   <dt id="DB_KEYFIRST"><a class="permalink" href="#DB_KEYFIRST"><b>DB_KEYFIRST</b></a></dt>
   <dd>Only valid with a Btree or Hash database. This flag is only really used
       when duplicates are enabled in the database and sorted duplicates haven't
@@ -1831,15 +1728,15 @@
     to a valid key/value pair.</p>
 <p class="Pp">If the key/value pair associated with the cursor have already been
     deleted, <b>c_del</b> will return <b>DB_KEYEMPTY</b>.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is not used at
-  present.</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is not used at present.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss">$status = $cursor-&gt;c_count($cnt [, $flags])</h2>
 <p class="Pp">Stores the number of duplicates at the current cursor position in
-    <b></b><b>$cnt</b><b></b>.</p>
-<p class="Pp">The <b></b><b>$flags</b><b></b> parameter is not used at present.
-    This method needs Berkeley DB 3.1 or better.</p>
+    <b></b><span class="Li"><b>$cnt</b></span><b></b>.</p>
+<p class="Pp">The <b></b><span class="Li"><b>$flags</b></span><b></b> parameter
+    is not used at present. This method needs Berkeley DB 3.1 or better.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss">$status = $cursor-&gt;<b>status()</b></h2>
@@ -1851,7 +1748,8 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">$status = $cursor-&gt;<b>c_close()</b></h2>
-<p class="Pp">Closes the cursor <b></b><b>$cursor</b><b></b>.</p>
+<p class="Pp">Closes the cursor
+    <b></b><span class="Li"><b>$cursor</b></span><b></b>.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="$stream_=_$cursor"><a class="permalink" href="#$stream_=_$cursor">$stream
@@ -1883,25 +1781,21 @@
 <p class="Pp">Transactions are created using the
     <span class="Li">&quot;txn_begin&quot;</span> method on BerkeleyDB::Env:</p>
 <p class="Pp"></p>
-<pre>
-        my $txn = $env-&gt;txn_begin;
+<pre>        my $txn = $env-&gt;txn_begin;
 </pre>
 <p class="Pp">If this is a nested transaction, supply the parent transaction as
     an argument:</p>
 <p class="Pp"></p>
-<pre>
-        my $child_txn = $env-&gt;txn_begin($parent_txn);
+<pre>        my $child_txn = $env-&gt;txn_begin($parent_txn);
 </pre>
 <p class="Pp">Then in order to work with the transaction, you must set it as the
     current transaction on the database handles you want to work with:</p>
 <p class="Pp"></p>
-<pre>
-        $db-&gt;Txn($txn);
+<pre>        $db-&gt;Txn($txn);
 </pre>
 <p class="Pp">Or for multiple handles:</p>
 <p class="Pp"></p>
-<pre>
-        $txn-&gt;Txn(@handles);
+<pre>        $txn-&gt;Txn(@handles);
 </pre>
 <p class="Pp">The current transaction is given by BerkeleyDB each time to the
     various BDB operations. In the C api it is required explicitly as an
@@ -1909,13 +1803,11 @@
 <p class="Pp">To commit a transaction call the
     <span class="Li">&quot;commit&quot;</span> method on it:</p>
 <p class="Pp"></p>
-<pre>
-        $txn-&gt;txn_commit;
+<pre>        $txn-&gt;txn_commit;
 </pre>
 <p class="Pp">and to roll back call abort:</p>
 <p class="Pp"></p>
-<pre>
-        $txn-&gt;txn_abort
+<pre>        $txn-&gt;txn_abort
 </pre>
 <p class="Pp">After committing or aborting a child transaction you need to set
     the active transaction again using
@@ -1930,25 +1822,19 @@
 <p class="Pp">A Blob is access via a BerkeleyDBB::DbStream object. This is
     created via a cursor object.</p>
 <p class="Pp"></p>
-<pre>
-    # Note - error handling not shown below.
-
+<pre>    # Note - error handling not shown below.
     # Set the key we want
     my $k = &quot;some key&quot;;
-
     # Don't want the value retrieved by the cursor,
     # so use partial_set to make sure no data is retrieved.
     my $v = '';
     $cursor-&gt;partial_set(0,0) ;
     $cursor-&gt;c_get($k, $v, DB_SET) ;
     $cursor-&gt;partial_clear() ;
-
     # Now create a stream to the blob
     my $stream = $cursor-&gt;db_stream(DB_STREAM_WRITE) ;
-
     # get the size of the blob
     $stream-&gt;size(my $s) ;
-
     # Read the first 1k of data from the blob
     my $data ;
     $stream-&gt;read($data, 0, 1024);
@@ -1974,19 +1860,15 @@
 <p class="Pp">Below is an example of how to walk through a database when you
     don't know beforehand which entries are blobs and which are not.</p>
 <p class="Pp"></p>
-<pre>
-    while (1)
+<pre>    while (1)
     {
         my $k = '';
         my $v = '';
         $cursor-&gt;partial_set(0,0) ;
         my $status = $cursor-&gt;c_get($k, $v, DB_NEXT) ;
         $cursor-&gt;partial_clear();
-
         last if $status != 0 ;
-
         my $stream = $cursor-&gt;db_stream(DB_STREAM_WRITE);
-
         if (defined $stream)
         {
             # It's a Blob
@@ -2075,8 +1957,7 @@
 <p class="Pp">By default Berkeley DB cursors create a read lock, but it is
     possible to create a cursor that holds a write lock, thus</p>
 <p class="Pp"></p>
-<pre>
-    $cursor = $db-&gt;db_cursor(DB_WRITECURSOR);
+<pre>    $cursor = $db-&gt;db_cursor(DB_WRITECURSOR);
 </pre>
 <p class="Pp">Whilst either a read or write cursor is active, it will block any
     other processes that wants to write to the database.</p>
@@ -2094,14 +1975,11 @@
 <p class="Pp">Here is the typical signature that is used when opening a database
     in CDS mode.</p>
 <p class="Pp"></p>
-<pre>
-    use BerkeleyDB ;
-
+<pre>    use BerkeleyDB ;
     my $env = new BerkeleyDB::Env
                   -Home   =&gt; &quot;./home&quot; ,
                   -Flags  =&gt; DB_CREATE| DB_INIT_CDB | DB_INIT_MPOOL
         or die &quot;cannot open environment: $BerkeleyDB::Error\n&quot;;
-
     my $db  = new BerkeleyDB::Hash
                 -Filename       =&gt; 'test1.db',
                 -Flags          =&gt; DB_CREATE,
@@ -2110,8 +1988,7 @@
 </pre>
 <p class="Pp">or this, if you use the tied interface</p>
 <p class="Pp"></p>
-<pre>
-    tie %hash, &quot;BerkeleyDB::Hash&quot;,
+<pre>    tie %hash, &quot;BerkeleyDB::Hash&quot;,
                 -Filename       =&gt; 'test2.db',
                 -Flags          =&gt; DB_CREATE,
                 -Env            =&gt; $env
@@ -2144,16 +2021,14 @@
     course, that <span class="Li">%hash</span> has been tied to a Berkeley DB
     database):</p>
 <p class="Pp"></p>
-<pre>
-    $hash{Counter} ++ ;
+<pre>    $hash{Counter} ++ ;
 </pre>
 <p class="Pp">That may look innocent enough, but there is a race condition
     lurking in there. If I rewrite the line of code using the low-level Berkeley
     DB API, which is what will actually be executed, the race condition may be
     more apparent:</p>
 <p class="Pp"></p>
-<pre>
-    $db-&gt;db_get(&quot;Counter&quot;, $value);
+<pre>    $db-&gt;db_get(&quot;Counter&quot;, $value);
     ++ $value ;
     $db-&gt;db_put(&quot;Counter&quot;, $value);
 </pre>
@@ -2183,16 +2058,14 @@
     <span class="Li">&quot;cds_lock&quot;</span>, the counter update code can
     now be rewritten thus:</p>
 <p class="Pp"></p>
-<pre>
-    my $lk = $dbh-&gt;cds_lock() ; 
+<pre>    my $lk = $dbh-&gt;cds_lock() ; 
     $hash{Counter} ++ ;
     $lk-&gt;cds_unlock;
 </pre>
 <p class="Pp">or this, where scoping is used to limit the lifetime of the lock
     object</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         my $lk = $dbh-&gt;cds_lock() ;
         $hash{Counter} ++ ;
     }
@@ -2200,8 +2073,7 @@
 <p class="Pp">Similarly, <span class="Li">&quot;cds_lock&quot;</span> can be
     used with the native Berkeley DB API</p>
 <p class="Pp"></p>
-<pre>
-    my $lk = $dbh-&gt;cds_lock() ;
+<pre>    my $lk = $dbh-&gt;cds_lock() ;
     $db-&gt;db_get(&quot;Counter&quot;, $value);
     ++ $value ;
     $db-&gt;db_put(&quot;Counter&quot;, $value);
@@ -2218,8 +2090,7 @@
     write-lock on the database until the cursor is deleted. This is how you
     create a write-cursor</p>
 <p class="Pp"></p>
-<pre>
-    $cursor = $db-&gt;db_cursor(DB_WRITECURSOR);
+<pre>    $cursor = $db-&gt;db_cursor(DB_WRITECURSOR);
 </pre>
 <p class="Pp">If you have instantiated multiple
     <span class="Li">&quot;cds_lock&quot;</span> objects for one database within
@@ -2238,17 +2109,13 @@
     the code below. The intention of the code is to increment the values of all
     the elements in a database by one.</p>
 <p class="Pp"></p>
-<pre>
-    # Assume $db is a database opened in a CDS environment.
-
+<pre>    # Assume $db is a database opened in a CDS environment.
     # Create a write-lock
     my $lock = $db-&gt;db_cursor(DB_WRITECURSOR);
     # or 
     # my $lock = $db-&gt;cds_lock();
-
     
     my $cursor = $db-&gt;db_cursor();
-
     # Now loop through the database, and increment
     # each value using c_put.
     while ($cursor-&gt;c_get($key, $value, DB_NEXT) == 0) 
@@ -2260,8 +2127,7 @@
 <p class="Pp">When this code is run, it will fail on the
     <span class="Li">&quot;c_put&quot;</span> line with this error</p>
 <p class="Pp"></p>
-<pre>
-    Write attempted on read-only cursor
+<pre>    Write attempted on read-only cursor
 </pre>
 <p class="Pp">The read cursor has automatically disallowed a write operation to
     prevent a deadlock.</p>
@@ -2274,17 +2140,13 @@
     <span class="Li">&quot;db_put&quot;</span> instead of
     <span class="Li">&quot;c_put&quot;</span>, like this</p>
 <p class="Pp"></p>
-<pre>
-    # Assume $db is a database opened in a CDS environment.
-
+<pre>    # Assume $db is a database opened in a CDS environment.
     # Create a write-lock
     my $lock = $db-&gt;db_cursor(DB_WRITECURSOR);
     # or 
     # my $lock = $db-&gt;cds_lock();
-
     
     my $cursor = $db-&gt;db_cursor();
-
     # Now loop through the database, and increment
     # each value using c_put.
     while ($cursor-&gt;c_get($key, $value, DB_NEXT) == 0) 
@@ -2307,8 +2169,7 @@
     your script, but there are a few notable exceptions.</p>
 <p class="Pp">Consider this snippet of code</p>
 <p class="Pp"></p>
-<pre>
-    while (my ($k, $v) = each %hash)
+<pre>    while (my ($k, $v) = each %hash)
     {
         # do something
     }
@@ -2328,12 +2189,10 @@
     <span class="Li">&quot;keys&quot;</span> functions, shown below, is subtly
     different.</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $k (keys %hash)
+<pre>    foreach my $k (keys %hash)
     {
         # do something
     }
-
     foreach my $v (values %hash)
     {
         # do something
@@ -2424,8 +2283,7 @@
     application will have to manage NULL termination itself. When you write to
     the database you will have to use something like this:</p>
 <p class="Pp"></p>
-<pre>
-    $hash{&quot;$key\0&quot;} = &quot;$value\0&quot; ;
+<pre>    $hash{&quot;$key\0&quot;} = &quot;$value\0&quot; ;
 </pre>
 <p class="Pp">Similarly the NULL needs to be taken into account when you are
     considering the length of existing keys/values.</p>
@@ -2436,25 +2294,20 @@
     you have already guessed, this is a problem that DBM Filters can fix very
     easily.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
-
     my %hash ;
     my $filename = &quot;filt.db&quot; ;
     unlink $filename ;
-
     my $db = tie %hash, 'BerkeleyDB::Hash',
                 -Filename   =&gt; $filename,
                 -Flags      =&gt; DB_CREATE
       or die &quot;Cannot open $filename: $!\n&quot; ;
-
     # Install DBM Filters
     $db-&gt;filter_fetch_key  ( sub { s/\0$//    } ) ;
     $db-&gt;filter_store_key  ( sub { $_ .= &quot;\0&quot; } ) ;
     $db-&gt;filter_fetch_value( sub { s/\0$//    } ) ;
     $db-&gt;filter_store_value( sub { $_ .= &quot;\0&quot; } ) ;
-
     $hash{&quot;abc&quot;} = &quot;def&quot; ;
     my $a = $hash{&quot;ABC&quot;} ;
     # ...
@@ -2472,8 +2325,7 @@
     writes to a DBM database it always writes the key and value as strings. So
     when you use this:</p>
 <p class="Pp"></p>
-<pre>
-    $hash{12345} = &quot;something&quot; ;
+<pre>    $hash{12345} = &quot;something&quot; ;
 </pre>
 <p class="Pp">the key 12345 will get stored in the DBM database as the 5 byte
     string &quot;12345&quot;. If you actually want the key to be stored in the
@@ -2482,19 +2334,15 @@
     <span class="Li">&quot;unpack&quot;</span> when reading.</p>
 <p class="Pp">Here is a DBM Filter that does it:</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
     my %hash ;
     my $filename = &quot;filt.db&quot; ;
     unlink $filename ;
-
-
     my $db = tie %hash, 'BerkeleyDB::Btree',
                 -Filename   =&gt; $filename,
                 -Flags      =&gt; DB_CREATE
       or die &quot;Cannot open $filename: $!\n&quot; ;
-
     $db-&gt;filter_fetch_key  ( sub { $_ = unpack(&quot;i&quot;, $_) } ) ;
     $db-&gt;filter_store_key  ( sub { $_ = pack (&quot;i&quot;, $_) } ) ;
     $hash{123} = &quot;def&quot; ;
@@ -2515,8 +2363,7 @@
     BerkeleyDB::Btree. To use BerkeleyDB::Hash just replace BerkeleyDB::Btree
     with BerkeleyDB::Hash.</p>
 <p class="Pp"></p>
-<pre>
-    use strict ;
+<pre>    use strict ;
     use BerkeleyDB ;
     use MLDBM qw(BerkeleyDB::Btree) ;
     use Data::Dumper;
@@ -2600,9 +2447,7 @@
     <i>http://www.oracle.com/technology/products/berkeley-db/db/index.html</i>)
     regarding the license:</p>
 <p class="Pp"></p>
-<pre>
-    Do I have to license DB to use it in Perl scripts?
-
+<pre>    Do I have to license DB to use it in Perl scripts?
     No. The Berkeley DB license requires that software that uses
     Berkeley DB be freely redistributable. In the case of Perl, that
     software is Perl, and not your scripts. Any Perl scripts that you

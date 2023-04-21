@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test::utf8(3)</title>
 </head>
@@ -28,11 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # check the string is good
+<pre>  # check the string is good
   is_valid_string($string);   # check the string is valid
   is_sane_utf8($string);      # check not double encoded
-
   # check the string has certain attributes
   is_flagged_utf8($string1);   # has utf8 flag set
   is_within_ascii($string2);   # only has ascii chars in it
@@ -66,19 +65,15 @@
     <p class="Pp">To be clear, here's an example of the error case this can
         detect:</p>
     <p class="Pp"></p>
-    <pre>
-  my $mark = &quot;Mark&quot;;
+    <pre>  my $mark = &quot;Mark&quot;;
   my $leon = &quot;L\x{e9}on&quot;;
   is_valid_string($mark);  # passes, not utf-8
   is_valid_string($leon);  # passes, not utf-8
-
   my $iloveny = &quot;I \x{2665} NY&quot;;
   is_valid_string($iloveny);      # passes, proper utf-8
-
   my $acme = &quot;L\x{c3}\x{a9}on&quot;;
   Encode::_utf8_on($acme);      # (please don't do things like this)
   is_valid_string($acme);       # passes, proper utf-8 byte sequence upgraded
-
   Encode::_utf8_on($leon);      # (this is why you don't do things like this)
   is_valid_string($leon);       # fails! the byte \x{e9} isn't valid utf-8
     </pre>
@@ -91,15 +86,12 @@
       as such. Strings that are not utf8 always automatically pass.
     <p class="Pp">Some examples may help:</p>
     <p class="Pp"></p>
-    <pre>
-  # This will pass as it's a normal latin-1 string
+    <pre>  # This will pass as it's a normal latin-1 string
   is_sane_utf8(&quot;Hello L\x{e9}eon&quot;);
-
   # this will fail because the \x{c3}\x{a9} looks like the
   # utf8 byte sequence for e-acute
   my $string = &quot;Hello L\x{c3}\x{a9}on&quot;;
   is_sane_utf8($string);
-
   # this will pass because the utf8 is correctly interpreted as utf8
   Encode::_utf8_on($string)
   is_sane_utf8($string);
@@ -112,8 +104,7 @@
         LETTER WITH TILDE&quot;) followed by one of the latin-1 punctuation
         symbols.</p>
     <p class="Pp"></p>
-    <pre>
-  # a capital letter A with tilde surrounded by smart quotes
+    <pre>  # a capital letter A with tilde surrounded by smart quotes
   # this will fail because it'll see the &quot;\x{c2}\x{94}&quot; and think
   # it's actually the utf8 sequence for the end smart quote
   is_sane_utf8(&quot;\x{93}\x{c2}\x{94}&quot;);

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>overload(3pm)</title>
 </head>
@@ -28,15 +29,12 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package SomeThing;
-
+<pre>    package SomeThing;
     use overload
         '+' =&gt; \&amp;myadd,
         '-' =&gt; \&amp;mysub;
         # etc
     ...
-
     package main;
     $a = SomeThing-&gt;new( 57 );
     $b = 5 + $a;
@@ -62,8 +60,7 @@
     anything legal inside a <span class="Li">&quot;&amp;{ ... }&quot;</span>
     call. Values specified as strings are interpreted as method names. Thus</p>
 <p class="Pp"></p>
-<pre>
-    package Number;
+<pre>    package Number;
     use overload
         &quot;-&quot; =&gt; &quot;minus&quot;,
         &quot;*=&quot; =&gt; \&amp;muas,
@@ -85,8 +82,7 @@
     <span class="Li">&quot;Number&quot;</span> objects are simply blessed
     references to scalars) illustrates the calling conventions:</p>
 <p class="Pp"></p>
-<pre>
-    package Number;
+<pre>    package Number;
     sub minus {
         my ($self, $other, $swap) = @_;
         my $result = $$self - $other;         # *
@@ -111,8 +107,7 @@
     example, if <span class="Li">$x</span> and <span class="Li">$y</span> are
     <span class="Li">&quot;Number&quot;</span>s:</p>
 <p class="Pp"></p>
-<pre>
-    operation   |   generates a call to
+<pre>    operation   |   generates a call to
     ============|======================
     $x - $y     |   minus($x, $y, '')
     $x - 7      |   minus($x, 7, '')
@@ -127,8 +122,7 @@
     <span class="Li">&quot;neg&quot;</span> (the overload key for unary minus),
     or <span class="Li">&quot;-=&quot;</span>. Thus</p>
 <p class="Pp"></p>
-<pre>
-    operation   |   generates a call to
+<pre>    operation   |   generates a call to
     ============|======================
     -$x         |   minus($x, 0, 1)
     $x--        |   minus($x, 1, undef)
@@ -156,8 +150,7 @@
     operand. An appropriate implementation of
     <span class="Li">&quot;--&quot;</span> might look like</p>
 <p class="Pp"></p>
-<pre>
-    use overload '--' =&gt; &quot;decr&quot;,
+<pre>    use overload '--' =&gt; &quot;decr&quot;,
         # ...
     sub decr { --${$_[0]}; }
 </pre>
@@ -175,15 +168,13 @@
     mathematical operators. Mathemagical operations raise an issue. Consider the
     code:</p>
 <p class="Pp"></p>
-<pre>
-    $a = $b;
+<pre>    $a = $b;
     --$a;
 </pre>
 <p class="Pp">If <span class="Li">$a</span> and <span class="Li">$b</span> are
     scalars then after these statements</p>
 <p class="Pp"></p>
-<pre>
-    $a == $b - 1
+<pre>    $a == $b - 1
 </pre>
 <p class="Pp">An object, however, is a reference to blessed data, so if
     <span class="Li">$a</span> and <span class="Li">$b</span> are objects then
@@ -217,8 +208,7 @@
     separated by spaces, in the values of the hash
     <span class="Li">%overload::ops</span>:</p>
 <p class="Pp"></p>
-<pre>
- with_assign      =&gt; '+ - * / % ** &lt;&lt; &gt;&gt; x .',
+<pre> with_assign      =&gt; '+ - * / % ** &lt;&lt; &gt;&gt; x .',
  assign           =&gt; '+= -= *= /= %= **= &lt;&lt;= &gt;&gt;= x= .=',
  num_comparison   =&gt; '&lt; &lt;= &gt; &gt;= == !=',
  '3way_comparison'=&gt; '&lt;=&gt; cmp',
@@ -267,8 +257,7 @@
   </li>
   <li><i>Assignments</i>
     <p class="Pp"></p>
-    <pre>
-    +=  -=  *=  /=  %=  **=  &lt;&lt;=  &gt;&gt;=  x=  .=
+    <pre>    +=  -=  *=  /=  %=  **=  &lt;&lt;=  &gt;&gt;=  x=  .=
     &amp;=  |=  ^=  &amp;.=  |.=  ^.=
     </pre>
     <p class="Pp">Simple assignment is not overloadable (the
@@ -287,8 +276,7 @@
         calls the corresponding methods with the third argument (the
         &quot;swap&quot; argument) set to TRUE. For example, the operation</p>
     <p class="Pp"></p>
-    <pre>
-    $a *= $b
+    <pre>    $a *= $b
     </pre>
     <p class="Pp">cannot lead to <span class="Li">$b</span>'s implementation of
         <span class="Li">&quot;*=&quot;</span> being called, even if
@@ -298,8 +286,7 @@
   </li>
   <li><i>Non-mutators with a mutator variant</i>
     <p class="Pp"></p>
-    <pre>
-     +  -  *  /  %  **  &lt;&lt;  &gt;&gt;  x  .
+    <pre>     +  -  *  /  %  **  &lt;&lt;  &gt;&gt;  x  .
      &amp;  |  ^  &amp;.  |.  ^.
     </pre>
     <p class="Pp">As described above, Perl may call methods for operators like
@@ -320,8 +307,7 @@
   </li>
   <li><i>String, numeric, boolean, and regexp conversions</i>
     <p class="Pp"></p>
-    <pre>
-    &quot;&quot;  0+  bool
+    <pre>    &quot;&quot;  0+  bool
     </pre>
     <p class="Pp">These conversions are invoked according to context as
         necessary. For example, the subroutine for
@@ -350,8 +336,7 @@
         looks like
         <span class="Li">&quot;YourPackage=HASH(0x8172b34)&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-    qr
+    <pre>    qr
     </pre>
     <p class="Pp">The subroutine for <span class="Li">'qr'</span> is used
         wherever the object is interpolated into or used as a regexp, including
@@ -395,26 +380,22 @@
         operator does not get full control of the smart match behaviour. In
         particular, in the following code:</p>
     <p class="Pp"></p>
-    <pre>
-    package Foo;
+    <pre>    package Foo;
     use overload '~~' =&gt; 'match';
-
     my $obj =  Foo-&gt;new();
     $obj ~~ [ 1,2,3 ];
     </pre>
     <p class="Pp">the smart match does <i>not</i> invoke the method call like
         this:</p>
     <p class="Pp"></p>
-    <pre>
-    $obj-&gt;match([1,2,3],0);
+    <pre>    $obj-&gt;match([1,2,3],0);
     </pre>
     <p class="Pp">rather, the smart match distributive rule takes precedence, so
         <span class="Li">$obj</span> is smart matched against each array element
         in turn until a match is found, so you may see between one and three of
         these calls instead:</p>
     <p class="Pp"></p>
-    <pre>
-    $obj-&gt;match(1,0);
+    <pre>    $obj-&gt;match(1,0);
     $obj-&gt;match(2,0);
     $obj-&gt;match(3,0);
     </pre>
@@ -423,8 +404,7 @@
   </li>
   <li><i>Dereferencing</i>
     <p class="Pp"></p>
-    <pre>
-    ${}  @{}  %{}  &amp;{}  *{}
+    <pre>    ${}  @{}  %{}  &amp;{}  *{}
     </pre>
     <p class="Pp">If these operators are not explicitly overloaded then they
         work in the normal way, yielding the underlying scalar, array, or
@@ -444,8 +424,7 @@
   </li>
   <li><i>Special</i>
     <p class="Pp"></p>
-    <pre>
-    nomethod  fallback  =
+    <pre>    nomethod  fallback  =
     </pre>
     <p class="Pp">See &quot;Special Keys for <span class="Li">&quot;use
         overload&quot;</span>&quot;.</p>
@@ -470,8 +449,7 @@
     <span class="Li">'0+'</span> or, failing that,
     <span class="Li">'&quot;&quot;'</span>.</p>
 <p class="Pp"></p>
-<pre>
-    operator | can be autogenerated from
+<pre>    operator | can be autogenerated from
              |
              | 0+   &quot;&quot;   bool   .   x
     =========|==========================
@@ -495,8 +473,7 @@
     <span class="Li">'0+'</span>, or <span class="Li">'bool'</span>) to be
     interpreted as a glob or filename.</p>
 <p class="Pp"></p>
-<pre>
-    operator | can be autogenerated from
+<pre>    operator | can be autogenerated from
              |
              |  &lt;   &lt;=&gt;   neg   -=    -
     =========|==========================
@@ -510,15 +487,13 @@
        &gt;=    |        1
        ==    |        1
        !=    |        1
-
     * one from [a1, a2] and one from [b1, b2]
 </pre>
 <p class="Pp">Just as numeric comparisons can be autogenerated from the method
     for <span class="Li">'&lt;=&gt;'</span>, string comparisons can be
     autogenerated from that for <span class="Li">'cmp'</span>:</p>
 <p class="Pp"></p>
-<pre>
-     operators          |  can be autogenerated from
+<pre>     operators          |  can be autogenerated from
     ====================|===========================
      lt gt le ge eq ne  |  cmp
 </pre>
@@ -526,8 +501,7 @@
     and <span class="Li">'++'</span> is analogous to
     <span class="Li">'-='</span> and <span class="Li">'--'</span> above:</p>
 <p class="Pp"></p>
-<pre>
-    operator | can be autogenerated from
+<pre>    operator | can be autogenerated from
              |
              |  +=    +
     =========|==========================
@@ -538,8 +512,7 @@
     <span class="Li">'+='</span> and <span class="Li">'-='</span> (and similar
     to <span class="Li">'.='</span> and <span class="Li">'x='</span> above):</p>
 <p class="Pp"></p>
-<pre>
-              operator ||  *= /= %= **= &lt;&lt;= &gt;&gt;= &amp;= ^= |= &amp;.= ^.= |.=
+<pre>              operator ||  *= /= %= **= &lt;&lt;= &gt;&gt;= &amp;= ^= |= &amp;.= ^.= |.=
     -------------------||-------------------------------------------
     autogenerated from ||  *  /  %  **  &lt;&lt;  &gt;&gt;  &amp;  ^  |  &amp;.  ^.  |.
 </pre>
@@ -553,8 +526,7 @@
     the autogenerated operations may not do exactly what the user expects. The
     minimal set is:</p>
 <p class="Pp"></p>
-<pre>
-    + - * / % ** &lt;&lt; &gt;&gt; x
+<pre>    + - * / % ** &lt;&lt; &gt;&gt; x
     &lt;=&gt; cmp
     &amp; | ^ ~ &amp;. |. ^. ~.
     atan2 cos sin exp log sqrt int
@@ -567,7 +539,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Special_Keys_for__use_overload_"><a class="permalink" href="#Special_Keys_for__use_overload_">Special
   Keys for &quot;use overload&quot;</a></h2>
-<p class="Pp"><i></i><i>&quot;nomethod&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;nomethod&quot;</i></span><i></i></p>
 <p class="Pp">The <span class="Li">'nomethod'</span> key is used to specify a
     catch-all function to be called for any operator that is not individually
     overloaded. The specified function will be passed four parameters. The first
@@ -583,30 +555,26 @@
 <p class="Pp">For example, if <span class="Li">$a</span> is an object blessed
     into a package declaring</p>
 <p class="Pp"></p>
-<pre>
-    use overload 'nomethod' =&gt; 'catch_all', # ...
+<pre>    use overload 'nomethod' =&gt; 'catch_all', # ...
 </pre>
 <p class="Pp">then the operation</p>
 <p class="Pp"></p>
-<pre>
-    3 + $a
+<pre>    3 + $a
 </pre>
 <p class="Pp">could (unless a method is specifically declared for the key
     <span class="Li">'+'</span>) result in a call</p>
 <p class="Pp"></p>
-<pre>
-    catch_all($a, 3, 1, '+')
+<pre>    catch_all($a, 3, 1, '+')
 </pre>
 <p class="Pp">See &quot;How Perl Chooses an Operator Implementation&quot;.</p>
-<p class="Pp"><i></i><i>&quot;fallback&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;fallback&quot;</i></span><i></i></p>
 <p class="Pp">The value assigned to the key <span class="Li">'fallback'</span>
     tells Perl how hard it should try to find an alternative way to implement a
     missing operator.</p>
 <ul class="Bl-bullet">
   <li>defined, but FALSE
     <p class="Pp"></p>
-    <pre>
-    use overload &quot;fallback&quot; =&gt; 0, # ... ;
+    <pre>    use overload &quot;fallback&quot; =&gt; 0, # ... ;
     </pre>
     <p class="Pp">This disables &quot;Magic Autogeneration&quot;.</p>
   </li>
@@ -634,15 +602,13 @@
     <span class="Li">'incr'</span>, and <span class="Li">'='</span> is
     overloaded with <span class="Li">'clone'</span>, then the code</p>
 <p class="Pp"></p>
-<pre>
-    $a = $b;
+<pre>    $a = $b;
     # ... (other code which does not modify $a or $b) ...
     ++$b;
 </pre>
 <p class="Pp">would be executed in a manner equivalent to</p>
 <p class="Pp"></p>
-<pre>
-    $a = $b;
+<pre>    $a = $b;
     # ...
     $b = $b-&gt;clone(undef, &quot;&quot;);
     $b-&gt;incr(undef, &quot;&quot;);
@@ -665,8 +631,7 @@
       increment operation is effected by a call to the method for
       <span class="Li">'+'</span> since, in the equivalent code,
     <p class="Pp"></p>
-    <pre>
-    $a = $b;
+    <pre>    $a = $b;
     $b = $b + 1;
     </pre>
     <p class="Pp">the data referred to by <span class="Li">$a</span> is
@@ -682,8 +647,7 @@
       is stored as, for example, an array of scalars, the following might be
       appropriate:
     <p class="Pp"></p>
-    <pre>
-    use overload '=' =&gt; sub { bless [ @{$_[0]} ] },  # ...
+    <pre>    use overload '=' =&gt; sub { bless [ @{$_[0]} ] },  # ...
     </pre>
   </li>
   <li>If <span class="Li">'fallback'</span> is TRUE and no copy constructor is
@@ -774,8 +738,7 @@
     &quot;use overload&quot; directive</a></dt>
   <dd>If <span class="Li">&quot;value&quot;</span> in
     <p class="Pp"></p>
-    <pre>
-  use overload key =&gt; value;
+    <pre>  use overload key =&gt; value;
     </pre>
     <p class="Pp">is a string, it is interpreted as a method name - which may
         (in the usual way) be inherited from another class.</p>
@@ -813,13 +776,11 @@
     executed at compile-time, the only way to change overloading during run-time
     is to</p>
 <p class="Pp"></p>
-<pre>
-    eval 'use overload &quot;+&quot; =&gt; \&amp;addmethod';
+<pre>    eval 'use overload &quot;+&quot; =&gt; \&amp;addmethod';
 </pre>
 <p class="Pp">You can also use</p>
 <p class="Pp"></p>
-<pre>
-    eval 'no overload &quot;+&quot;, &quot;--&quot;, &quot;&lt;=&quot;';
+<pre>    eval 'no overload &quot;+&quot;, &quot;--&quot;, &quot;&lt;=&quot;';
 </pre>
 <p class="Pp">though the use of these constructs during run-time is
     questionable.</p>
@@ -898,8 +859,7 @@
     anywhere but <b>import()</b> and <b>unimport()</b> methods. From these
     methods they may be called as</p>
 <p class="Pp"></p>
-<pre>
-    sub import {
+<pre>    sub import {
        shift;
        return unless @_;
        die &quot;unknown import: @_&quot; unless @_ == 1 and $_[0] eq ':constant';
@@ -940,8 +900,7 @@
   Scalars</a></h2>
 <p class="Pp">Put this in <i>two_face.pm</i> in your Perl library directory:</p>
 <p class="Pp"></p>
-<pre>
-  package two_face;             # Scalars with separate string and
+<pre>  package two_face;             # Scalars with separate string and
                                 # numeric values.
   sub new { my $p = shift; bless [@_], $p }
   use overload '&quot;&quot;' =&gt; \&amp;str, '0+' =&gt; \&amp;num, fallback =&gt; 1;
@@ -950,8 +909,7 @@
 </pre>
 <p class="Pp">Use it as follows:</p>
 <p class="Pp"></p>
-<pre>
-  require two_face;
+<pre>  require two_face;
   my $seven = two_face-&gt;new(&quot;vii&quot;, 7);
   printf &quot;seven=$seven, seven=%d, eight=%d\n&quot;, $seven, $seven+1;
   print &quot;seven contains 'i'\n&quot; if $seven =~ /i/;
@@ -959,8 +917,7 @@
 <p class="Pp">(The second line creates a scalar which has both a string value,
     and a numeric value.) This prints:</p>
 <p class="Pp"></p>
-<pre>
-  seven=vii, seven=7, eight=8
+<pre>  seven=vii, seven=7, eight=8
   seven contains 'i'
 </pre>
 </section>
@@ -970,8 +927,7 @@
 <p class="Pp">Suppose you want to create an object which is accessible as both
     an array reference and a hash reference.</p>
 <p class="Pp"></p>
-<pre>
-  package two_refs;
+<pre>  package two_refs;
   use overload '%{}' =&gt; \&amp;gethash, '@{}' =&gt; sub { $ {shift()} };
   sub new {
     my $p = shift;
@@ -983,7 +939,6 @@
     tie %h, ref $self, $self;
     \%h;
   }
-
   sub TIEHASH { my $p = shift; bless \ shift, $p }
   my %fields;
   my $i = 0;
@@ -1004,8 +959,7 @@
 <p class="Pp">Now one can access an object using both the array and hash
   syntax:</p>
 <p class="Pp"></p>
-<pre>
-  my $bar = two_refs-&gt;new(3,4,5,6);
+<pre>  my $bar = two_refs-&gt;new(3,4,5,6);
   $bar-&gt;[2] = 11;
   $bar-&gt;{two} == 11 or die 'bad hash fetch';
 </pre>
@@ -1025,8 +979,7 @@
     <i>actual</i> hash (as opposed to the <i>virtual</i> hash exhibited by the
     overloaded dereference operator). Here is one possible fetching routine:</p>
 <p class="Pp"></p>
-<pre>
-  sub access_hash {
+<pre>  sub access_hash {
     my ($self, $key) = (shift, shift);
     my $class = ref $self;
     bless $self, 'overload::dummy'; # Disable overloading of %{}
@@ -1039,8 +992,7 @@
     extra level of indirection which allows a non-circular structure of
     references:</p>
 <p class="Pp"></p>
-<pre>
-  package two_refs1;
+<pre>  package two_refs1;
   use overload '%{}' =&gt; sub { ${shift()}-&gt;[1] },
                '@{}' =&gt; sub { ${shift()}-&gt;[0] };
   sub new {
@@ -1056,7 +1008,6 @@
     tie %h, ref $self, $self;
     \%h;
   }
-
   sub TIEHASH { my $p = shift; bless \ shift, $p }
   my %fields;
   my $i = 0;
@@ -1093,10 +1044,8 @@
   Calculator</a></h2>
 <p class="Pp">Put this in <i>symbolic.pm</i> in your Perl library directory:</p>
 <p class="Pp"></p>
-<pre>
-  package symbolic;             # Primitive symbolic calculator
+<pre>  package symbolic;             # Primitive symbolic calculator
   use overload nomethod =&gt; \&amp;wrap;
-
   sub new { shift; bless ['n', @_] }
   sub wrap {
     my ($obj, $other, $inv, $meth) = @_;
@@ -1116,12 +1065,10 @@
 <p class="Pp">Here is an example of the script which &quot;calculates&quot; the
     side of circumscribed octagon using the above package:</p>
 <p class="Pp"></p>
-<pre>
-  require symbolic;
+<pre>  require symbolic;
   my $iter = 1;                 # 2**($iter+2) = 8
   my $side = symbolic-&gt;new(1);
   my $cnt = $iter;
-
   while ($cnt--) {
     $side = (sqrt(1 + $side**2) - 1)/$side;
   }
@@ -1129,8 +1076,7 @@
 </pre>
 <p class="Pp">The value of <span class="Li">$side</span> is</p>
 <p class="Pp"></p>
-<pre>
-  ['/', ['-', ['sqrt', ['+', 1, ['**', ['n', 1], 2]],
+<pre>  ['/', ['-', ['sqrt', ['+', 1, ['**', ['n', 1], 2]],
                        undef], 1], ['n', 1]]
 </pre>
 <p class="Pp">Note that while we obtained this value using a nice little script,
@@ -1146,8 +1092,7 @@
     loop.</p>
 <p class="Pp">Add a pretty-printer method to the module <i>symbolic.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  sub pretty {
+<pre>  sub pretty {
     my ($meth, $a, $b) = @{+shift};
     $a = 'u' unless defined $a;
     $b = 'u' unless defined $b;
@@ -1158,8 +1103,7 @@
 </pre>
 <p class="Pp">Now one can finish the script by</p>
 <p class="Pp"></p>
-<pre>
-  print &quot;side = &quot;, $side-&gt;pretty, &quot;\n&quot;;
+<pre>  print &quot;side = &quot;, $side-&gt;pretty, &quot;\n&quot;;
 </pre>
 <p class="Pp">The method <span class="Li">&quot;pretty&quot;</span> is doing
     object-to-string conversion, so it is natural to overload the operator
@@ -1174,8 +1118,7 @@
     overloaded operator <span class="Li">&quot;&quot;</span>. Thus it is enough
     to use</p>
 <p class="Pp"></p>
-<pre>
-  use overload nomethod =&gt; \&amp;wrap, '&quot;&quot;' =&gt; \&amp;str;
+<pre>  use overload nomethod =&gt; \&amp;wrap, '&quot;&quot;' =&gt; \&amp;str;
   sub str {
     my ($meth, $a, $b) = @{+shift};
     $a = 'u' unless defined $a;
@@ -1185,13 +1128,11 @@
 </pre>
 <p class="Pp">Now one can change the last line of the script to</p>
 <p class="Pp"></p>
-<pre>
-  print &quot;side = $side\n&quot;;
+<pre>  print &quot;side = $side\n&quot;;
 </pre>
 <p class="Pp">which outputs</p>
 <p class="Pp"></p>
-<pre>
-  side = [/ [- [sqrt [+ 1 [** [n 1 u] 2]] u] 1] [n 1 u]]
+<pre>  side = [/ [- [sqrt [+ 1 [** [n 1 u] 2]] u] 1] [n 1 u]]
 </pre>
 <p class="Pp">and one can inspect the value in debugger using all the possible
     methods.</p>
@@ -1211,11 +1152,9 @@
 <p class="Pp">Here is the text of <i>symbolic.pm</i> with such a routine added
     (and slightly modified <b>str()</b>):</p>
 <p class="Pp"></p>
-<pre>
-  package symbolic;             # Primitive symbolic calculator
+<pre>  package symbolic;             # Primitive symbolic calculator
   use overload
     nomethod =&gt; \&amp;wrap, '&quot;&quot;' =&gt; \&amp;str, '0+' =&gt; \&amp;num;
-
   sub new { shift; bless ['n', @_] }
   sub wrap {
     my ($obj, $other, $inv, $meth) = @_;
@@ -1256,12 +1195,10 @@
     section.)</p>
 <p class="Pp">Use this module like this:</p>
 <p class="Pp"></p>
-<pre>
-  require symbolic;
+<pre>  require symbolic;
   my $iter = symbolic-&gt;new(2);  # 16-gon
   my $side = symbolic-&gt;new(1);
   my $cnt = $iter;
-
   while ($cnt) {
     $cnt = $cnt - 1;            # Mutator '--' not implemented
     $side = (sqrt(1 + $side**2) - 1)/$side;
@@ -1271,8 +1208,7 @@
 </pre>
 <p class="Pp">It prints (without so many line breaks)</p>
 <p class="Pp"></p>
-<pre>
-  [/ [- [sqrt [+ 1 [** [/ [- [sqrt [+ 1 [** [n 1] 2]]] 1]
+<pre>  [/ [- [sqrt [+ 1 [** [/ [- [sqrt [+ 1 [** [n 1] 2]]] 1]
                           [n 1]] 2]]] 1]
      [/ [- [sqrt [+ 1 [** [n 1] 2]]] 1] [n 1]]]=0.198912
   pi=3.182598
@@ -1286,8 +1222,7 @@
     use the tables of operations, and change the code which fills
     <span class="Li">%subr</span> to</p>
 <p class="Pp"></p>
-<pre>
-  my %subr = ( 'n' =&gt; sub {$_[0]} );
+<pre>  my %subr = ( 'n' =&gt; sub {$_[0]} );
   foreach my $op (split &quot; &quot;, $overload::ops{with_assign}) {
     $subr{$op} = $subr{&quot;$op=&quot;} = eval &quot;sub {shift() $op shift()}&quot;;
   }
@@ -1313,8 +1248,7 @@
     overload&quot;</span> line, and code (this code assumes that mutators change
     things one level deep only, so recursive copying is not needed):</p>
 <p class="Pp"></p>
-<pre>
-  sub cpy {
+<pre>  sub cpy {
     my $self = shift;
     bless [@$self], ref $self;
   }
@@ -1325,8 +1259,7 @@
     <span class="Li">&quot;nomethod&quot;</span>. We continue to do things
     inside <span class="Li">&quot;nomethod&quot;</span>, thus add</p>
 <p class="Pp"></p>
-<pre>
-    if ($meth eq '++' or $meth eq '--') {
+<pre>    if ($meth eq '++' or $meth eq '--') {
       @$obj = ($meth, (bless [@$obj]), 1); # Avoid circular reference
       return $obj;
     }
@@ -1334,15 +1267,13 @@
 <p class="Pp">after the first line of <b>wrap()</b>. This is not a most
     effective implementation, one may consider</p>
 <p class="Pp"></p>
-<pre>
-  sub inc { $_[0] = bless ['++', shift, 1]; }
+<pre>  sub inc { $_[0] = bless ['++', shift, 1]; }
 </pre>
 <p class="Pp">instead.</p>
 <p class="Pp">As a final remark, note that one can fill
     <span class="Li">%subr</span> by</p>
 <p class="Pp"></p>
-<pre>
-  my %subr = ( 'n' =&gt; sub {$_[0]} );
+<pre>  my %subr = ( 'n' =&gt; sub {$_[0]} );
   foreach my $op (split &quot; &quot;, $overload::ops{with_assign}) {
     $subr{$op} = $subr{&quot;$op=&quot;} = eval &quot;sub {shift() $op shift()}&quot;;
   }
@@ -1385,8 +1316,7 @@
     postponed until the value is <i>used</i>.</p>
 <p class="Pp">To see it in action, add a method</p>
 <p class="Pp"></p>
-<pre>
-  sub STORE {
+<pre>  sub STORE {
     my $obj = shift;
     $#$obj = 1;
     @$obj-&gt;[0,1] = ('=', shift);
@@ -1395,16 +1325,14 @@
 <p class="Pp">to the package <span class="Li">&quot;symbolic&quot;</span>. After
     this change one can do</p>
 <p class="Pp"></p>
-<pre>
-  my $a = symbolic-&gt;new(3);
+<pre>  my $a = symbolic-&gt;new(3);
   my $b = symbolic-&gt;new(4);
   my $c = sqrt($a**2 + $b**2);
 </pre>
 <p class="Pp">and the numeric value of <span class="Li">$c</span> becomes 5.
     However, after calling</p>
 <p class="Pp"></p>
-<pre>
-  $a-&gt;STORE(12);  $b-&gt;STORE(5);
+<pre>  $a-&gt;STORE(12);  $b-&gt;STORE(5);
 </pre>
 <p class="Pp">the numeric value of <span class="Li">$c</span> becomes 13. There
     is no doubt now that the module symbolic provides a <i>symbolic</i>
@@ -1413,19 +1341,16 @@
     interface to the package <span class="Li">&quot;symbolic&quot;</span>. Add
     methods</p>
 <p class="Pp"></p>
-<pre>
-  sub TIESCALAR { my $pack = shift; $pack-&gt;new(@_) }
+<pre>  sub TIESCALAR { my $pack = shift; $pack-&gt;new(@_) }
   sub FETCH { shift }
   sub nop {  }          # Around a bug
 </pre>
 <p class="Pp">(the bug, fixed in Perl 5.14, is described in &quot;BUGS&quot;).
     One can use this new interface as</p>
 <p class="Pp"></p>
-<pre>
-  tie $a, 'symbolic', 3;
+<pre>  tie $a, 'symbolic', 3;
   tie $b, 'symbolic', 4;
   $a-&gt;nop;  $b-&gt;nop;    # Around a bug
-
   my $c = sqrt($a**2 + $b**2);
 </pre>
 <p class="Pp">Now numeric value of <span class="Li">$c</span> is 5. After
@@ -1433,19 +1358,15 @@
     <span class="Li">$c</span> becomes 13. To insulate the user of the module
     add a method</p>
 <p class="Pp"></p>
-<pre>
-  sub vars { my $p = shift; tie($_, $p), $_-&gt;nop foreach @_; }
+<pre>  sub vars { my $p = shift; tie($_, $p), $_-&gt;nop foreach @_; }
 </pre>
 <p class="Pp">Now</p>
 <p class="Pp"></p>
-<pre>
-  my ($a, $b);
+<pre>  my ($a, $b);
   symbolic-&gt;vars($a, $b);
   my $c = sqrt($a**2 + $b**2);
-
   $a = 3; $b = 4;
   printf &quot;c5  %s=%f\n&quot;, $c, $c;
-
   $a = 12; $b = 5;
   printf &quot;c13  %s=%f\n&quot;, $c, $c;
 </pre>
@@ -1506,8 +1427,7 @@
       implementation of an operator is that some operators have more than one
       semantic, for example <span class="Li">&quot;|&quot;</span>:
     <p class="Pp"></p>
-    <pre>
-        use overload '0+' =&gt; sub { $_[0]-&gt;{n}; },
+    <pre>        use overload '0+' =&gt; sub { $_[0]-&gt;{n}; },
             fallback =&gt; 1;
         my $x = bless { n =&gt; 4 }, &quot;main&quot;;
         my $y = bless { n =&gt; 8 }, &quot;main&quot;;
@@ -1527,36 +1447,30 @@
       self-referential structures. Currently Perl will not free self-referential
       structures until cycles are explicitly broken. For example,
     <p class="Pp"></p>
-    <pre>
-    use overload '+' =&gt; 'add';
+    <pre>    use overload '+' =&gt; 'add';
     sub add { bless [ \$_[0], \$_[1] ] };
     </pre>
     <p class="Pp">is asking for trouble, since</p>
     <p class="Pp"></p>
-    <pre>
-    $obj += $y;
+    <pre>    $obj += $y;
     </pre>
     <p class="Pp">will effectively become</p>
     <p class="Pp"></p>
-    <pre>
-    $obj = add($obj, $y, undef);
+    <pre>    $obj = add($obj, $y, undef);
     </pre>
     <p class="Pp">with the same result as</p>
     <p class="Pp"></p>
-    <pre>
-    $obj = [\$obj, \$foo];
+    <pre>    $obj = [\$obj, \$foo];
     </pre>
     <p class="Pp">Even if no <i>explicit</i> assignment-variants of operators
         are present in the script, they may be generated by the optimizer. For
         example,</p>
     <p class="Pp"></p>
-    <pre>
-    &quot;obj = $obj\n&quot;
+    <pre>    &quot;obj = $obj\n&quot;
     </pre>
     <p class="Pp">may be optimized to</p>
     <p class="Pp"></p>
-    <pre>
-    my $tmp = 'obj = ' . $obj;  $tmp .= &quot;\n&quot;;
+    <pre>    my $tmp = 'obj = ' . $obj;  $tmp .= &quot;\n&quot;;
     </pre>
   </li>
   <li>The symbol table is filled with names looking like line-noise.</li>

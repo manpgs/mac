@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Capture::Tiny(3)</title>
 </head>
@@ -33,33 +34,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Capture::Tiny ':all';
-
+<pre>  use Capture::Tiny ':all';
   # capture from external command
-
   ($stdout, $stderr, $exit) = capture {
     system( $cmd, @args );
   };
-
   # capture from arbitrary code (Perl or external)
-
   ($stdout, $stderr, @result) = capture {
     # your code here
   };
-
   # capture partial or merged output
-
   $stdout = capture_stdout { ... };
   $stderr = capture_stderr { ... };
   $merged = capture_merged { ... };
-
   # tee output
-
   ($stdout, $stderr) = tee {
     # your code here
   };
-
   $stdout = tee_stdout { ... };
   $stderr = tee_stderr { ... };
   $merged = tee_merged { ... };
@@ -81,8 +72,7 @@
     default.</p>
 <section class="Ss">
 <h2 class="Ss" id="capture"><a class="permalink" href="#capture">capture</a></h2>
-<pre>
-  ($stdout, $stderr, @result) = capture \&amp;code;
+<pre>  ($stdout, $stderr, @result) = capture \&amp;code;
   $stdout = capture \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;capture&quot;</span> function takes a
@@ -94,8 +84,7 @@
 <p class="Pp">It is prototyped to take a subroutine reference as an argument.
     Thus, it can be called in block form:</p>
 <p class="Pp"></p>
-<pre>
-  ($stdout, $stderr) = capture {
+<pre>  ($stdout, $stderr) = capture {
     # your code here ...
   };
 </pre>
@@ -103,8 +92,7 @@
     force scalar context on the return value, you must use the
     <span class="Li">&quot;scalar&quot;</span> keyword.</p>
 <p class="Pp"></p>
-<pre>
-  ($stdout, $stderr, $count) = capture {
+<pre>  ($stdout, $stderr, $count) = capture {
     my @list = qw/one two three/;
     return scalar @list; # $count will be 3
   };
@@ -113,12 +101,10 @@
     variable will be empty. So don't use arguments from a surrounding subroutine
     without copying them to an array first:</p>
 <p class="Pp"></p>
-<pre>
-  sub wont_work {
+<pre>  sub wont_work {
     my ($stdout, $stderr) = capture { do_stuff( @_ ) };    # WRONG
     ...
   }
-
   sub will_work {
     my @args = @_;
     my ($stdout, $stderr) = capture { do_stuff( @args ) }; # RIGHT
@@ -129,8 +115,7 @@
     To capture via a named file (e.g. to externally monitor a long-running
     capture), provide custom filehandles as a trailing list of option pairs:</p>
 <p class="Pp"></p>
-<pre>
-  my $out_fh = IO::File-&gt;new(&quot;out.txt&quot;, &quot;w+&quot;);
+<pre>  my $out_fh = IO::File-&gt;new(&quot;out.txt&quot;, &quot;w+&quot;);
   my $err_fh = IO::File-&gt;new(&quot;out.txt&quot;, &quot;w+&quot;);
   capture { ... } stdout =&gt; $out_fh, stderr =&gt; $err_fh;
 </pre>
@@ -143,8 +128,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="capture_stdout"><a class="permalink" href="#capture_stdout">capture_stdout</a></h2>
-<pre>
-  ($stdout, @result) = capture_stdout \&amp;code;
+<pre>  ($stdout, @result) = capture_stdout \&amp;code;
   $stdout = capture_stdout \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;capture_stdout&quot;</span> function
@@ -153,8 +137,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="capture_stderr"><a class="permalink" href="#capture_stderr">capture_stderr</a></h2>
-<pre>
-  ($stderr, @result) = capture_stderr \&amp;code;
+<pre>  ($stderr, @result) = capture_stderr \&amp;code;
   $stderr = capture_stderr \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;capture_stderr&quot;</span> function
@@ -163,8 +146,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="capture_merged"><a class="permalink" href="#capture_merged">capture_merged</a></h2>
-<pre>
-  ($merged, @result) = capture_merged \&amp;code;
+<pre>  ($merged, @result) = capture_merged \&amp;code;
   $merged = capture_merged \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;capture_merged&quot;</span> function
@@ -176,8 +158,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tee"><a class="permalink" href="#tee">tee</a></h2>
-<pre>
-  ($stdout, $stderr, @result) = tee \&amp;code;
+<pre>  ($stdout, $stderr, @result) = tee \&amp;code;
   $stdout = tee \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;tee&quot;</span> function works just
@@ -190,8 +171,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tee_stdout"><a class="permalink" href="#tee_stdout">tee_stdout</a></h2>
-<pre>
-  ($stdout, @result) = tee_stdout \&amp;code;
+<pre>  ($stdout, @result) = tee_stdout \&amp;code;
   $stdout = tee_stdout \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;tee_stdout&quot;</span> function works
@@ -200,8 +180,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tee_stderr"><a class="permalink" href="#tee_stderr">tee_stderr</a></h2>
-<pre>
-  ($stderr, @result) = tee_stderr \&amp;code;
+<pre>  ($stderr, @result) = tee_stderr \&amp;code;
   $stderr = tee_stderr \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;tee_stderr&quot;</span> function works
@@ -210,8 +189,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tee_merged"><a class="permalink" href="#tee_merged">tee_merged</a></h2>
-<pre>
-  ($merged, @result) = tee_merged \&amp;code;
+<pre>  ($merged, @result) = tee_merged \&amp;code;
   $merged = tee_merged \&amp;code;
 </pre>
 <p class="Pp">The <span class="Li">&quot;tee_merged&quot;</span> function works
@@ -306,8 +284,7 @@
 <p class="Pp">Unless having STDIN tied is crucial, it may be safest to localize
     STDIN when capturing:</p>
 <p class="Pp"></p>
-<pre>
-  my ($out, $err) = do { local *STDIN; capture { ... } };
+<pre>  my ($out, $err) = do { local *STDIN; capture { ... } };
 </pre>
 </section>
 <section class="Ss">
@@ -413,8 +390,7 @@
     public review and contribution under the terms of the license.</p>
 <p class="Pp">&lt;https://github.com/dagolden/Capture-Tiny&gt;</p>
 <p class="Pp"></p>
-<pre>
-  git clone https://github.com/dagolden/Capture-Tiny.git
+<pre>  git clone https://github.com/dagolden/Capture-Tiny.git
 </pre>
 </section>
 </section>
@@ -438,8 +414,7 @@
 <p class="Pp">This software is Copyright (c) 2009 by David Golden.</p>
 <p class="Pp">This is free software, licensed under:</p>
 <p class="Pp"></p>
-<pre>
-  The Apache License, Version 2.0, January 2004
+<pre>  The Apache License, Version 2.0, January 2004
 </pre>
 </section>
 </div>

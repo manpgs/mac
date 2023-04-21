@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ6(1)</title>
 </head>
@@ -51,8 +52,7 @@
   <dd>Describe what you're doing and how you're doing it, using normal Perl
       comments.
     <p class="Pp"></p>
-    <pre>
-    # turn the line into the first word, a colon, and the
+    <pre>    # turn the line into the first word, a colon, and the
     # number of characters on the rest of the line
     s/^(\w+)(.*)/ lc($1) . &quot;:&quot; . length($2) /meg;
     </pre>
@@ -65,13 +65,11 @@
       imagine, whitespace and comments help a lot.
     <p class="Pp"><span class="Li">&quot;/x&quot;</span> lets you turn this:</p>
     <p class="Pp"></p>
-    <pre>
-    s{&lt;(?:[^&gt;'&quot;]*|&quot;.*?&quot;|'.*?')+&gt;}{}gs;
+    <pre>    s{&lt;(?:[^&gt;'&quot;]*|&quot;.*?&quot;|'.*?')+&gt;}{}gs;
     </pre>
     <p class="Pp">into this:</p>
     <p class="Pp"></p>
-    <pre>
-    s{ &lt;                    # opening angle bracket
+    <pre>    s{ &lt;                    # opening angle bracket
         (?:                 # Non-backreffing grouping paren
             [^&gt;'&quot;] *        # 0 or more things that are neither &gt; nor ' nor &quot;
                 |           #    or else
@@ -94,15 +92,13 @@
       Selecting another delimiter can avoid quoting the delimiter within the
       pattern:
     <p class="Pp"></p>
-    <pre>
-    s/\/usr\/local/\/usr\/share/g;    # bad delimiter choice
+    <pre>    s/\/usr\/local/\/usr\/share/g;    # bad delimiter choice
     s#/usr/local#/usr/share#g;        # better
     </pre>
     <p class="Pp">Using logically paired delimiters can be even more
       readable:</p>
     <p class="Pp"></p>
-    <pre>
-    s{/usr/local/}{/usr/share}g;      # better still
+    <pre>    s{/usr/local/}{/usr/share}g;      # better still
     </pre>
   </dd>
 </dl>
@@ -133,8 +129,7 @@
     imperative that $/ be set to something other than the default, or else we
     won't actually ever have a multiline record read in.</p>
 <p class="Pp"></p>
-<pre>
-    $/ = '';          # read in whole paragraph, not just one line
+<pre>    $/ = '';          # read in whole paragraph, not just one line
     while ( &lt;&gt; ) {
         while ( /\b([\w'-]+)(\s+\g1)+\b/gi ) {     # word starts alpha
             print &quot;Duplicate $1 at paragraph $.\n&quot;;
@@ -144,8 +139,7 @@
 <p class="Pp">Here's some code that finds sentences that begin with &quot;From
     &quot; (which would be mangled by many mailers):</p>
 <p class="Pp"></p>
-<pre>
-    $/ = '';          # read in whole paragraph, not just one line
+<pre>    $/ = '';          # read in whole paragraph, not just one line
     while ( &lt;&gt; ) {
         while ( /^From /gm ) { # /m makes ^ match next to \n
         print &quot;leading From in paragraph $.\n&quot;;
@@ -155,8 +149,7 @@
 <p class="Pp">Here's code that finds everything between START and END in a
     paragraph:</p>
 <p class="Pp"></p>
-<pre>
-    undef $/;          # read in whole file, not just one line or paragraph
+<pre>    undef $/;          # read in whole file, not just one line or paragraph
     while ( &lt;&gt; ) {
         while ( /START(.*?)END/sgm ) { # /s makes . cross line boundaries
             print &quot;$1\n&quot;;
@@ -171,13 +164,11 @@
 <p class="Pp">You can use Perl's somewhat exotic
     <span class="Li">&quot;..&quot;</span> operator (documented in perlop):</p>
 <p class="Pp"></p>
-<pre>
-    perl -ne 'print if /START/ .. /END/' file1 file2 ...
+<pre>    perl -ne 'print if /START/ .. /END/' file1 file2 ...
 </pre>
 <p class="Pp">If you wanted text and not lines, you would use</p>
 <p class="Pp"></p>
-<pre>
-    perl -0777 -ne 'print &quot;$1\n&quot; while /START(.*?)END/gs' file1 file2 ...
+<pre>    perl -0777 -ne 'print &quot;$1\n&quot; while /START(.*?)END/gs' file1 file2 ...
 </pre>
 <p class="Pp">But if you want nested occurrences of
     <span class="Li">&quot;START&quot;</span> through
@@ -186,8 +177,7 @@
 <p class="Pp">Here's another example of using
     <span class="Li">&quot;..&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         my $in_header =   1  .. /^$/;
         my $in_body   = /^$/ .. eof;
     # now choose between them
@@ -213,14 +203,11 @@
     need to do this.</p>
 <p class="Pp">If you have File::Stream, this is easy.</p>
 <p class="Pp"></p>
-<pre>
-    use File::Stream;
-
+<pre>    use File::Stream;
     my $stream = File::Stream-&gt;new(
         $filehandle,
         separator =&gt; qr/\s*,\s*/,
         );
-
     print &quot;$_\n&quot; while &lt;$stream&gt;;
 </pre>
 <p class="Pp">If you don't have File::Stream, you have to do a little more
@@ -229,8 +216,7 @@
     to a buffer. After you add to the buffer, you check if you have a complete
     line (using your regular expression).</p>
 <p class="Pp"></p>
-<pre>
-    local $_ = &quot;&quot;;
+<pre>    local $_ = &quot;&quot;;
     while( sysread FH, $_, 8192, length ) {
         while( s/^((?s).*?)your_pattern// ) {
             my $record = $1;
@@ -242,8 +228,7 @@
     flag and the \G anchor, if you do not mind your entire file being in memory
     at the end.</p>
 <p class="Pp"></p>
-<pre>
-    local $_ = &quot;&quot;;
+<pre>    local $_ = &quot;&quot;;
     while( sysread FH, $_, 8192, length ) {
         foreach my $record ( m/\G((?s).*?)your_pattern/gc ) {
             # do stuff here.
@@ -259,51 +244,40 @@
 <p class="Pp">Here's a lovely Perlish solution by Larry Rosler. It exploits
     properties of bitwise xor on ASCII strings.</p>
 <p class="Pp"></p>
-<pre>
-    $_= &quot;this is a TEsT case&quot;;
-
+<pre>    $_= &quot;this is a TEsT case&quot;;
     $old = 'test';
     $new = 'success';
-
     s{(\Q$old\E)}
     { uc $new | (uc $1 ^ $1) .
         (uc(substr $1, -1) ^ substr $1, -1) x
         (length($new) - length $1)
     }egi;
-
     print;
 </pre>
 <p class="Pp">And here it is as a subroutine, modeled after the above:</p>
 <p class="Pp"></p>
-<pre>
-    sub preserve_case {
+<pre>    sub preserve_case {
         my ($old, $new) = @_;
         my $mask = uc $old ^ $old;
-
         uc $new | $mask .
             substr($mask, -1) x (length($new) - length($old))
     }
-
     $string = &quot;this is a TEsT case&quot;;
     $string =~ s/(test)/preserve_case($1, &quot;success&quot;)/egi;
     print &quot;$string\n&quot;;
 </pre>
 <p class="Pp">This prints:</p>
 <p class="Pp"></p>
-<pre>
-    this is a SUcCESS case
+<pre>    this is a SUcCESS case
 </pre>
 <p class="Pp">As an alternative, to keep the case of the replacement word if it
     is longer than the original, you can use this code, by Jeff Pinyan:</p>
 <p class="Pp"></p>
-<pre>
-    sub preserve_case {
+<pre>    sub preserve_case {
         my ($from, $to) = @_;
         my ($lf, $lt) = map length, @_;
-
         if ($lt &lt; $lf) { $from = substr $from, 0, $lt }
         else { $from .= substr $to, $lf }
-
         return uc $to | ($from ^ uc $from);
     }
 </pre>
@@ -316,8 +290,7 @@
     the substitution has more characters than the string being substituted, the
     case of the last character is used for the rest of the substitution.</p>
 <p class="Pp"></p>
-<pre>
-    # Original by Nathan Torkington, massaged by Jeffrey Friedl
+<pre>    # Original by Nathan Torkington, massaged by Jeffrey Friedl
     #
     sub preserve_case
     {
@@ -325,7 +298,6 @@
         my $state = 0; # 0 = no change; 1 = lc; 2 = uc
         my ($i, $oldlen, $newlen, $c) = (0, length($old), length($new));
         my $len = $oldlen &lt; $newlen ? $oldlen : $newlen;
-
         for ($i = 0; $i &lt; $len; $i++) {
             if ($c = substr($old, $i, 1), $c =~ /[\W\d_]/) {
                 $state = 0;
@@ -378,10 +350,8 @@
     regex special characters will be acted on unless you precede the
     substitution with \Q. Here's an example:</p>
 <p class="Pp"></p>
-<pre>
-    $string = &quot;Placido P. Octopus&quot;;
+<pre>    $string = &quot;Placido P. Octopus&quot;;
     $regex  = &quot;P.&quot;;
-
     $string =~ s/$regex/Polyp/;
     # $string is now &quot;Polypacido P. Octopus&quot;
 </pre>
@@ -393,10 +363,8 @@
     <span class="Li">&quot;.&quot;</span>, we use
     <span class="Li">&quot;\Q&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    $string = &quot;Placido P. Octopus&quot;;
+<pre>    $string = &quot;Placido P. Octopus&quot;;
     $regex  = &quot;P.&quot;;
-
     $string =~ s/\Q$regex/Polyp/;
     # $string is now &quot;Placido Polyp Octopus&quot;
 </pre>
@@ -423,9 +391,7 @@
 <p class="Pp">This example takes a regular expression from the argument list and
     prints the lines of input that match it:</p>
 <p class="Pp"></p>
-<pre>
-    my $pattern = shift @ARGV;
-
+<pre>    my $pattern = shift @ARGV;
     while( &lt;&gt; ) {
         print if m/$pattern/;
     }
@@ -436,9 +402,7 @@
     by telling Perl to compile the pattern the first time, then reuse that for
     subsequent iterations:</p>
 <p class="Pp"></p>
-<pre>
-    my $pattern = shift @ARGV;
-
+<pre>    my $pattern = shift @ARGV;
     while( &lt;&gt; ) {
         print if m/$pattern/o; # useful for Perl &lt; 5.6
     }
@@ -459,9 +423,7 @@
     or later, you should only see <span class="Li">&quot;re&quot;</span> report
     that for the first iteration.</p>
 <p class="Pp"></p>
-<pre>
-    use re 'debug';
-
+<pre>    use re 'debug';
     my $regex = 'Perl';
     foreach ( qw(Perl Java Ruby Python) ) {
         print STDERR &quot;-&quot; x 73, &quot;\n&quot;;
@@ -476,16 +438,14 @@
 <p class="Pp">While this actually can be done, it's much harder than you'd
     think. For example, this one-liner</p>
 <p class="Pp"></p>
-<pre>
-    perl -0777 -pe 's{/\*.*?\*/}{}gs' foo.c
+<pre>    perl -0777 -pe 's{/\*.*?\*/}{}gs' foo.c
 </pre>
 <p class="Pp">will work in many but not all cases. You see, it's too
     simple-minded for certain kinds of C programs, in particular, those with
     what appear to be comments in quoted strings. For that, you'd need something
     like this, created by Jeffrey Friedl and later modified by Fred Curtis.</p>
 <p class="Pp"></p>
-<pre>
-    $/ = undef;
+<pre>    $/ = undef;
     $_ = &lt;&gt;;
     s#/\*[^*]*\*+([^/*][^*]*\*+)*/|(&quot;(\\.|[^&quot;\\])*&quot;|'(\\.|[^'\\])*'|.[^/&quot;'\\]*)#defined $2 ? $2 : &quot;&quot;#gse;
     print;
@@ -494,8 +454,7 @@
     <span class="Li">&quot;/x&quot;</span> modifier, adding whitespace and
     comments. Here it is expanded, courtesy of Fred Curtis.</p>
 <p class="Pp"></p>
-<pre>
-    s{
+<pre>    s{
        /\*         ##  Start of /* ... */ comment
        [^*]*\*+    ##  Non-* followed by 1-or-more *'s
        (
@@ -503,9 +462,7 @@
        )*          ##  0-or-more things which don't start with /
                    ##    but do end with '*'
        /           ##  End of /* ... */ comment
-
      |         ##     OR  various things which aren't comments:
-
        (
          &quot;           ##  Start of &quot; ... &quot; string
          (
@@ -514,9 +471,7 @@
            [^&quot;\\]        ##  Non &quot;\
          )*
          &quot;           ##  End of &quot; ... &quot; string
-
        |         ##     OR
-
          '           ##  Start of ' ... ' string
          (
            \\.           ##  Escaped char
@@ -524,9 +479,7 @@
            [^'\\]        ##  Non '\
          )*
          '           ##  End of ' ... ' string
-
        |         ##     OR
-
          .           ##  Anything other char
          [^/&quot;'\\]*   ##  Chars which doesn't start a comment, string or escape
        )
@@ -535,8 +488,7 @@
 <p class="Pp">A slight modification also removes C++ comments, possibly spanning
     multiple lines using a continuation character:</p>
 <p class="Pp"></p>
-<pre>
- s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|(&quot;(\\.|[^&quot;\\])*&quot;|'(\\.|[^'\\])*'|.[^/&quot;'\\]*)#defined $3 ? $3 : &quot;&quot;#gse;
+<pre> s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//([^\\]|[^\n][\n]?)*?\n|(&quot;(\\.|[^&quot;\\])*&quot;|'(\\.|[^'\\])*'|.[^/&quot;'\\]*)#defined $3 ? $3 : &quot;&quot;#gse;
 </pre>
 </section>
 <section class="Ss">
@@ -557,8 +509,7 @@
     group with one level of nesting and a group with two levels of nesting.
     There are five total groups in angle brackets:</p>
 <p class="Pp"></p>
-<pre>
-    I have some &lt;brackets in &lt;nested brackets&gt; &gt; and
+<pre>    I have some &lt;brackets in &lt;nested brackets&gt; &gt; and
     &lt;another group &lt;nested once &lt;nested twice&gt; &gt; &gt;
     and that's it.
 </pre>
@@ -580,15 +531,12 @@
     pattern in the outer capture group as an independent part of the regex.</p>
 <p class="Pp">Putting it all together, you have:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/local/bin/perl5.10.0
-
+<pre>    #!/usr/local/bin/perl5.10.0
     my $string =&lt;&lt;&quot;HERE&quot;;
     I have some &lt;brackets in &lt;nested brackets&gt; &gt; and
     &lt;another group &lt;nested once &lt;nested twice&gt; &gt; &gt;
     and that's it.
     HERE
-
     my @groups = $string =~ m/
             (                   # start of capture group 1
             &lt;                   # match an opening angle bracket
@@ -600,14 +548,12 @@
             &gt;                   # match a closing angle bracket
             )                   # end of capture group 1
             /xg;
-
     $&quot; = &quot;\n\t&quot;;
     print &quot;Found:\n\t@groups\n&quot;;
 </pre>
 <p class="Pp">The output shows that Perl found the two major groups:</p>
 <p class="Pp"></p>
-<pre>
-    Found:
+<pre>    Found:
         &lt;brackets in &lt;nested brackets&gt; &gt;
         &lt;another group &lt;nested once &lt;nested twice&gt; &gt; &gt;
 </pre>
@@ -617,15 +563,12 @@
     so don't match it again) and add it to a queue of strings to process. Keep
     doing that until you get no matches:</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/local/bin/perl5.10.0
-
+<pre>    #!/usr/local/bin/perl5.10.0
     my @queue =&lt;&lt;&quot;HERE&quot;;
     I have some &lt;brackets in &lt;nested brackets&gt; &gt; and
     &lt;another group &lt;nested once &lt;nested twice&gt; &gt; &gt;
     and that's it.
     HERE
-
     my $regex = qr/
             (                   # start of bracket 1
             &lt;                   # match an opening angle bracket
@@ -637,32 +580,24 @@
             &gt;                   # match a closing angle bracket
             )                   # end of bracket 1
             /x;
-
     $&quot; = &quot;\n\t&quot;;
-
     while( @queue ) {
         my $string = shift @queue;
-
         my @groups = $string =~ m/$regex/g;
         print &quot;Found:\n\t@groups\n\n&quot; if @groups;
-
         unshift @queue, map { s/^&lt;//; s/&gt;$//; $_ } @groups;
     }
 </pre>
 <p class="Pp">The output shows all of the groups. The outermost matches show up
     first and the nested matches show up later:</p>
 <p class="Pp"></p>
-<pre>
-    Found:
+<pre>    Found:
         &lt;brackets in &lt;nested brackets&gt; &gt;
         &lt;another group &lt;nested once &lt;nested twice&gt; &gt; &gt;
-
     Found:
         &lt;nested brackets&gt;
-
     Found:
         &lt;nested once &lt;nested twice&gt; &gt;
-
     Found:
         &lt;nested twice&gt;
 </pre>
@@ -684,8 +619,7 @@
     <span class="Li">&quot;{}?&quot;</span>).</p>
 <p class="Pp">An example:</p>
 <p class="Pp"></p>
-<pre>
-    my $s1 = my $s2 = &quot;I am very very cold&quot;;
+<pre>    my $s1 = my $s2 = &quot;I am very very cold&quot;;
     $s1 =~ s/ve.*y //;      # I am cold
     $s2 =~ s/ve.*?y //;     # I am very cold
 </pre>
@@ -700,8 +634,7 @@
   do I process each word on each line?</a></h2>
 <p class="Pp">Use the split function:</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         foreach my $word ( split ) {
             # do something with $word here
         }
@@ -712,8 +645,7 @@
 <p class="Pp">To work with only alphanumeric sequences (including underscores),
     you might consider</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         foreach $word (m/(\w+)/g) {
             # do something with $word here
         }
@@ -728,14 +660,12 @@
     apostrophes, rather than the non-whitespace chunk idea of a word given in
     the previous question:</p>
 <p class="Pp"></p>
-<pre>
-    my (%seen);
+<pre>    my (%seen);
     while (&lt;&gt;) {
         while ( /(\b[^\W_\d][\w'-]+\b)/g ) {   # misses &quot;`sheep'&quot;
             $seen{$1}++;
         }
     }
-
     while ( my ($word, $count) = each %seen ) {
         print &quot;$count $word\n&quot;;
     }
@@ -743,13 +673,10 @@
 <p class="Pp">If you wanted to do the same thing for lines, you wouldn't need a
     regular expression:</p>
 <p class="Pp"></p>
-<pre>
-    my (%seen);
-
+<pre>    my (%seen);
     while (&lt;&gt;) {
         $seen{$_}++;
     }
-
     while ( my ($line, $count) = each %seen ) {
         print &quot;$count $line&quot;;
     }
@@ -769,9 +696,7 @@
 <p class="Pp">If you have Perl 5.10 or later, this is almost trivial. You just
     smart match against an array of regular expression objects:</p>
 <p class="Pp"></p>
-<pre>
-    my @patterns = ( qr/Fr.d/, qr/B.rn.y/, qr/W.lm./ );
-
+<pre>    my @patterns = ( qr/Fr.d/, qr/B.rn.y/, qr/W.lm./ );
     if( $string ~~ @patterns ) {
         ...
     };
@@ -784,9 +709,7 @@
     of the <span class="Li">&quot;foreach&quot;</span> loop since it has no way
     to know what <span class="Li">$pattern</span> will be:</p>
 <p class="Pp"></p>
-<pre>
-    my @patterns = qw( foo bar baz );
-
+<pre>    my @patterns = qw( foo bar baz );
     LINE: while( &lt;DATA&gt; ) {
         foreach $pattern ( @patterns ) {
             if( /\b$pattern\b/i ) {
@@ -803,9 +726,7 @@
     pattern into its pre-compiled form. The rest of the script is the same, but
     faster:</p>
 <p class="Pp"></p>
-<pre>
-    my @patterns = map { qr/\b$_\b/i } qw( foo bar baz );
-
+<pre>    my @patterns = map { qr/\b$_\b/i } qw( foo bar baz );
     LINE: while( &lt;&gt; ) {
         foreach $pattern ( @patterns ) {
             if( /$pattern/ ) {
@@ -819,9 +740,7 @@
     single regular expression. Beware of situations that require backtracking
     though.</p>
 <p class="Pp"></p>
-<pre>
-    my $regex = join '|', qw( foo bar baz );
-
+<pre>    my $regex = join '|', qw( foo bar baz );
     LINE: while( &lt;&gt; ) {
         print if /\b(?:$regex)\b/i;
     }
@@ -852,30 +771,26 @@
     succeeds the &quot;l&quot;, the pattern will match. These strings match
     /\bPerl\b/.</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Perl&quot;    # no word char before &quot;P&quot; or after &quot;l&quot;
+<pre>    &quot;Perl&quot;    # no word char before &quot;P&quot; or after &quot;l&quot;
     &quot;Perl &quot;   # same as previous (space is not a word char)
     &quot;'Perl'&quot;  # the &quot;'&quot; char is not a word char
     &quot;Perl's&quot;  # no word char before &quot;P&quot;, non-word char after &quot;l&quot;
 </pre>
 <p class="Pp">These strings do not match /\bPerl\b/.</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Perl_&quot;   # &quot;_&quot; is a word char!
+<pre>    &quot;Perl_&quot;   # &quot;_&quot; is a word char!
     &quot;Perler&quot;  # no word char before &quot;P&quot;, but one after &quot;l&quot;
 </pre>
 <p class="Pp">You don't have to use \b to match words though. You can look for
     non-word characters surrounded by word characters. These strings match the
     pattern /\b'\b/.</p>
 <p class="Pp"></p>
-<pre>
-    &quot;don't&quot;   # the &quot;'&quot; char is surrounded by &quot;n&quot; and &quot;t&quot;
+<pre>    &quot;don't&quot;   # the &quot;'&quot; char is surrounded by &quot;n&quot; and &quot;t&quot;
     &quot;qep'a'&quot;  # the &quot;'&quot; char is surrounded by &quot;p&quot; and &quot;a&quot;
 </pre>
 <p class="Pp">These strings do not match /\b'\b/.</p>
 <p class="Pp"></p>
-<pre>
-    &quot;foo'&quot;    # there is no word char after non-word &quot;'&quot;
+<pre>    &quot;foo'&quot;    # there is no word char after non-word &quot;'&quot;
 </pre>
 <p class="Pp">You can also use the complement of \b, \B, to specify that there
     should not be a word boundary.</p>
@@ -883,14 +798,12 @@
     &quot;a&quot; and after the &quot;m&quot;. These patterns match
   /\Bam\B/:</p>
 <p class="Pp"></p>
-<pre>
-    &quot;llama&quot;   # &quot;am&quot; surrounded by word chars
+<pre>    &quot;llama&quot;   # &quot;am&quot; surrounded by word chars
     &quot;Samuel&quot;  # same
 </pre>
 <p class="Pp">These strings do not match /\Bam\B/</p>
 <p class="Pp"></p>
-<pre>
-    &quot;Sam&quot;      # no word boundary before &quot;a&quot;, but one after &quot;m&quot;
+<pre>    &quot;Sam&quot;      # no word boundary before &quot;a&quot;, but one after &quot;m&quot;
     &quot;I am Sam&quot; # &quot;am&quot; surrounded by non-word chars
 </pre>
 </section>
@@ -946,8 +859,7 @@
     digits skips over the <span class="Li">&quot;a&quot;</span> and still
     matches <span class="Li">44</span>.</p>
 <p class="Pp"></p>
-<pre>
-    $_ = &quot;1122a44&quot;;
+<pre>    $_ = &quot;1122a44&quot;;
     my @pairs = m/(\d\d)/g;   # qw( 11 22 44 )
 </pre>
 <p class="Pp">If you use the <span class="Li">&quot;\G&quot;</span> anchor, you
@@ -956,16 +868,14 @@
     there since it does not find a digit, so the next match fails and the match
     operator returns the pairs it already found.</p>
 <p class="Pp"></p>
-<pre>
-    $_ = &quot;1122a44&quot;;
+<pre>    $_ = &quot;1122a44&quot;;
     my @pairs = m/\G(\d\d)/g; # qw( 11 22 )
 </pre>
 <p class="Pp">You can also use the <span class="Li">&quot;\G&quot;</span> anchor
     in scalar context. You still need the <span class="Li">&quot;g&quot;</span>
     modifier.</p>
 <p class="Pp"></p>
-<pre>
-    $_ = &quot;1122a44&quot;;
+<pre>    $_ = &quot;1122a44&quot;;
     while( m/\G(\d\d)/g ) {
         print &quot;Found $1\n&quot;;
     }
@@ -975,12 +885,10 @@
     <span class="Li">&quot;pos()&quot;</span> and the next match on the same
     string starts at the beginning.</p>
 <p class="Pp"></p>
-<pre>
-    $_ = &quot;1122a44&quot;;
+<pre>    $_ = &quot;1122a44&quot;;
     while( m/\G(\d\d)/g ) {
         print &quot;Found $1\n&quot;;
     }
-
     print &quot;Found $1 after while&quot; if m/(\d\d)/g; # finds &quot;11&quot;
 </pre>
 <p class="Pp">You can disable <span class="Li">&quot;pos()&quot;</span> resets
@@ -994,12 +902,10 @@
     <span class="Li">&quot;a&quot;</span> to find
   <span class="Li">44</span>.</p>
 <p class="Pp"></p>
-<pre>
-    $_ = &quot;1122a44&quot;;
+<pre>    $_ = &quot;1122a44&quot;;
     while( m/\G(\d\d)/gc ) {
         print &quot;Found $1\n&quot;;
     }
-
     print &quot;Found $1 after while&quot; if m/(\d\d)/g; # finds &quot;44&quot;
 </pre>
 <p class="Pp">Typically you use the <span class="Li">&quot;\G&quot;</span>
@@ -1007,8 +913,7 @@
     to try a different match if one fails, such as in a tokenizer. Jeffrey
     Friedl offers this example which works in 5.004 or later.</p>
 <p class="Pp"></p>
-<pre>
-    while (&lt;&gt;) {
+<pre>    while (&lt;&gt;) {
         chomp;
         PARSER: {
             m/ \G( \d+\b    )/gcx   &amp;&amp; do { print &quot;number: $1\n&quot;;  redo; };
@@ -1082,16 +987,13 @@
     &quot;GX&quot;. This is a big problem.</p>
 <p class="Pp">Here are a few ways, all painful, to deal with it:</p>
 <p class="Pp"></p>
-<pre>
-    # Make sure adjacent &quot;martian&quot; bytes are no longer adjacent.
+<pre>    # Make sure adjacent &quot;martian&quot; bytes are no longer adjacent.
     $martian =~ s/([A-Z][A-Z])/ $1 /g;
-
     print &quot;found GX!\n&quot; if $martian =~ /GX/;
 </pre>
 <p class="Pp">Or like this:</p>
 <p class="Pp"></p>
-<pre>
-    my @chars = $martian =~ m/([A-Z][A-Z]|[^A-Z])/g;
+<pre>    my @chars = $martian =~ m/([A-Z][A-Z]|[^A-Z])/g;
     # above is conceptually similar to:     my @chars = $text =~ m/(.)/g;
     #
     foreach my $char (@chars) {
@@ -1100,8 +1002,7 @@
 </pre>
 <p class="Pp">Or like this:</p>
 <p class="Pp"></p>
-<pre>
-    while ($martian =~ m/\G([A-Z][A-Z]|.)/gs) {  # \G probably unneeded
+<pre>    while ($martian =~ m/\G([A-Z][A-Z]|.)/gs) {  # \G probably unneeded
         if ($1 eq 'GX') {
             print &quot;found GX!\n&quot;;
             last;
@@ -1111,8 +1012,7 @@
 <p class="Pp">Here's another, slightly less painful, way to do it from Benjamin
     Goldberg, who uses a zero-width negative look-behind assertion.</p>
 <p class="Pp"></p>
-<pre>
-    print &quot;found GX!\n&quot; if    $martian =~ m/
+<pre>    print &quot;found GX!\n&quot; if    $martian =~ m/
         (?&lt;![A-Z])
         (?:[A-Z][A-Z])*?
         GX
@@ -1139,9 +1039,7 @@
     <span class="Li">$regex</span>, you use that variable in the match
   operator.</p>
 <p class="Pp"></p>
-<pre>
-    chomp( my $regex = &lt;STDIN&gt; );
-
+<pre>    chomp( my $regex = &lt;STDIN&gt; );
     if( $string =~ m/$regex/ ) { ... }
 </pre>
 <p class="Pp">Any regular expression special characters in
@@ -1149,27 +1047,22 @@
     to be valid or Perl will complain. For instance, in this pattern there is an
     unpaired parenthesis.</p>
 <p class="Pp"></p>
-<pre>
-    my $regex = &quot;Unmatched ( paren&quot;;
-
+<pre>    my $regex = &quot;Unmatched ( paren&quot;;
     &quot;Two parens to bind them all&quot; =~ m/$regex/;
 </pre>
 <p class="Pp">When Perl compiles the regular expression, it treats the
     parenthesis as the start of a memory match. When it doesn't find the closing
     parenthesis, it complains:</p>
 <p class="Pp"></p>
-<pre>
-    Unmatched ( in regex; marked by &lt;-- HERE in m/Unmatched ( &lt;-- HERE  paren/ at script line 3.
+<pre>    Unmatched ( in regex; marked by &lt;-- HERE in m/Unmatched ( &lt;-- HERE  paren/ at script line 3.
 </pre>
 <p class="Pp">You can get around this in several ways depending on our
     situation. First, if you don't want any of the characters in the string to
     be special, you can escape them with
     <span class="Li">&quot;quotemeta&quot;</span> before you use the string.</p>
 <p class="Pp"></p>
-<pre>
-    chomp( my $regex = &lt;STDIN&gt; );
+<pre>    chomp( my $regex = &lt;STDIN&gt; );
     $regex = quotemeta( $regex );
-
     if( $string =~ m/$regex/ ) { ... }
 </pre>
 <p class="Pp">You can also do this directly in the match operator using the
@@ -1179,9 +1072,7 @@
     special characters, and the <span class="Li">&quot;\E&quot;</span> tells it
     where to stop (see perlop for more details).</p>
 <p class="Pp"></p>
-<pre>
-    chomp( my $regex = &lt;STDIN&gt; );
-
+<pre>    chomp( my $regex = &lt;STDIN&gt; );
     if( $string =~ m/\Q$regex\E/ ) { ... }
 </pre>
 <p class="Pp">Alternately, you can use <span class="Li">&quot;qr//&quot;</span>,
@@ -1189,19 +1080,14 @@
     quotes and perhaps compiles the pattern, and you can apply regular
     expression flags to the pattern.</p>
 <p class="Pp"></p>
-<pre>
-    chomp( my $input = &lt;STDIN&gt; );
-
+<pre>    chomp( my $input = &lt;STDIN&gt; );
     my $regex = qr/$input/is;
-
     $string =~ m/$regex/  # same as m/$input/is;
 </pre>
 <p class="Pp">You might also want to trap any errors by wrapping an
     <span class="Li">&quot;eval&quot;</span> block around the whole thing.</p>
 <p class="Pp"></p>
-<pre>
-    chomp( my $input = &lt;STDIN&gt; );
-
+<pre>    chomp( my $input = &lt;STDIN&gt; );
     eval {
         if( $string =~ m/\Q$input\E/ ) { ... }
     };
@@ -1209,8 +1095,7 @@
 </pre>
 <p class="Pp">Or...</p>
 <p class="Pp"></p>
-<pre>
-    my $regex = eval { qr/$input/is };
+<pre>    my $regex = eval { qr/$input/is };
     if( defined $regex ) {
         $string =~ m/$regex/;
     }

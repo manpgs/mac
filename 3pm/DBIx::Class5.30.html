@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class(3)</title>
 </head>
@@ -64,12 +65,9 @@
   classes preparation</a></h2>
 <p class="Pp">Create a schema class called <i>MyApp/Schema.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema;
+<pre>  package MyApp::Schema;
   use base qw/DBIx::Class::Schema/;
-
   __PACKAGE__-&gt;load_namespaces();
-
   1;
 </pre>
 <p class="Pp">Create a result class to represent artists, who have many CDs, in
@@ -77,30 +75,24 @@
 <p class="Pp">See DBIx::Class::ResultSource for docs on defining result
   classes.</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::Result::Artist;
+<pre>  package MyApp::Schema::Result::Artist;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;table('artist');
   __PACKAGE__-&gt;add_columns(qw/ artistid name /);
   __PACKAGE__-&gt;set_primary_key('artistid');
   __PACKAGE__-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artistid');
-
   1;
 </pre>
 <p class="Pp">A result class to represent a CD, which belongs to an artist, in
     <i>MyApp/Schema/Result/CD.pm</i>:</p>
 <p class="Pp"></p>
-<pre>
-  package MyApp::Schema::Result::CD;
+<pre>  package MyApp::Schema::Result::CD;
   use base qw/DBIx::Class::Core/;
-
   __PACKAGE__-&gt;load_components(qw/InflateColumn::DateTime/);
   __PACKAGE__-&gt;table('cd');
   __PACKAGE__-&gt;add_columns(qw/ cdid artistid title year /);
   __PACKAGE__-&gt;set_primary_key('cdid');
   __PACKAGE__-&gt;belongs_to(artist =&gt; 'MyApp::Schema::Result::Artist', 'artistid');
-
   1;
 </pre>
 </section>
@@ -108,62 +100,50 @@
 <h2 class="Ss">API usage</h2>
 <p class="Pp">Then you can use these classes in your application's code:</p>
 <p class="Pp"></p>
-<pre>
-  # Connect to your database.
+<pre>  # Connect to your database.
   use MyApp::Schema;
   my $schema = MyApp::Schema-&gt;connect($dbi_dsn, $user, $pass, \%dbi_params);
-
   # Query for all artists and put them in an array,
   # or retrieve them as a result set object.
   # $schema-&gt;resultset returns a DBIx::Class::ResultSet
   my @all_artists = $schema-&gt;resultset('Artist')-&gt;all;
   my $all_artists_rs = $schema-&gt;resultset('Artist');
-
   # Output all artists names
   # $artist here is a DBIx::Class::Row, which has accessors
   # for all its columns. Rows are also subclasses of your Result class.
   foreach $artist (@all_artists) {
     print $artist-&gt;name, &quot;\n&quot;;
   }
-
   # Create a result set to search for artists.
   # This does not query the DB.
   my $johns_rs = $schema-&gt;resultset('Artist')-&gt;search(
     # Build your WHERE using an SQL::Abstract structure:
     { name =&gt; { like =&gt; 'John%' } }
   );
-
   # Execute a joined query to get the cds.
   my @all_john_cds = $johns_rs-&gt;search_related('cds')-&gt;all;
-
   # Fetch the next available row.
   my $first_john = $johns_rs-&gt;next;
-
   # Specify ORDER BY on the query.
   my $first_john_cds_by_title_rs = $first_john-&gt;cds(
     undef,
     { order_by =&gt; 'title' }
   );
-
   # Create a result set that will fetch the artist data
   # at the same time as it fetches CDs, using only one query.
   my $millennium_cds_rs = $schema-&gt;resultset('CD')-&gt;search(
     { year =&gt; 2000 },
     { prefetch =&gt; 'artist' }
   );
-
   my $cd = $millennium_cds_rs-&gt;next; # SELECT ... FROM cds JOIN artists ...
   my $cd_artist_name = $cd-&gt;artist-&gt;name; # Already has the data so no 2nd query
-
   # new() makes a Result object but doesn't insert it into the DB.
   # create() is the same as new() then insert().
   my $new_cd = $schema-&gt;resultset('CD')-&gt;new({ title =&gt; 'Spoon' });
   $new_cd-&gt;artist($cd-&gt;artist);
   $new_cd-&gt;insert; # Auto-increment primary key filled in after INSERT
   $new_cd-&gt;title('Fork');
-
   $schema-&gt;txn_do(sub { $new_cd-&gt;update }); # Runs the update in a transaction
-
   # change the year of all the millennium CDs at once
   $millennium_cds_rs-&gt;update({ year =&gt; 2002 });
 </pre>

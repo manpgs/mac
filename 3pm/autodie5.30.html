@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>autodie(3pm)</title>
 </head>
@@ -29,15 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use autodie;            # Recommended: implies 'use autodie qw(:default)'
-
+<pre>    use autodie;            # Recommended: implies 'use autodie qw(:default)'
     use autodie qw(:all);   # Recommended more: defaults and system/exec.
-
     use autodie qw(open close);   # open/close succeed or die
-
     open(my $fh, &quot;&lt;&quot;, $filename); # No need to check!
-
     {
         no autodie qw(open);          # open failures won't die
         open(my $fh, &quot;&lt;&quot;, $filename); # Could fail silently!
@@ -49,11 +45,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<pre>
-        bIlujDI' yIchegh()Qo'; yIHegh()!
-
+<pre>        bIlujDI' yIchegh()Qo'; yIHegh()!
         It is better to die() than to return() in failure.
-
                 -- Klingon programming proverb.
 </pre>
 <p class="Pp">The <span class="Li">&quot;autodie&quot;</span> pragma provides a
@@ -76,22 +69,14 @@
     autodie::exception class. The preferred way to work with these exceptions
     under Perl 5.10 is as follows:</p>
 <p class="Pp"></p>
-<pre>
-    use feature qw(switch);
-
+<pre>    use feature qw(switch);
     eval {
         use autodie;
-
         open(my $fh, '&lt;', $some_file);
-
         my @records = &lt;$fh&gt;;
-
         # Do things with @records...
-
         close($fh);
-
     };
-
     given ($@) {
         when (undef)   { say &quot;No error&quot;;                    }
         when ('open')  { say &quot;Error from open&quot;;             }
@@ -103,19 +88,13 @@
 <p class="Pp">Under Perl 5.8, the <span class="Li">&quot;given/when&quot;</span>
     structure is not available, so the following structure may be used:</p>
 <p class="Pp"></p>
-<pre>
-    eval {
+<pre>    eval {
         use autodie;
-
         open(my $fh, '&lt;', $some_file);
-
         my @records = &lt;$fh&gt;;
-
         # Do things with @records...
-
         close($fh);
     };
-
     if ($@ and $@-&gt;isa('autodie::exception')) {
         if ($@-&gt;matches('open')) { print &quot;Error from open\n&quot;;   }
         if ($@-&gt;matches(':io' )) { print &quot;Non-open, IO error.&quot;; }
@@ -138,8 +117,7 @@
     <span class="Li">&quot;sysopen&quot;</span>.</p>
 <p class="Pp">The categories are currently:</p>
 <p class="Pp"></p>
-<pre>
-    :all
+<pre>    :all
         :default
             :io
                 read
@@ -218,8 +196,7 @@
     See &quot;BUGS&quot; below for more details.</p>
 <p class="Pp">The syntax:</p>
 <p class="Pp"></p>
-<pre>
-    use autodie qw(:1.994);
+<pre>    use autodie qw(:1.994);
 </pre>
 <p class="Pp">allows the <span class="Li">&quot;:default&quot;</span> list from
     a particular version to be used. This provides the convenience of using the
@@ -229,8 +206,7 @@
     of Perl's built-ins, including <span class="Li">&quot;system&quot;</span>
     and <span class="Li">&quot;exec&quot;</span> with:</p>
 <p class="Pp"></p>
-<pre>
-    use autodie qw(:all);
+<pre>    use autodie qw(:all);
 </pre>
 </section>
 <section class="Sh">
@@ -239,7 +215,7 @@
 <section class="Ss">
 <h2 class="Ss" id="print"><a class="permalink" href="#print">print</a></h2>
 <p class="Pp">The autodie pragma <b>&lt;does not check calls to
-    </b><b>&quot;print&quot;</b><b></b>&gt;.</p>
+    </b><span class="Li"><b>&quot;print&quot;</b></span><b></b>&gt;.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="flock"><a class="permalink" href="#flock">flock</a></h2>
@@ -250,9 +226,7 @@
     return value of <span class="Li">&quot;flock&quot;</span> when called with
     the <span class="Li">&quot;LOCK_NB&quot;</span> option:</p>
 <p class="Pp"></p>
-<pre>
-    use autodie;
-
+<pre>    use autodie;
     if ( flock($fh, LOCK_EX | LOCK_NB) ) {
         # We have a lock
     }
@@ -276,8 +250,7 @@
 <p class="Pp">Additional allowable exit values can be supplied as an optional
     first argument to autodying <span class="Li">&quot;system&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    system( [ 0, 1, 2 ], $cmd, @args);  # 0,1,2 are good exit values
+<pre>    system( [ 0, 1, 2 ], $cmd, @args);  # 0,1,2 are good exit values
 </pre>
 <p class="Pp"><span class="Li">&quot;autodie&quot;</span> uses the
     IPC::System::Simple module to change
@@ -306,8 +279,7 @@
     cannot completely be representated with a Perl prototype. This means that
     some valid Perl code will be invalid under autodie. As an example:</p>
 <p class="Pp"></p>
-<pre>
-  chdir(BAREWORD);
+<pre>  chdir(BAREWORD);
 </pre>
 <p class="Pp">Without autodie (and assuming BAREWORD is an open
     filehandle/dirhandle) this is a valid call to chdir. But under autodie,

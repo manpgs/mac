@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ArgvFile(3)</title>
 </head>
@@ -36,74 +37,59 @@
 <p class="Pp">One line invocation - option hints are processed while the module
     is loaded:</p>
 <p class="Pp"></p>
-<pre>
-  # load module and process option file hints in @ARGV
+<pre>  # load module and process option file hints in @ARGV
   use Getopt::ArgvFile default=&gt;1;
    
   # load another module to evaluate the options, e.g.:
   use Getopt::Long;
   ...
-
   # evaluate options, e.g. this common way:
   GetOptions(\%options, 'any');    # this function is defined in Getopt::Long
 </pre>
 <p class="Pp">Or suppress option hint processing when the module is loaded, to
     perform it later on:</p>
 <p class="Pp"></p>
-<pre>
-  # load module, do *not* process option file hints
+<pre>  # load module, do *not* process option file hints
   use Getopt::ArgvFile justload=&gt;1;
    
   # load another module to evaluate the options, e.g.:
   use Getopt::Long;
   ...
-
   # *now*, solve option file hints
   Getopt::ArgvFile::argvFile(default=&gt;1);
-
   # evaluate options, e.g. this common way:
   GetOptions(\%options, 'any');    # this function is defined in Getopt::Long
 </pre>
 <p class="Pp">Or use the traditional two step invocation of module loading with
     <i>symbol import</i> and <i>explicit</i> option file handling:</p>
 <p class="Pp"></p>
-<pre>
-  # Load the module and import the &amp;argvFile symbol
+<pre>  # Load the module and import the &amp;argvFile symbol
   # - this will *not* process option hints.
   # Use *this* syntax to do so, *exactly*.
   use Getopt::ArgvFile qw(argvFile);
-
   # load another module to evaluate the options, e.g.:
   use Getopt::Long;
   ...
-
   # *now*, solve option file hints
   argvFile(default=&gt;1);
-
   # evaluate options, e.g. this common way:
   GetOptions(\%options, 'any');    # this function is defined in Getopt::Long
 </pre>
 <p class="Pp">If options should be processed into another array, this can be
     done this way:</p>
 <p class="Pp"></p>
-<pre>
-  # prepare target array
+<pre>  # prepare target array
   my @options=('@options1', '@options2', '@options3');
-
   ...
-
   # replace file hints by the options stored in the files
   argvFile(array=&gt;\@options);
 </pre>
 <p class="Pp">In case you do not like the &quot;@&quot; prefix it is possible to
     define an option to be used instead:</p>
 <p class="Pp"></p>
-<pre>
-  # prepare target array
+<pre>  # prepare target array
   my @options=('-options', 'options1', '-options', 'options2');
-
   ...
-
   # replace file hints by the options stored in the files
   argvFile(fileOption=&gt;'options', array=&gt;\@options);
 </pre>
@@ -197,19 +183,18 @@
     the &quot;<b>argvFile()</b>&quot; function <i>using the exact syntax of the
     following example</i>:</p>
 <p class="Pp"></p>
-<pre>
-  use Getopt::ArgvFile qw(argvFile);
+<pre>  use Getopt::ArgvFile qw(argvFile);
 </pre>
 <p class="Pp">Please note that this interface is provided for backwards
     compatibility with versions up to 1.06. By loading the module this way, the
     traditional import mechanisms take affect and
-    <i></i><i>&quot;argvFile()&quot;</i><i> is not called implicitly</i>.</p>
+    <i></i><span class="Li"><i>&quot;argvFile()&quot;</i></span><i> is not
+    called implicitly</i>.</p>
 <p class="Pp">This means that while option file hints are usually processed
     implicitly when <span class="Li">&quot;Getopt::ArgvFile&quot;</span> is
     loaded, the syntax</p>
 <p class="Pp"></p>
-<pre>
-  use Getopt::ArgvFile qw(argvFile);
+<pre>  use Getopt::ArgvFile qw(argvFile);
 </pre>
 <p class="Pp">requires an <i>extra</i> call of
     <i></i><b><i>argvFile()</i></b><i></i> to process option files.</p>
@@ -224,14 +209,11 @@
     when the module is loaded, except this is done in one of the following
   ways:</p>
 <p class="Pp"></p>
-<pre>
-  # the traditional interface - provided for
+<pre>  # the traditional interface - provided for
   # backwards compatibility - this loads the
   # module and imports the &amp;argvFile symbol
   use Getopt::ArgvFile qw(argvFile);
-
   --
-
   # option file processing is explicitly suppressed
   use Getopt::ArgvFile justload=&gt;1;
 </pre>
@@ -240,8 +222,7 @@
     <span class="Li">&quot;use&quot;</span>, but in the typical
     <span class="Li">&quot;use&quot;</span> syntax without parantheses.</p>
 <p class="Pp"></p>
-<pre>
-  # implicit call of argvFile(default=&gt;1, home=&gt;1)
+<pre>  # implicit call of argvFile(default=&gt;1, home=&gt;1)
   use Getopt::ArgvFile default=&gt;1, home=&gt;1;
 </pre>
 <p class="Pp">See <i>ONE LINE INVOCATION</i> for further details.</p>
@@ -260,8 +241,7 @@
 <p class="Pp">An option file hint is simply the filename preceeded by (at least)
     one &quot;@&quot; character:</p>
 <p class="Pp"></p>
-<pre>
-  &gt; script -optA argA -optB @optionFile -optC argC
+<pre>  &gt; script -optA argA -optB @optionFile -optC argC
 </pre>
 <p class="Pp">This will cause <b>argvFile()</b> to scan &quot;optionFile&quot;
     for options. The element &quot;@optionFile&quot; will be removed from the
@@ -277,32 +257,27 @@
     space and comment lines (starting with a &quot;#&quot;) are allowed
     additionally. POD comments are supported as well. For example, the call</p>
 <p class="Pp"></p>
-<pre>
-  &gt; script -optA argA -optB -optC cArg par1 par2
+<pre>  &gt; script -optA argA -optB -optC cArg par1 par2
 </pre>
 <p class="Pp">could be transformed into</p>
 <p class="Pp"></p>
-<pre>
-  &gt; script @scriptOptions par1 par2
+<pre>  &gt; script @scriptOptions par1 par2
 </pre>
 <p class="Pp">where the file &quot;scriptOptions&quot; may look like this:</p>
 <p class="Pp"></p>
-<pre>
-  # option a
+<pre>  # option a
   -optA argA
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  =pod
+<pre>  =pod
   option b
   =cut
   -optB
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  # option c
+<pre>  # option c
   -optC cArg
 </pre>
 <p class="Pp"><b>Nested option files</b></p>
@@ -314,52 +289,44 @@
 <p class="Pp">By using this feature, you may combine groups of typical options
     into a top level option file, e.g.:</p>
 <p class="Pp"></p>
-<pre>
-  File ab:
+<pre>  File ab:
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  # option a
+<pre>  # option a
   -optA argA
   # option b
   -optB
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  File c:
+<pre>  File c:
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  # option c
+<pre>  # option c
   -optC cArg
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  File abc:
+<pre>  File abc:
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  # combine ab and c
+<pre>  # combine ab and c
   @ab @c
 </pre>
 <p class="Pp">If anyone provides these files, a user can use a very short
   call:</p>
 <p class="Pp"></p>
-<pre>
-  &gt; script @abc
+<pre>  &gt; script @abc
 </pre>
 <p class="Pp">and <b>argvFile()</b> will recursively move all the filed program
     parameters into <span class="Li">@ARGV</span>.</p>
 <p class="Pp"><b>Relative pathes</b></p>
 <p class="Pp">Pathes in option files might be relative, as in</p>
 <p class="Pp"></p>
-<pre>
-  -file ../file @../../configs/nested
+<pre>  -file ../file @../../configs/nested
 </pre>
 <p class="Pp">If written with the (prepared) start directory in mind, that will
     work, but it can fail when it was written relatively to the option file
@@ -369,16 +336,13 @@
     <span class="Li">&quot;resolveRelativePathes&quot;</span> to switch to path
     resolution:</p>
 <p class="Pp"></p>
-<pre>
-   argvFile(resolveRelativePathes=&gt;1);
+<pre>   argvFile(resolveRelativePathes=&gt;1);
 </pre>
 <p class="Pp">will cause <span class="Li">&quot;argvFile()&quot;</span> to
     expand those pathes, both in standard strings and nested option files.</p>
 <p class="Pp"></p>
-<pre>
-   With resolveRelativePathes, both pathes
+<pre>   With resolveRelativePathes, both pathes
    will be resolved:
-
    -file ../file @../../configs/nested
 </pre>
 <p class="Pp">A path is resolved <i>relative to the option file</i> it is found
@@ -391,8 +355,7 @@
     variables. But if required it can be commanded to do so via parameter
     <span class="Li">&quot;resolveEnvVars&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-  argvFile(resolveEnvVars=&gt;1);
+<pre>  argvFile(resolveEnvVars=&gt;1);
 </pre>
 <p class="Pp"><b>Startup support</b></p>
 <p class="Pp">By setting several named parameters, you can enable automatic
@@ -405,16 +368,14 @@
     the script, preceeded by a dot, but this can be adapted to individual needs
     if preferred, see below.</p>
 <p class="Pp"></p>
-<pre>
- Examples:
+<pre> Examples:
   If a script located in &quot;/path/script&quot; is invoked in directory
   /the/current/dir by a user &quot;user&quot; whoms &quot;HOME&quot; variable points
   to &quot;/homes/user&quot;, the following happens:
 </pre>
 <p class="Pp"><span class="Li">&quot;&quot;</span></p>
 <p class="Pp"></p>
-<pre>
-  argvFile()                    # ignores all startup option files;
+<pre>  argvFile()                    # ignores all startup option files;
   argvFile(default=&gt;1)          # searches and expands &quot;/path/.script&quot;,
                                 # if available (the &quot;default&quot; settings);
   argvFile(home=&gt;1)             # searches and expands &quot;/homes/user/.script&quot;,
@@ -436,18 +397,14 @@
     plainly or as a reference to an array of names. Such callback code will be
     called <i>once</i> and will receive the name of the script.</p>
 <p class="Pp"></p>
-<pre>
-  # use &quot;.config&quot;
+<pre>  # use &quot;.config&quot;
   argvFile(startupFilename =&gt; '.config');
-
   # use &quot;.config&quot; or &quot;config&quot;
   argvFile(startupFilename =&gt; [qw(.config config)]);
-
   # emulate the default behaviour,
   # but use an extra dot postfix
   my $nameBuilder=sub {join('', '.', basename($_[0]), '.');};
   argvFile(startupFilename =&gt; $nameBuilder);
-
   # use .(script)rc or .(script)/config
   my $nameBuilder=sub
                    {
@@ -493,8 +450,7 @@
     <span class="Li">@ARGV</span> - assuming there will be another utility
     reading option files.</p>
 <p class="Pp"></p>
-<pre>
- Examples:
+<pre> Examples:
   @rfile          rfile will be opened, its contents is
                   made part of @ARGV.
   @@rfile         cascade: &quot;@rfile&quot; is written back to
@@ -510,8 +466,7 @@
     well if you prefer. To do this, simply pass a <i>reference</i> to this array
     by parameter <b>array</b>.</p>
 <p class="Pp"></p>
-<pre>
- Examples:
+<pre> Examples:
   argvFile()                    # processes @ARGV;
   argvFile(array=&gt;\@options);   # processes @options;
 </pre>
@@ -519,8 +474,7 @@
 <p class="Pp">By default, &quot;@&quot; is the prefix used to mark an option
     file. This can be changed by using the optional parameter <b>prefix</b>:</p>
 <p class="Pp"></p>
-<pre>
- Examples:
+<pre> Examples:
   argvFile();                   # use &quot;@&quot;;
   argvFile(prefix=&gt;'~');        # use &quot;~&quot;;
 </pre>
@@ -533,8 +487,7 @@
     prefixes. This can be avoided by offering an <i>option</i> that can be used
     instead of a prefix, using the optional parameter <b>fileOption</b>:</p>
 <p class="Pp"></p>
-<pre>
-  # install a file option
+<pre>  # install a file option
   # (all lines are equivalent)
   argvFile(fileOption=&gt;'options');
   argvFile(fileOption=&gt;'-options');
@@ -548,12 +501,10 @@
 <p class="Pp">Once an option is declared, it <i>can</i> replace a prefix.
     (Prefixes remain in action as well.)</p>
 <p class="Pp"></p>
-<pre>
-   # with -options declared to be a file option,
+<pre>   # with -options declared to be a file option,
    # these sequences are equivalent
    @file
    -options file
-
    # five equivalent cascades
    @@@@file
    -options @@@file
@@ -571,12 +522,9 @@
   LINE INVOCATION</a></h1>
 <p class="Pp">The traditional two line sequence</p>
 <p class="Pp"></p>
-<pre>
-  # load the module
+<pre>  # load the module
   use Getopt::ArgvFile qw(argvFile);
-
   ...
-
   # solve option files
   argvFile(default=&gt;1);
 </pre>
@@ -584,8 +532,7 @@
     <span class="Li">&quot;argvFile()&quot;</span> to
     <span class="Li">&quot;use()&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  # load module and process option file hints in @ARGV
+<pre>  # load module and process option file hints in @ARGV
   use Getopt::ArgvFile default=&gt;1;
 </pre>
 <p class="Pp">Please note that in this case option file hints are processed at
@@ -595,20 +542,18 @@
 <p class="Pp">In versions 1.07 and above, implicit option file handling is the
     <i>default</i> and only suppressed for the traditional</p>
 <p class="Pp"></p>
-<pre>
-  use Getopt::ArgvFile qw(argvFile);
+<pre>  use Getopt::ArgvFile qw(argvFile);
 </pre>
 <p class="Pp">loading, for reasons of backwards compatibility. A simple loading
     like</p>
 <p class="Pp"></p>
-<pre>
-  use Getopt::ArgvFile;
+<pre>  use Getopt::ArgvFile;
 </pre>
 <p class="Pp"><i>will</i> process option hints! If you want to suppress this,
-    use the <b></b><b>&quot;justload&quot;</b><b></b> switch:</p>
+    use the <b></b><span class="Li"><b>&quot;justload&quot;</b></span><b></b>
+    switch:</p>
 <p class="Pp"></p>
-<pre>
-  use Getopt::ArgvFile justload=&gt;1;
+<pre>  use Getopt::ArgvFile justload=&gt;1;
 </pre>
 <p class="Pp">See <i>FUNCTIONS</i> for additional informations.</p>
 </section>

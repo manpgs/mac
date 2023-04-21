@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>charnames(3pm)</title>
 </head>
@@ -29,23 +30,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use charnames ':full';
+<pre> use charnames ':full';
  print &quot;\N{GREEK SMALL LETTER SIGMA} is called sigma.\n&quot;;
  print &quot;\N{LATIN CAPITAL LETTER E WITH VERTICAL LINE BELOW}&quot;,
        &quot; is an officially named sequence of two Unicode characters\n&quot;;
-
  use charnames ':loose';
  print &quot;\N{Greek small-letter  sigma}&quot;,
         &quot;can be used to ignore case, underscores, most blanks,&quot;
         &quot;and when you aren't sure if the official name has hyphens\n&quot;;
-
  use charnames ':short';
  print &quot;\N{greek:Sigma} is an upper-case sigma.\n&quot;;
-
  use charnames qw(cyrillic greek);
  print &quot;\N{sigma} is Greek sigma, and \N{be} is Cyrillic b.\n&quot;;
-
  use utf8;
  use charnames &quot;:full&quot;, &quot;:alias&quot; =&gt; {
    e_ACUTE =&gt; &quot;LATIN SMALL LETTER E WITH ACUTE&quot;,
@@ -56,7 +52,6 @@
  print &quot;\N{mychar} allows me to name private use characters.\n&quot;;
  print &quot;And I can create synonyms in other languages,&quot;,
        &quot; such as \N{XXXXXXX} for &quot;BICYCLIST (U+1F6B4)\n&quot;;
-
  use charnames ();
  print charnames::viacode(0x1234); # prints &quot;ETHIOPIC SYLLABLE SEE&quot;
  printf &quot;%04X&quot;, charnames::vianame(&quot;GOTHIC LETTER AHSA&quot;); # prints
@@ -86,7 +81,7 @@
       point to get its Unicode name.</li>
 </ul>
 <p class="Pp">Starting in Perl v5.16, any occurrence of
-    <span class="Li">&quot;\N{</span><i>CHARNAME</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>CHARNAME</i></span><span class="Li">}&quot;</span>
     sequences in a double-quotish string automatically loads this module with
     arguments <span class="Li">&quot;:full&quot;</span> and
     <span class="Li">&quot;:short&quot;</span> (described below) if it hasn't
@@ -96,16 +91,16 @@
     enable this usage. (However, prior to v5.16, the form
     <span class="Li">&quot;use&#x00A0;charnames&#x00A0;();&quot;</span> did not
     enable
-    <span class="Li">&quot;\N{</span><i>CHARNAME</i><span class="Li">}&quot;</span>.)</p>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>CHARNAME</i></span><span class="Li">}&quot;</span>.)</p>
 <p class="Pp">Note that
-    <span class="Li">&quot;\N{U+</span><i>...</i><span class="Li">}&quot;</span>,
+    <span class="Li">&quot;\N{U+</span><span class="Li"><i>...</i></span><span class="Li">}&quot;</span>,
     where the <i>...</i> is a hexadecimal number, also inserts a character into
     a string. The character it inserts is the one whose Unicode code point
     (ordinal value) is equal to the number. For example,
     <span class="Li">&quot;\N{U+263a}&quot;</span> is the Unicode (white
     background, black foreground) smiley face equivalent to
     <span class="Li">&quot;\N{WHITE SMILING FACE}&quot;</span>. Also note,
-    <span class="Li">&quot;\N{</span><i>...</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>...</i></span><span class="Li">}&quot;</span>
     can mean a regex quantifier instead of a character name, when the <i>...</i>
     is a number (or comma separated pair of numbers (see &quot;QUANTIFIERS&quot;
     in perlreref), and is not related to this pragma.</p>
@@ -116,7 +111,7 @@
     aliases.</p>
 <p class="Pp">If <span class="Li">&quot;:full&quot;</span> is present, for
     expansion of
-    <span class="Li">&quot;\N{</span><i>CHARNAME</i><span class="Li">}&quot;</span>,
+    <span class="Li">&quot;\N{</span><span class="Li"><i>CHARNAME</i></span><span class="Li">}&quot;</span>,
     the string <i>CHARNAME</i> is first looked up in the list of standard
     Unicode character names.</p>
 <p class="Pp"><span class="Li">&quot;:loose&quot;</span> is a variant of
@@ -124,11 +119,11 @@
     less precisely specified. Details are in &quot;LOOSE MATCHES&quot;.</p>
 <p class="Pp">If <span class="Li">&quot;:short&quot;</span> is present, and
     <i>CHARNAME</i> has the form
-    <span class="Li">&quot;</span><i>SCRIPT</i><span class="Li">:</span><i>CNAME</i><span class="Li">&quot;</span>,
+    <span class="Li">&quot;</span><span class="Li"><i>SCRIPT</i></span><span class="Li">:</span><span class="Li"><i>CNAME</i></span><span class="Li">&quot;</span>,
     then <i>CNAME</i> is looked up as a letter in script <i>SCRIPT</i>, as
     described in the next paragraph. Or, if <span class="Li">&quot;use
     charnames&quot;</span> is used with script name arguments, then for
-    <span class="Li">&quot;\N{</span><i>CHARNAME</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>CHARNAME</i></span><span class="Li">}&quot;</span>
     the name <i>CHARNAME</i> is looked up as a letter in the given scripts (in
     the specified order). Customized aliases can override these, and are
     explained in &quot;CUSTOM ALIASES&quot;.</p>
@@ -136,8 +131,7 @@
     <i>SCRIPTNAME</i>, this pragma looks in the table of standard Unicode names
     for the names</p>
 <p class="Pp"></p>
-<pre>
-  SCRIPTNAME CAPITAL LETTER CHARNAME
+<pre>  SCRIPTNAME CAPITAL LETTER CHARNAME
   SCRIPTNAME SMALL LETTER CHARNAME
   SCRIPTNAME LETTER CHARNAME
 </pre>
@@ -166,9 +160,9 @@
     input name is that of a character that won't fit into a byte (i.e., whose
     ordinal is above 255).</p>
 <p class="Pp">Otherwise, any string that includes a
-    <span class="Li">&quot;\N{</span><i>charname</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>charname</i></span><span class="Li">}&quot;</span>
     or
-    <span class="Li">&quot;\N{U+</span><i>code&#x00A0;point</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{U+</span><span class="Li"><i>code&#x00A0;point</i></span><span class="Li">}&quot;</span>
     will automatically have Unicode rules (see &quot;Byte and Character
     Semantics&quot; in perlunicode).</p>
 </section>
@@ -254,8 +248,7 @@
     SPACE&quot; on EBCDIC platforms.</p>
 <p class="Pp">Aliases are added either by the use of anonymous hashes:</p>
 <p class="Pp"></p>
-<pre>
-    use charnames &quot;:alias&quot; =&gt; {
+<pre>    use charnames &quot;:alias&quot; =&gt; {
         e_ACUTE =&gt; &quot;LATIN SMALL LETTER E WITH ACUTE&quot;,
         mychar1 =&gt; 0xE8000,
         };
@@ -263,16 +256,14 @@
 </pre>
 <p class="Pp">or by using a file containing aliases:</p>
 <p class="Pp"></p>
-<pre>
-    use charnames &quot;:alias&quot; =&gt; &quot;pro&quot;;
+<pre>    use charnames &quot;:alias&quot; =&gt; &quot;pro&quot;;
 </pre>
 <p class="Pp">This will try to read
     <span class="Li">&quot;unicore/pro_alias.pl&quot;</span> from the
     <span class="Li">@INC</span> path. This file should return a list in plain
     perl:</p>
 <p class="Pp"></p>
-<pre>
-    (
+<pre>    (
     A_GRAVE         =&gt; &quot;LATIN CAPITAL LETTER A WITH GRAVE&quot;,
     A_CIRCUM        =&gt; &quot;LATIN CAPITAL LETTER A WITH CIRCUMFLEX&quot;,
     A_DIAERES       =&gt; &quot;LATIN CAPITAL LETTER A WITH DIAERESIS&quot;,
@@ -288,8 +279,7 @@
     argument (if no other argument is given), and you can give the
     <span class="Li">&quot;:full&quot;</span> explicitly as well, like</p>
 <p class="Pp"></p>
-<pre>
-    use charnames &quot;:full&quot;, &quot;:alias&quot; =&gt; &quot;pro&quot;;
+<pre>    use charnames &quot;:full&quot;, &quot;:alias&quot; =&gt; &quot;pro&quot;;
 </pre>
 <p class="Pp"><span class="Li">&quot;:loose&quot;</span> has no effect with
     these. Input names must match exactly, using
@@ -329,8 +319,7 @@
     <span class="Li">&quot;string_vianame&quot;</span> returns a string. For
     example,</p>
 <p class="Pp"></p>
-<pre>
-   printf &quot;U+%04X&quot;, charnames::vianame(&quot;FOUR TEARDROP-SPOKED ASTERISK&quot;);
+<pre>   printf &quot;U+%04X&quot;, charnames::vianame(&quot;FOUR TEARDROP-SPOKED ASTERISK&quot;);
 </pre>
 <p class="Pp">prints &quot;U+2722&quot;.</p>
 <p class="Pp">This leads to the other two differences. Since a single code point
@@ -347,8 +336,7 @@
 <p class="Pp">Returns the full name of the character indicated by the numeric
     code. For example,</p>
 <p class="Pp"></p>
-<pre>
-    print charnames::viacode(0x2722);
+<pre>    print charnames::viacode(0x2722);
 </pre>
 <p class="Pp">prints &quot;FOUR TEARDROP-SPOKED ASTERISK&quot;.</p>
 <p class="Pp">The name returned is the &quot;best&quot; (defined below) official
@@ -429,8 +417,7 @@
     (inside the scope which <span class="Li">&quot;use&quot;</span>s the module)
     with the following magic incantation:</p>
 <p class="Pp"></p>
-<pre>
-    sub import {
+<pre>    sub import {
         shift;
         $^H{charnames} = \&amp;translator;
     }
@@ -438,7 +425,7 @@
 <p class="Pp">Here <b>translator()</b> is a subroutine which takes
     <i>CHARNAME</i> as an argument, and returns text to insert into the string
     instead of the
-    <span class="Li">&quot;\N{</span><i>CHARNAME</i><span class="Li">}&quot;</span>
+    <span class="Li">&quot;\N{</span><span class="Li"><i>CHARNAME</i></span><span class="Li">}&quot;</span>
     escape.</p>
 <p class="Pp">This is the only way you can create a custom named sequence of
     code points.</p>
@@ -447,8 +434,7 @@
     should check the current state of
     <span class="Li">&quot;bytes&quot;</span>-flag as in:</p>
 <p class="Pp"></p>
-<pre>
-    use bytes ();                      # for $bytes::hint_bits
+<pre>    use bytes ();                      # for $bytes::hint_bits
     sub translator {
         if ($^H &amp; $bytes::hint_bits) {
             return bytes_translator(@_);

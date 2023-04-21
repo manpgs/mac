@@ -25,6 +25,7 @@
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DTRACE(1)</title>
 </head>
@@ -438,12 +439,10 @@
     Tracing Guide</span>.</cite> The steps for adding probes are as follows:</p>
 <ol class="Bl-enum">
   <li>Name the provider and specify its probes, using the following form:
-    <div class="Bd Pp">
-    <pre>
-provider Example {
+    <div class="Bd Pp Li">
+    <pre>provider Example {
 	probe increment(int);
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp">This defines the <code class="Li">Example</code> provider with
         one probe, <code class="Li">increment</code>, that takes a single int
@@ -463,29 +462,23 @@ provider Example {
     <p class="Pp">For each probe defined in the provider, the
         <span class="Pa">provider.h</span> file will contain two macros. The
         naming is as follows:</p>
-    <div class="Bd Pp">
-    <pre>
-PROVIDER_PROBENAME()
-PROVIDER_PROBENAME_ENABLED()
-    </pre>
+    <div class="Bd Pp Li">
+    <pre>PROVIDER_PROBENAME()
+PROVIDER_PROBENAME_ENABLED()</pre>
     </div>
     <p class="Pp">In the Example provider, the increment probe becomes:</p>
-    <div class="Bd Pp">
-    <pre>
-EXAMPLE_INCREMENT()
-EXAMPLE_INCREMENT_ENABLED()
-    </pre>
+    <div class="Bd Pp Li">
+    <pre>EXAMPLE_INCREMENT()
+EXAMPLE_INCREMENT_ENABLED()</pre>
     </div>
     <p class="Pp">Place a macro invocation in the code at each site to be
         traced. If the arguments passed to a probe are expensive to calculate,
         you may guard the probe placement like this:</p>
-    <div class="Bd Pp">
-    <pre>
-if (EXAMPLE_INCREMENT_ENABLED()) {
+    <div class="Bd Pp Li">
+    <pre>if (EXAMPLE_INCREMENT_ENABLED()) {
 	argument = /* Expensive argument calculation code here */;
 	EXAMPLE_INCREMENT(argument);
-};
-    </pre>
+};</pre>
     </div>
     <p class="Pp">The if test will only succeed when the increment probe is
         active.</p>
@@ -755,7 +748,7 @@ if (EXAMPLE_INCREMENT_ENABLED()) {
       <a class="permalink" href="#tick"><b class="Sy" id="tick">tick</b></a>
       providers set <var class="Va">arg1</var> to the address of the instruction
       that was running when the action fired.</dd>
-  <dt><var class="Va">args[]</var></dt>
+  <dt id="args__"><var class="Va">args[]</var></dt>
   <dd>Typed arguments of the current probe, if available. See
       <code class="Fl">-v</code>.</dd>
   <dt><var class="Vt">uint64_t</var> <var class="Va">caller</var></dt>

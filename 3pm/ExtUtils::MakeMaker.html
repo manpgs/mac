@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ExtUtils::MakeMaker(3pm)</title>
 </head>
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use ExtUtils::MakeMaker;
-
+<pre>  use ExtUtils::MakeMaker;
   WriteMakefile(
       NAME              =&gt; &quot;Foo::Bar&quot;,
       VERSION_FROM      =&gt; &quot;lib/Foo/Bar.pm&quot;,
@@ -74,8 +73,7 @@
 <p class="Pp">The generated Makefile enables the user of the extension to
   invoke</p>
 <p class="Pp"></p>
-<pre>
-  perl Makefile.PL # optionally &quot;perl Makefile.PL verbose&quot;
+<pre>  perl Makefile.PL # optionally &quot;perl Makefile.PL verbose&quot;
   make
   make test        # optionally set TEST_VERBOSE=1
   make install     # See below
@@ -83,13 +81,11 @@
 <p class="Pp">The Makefile to be produced may be altered by adding arguments of
     the form <span class="Li">&quot;KEY=VALUE&quot;</span>. E.g.</p>
 <p class="Pp"></p>
-<pre>
-  perl Makefile.PL INSTALL_BASE=~
+<pre>  perl Makefile.PL INSTALL_BASE=~
 </pre>
 <p class="Pp">Other interesting targets in the generated Makefile are</p>
 <p class="Pp"></p>
-<pre>
-  make config     # to check if the Makefile is up-to-date
+<pre>  make config     # to check if the Makefile is up-to-date
   make clean      # delete local temp files (Makefile gets renamed)
   make realclean  # delete derived files (including ./blib)
   make ci         # check in all the files in the MANIFEST file
@@ -110,15 +106,13 @@
     <i>t/</i> directory. To do so, use the <i>test</i> directive in your
     <i>Makefile.PL</i>. For example, if you had tests in:</p>
 <p class="Pp"></p>
-<pre>
-    t/foo
+<pre>    t/foo
     t/foo/bar
 </pre>
 <p class="Pp">You could tell make to run tests in both of those directories with
     the following directives:</p>
 <p class="Pp"></p>
-<pre>
-    test =&gt; {TESTS =&gt; 't/*/*.t t/*/*/*.t'}
+<pre>    test =&gt; {TESTS =&gt; 't/*/*.t t/*/*/*.t'}
     test =&gt; {TESTS =&gt; 't/foo/*.t t/foo/bar/*.t'}
 </pre>
 <p class="Pp">The first will run all test files in all first-level
@@ -127,15 +121,13 @@
 <p class="Pp">If you'd like to see the raw output of your tests, set the
     <span class="Li">&quot;TEST_VERBOSE&quot;</span> variable to true.</p>
 <p class="Pp"></p>
-<pre>
-  make test TEST_VERBOSE=1
+<pre>  make test TEST_VERBOSE=1
 </pre>
 <p class="Pp">If you want to run particular test files, set the
     <span class="Li">&quot;TEST_FILES&quot;</span> variable. It is possible to
     use globbing with this mechanism.</p>
 <p class="Pp"></p>
-<pre>
-  make test TEST_FILES='t/foobar.t t/dagobah*.t'
+<pre>  make test TEST_FILES='t/foobar.t t/dagobah*.t'
 </pre>
 <p class="Pp">Windows users who are using
     <span class="Li">&quot;nmake&quot;</span> should note that due to a bug in
@@ -143,8 +135,7 @@
     <span class="Li">&quot;TEST_FILES&quot;</span> you must use back-slashes
     instead of forward-slashes.</p>
 <p class="Pp"></p>
-<pre>
-  nmake test TEST_FILES='t\foobar.t t\dagobah*.t'
+<pre>  nmake test TEST_FILES='t\foobar.t t\dagobah*.t'
 </pre>
 </section>
 <section class="Ss">
@@ -157,16 +148,14 @@
 <p class="Pp">If you want to debug some other testfile, set the
     <span class="Li">&quot;TEST_FILE&quot;</span> variable thusly:</p>
 <p class="Pp"></p>
-<pre>
-  make testdb TEST_FILE=t/mytest.t
+<pre>  make testdb TEST_FILE=t/mytest.t
 </pre>
 <p class="Pp">By default the debugger is called using
     <span class="Li">&quot;-d&quot;</span> option to perl. If you want to
     specify some other option, set the
     <span class="Li">&quot;TESTDB_SW&quot;</span> variable:</p>
 <p class="Pp"></p>
-<pre>
-  make testdb TESTDB_SW=-Dx
+<pre>  make testdb TESTDB_SW=-Dx
 </pre>
 </section>
 <section class="Ss">
@@ -183,10 +172,8 @@
     counterparts. Which counterparts are chosen depends on the setting of
     INSTALLDIRS according to the following table:</p>
 <p class="Pp"></p>
-<pre>
-                                 INSTALLDIRS set to
+<pre>                                 INSTALLDIRS set to
                            perl        site          vendor
-
                  PERLPREFIX      SITEPREFIX          VENDORPREFIX
   INST_ARCHLIB   INSTALLARCHLIB  INSTALLSITEARCH     INSTALLVENDORARCH
   INST_LIB       INSTALLPRIVLIB  INSTALLSITELIB      INSTALLVENDORLIB
@@ -201,14 +188,12 @@
 <p class="Pp">You can check the values of these variables on your system
   with</p>
 <p class="Pp"></p>
-<pre>
-    perl '-V:install.*'
+<pre>    perl '-V:install.*'
 </pre>
 <p class="Pp">And to check the sequence in which the library directories are
     searched by perl, run</p>
 <p class="Pp"></p>
-<pre>
-    perl -le 'print join $/, @INC'
+<pre>    perl -le 'print join $/, @INC'
 </pre>
 <p class="Pp">Sometimes older versions of the module you're installing live in
     other directories in <span class="Li">@INC</span>. Because Perl loads the
@@ -218,8 +203,7 @@
     (not simply older ones) set the <span class="Li">&quot;UNINST&quot;</span>
     variable.</p>
 <p class="Pp"></p>
-<pre>
-    make install UNINST=1
+<pre>    make install UNINST=1
 </pre>
 </section>
 <section class="Ss">
@@ -230,16 +214,14 @@
 <p class="Pp">To have everything installed in your home directory, do the
     following.</p>
 <p class="Pp"></p>
-<pre>
-    # Unix users, INSTALL_BASE=~ works fine
+<pre>    # Unix users, INSTALL_BASE=~ works fine
     perl Makefile.PL INSTALL_BASE=/path/to/your/home/dir
 </pre>
 <p class="Pp">Like PREFIX, it sets several INSTALL* attributes at once. Unlike
     PREFIX it is easy to predict where the module will end up. The installation
     pattern looks like this:</p>
 <p class="Pp"></p>
-<pre>
-    INSTALLARCHLIB     INSTALL_BASE/lib/perl5/$Config{archname}
+<pre>    INSTALLARCHLIB     INSTALL_BASE/lib/perl5/$Config{archname}
     INSTALLPRIVLIB     INSTALL_BASE/lib/perl5
     INSTALLBIN         INSTALL_BASE/bin
     INSTALLSCRIPT      INSTALL_BASE/bin
@@ -258,8 +240,7 @@
 <p class="Pp">PREFIX and LIB can be used to set several INSTALL* attributes in
     one go. Here's an example for installing into your home directory.</p>
 <p class="Pp"></p>
-<pre>
-    # Unix users, PREFIX=~ works fine
+<pre>    # Unix users, PREFIX=~ works fine
     perl Makefile.PL PREFIX=/path/to/your/home/dir
 </pre>
 <p class="Pp">This will install all files in the module under your home
@@ -271,8 +252,7 @@
 <p class="Pp">Another way to specify many INSTALL directories with a single
     parameter is LIB.</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL LIB=~/lib
+<pre>    perl Makefile.PL LIB=~/lib
 </pre>
 <p class="Pp">This will install the module's architecture-independent files into
     ~/lib, the architecture-dependent files into ~/lib/$archname.</p>
@@ -294,8 +274,7 @@
     INSTALLSCRIPT, etc. will be appropriate, and this incantation will be the
     best:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL;
+<pre>    perl Makefile.PL;
     make;
     make test
     make install
@@ -311,8 +290,7 @@
     probably have changed since perl itself has been installed. They will have
     to do this by calling</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL INSTALLSITELIB=/afs/here/today \
+<pre>    perl Makefile.PL INSTALLSITELIB=/afs/here/today \
         INSTALLSCRIPT=/afs/there/now INSTALLMAN3DIR=/afs/for/manpages
     make
 </pre>
@@ -330,8 +308,7 @@
     appropriate targets in the Makefile whenever an extension is built. You can
     invoke the corresponding section of the makefile with</p>
 <p class="Pp"></p>
-<pre>
-    make perl
+<pre>    make perl
 </pre>
 <p class="Pp">That produces a new perl binary in the current directory with all
     extensions linked in that can be found in INST_ARCHLIB, SITELIBEXP, and
@@ -343,21 +320,18 @@
 <p class="Pp">The binary can be installed into the directory where perl normally
     resides on your machine with</p>
 <p class="Pp"></p>
-<pre>
-    make inst_perl
+<pre>    make inst_perl
 </pre>
 <p class="Pp">To produce a perl binary with a different name than
     <span class="Li">&quot;perl&quot;</span>, either say</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL MAP_TARGET=myperl
+<pre>    perl Makefile.PL MAP_TARGET=myperl
     make myperl
     make inst_perl
 </pre>
 <p class="Pp">or say</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL
+<pre>    perl Makefile.PL
     make myperl MAP_TARGET=myperl
     make inst_perl MAP_TARGET=myperl
 </pre>
@@ -375,13 +349,11 @@
     explicitly set the linktype with the invocation of the Makefile.PL or
   make:</p>
 <p class="Pp"></p>
-<pre>
-    perl Makefile.PL LINKTYPE=static    # recommended
+<pre>    perl Makefile.PL LINKTYPE=static    # recommended
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    make LINKTYPE=static                # works on most systems
+<pre>    make LINKTYPE=static                # works on most systems
 </pre>
 </section>
 <section class="Ss">
@@ -406,8 +378,7 @@
     extension is recognized as a standard extension, then other variables
     default to the following:</p>
 <p class="Pp"></p>
-<pre>
-  PERL_INC     = PERL_SRC
+<pre>  PERL_INC     = PERL_SRC
   PERL_LIB     = PERL_SRC/lib
   PERL_ARCHLIB = PERL_SRC/lib
   INST_LIB     = PERL_LIB
@@ -417,8 +388,7 @@
     MakeMaker will leave PERL_SRC undefined and default to using the installed
     copy of the perl library. The other variables default to the following:</p>
 <p class="Pp"></p>
-<pre>
-  PERL_INC     = $archlibexp/CORE
+<pre>  PERL_INC     = $archlibexp/CORE
   PERL_LIB     = $privlibexp
   PERL_ARCHLIB = $archlibexp
   INST_LIB     = ./blib/lib
@@ -473,8 +443,7 @@
       or relative path or URL to the binary archive for a particular
       architecture. For example:
     <p class="Pp"></p>
-    <pre>
-        perl Makefile.PL BINARY_LOCATION=x86/Agent.tar.gz
+    <pre>        perl Makefile.PL BINARY_LOCATION=x86/Agent.tar.gz
     </pre>
     <p class="Pp">builds a PPD package that references a binary of the
         <span class="Li">&quot;Agent&quot;</span> package, located in the
@@ -558,15 +527,13 @@
   <dt id="DLEXT"><a class="permalink" href="#DLEXT">DLEXT</a></dt>
   <dd>Specifies the extension of the module's loadable object. For example:
     <p class="Pp"></p>
-    <pre>
-  DLEXT =&gt; 'unusual_ext', # Default value is $Config{so}
+    <pre>  DLEXT =&gt; 'unusual_ext', # Default value is $Config{so}
     </pre>
     <p class="Pp">NOTE: When using this option to alter the extension of a
         module's loadable object, it is also necessary that the module's pm file
         specifies the same change:</p>
     <p class="Pp"></p>
-    <pre>
-  local $DynaLoader::dl_dlext = 'unusual_ext';
+    <pre>  local $DynaLoader::dl_dlext = 'unusual_ext';
     </pre>
   </dd>
   <dt id="DL_FUNCS"><a class="permalink" href="#DL_FUNCS">DL_FUNCS</a></dt>
@@ -576,13 +543,11 @@
       present. The routine names supplied will be expanded in the same way as
       XSUB names are expanded by the <b>XS()</b> macro. Defaults to
     <p class="Pp"></p>
-    <pre>
-  {&quot;$(NAME)&quot; =&gt; [&quot;boot_$(NAME)&quot; ] }
+    <pre>  {&quot;$(NAME)&quot; =&gt; [&quot;boot_$(NAME)&quot; ] }
     </pre>
     <p class="Pp">e.g.</p>
     <p class="Pp"></p>
-    <pre>
-  {&quot;RPC&quot; =&gt; [qw( boot_rpcb rpcb_gettime getnetconfigent )],
+    <pre>  {&quot;RPC&quot; =&gt; [qw( boot_rpcb rpcb_gettime getnetconfigent )],
    &quot;NetconfigPtr&quot; =&gt; [ 'DESTROY'] }
     </pre>
     <p class="Pp">Please see the ExtUtils::Mksymlists documentation for more
@@ -764,24 +729,21 @@
   <dd>An anonymous array of alternative library specifications to be searched
       for (in order) until at least one library is found. E.g.
     <p class="Pp"></p>
-    <pre>
-  'LIBS' =&gt; [&quot;-lgdbm&quot;, &quot;-ldbm -lfoo&quot;, &quot;-L/path -ldbm.nfs&quot;]
+    <pre>  'LIBS' =&gt; [&quot;-lgdbm&quot;, &quot;-ldbm -lfoo&quot;, &quot;-L/path -ldbm.nfs&quot;]
     </pre>
     <p class="Pp">Mind, that any element of the array contains a complete set of
         arguments for the ld command. So do not specify</p>
     <p class="Pp"></p>
-    <pre>
-  'LIBS' =&gt; [&quot;-ltcl&quot;, &quot;-ltk&quot;, &quot;-lX11&quot;]
+    <pre>  'LIBS' =&gt; [&quot;-ltcl&quot;, &quot;-ltk&quot;, &quot;-lX11&quot;]
     </pre>
     <p class="Pp">See ODBM_File/Makefile.PL for an example, where an array is
         needed. If you specify a scalar as in</p>
     <p class="Pp"></p>
-    <pre>
-  'LIBS' =&gt; &quot;-ltcl -ltk -lX11&quot;
+    <pre>  'LIBS' =&gt; &quot;-ltcl -ltk -lX11&quot;
     </pre>
     <p class="Pp">MakeMaker will turn it into an array with one element.</p>
   </dd>
-  <dt id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></dt>
+  <dt>LICENSE</dt>
   <dd>Available in version 6.31 and above.
     <p class="Pp">The licensing terms of your distribution. Generally it's
         &quot;perl_5&quot; for the same license as Perl itself.</p>
@@ -835,8 +797,7 @@
         <span class="Li">&quot;blib/man1/&quot;</span> directory, as in the
         following example:</p>
     <p class="Pp"></p>
-    <pre>
-  MAN1PODS            =&gt; {
+    <pre>  MAN1PODS            =&gt; {
     'doc/command.pod'    =&gt; 'blib/man1/command.1',
     'scripts/script.pl'  =&gt; 'blib/man1/script.1',
   }
@@ -887,21 +848,15 @@
         <span class="Li">&quot;meta-spec&quot;</span> the version you want to
         use.</p>
     <p class="Pp"></p>
-    <pre>
-  META_MERGE        =&gt; {
-
+    <pre>  META_MERGE        =&gt; {
     &quot;meta-spec&quot; =&gt; { version =&gt; 2 },
-
     resources =&gt; {
-
       repository =&gt; {
           type =&gt; 'git',
           url =&gt; 'git://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker.git',
           web =&gt; 'https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker',
       },
-
     },
-
   },
     </pre>
   </dd>
@@ -914,7 +869,7 @@
   <dt id="MYEXTLIB"><a class="permalink" href="#MYEXTLIB">MYEXTLIB</a></dt>
   <dd>If the extension links to a library that it builds, set this to the name
       of the library (see SDBM_File)</dd>
-  <dt id="NAME~2"><a class="permalink" href="#NAME~2">NAME</a></dt>
+  <dt>NAME</dt>
   <dd>The package representing the distribution. For example,
       <span class="Li">&quot;Test::More&quot;</span> or
       <span class="Li">&quot;ExtUtils::MakeMaker&quot;</span>. It will be used
@@ -990,8 +945,7 @@
       protects them, since this value is intended to be inserted in a shell
       command line in the Makefile. E.g.:
     <p class="Pp"></p>
-    <pre>
-  # Perl executable lives in &quot;C:/Program Files/Perl/bin&quot;
+    <pre>  # Perl executable lives in &quot;C:/Program Files/Perl/bin&quot;
   # Normally you don't need to set this yourself!
   $ perl Makefile.PL PERL='&quot;C:/Program Files/Perl/bin/perl.exe&quot; -w'
     </pre>
@@ -1078,35 +1032,29 @@
       and there is an intention, but not a requirement, that the *.PL file make
       the file passed to to as an argument. For example...
     <p class="Pp"></p>
-    <pre>
-    perl foo.PL foo
+    <pre>    perl foo.PL foo
     </pre>
     <p class="Pp">This behavior can be overridden by supplying your own set of
         files to search. PL_FILES accepts a hash ref, the key being the file to
         run and the value is passed in as the first argument when the PL file is
         run.</p>
     <p class="Pp"></p>
-    <pre>
-    PL_FILES =&gt; {'bin/foobar.PL' =&gt; 'bin/foobar'}
-
+    <pre>    PL_FILES =&gt; {'bin/foobar.PL' =&gt; 'bin/foobar'}
     PL_FILES =&gt; {'foo.PL' =&gt; 'foo.c'}
     </pre>
     <p class="Pp">Would run bin/foobar.PL like this:</p>
     <p class="Pp"></p>
-    <pre>
-    perl bin/foobar.PL bin/foobar
+    <pre>    perl bin/foobar.PL bin/foobar
     </pre>
     <p class="Pp">If multiple files from one program are desired an array ref
         can be used.</p>
     <p class="Pp"></p>
-    <pre>
-    PL_FILES =&gt; {'bin/foobar.PL' =&gt; [qw(bin/foobar1 bin/foobar2)]}
+    <pre>    PL_FILES =&gt; {'bin/foobar.PL' =&gt; [qw(bin/foobar1 bin/foobar2)]}
     </pre>
     <p class="Pp">In this case the program will be run multiple times using each
         target file.</p>
     <p class="Pp"></p>
-    <pre>
-    perl bin/foobar.PL bin/foobar1
+    <pre>    perl bin/foobar.PL bin/foobar1
     perl bin/foobar.PL bin/foobar2
     </pre>
     <p class="Pp">PL files are normally run <b>after</b> pm_to_blib and include
@@ -1128,8 +1076,7 @@
   <dt id="PM"><a class="permalink" href="#PM">PM</a></dt>
   <dd>Hashref of .pm files and *.pl files to be installed. e.g.
     <p class="Pp"></p>
-    <pre>
-  {'name_of_file.pm' =&gt; '$(INST_LIB)/install_as.pm'}
+    <pre>  {'name_of_file.pm' =&gt; '$(INST_LIB)/install_as.pm'}
     </pre>
     <p class="Pp">By default this will include *.pm and *.pl and the files found
         in the PMLIBDIRS directories. Defining PM in the Makefile.PL will
@@ -1149,8 +1096,7 @@
       <b>pm_to_blib()</b> phase). It is empty by default, meaning no filtering
       is done. You could use:
     <p class="Pp"></p>
-    <pre>
-  PM_FILTER =&gt; 'perl -ne &quot;print unless /^\\#/&quot;',
+    <pre>  PM_FILTER =&gt; 'perl -ne &quot;print unless /^\\#/&quot;',
     </pre>
     <p class="Pp">to remove all the leading comments on the fly during the
         build. In order to be as portable as possible, please consider using a
@@ -1158,8 +1104,7 @@
         escaped for the Makefile, since what is going to be generated will then
         be:</p>
     <p class="Pp"></p>
-    <pre>
-  PM_FILTER = perl -ne &quot;print unless /^\#/&quot;
+    <pre>  PM_FILTER = perl -ne &quot;print unless /^\#/&quot;
     </pre>
     <p class="Pp">Without the \ before the #, we'd have the start of a Makefile
         comment, and the macro would be incorrectly defined.</p>
@@ -1173,8 +1118,7 @@
       these preprocessor definitions are not available by default. The POLLUTE
       flag specifies that the old names should still be defined:
     <p class="Pp"></p>
-    <pre>
-  perl Makefile.PL POLLUTE=1
+    <pre>  perl Makefile.PL POLLUTE=1
     </pre>
     <p class="Pp">Please inform the module author if this is necessary to
         successfully install a module under 5.6 or later.</p>
@@ -1241,11 +1185,9 @@
         the <span class="Li">&quot;prereqs&quot;</span> field of your
         <i>META.json</i>.</p>
     <p class="Pp"></p>
-    <pre>
-    PREREQ_PM =&gt; {
+    <pre>    PREREQ_PM =&gt; {
         # Require Test::More at least 0.47
         &quot;Test::More&quot; =&gt; &quot;0.47&quot;,
-
         # Require any version of Acme::Buffy
         &quot;Acme::Buffy&quot; =&gt; 0,
     }
@@ -1255,8 +1197,7 @@
   <dd>Bool. If this parameter is true, the prerequisites will be printed to
       stdout and MakeMaker will exit. The output format is an evalable hash ref.
     <p class="Pp"></p>
-    <pre>
-  $PREREQ_PM = {
+    <pre>  $PREREQ_PM = {
                  'A::B' =&gt; Vers1,
                  'C::D' =&gt; Vers2,
                  ...
@@ -1265,8 +1206,7 @@
     <p class="Pp">If a distribution defines a minimal required perl version,
         this is added to the output as an additional line of the form:</p>
     <p class="Pp"></p>
-    <pre>
-  $MIN_PERL_VERSION = '5.008001';
+    <pre>  $MIN_PERL_VERSION = '5.008001';
     </pre>
     <p class="Pp">If BUILD_REQUIRES is not empty, it will be dumped as
         <span class="Li">$BUILD_REQUIRES</span> hashref.</p>
@@ -1275,14 +1215,12 @@
   <dd>RedHatism for <span class="Li">&quot;PREREQ_PRINT&quot;</span>. The output
       format is different, though:
     <p class="Pp"></p>
-    <pre>
-    perl(A::B)&gt;=Vers1 perl(C::D)&gt;=Vers2 ...
+    <pre>    perl(A::B)&gt;=Vers1 perl(C::D)&gt;=Vers2 ...
     </pre>
     <p class="Pp">A minimal required perl version, if present, will look like
         this:</p>
     <p class="Pp"></p>
-    <pre>
-    perl(perl)&gt;=5.008001
+    <pre>    perl(perl)&gt;=5.008001
     </pre>
   </dd>
   <dt id="SITEPREFIX"><a class="permalink" href="#SITEPREFIX">SITEPREFIX</a></dt>
@@ -1345,8 +1283,7 @@
       <span class="Li">VERSION&quot;</span> will be used. The following lines
       will be parsed o.k.:
     <p class="Pp"></p>
-    <pre>
-    # Good
+    <pre>    # Good
     package Foo::Bar 1.23;                      # 1.23
     $VERSION   = '1.00';                        # 1.00
     *VERSION   = \'1.01';                       # 1.01
@@ -1356,8 +1293,7 @@
     </pre>
     <p class="Pp">but these will fail:</p>
     <p class="Pp"></p>
-    <pre>
-    # Bad
+    <pre>    # Bad
     my $VERSION         = '1.01';
     local $VERSION      = '1.02';
     local $FOO::VERSION = '1.30';
@@ -1368,8 +1304,7 @@
     <p class="Pp">&quot;Version strings&quot; are incompatible and should not be
         used.</p>
     <p class="Pp"></p>
-    <pre>
-    # Bad
+    <pre>    # Bad
     $VERSION = 1.2.3;
     $VERSION = v1.2.3;
     </pre>
@@ -1378,8 +1313,7 @@
         version.pm. For compatibility with older MakeMaker you should load on
         the same line as <span class="Li">$VERSION</span> is declared.</p>
     <p class="Pp"></p>
-    <pre>
-    # All on one line
+    <pre>    # All on one line
     use version; our $VERSION = qv(1.2.3);
     </pre>
     <p class="Pp">The file named in VERSION_FROM is not added as a dependency to
@@ -1389,8 +1323,7 @@
         the correct VERSION macro after any change of the file, you would have
         to do something like</p>
     <p class="Pp"></p>
-    <pre>
-    depend =&gt; { Makefile =&gt; '$(VERSION_FROM)' }
+    <pre>    depend =&gt; { Makefile =&gt; '$(VERSION_FROM)' }
     </pre>
     <p class="Pp">See attribute <span class="Li">&quot;depend&quot;</span>
         below.</p>
@@ -1401,8 +1334,7 @@
   <dt id="XS"><a class="permalink" href="#XS">XS</a></dt>
   <dd>Hashref of .xs files. MakeMaker will default this. e.g.
     <p class="Pp"></p>
-    <pre>
-  {'name_of_file.xs' =&gt; 'name_of_file.c'}
+    <pre>  {'name_of_file.xs' =&gt; 'name_of_file.c'}
     </pre>
     <p class="Pp">The .c files will automatically be included in the list of
         files deleted by a make clean.</p>
@@ -1412,8 +1344,7 @@
     <p class="Pp">Hashref with options controlling the operation of
         <span class="Li">&quot;XSMULTI&quot;</span>:</p>
     <p class="Pp"></p>
-    <pre>
-  {
+    <pre>  {
     xs =&gt; {
         all =&gt; {
             # options applying to all .xs files for this distribution
@@ -1484,22 +1415,19 @@
 <dl class="Bl-tag">
   <dt id="clean"><a class="permalink" href="#clean">clean</a></dt>
   <dd>
-    <pre>
-  {FILES =&gt; &quot;*.xyz foo&quot;}
+    <pre>  {FILES =&gt; &quot;*.xyz foo&quot;}
     </pre>
   </dd>
   <dt id="depend"><a class="permalink" href="#depend">depend</a></dt>
   <dd>
-    <pre>
-  {ANY_TARGET =&gt; ANY_DEPENDENCY, ...}
+    <pre>  {ANY_TARGET =&gt; ANY_DEPENDENCY, ...}
     </pre>
     <p class="Pp">(ANY_TARGET must not be given a double-colon rule by
         MakeMaker.)</p>
   </dd>
   <dt id="dist"><a class="permalink" href="#dist">dist</a></dt>
   <dd>
-    <pre>
-  {TARFLAGS =&gt; 'cvfF', COMPRESS =&gt; 'gzip', SUFFIX =&gt; '.gz',
+    <pre>  {TARFLAGS =&gt; 'cvfF', COMPRESS =&gt; 'gzip', SUFFIX =&gt; '.gz',
   SHAR =&gt; 'shar -m', DIST_CP =&gt; 'ln', ZIP =&gt; '/bin/zip',
   ZIPFLAGS =&gt; '-rl', DIST_DEFAULT =&gt; 'private tardist' }
     </pre>
@@ -1512,19 +1440,16 @@
   </dd>
   <dt id="dynamic_lib"><a class="permalink" href="#dynamic_lib">dynamic_lib</a></dt>
   <dd>
-    <pre>
-  {ARMAYBE =&gt; 'ar', OTHERLDFLAGS =&gt; '...', INST_DYNAMIC_DEP =&gt; '...'}
+    <pre>  {ARMAYBE =&gt; 'ar', OTHERLDFLAGS =&gt; '...', INST_DYNAMIC_DEP =&gt; '...'}
     </pre>
   </dd>
   <dt id="linkext"><a class="permalink" href="#linkext">linkext</a></dt>
   <dd>
-    <pre>
-  {LINKTYPE =&gt; 'static', 'dynamic' or ''}
+    <pre>  {LINKTYPE =&gt; 'static', 'dynamic' or ''}
     </pre>
     <p class="Pp">NB: Extensions that have nothing but *.pm files had to say</p>
     <p class="Pp"></p>
-    <pre>
-  {LINKTYPE =&gt; ''}
+    <pre>  {LINKTYPE =&gt; ''}
     </pre>
     <p class="Pp">with Pre-5.0 MakeMakers. Since version 5.00 of MakeMaker such
         a line can be deleted safely. MakeMaker recognizes when there's nothing
@@ -1532,8 +1457,7 @@
   </dd>
   <dt id="macro"><a class="permalink" href="#macro">macro</a></dt>
   <dd>
-    <pre>
-  {ANY_MACRO =&gt; ANY_VALUE, ...}
+    <pre>  {ANY_MACRO =&gt; ANY_VALUE, ...}
     </pre>
   </dd>
   <dt id="postamble"><a class="permalink" href="#postamble">postamble</a></dt>
@@ -1541,15 +1465,13 @@
       one.</dd>
   <dt id="realclean"><a class="permalink" href="#realclean">realclean</a></dt>
   <dd>
-    <pre>
-  {FILES =&gt; '$(INST_ARCHAUTODIR)/*.xyz'}
+    <pre>  {FILES =&gt; '$(INST_ARCHAUTODIR)/*.xyz'}
     </pre>
   </dd>
   <dt id="test"><a class="permalink" href="#test">test</a></dt>
   <dd>Specify the targets for testing.
     <p class="Pp"></p>
-    <pre>
-  {TESTS =&gt; 't/*.t'}
+    <pre>  {TESTS =&gt; 't/*.t'}
     </pre>
     <p class="Pp"><span class="Li">&quot;RECURSIVE_TEST_FILES&quot;</span> can
         be used to include all directories recursively under
@@ -1558,15 +1480,13 @@
         provide your own <span class="Li">&quot;TESTS&quot;</span> attribute,
         defaults to false.</p>
     <p class="Pp"></p>
-    <pre>
-  {RECURSIVE_TEST_FILES=&gt;1}
+    <pre>  {RECURSIVE_TEST_FILES=&gt;1}
     </pre>
     <p class="Pp">This is supported since 6.76</p>
   </dd>
   <dt id="tool_autosplit"><a class="permalink" href="#tool_autosplit">tool_autosplit</a></dt>
   <dd>
-    <pre>
-  {MAXLEN =&gt; 8}
+    <pre>  {MAXLEN =&gt; 8}
     </pre>
   </dd>
 </dl>
@@ -1579,13 +1499,11 @@
     subroutine returns the text it wishes to have written to the Makefile. To
     override a section of the Makefile you can either say:</p>
 <p class="Pp"></p>
-<pre>
-        sub MY::c_o { &quot;new literal text&quot; }
+<pre>        sub MY::c_o { &quot;new literal text&quot; }
 </pre>
 <p class="Pp">or you can edit the default by saying something like:</p>
 <p class="Pp"></p>
-<pre>
-        package MY; # so that &quot;SUPER&quot; works right
+<pre>        package MY; # so that &quot;SUPER&quot; works right
         sub c_o {
             my $inherited = shift-&gt;SUPER::c_o(@_);
             $inherited =~ s/old text/new text/;
@@ -1604,12 +1522,10 @@
 <p class="Pp">Here is a simple example of how to add a new target to the
     generated Makefile:</p>
 <p class="Pp"></p>
-<pre>
-    sub MY::postamble {
+<pre>    sub MY::postamble {
         return &lt;&lt;'MAKE_FRAG';
     $(MYEXTLIB): sdbm/Makefile
             cd sdbm &amp;&amp; $(MAKE) all
-
     MAKE_FRAG
     }
 </pre>
@@ -1652,8 +1568,7 @@
     if you want to do the equivalent to override or create an attribute you
     would say something like</p>
 <p class="Pp"></p>
-<pre>
-    $self-&gt;{LIBS} = ['-ldbm -lucb -lc'];
+<pre>    $self-&gt;{LIBS} = ['-ldbm -lucb -lc'];
 </pre>
 </section>
 <section class="Ss">
@@ -1726,8 +1641,7 @@
     reference to the dist attribute of the WriteMakefile call. The following
     parameters are recognized:</p>
 <p class="Pp"></p>
-<pre>
-    CI           ('ci -u')
+<pre>    CI           ('ci -u')
     COMPRESS     ('gzip --best')
     POSTOP       ('@ :')
     PREOP        ('@ :')
@@ -1742,8 +1656,7 @@
 </pre>
 <p class="Pp">An example:</p>
 <p class="Pp"></p>
-<pre>
-    WriteMakefile(
+<pre>    WriteMakefile(
         ...other options...
         dist =&gt; {
             COMPRESS =&gt; &quot;bzip2&quot;,
@@ -1794,8 +1707,7 @@
     can create a <i>Makefile</i> which does nothing, but succeeds on all the
     &quot;usual&quot; build targets. To do so, use</p>
 <p class="Pp"></p>
-<pre>
-    use ExtUtils::MakeMaker qw(WriteEmptyMakefile);
+<pre>    use ExtUtils::MakeMaker qw(WriteEmptyMakefile);
     WriteEmptyMakefile();
 </pre>
 <p class="Pp">instead of <b>WriteMakefile()</b>.</p>
@@ -1811,8 +1723,7 @@
 <dl class="Bl-tag">
   <dt id="prompt"><a class="permalink" href="#prompt">prompt</a></dt>
   <dd>
-    <pre>
-    my $value = prompt($message);
+    <pre>    my $value = prompt($message);
     my $value = prompt($message, $default);
     </pre>
     <p class="Pp">The <span class="Li">&quot;prompt()&quot;</span> function
@@ -1831,8 +1742,7 @@
   </dd>
   <dt id="os_unsupported"><a class="permalink" href="#os_unsupported">os_unsupported</a></dt>
   <dd>
-    <pre>
-  os_unsupported();
+    <pre>  os_unsupported();
   os_unsupported if $^O eq 'MSWin32';
     </pre>
     <p class="Pp">The <span class="Li">&quot;os_unsupported()&quot;</span>
@@ -1864,8 +1774,7 @@
       as the shell would, and the result is processed before any actual command
       line arguments are processed.
     <p class="Pp"></p>
-    <pre>
-  PERL_MM_OPT='CCFLAGS=&quot;-Wl,-rpath -Wl,/foo/bar/lib&quot; LIBS=&quot;-lwibble -lwobble&quot;'
+    <pre>  PERL_MM_OPT='CCFLAGS=&quot;-Wl,-rpath -Wl,/foo/bar/lib&quot; LIBS=&quot;-lwibble -lwobble&quot;'
     </pre>
   </dd>
   <dt id="PERL_MM_USE_DEFAULT"><a class="permalink" href="#PERL_MM_USE_DEFAULT">PERL_MM_USE_DEFAULT</a></dt>
@@ -1914,7 +1823,7 @@
     &lt;https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker&gt;.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="LICENSE~2"><a class="permalink" href="#LICENSE~2">LICENSE</a></h1>
+<h1 class="Sh" id="LICENSE"><a class="permalink" href="#LICENSE">LICENSE</a></h1>
 <p class="Pp">This program is free software; you can redistribute it and/or
     modify it under the same terms as Perl itself.</p>
 <p class="Pp">See &lt;http://www.perl.com/perl/misc/Artistic.html&gt;</p>

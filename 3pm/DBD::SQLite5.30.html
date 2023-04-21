@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::SQLite(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use DBI;
+<pre>  use DBI;
   my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:dbname=$dbfile&quot;,&quot;&quot;,&quot;&quot;);
 </pre>
 </section>
@@ -93,8 +93,7 @@
     without a parent directory) in the DBI connection string (as a database
     <span class="Li">&quot;name&quot;</span>):</p>
 <p class="Pp"></p>
-<pre>
-  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:dbname=$dbfile&quot;,&quot;&quot;,&quot;&quot;);
+<pre>  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:dbname=$dbfile&quot;,&quot;&quot;,&quot;&quot;);
 </pre>
 <p class="Pp">The file is opened in read/write mode, and will be created if it
     does not exist yet.</p>
@@ -117,8 +116,7 @@
 <p class="Pp">As of 1.41_01, you can pass URI filename (see
     &lt;https://www.sqlite.org/uri.html&gt;) as well for finer control:</p>
 <p class="Pp"></p>
-<pre>
-  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:uri=file:$path_to_dbfile?mode=rwc&quot;);
+<pre>  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:uri=file:$path_to_dbfile?mode=rwc&quot;);
 </pre>
 <p class="Pp">Note that this is not for remote SQLite database connection. You
     can only connect to a local database.</p>
@@ -129,8 +127,7 @@
 <p class="Pp">You can set sqlite_open_flags (only) when you connect to a
     database:</p>
 <p class="Pp"></p>
-<pre>
-  use DBD::SQLite::Constants qw/:file_open/;
+<pre>  use DBD::SQLite::Constants qw/:file_open/;
   my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:$dbfile&quot;, undef, undef, {
     sqlite_open_flags =&gt; SQLITE_OPEN_READONLY,
   });
@@ -159,8 +156,7 @@
       locked&quot; error. To avoid this, set EXLOCK option to false when you
       call <b>tempfile()</b>.
     <p class="Pp"></p>
-    <pre>
-  ($fh, $filename) = tempfile($template, EXLOCK =&gt; 0);
+    <pre>  ($fh, $filename) = tempfile($template, EXLOCK =&gt; 0);
     </pre>
   </dd>
   <dt id="CLEANUP"><a class="permalink" href="#CLEANUP">CLEANUP may not work
@@ -203,8 +199,7 @@
     <span class="Li">&quot;dbish&quot;</span> which comes with the DBI::Shell
     module. Just type:</p>
 <p class="Pp"></p>
-<pre>
-  dbish dbi:SQLite:foo.db
+<pre>  dbish dbi:SQLite:foo.db
 </pre>
 <p class="Pp">On the command line to access the file <i>foo.db</i>.</p>
 <p class="Pp">Alternatively you can install SQLite from the link above without
@@ -219,8 +214,7 @@
     a NUL terminated string, rather than the size of the blob in bytes. In order
     to store natively as a BLOB use the following code:</p>
 <p class="Pp"></p>
-<pre>
-  use DBI qw(:sql_types);
+<pre>  use DBI qw(:sql_types);
   my $dbh = DBI-&gt;connect(&quot;dbi:SQLite:dbfile&quot;,&quot;&quot;,&quot;&quot;);
   
   my $blob = `cat foo.jpg`;
@@ -230,8 +224,7 @@
 </pre>
 <p class="Pp">And then retrieval just works:</p>
 <p class="Pp"></p>
-<pre>
-  $sth = $dbh-&gt;prepare(&quot;SELECT * FROM mytable WHERE id = 1&quot;);
+<pre>  $sth = $dbh-&gt;prepare(&quot;SELECT * FROM mytable WHERE id = 1&quot;);
   $sth-&gt;execute();
   my $row = $sth-&gt;fetch;
   my $blobo = $row-&gt;[1];
@@ -246,8 +239,7 @@
     function with a numeric bind value like this doesn't work as you might
     expect.</p>
 <p class="Pp"></p>
-<pre>
-  my $sth = $dbh-&gt;prepare(q{
+<pre>  my $sth = $dbh-&gt;prepare(q{
     SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; ?;
   });
   $sth-&gt;execute(5);
@@ -256,8 +248,7 @@
     text (and should be quoted) by default. Thus the above statement becomes
     like this while executing:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; &quot;5&quot;;
+<pre>  SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; &quot;5&quot;;
 </pre>
 <p class="Pp">There are four workarounds for this.</p>
 <dl class="Bl-tag">
@@ -267,8 +258,7 @@
       you can always use <span class="Li">&quot;bind_param()&quot;</span> to
       tell the type of a bind value.
     <p class="Pp"></p>
-    <pre>
-  use DBI qw(:sql_types);  # Don't forget this
+    <pre>  use DBI qw(:sql_types);  # Don't forget this
   
   my $sth = $dbh-&gt;prepare(q{
     SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; ?;
@@ -281,8 +271,7 @@
     number</a></dt>
   <dd>This is somewhat weird, but works anyway.
     <p class="Pp"></p>
-    <pre>
-  my $sth = $dbh-&gt;prepare(q{
+    <pre>  my $sth = $dbh-&gt;prepare(q{
     SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; (? + 0);
   });
   $sth-&gt;execute(5);
@@ -292,8 +281,7 @@
     function</a></dt>
   <dd>This is more explicit way to do the above.
     <p class="Pp"></p>
-    <pre>
-  my $sth = $dbh-&gt;prepare(q{
+    <pre>  my $sth = $dbh-&gt;prepare(q{
     SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; cast(? as integer);
   });
   $sth-&gt;execute(5);
@@ -305,8 +293,7 @@
       <span class="Li">&quot;sqlite_see_if_its_a_number&quot;</span> to let
       DBD::SQLite to see if the bind values are numbers or not.
     <p class="Pp"></p>
-    <pre>
-  $dbh-&gt;{sqlite_see_if_its_a_number} = 1;
+    <pre>  $dbh-&gt;{sqlite_see_if_its_a_number} = 1;
   my $sth = $dbh-&gt;prepare(q{
     SELECT bar FROM foo GROUP BY bar HAVING count(*) &gt; ?;
   });
@@ -314,8 +301,7 @@
     </pre>
     <p class="Pp">You can set it to true when you connect to a database.</p>
     <p class="Pp"></p>
-    <pre>
-  my $dbh = DBI-&gt;connect('dbi:SQLite:foo', undef, undef, {
+    <pre>  my $dbh = DBI-&gt;connect('dbi:SQLite:foo', undef, undef, {
     AutoCommit =&gt; 1,
     RaiseError =&gt; 1,
     sqlite_see_if_its_a_number =&gt; 1,
@@ -332,8 +318,7 @@
         <span class="Li">&quot;sqlite_see_if_its_a_number&quot;</span> works
         only for bind values with no explicit type.</p>
     <p class="Pp"></p>
-    <pre>
-  my $dbh = DBI-&gt;connect('dbi:SQLite:foo', undef, undef, {
+    <pre>  my $dbh = DBI-&gt;connect('dbi:SQLite:foo', undef, undef, {
     AutoCommit =&gt; 1,
     RaiseError =&gt; 1,
     sqlite_see_if_its_a_number =&gt; 1,
@@ -358,8 +343,7 @@
     placeholder. You're advised not to use it with other (numbered or named)
     placeholders to avoid confusion.</p>
 <p class="Pp"></p>
-<pre>
-  my $sth = $dbh-&gt;prepare(
+<pre>  my $sth = $dbh-&gt;prepare(
     'update TABLE set a=?1 where b=?2 and a IS NOT ?1'
   );
   $sth-&gt;execute(1, 2);
@@ -428,14 +412,12 @@
     feature and enforce the constraints, preferably as soon as you connect to a
     database and you're not in a transaction:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;do(&quot;PRAGMA foreign_keys = ON&quot;);
+<pre>  $dbh-&gt;do(&quot;PRAGMA foreign_keys = ON&quot;);
 </pre>
 <p class="Pp">And you can explicitly disable the feature whenever you like by
     turning the pragma off:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;do(&quot;PRAGMA foreign_keys = OFF&quot;);
+<pre>  $dbh-&gt;do(&quot;PRAGMA foreign_keys = OFF&quot;);
 </pre>
 <p class="Pp">As of this writing, this feature is disabled by default by the
     SQLite team, and by us, to secure backward compatibility, as this feature
@@ -463,8 +445,7 @@
       <span class="Li">&quot;commit/rollback&quot;</span> methods, or issue the
       corresponding statements.
     <p class="Pp"></p>
-    <pre>
-  $dbh-&gt;{AutoCommit} = 1;
+    <pre>  $dbh-&gt;{AutoCommit} = 1;
   
   $dbh-&gt;begin_work; # or $dbh-&gt;do('BEGIN TRANSACTION');
   
@@ -486,8 +467,7 @@
       internally). You can commit or roll it back freely. Another transaction
       will automatically begin if you execute another statement.
     <p class="Pp"></p>
-    <pre>
-  $dbh-&gt;{AutoCommit} = 0;
+    <pre>  $dbh-&gt;{AutoCommit} = 0;
   
   # $dbh-&gt;do('BEGIN TRANSACTION') is not necessary, but possible
   
@@ -525,8 +505,7 @@
     database handle attribute to false, and the default
     <span class="Li">&quot;deferred&quot;</span> transaction will be used.</p>
 <p class="Pp"></p>
-<pre>
-  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite::memory:&quot;, &quot;&quot;, &quot;&quot;, {
+<pre>  my $dbh = DBI-&gt;connect(&quot;dbi:SQLite::memory:&quot;, &quot;&quot;, &quot;&quot;, {
     sqlite_use_immediate_transaction =&gt; 0,
   });
 </pre>
@@ -549,8 +528,7 @@
     details). So you need to call <span class="Li">&quot;finish&quot;</span>
     before you issue a rollback.</p>
 <p class="Pp"></p>
-<pre>
-  $sth = $dbh-&gt;prepare(&quot;SELECT * FROM t&quot;);
+<pre>  $sth = $dbh-&gt;prepare(&quot;SELECT * FROM t&quot;);
   $dbh-&gt;begin_work;
   eval {
       $sth-&gt;execute;
@@ -611,8 +589,7 @@
 <p class="Pp">Queries like count(*) and avg(bytes) took fractions of a second to
     return, but what surprised him most of all was:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT url, count(*) as count
+<pre>  SELECT url, count(*) as count
   FROM access_log
   GROUP BY url
   ORDER BY count desc
@@ -627,8 +604,7 @@
 <p class="Pp">For best performance be sure to tune your hdparm settings if you
     are using linux. Also you might want to set:</p>
 <p class="Pp"></p>
-<pre>
-  PRAGMA synchronous = OFF
+<pre>  PRAGMA synchronous = OFF
 </pre>
 <p class="Pp">Which will prevent SQLite from doing fsync's when writing (which
     slows down non-transactional writes significantly) at the expense of some
@@ -636,8 +612,7 @@
 <p class="Pp">The memory usage of SQLite can also be tuned using the cache_size
     pragma.</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;do(&quot;PRAGMA cache_size = 800000&quot;);
+<pre>  $dbh-&gt;do(&quot;PRAGMA cache_size = 800000&quot;);
 </pre>
 <p class="Pp">The above will allocate 800M for DB cache; the default is 2M. Your
     sweet spot probably lies somewhere in between.</p>
@@ -666,8 +641,7 @@
         the 3-argument form of &quot;bind_param&quot; in DBI when doing
       updates:</p>
     <p class="Pp"></p>
-    <pre>
-  use DBI qw(:sql_types);
+    <pre>  use DBI qw(:sql_types);
   $dbh-&gt;{sqlite_unicode} = 1;
   my $sth = $dbh-&gt;prepare(&quot;INSERT INTO mytable (blobcolumn) VALUES (?)&quot;);
   
@@ -727,8 +701,7 @@
     methods.</p>
 <section class="Ss">
 <h2 class="Ss" id="table_info"><a class="permalink" href="#table_info">table_info</a></h2>
-<pre>
-  $sth = $dbh-&gt;table_info(undef, $schema, $table, $type, \%attr);
+<pre>  $sth = $dbh-&gt;table_info(undef, $schema, $table, $type, \%attr);
 </pre>
 <p class="Pp">Returns all tables and schemas (databases) as specified in
     &quot;table_info&quot; in DBI. The schema and table arguments will do a
@@ -752,8 +725,7 @@
 <section class="Ss">
 <h2 class="Ss" id="primary_key,_primary_key_info"><a class="permalink" href="#primary_key,_primary_key_info">primary_key,
   primary_key_info</a></h2>
-<pre>
-  @names = $dbh-&gt;primary_key(undef, $schema, $table);
+<pre>  @names = $dbh-&gt;primary_key(undef, $schema, $table);
   $sth   = $dbh-&gt;primary_key_info(undef, $schema, $table, \%attr);
 </pre>
 <p class="Pp">You can retrieve primary key names or more detailed information.
@@ -765,8 +737,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="foreign_key_info"><a class="permalink" href="#foreign_key_info">foreign_key_info</a></h2>
-<pre>
-  $sth = $dbh-&gt;foreign_key_info(undef, $pk_schema, $pk_table,
+<pre>  $sth = $dbh-&gt;foreign_key_info(undef, $pk_schema, $pk_table,
                                 undef, $fk_schema, $fk_table);
 </pre>
 <p class="Pp">Returns information about foreign key constraints, as specified in
@@ -790,8 +761,7 @@
 <p class="Pp"><b>UPDATE_RULE</b>: The referential action for the UPDATE rule.
     The following codes are defined:</p>
 <p class="Pp"></p>
-<pre>
-  CASCADE              0
+<pre>  CASCADE              0
   RESTRICT             1
   SET NULL             2
   NO ACTION            3
@@ -802,8 +772,7 @@
     The codes are the same as for UPDATE_RULE.</p>
 <p class="Pp"><b>DEFERRABILITY</b>: The following codes are defined:</p>
 <p class="Pp"></p>
-<pre>
-  INITIALLY DEFERRED   5
+<pre>  INITIALLY DEFERRED   5
   INITIALLY IMMEDIATE  6
   NOT DEFERRABLE       7
 </pre>
@@ -815,8 +784,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="statistics_info"><a class="permalink" href="#statistics_info">statistics_info</a></h2>
-<pre>
-  $sth = $dbh-&gt;statistics_info(undef, $schema, $table,
+<pre>  $sth = $dbh-&gt;statistics_info(undef, $schema, $table,
                                 $unique_only, $quick);
 </pre>
 <p class="Pp">Returns information about a table and it's indexes, as specified
@@ -844,8 +812,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ping"><a class="permalink" href="#ping">ping</a></h2>
-<pre>
-  my $bool = $dbh-&gt;ping;
+<pre>  my $bool = $dbh-&gt;ping;
 </pre>
 <p class="Pp">returns true if the database file exists (or the database is
     in-memory), and the database connection is active.</p>
@@ -862,15 +829,13 @@
     <span class="Li">&quot;sqlite_&quot;</span> methods. If you need to use an
     older DBI, you can call these like this:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;func( ..., &quot;(method name without sqlite_ prefix)&quot; );
+<pre>  $dbh-&gt;func( ..., &quot;(method name without sqlite_ prefix)&quot; );
 </pre>
 <p class="Pp">Exception: <span class="Li">&quot;sqlite_trace&quot;</span> should
     always be called as is, even with <span class="Li">&quot;func()&quot;</span>
     method (to avoid conflict with DBI's <b>trace()</b> method).</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;func( ..., &quot;sqlite_trace&quot;);
+<pre>  $dbh-&gt;func( ..., &quot;sqlite_trace&quot;);
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="$dbh"><a class="permalink" href="#$dbh">$dbh-&gt;<b>sqlite_last_insert_rowid()</b></a></h2>
@@ -881,8 +846,7 @@
 <p class="Pp">Generally you should not be using this method. Use the DBI
     last_insert_id method instead. The usage of this is:</p>
 <p class="Pp"></p>
-<pre>
-  $h-&gt;last_insert_id($catalog, $schema, $table_name, $field_name [, \%attr ])
+<pre>  $h-&gt;last_insert_id($catalog, $schema, $table_name, $field_name [, \%attr ])
 </pre>
 <p class="Pp">Running
     <span class="Li">&quot;$h-&gt;last_insert_id(&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;)&quot;</span>
@@ -928,13 +892,11 @@
 <p class="Pp">For example, here is how to define a <b>now()</b> function which
     returns the current number of seconds since the epoch:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;sqlite_create_function( 'now', 0, sub { return time } );
+<pre>  $dbh-&gt;sqlite_create_function( 'now', 0, sub { return time } );
 </pre>
 <p class="Pp">After this, it could be used from SQL as:</p>
 <p class="Pp"></p>
-<pre>
-  INSERT INTO mytable ( now() );
+<pre>  INSERT INTO mytable ( now() );
 </pre>
 <p class="Pp"><i>REGEXP function</i></p>
 <p class="Pp">SQLite includes syntactic support for an infix operator 'REGEXP',
@@ -944,14 +906,12 @@
     matching, using current locale. So for example you can search for words
     starting with an 'A' with a query like</p>
 <p class="Pp"></p>
-<pre>
-  SELECT * from table WHERE column REGEXP '\bA\w+'
+<pre>  SELECT * from table WHERE column REGEXP '\bA\w+'
 </pre>
 <p class="Pp">If you want case-insensitive searching, use perl regex flags, like
     this :</p>
 <p class="Pp"></p>
-<pre>
-  SELECT * from table WHERE column REGEXP '(?i:\bA\w+)'
+<pre>  SELECT * from table WHERE column REGEXP '(?i:\bA\w+)'
 </pre>
 <p class="Pp">The default REGEXP implementation can be overridden through the
     <span class="Li">&quot;create_function&quot;</span> API described above.</p>
@@ -980,8 +940,7 @@
     invoked whenever an undefined collation sequence is required from an SQL
     statement. The callback is invoked as</p>
 <p class="Pp"></p>
-<pre>
-  $code_ref-&gt;($dbh, $collation_name)
+<pre>  $code_ref-&gt;($dbh, $collation_name)
 </pre>
 <p class="Pp">and should register the desired collation using
     &quot;sqlite_create_collation&quot;.</p>
@@ -1031,8 +990,7 @@
 <p class="Pp">Here is a simple aggregate function which returns the variance
     (example adapted from pysqlite):</p>
 <p class="Pp"></p>
-<pre>
-  package variance;
+<pre>  package variance;
   
   sub new { bless [], shift; }
   
@@ -1069,8 +1027,7 @@
 </pre>
 <p class="Pp">The aggregate function can then be used as:</p>
 <p class="Pp"></p>
-<pre>
-  SELECT group_name, variance(score)
+<pre>  SELECT group_name, variance(score)
   FROM results
   GROUP BY group_name;
 </pre>
@@ -1126,8 +1083,7 @@
     <span class="Li">&quot;undef&quot;</span> disables the callback.</p>
 <p class="Pp">The callback will be called as</p>
 <p class="Pp"></p>
-<pre>
-  $code_ref-&gt;($action_code, $database, $table, $rowid)
+<pre>  $code_ref-&gt;($action_code, $database, $table, $rowid)
 </pre>
 <p class="Pp">where</p>
 <dl class="Bl-tag">
@@ -1169,8 +1125,7 @@
     except SELECT statements.</p>
 <p class="Pp">The callback will be called as</p>
 <p class="Pp"></p>
-<pre>
-  $code_ref-&gt;($action_code, $string1, $string2, $database, $trigger_or_view)
+<pre>  $code_ref-&gt;($action_code, $string1, $string2, $database, $trigger_or_view)
 </pre>
 <p class="Pp">where</p>
 <dl class="Bl-tag">
@@ -1223,8 +1178,7 @@
 <p class="Pp">Calling this method with a true value enables loading (external)
     SQLite3 extensions. After the call, you can load extensions like this:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;sqlite_enable_load_extension(1);
+<pre>  $dbh-&gt;sqlite_enable_load_extension(1);
   $sth = $dbh-&gt;prepare(&quot;select load_extension('libsqlitefunctions.so')&quot;)
   or die &quot;Cannot prepare: &quot; . $dbh-&gt;errstr();
 </pre>
@@ -1246,8 +1200,7 @@
     statements are being run.</p>
 <p class="Pp">The callback will be called as</p>
 <p class="Pp"></p>
-<pre>
-  $code_ref-&gt;($statement)
+<pre>  $code_ref-&gt;($statement)
 </pre>
 <p class="Pp">where</p>
 <dl class="Bl-tag">
@@ -1267,8 +1220,7 @@
     SQL statement finishes.</p>
 <p class="Pp">The callback will be called as</p>
 <p class="Pp"></p>
-<pre>
-  $code_ref-&gt;($statement, $elapsed_time)
+<pre>  $code_ref-&gt;($statement, $elapsed_time)
 </pre>
 <p class="Pp">where</p>
 <dl class="Bl-tag">
@@ -1301,8 +1253,7 @@
     &lt;https://www.sqlite.org/c3ref/c_stmtstatus_counter.html&gt; for details.
     Statement status only holds the current value.</p>
 <p class="Pp"></p>
-<pre>
-  my $status = $sth-&gt;sqlite_st_status();
+<pre>  my $status = $sth-&gt;sqlite_st_status();
   my $cur = $status-&gt;{fullscan_step};
 </pre>
 <p class="Pp">You may also pass 0 as an argument to reset the status.</p>
@@ -1312,11 +1263,9 @@
 <p class="Pp">You can change how the connected database should behave like
   this:</p>
 <p class="Pp"></p>
-<pre>
-  use DBD::SQLite::Constants qw/:database_connection_configuration_options/;
+<pre>  use DBD::SQLite::Constants qw/:database_connection_configuration_options/;
   
   my $dbh = DBI-&gt;connect('dbi:SQLite::memory:');
-
   # This disables language features that allow ordinary SQL
   # to deliberately corrupt the database file
   $dbh-&gt;sqlite_db_config( SQLITE_DBCONFIG_DEFENSIVE, 1 );
@@ -1328,8 +1277,7 @@
     new value after the call. If you just want to know the current value without
     changing anything, pass a negative integer value.</p>
 <p class="Pp"></p>
-<pre>
-  my $current_value = $dbh-&gt;sqlite_db_config( SQLITE_DBCONFIG_DEFENSIVE, -1 );
+<pre>  my $current_value = $dbh-&gt;sqlite_db_config( SQLITE_DBCONFIG_DEFENSIVE, -1 );
 </pre>
 <p class="Pp">As of this writing,
     <span class="Li">&quot;sqlite_db_config&quot;</span> only supports options
@@ -1381,8 +1329,7 @@
     details). Each of the entry contains the current value and the highwater
     value.</p>
 <p class="Pp"></p>
-<pre>
-  my $status = DBD::SQLite::sqlite_status();
+<pre>  my $status = DBD::SQLite::sqlite_status();
   my $cur  = $status-&gt;{memory_used}{current};
   my $high = $status-&gt;{memory_used}{highwater};
 </pre>
@@ -1408,8 +1355,7 @@
     For example, an authorizer that forbids any DELETE operation would be
     written as follows :</p>
 <p class="Pp"></p>
-<pre>
-  use DBD::SQLite;
+<pre>  use DBD::SQLite;
   $dbh-&gt;sqlite_set_authorizer(sub {
     my $action_code = shift;
     return $action_code == DBD::SQLite::DELETE ? DBD::SQLite::DENY
@@ -1423,8 +1369,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Authorizer_Return_Codes"><a class="permalink" href="#Authorizer_Return_Codes">Authorizer
   Return Codes</a></h2>
-<pre>
-  OK
+<pre>  OK
   DENY
   IGNORE
 </pre>
@@ -1439,8 +1384,7 @@
     are strings, the meaning of which varies according to the action code. Below
     is the list of action codes, together with their associated strings.</p>
 <p class="Pp"></p>
-<pre>
-  # constant              string1         string2
+<pre>  # constant              string1         string2
   # ========              =======         =======
   CREATE_INDEX            Index Name      Table Name
   CREATE_TABLE            Table Name      undef
@@ -1520,8 +1464,7 @@
 <h2 class="Ss" id="Usage"><a class="permalink" href="#Usage">Usage</a></h2>
 <p class="Pp">You can write for example</p>
 <p class="Pp"></p>
-<pre>
-  CREATE TABLE foo(
+<pre>  CREATE TABLE foo(
       txt1 COLLATE perl,
       txt2 COLLATE perllocale,
       txt3 COLLATE nocase
@@ -1529,8 +1472,7 @@
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  SELECT * FROM foo ORDER BY name COLLATE perllocale
+<pre>  SELECT * FROM foo ORDER BY name COLLATE perllocale
 </pre>
 </section>
 <section class="Ss">
@@ -1544,8 +1486,7 @@
     <b>before</b> the first call to a perl collation sequence . The recommended
     way to activate unicode is to set the parameter at connection time :</p>
 <p class="Pp"></p>
-<pre>
-  my $dbh = DBI-&gt;connect(
+<pre>  my $dbh = DBI-&gt;connect(
       &quot;dbi:SQLite:dbname=foo&quot;, &quot;&quot;, &quot;&quot;,
       {
           RaiseError     =&gt; 1,
@@ -1569,8 +1510,7 @@
     will be loaded on demand from the hash. For example, here is a way to sort
     text values regardless of their accented characters :</p>
 <p class="Pp"></p>
-<pre>
-  use DBD::SQLite;
+<pre>  use DBD::SQLite;
   $DBD::SQLite::COLLATION{no_accents} = sub {
     my ( $a, $b ) = map lc, @_;
     tr[&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;]
@@ -1621,8 +1561,7 @@
     geospatial data such as latitude/longitude coordinates for buildings within
     a city :</p>
 <p class="Pp"></p>
-<pre>
-  CREATE VIRTUAL TABLE city_buildings USING rtree(
+<pre>  CREATE VIRTUAL TABLE city_buildings USING rtree(
      id,               -- Integer primary key
      minLong, maxLong, -- Minimum and maximum longitude
      minLat, maxLat    -- Minimum and maximum latitude
@@ -1631,8 +1570,7 @@
 <p class="Pp">then query which buildings overlap or are contained within a
     specified region:</p>
 <p class="Pp"></p>
-<pre>
-  # IDs that are contained within query coordinates
+<pre>  # IDs that are contained within query coordinates
   my $contained_sql = &lt;&lt;&quot;&quot;;
   SELECT id FROM city_buildings
      WHERE  minLong &gt;= ? AND maxLong &lt;= ?
@@ -1685,8 +1623,7 @@
 <p class="Pp">Since 1.30_01, you can retrieve the bundled SQLite C source and/or
     header like this:</p>
 <p class="Pp"></p>
-<pre>
-  use File::ShareDir 'dist_dir';
+<pre>  use File::ShareDir 'dist_dir';
   use File::Spec::Functions 'catfile';
   
   # the whole sqlite3.h header

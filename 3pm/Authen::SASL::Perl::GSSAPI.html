@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Authen::SASL::Perl::GSSAPI(3)</title>
 </head>
@@ -29,14 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Authen::SASL qw(Perl);
-
+<pre>  use Authen::SASL qw(Perl);
   $sasl = Authen::SASL-&gt;new( mechanism =&gt; 'GSSAPI' );
-
   $sasl = Authen::SASL-&gt;new( mechanism =&gt; 'GSSAPI',
                              callback =&gt; { pass =&gt; $mycred });
-
   $sasl-&gt;client_start( $service, $host );
 </pre>
 </section>
@@ -70,41 +67,31 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
- #! /usr/bin/perl -w
-
+<pre> #! /usr/bin/perl -w
  use strict;
-
  use Net::LDAP 0.33;
  use Authen::SASL 2.10;
-
  # -------- Adjust to your environment --------
  my $adhost      = 'theserver.bla.net';
  my $ldap_base   = 'dc=bla,dc=net';
  my $ldap_filter = '(&amp;(sAMAccountName=BLAAGROL))';
-
  my $sasl = Authen::SASL-&gt;new(mechanism =&gt; 'GSSAPI');
  my $ldap;
-
  eval {
      $ldap = Net::LDAP-&gt;new($adhost,
                             onerror =&gt; 'die')
        or  die &quot;Cannot connect to LDAP host '$adhost': '$@'&quot;;
      $ldap-&gt;bind(sasl =&gt; $sasl);
  };
-
  if ($@) {
      chomp $@;
      die   &quot;\nBind error         : $@&quot;,
            &quot;\nDetailed SASL error: &quot;, $sasl-&gt;error,
            &quot;\nTerminated&quot;;
  }
-
  print &quot;\nLDAP bind() succeeded, working in authenticated state&quot;;
-
  my $mesg = $ldap-&gt;search(base   =&gt; $ldap_base,
                           filter =&gt; $ldap_filter);
-
  # -------- evaluate $mesg
 </pre>
 <section class="Ss">

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Transition(3pm)</title>
 </head>
@@ -96,16 +97,14 @@
     more readable to outdent the subtest note instead of having it inline with
     the subtest:</p>
 <p class="Pp"></p>
-<pre>
-    # subtest foo
+<pre>    # subtest foo
         ok 1 - blah
         1..1
     ok 1 - subtest foo
 </pre>
 <p class="Pp">The old style indented the note:</p>
 <p class="Pp"></p>
-<pre>
-        # subtest foo
+<pre>        # subtest foo
         ok 1 - blah
         1..1
     ok 1 - subtest foo
@@ -113,9 +112,7 @@
 <p class="Pp">This breaks tests that do string comparison of TAP output.</p>
 <p class="Pp"><i>The Fix</i></p>
 <p class="Pp"></p>
-<pre>
-    my $indent = $INC{'Test2/API.pm'} ? '' : '    ';
-
+<pre>    my $indent = $INC{'Test2/API.pm'} ? '' : '    ';
     is(
         $subtest_output,
         &quot;${indent}# subtest foo&quot;,
@@ -320,21 +317,17 @@
   ASSERTIONS -&gt; SEND EVENTS</a></h1>
 <section class="Ss">
 <h2 class="Ss">LEGACY</h2>
-<pre>
-    use Test::Builder;
-
+<pre>    use Test::Builder;
     # A majority of tools out there do this:
     # my $TB = Test::Builder-&gt;new;
     # This works, but has always been wrong, forcing Test::Builder to implement
     # subtests as a horrific hack. It also causes problems for tools that try
     # to replace the singleton (also discouraged).
-
     sub my_ok($;$) {
         my ($bool, $name) = @_;
         my $TB = Test::Builder-&gt;new;
         $TB-&gt;ok($bool, $name);
     }
-
     sub my_diag($) {
         my ($msg) = @_;
         my $TB = Test::Builder-&gt;new;
@@ -344,16 +337,13 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">TEST2</h2>
-<pre>
-    use Test2::API qw/context/;
-
+<pre>    use Test2::API qw/context/;
     sub my_ok($;$) {
         my ($bool, $name) = @_;
         my $ctx = context();
         $ctx-&gt;ok($bool, $name);
         $ctx-&gt;release;
     }
-
     sub my_diag($) {
         my ($msg) = @_;
         my $ctx = context();
@@ -385,19 +375,14 @@
   EXISTING TOOLS</a></h1>
 <section class="Ss">
 <h2 class="Ss">LEGACY</h2>
-<pre>
-    use Test::More;
-
+<pre>    use Test::More;
     sub exclusive_ok {
         my ($bool1, $bool2, $name) = @_;
-
         # Ensure errors are reported 1 level higher
         local $Test::Builder::Level = $Test::Builder::Level + 1;
-
         $ok = $bool1 || $bool2;
         $ok &amp;&amp;= !($bool1 &amp;&amp; $bool2);
         ok($ok, $name);
-
         return $bool;
     }
 </pre>
@@ -413,20 +398,15 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">TEST2</h2>
-<pre>
-    use Test::More;
-
+<pre>    use Test::More;
     sub exclusive_ok {
         my ($bool1, $bool2, $name) = @_;
-
         # Grab and store the context, even if you do not need to use it
         # directly.
         my $ctx = context();
-
         $ok = $bool1 || $bool2;
         $ok &amp;&amp;= !($bool1 &amp;&amp; $bool2);
         ok($ok, $name);
-
         $ctx-&gt;release;
         return $bool;
     }
@@ -445,15 +425,13 @@
   UTF8</a></h1>
 <section class="Ss">
 <h2 class="Ss">LEGACY</h2>
-<pre>
-    # Set the mode BEFORE anything loads Test::Builder
+<pre>    # Set the mode BEFORE anything loads Test::Builder
     use open ':std', ':encoding(utf8)';
     use Test::More;
 </pre>
 <p class="Pp">Or</p>
 <p class="Pp"></p>
-<pre>
-    # Modify the filehandles
+<pre>    # Modify the filehandles
     my $builder = Test::More-&gt;builder;
     binmode $builder-&gt;output,         &quot;:encoding(utf8)&quot;;
     binmode $builder-&gt;failure_output, &quot;:encoding(utf8)&quot;;
@@ -462,9 +440,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss">TEST2</h2>
-<pre>
-    use Test2::API qw/test2_stack/;
-
+<pre>    use Test2::API qw/test2_stack/;
     test2_stack-&gt;top-&gt;format-&gt;encoding('utf8');
 </pre>
 <p class="Pp">Though a much better way is to use the Test2::Plugin::UTF8 plugin,

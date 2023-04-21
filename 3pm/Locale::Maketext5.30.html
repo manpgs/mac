@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Locale::Maketext(3pm)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyProgram;
+<pre>  package MyProgram;
   use strict;
   use MyProgram::L10N;
    # ...which inherits from Locale::Maketext
@@ -75,8 +75,7 @@
     handle&quot;; it's typically a flyweight object.</p>
 <p class="Pp">The normal course of action is to call:</p>
 <p class="Pp"></p>
-<pre>
-  use TkBocciBall::Localize;  # the localization project class
+<pre>  use TkBocciBall::Localize;  # the localization project class
   $lh = TkBocciBall::Localize-&gt;get_handle();
    # Depending on the user's locale, etc., this will
    # make a language handle from among the classes available,
@@ -87,8 +86,7 @@
     <span class="Li">&quot;maketext&quot;</span> function to access entries in
     whatever lexicon(s) belong to the language handle you got. So, this:</p>
 <p class="Pp"></p>
-<pre>
-  print $lh-&gt;maketext(&quot;You won!&quot;), &quot;\n&quot;;
+<pre>  print $lh-&gt;maketext(&quot;You won!&quot;), &quot;\n&quot;;
 </pre>
 <p class="Pp">...emits the right text for this language. If the object in
     <span class="Li">$lh</span> belongs to class
@@ -165,8 +163,7 @@
         configuration file, you might consider something like this in your
         project class:</p>
     <p class="Pp"></p>
-    <pre>
-  sub get_handle_via_config {
+    <pre>  sub get_handle_via_config {
     my $class = $_[0];
     my $chosen_language = $Config_settings{'language'};
     my $lh;
@@ -233,8 +230,7 @@
   &quot;maketext&quot; Method</a></h2>
 <p class="Pp">This is the most important method in Locale::Maketext:</p>
 <p class="Pp"></p>
-<pre>
-    $text = $lh-&gt;maketext(I&lt;key&gt;, ...parameters for this phrase...);
+<pre>    $text = $lh-&gt;maketext(I&lt;key&gt;, ...parameters for this phrase...);
 </pre>
 <p class="Pp">This looks in the <span class="Li">%Lexicon</span> of the language
     handle <span class="Li">$lh</span> and all its superclasses, looking for an
@@ -273,8 +269,7 @@
     <span class="Li">&quot;maketext&quot;</span> method with an &quot;after
     method&quot;, if you want to translate encodings, or even scripts:</p>
 <p class="Pp"></p>
-<pre>
-    package YrProj::zh_cn; # Chinese with PRC-style glyphs
+<pre>    package YrProj::zh_cn; # Chinese with PRC-style glyphs
     use base ('YrProj::zh_tw');  # Taiwan-style
     sub maketext {
       my $self = shift(@_);
@@ -285,8 +280,7 @@
 <p class="Pp">Or you may want to override it with something that traps any
     exceptions, if that's critical to your program:</p>
 <p class="Pp"></p>
-<pre>
-  sub maketext {
+<pre>  sub maketext {
     my($lh, @stuff) = @_;
     my $out;
     eval { $out = $lh-&gt;SUPER::maketext(@stuff) };
@@ -326,8 +320,7 @@
   <dd>This is generally meant to be called from inside Bracket Notation (which
       is discussed later), as in
     <p class="Pp"></p>
-    <pre>
-     &quot;Your search matched [quant,_1,document]!&quot;
+    <pre>     &quot;Your search matched [quant,_1,document]!&quot;
     </pre>
     <p class="Pp">It's for <i>quantifying</i> a noun (i.e., saying how much of
         it there is, while giving the correct form of it). The behavior of this
@@ -336,8 +329,7 @@
         can feel free to read the source, but the current implementation is
         basically as this pseudocode describes:</p>
     <p class="Pp"></p>
-    <pre>
-     if $number is 0 and there's a $negative,
+    <pre>     if $number is 0 and there's a $negative,
         return $negative;
      elsif $number is 1,
         return &quot;1 $singular&quot;;
@@ -360,20 +352,17 @@
         &quot;directorys&quot;. And you might find that the output may sound
         better if you specify a negative form, as in:</p>
     <p class="Pp"></p>
-    <pre>
-     &quot;[quant,_1,file,files,No files] matched your query.\n&quot;
+    <pre>     &quot;[quant,_1,file,files,No files] matched your query.\n&quot;
     </pre>
     <p class="Pp">Remember to keep in mind verb agreement (or adjectives too, in
         other languages), as in:</p>
     <p class="Pp"></p>
-    <pre>
-     &quot;[quant,_1,document] were matched.\n&quot;
+    <pre>     &quot;[quant,_1,document] were matched.\n&quot;
     </pre>
     <p class="Pp">Because if _1 is one, you get &quot;1 document <b>were</b>
         matched&quot;. An acceptable hack here is to do something like this:</p>
     <p class="Pp"></p>
-    <pre>
-     &quot;[quant,_1,document was, documents were] matched.\n&quot;
+    <pre>     &quot;[quant,_1,document was, documents were] matched.\n&quot;
     </pre>
   </dd>
   <dt>$language-&gt;numf($number)</dt>
@@ -404,13 +393,11 @@
       <span class="Li">&quot;sprintf&quot;</span> function. It's provided so
       that you can use &quot;sprintf&quot; in Bracket Notation:
     <p class="Pp"></p>
-    <pre>
-     &quot;Couldn't access datanode [sprintf,%10x=~[%s~],_1,_2]!\n&quot;
+    <pre>     &quot;Couldn't access datanode [sprintf,%10x=~[%s~],_1,_2]!\n&quot;
     </pre>
     <p class="Pp">returning...</p>
     <p class="Pp"></p>
-    <pre>
-     Couldn't access datanode      Stuff=[thangamabob]!
+    <pre>     Couldn't access datanode      Stuff=[thangamabob]!
     </pre>
   </dd>
   <dt>$language-&gt;<b>language_tag()</b></dt>
@@ -470,8 +457,7 @@
       lowercase, turning dashes to underscores, and appending it to
       YourProjClass . &quot;::&quot;. So this:
     <p class="Pp"></p>
-    <pre>
-  $lh = YourProjClass-&gt;get_handle(
+    <pre>  $lh = YourProjClass-&gt;get_handle(
     'en-US', 'fr', 'kon', 'i-klingon', 'i-klingon-romanized'
   );
     </pre>
@@ -515,19 +501,16 @@
     &quot;_min_larger_max_error&quot;), it is often useful for if an entry's key
     is itself a valid value, like this example error message:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
+<pre>  &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
 </pre>
 <p class="Pp">Compare this code that uses an arbitrary ID...</p>
 <p class="Pp"></p>
-<pre>
-  die $lh-&gt;maketext( &quot;_min_larger_max_error&quot;, $min, $max )
+<pre>  die $lh-&gt;maketext( &quot;_min_larger_max_error&quot;, $min, $max )
    if $min &gt; $max;
 </pre>
 <p class="Pp">...to this code that uses a key-as-value:</p>
 <p class="Pp"></p>
-<pre>
-  die $lh-&gt;maketext(
+<pre>  die $lh-&gt;maketext(
    &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
    $min, $max
   ) if $min &gt; $max;
@@ -541,21 +524,18 @@
     it to a translator; and then the translator's work will go faster if what
     he's presented is this:</p>
 <p class="Pp"></p>
-<pre>
- &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
+<pre> &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
   =&gt; &quot;&quot;,   # fill in something here, Jacques!
 </pre>
 <p class="Pp">rather than this more cryptic mess:</p>
 <p class="Pp"></p>
-<pre>
- &quot;_min_larger_max_error&quot;
+<pre> &quot;_min_larger_max_error&quot;
   =&gt; &quot;&quot;,   # fill in something here, Jacques
 </pre>
 <p class="Pp">I think that keys as lexicon values makes the completed lexicon
     entries more readable:</p>
 <p class="Pp"></p>
-<pre>
- &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
+<pre> &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
   =&gt; &quot;Le minimum ([_1]) est plus grand que le maximum ([_2])!\n&quot;,
 </pre>
 <p class="Pp">Also, having valid values as keys becomes very useful if you set
@@ -568,15 +548,13 @@
     define that lexicon entry in the ProjectClass::L10N::en lexicon (since
     English is always my &quot;project language&quot;):</p>
 <p class="Pp"></p>
-<pre>
-  '_USAGE_MESSAGE' =&gt; &lt;&lt;'EOSTUFF',
+<pre>  '_USAGE_MESSAGE' =&gt; &lt;&lt;'EOSTUFF',
   ...long long message...
   EOSTUFF
 </pre>
 <p class="Pp">and then I can use it as:</p>
 <p class="Pp"></p>
-<pre>
-  getopt('oDI', \%opts) or die $lh-&gt;maketext('_USAGE_MESSAGE');
+<pre>  getopt('oDI', \%opts) or die $lh-&gt;maketext('_USAGE_MESSAGE');
 </pre>
 <p class="Pp">Incidentally, note that each class's
     <span class="Li">%Lexicon</span> inherits-and-extends the lexicons in its
@@ -605,8 +583,7 @@
     Consider this example of a processor for responses to French
     &quot;oui/non&quot; questions:</p>
 <p class="Pp"></p>
-<pre>
-  sub y_or_n {
+<pre>  sub y_or_n {
     return undef unless defined $_[1] and length $_[1];
     my $answer = lc $_[1];  # smash case
     return 1 if $answer eq 'o' or $answer eq 'oui';
@@ -616,8 +593,7 @@
 </pre>
 <p class="Pp">...which you'd then call in a construct like this:</p>
 <p class="Pp"></p>
-<pre>
-  my $response;
+<pre>  my $response;
   until(defined $response) {
     print $lh-&gt;maketext(&quot;Open the pod bay door (y/n)? &quot;);
     $response = $lh-&gt;y_or_n( get_input_from_keyboard_somehow() );
@@ -628,8 +604,7 @@
 <p class="Pp">Other data worth storing in a lexicon might be things like
     filenames for language-targetted resources:</p>
 <p class="Pp"></p>
-<pre>
-  ...
+<pre>  ...
   &quot;_main_splash_png&quot;
     =&gt; &quot;/styles/en_us/main_splash.png&quot;,
   &quot;_main_splash_imagemap&quot;
@@ -668,15 +643,13 @@
     underlined with a &quot;^&quot;, and all the in-bracket special regions are
     underlined with an X:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
+<pre>  &quot;Minimum ([_1]) is larger than maximum ([_2])!\n&quot;,
    ^^^^^^^^^ XX ^^^^^^^^^^^^^^^^^^^^^^^^^^ XX ^^^^
 </pre>
 <p class="Pp">When that string is compiled from bracket notation into a real
     Perl sub, it's basically turned into:</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     my $lh = $_[0];
     my @params = @_;
     return join '',
@@ -719,8 +692,7 @@
   <li>If the first item in a bracket group looks like a method name, then that
       group is interpreted like this:
     <p class="Pp"></p>
-    <pre>
-  $lh-&gt;that_method_name(
+    <pre>  $lh-&gt;that_method_name(
     ...rest of items in this group...
   ),
     </pre>
@@ -734,8 +706,7 @@
       &quot;_-<i>digits</i>&quot;, then that group is interpreted as just the
       interpolation of all its items:
     <p class="Pp"></p>
-    <pre>
-  join('',
+    <pre>  join('',
     ...rest of items in this group...
   ),
     </pre>
@@ -756,13 +727,11 @@
     not <span class="Li">&quot;/\s*,\s*/&quot;</span>-separated. That is, you
     might expect that this bracket group:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Hoohah [foo, _1 , bar ,baz]!&quot;
+<pre>  &quot;Hoohah [foo, _1 , bar ,baz]!&quot;
 </pre>
 <p class="Pp">would compile to this:</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     my $lh = $_[0];
     return join '',
       &quot;Hoohah &quot;,
@@ -772,8 +741,7 @@
 </pre>
 <p class="Pp">But it actually compiles as this:</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     my $lh = $_[0];
     return join '',
       &quot;Hoohah &quot;,
@@ -809,8 +777,7 @@
 <p class="Pp">Brackets must be balanced -- every openbracket must have one
     matching closebracket, and vice versa. So these are all <b>invalid</b>:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;I ate [quant,_1,rhubarb pie.&quot;
+<pre>  &quot;I ate [quant,_1,rhubarb pie.&quot;
   &quot;I ate [quant,_1,rhubarb pie[.&quot;
   &quot;I ate quant,_1,rhubarb pie].&quot;
   &quot;I ate quant,_1,rhubarb pie[.&quot;
@@ -818,13 +785,11 @@
 <p class="Pp">Currently, bracket groups do not nest. That is, you <b>cannot</b>
     say:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Foo [bar,baz,[quux,quuux]]\n&quot;;
+<pre>  &quot;Foo [bar,baz,[quux,quuux]]\n&quot;;
 </pre>
 <p class="Pp">If you need a notation that's that powerful, use normal Perl:</p>
 <p class="Pp"></p>
-<pre>
-  %Lexicon = (
+<pre>  %Lexicon = (
     ...
     &quot;some_key&quot; =&gt; sub {
       my $lh = $_[0];
@@ -858,8 +823,7 @@
 <p class="Pp">The default blacklist for Locale::Maketext also prevents use of
     the following methods in bracket notation:</p>
 <p class="Pp"></p>
-<pre>
-  blacklist
+<pre>  blacklist
   encoding
   fail_with
   failure_handler_auto
@@ -878,16 +842,14 @@
 <p class="Pp">To prevent specific methods from being called in bracket notation,
     use the <b>blacklist()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  my $lh = MyProgram::L10N-&gt;get_handle();
+<pre>  my $lh = MyProgram::L10N-&gt;get_handle();
   $lh-&gt;blacklist(qw{my_internal_method my_other_method});
   $lh-&gt;maketext('[my_internal_method]'); # dies
 </pre>
 <p class="Pp">To limit the allowed bracked notation methods to a specific list,
     use the <b>whitelist()</b> method:</p>
 <p class="Pp"></p>
-<pre>
-  my $lh = MyProgram::L10N-&gt;get_handle();
+<pre>  my $lh = MyProgram::L10N-&gt;get_handle();
   $lh-&gt;whitelist('numerate', 'numf');
   $lh-&gt;maketext('[_1] [numerate, _1,shoe,shoes]', 12); # works
   $lh-&gt;maketext('[my_internal_method]'); # dies
@@ -896,8 +858,7 @@
     internal lists whenever they are called. To reset the blacklist or
     whitelist, create a new maketext object.</p>
 <p class="Pp"></p>
-<pre>
-  my $lh = MyProgram::L10N-&gt;get_handle();
+<pre>  my $lh = MyProgram::L10N-&gt;get_handle();
   $lh-&gt;blacklist('numerate');
   $lh-&gt;blacklist('numf');
   $lh-&gt;maketext('[_1] [numerate,_1,shoe,shoes]', 12); # dies
@@ -933,8 +894,7 @@
 <p class="Pp">As you're writing an application, you decide as you go what
     messages you need to emit. Normally you'd go to write this:</p>
 <p class="Pp"></p>
-<pre>
-  if(-e $filename) {
+<pre>  if(-e $filename) {
     go_process_file($filename)
   } else {
     print qq{Couldn't find file &quot;$filename&quot;!\n};
@@ -942,8 +902,7 @@
 </pre>
 <p class="Pp">but since you anticipate localizing this, you write:</p>
 <p class="Pp"></p>
-<pre>
-  use ThisProject::I18N;
+<pre>  use ThisProject::I18N;
   my $lh = ThisProject::I18N-&gt;get_handle();
    # For the moment, assume that things are set up so
    # that we load class ThisProject::I18N::en
@@ -961,8 +920,7 @@
     normally have to go open the file ThisProject/I18N/en.pm, and immediately
     add an entry:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;
+<pre>  &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;
   =&gt; &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;,
 </pre>
 <p class="Pp">But I consider that somewhat of a distraction from the work of
@@ -977,8 +935,7 @@
     this project's internal message keys), then you don't ever have to go adding
     lines like this</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;
+<pre>  &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;
   =&gt; &quot;Couldn't find file \&quot;[_1]\&quot;!\n&quot;,
 </pre>
 <p class="Pp">to ThisProject/I18N/en.pm, because if _AUTO is true there, then
@@ -999,14 +956,12 @@
 <p class="Pp">For example a GDBM_File GDBM_READER tied hash will die with
     something like:</p>
 <p class="Pp"></p>
-<pre>
-   gdbm store returned -1, errno 2, key &quot;...&quot; at ...
+<pre>   gdbm store returned -1, errno 2, key &quot;...&quot; at ...
 </pre>
 <p class="Pp">All you need to do is turn on caching outside of the lexicon hash
     itself like so:</p>
 <p class="Pp"></p>
-<pre>
-   sub init {
+<pre>   sub init {
        my ($lh) = @_;
        ...
        $lh-&gt;{'use_external_lex_cache'} = 1;
@@ -1039,30 +994,24 @@
     <span class="Li">$lh</span>-&gt;maketext(<i>key</i>,...params...) gives up
     and calls:</p>
 <p class="Pp"></p>
-<pre>
-  return $that_subref-&gt;($lh, $key, @params);
+<pre>  return $that_subref-&gt;($lh, $key, @params);
 </pre>
 <p class="Pp">Otherwise, the &quot;fail&quot; attribute's value should be a
     string denoting a method name, so that
     <span class="Li">$lh</span>-&gt;maketext(<i>key</i>,...params...) can give
     up with:</p>
 <p class="Pp"></p>
-<pre>
-  return $lh-&gt;$that_method_name($phrase, @params);
+<pre>  return $lh-&gt;$that_method_name($phrase, @params);
 </pre>
 <p class="Pp">The &quot;fail&quot; attribute can be accessed with the
     <span class="Li">&quot;fail_with&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-  # Set to a coderef:
+<pre>  # Set to a coderef:
   $lh-&gt;fail_with( \&amp;failure_handler );
-
   # Set to a method name:
   $lh-&gt;fail_with( 'failure_method' );
-
   # Set to nothing (i.e., so failure throws a plain exception)
   $lh-&gt;fail_with( undef );
-
   # Get the current value
   $handler = $lh-&gt;fail_with();
 </pre>
@@ -1074,8 +1023,7 @@
 <p class="Pp">Or maybe you don't want to <span class="Li">&quot;die&quot;</span>
     at all! Maybe you could use a handler like this:</p>
 <p class="Pp"></p>
-<pre>
-  # Make all lookups fall back onto an English value,
+<pre>  # Make all lookups fall back onto an English value,
   #  but only after we log it for later fingerpointing.
   my $lh_backup = ThisProject-&gt;get_handle('en');
   open(LEX_FAIL_LOG, &quot;&gt;&gt;wherever/lex.log&quot;) || die &quot;GNAARGH $!&quot;;
@@ -1102,21 +1050,18 @@
     the method name &quot;failure_handler_auto&quot;. This is a method defined
     in the class Locale::Maketext itself. You set it with:</p>
 <p class="Pp"></p>
-<pre>
-  $lh-&gt;fail_with('failure_handler_auto');
+<pre>  $lh-&gt;fail_with('failure_handler_auto');
 </pre>
 <p class="Pp">Then when you call
     <span class="Li">$lh</span>-&gt;maketext(<i>key</i>, ...parameters...) and
     there's no <i>key</i> in any of those lexicons, maketext gives up with</p>
 <p class="Pp"></p>
-<pre>
-  return $lh-&gt;failure_handler_auto($key, @params);
+<pre>  return $lh-&gt;failure_handler_auto($key, @params);
 </pre>
 <p class="Pp">But failure_handler_auto, instead of dying or anything, compiles
     <span class="Li">$key</span>, caching it in</p>
 <p class="Pp"></p>
-<pre>
-    $lh-&gt;{'failure_lex'}{$key} = $compiled
+<pre>    $lh-&gt;{'failure_lex'}{$key} = $compiled
 </pre>
 <p class="Pp">and then calls the compiled value, and returns that. (I.e., if
     <span class="Li">$key</span> looks like bracket notation,
@@ -1137,8 +1082,7 @@
     make it default for every object of a given class, by setting it in that
     class's init:</p>
 <p class="Pp"></p>
-<pre>
-  sub init {
+<pre>  sub init {
     my $lh = $_[0];  # a newborn handle
     $lh-&gt;SUPER::init();
     $lh-&gt;fail_with('my_clever_failure_handler');
@@ -1167,21 +1111,17 @@
   <li>Create a class for your localization project. This is the name of the
       class that you'll use in the idiom:
     <p class="Pp"></p>
-    <pre>
-  use Projname::L10N;
+    <pre>  use Projname::L10N;
   my $lh = Projname::L10N-&gt;get_handle(...) || die &quot;Language?&quot;;
     </pre>
     <p class="Pp">Assuming you call your class Projname::L10N, create a class
         consisting minimally of:</p>
     <p class="Pp"></p>
-    <pre>
-  package Projname::L10N;
+    <pre>  package Projname::L10N;
   use base qw(Locale::Maketext);
   ...any methods you might want all your languages to share...
-
   # And, assuming you want the base class to be an _AUTO lexicon,
   # as is discussed a few sections up:
-
   1;
     </pre>
   </li>
@@ -1191,8 +1131,7 @@
       English, you should call this Projname::L10N::en_us. It should consist
       minimally of:
     <p class="Pp"></p>
-    <pre>
-  package Projname::L10N::en_us;
+    <pre>  package Projname::L10N::en_us;
   use base qw(Projname::L10N);
   %Lexicon = (
     '_AUTO' =&gt; 1,
@@ -1205,21 +1144,18 @@
   </li>
   <li>Go and write your program. Everywhere in your program where you would say:
     <p class="Pp"></p>
-    <pre>
-  print &quot;Foobar $thing stuff\n&quot;;
+    <pre>  print &quot;Foobar $thing stuff\n&quot;;
     </pre>
     <p class="Pp">instead do it thru maketext, using no variable interpolation
         in the key:</p>
     <p class="Pp"></p>
-    <pre>
-  print $lh-&gt;maketext(&quot;Foobar [_1] stuff\n&quot;, $thing);
+    <pre>  print $lh-&gt;maketext(&quot;Foobar [_1] stuff\n&quot;, $thing);
     </pre>
     <p class="Pp">If you get tired of constantly saying
         <span class="Li">&quot;print $lh-&gt;maketext&quot;</span>, consider
         making a functional wrapper for it, like so:</p>
     <p class="Pp"></p>
-    <pre>
-  use Projname::L10N;
+    <pre>  use Projname::L10N;
   our $lh;
   $lh = Projname::L10N-&gt;get_handle(...) || die &quot;Language?&quot;;
   sub pmt (@) { print( $lh-&gt;maketext(@_)) }

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Archive::Zip(3)</title>
 </head>
@@ -28,32 +29,25 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-   # Create a Zip file
+<pre>   # Create a Zip file
    use Archive::Zip qw( :ERROR_CODES :CONSTANTS );
    my $zip = Archive::Zip-&gt;new();
-
    # Add a directory
    my $dir_member = $zip-&gt;addDirectory( 'dirname/' );
-
    # Add a file from a string with compression
    my $string_member = $zip-&gt;addString( 'This is a test', 'stringMember.txt' );
    $string_member-&gt;desiredCompressionMethod( COMPRESSION_DEFLATED );
-
    # Add a file from disk
    my $file_member = $zip-&gt;addFile( 'xyz.pl', 'AnotherName.pl' );
-
    # Save the Zip file
    unless ( $zip-&gt;writeToFileNamed('someZip.zip') == AZ_OK ) {
        die 'write error';
    }
-
    # Read a Zip file
    my $somezip = Archive::Zip-&gt;new();
    unless ( $somezip-&gt;read( 'someZip.zip' ) == AZ_OK ) {
        die 'read error';
    }
-
    # Change the compression type for a file in the Zip
    my $member = $somezip-&gt;memberNamed( 'stringMember.txt' );
    $member-&gt;desiredCompressionMethod( COMPRESSION_STORED );
@@ -122,8 +116,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Inheritance"><a class="permalink" href="#Inheritance">Inheritance</a></h2>
-<pre>
-  Exporter
+<pre>  Exporter
    Archive::Zip                            Common base class, has defs.
        Archive::Zip::Archive               A Zip archive.
        Archive::Zip::Member                Abstract superclass for all members.
@@ -175,11 +168,8 @@
     constant&quot;</span> pragma. They can be imported into your namespace using
     the <span class="Li">&quot;:ERROR_CODES&quot;</span> tag:</p>
 <p class="Pp"></p>
-<pre>
-  use Archive::Zip qw( :ERROR_CODES );
-
+<pre>  use Archive::Zip qw( :ERROR_CODES );
   ...
-
   unless ( $zip-&gt;read( 'myfile.zip' ) == AZ_OK ) {
       die &quot;whoops!&quot;;
   }
@@ -213,13 +203,10 @@
 <p class="Pp">You can inquire about the current compression and set the desired
     compression method:</p>
 <p class="Pp"></p>
-<pre>
-  my $member = $zip-&gt;memberNamed( 'xyz.txt' );
+<pre>  my $member = $zip-&gt;memberNamed( 'xyz.txt' );
   $member-&gt;compressionMethod();    # return current compression
-
   # set to read uncompressed
   $member-&gt;desiredCompressionMethod( COMPRESSION_STORED );
-
   # set to read compressed
   $member-&gt;desiredCompressionMethod( COMPRESSION_DEFLATED );
 </pre>
@@ -239,16 +226,14 @@
     speed of compression and decompression, as well as the size of the
     compressed member data.</p>
 <p class="Pp"></p>
-<pre>
-  $member-&gt;desiredCompressionLevel( 9 );
+<pre>  $member-&gt;desiredCompressionLevel( 9 );
 </pre>
 <p class="Pp">The levels given can be:</p>
 <ul class="Bl-bullet">
   <li>0 or COMPRESSION_LEVEL_NONE
     <p class="Pp">This is the same as saying</p>
     <p class="Pp"></p>
-    <pre>
-  $member-&gt;desiredCompressionMethod( COMPRESSION_STORED );
+    <pre>  $member-&gt;desiredCompressionMethod( COMPRESSION_STORED );
     </pre>
   </li>
   <li>1 .. 9
@@ -285,14 +270,12 @@
     $fileName } )</a></dt>
   <dd>Make a new, empty zip archive.
     <p class="Pp"></p>
-    <pre>
-    my $zip = Archive::Zip-&gt;new();
+    <pre>    my $zip = Archive::Zip-&gt;new();
     </pre>
     <p class="Pp">If an additional argument is passed, <b>new()</b> will call
         <b>read()</b> to read the contents of an archive:</p>
     <p class="Pp"></p>
-    <pre>
-    my $zip = Archive::Zip-&gt;new( 'xyz.zip' );
+    <pre>    my $zip = Archive::Zip-&gt;new( 'xyz.zip' );
     </pre>
     <p class="Pp">If a filename argument is passed and the read fails for any
         reason, new will return undef. For this reason, it may be better to call
@@ -306,8 +289,7 @@
 <p class="Pp">These Archive::Zip methods may be called as functions or as object
     methods. Do not call them as class methods:</p>
 <p class="Pp"></p>
-<pre>
-    $zip = Archive::Zip-&gt;new();
+<pre>    $zip = Archive::Zip-&gt;new();
     $crc = Archive::Zip::computeCRC32( 'ghijkl' );    # OK
     $crc = $zip-&gt;computeCRC32( 'ghijkl' );            # also OK
     $crc = Archive::Zip-&gt;computeCRC32( 'ghijkl' );    # NOT OK
@@ -321,13 +303,11 @@
   <dd>This is a utility function that uses the Compress::Raw::Zlib CRC routine
       to compute a CRC-32. You can get the CRC of a string:
     <p class="Pp"></p>
-    <pre>
-    $crc = Archive::Zip::computeCRC32( $string );
+    <pre>    $crc = Archive::Zip::computeCRC32( $string );
     </pre>
     <p class="Pp">Or you can compute the running CRC:</p>
     <p class="Pp"></p>
-    <pre>
-    $crc = 0;
+    <pre>    $crc = 0;
     $crc = Archive::Zip::computeCRC32( 'abcdef', $crc );
     $crc = Archive::Zip::computeCRC32( 'ghijkl', $crc );
     </pre>
@@ -343,8 +323,7 @@
       must call <b>setChunkSize()</b> before reading or writing. This is not
       exportable, so you must call it like:
     <p class="Pp"></p>
-    <pre>
-    Archive::Zip::setChunkSize( 4096 );
+    <pre>    Archive::Zip::setChunkSize( 4096 );
     </pre>
     <p class="Pp">or as a method on a zip (though this is a global setting).
         Returns old chunk size.</p>
@@ -352,8 +331,7 @@
   <dt id="Archive::Zip::chunkSize()"><a class="permalink" href="#Archive::Zip::chunkSize()"><b>Archive::Zip::chunkSize()</b></a></dt>
   <dd>Returns the current chunk size:
     <p class="Pp"></p>
-    <pre>
-    my $chunkSize = Archive::Zip::chunkSize();
+    <pre>    my $chunkSize = Archive::Zip::chunkSize();
     </pre>
   </dd>
   <dt id="Archive::Zip::setErrorHandler("><a class="permalink" href="#Archive::Zip::setErrorHandler(">Archive::Zip::setErrorHandler(
@@ -365,8 +343,7 @@
       \&amp;Carp::carp, but you may want to change it to get the error strings.
       This is not exportable, so you must call it like:
     <p class="Pp"></p>
-    <pre>
-    Archive::Zip::setErrorHandler( \&amp;myErrorHandler );
+    <pre>    Archive::Zip::setErrorHandler( \&amp;myErrorHandler );
     </pre>
     <p class="Pp">If myErrorHandler is undef, resets handler to default. Returns
         old error handler. Note that if you call Carp::carp or a similar routine
@@ -374,8 +351,7 @@
         handler, you may want to increment the number of caller levels that are
         skipped (do not just set it to a number):</p>
     <p class="Pp"></p>
-    <pre>
-    $Carp::CarpLevel++;
+    <pre>    $Carp::CarpLevel++;
     </pre>
   </dd>
   <dt id="Archive::Zip::tempFile("><a class="permalink" href="#Archive::Zip::tempFile(">Archive::Zip::tempFile(
@@ -389,8 +365,7 @@
       using <span class="Li">&quot;File::Spec::tmpdir()&quot;</span>. Generally,
       you can override this choice using the
     <p class="Pp"></p>
-    <pre>
-    $ENV{TMPDIR}
+    <pre>    $ENV{TMPDIR}
     </pre>
     <p class="Pp">environment variable. But see the File::Spec documentation for
         your system. Note that on many systems, if you're running in taint mode,
@@ -399,8 +374,7 @@
         <span class="Li">$tmpdir</span> if it does not exist (this is a change
         from prior versions!). Returns file handle and name:</p>
     <p class="Pp"></p>
-    <pre>
-    my ($fh, $name) = Archive::Zip::tempFile();
+    <pre>    my ($fh, $name) = Archive::Zip::tempFile();
     my ($fh, $name) = Archive::Zip::tempFile('myTempDir');
     my $fh = Archive::Zip::tempFile();  # if you don't need the name
     </pre>
@@ -414,8 +388,7 @@
   <dt id="members()"><a class="permalink" href="#members()"><b>members()</b></a></dt>
   <dd>Return a copy of the members array
     <p class="Pp"></p>
-    <pre>
-    my @members = $zip-&gt;members();
+    <pre>    my @members = $zip-&gt;members();
     </pre>
   </dd>
   <dt id="numberOfMembers()"><a class="permalink" href="#numberOfMembers()"><b>numberOfMembers()</b></a></dt>
@@ -438,8 +411,7 @@
   <dd>Return array of members whose filenames match given regular expression in
       list context. Returns number of matching members in scalar context.
     <p class="Pp"></p>
-    <pre>
-    my @textFileMembers = $zip-&gt;membersMatching( '.*\.txt' );
+    <pre>    my @textFileMembers = $zip-&gt;membersMatching( '.*\.txt' );
     # or
     my $numberOfTextFiles = $zip-&gt;membersMatching( '.*\.txt' );
     </pre>
@@ -485,8 +457,7 @@
     [ { comment =&gt; $string } ] )</a></dt>
   <dd>Get or set the zipfile comment. Returns the old comment.
     <p class="Pp"></p>
-    <pre>
-    print $zip-&gt;zipfileComment();
+    <pre>    print $zip-&gt;zipfileComment();
     $zip-&gt;zipfileComment( 'New Comment' );
     </pre>
   </dd>
@@ -497,8 +468,7 @@
       Not used for writing zips, but might be interesting if you read a zip in.
       Here is an example of how you can diagnose this:
     <p class="Pp"></p>
-    <pre>
-  my $zip = Archive::Zip-&gt;new('somefile.zip');
+    <pre>  my $zip = Archive::Zip-&gt;new('somefile.zip');
   if ($zip-&gt;eocdOffset())
   {
     warn &quot;A virus has added &quot;, $zip-&gt;eocdOffset, &quot; bytes of garbage\n&quot;;
@@ -542,8 +512,7 @@
         <span class="Li">$newMember</span> that is a member of the zip being
         modified.</p>
     <p class="Pp"></p>
-    <pre>
-    my $member1 = $zip-&gt;removeMember( 'xyz' );
+    <pre>    my $member1 = $zip-&gt;removeMember( 'xyz' );
     my $member2 = $zip-&gt;replaceMember( 'abc', $member1 );
     # now, $member2 (named 'abc') is not in $zip,
     # and $member1 (named 'xyz') is, having taken $member2's place.
@@ -592,8 +561,7 @@
       <b>addDirectory()</b>, <b>addFileOrDirectory()</b>, <b>addString()</b>, or
       <b>read()</b> to add members.
     <p class="Pp"></p>
-    <pre>
-    # Move member named 'abc' to end of zip:
+    <pre>    # Move member named 'abc' to end of zip:
     my $member = $zip-&gt;removeMember( 'abc' );
     $zip-&gt;addMember( $member );
     </pre>
@@ -671,8 +639,7 @@
       modification time will be set to now, and the file attributes will be set
       to permissive defaults.
     <p class="Pp"></p>
-    <pre>
-    my $member = $zip-&gt;addString( 'This is a test', 'test.txt' );
+    <pre>    my $member = $zip-&gt;addString( 'This is a test', 'test.txt' );
     </pre>
   </dd>
   <dt id="contents("><a class="permalink" href="#contents(">contents(
@@ -683,19 +650,16 @@
     )</a></dt>
   <dd>Returns the uncompressed data for a particular member, or undef.
     <p class="Pp"></p>
-    <pre>
-    print &quot;xyz.txt contains &quot; . $zip-&gt;contents( 'xyz.txt' );
+    <pre>    print &quot;xyz.txt contains &quot; . $zip-&gt;contents( 'xyz.txt' );
     </pre>
     <p class="Pp">Also can change the contents of a member:</p>
     <p class="Pp"></p>
-    <pre>
-    $zip-&gt;contents( 'xyz.txt', 'This is the new contents' );
+    <pre>    $zip-&gt;contents( 'xyz.txt', 'This is the new contents' );
     </pre>
     <p class="Pp">If called expecting an array as the return value, it will
         include the status as the second value in the array.</p>
     <p class="Pp"></p>
-    <pre>
-    ($content, $status) = $zip-&gt;contents( 'xyz.txt');
+    <pre>    ($content, $status) = $zip-&gt;contents( 'xyz.txt');
     </pre>
   </dd>
 </dl>
@@ -714,8 +678,7 @@
   <dd>Write a zip archive to named file. Returns
       <span class="Li">&quot;AZ_OK&quot;</span> on success.
     <p class="Pp"></p>
-    <pre>
-    my $status = $zip-&gt;writeToFileNamed( 'xx.zip' );
+    <pre>    my $status = $zip-&gt;writeToFileNamed( 'xx.zip' );
     die &quot;error somewhere&quot; if $status != AZ_OK;
     </pre>
     <p class="Pp">Note that if you use the same name as an existing zip file
@@ -734,8 +697,7 @@
       <span class="Li">&quot;-f&quot;</span> test returns true. This could fail
       on some operating systems, though.
     <p class="Pp"></p>
-    <pre>
-    my $fh = IO::File-&gt;new( 'someFile.zip', 'w' );
+    <pre>    my $fh = IO::File-&gt;new( 'someFile.zip', 'w' );
     unless ( $zip-&gt;writeToFileHandle( $fh ) == AZ_OK ) {
         # error handling
     }
@@ -743,8 +705,7 @@
     <p class="Pp">If you pass a file handle that is not seekable (like if you're
         writing to a pipe or a socket), pass a false second argument:</p>
     <p class="Pp"></p>
-    <pre>
-    my $fh = IO::File-&gt;new( '| cat &gt; somefile.zip', 'w' );
+    <pre>    my $fh = IO::File-&gt;new( '| cat &gt; somefile.zip', 'w' );
     $zip-&gt;writeToFileHandle( $fh, 0 );   # fh is not seekable
     </pre>
     <p class="Pp">If this method fails during the write of a member, that member
@@ -773,8 +734,7 @@
     <p class="Pp">You can truncate the zip by seeking backwards and then writing
         the directory:</p>
     <p class="Pp"></p>
-    <pre>
-    my $fh = IO::File-&gt;new( 'someFile.zip', 'w' );
+    <pre>    my $fh = IO::File-&gt;new( 'someFile.zip', 'w' );
         my $retval = $zip-&gt;writeToFileHandle( $fh );
     if ( $retval == AZ_IO_ERROR ) {
         my @unwritten = grep { not $_-&gt;wasWritten() } $zip-&gt;members();
@@ -805,8 +765,7 @@
   <dd>Read zipfile headers from a zip file, appending new members. Returns
       <span class="Li">&quot;AZ_OK&quot;</span> or error code.
     <p class="Pp"></p>
-    <pre>
-    my $zipFile = Archive::Zip-&gt;new();
+    <pre>    my $zipFile = Archive::Zip-&gt;new();
     my $status = $zipFile-&gt;read( '/some/FileName.zip' );
     </pre>
   </dd>
@@ -821,8 +780,7 @@
       requires a seekable file handle; reading from a stream is not yet
       supported, but using in-memory data is.
     <p class="Pp"></p>
-    <pre>
-    my $fh = IO::File-&gt;new( '/some/FileName.zip', 'r' );
+    <pre>    my $fh = IO::File-&gt;new( '/some/FileName.zip', 'r' );
     my $zip1 = Archive::Zip-&gt;new();
     my $status = $zip1-&gt;readFromFileHandle( $fh );
     my $zip2 = Archive::Zip-&gt;new();
@@ -830,8 +788,7 @@
     </pre>
     <p class="Pp">Read zip using in-memory data (recursable):</p>
     <p class="Pp"></p>
-    <pre>
-    open my $fh, &quot;&lt;&quot;, &quot;archive.zip&quot; or die $!;
+    <pre>    open my $fh, &quot;&lt;&quot;, &quot;archive.zip&quot; or die $!;
     my $zip_data = do { local $.; &lt;$fh&gt; };
     my $zip = Archive::Zip-&gt;new;
     open my $dh, &quot;+&lt;&quot;, \$zip_data;
@@ -847,28 +804,20 @@
     Archive::Zip. They enable operation on an entire tree of members or files. A
     usage example:</p>
 <p class="Pp"></p>
-<pre>
-  use Archive::Zip;
+<pre>  use Archive::Zip;
   my $zip = Archive::Zip-&gt;new();
-
   # add all readable files and directories below . as xyz/*
   $zip-&gt;addTree( '.', 'xyz' );
-
   # add all readable plain files below /abc as def/*
   $zip-&gt;addTree( '/abc', 'def', sub { -f &amp;&amp; -r } );
-
   # add all .c files below /tmp as stuff/*
   $zip-&gt;addTreeMatching( '/tmp', 'stuff', '\.c$' );
-
   # add all .o files below /tmp as stuff/* if they aren't writable
   $zip-&gt;addTreeMatching( '/tmp', 'stuff', '\.o$', sub { ! -w } );
-
   # add all .so files below /tmp that are smaller than 200 bytes as stuff/*
   $zip-&gt;addTreeMatching( '/tmp', 'stuff', '\.o$', sub { -s &lt; 200 } );
-
   # and write them into a file
   $zip-&gt;writeToFileNamed('xxx.zip');
-
   # now extract the same files into /tmpx
   $zip-&gt;extractTree( 'stuff', '/tmpx' );
 </pre>
@@ -889,16 +838,14 @@
       returns true, the file or directory will be included. The default is to
       add all readable files and directories. For instance, using
     <p class="Pp"></p>
-    <pre>
-  my $pred = sub { /\.txt/ };
+    <pre>  my $pred = sub { /\.txt/ };
   $zip-&gt;addTree( '.', '', $pred );
     </pre>
     <p class="Pp">will add all the .txt files in and below the current
         directory, using relative names, and making the names identical in the
         zipfile:</p>
     <p class="Pp"></p>
-    <pre>
-  original name           zip member name
+    <pre>  original name           zip member name
   ./xyz                   xyz
   ./a/                    a/
   ./a/b                   a/b
@@ -906,8 +853,7 @@
     <p class="Pp">To translate absolute to relative pathnames, just pass them
         in: <span class="Li">$zip</span>-&gt;addTree( '/c/d', 'a' );</p>
     <p class="Pp"></p>
-    <pre>
-  original name           zip member name
+    <pre>  original name           zip member name
   /c/d/xyz                a/xyz
   /c/d/a/                 a/a/
   /c/d/a/b                a/a/b
@@ -937,16 +883,14 @@
       <span class="Li">&quot;.pl&quot;</span>, and make them extract into a
       subdirectory named <span class="Li">&quot;xyz&quot;</span>, do this:
     <p class="Pp"></p>
-    <pre>
-  $zip-&gt;addTreeMatching( '.', 'xyz', '\.pl$' )
+    <pre>  $zip-&gt;addTreeMatching( '.', 'xyz', '\.pl$' )
     </pre>
     <p class="Pp">To add all <i>writable</i> files in and below the directory
         named <span class="Li">&quot;/abc&quot;</span> whose names end in
         <span class="Li">&quot;.pl&quot;</span>, and make them extract into a
         subdirectory named <span class="Li">&quot;xyz&quot;</span>, do this:</p>
     <p class="Pp"></p>
-    <pre>
-  $zip-&gt;addTreeMatching( '/abc', 'xyz', '\.pl$', sub { -w } )
+    <pre>  $zip-&gt;addTreeMatching( '/abc', 'xyz', '\.pl$', sub { -w } )
     </pre>
     <p class="Pp">Returns AZ_OK on success. Note that this will not follow
         symbolic links to directories.</p>
@@ -979,8 +923,7 @@
         current directory, stripping off <span class="Li">$root</span> first.
         <span class="Li">$root</span> is in Zip (Unix) format. For instance,</p>
     <p class="Pp"></p>
-    <pre>
-  $zip-&gt;extractTree( 'a' );
+    <pre>  $zip-&gt;extractTree( 'a' );
     </pre>
     <p class="Pp">when applied to a zip containing the files: a/x a/b/c ax/d/e
         d/e will extract:</p>
@@ -994,8 +937,7 @@
         <span class="Li">$dest</span> are in Zip (Unix) format. For
       instance,</p>
     <p class="Pp"></p>
-    <pre>
-   $zip-&gt;extractTree( 'a', 'd/e' );
+    <pre>   $zip-&gt;extractTree( 'a', 'd/e' );
     </pre>
     <p class="Pp">when applied to a zip containing the files: a/x a/b/c ax/d/e
         d/e will extract:</p>
@@ -1014,8 +956,7 @@
         format.</p>
     <p class="Pp">For instance, under Windows,</p>
     <p class="Pp"></p>
-    <pre>
-   $zip-&gt;extractTree( 'a', 'd/e', 'f:' );
+    <pre>   $zip-&gt;extractTree( 'a', 'd/e', 'f:' );
     </pre>
     <p class="Pp">when applied to a zip containing the files: a/x a/b/c ax/d/e
         d/e will extract:</p>
@@ -1025,8 +966,7 @@
         relative to the current directory on the destination volume, you can
         specify these in <span class="Li">$dest</span>:</p>
     <p class="Pp"></p>
-    <pre>
-   $zip-&gt;extractTree( 'a', '/d/e', 'f:' );
+    <pre>   $zip-&gt;extractTree( 'a', '/d/e', 'f:' );
     </pre>
     <p class="Pp">when applied to a zip containing the files: a/x a/b/c ax/d/e
         d/e will extract:</p>
@@ -1050,8 +990,7 @@
       to be UTF-8 encoded. This is <i>EXPERIMENTAL AND BUGGY (there are some
       edge cases</i> <i>on Win32)</i>. Please report problems.
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
         local $Archive::Zip::UNICODE = 1;
         $zip-&gt;addFile('D&#x00E9;j&#x00E0; vu.txt');
     }
@@ -1077,8 +1016,7 @@
     { string =&gt; $stringOrStringRef [, zipName =&gt; $fileName ] )</a></dt>
   <dd>Construct a new member from the given string. Returns undef on error.
     <p class="Pp"></p>
-    <pre>
-    my $member = Archive::Zip::Member-&gt;newFromString( 'This is a test' );
+    <pre>    my $member = Archive::Zip::Member-&gt;newFromString( 'This is a test' );
     my $member = Archive::Zip::Member-&gt;newFromString( 'This is a test', 'test.txt' );
     my $member = Archive::Zip::Member-&gt;newFromString( { string =&gt; 'This is a test', zipName =&gt; 'test.txt' } );
     </pre>
@@ -1090,8 +1028,7 @@
     { filename =&gt; $fileName [, zipName =&gt; $zipName ] } )</a></dt>
   <dd>Construct a new member from the given file. Returns undef on error.
     <p class="Pp"></p>
-    <pre>
-    my $member = Archive::Zip::Member-&gt;newFromFile( 'xyz.txt' );
+    <pre>    my $member = Archive::Zip::Member-&gt;newFromFile( 'xyz.txt' );
     </pre>
   </dd>
   <dt id="newDirectoryNamed("><a class="permalink" href="#newDirectoryNamed(">newDirectoryNamed(
@@ -1108,8 +1045,7 @@
         will be converted from <span class="Li">$directoryName</span>.</p>
     <p class="Pp">Returns undef on error.</p>
     <p class="Pp"></p>
-    <pre>
-    my $member = Archive::Zip::Member-&gt;newDirectoryNamed( 'CVS/' );
+    <pre>    my $member = Archive::Zip::Member-&gt;newDirectoryNamed( 'CVS/' );
     </pre>
   </dd>
 </dl>
@@ -1191,15 +1127,13 @@
   <dd>Return the member's last modification date/time stamp, converted to unix
       localtime format.
     <p class="Pp"></p>
-    <pre>
-    print &quot;Mod Time: &quot; . scalar( localtime( $member-&gt;lastModTime() ) );
+    <pre>    print &quot;Mod Time: &quot; . scalar( localtime( $member-&gt;lastModTime() ) );
     </pre>
   </dd>
   <dt id="setLastModFileDateTimeFromUnix()"><a class="permalink" href="#setLastModFileDateTimeFromUnix()"><b>setLastModFileDateTimeFromUnix()</b></a></dt>
   <dd>Set the member's lastModFileDateTime from the given unix time.
     <p class="Pp"></p>
-    <pre>
-    $member-&gt;setLastModFileDateTimeFromUnix( time() );
+    <pre>    $member-&gt;setLastModFileDateTimeFromUnix( time() );
     </pre>
   </dd>
   <dt id="internalFileAttributes()"><a class="permalink" href="#internalFileAttributes()"><b>internalFileAttributes()</b></a></dt>
@@ -1216,8 +1150,7 @@
   <dd>Get or set the member's file attributes using UNIX file attributes.
       Returns old attributes.
     <p class="Pp"></p>
-    <pre>
-    my $oldAttribs = $member-&gt;unixFileAttributes( 0666 );
+    <pre>    my $oldAttribs = $member-&gt;unixFileAttributes( 0666 );
     </pre>
     <p class="Pp">Note that the return value has more than just the file
         permissions, so you will have to mask off the lowest bits for
@@ -1279,8 +1212,7 @@
       currently support creation of encrypted members. Decryption works more or
       less like this:
     <p class="Pp"></p>
-    <pre>
-  my $zip = Archive::Zip-&gt;new;
+    <pre>  my $zip = Archive::Zip-&gt;new;
   $zip-&gt;read (&quot;encrypted.zip&quot;);
   for my $m (map { $zip-&gt;memberNamed ($_) } $zip-&gt;memberNames) {
       $m-&gt;password (&quot;secret&quot;);
@@ -1333,8 +1265,7 @@
     instance, here is how to print the uncompressed contents of a member in
     chunks using these methods:</p>
 <p class="Pp"></p>
-<pre>
-    my ( $member, $status, $bufferRef );
+<pre>    my ( $member, $status, $bufferRef );
     $member = $zip-&gt;memberNamed( 'xyz.txt' );
     $member-&gt;desiredCompressionMethod( COMPRESSION_STORED );
     $status = $member-&gt;rewindData();
@@ -1363,8 +1294,7 @@
       <span class="Li">&quot;(</span> <span class="Li">\$bytes,
       $status)&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-    my ( $outRef, $status ) = $self-&gt;readChunk();
+    <pre>    my ( $outRef, $status ) = $self-&gt;readChunk();
     print $$outRef if $status != AZ_OK &amp;&amp; $status != AZ_STREAM_END;
     </pre>
   </dd>
@@ -1385,8 +1315,7 @@
       $string,</span> <span class="Li">$status )&quot;</span>; status will be
       AZ_OK on success:
     <p class="Pp"></p>
-    <pre>
-    my $string = $member-&gt;contents();
+    <pre>    my $string = $member-&gt;contents();
     # or
     my ( $string, $status ) = $member-&gt;contents();
     die &quot;error $status&quot; unless $status == AZ_OK;
@@ -1394,8 +1323,7 @@
     <p class="Pp">Can also be used to set the contents of a member (this may
         change the class of the member):</p>
     <p class="Pp"></p>
-    <pre>
-    $member-&gt;contents( &quot;this is my new contents&quot; );
+    <pre>    $member-&gt;contents( &quot;this is my new contents&quot; );
     </pre>
   </dd>
   <dt id="extractToFileHandle("><a class="permalink" href="#extractToFileHandle(">extractToFileHandle(

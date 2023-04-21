@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Base64(3pm)</title>
 </head>
@@ -28,9 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use MIME::Base64;
-
+<pre> use MIME::Base64;
  $encoded = encode_base64('Aladdin:open sesame');
  $decoded = decode_base64($encoded);
 </pre>
@@ -77,8 +76,7 @@
 <p class="Pp">If you prefer not to import these routines into your namespace,
     you can call them as:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Base64 ();
+<pre>    use MIME::Base64 ();
     $encoded = MIME::Base64::encode($decoded);
     $decoded = MIME::Base64::decode($encoded);
 </pre>
@@ -119,9 +117,7 @@
     and that you do not end up with padding in the middle. 57 bytes of data
     fills one complete base64 line (76 == 57*4/3):</p>
 <p class="Pp"></p>
-<pre>
-   use MIME::Base64 qw(encode_base64);
-
+<pre>   use MIME::Base64 qw(encode_base64);
    open(FILE, &quot;/var/log/wtmp&quot;) or die &quot;$!&quot;;
    while (read(FILE, $buf, 60*57)) {
        print encode_base64($buf);
@@ -129,31 +125,26 @@
 </pre>
 <p class="Pp">or if you know you have enough memory</p>
 <p class="Pp"></p>
-<pre>
-   use MIME::Base64 qw(encode_base64);
+<pre>   use MIME::Base64 qw(encode_base64);
    local($/) = undef;  # slurp
    print encode_base64(&lt;STDIN&gt;);
 </pre>
 <p class="Pp">The same approach as a command line:</p>
 <p class="Pp"></p>
-<pre>
-   perl -MMIME::Base64 -0777 -ne 'print encode_base64($_)' &lt;file
+<pre>   perl -MMIME::Base64 -0777 -ne 'print encode_base64($_)' &lt;file
 </pre>
 <p class="Pp">Decoding does not need slurp mode if every line contains a
     multiple of four base64 chars:</p>
 <p class="Pp"></p>
-<pre>
-   perl -MMIME::Base64 -ne 'print decode_base64($_)' &lt;file
+<pre>   perl -MMIME::Base64 -ne 'print decode_base64($_)' &lt;file
 </pre>
 <p class="Pp">Perl v5.8 and better allow extended Unicode characters in strings.
     Such strings cannot be encoded directly, as the base64 encoding is only
     defined for single-byte characters. The solution is to use the Encode module
     to select the byte encoding you want. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use MIME::Base64 qw(encode_base64);
+<pre>    use MIME::Base64 qw(encode_base64);
     use Encode qw(encode);
-
     $encoded = encode_base64(encode(&quot;UTF-8&quot;, &quot;\x{FFFF}\n&quot;));
     print $encoded;
 </pre>

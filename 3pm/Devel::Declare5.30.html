@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Devel::Declare(3)</title>
 </head>
@@ -28,12 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Method::Signatures;
+<pre>  use Method::Signatures;
   # or ...
   use MooseX::Declare;
   # etc.
-
   # Use some new and exciting syntax like:
   method hello (Str :$who, Int :$age where { $_ &gt; 0 }) {
     $self-&gt;say(&quot;Hello ${who}, I am ${age} years old!&quot;);
@@ -73,8 +72,7 @@
     automatically unpacks <span class="Li">$self</span> and the other
   arguments.</p>
 <p class="Pp"></p>
-<pre>
-  package My::Methods;
+<pre>  package My::Methods;
   use Devel::Declare;
 </pre>
 <section class="Ss">
@@ -82,11 +80,9 @@
   a declarator with &quot;setup_for&quot;</a></h2>
 <p class="Pp">You will typically create</p>
 <p class="Pp"></p>
-<pre>
-  sub import {
+<pre>  sub import {
     my $class = shift;
     my $caller = caller;
-
     Devel::Declare-&gt;setup_for(
         $caller,
         { method =&gt; { const =&gt; \&amp;parser } }
@@ -102,16 +98,14 @@
     prototype <span class="Li">&quot;(&amp;)&quot;</span> which means that the
     caller would call it like so:</p>
 <p class="Pp"></p>
-<pre>
-    method {
+<pre>    method {
         my ($self, $arg1, $arg2) = @_;
         ...
     }
 </pre>
 <p class="Pp">However we want to be able to call it like this</p>
 <p class="Pp"></p>
-<pre>
-    method foo ($arg1, $arg2) {
+<pre>    method foo ($arg1, $arg2) {
         ...
     }
 </pre>
@@ -132,14 +126,12 @@
     the <span class="Li">&quot;perl&quot;</span> compiler.</p>
 <p class="Pp">For this example, we're defining some globals for convenience:</p>
 <p class="Pp"></p>
-<pre>
-    our ($Declarator, $Offset);
+<pre>    our ($Declarator, $Offset);
 </pre>
 <p class="Pp">Then we define a parser subroutine to handle our declarator. We'll
     look at this in a few chunks.</p>
 <p class="Pp"></p>
-<pre>
-    sub parser {
+<pre>    sub parser {
       local ($Declarator, $Offset) = @_;
 </pre>
 <p class="Pp"><span class="Li">&quot;Devel::Declare&quot;</span> provides some
@@ -150,8 +142,7 @@
     the <span class="Li">&quot;perl&quot;</span> parser is pointed just
     <i>before</i> the declarator name.</p>
 <p class="Pp"></p>
-<pre>
-      skip_declarator;          # step past 'method'
+<pre>      skip_declarator;          # step past 'method'
       my $name = strip_name;    # strip out the name 'foo', if present
       my $proto = strip_proto;  # strip out the prototype '($arg1, $arg2)', if present
 </pre>
@@ -161,8 +152,7 @@
     at the beginning of it. We also do some clever stuff with scopes that we'll
     look at shortly.</p>
 <p class="Pp"></p>
-<pre>
-      my $inject = make_proto_unwrap($proto);
+<pre>      my $inject = make_proto_unwrap($proto);
       if (defined $name) {
         $inject = scope_injector_call().$inject;
       }
@@ -184,8 +174,7 @@
 <p class="Pp">Note that we also handle the case where there was no name,
     allowing an anonymous method analogous to an anonymous subroutine.</p>
 <p class="Pp"></p>
-<pre>
-      if (defined $name) {
+<pre>      if (defined $name) {
         $name = join('::', Devel::Declare::get_curstash_name(), $name)
           unless ($name =~ /::/);
         shadow(sub (&amp;) { no strict 'refs'; *{$name} = shift; });
@@ -202,13 +191,12 @@
     <span class="Li">$Offset</span> in these examples. You may prefer to look at
     Devel::Declare::Context::Simple, which encapsulates the context much more
     cleanly.</p>
-<p class="Pp"><i></i><i>&quot;skip_declarator&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;skip_declarator&quot;</i></span><i></i></p>
 <p class="Pp">This simple parser just moves across a 'token'. The common case is
     to skip the declarator, i.e. to move to the end of the string 'method' and
     before the prototype and code block.</p>
 <p class="Pp"></p>
-<pre>
-    sub skip_declarator {
+<pre>    sub skip_declarator {
       $Offset += Devel::Declare::toke_move_past_token($Offset);
     }
 </pre>
@@ -217,14 +205,13 @@
     <span class="Li">&quot;/[a-zA-Z_]\w*/&quot;</span>) It takes an offset into
     the source document, and skips past the token. It returns the number of
     characters skipped.</p>
-<p class="Pp"><i></i><i>&quot;strip_name&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;strip_name&quot;</i></span><i></i></p>
 <p class="Pp">This parser skips any whitespace, then scans the next word (again
     matching a 'token'). We can then analyse the current line, and manipulate it
     (using pure Perl). In this case we take the name of the method out, and
     return it.</p>
 <p class="Pp"></p>
-<pre>
-    sub strip_name {
+<pre>    sub strip_name {
       skipspace;
       if (my $len = Devel::Declare::toke_scan_word($Offset, 1)) {
         my $linestr = Devel::Declare::get_linestr();
@@ -249,26 +236,23 @@
     likely to fail in surprising ways. Generally, Perl's parser can rely on the
     `current line' actually being only a single line. Use other kinds of
     whitespace instead, in the code that you inject.</p>
-<p class="Pp"><i></i><i>&quot;skipspace&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;skipspace&quot;</i></span><i></i></p>
 <p class="Pp">This parser skips whitsepace.</p>
 <p class="Pp"></p>
-<pre>
-    sub skipspace {
+<pre>    sub skipspace {
       $Offset += Devel::Declare::toke_skipspace($Offset);
     }
 </pre>
 <p class="Pp"><span class="Li">&quot;toke_skipspace&quot;</span></p>
 <p class="Pp">This builtin parser, given an offset into the source document,
     skips over any whitespace, and returns the number of characters skipped.</p>
-<p class="Pp"><i></i><i>&quot;strip_proto&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;strip_proto&quot;</i></span><i></i></p>
 <p class="Pp">This is a more complex parser that checks if it's found something
     that starts with <span class="Li">'('</span> and returns everything till the
     matching <span class="Li">')'</span>.</p>
 <p class="Pp"></p>
-<pre>
-    sub strip_proto {
+<pre>    sub strip_proto {
       skipspace;
-
       my $linestr = Devel::Declare::get_linestr();
       if (substr($linestr, $Offset, 1) eq '(') {
         my $length = Devel::Declare::toke_scan_str($Offset);
@@ -317,21 +301,19 @@
 <h2 class="Ss" id="Munging_the_subroutine"><a class="permalink" href="#Munging_the_subroutine">Munging
   the subroutine</a></h2>
 <p class="Pp">Let's look at what we need to do in detail.</p>
-<p class="Pp"><i></i><i>&quot;make_proto_unwrap&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;make_proto_unwrap&quot;</i></span><i></i></p>
 <p class="Pp">We may have defined our method in different ways, which will
     result in a different value for our prototype, as parsed above. For
   example:</p>
 <p class="Pp"></p>
-<pre>
-    method foo         {  # undefined
+<pre>    method foo         {  # undefined
     method foo ()      {  # ''
     method foo ($arg1) {  # '$arg1'
 </pre>
 <p class="Pp">We deal with them as follows, and return the appropriate
     <span class="Li">&quot;my ($self, ...) = @_;&quot;</span> string.</p>
 <p class="Pp"></p>
-<pre>
-    sub make_proto_unwrap {
+<pre>    sub make_proto_unwrap {
       my ($proto) = @_;
       my $inject = 'my ($self';
       if (defined $proto) {
@@ -343,15 +325,14 @@
       return $inject;
     }
 </pre>
-<p class="Pp"><i></i><i>&quot;inject_if_block&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;inject_if_block&quot;</i></span><i></i></p>
 <p class="Pp">Now we need to inject it after the opening
     <span class="Li">'{'</span> of the method body. We can do this with the
     building blocks we defined above like
     <span class="Li">&quot;skipspace&quot;</span> and
     <span class="Li">&quot;get_linestr&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    sub inject_if_block {
+<pre>    sub inject_if_block {
       my $inject = shift;
       skipspace;
       my $linestr = Devel::Declare::get_linestr;
@@ -361,18 +342,16 @@
       }
     }
 </pre>
-<p class="Pp"><i></i><i>&quot;scope_injector_call&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;scope_injector_call&quot;</i></span><i></i></p>
 <p class="Pp">We want to be able to handle both named and anonymous methods.
     i.e.</p>
 <p class="Pp"></p>
-<pre>
-    method foo () { ... }
+<pre>    method foo () { ... }
     my $meth = method () { ... };
 </pre>
 <p class="Pp">These will then get rewritten as</p>
 <p class="Pp"></p>
-<pre>
-    method { ... }
+<pre>    method { ... }
     my $meth = method { ... };
 </pre>
 <p class="Pp">where 'method' is a subroutine that takes a code block. Spot the
@@ -382,14 +361,12 @@
     <span class="Li">&quot;B::Hooks::EndOfScope&quot;</span>, we can do
   this!</p>
 <p class="Pp"></p>
-<pre>
-  use B::Hooks::EndOfScope;
+<pre>  use B::Hooks::EndOfScope;
 </pre>
 <p class="Pp">We'll add this to what gets 'injected' at the beginning of the
     method source.</p>
 <p class="Pp"></p>
-<pre>
-  sub scope_injector_call {
+<pre>  sub scope_injector_call {
     return ' BEGIN { MethodHandlers::inject_scope }; ';
   }
 </pre>
@@ -397,8 +374,7 @@
     that will get invoked at the <i>end</i> of the method's compilation... i.e.
     exactly then the closing <span class="Li">'}'</span> is compiled.</p>
 <p class="Pp"></p>
-<pre>
-  sub inject_scope {
+<pre>  sub inject_scope {
     on_scope_end {
       my $linestr = Devel::Declare::get_linestr;
       my $offset = Devel::Declare::get_linestr_offset;
@@ -411,20 +387,18 @@
 <section class="Ss">
 <h2 class="Ss" id="Shadowing_each_method."><a class="permalink" href="#Shadowing_each_method.">Shadowing
   each method.</a></h2>
-<p class="Pp"><i></i><i>&quot;shadow&quot;</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>&quot;shadow&quot;</i></span><i></i></p>
 <p class="Pp">We override the current definition of 'method' using
     <span class="Li">&quot;shadow&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    sub shadow {
+<pre>    sub shadow {
       my $pack = Devel::Declare::get_curstash_name;
       Devel::Declare::shadow_sub(&quot;${pack}::${Declarator}&quot;, $_[0]);
     }
 </pre>
 <p class="Pp">For a named method we invoked like this:</p>
 <p class="Pp"></p>
-<pre>
-    shadow(sub (&amp;) { no strict 'refs'; *{$name} = shift; });
+<pre>    shadow(sub (&amp;) { no strict 'refs'; *{$name} = shift; });
 </pre>
 <p class="Pp">So in the case of a <span class="Li">&quot;method foo { ...
     }&quot;</span>, this call would redefine
@@ -433,13 +407,11 @@
     <span class="Li">&quot;{...}&quot;</span>.</p>
 <p class="Pp">The case of an anonymous method is also cute:</p>
 <p class="Pp"></p>
-<pre>
-    shadow(sub (&amp;) { shift });
+<pre>    shadow(sub (&amp;) { shift });
 </pre>
 <p class="Pp">This means that</p>
 <p class="Pp"></p>
-<pre>
-    my $meth = method () { ... };
+<pre>    my $meth = method () { ... };
 </pre>
 <p class="Pp">is rewritten with <span class="Li">&quot;method&quot;</span>
     taking the codeblock, and returning it as is to become the value of

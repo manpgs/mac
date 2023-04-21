@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>HTML::Tree::Scanning(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # This an article, not a module.
+<pre>  # This an article, not a module.
 </pre>
 </section>
 <section class="Sh">
@@ -70,8 +70,7 @@
 <p class="Pp">You use HTML::TreeBuilder to make a parse tree out of an HTML
     source file, by simply saying:</p>
 <p class="Pp"></p>
-<pre>
-  use HTML::TreeBuilder;
+<pre>  use HTML::TreeBuilder;
   my $tree = HTML::TreeBuilder-&gt;new();
   $tree-&gt;parse_file('foo.html');
 </pre>
@@ -84,8 +83,7 @@
     class HTML::Element.</p>
 <p class="Pp">So, if you take this source:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;html&gt;&lt;head&gt;&lt;title&gt;Doc 1&lt;/title&gt;&lt;/head&gt;
+<pre>  &lt;html&gt;&lt;head&gt;&lt;title&gt;Doc 1&lt;/title&gt;&lt;/head&gt;
   &lt;body&gt;
   Stuff &lt;hr&gt; 2000-08-17
   &lt;/body&gt;&lt;/html&gt;
@@ -93,8 +91,7 @@
 <p class="Pp">and feed it to HTML::TreeBuilder, it'll return a tree of objects
     that looks like this:</p>
 <p class="Pp"></p>
-<pre>
-               html
+<pre>               html
              /      \
          head        body
         /          /   |  \
@@ -107,8 +104,7 @@
     The same tree can be represented a bit more easily sideways, with
   indenting:</p>
 <p class="Pp"></p>
-<pre>
-  . html
+<pre>  . html
      . head
         . title
            . &quot;Doc 1&quot;
@@ -198,8 +194,7 @@
 <p class="Pp">Suppose you have a thousand HTML documents, each of them a press
     release. They all start out:</p>
 <p class="Pp"></p>
-<pre>
-  [...lots of leading images and junk...]
+<pre>  [...lots of leading images and junk...]
   &lt;h1&gt;ConGlomCo to Open New Corporate Office in Ougadougou&lt;/h1&gt;
   BAKERSFIELD, CA, 2000-04-24 -- ConGlomCo's vice president in charge
   of world conquest, Rock Feldspar, announced today the opening of a
@@ -217,8 +212,7 @@
         placement of linebreaks and whitespace, so you could just get away with
         scanning the file like so:</p>
     <p class="Pp"></p>
-    <pre>
-  sub get_heading {
+    <pre>  sub get_heading {
     my $filename = $_[0];
     local *HTML;
     open(HTML, $filename)
@@ -295,8 +289,7 @@
 <p class="Pp">So, to extract the text from the &quot;h1&quot; elements of an
     HTML document:</p>
 <p class="Pp"></p>
-<pre>
-  sub get_heading {
+<pre>  sub get_heading {
     my $tree = HTML::TreeBuilder-&gt;new;
     $tree-&gt;parse_file($_[0]);   # !
     my $heading;
@@ -320,19 +313,16 @@
     descendants) of the given node -- to get the text content of the
     <span class="Li">$h1</span> object, we could just say:</p>
 <p class="Pp"></p>
-<pre>
-  $heading = join '', $h1-&gt;content_list;
+<pre>  $heading = join '', $h1-&gt;content_list;
 </pre>
 <p class="Pp">but that will work only if we're sure that the &quot;h1&quot;
     element's children will be only text bits -- if the document contained:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;h1&gt;Local Man Sees &lt;cite&gt;Blade&lt;/cite&gt; Again&lt;/h1&gt;
+<pre>  &lt;h1&gt;Local Man Sees &lt;cite&gt;Blade&lt;/cite&gt; Again&lt;/h1&gt;
 </pre>
 <p class="Pp">then the sub-tree would be:</p>
 <p class="Pp"></p>
-<pre>
-  . h1
+<pre>  . h1
     . &quot;Local Man Sees &quot;
     . cite
       . &quot;Blade&quot;
@@ -341,28 +331,24 @@
 <p class="Pp">so <span class="Li">&quot;join '',
     $h1-&gt;content_list&quot;</span> will be something like:</p>
 <p class="Pp"></p>
-<pre>
-  Local Man Sees HTML::Element=HASH(0x15424040) Again
+<pre>  Local Man Sees HTML::Element=HASH(0x15424040) Again
 </pre>
 <p class="Pp">whereas <span class="Li">&quot;$h1-&gt;as_text&quot;</span> would
     yield:</p>
 <p class="Pp"></p>
-<pre>
-  Local Man Sees Blade Again
+<pre>  Local Man Sees Blade Again
 </pre>
 <p class="Pp">and depending on what you're doing with the heading text, you
     might want the <span class="Li">&quot;as_HTML&quot;</span> method instead.
     It returns the (sub)tree represented as HTML source.
     <span class="Li">&quot;$h1-&gt;as_HTML&quot;</span> would yield:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;h1&gt;Local Man Sees &lt;cite&gt;Blade&lt;/cite&gt; Again&lt;/h1&gt;
+<pre>  &lt;h1&gt;Local Man Sees &lt;cite&gt;Blade&lt;/cite&gt; Again&lt;/h1&gt;
 </pre>
 <p class="Pp">However, if you wanted the contents of <span class="Li">$h1</span>
     as HTML, but not the <span class="Li">$h1</span> itself, you could say:</p>
 <p class="Pp"></p>
-<pre>
-  join '',
+<pre>  join '',
     map(
       ref($_) ? $_-&gt;as_HTML : $_,
       $h1-&gt;content_list
@@ -401,8 +387,7 @@
     element, it doesn't bother looking any further.</p>
 <p class="Pp">So the example:</p>
 <p class="Pp"></p>
-<pre>
-  $h1 = $tree-&gt;look_down('_tag', 'h1');
+<pre>  $h1 = $tree-&gt;look_down('_tag', 'h1');
 </pre>
 <p class="Pp">returns the first element at-or-under
     <span class="Li">$tree</span> whose <span class="Li">&quot;_tag&quot;</span>
@@ -418,8 +403,7 @@
     &quot;h1&quot; elements, possibly before or after the one you actually want.
     For example:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;h1&gt;&lt;center&gt;Visit Our Corporate Partner
+<pre>  &lt;h1&gt;&lt;center&gt;Visit Our Corporate Partner
    &lt;br&gt;&lt;a href=&quot;/dyna/clickthru&quot;
      &gt;&lt;img src=&quot;/dyna/vend_ad&quot;&gt;&lt;/a&gt;
   &lt;/center&gt;&lt;/h1&gt;
@@ -435,8 +419,7 @@
     could exclude &quot;h1&quot; elements that contain the word
     &quot;visit&quot; under them:</p>
 <p class="Pp"></p>
-<pre>
-  my $real_h1 = $tree-&gt;look_down(
+<pre>  my $real_h1 = $tree-&gt;look_down(
     '_tag', 'h1',
     sub {
       $_[0]-&gt;as_text !~ m/\bvisit/i
@@ -451,8 +434,7 @@
 <p class="Pp">Instead you could try looking for the first &quot;h1&quot; element
     that doesn't contain an image:</p>
 <p class="Pp"></p>
-<pre>
-  my $real_h1 = $tree-&gt;look_down(
+<pre>  my $real_h1 = $tree-&gt;look_down(
     '_tag', 'h1',
     sub {
       not $_[0]-&gt;look_down('_tag', 'img')
@@ -469,8 +451,7 @@
     being a reference and object, is always a true value), if any matches. So,
     here,</p>
 <p class="Pp"></p>
-<pre>
-  sub {
+<pre>  sub {
     not $_[0]-&gt;look_down('_tag', 'img')
   }
 </pre>
@@ -483,8 +464,7 @@
     second &quot;h1&quot; elements -- the only second one contains the string
     &quot;Schreck&quot;, and we could just test for that:</p>
 <p class="Pp"></p>
-<pre>
-  my $real_h1 = $tree-&gt;look_down(
+<pre>  my $real_h1 = $tree-&gt;look_down(
     '_tag', 'h1',
     sub {
       $_[0]-&gt;as_text =~ m{Schreck}
@@ -497,8 +477,7 @@
     want to exclude involve a link whose URL involves &quot;/dyna/&quot;, then
     you can use that:</p>
 <p class="Pp"></p>
-<pre>
-  my $real_h1 = $tree-&gt;look_down(
+<pre>  my $real_h1 = $tree-&gt;look_down(
     '_tag', 'h1',
     sub {
       my $link = $_[0]-&gt;look_down('_tag','a');
@@ -515,8 +494,7 @@
     has a &quot;src&quot; attribute whose value contains
   &quot;/photos/&quot;:</p>
 <p class="Pp"></p>
-<pre>
-  my $real_h1 = $tree-&gt;look_down(
+<pre>  my $real_h1 = $tree-&gt;look_down(
     '_tag', 'h1',
     sub {
       my $img = $_[0]-&gt;look_down('_tag','img');
@@ -537,8 +515,7 @@
     can use <span class="Li">&quot;look_down&quot;</span> in a list context, and
     just use the last element of that list:</p>
 <p class="Pp"></p>
-<pre>
-  my @h1s = $tree-&gt;look_down(
+<pre>  my @h1s = $tree-&gt;look_down(
     '_tag', 'h1',
     ...maybe more criteria...
   );
@@ -590,8 +567,7 @@
     position in the tree. For example, headlines of interest may be in the third
     column of the second row of the second table element in a page:</p>
 <p class="Pp"></p>
-<pre>
-  my $table = ( $tree-&gt;look_down('_tag','table') )[1];
+<pre>  my $table = ( $tree-&gt;look_down('_tag','table') )[1];
   my $row2  = ( $table-&gt;look_down('_tag', 'tr' ) )[1];
   my $col3  = ( $row2-&gt;look-down('_tag', 'td')   )[2];
   ...then do things with $col3...
@@ -599,8 +575,7 @@
 <p class="Pp">Or they may be all the links in a &quot;p&quot; element that has
     at least three &quot;br&quot; elements as children:</p>
 <p class="Pp"></p>
-<pre>
-  my $p = $tree-&gt;look_down(
+<pre>  my $p = $tree-&gt;look_down(
     '_tag', 'p',
     sub {
       2 &lt; grep { ref($_) and $_-&gt;tag eq 'br' }
@@ -615,15 +590,13 @@
     tagging, such is as useful in CSS -- note the class=&quot;headlinelink&quot;
     bit here:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;a href=&quot;...long_news_url...&quot; class=&quot;headlinelink&quot;&gt;Elvis
+<pre>  &lt;a href=&quot;...long_news_url...&quot; class=&quot;headlinelink&quot;&gt;Elvis
   seen in tortilla&lt;/a&gt;
 </pre>
 <p class="Pp">If you find anything like that, you could leap right in and select
     links with:</p>
 <p class="Pp"></p>
-<pre>
-  @links = $tree-&gt;look_down('class','headlinelink');
+<pre>  @links = $tree-&gt;look_down('class','headlinelink');
 </pre>
 <p class="Pp">Regrettably, your chances of seeing any sort of semantic markup
     principles really being followed with actual HTML are pretty thin.</p>
@@ -643,13 +616,11 @@
     because the headline-links are distinguished by the fact that they (and they
     alone) contain a &quot;b&quot; element:</p>
 <p class="Pp"></p>
-<pre>
-  &lt;a href=&quot;...long_news_url...&quot;&gt;&lt;b&gt;Elvis seen in tortilla&lt;/b&gt;&lt;/a&gt;
+<pre>  &lt;a href=&quot;...long_news_url...&quot;&gt;&lt;b&gt;Elvis seen in tortilla&lt;/b&gt;&lt;/a&gt;
 </pre>
 <p class="Pp">or, diagrammed as a part of the parse tree:</p>
 <p class="Pp"></p>
-<pre>
-  . a  [href=&quot;...long_news_url...&quot;]
+<pre>  . a  [href=&quot;...long_news_url...&quot;]
     . b
       . &quot;Elvis seen in tortilla&quot;
 </pre>
@@ -660,8 +631,7 @@
     bit of code that retrieves the text of the given Yahoo News page and feeds
     it to TreeBuilder:</p>
 <p class="Pp"></p>
-<pre>
-  use strict;
+<pre>  use strict;
   use HTML::TreeBuilder 2.97;
   use LWP::UserAgent;
   sub get_headlines {
@@ -701,8 +671,7 @@
 <p class="Pp">...and add a bit of code to actually call that routine and display
     the results...</p>
 <p class="Pp"></p>
-<pre>
-  foreach my $section (qw[tc sc hl wl en]) {
+<pre>  foreach my $section (qw[tc sc hl wl en]) {
     my @links = get_headlines(
       &quot;http://dailynews.yahoo.com/h/$section/&quot;
     );
@@ -759,7 +728,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-02-12</td>
+    <td class="foot-date">2022-11-05</td>
     <td class="foot-os">perl v5.30.2</td>
   </tr>
 </table>

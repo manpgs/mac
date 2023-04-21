@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::DBM(3)</title>
 </head>
@@ -28,13 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use DBI;
+<pre> use DBI;
  $dbh = DBI-&gt;connect('dbi:DBM:');                    # defaults to SDBM_File
  $dbh = DBI-&gt;connect('DBI:DBM(RaiseError=1):');      # defaults to SDBM_File
  $dbh = DBI-&gt;connect('dbi:DBM:dbm_type=DB_File');    # defaults to DB_File
  $dbh = DBI-&gt;connect('dbi:DBM:dbm_mldbm=Storable');  # MLDBM with SDBM_File
-
  # or
  $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef);
  $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, {
@@ -97,8 +96,7 @@
     &quot;Adding multi-column support with MLDBM&quot;.</p>
 <p class="Pp">But here's a sample to get you started.</p>
 <p class="Pp"></p>
-<pre>
- use DBI;
+<pre> use DBI;
  my $dbh = DBI-&gt;connect('dbi:DBM:');
  $dbh-&gt;{RaiseError} = 1;
  for my $sql( split /;\n+/,&quot;
@@ -158,10 +156,8 @@
     of the implementation and extension so we can add it to DBD::DBM. Thanks in
     advance for that :-).</p>
 <p class="Pp"></p>
-<pre>
-  $dbh = DBI-&gt;connect('dbi:DBM:f_ext=.db');  # .db extension is used
+<pre>  $dbh = DBI-&gt;connect('dbi:DBM:f_ext=.db');  # .db extension is used
   $dbh = DBI-&gt;connect('dbi:DBM:f_ext=');     # no extension is used
-
   # or
   $dbh-&gt;{f_ext}='.db';                       # global setting
   $dbh-&gt;{f_meta}-&gt;{'qux'}-&gt;{f_ext}='.db';    # setting for table 'qux'
@@ -172,14 +168,12 @@
 <p class="Pp">For example, this will look for the file /foo/bar/fruit (or
     /foo/bar/fruit.pag for DBM types that use that extension)</p>
 <p class="Pp"></p>
-<pre>
-  my $dbh = DBI-&gt;connect('dbi:DBM:f_dir=/foo/bar');
+<pre>  my $dbh = DBI-&gt;connect('dbi:DBM:f_dir=/foo/bar');
   # and this will too:
   my $dbh = DBI-&gt;connect('dbi:DBM:');
   $dbh-&gt;{f_dir} = '/foo/bar';
   # but this is recommended
   my $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, { f_dir =&gt; '/foo/bar' } );
-
   # now you can do
   my $ary = $dbh-&gt;selectall_arrayref(q{ SELECT x FROM fruit });
 </pre>
@@ -187,8 +181,7 @@
     in SQL statements. This looks in the same place as the two examples above
     but without setting <i>f_dir</i>:</p>
 <p class="Pp"></p>
-<pre>
-   my $dbh = DBI-&gt;connect('dbi:DBM:');
+<pre>   my $dbh = DBI-&gt;connect('dbi:DBM:');
    my $ary = $dbh-&gt;selectall_arrayref(q{
        SELECT x FROM &quot;/foo/bar/fruit&quot;
    });
@@ -196,16 +189,14 @@
 <p class="Pp">You can also tell DBD::DBM to use a specified path for a specific
     table:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{dbm_tables}-&gt;{f}-&gt;{file} = q(/foo/bar/fruit);
+<pre>  $dbh-&gt;{dbm_tables}-&gt;{f}-&gt;{file} = q(/foo/bar/fruit);
 </pre>
 <p class="Pp">Please be aware that you cannot specify this during
   connection.</p>
 <p class="Pp">If you have SQL::Statement installed, you can use table
   aliases:</p>
 <p class="Pp"></p>
-<pre>
-   my $dbh = DBI-&gt;connect('dbi:DBM:');
+<pre>   my $dbh = DBI-&gt;connect('dbi:DBM:');
    my $ary = $dbh-&gt;selectall_arrayref(q{
        SELECT f.x FROM &quot;/foo/bar/fruit&quot; AS f
    });
@@ -264,10 +255,8 @@
     GDBM_File, DB_File, etc. Do <i>not</i> use MLDBM as your <i>dbm_type</i> as
     that is set differently, see below.</p>
 <p class="Pp"></p>
-<pre>
- my $dbh=DBI-&gt;connect('dbi:DBM:');                # uses the default SDBM_File
+<pre> my $dbh=DBI-&gt;connect('dbi:DBM:');                # uses the default SDBM_File
  my $dbh=DBI-&gt;connect('dbi:DBM:dbm_type=GDBM_File'); # uses the GDBM_File
-
  # You can also use $dbh-&gt;{dbm_type} to set the DBM type for the connection:
  $dbh-&gt;{dbm_type} = 'DB_File';    # set the global DBM type
  print $dbh-&gt;{dbm_type};          # display the global DBM type
@@ -278,15 +267,12 @@
     perform joins on files that have completely different storage
   mechanisms.</p>
 <p class="Pp"></p>
-<pre>
- # sets global default of GDBM_File
+<pre> # sets global default of GDBM_File
  my $dbh-&gt;('dbi:DBM:type=GDBM_File');
-
  # overrides the global setting, but only for the tables called
  # I&lt;foo&gt; and I&lt;bar&gt;
  my $dbh-&gt;{f_meta}-&gt;{foo}-&gt;{dbm_type} = 'DB_File';
  my $dbh-&gt;{f_meta}-&gt;{bar}-&gt;{dbm_type} = 'BerkeleyDB';
-
  # prints the dbm_type for the table &quot;foo&quot;
  print $dbh-&gt;{f_meta}-&gt;{foo}-&gt;{dbm_type};
 </pre>
@@ -312,8 +298,7 @@
     <i>dbm_mldbm</i> attribute.</p>
 <p class="Pp">Some examples:</p>
 <p class="Pp"></p>
-<pre>
- $dbh=DBI-&gt;connect('dbi:DBM:dbm_mldbm=Storable');  # use MLDBM with Storable
+<pre> $dbh=DBI-&gt;connect('dbi:DBM:dbm_mldbm=Storable');  # use MLDBM with Storable
  $dbh=DBI-&gt;connect(
     'dbi:DBM:dbm_mldbm=MySerializer' # use MLDBM with a user defined module
  );
@@ -328,8 +313,7 @@
     type along with setting dbm_mldbm. The examples above would default to using
     SDBM_File with MLDBM. If you wanted GDBM_File instead, here's how:</p>
 <p class="Pp"></p>
-<pre>
- # uses DB_File with MLDBM and Storable
+<pre> # uses DB_File with MLDBM and Storable
  $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, {
      dbm_type  =&gt; 'DB_File',
      dbm_mldbm =&gt; 'Storable',
@@ -355,8 +339,7 @@
 <p class="Pp">With BerkeleyDB, you can specify initialization flags by setting
     them in your script like this:</p>
 <p class="Pp"></p>
-<pre>
- use BerkeleyDB;
+<pre> use BerkeleyDB;
  my $env = new BerkeleyDB::Env -Home =&gt; $dir;  # and/or other Env flags
  $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, {
      dbm_type  =&gt; 'BerkeleyDB',
@@ -395,8 +378,7 @@
     the key field. For example, the following SQL statements are optimized for
     keyed lookup:</p>
 <p class="Pp"></p>
-<pre>
- CREATE TABLE user ( user_name TEXT, phone TEXT);
+<pre> CREATE TABLE user ( user_name TEXT, phone TEXT);
  INSERT INTO user VALUES ('Fred Bloggs','233-7777');
  # ... many more inserts
  SELECT phone FROM user WHERE user_name='Fred Bloggs';
@@ -409,8 +391,7 @@
 <p class="Pp">In contrast, these searches on the same table are not
   optimized:</p>
 <p class="Pp"></p>
-<pre>
- 1. SELECT phone FROM user WHERE user_name &lt; 'Fred';
+<pre> 1. SELECT phone FROM user WHERE user_name &lt; 'Fred';
  2. SELECT user_name FROM user WHERE phone = '233-7777';
 </pre>
 <p class="Pp">In #1, the operation uses a less-than (&lt;) comparison rather
@@ -454,22 +435,19 @@
     use the <b>dbm_versions()</b> method or, if you don't need the full output
     and version numbers, just do this:</p>
 <p class="Pp"></p>
-<pre>
- print $dbh-&gt;{sql_handler}, &quot;\n&quot;;
+<pre> print $dbh-&gt;{sql_handler}, &quot;\n&quot;;
 </pre>
 <p class="Pp">That will print out either &quot;SQL::Statement&quot; or
     &quot;DBI::SQL::Nano&quot;.</p>
 <p class="Pp">Baring the section about optimized access to the DBM storage in
     mind, comparing the benefits of both engines:</p>
 <p class="Pp"></p>
-<pre>
-  # DBI::SQL::Nano is faster
+<pre>  # DBI::SQL::Nano is faster
   $sth = $dbh-&gt;prepare( &quot;update foo set value='new' where key=15&quot; );
   $sth-&gt;execute();
   $sth = $dbh-&gt;prepare( &quot;delete from foo where key=27&quot; );
   $sth-&gt;execute();
   $sth = $dbh-&gt;prepare( &quot;select * from foo where key='abc'&quot; );
-
   # SQL::Statement might faster (depending on DB size)
   $sth = $dbh-&gt;prepare( &quot;update foo set value='new' where key=?&quot; );
   $sth-&gt;execute(15);
@@ -477,7 +455,6 @@
   $sth-&gt;execute('new');
   $sth = $dbh-&gt;prepare( &quot;delete from foo where key=?&quot; );
   $sth-&gt;execute(27);
-
   # SQL::Statement is faster
   $sth = $dbh-&gt;prepare( &quot;update foo set value='new' where value='old'&quot; );
   $sth-&gt;execute();
@@ -488,7 +465,6 @@
   # must be expressed using &quot;where key &gt; 10 and key &lt; 90&quot; in DBI::SQL::Nano
   $sth = $dbh-&gt;prepare( &quot;select * from foo where key between (10,90)&quot; );
   $sth-&gt;execute();
-
   # only SQL::Statement can handle
   $sth-&gt;prepare( &quot;select * from foo,bar where foo.name = bar.name&quot; );
   $sth-&gt;execute();
@@ -507,15 +483,13 @@
 <p class="Pp">DBD::DBM stores column names as a row in the file with the key
     <i>_metadata</i> <i>\0</i>. So this code</p>
 <p class="Pp"></p>
-<pre>
- my $dbh = DBI-&gt;connect('dbi:DBM:');
+<pre> my $dbh = DBI-&gt;connect('dbi:DBM:');
  $dbh-&gt;do(&quot;CREATE TABLE baz (foo CHAR(10), bar INTEGER)&quot;);
  $dbh-&gt;do(&quot;INSERT INTO baz (foo,bar) VALUES ('zippy',1)&quot;);
 </pre>
 <p class="Pp">Will create a file that has a structure something like this:</p>
 <p class="Pp"></p>
-<pre>
-  _metadata \0 | &lt;dbd_metadata&gt;&lt;schema&gt;&lt;/schema&gt;&lt;col_names&gt;foo,bar&lt;/col_names&gt;&lt;/dbd_metadata&gt;
+<pre>  _metadata \0 | &lt;dbd_metadata&gt;&lt;schema&gt;&lt;/schema&gt;&lt;col_names&gt;foo,bar&lt;/col_names&gt;&lt;/dbd_metadata&gt;
   zippy        | 1
 </pre>
 <p class="Pp">The next time you access this table with DBD::DBM, it will treat
@@ -525,12 +499,9 @@
 <p class="Pp">If you do not want the column names stored as a data row in the
     table you can set the <i>dbm_store_metadata</i> attribute to 0.</p>
 <p class="Pp"></p>
-<pre>
- my $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, { dbm_store_metadata =&gt; 0 });
-
+<pre> my $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, { dbm_store_metadata =&gt; 0 });
  # or
  $dbh-&gt;{dbm_store_metadata} = 0;
-
  # or for per-table setting
  $dbh-&gt;{f_meta}-&gt;{qux}-&gt;{dbm_store_metadata} = 0;
 </pre>
@@ -540,16 +511,13 @@
     you want to use alternate column names, you need to specify the column names
     like this:</p>
 <p class="Pp"></p>
-<pre>
- my $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, {
+<pre> my $dbh = DBI-&gt;connect('dbi:DBM:', undef, undef, {
      dbm_store_metadata =&gt; 0,
      dbm_cols =&gt; [ qw(foo bar) ],
  });
-
  # or
  $dbh-&gt;{dbm_store_metadata} = 0;
  $dbh-&gt;{dbm_cols}           = 'foo,bar';
-
  # or to set the column names on per-table basis, do this:
  # sets the column names only for table &quot;qux&quot;
  $dbh-&gt;{f_meta}-&gt;{qux}-&gt;{dbm_store_metadata} = 0;
@@ -667,8 +635,7 @@
     with MLDBM. The <b>dbm_versions()</b> method reports all of that and
   more.</p>
 <p class="Pp"></p>
-<pre>
-  print $dbh-&gt;dbm_versions;               # displays global settings
+<pre>  print $dbh-&gt;dbm_versions;               # displays global settings
   print $dbh-&gt;dbm_versions($table_name);  # displays per table settings
 </pre>
 <p class="Pp">An important thing to note about this method is that when it
@@ -728,8 +695,7 @@
     {f_ext} appended to it. So this be dangerous if you aren't sure what file it
     refers to:</p>
 <p class="Pp"></p>
-<pre>
- $dbh-&gt;do(qq{DROP TABLE &quot;/path/to/any/file&quot;});
+<pre> $dbh-&gt;do(qq{DROP TABLE &quot;/path/to/any/file&quot;});
 </pre>
 <p class="Pp">Each DBM type has limitations. SDBM_File, for example, can only
     store values of less than 1,000 characters. *You* as the script author must
@@ -763,9 +729,7 @@
     different) for each dbm type which lacks
     <span class="Li">&quot;EXISTS&quot;</span> support:</p>
 <p class="Pp"></p>
-<pre>
-  $sth-&gt;do( &quot;insert into foo values (1, 'hello')&quot; );
-
+<pre>  $sth-&gt;do( &quot;insert into foo values (1, 'hello')&quot; );
   # this statement does ...
   $sth-&gt;do( &quot;update foo set v='world' where k=1&quot; );
   # ... the same as this statement
@@ -824,8 +788,7 @@
     &gt;, who also maintained it till 2007. After that, in 2010, Jens Rehsack
     &amp; H.Merijn Brand took over maintenance.</p>
 <p class="Pp"></p>
-<pre>
- Copyright (c) 2004 by Jeff Zucker, all rights reserved.
+<pre> Copyright (c) 2004 by Jeff Zucker, all rights reserved.
  Copyright (c) 2010-2013 by Jens Rehsack &amp; H.Merijn Brand, all rights reserved.
 </pre>
 <p class="Pp">You may freely distribute and/or modify this module under the

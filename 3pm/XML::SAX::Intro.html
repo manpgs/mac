@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>XML::SAX::Intro(3)</title>
 </head>
@@ -47,8 +48,7 @@
     callbacks are subrefs. This doesn't sound like much of an issue, but
     unfortunately leads to code like:</p>
 <p class="Pp"></p>
-<pre>
-  sub handle_start {
+<pre>  sub handle_start {
     my ($e, $el, %attrs) = @_;
     if ($el eq 'foo') {
       $e-&gt;{inside_foo}++; # BAD! $e is an XML::Parser::Expat object.
@@ -65,8 +65,7 @@
 <p class="Pp">The only way currently with XML::Parser to safely maintain state
     is to use a closure:</p>
 <p class="Pp"></p>
-<pre>
-  my $state = MyState-&gt;new();
+<pre>  my $state = MyState-&gt;new();
   $parser-&gt;setHandlers(Start =&gt; sub { handle_start($state, @_) });
 </pre>
 <p class="Pp">This closure traps the <span class="Li">$state</span> variable,
@@ -86,8 +85,7 @@
     Constructing a SAX parser and passing events to handlers is done as simply
     as:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::SAX;
+<pre>  use XML::SAX;
   use MySAXHandler;
   
   my $parser = XML::SAX::ParserFactory-&gt;parser(
@@ -112,8 +110,7 @@
     callback is called as a method call on an instance of that handler class. An
     example will best demonstrate this:</p>
 <p class="Pp"></p>
-<pre>
-  package MySAXHandler;
+<pre>  package MySAXHandler;
   use base qw(XML::SAX::Base);
   
   sub start_document {
@@ -131,14 +128,12 @@
     called as method calls, so this would be the equivalent of directly
   calling:</p>
 <p class="Pp"></p>
-<pre>
-  $object-&gt;start_element($el);
+<pre>  $object-&gt;start_element($el);
 </pre>
 <p class="Pp">Notice how this is different to XML::Parser's calling style, which
     calls:</p>
 <p class="Pp"></p>
-<pre>
-  start_element($e, $name, %attribs);
+<pre>  start_element($e, $name, %attribs);
 </pre>
 <p class="Pp">It's the difference between function calling and method calling
     which allows you to subclass SAX handlers which contributes to SAX being a
@@ -156,8 +151,7 @@
     them. You can use a constructor parameter as we saw above, or we can pass
     the handler directly in the call to one of the parse methods:</p>
 <p class="Pp"></p>
-<pre>
-  $parser-&gt;parse(Handler =&gt; $handler, 
+<pre>  $parser-&gt;parse(Handler =&gt; $handler, 
                  Source =&gt; { SystemId =&gt; &quot;foo.xml&quot; });
   # or...
   $parser-&gt;parse_file($fh, Handler =&gt; $handler);
@@ -226,8 +220,7 @@
 </dl>
 <p class="Pp">So a full example, as output by Data::Dumper might be:</p>
 <p class="Pp"></p>
-<pre>
-  ....
+<pre>  ....
 </pre>
 </section>
 <section class="Ss">
@@ -337,8 +330,7 @@
     building pipelines easy. But before we see how it makes things easy, first
     lets see how tricky it looks to build complex SAX filter pipelines.</p>
 <p class="Pp"></p>
-<pre>
-  use XML::SAX::ParserFactory;
+<pre>  use XML::SAX::ParserFactory;
   use XML::Filter::Filter1;
   use XML::Filter::Filter2;
   use XML::SAX::Writer;
@@ -353,8 +345,7 @@
 </pre>
 <p class="Pp">This is a lot easier with XML::SAX::Machines:</p>
 <p class="Pp"></p>
-<pre>
-  use XML::SAX::Machines qw(Pipeline);
+<pre>  use XML::SAX::Machines qw(Pipeline);
   
   my $output_string;
   my $parser = Pipeline(
@@ -375,8 +366,7 @@
     allow you to dump the SAX stream of events as it goes by. Usage is really
     very simple just call your perl script that uses SAX as follows:</p>
 <p class="Pp"></p>
-<pre>
-  $ perl -d:TraceSAX &lt;scriptname&gt;
+<pre>  $ perl -d:TraceSAX &lt;scriptname&gt;
 </pre>
 <p class="Pp">And preferably pipe the output to a pager of some sort, such as
     more or less. The output is extremely verbose, but should help clear some

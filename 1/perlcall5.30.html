@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLCALL(1)</title>
 </head>
@@ -69,8 +70,7 @@
 <p class="Pp">Perl has a number of C functions that allow you to call Perl
     subroutines. They are</p>
 <p class="Pp"></p>
-<pre>
-    I32 call_sv(SV* sv, I32 flags);
+<pre>    I32 call_sv(SV* sv, I32 flags);
     I32 call_pv(char *subname, I32 flags);
     I32 call_method(char *methname, I32 flags);
     I32 call_argv(char *subname, I32 flags, char **argv);
@@ -235,19 +235,15 @@
     <i>call_*</i> function has itself been called from another Perl subroutine.
     The code below illustrates this</p>
 <p class="Pp"></p>
-<pre>
-    sub fred
+<pre>    sub fred
       { print &quot;@_\n&quot;  }
-
     sub joe
       { &amp;fred }
-
     &amp;joe(1,2,3);
 </pre>
 <p class="Pp">This will print</p>
 <p class="Pp"></p>
-<pre>
-    1 2 3
+<pre>    1 2 3
 </pre>
 <p class="Pp">What has happened is that <span class="Li">&quot;fred&quot;</span>
     accesses the <span class="Li">@_</span> array which belongs to
@@ -351,20 +347,17 @@
 <p class="Pp">This first trivial example will call a Perl subroutine,
     <i>PrintUID</i>, to print out the UID of the process.</p>
 <p class="Pp"></p>
-<pre>
-    sub PrintUID
+<pre>    sub PrintUID
     {
         print &quot;UID is $&lt;\n&quot;;
     }
 </pre>
 <p class="Pp">and here is a C function to call it</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_PrintUID()
     {
         dSP;
-
         PUSHMARK(SP);
         call_pv(&quot;PrintUID&quot;, G_DISCARD|G_NOARGS);
     }
@@ -403,8 +396,7 @@
     of the string.</p>
 <p class="Pp">So the Perl subroutine would look like this:</p>
 <p class="Pp"></p>
-<pre>
-    sub LeftString
+<pre>    sub LeftString
     {
         my($s, $n) = @_;
         print substr($s, 0, $n), &quot;\n&quot;;
@@ -413,25 +405,20 @@
 <p class="Pp">The C function required to call <i>LeftString</i> would look like
     this:</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_LeftString(a, b)
     char * a;
     int b;
     {
         dSP;
-
         ENTER;
         SAVETMPS;
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSVpv(a, 0)));
         PUSHs(sv_2mortal(newSViv(b)));
         PUTBACK;
-
         call_pv(&quot;LeftString&quot;, G_DISCARD);
-
         FREETMPS;
         LEAVE;
     }
@@ -495,14 +482,12 @@
       calls) we will have to tidy up the Perl stack and dispose of mortal SVs.
     <p class="Pp">This is the purpose of</p>
     <p class="Pp"></p>
-    <pre>
-    ENTER;
+    <pre>    ENTER;
     SAVETMPS;
     </pre>
     <p class="Pp">at the start of the function, and</p>
     <p class="Pp"></p>
-    <pre>
-    FREETMPS;
+    <pre>    FREETMPS;
     LEAVE;
     </pre>
     <p class="Pp">at the end. The
@@ -541,8 +526,7 @@
 <p class="Pp">Here is a Perl subroutine, <i>Adder</i>, that takes 2 integer
     parameters and simply returns their sum.</p>
 <p class="Pp"></p>
-<pre>
-    sub Adder
+<pre>    sub Adder
     {
         my($a, $b) = @_;
         $a + $b;
@@ -552,33 +536,25 @@
     <i>Adder</i>, the C function required to call it is now a bit more
   complex.</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_Adder(a, b)
     int a;
     int b;
     {
         dSP;
         int count;
-
         ENTER;
         SAVETMPS;
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSViv(a)));
         PUSHs(sv_2mortal(newSViv(b)));
         PUTBACK;
-
         count = call_pv(&quot;Adder&quot;, G_SCALAR);
-
         SPAGAIN;
-
         if (count != 1)
             croak(&quot;Big trouble\n&quot;);
-
         printf (&quot;The sum of %d and %d is %d\n&quot;, a, b, POPi);
-
         PUTBACK;
         FREETMPS;
         LEAVE;
@@ -618,8 +594,7 @@
     <p class="Pp">Here is the complete list of POP macros available, along with
         the types they return.</p>
     <p class="Pp"></p>
-    <pre>
-    POPs        SV
+    <pre>    POPs        SV
     POPp        pointer (PV)
     POPpbytex   pointer to bytes (PV)
     POPn        double (NV)
@@ -632,23 +607,20 @@
         arguments to macros that may evaluate their argument several times, for
         example:</p>
     <p class="Pp"></p>
-    <pre>
-  /* Bad idea, don't do this */
+    <pre>  /* Bad idea, don't do this */
   STRLEN len;
   const char *s = SvPV(POPs, len);
     </pre>
     <p class="Pp">Instead, use a temporary:</p>
     <p class="Pp"></p>
-    <pre>
-  STRLEN len;
+    <pre>  STRLEN len;
   SV *sv = POPs;
   const char *s = SvPV(sv, len);
     </pre>
     <p class="Pp">or a macro that guarantees it will evaluate its arguments only
         once:</p>
     <p class="Pp"></p>
-    <pre>
-  STRLEN len;
+    <pre>  STRLEN len;
   const char *s = SvPVx(POPs, len);
     </pre>
   </dd>
@@ -668,8 +640,7 @@
     the parameters and the difference.</p>
 <p class="Pp">Here is the Perl subroutine</p>
 <p class="Pp"></p>
-<pre>
-    sub AddSubtract
+<pre>    sub AddSubtract
     {
        my($a, $b) = @_;
        ($a+$b, $a-$b);
@@ -677,34 +648,26 @@
 </pre>
 <p class="Pp">and this is the C function</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_AddSubtract(a, b)
     int a;
     int b;
     {
         dSP;
         int count;
-
         ENTER;
         SAVETMPS;
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSViv(a)));
         PUSHs(sv_2mortal(newSViv(b)));
         PUTBACK;
-
         count = call_pv(&quot;AddSubtract&quot;, G_ARRAY);
-
         SPAGAIN;
-
         if (count != 2)
             croak(&quot;Big trouble\n&quot;);
-
         printf (&quot;%d - %d = %d\n&quot;, a, b, POPi);
         printf (&quot;%d + %d = %d\n&quot;, a, b, POPi);
-
         PUTBACK;
         FREETMPS;
         LEAVE;
@@ -712,13 +675,11 @@
 </pre>
 <p class="Pp">If <i>call_AddSubtract</i> is called like this</p>
 <p class="Pp"></p>
-<pre>
-    call_AddSubtract(7, 4);
+<pre>    call_AddSubtract(7, 4);
 </pre>
 <p class="Pp">then here is the output</p>
 <p class="Pp"></p>
-<pre>
-    7 - 4 = 3
+<pre>    7 - 4 = 3
     7 + 4 = 11
 </pre>
 <p class="Pp">Notes</p>
@@ -739,8 +700,7 @@
 <p class="Pp">Say the Perl subroutine in the previous section was called in a
     scalar context, like this</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_AddSubScalar(a, b)
     int a;
     int b;
@@ -748,25 +708,18 @@
         dSP;
         int count;
         int i;
-
         ENTER;
         SAVETMPS;
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSViv(a)));
         PUSHs(sv_2mortal(newSViv(b)));
         PUTBACK;
-
         count = call_pv(&quot;AddSubtract&quot;, G_SCALAR);
-
         SPAGAIN;
-
         printf (&quot;Items Returned = %d\n&quot;, count);
-
         for (i = 1; i &lt;= count; ++i)
             printf (&quot;Value %d = %d\n&quot;, i, POPi);
-
         PUTBACK;
         FREETMPS;
         LEAVE;
@@ -777,13 +730,11 @@
     (for simplicity it assumes that they are integer). So if
     <i>call_AddSubScalar</i> is called</p>
 <p class="Pp"></p>
-<pre>
-    call_AddSubScalar(7, 4);
+<pre>    call_AddSubScalar(7, 4);
 </pre>
 <p class="Pp">then the output will be</p>
 <p class="Pp"></p>
-<pre>
-    Items Returned = 1
+<pre>    Items Returned = 1
     Value 1 = 3
 </pre>
 <p class="Pp">In this case the main point to note is that only the last item in
@@ -799,8 +750,7 @@
 <p class="Pp">The Perl subroutine, <i>Inc</i>, below takes 2 parameters and
     increments each directly.</p>
 <p class="Pp"></p>
-<pre>
-    sub Inc
+<pre>    sub Inc
     {
         ++ $_[0];
         ++ $_[1];
@@ -808,8 +758,7 @@
 </pre>
 <p class="Pp">and here is a C function to call it.</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_Inc(a, b)
     int a;
     int b;
@@ -818,28 +767,21 @@
         int count;
         SV * sva;
         SV * svb;
-
         ENTER;
         SAVETMPS;
-
         sva = sv_2mortal(newSViv(a));
         svb = sv_2mortal(newSViv(b));
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sva);
         PUSHs(svb);
         PUTBACK;
-
         count = call_pv(&quot;Inc&quot;, G_DISCARD);
-
         if (count != 0)
             croak (&quot;call_Inc: expected 0 values from 'Inc', got %d\n&quot;,
                    count);
-
         printf (&quot;%d + 1 = %d\n&quot;, a, SvIV(sva));
         printf (&quot;%d + 1 = %d\n&quot;, b, SvIV(svb));
-
         FREETMPS;
         LEAVE;
     }
@@ -860,20 +802,16 @@
     computes the difference of its 2 parameters. If this would result in a
     negative result, the subroutine calls <i>die</i>.</p>
 <p class="Pp"></p>
-<pre>
-    sub Subtract
+<pre>    sub Subtract
     {
         my ($a, $b) = @_;
-
         die &quot;death can be fatal\n&quot; if $a &lt; $b;
-
         $a - $b;
     }
 </pre>
 <p class="Pp">and some C to call it</p>
 <p class="Pp"></p>
-<pre>
- static void
+<pre> static void
  call_Subtract(a, b)
  int a;
  int b;
@@ -881,20 +819,15 @@
      dSP;
      int count;
      SV *err_tmp;
-
      ENTER;
      SAVETMPS;
-
      PUSHMARK(SP);
      EXTEND(SP, 2);
      PUSHs(sv_2mortal(newSViv(a)));
      PUSHs(sv_2mortal(newSViv(b)));
      PUTBACK;
-
      count = call_pv(&quot;Subtract&quot;, G_EVAL|G_SCALAR);
-
      SPAGAIN;
-
      /* Check the eval first */
      err_tmp = ERRSV;
      if (SvTRUE(err_tmp))
@@ -907,10 +840,8 @@
        if (count != 1)
         croak(&quot;call_Subtract: wanted 1 value from 'Subtract', got %d\n&quot;,
               count);
-
          printf (&quot;%d - %d = %d\n&quot;, a, b, POPi);
      }
-
      PUTBACK;
      FREETMPS;
      LEAVE;
@@ -918,13 +849,11 @@
 </pre>
 <p class="Pp">If <i>call_Subtract</i> is called thus</p>
 <p class="Pp"></p>
-<pre>
-    call_Subtract(4, 5)
+<pre>    call_Subtract(4, 5)
 </pre>
 <p class="Pp">the following will be printed</p>
 <p class="Pp"></p>
-<pre>
-    Uh oh - death can be fatal
+<pre>    Uh oh - death can be fatal
 </pre>
 <p class="Pp">Notes</p>
 <dl class="Bl-tag">
@@ -936,8 +865,7 @@
   <dt>2.</dt>
   <dd>The code
     <p class="Pp"></p>
-    <pre>
-    err_tmp = ERRSV;
+    <pre>    err_tmp = ERRSV;
     if (SvTRUE(err_tmp))
     {
         printf (&quot;Uh oh - %s\n&quot;, SvPV_nolen(err_tmp));
@@ -946,8 +874,7 @@
     </pre>
     <p class="Pp">is the direct equivalent of this bit of Perl</p>
     <p class="Pp"></p>
-    <pre>
-    print &quot;Uh oh - $@\n&quot; if $@;
+    <pre>    print &quot;Uh oh - $@\n&quot; if $@;
     </pre>
     <p class="Pp"><span class="Li">&quot;PL_errgv&quot;</span> is a perl global
         of type <span class="Li">&quot;GV *&quot;</span> that points to the
@@ -976,8 +903,7 @@
 <p class="Pp">Consider this rather facetious example, where we have used an XS
     version of the call_Subtract example above inside a destructor:</p>
 <p class="Pp"></p>
-<pre>
-    package Foo;
+<pre>    package Foo;
     sub new { bless {}, $_[0] }
     sub Subtract {
         my($a,$b) = @_;
@@ -986,7 +912,6 @@
     }
     sub DESTROY { call_Subtract(5, 4); }
     sub foo { die &quot;foo dies&quot;; }
-
     package main;
     {
         my $foo = Foo-&gt;new;
@@ -1005,8 +930,7 @@
 <p class="Pp">Appending the G_KEEPERR flag, so that the <i>call_pv</i> call in
     call_Subtract reads:</p>
 <p class="Pp"></p>
-<pre>
-        count = call_pv(&quot;Subtract&quot;, G_EVAL|G_SCALAR|G_KEEPERR);
+<pre>        count = call_pv(&quot;Subtract&quot;, G_EVAL|G_SCALAR|G_KEEPERR);
 </pre>
 <p class="Pp">will preserve the error and restore reliable error handling.</p>
 </section>
@@ -1019,18 +943,15 @@
     the Perl script, and you'll want to use call_sv.</p>
 <p class="Pp">Consider the Perl code below</p>
 <p class="Pp"></p>
-<pre>
-    sub fred
+<pre>    sub fred
     {
         print &quot;Hello there\n&quot;;
     }
-
     CallSubPV(&quot;fred&quot;);
 </pre>
 <p class="Pp">Here is a snippet of XSUB which defines <i>CallSubPV</i>.</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     CallSubPV(name)
         char *  name
         CODE:
@@ -1046,8 +967,7 @@
     parameter is now defined as an SV* and we use <i>call_sv</i> instead of
     <i>call_pv</i>.</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     CallSubSV(name)
         SV *    name
         CODE:
@@ -1057,8 +977,7 @@
 <p class="Pp">Because we are using an SV to call <i>fred</i> the following can
     all be used:</p>
 <p class="Pp"></p>
-<pre>
-    CallSubSV(&quot;fred&quot;);
+<pre>    CallSubSV(&quot;fred&quot;);
     CallSubSV(\&amp;fred);
     $ref = \&amp;fred;
     CallSubSV($ref);
@@ -1072,15 +991,12 @@
     program, it not enough just to store a copy of the pointer to the SV. Say
     the code above had been like this:</p>
 <p class="Pp"></p>
-<pre>
-    static SV * rememberSub;
-
+<pre>    static SV * rememberSub;
     void
     SaveSub1(name)
         SV *    name
         CODE:
         rememberSub = name;
-
     void
     CallSavedSub1()
         CODE:
@@ -1094,10 +1010,8 @@
     <span class="Li">&quot;SaveSub1&quot;</span>. This is particularly true for
     these cases:</p>
 <p class="Pp"></p>
-<pre>
-    SaveSub1(\&amp;fred);
+<pre>    SaveSub1(\&amp;fred);
     CallSavedSub1();
-
     SaveSub1( sub { print &quot;Hello there\n&quot; } );
     CallSavedSub1();
 </pre>
@@ -1106,15 +1020,13 @@
     executed, the SV*s which corresponded to the parameters will no longer
     exist. Expect an error message from Perl of the form</p>
 <p class="Pp"></p>
-<pre>
-    Can't use an undefined value as a subroutine reference at ...
+<pre>    Can't use an undefined value as a subroutine reference at ...
 </pre>
 <p class="Pp">for each of the <span class="Li">&quot;CallSavedSub1&quot;</span>
     lines.</p>
 <p class="Pp">Similarly, with this code</p>
 <p class="Pp"></p>
-<pre>
-    $ref = \&amp;fred;
+<pre>    $ref = \&amp;fred;
     SaveSub1($ref);
     $ref = 47;
     CallSavedSub1();
@@ -1122,8 +1034,7 @@
 <p class="Pp">you can expect one of these messages (which you actually get is
     dependent on the version of Perl you are using)</p>
 <p class="Pp"></p>
-<pre>
-    Not a CODE reference at ...
+<pre>    Not a CODE reference at ...
     Undefined subroutine &amp;main::47 called ...
 </pre>
 <p class="Pp">The variable <span class="Li">$ref</span> may have referred to the
@@ -1142,8 +1053,7 @@
 <p class="Pp">A similar but more subtle problem is illustrated with this
   code:</p>
 <p class="Pp"></p>
-<pre>
-    $ref = \&amp;fred;
+<pre>    $ref = \&amp;fred;
     SaveSub1($ref);
     $ref = \&amp;joe;
     CallSavedSub1();
@@ -1158,10 +1068,8 @@
     of the SV. The code below shows <span class="Li">&quot;SaveSub2&quot;</span>
     modified to do that.</p>
 <p class="Pp"></p>
-<pre>
-    /* this isn't thread-safe */
+<pre>    /* this isn't thread-safe */
     static SV * keepSub = (SV*)NULL;
-
     void
     SaveSub2(name)
         SV *    name
@@ -1173,7 +1081,6 @@
         else
             /* Been here before, so overwrite */
             SvSetSV(keepSub, name);
-
     void
     CallSavedSub2()
         CODE:
@@ -1203,20 +1110,16 @@
 <p class="Pp">Here is a Perl subroutine which prints whatever parameters are
     passed to it.</p>
 <p class="Pp"></p>
-<pre>
-    sub PrintList
+<pre>    sub PrintList
     {
         my(@list) = @_;
-
         foreach (@list) { print &quot;$_\n&quot; }
     }
 </pre>
 <p class="Pp">And here is an example of <i>call_argv</i> which will call
     <i>PrintList</i>.</p>
 <p class="Pp"></p>
-<pre>
-    static char * words[] = {&quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot;, &quot;delta&quot;, NULL};
-
+<pre>    static char * words[] = {&quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot;, &quot;delta&quot;, NULL};
     static void
     call_PrintList()
     {
@@ -1232,22 +1135,18 @@
   call_method</a></h2>
 <p class="Pp">Consider the following Perl code:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Mine;
-
         sub new
         {
             my($type) = shift;
             bless [@_]
         }
-
         sub Display
         {
             my ($self, $index) = @_;
             print &quot;$index: $$self[$index]\n&quot;;
         }
-
         sub PrintID
         {
             my($class) = @_;
@@ -1263,15 +1162,13 @@
     <span class="Li">&quot;Display&quot;</span>, prints out a single element of
     the array. Here is an all-Perl example of using it.</p>
 <p class="Pp"></p>
-<pre>
-    $a = Mine-&gt;new('red', 'green', 'blue');
+<pre>    $a = Mine-&gt;new('red', 'green', 'blue');
     $a-&gt;Display(1);
     Mine-&gt;PrintID;
 </pre>
 <p class="Pp">will print</p>
 <p class="Pp"></p>
-<pre>
-    1: green
+<pre>    1: green
     This is Class Mine version 1.0
 </pre>
 <p class="Pp">Calling a Perl method from C is fairly straightforward. The
@@ -1286,8 +1183,7 @@
     both the <span class="Li">&quot;PrintID&quot;</span> and
     <span class="Li">&quot;Display&quot;</span> methods from C.</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     call_Method(ref, method, index)
         SV *    ref
         char *  method
@@ -1298,9 +1194,7 @@
         PUSHs(ref);
         PUSHs(sv_2mortal(newSViv(index)));
         PUTBACK;
-
         call_method(method, G_DISCARD);
-
     void
     call_PrintID(class, method)
         char *  class
@@ -1309,14 +1203,12 @@
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVpv(class, 0)));
         PUTBACK;
-
         call_method(method, G_DISCARD);
 </pre>
 <p class="Pp">So the methods <span class="Li">&quot;PrintID&quot;</span> and
     <span class="Li">&quot;Display&quot;</span> can be invoked like this:</p>
 <p class="Pp"></p>
-<pre>
-    $a = Mine-&gt;new('red', 'green', 'blue');
+<pre>    $a = Mine-&gt;new('red', 'green', 'blue');
     call_Method($a, 'Display', 1);
     call_PrintID('Mine', 'PrintID');
 </pre>
@@ -1330,8 +1222,7 @@
 <p class="Pp">Here is a trivial XSUB which prints the context in which it is
     currently executing.</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     PrintContext()
         CODE:
         U8 gimme = GIMME_V;
@@ -1344,15 +1235,13 @@
 </pre>
 <p class="Pp">And here is some Perl to test it.</p>
 <p class="Pp"></p>
-<pre>
-    PrintContext;
+<pre>    PrintContext;
     $a = PrintContext;
     @a = PrintContext;
 </pre>
 <p class="Pp">The output from that will be</p>
 <p class="Pp"></p>
-<pre>
-    Context is Void
+<pre>    Context is Void
     Context is Scalar
     Context is Array
 </pre>
@@ -1374,8 +1263,7 @@
     it for you automatically whenever it regains control after the callback has
     terminated. This is done by simply not using the</p>
 <p class="Pp"></p>
-<pre>
-    ENTER;
+<pre>    ENTER;
     SAVETMPS;
     ...
     FREETMPS;
@@ -1395,16 +1283,14 @@
     be as follows. You have created an interface to an external library. Control
     can reach the external library like this</p>
 <p class="Pp"></p>
-<pre>
-    perl --&gt; XSUB --&gt; external library
+<pre>    perl --&gt; XSUB --&gt; external library
 </pre>
 <p class="Pp">Whilst control is in the library, an error condition occurs. You
     have previously set up a Perl callback to handle this situation, so it will
     get executed. Once the callback has finished, control will drop back to Perl
     again. Here is what the flow of control will be like in that situation</p>
 <p class="Pp"></p>
-<pre>
-    perl --&gt; XSUB --&gt; external library
+<pre>    perl --&gt; XSUB --&gt; external library
                       ...
                       error occurs
                       ...
@@ -1421,8 +1307,7 @@
 <p class="Pp">In the second example, an event driven program, the flow of
     control will be more like this</p>
 <p class="Pp"></p>
-<pre>
-    perl --&gt; XSUB --&gt; event handler
+<pre>    perl --&gt; XSUB --&gt; event handler
                       ...
                       event handler --&gt; call_* --&gt; perl
                                                        |
@@ -1439,8 +1324,7 @@
 <p class="Pp">In this case the flow of control can consist of only the repeated
     sequence</p>
 <p class="Pp"></p>
-<pre>
-    event handler --&gt; call_* --&gt; perl
+<pre>    event handler --&gt; call_* --&gt; perl
 </pre>
 <p class="Pp">for practically the complete duration of the program. This means
     that control may <i>never</i> drop back to the surrounding scope in Perl at
@@ -1472,16 +1356,14 @@
     function <span class="Li">&quot;register_fatal&quot;</span> which registers
     the C function to get called when a fatal error occurs.</p>
 <p class="Pp"></p>
-<pre>
-    register_fatal(cb1);
+<pre>    register_fatal(cb1);
 </pre>
 <p class="Pp">The single parameter <span class="Li">&quot;cb1&quot;</span> is a
     pointer to a function, so you must have defined
     <span class="Li">&quot;cb1&quot;</span> in your code, say something like
     this</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     cb1()
     {
         printf (&quot;Fatal Error\n&quot;);
@@ -1490,21 +1372,15 @@
 </pre>
 <p class="Pp">Now change that to call a Perl subroutine instead</p>
 <p class="Pp"></p>
-<pre>
-    static SV * callback = (SV*)NULL;
-
+<pre>    static SV * callback = (SV*)NULL;
     static void
     cb1()
     {
         dSP;
-
         PUSHMARK(SP);
-
         /* Call the Perl sub to process the callback */
         call_sv(callback, G_DISCARD);
     }
-
-
     void
     register_fatal(fn)
         SV *    fn
@@ -1514,7 +1390,6 @@
             callback = newSVsv(fn);
         else
             SvSetSV(callback, fn);
-
         /* register the callback with the external library */
         register_fatal(cb1);
 </pre>
@@ -1523,10 +1398,8 @@
     registers, <span class="Li">&quot;pcb1&quot;</span>, might look like
   this</p>
 <p class="Pp"></p>
-<pre>
-    # Register the sub pcb1
+<pre>    # Register the sub pcb1
     register_fatal(\&amp;pcb1);
-
     sub pcb1
     {
         die &quot;I'm dying...\n&quot;;
@@ -1554,13 +1427,11 @@
     <span class="Li">&quot;fh&quot;</span>--this assumes that it has also
     provided some routine to open the file and so obtain the file handle.</p>
 <p class="Pp"></p>
-<pre>
-    asynch_read(fh, ProcessRead)
+<pre>    asynch_read(fh, ProcessRead)
 </pre>
 <p class="Pp">This may expect the C <i>ProcessRead</i> function of this form</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     ProcessRead(fh, buffer)
     int fh;
     char *      buffer;
@@ -1573,9 +1444,7 @@
     Perl subroutine we want called. A hash is a convenient mechanism for storing
     this mapping. The code below shows a possible implementation</p>
 <p class="Pp"></p>
-<pre>
-    static HV * Mapping = (HV*)NULL;
-
+<pre>    static HV * Mapping = (HV*)NULL;
     void
     asynch_read(fh, callback)
         int     fh
@@ -1584,36 +1453,30 @@
         /* If the hash doesn't already exist, create it */
         if (Mapping == (HV*)NULL)
             Mapping = newHV();
-
         /* Save the fh -&gt; callback mapping */
         hv_store(Mapping, (char*)&amp;fh, sizeof(fh), newSVsv(callback), 0);
-
         /* Register with the C Library */
         asynch_read(fh, asynch_read_if);
 </pre>
 <p class="Pp">and <span class="Li">&quot;asynch_read_if&quot;</span> could look
     like this</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     asynch_read_if(fh, buffer)
     int fh;
     char *      buffer;
     {
         dSP;
         SV ** sv;
-
         /* Get the callback associated with fh */
         sv =  hv_fetch(Mapping, (char*)&amp;fh , sizeof(fh), FALSE);
         if (sv == (SV**)NULL)
             croak(&quot;Internal error...\n&quot;);
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSViv(fh)));
         PUSHs(sv_2mortal(newSVpv(buffer, 0)));
         PUTBACK;
-
         /* Call the Perl sub */
         call_sv(*sv, G_DISCARD);
     }
@@ -1622,28 +1485,23 @@
     <span class="Li">&quot;asynch_close&quot;</span>. This shows how to remove
     the entry from the hash <span class="Li">&quot;Mapping&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     asynch_close(fh)
         int     fh
         CODE:
         /* Remove the entry from the hash */
         (void) hv_delete(Mapping, (char*)&amp;fh, sizeof(fh), G_DISCARD);
-
         /* Now call the real asynch_close */
         asynch_close(fh);
 </pre>
 <p class="Pp">So the Perl interface would look like this</p>
 <p class="Pp"></p>
-<pre>
-    sub callback1
+<pre>    sub callback1
     {
         my($handle, $buffer) = @_;
     }
-
     # Register the Perl callback
     asynch_read($fh, \&amp;callback1);
-
     asynch_close($fh);
 </pre>
 <p class="Pp">The mapping between the C callback and Perl is stored in the
@@ -1655,8 +1513,7 @@
     the asynchronous i/o package, the callback function gets passed only the
     <span class="Li">&quot;buffer&quot;</span> parameter like this</p>
 <p class="Pp"></p>
-<pre>
-    void
+<pre>    void
     ProcessRead(buffer)
     char *      buffer;
     {
@@ -1668,64 +1525,53 @@
 <p class="Pp">In this case a possible way around this problem is to predefine a
     series of C functions to act as the interface to Perl, thus</p>
 <p class="Pp"></p>
-<pre>
-    #define MAX_CB              3
+<pre>    #define MAX_CB              3
     #define NULL_HANDLE -1
     typedef void (*FnMap)();
-
     struct MapStruct {
         FnMap    Function;
         SV *     PerlSub;
         int      Handle;
       };
-
     static void  fn1();
     static void  fn2();
     static void  fn3();
-
     static struct MapStruct Map [MAX_CB] =
         {
             { fn1, NULL, NULL_HANDLE },
             { fn2, NULL, NULL_HANDLE },
             { fn3, NULL, NULL_HANDLE }
         };
-
     static void
     Pcb(index, buffer)
     int index;
     char * buffer;
     {
         dSP;
-
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVpv(buffer, 0)));
         PUTBACK;
-
         /* Call the Perl sub */
         call_sv(Map[index].PerlSub, G_DISCARD);
     }
-
     static void
     fn1(buffer)
     char * buffer;
     {
         Pcb(0, buffer);
     }
-
     static void
     fn2(buffer)
     char * buffer;
     {
         Pcb(1, buffer);
     }
-
     static void
     fn3(buffer)
     char * buffer;
     {
         Pcb(2, buffer);
     }
-
     void
     array_asynch_read(fh, callback)
         int             fh
@@ -1733,52 +1579,40 @@
         CODE:
         int index;
         int null_index = MAX_CB;
-
         /* Find the same handle or an empty entry */
         for (index = 0; index &lt; MAX_CB; ++index)
         {
             if (Map[index].Handle == fh)
                 break;
-
             if (Map[index].Handle == NULL_HANDLE)
                 null_index = index;
         }
-
         if (index == MAX_CB &amp;&amp; null_index == MAX_CB)
             croak (&quot;Too many callback functions registered\n&quot;);
-
         if (index == MAX_CB)
             index = null_index;
-
         /* Save the file handle */
         Map[index].Handle = fh;
-
         /* Remember the Perl sub */
         if (Map[index].PerlSub == (SV*)NULL)
             Map[index].PerlSub = newSVsv(callback);
         else
             SvSetSV(Map[index].PerlSub, callback);
-
         asynch_read(fh, Map[index].Function);
-
     void
     array_asynch_close(fh)
         int     fh
         CODE:
         int index;
-
         /* Find the file handle */
         for (index = 0; index &lt; MAX_CB; ++ index)
             if (Map[index].Handle == fh)
                 break;
-
         if (index == MAX_CB)
             croak (&quot;could not close fh %d\n&quot;, fh);
-
         Map[index].Handle = NULL_HANDLE;
         SvREFCNT_dec(Map[index].PerlSub);
         Map[index].PerlSub = (SV*)NULL;
-
         asynch_close(fh);
 </pre>
 <p class="Pp">In this case the functions
@@ -1832,8 +1666,7 @@
     a List of Values&quot; recoded to use <span class="Li">&quot;ST&quot;</span>
     instead of <span class="Li">&quot;POP*&quot;</span>.</p>
 <p class="Pp"></p>
-<pre>
-    static void
+<pre>    static void
     call_AddSubtract2(a, b)
     int a;
     int b;
@@ -1841,28 +1674,21 @@
         dSP;
         I32 ax;
         int count;
-
         ENTER;
         SAVETMPS;
-
         PUSHMARK(SP);
         EXTEND(SP, 2);
         PUSHs(sv_2mortal(newSViv(a)));
         PUSHs(sv_2mortal(newSViv(b)));
         PUTBACK;
-
         count = call_pv(&quot;AddSubtract&quot;, G_ARRAY);
-
         SPAGAIN;
         SP -= count;
         ax = (SP - PL_stack_base) + 1;
-
         if (count != 2)
             croak(&quot;Big trouble\n&quot;);
-
         printf (&quot;%d + %d = %d\n&quot;, a, b, SvIV(ST(0)));
         printf (&quot;%d - %d = %d\n&quot;, a, b, SvIV(ST(1)));
-
         PUTBACK;
         FREETMPS;
         LEAVE;
@@ -1880,8 +1706,7 @@
   <dt>2.</dt>
   <dd>The code
     <p class="Pp"></p>
-    <pre>
-        SPAGAIN;
+    <pre>        SPAGAIN;
         SP -= count;
         ax = (SP - PL_stack_base) + 1;
     </pre>
@@ -1904,16 +1729,12 @@
     XSUB to perform this operation. Let's see how it can be done inside our C
     code:</p>
 <p class="Pp"></p>
-<pre>
- ...
-
+<pre> ...
  SV *cvrv
     = eval_pv(&quot;sub {
                 print 'You will not find me cluttering any namespace!'
                }&quot;, TRUE);
-
  ...
-
  call_sv(cvrv, G_VOID|G_NOARGS);
 </pre>
 <p class="Pp"><span class="Li">&quot;eval_pv&quot;</span> is used to compile the
@@ -1944,19 +1765,15 @@
     there is as yet no supported API for it. It's also inherently slower.)</p>
 <p class="Pp">The pattern of macro calls is like this:</p>
 <p class="Pp"></p>
-<pre>
-    dMULTICALL;                 /* Declare local variables */
+<pre>    dMULTICALL;                 /* Declare local variables */
     U8 gimme = G_SCALAR;        /* context of the call: G_SCALAR,
                                  * G_ARRAY, or G_VOID */
-
     PUSH_MULTICALL(cv);         /* Set up the context for calling cv,
                                    and set local vars appropriately */
-
     /* loop */ {
         /* set the value(s) af your parameter variables */
         MULTICALL;              /* Make the actual call */
     } /* end of loop */
-
     POP_MULTICALL;              /* Tear down the calling context */
 </pre>
 <p class="Pp">For some concrete examples, see the implementation of the

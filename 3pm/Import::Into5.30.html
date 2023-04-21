@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Import::Into(3)</title>
 </head>
@@ -28,35 +29,28 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package My::MultiExporter;
-
+<pre>  package My::MultiExporter;
   use Import::Into;
-
   # simple
   sub import {
     Thing1-&gt;import::into(scalar caller);
   }
-
   # multiple
   sub import {
     my $target = caller;
     Thing1-&gt;import::into($target);
     Thing2-&gt;import::into($target, qw(import arguments));
   }
-
   # by level
   sub import {
     Thing1-&gt;import::into(1);
   }
-
   # with exporter
   use base qw(Exporter);
   sub import {
     shift-&gt;export_to_level(1);
     Thing1-&gt;import::into(1);
   }
-
   # no My::MultiExporter == no Thing1
   sub unimport {
     Thing1-&gt;unimport::out_of(scalar caller);
@@ -134,28 +128,24 @@
 <p class="Pp">However, there is an approach that actually works for all of these
     types.</p>
 <p class="Pp"></p>
-<pre>
-  eval &quot;package $target; use $thing;&quot;
+<pre>  eval &quot;package $target; use $thing;&quot;
 </pre>
 <p class="Pp">will work for anything checking caller, which is everything except
     pragmas. But it doesn't work for pragmas - pragmas need:</p>
 <p class="Pp"></p>
-<pre>
-  $thing-&gt;import;
+<pre>  $thing-&gt;import;
 </pre>
 <p class="Pp">because they're designed to affect the code currently being
     compiled - so within an eval, that's the scope of the eval itself, not the
     module that just <span class="Li">&quot;use&quot;</span>d you - so</p>
 <p class="Pp"></p>
-<pre>
-  sub import {
+<pre>  sub import {
     eval &quot;use strict;&quot;
   }
 </pre>
 <p class="Pp">doesn't do what you wanted, but</p>
 <p class="Pp"></p>
-<pre>
-  sub import {
+<pre>  sub import {
     strict-&gt;import;
   }
 </pre>
@@ -166,8 +156,7 @@
     exporter and a pragma.</p>
 <p class="Pp">So, a solution for that is:</p>
 <p class="Pp"></p>
-<pre>
-  use Module::Runtime;
+<pre>  use Module::Runtime;
   my $sub = eval &quot;package $target; sub { use_module(shift)-&gt;import(\@_) }&quot;;
   $sub-&gt;($thing, @import_args);
 </pre>
@@ -182,8 +171,7 @@
     number to use in the directive then need to be fetched using
     <span class="Li">&quot;caller&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my ($target, $file, $line) = caller(1);
+<pre>  my ($target, $file, $line) = caller(1);
   my $sub = eval qq{
     package $target;
   #line $line &quot;$file&quot;
@@ -200,35 +188,29 @@
     call on any package to import it into another package. So now you can simply
     write:</p>
 <p class="Pp"></p>
-<pre>
-  use Import::Into;
-
+<pre>  use Import::Into;
   $thing-&gt;import::into($target, @import_args);
 </pre>
 <p class="Pp">This works because of how perl resolves method calls - a call to a
     simple method name is resolved against the package of the class or object,
     so</p>
 <p class="Pp"></p>
-<pre>
-  $thing-&gt;method_name(@args);
+<pre>  $thing-&gt;method_name(@args);
 </pre>
 <p class="Pp">is roughly equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  my $code_ref = $thing-&gt;can('method_name');
+<pre>  my $code_ref = $thing-&gt;can('method_name');
   $code_ref-&gt;($thing, @args);
 </pre>
 <p class="Pp">while if a <span class="Li">&quot;::&quot;</span> is found, the
     lookup is made relative to the package name (i.e. everything before the last
     <span class="Li">&quot;::&quot;</span>) so</p>
 <p class="Pp"></p>
-<pre>
-  $thing-&gt;Package::Name::method_name(@args);
+<pre>  $thing-&gt;Package::Name::method_name(@args);
 </pre>
 <p class="Pp">is roughly equivalent to:</p>
 <p class="Pp"></p>
-<pre>
-  my $code_ref = Package::Name-&gt;can('method_name');
+<pre>  my $code_ref = Package::Name-&gt;can('method_name');
   $code_ref-&gt;($thing, @args);
 </pre>
 <p class="Pp">So since Import::Into defines a method

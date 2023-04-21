@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooX::Types::MooseLike(3)</title>
 </head>
@@ -28,12 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package MyApp::Types;
+<pre>  package MyApp::Types;
   use MooX::Types::MooseLike;
   use base qw(Exporter);
   our @EXPORT_OK = ();
-
   # Define some types
   my $defs = [{
     name =&gt; 'MyType',
@@ -48,22 +47,17 @@
     },
     message =&gt; sub { &quot;$_[0] is too large! It should be less than or equal to $_[1].&quot; }
   }];
-
   # Make the types available - this adds them to @EXPORT_OK automatically.
   MooX::Types::MooseLike::register_types($defs, __PACKAGE__);
-
   ...
-
   # Somewhere in code that uses the type
   package MyApp::Foo;
   use Moo;
   use MyApp::Types qw(MyType VarChar);
-
   has attribute =&gt; (
     is  =&gt; 'ro',
     isa =&gt; MyType,
   );
-
   has string =&gt; (
     is  =&gt; 'ro',
     isa =&gt; VarChar[25]
@@ -89,8 +83,7 @@
     <span class="Li">@EXPORT_OK</span> of the package. Types are expected to be
     an array ref where every type is of the following format:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     name            =&gt; 'MyType',
     test            =&gt; sub { check_the_value_somehow($_[0]) },
     message         =&gt; sub { &quot;$_[0] is not the type we want!&quot; },
@@ -106,15 +99,13 @@
 <p class="Pp">The referenced type can come either from the same package or from
     a third party package:</p>
 <p class="Pp"></p>
-<pre>
-  MooX::Types::MooseLike::register_types([{
+<pre>  MooX::Types::MooseLike::register_types([{
     name       =&gt; 'GreaterThan10',
     subtype_of =&gt; 'Int',
     from       =&gt; 'MooX::Types::MooseLike::Base',
     test       =&gt; sub { $_[0] &gt; 10 },
     message    =&gt; sub { 'not greater than 10' },
   }], __PACKAGE__);
-
   MooX::Types::MooseLike::register_types([{
     name       =&gt; 'Between10And20',
     subtype_of =&gt; 'GreaterThan10',
@@ -122,7 +113,6 @@
     test       =&gt; sub { $_[0] &lt; 20 },
     message    =&gt; sub { 'not an integer between 10 and 20' },
   }], __PACKAGE__);
-
   MooX::Types::MooseLike::register_types([{
     name       =&gt; 'Between10And30',
     subtype_of =&gt; GreaterThan10(),
@@ -137,8 +127,7 @@
   )</b></p>
 <p class="Pp">Helper function to be used in a type definition:</p>
 <p class="Pp"></p>
-<pre>
-  {
+<pre>  {
     ...
     message =&gt; sub { return exception_message($_[0], 'a HashRef' },
     ...
@@ -147,8 +136,7 @@
 <p class="Pp">In the event of &lt;value&gt; mismatching the type constraints it
     produces the message:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;&lt;value&gt; is not a HashRef!&quot;
+<pre>  &quot;&lt;value&gt; is not a HashRef!&quot;
 </pre>
 </section>
 <section class="Ss">

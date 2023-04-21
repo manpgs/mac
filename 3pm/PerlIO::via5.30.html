@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PerlIO::via(3pm)</title>
 </head>
@@ -29,10 +30,8 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-   use PerlIO::via::Layer;
+<pre>   use PerlIO::via::Layer;
    open($fh,&quot;&lt;:via(Layer)&quot;,...);
-
    use Some::Other::Package;
    open($fh,&quot;&gt;:via(Some::Other::Package)&quot;,...);
 </pre>
@@ -47,8 +46,7 @@
     PerlIO::via::StripHTML and PerlIO::via::Base64. The PerlIO::via::StripHTML
     module for instance, allows you to say:</p>
 <p class="Pp"></p>
-<pre>
-        use PerlIO::via::StripHTML;
+<pre>        use PerlIO::via::StripHTML;
         open( my $fh, &quot;&lt;:via(StripHTML)&quot;, &quot;index.html&quot; );
         my @line = &lt;$fh&gt;;
 </pre>
@@ -70,11 +68,13 @@
 <p class="Pp">Please note that this is an area of recent development in Perl and
     that the interface described here is therefore still subject to change (and
     hopefully will have better documentation and more examples).</p>
-<p class="Pp">In the method descriptions below <i></i><i>$fh</i><i></i> will be
-    a reference to a glob which can be treated as a perl file handle. It refers
-    to the layer below. <i></i><i>$fh</i><i></i> is not passed if the layer is
-    at the bottom of the stack, for this reason and to maintain some level of
-    &quot;compatibility&quot; with TIEHANDLE classes it is passed last.</p>
+<p class="Pp">In the method descriptions below
+    <i></i><span class="Li"><i>$fh</i></span><i></i> will be a reference to a
+    glob which can be treated as a perl file handle. It refers to the layer
+    below. <i></i><span class="Li"><i>$fh</i></span><i></i> is not passed if the
+    layer is at the bottom of the stack, for this reason and to maintain some
+    level of &quot;compatibility&quot; with TIEHANDLE classes it is passed
+  last.</p>
 <dl class="Bl-tag">
   <dt>$class-&gt;PUSHED([$mode,[$fh]])</dt>
   <dd>Should return an object or the class, or -1 on failure. (Compare
@@ -97,13 +97,12 @@
       returned. It should return a true value if the layer expects data to be
       UTF-8 encoded. If it returns true, the result is as if the caller had done
     <p class="Pp"></p>
-    <pre>
-   &quot;:via(YourClass):utf8&quot;
+    <pre>   &quot;:via(YourClass):utf8&quot;
     </pre>
     <p class="Pp">If not present or if it returns false, then the stream is left
-        with the UTF-8 flag clear. The <i></i><i>$belowFlag</i><i></i> argument
-        will be true if there is a layer below and that layer was expecting
-        UTF-8.</p>
+        with the UTF-8 flag clear. The
+        <i></i><span class="Li"><i>$belowFlag</i></span><i></i> argument will be
+        true if there is a layer below and that layer was expecting UTF-8.</p>
   </dd>
   <dt>$obj-&gt;OPEN($path,$mode,[$fh])</dt>
   <dd>Optional - if not present a lower layer does the open. If present, called
@@ -176,9 +175,7 @@
   Hexadecimal Handle</a></h2>
 <p class="Pp">Given the following module, PerlIO::via::Hex :</p>
 <p class="Pp"></p>
-<pre>
-    package PerlIO::via::Hex;
-
+<pre>    package PerlIO::via::Hex;
     sub PUSHED
     {
      my ($class,$mode,$fh) = @_;
@@ -186,21 +183,18 @@
      my $buf = '';
      return bless \$buf,$class;
     }
-
     sub FILL
     {
      my ($obj,$fh) = @_;
      my $line = &lt;$fh&gt;;
      return (defined $line) ? pack(&quot;H*&quot;, $line) : undef;
     }
-
     sub WRITE
     {
      my ($obj,$buf,$fh) = @_;
      $$obj .= unpack(&quot;H*&quot;, $buf);
      return length($buf);
     }
-
     sub FLUSH
     {
      my ($obj,$fh) = @_;
@@ -208,7 +202,6 @@
      $$obj = '';
      return 0;
     }
-
     1;
 </pre>
 <p class="Pp">The following code opens up an output handle that will convert any
@@ -216,15 +209,13 @@
     will be converted to &quot;41&quot; (on ASCII-based machines, on EBCDIC
     platforms the &quot;A&quot; will become &quot;c1&quot;)</p>
 <p class="Pp"></p>
-<pre>
-    use PerlIO::via::Hex;
+<pre>    use PerlIO::via::Hex;
     open(my $fh, &quot;&gt;:via(Hex)&quot;, &quot;foo.hex&quot;);
 </pre>
 <p class="Pp">and the following code will read the hexdump in and convert it on
     the fly back into bytes:</p>
 <p class="Pp"></p>
-<pre>
-    open(my $fh, &quot;&lt;:via(Hex)&quot;, &quot;foo.hex&quot;);
+<pre>    open(my $fh, &quot;&lt;:via(Hex)&quot;, &quot;foo.hex&quot;);
 </pre>
 </section>
 </section>

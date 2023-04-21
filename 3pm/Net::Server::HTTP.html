@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::Server::HTTP(3)</title>
 </head>
@@ -30,30 +31,23 @@
 <section class="Sh">
 <h1 class="Sh" id="TEST_ONE_LINER"><a class="permalink" href="#TEST_ONE_LINER">TEST
   ONE LINER</a></h1>
-<pre>
-    perl -e 'use base qw(Net::Server::HTTP); main-&gt;run(port =&gt; 8080)'
+<pre>    perl -e 'use base qw(Net::Server::HTTP); main-&gt;run(port =&gt; 8080)'
     # will start up an echo server
 </pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use base qw(Net::Server::HTTP);
+<pre>    use base qw(Net::Server::HTTP);
     __PACKAGE__-&gt;run;
-
     sub process_http_request {
         my $self = shift;
-
         print &quot;Content-type: text/html\n\n&quot;;
         print &quot;&lt;form method=post action=/bam&gt;&lt;input type=text name=foo&gt;&lt;input type=submit&gt;&lt;/form&gt;\n&quot;;
-
         require Data::Dumper;
         local $Data::Dumper::Sortkeys = 1;
-
         require CGI;
         my $form = {};
         my $q = CGI-&gt;new; $form-&gt;{$_} = $q-&gt;param($_) for $q-&gt;param;
-
         print &quot;&lt;pre&gt;&quot;.Data::Dumper-&gt;Dump([\%ENV, $form], ['*ENV', 'form']).&quot;&lt;/pre&gt;&quot;;
     }
 </pre>
@@ -74,9 +68,7 @@
     interfaces, will speak both HTTP on port 8080 as well as HTTPS on 8443, and
     will speak both IPv4, as well as IPv6 if it is available.</p>
 <p class="Pp"></p>
-<pre>
-    use base qw(Net::Server::HTTP);
-
+<pre>    use base qw(Net::Server::HTTP);
     __PACKAGE__-&gt;run(
         port  =&gt; [8080, &quot;8443/ssl&quot;],
         ipv   =&gt; '*', # IPv6 if available
@@ -142,8 +134,7 @@
     <p class="Pp">The following is a listing of the available parameters as well
         as sample output based on a very basic HTTP server.</p>
     <p class="Pp"></p>
-    <pre>
-    %%                %                 # a percent
+    <pre>    %%                %                 # a percent
     %a                ::1               # remote ip
     %A                ::1               # local ip
     %b                83                # response size (- if 0) Common Log Format
@@ -178,8 +169,7 @@
     <p class="Pp">Additionally, the log parsing allows for the following
         formats.</p>
     <p class="Pp"></p>
-    <pre>
-    %&gt;s               200               # status of last request
+    <pre>    %&gt;s               200               # status of last request
     %&lt;s               200               # status of original request
     %400a             -                 # remote ip if status is 400
     %!400a            ::1               # remote ip if status is not 400
@@ -187,8 +177,7 @@
     </pre>
     <p class="Pp">There are few bits not completely implemented:</p>
     <p class="Pp"></p>
-    <pre>
-    &gt; and &lt;    # There is no internal redirection
+    <pre>    &gt; and &lt;    # There is no internal redirection
     %I         # The answer to this is based on header size and Content-length
                  instead of the more correct actual number of bytes read though
                  in common cases those would be the same.
@@ -204,19 +193,15 @@
   <dd>Allow for calling an external script as a CGI. This will use IPC::Open3 to
       fork a new process and read/write from it.
     <p class="Pp"></p>
-    <pre>
-    use base qw(Net::Server::HTTP);
+    <pre>    use base qw(Net::Server::HTTP);
     __PACKAGE__-&gt;run;
-
     sub process_http_request {
         my $self = shift;
-
         if ($ENV{'PATH_INFO'} &amp;&amp; $ENV{'PATH_INFO'} =~ s{^ (/foo) (?= $ | /) }{}x) {
            $ENV{'SCRIPT_NAME'} = $1;
            my $file = &quot;/var/www/cgi-bin/foo&quot;; # assuming this exists
            return $self-&gt;exec_cgi($file);
         }
-
         print &quot;Content-type: text/html\n\n&quot;;
         print &quot;&lt;a href=/foo&gt;Foo&lt;/a&gt;&quot;;
     }
@@ -255,19 +240,15 @@
       memory. It also means that the STDIN/STDOUT/STDERR handles the script is
       using are those directly bound by the server process.
     <p class="Pp"></p>
-    <pre>
-    use base qw(Net::Server::HTTP);
+    <pre>    use base qw(Net::Server::HTTP);
     __PACKAGE__-&gt;run;
-
     sub process_http_request {
         my $self = shift;
-
         if ($ENV{'PATH_INFO'} &amp;&amp; $ENV{'PATH_INFO'} =~ s{^ (/foo) (?= $ | /) }{}x) {
            $ENV{'SCRIPT_NAME'} = $1;
            my $file = &quot;/var/www/cgi-bin/foo&quot;; # assuming this exists
            return $self-&gt;exec_trusted_perl($file);
         }
-
         print &quot;Content-type: text/html\n\n&quot;;
         print &quot;&lt;a href=/foo&gt;Foo&lt;/a&gt;&quot;;
     }
@@ -319,8 +300,7 @@
     <p class="Pp">The default value is the NCSA extended/combined log
       format:</p>
     <p class="Pp"></p>
-    <pre>
-    '%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;'
+    <pre>    '%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;'
     </pre>
   </dd>
   <dt id="app"><a class="permalink" href="#app">app</a></dt>
@@ -353,12 +333,9 @@
         to configure virtual hosts - or that may have to wait for a third party
         module.</p>
     <p class="Pp"></p>
-    <pre>
-    app =&gt; &quot;/home/paul/foo.cgi&quot;,
+    <pre>    app =&gt; &quot;/home/paul/foo.cgi&quot;,
       # Dispatch: /home/paul/foo.cgi =&gt; home/paul/foo.cgi
       # Dispatch: / =&gt; home/paul/foo.cgi (default)
-
-
     app =&gt; &quot;../../foo.cgi&quot;,
     app =&gt; &quot;./bar.cgi&quot;,
     app =&gt; &quot;baz ./bar.cgi&quot;,
@@ -368,24 +345,18 @@
       # Dispatch: /baz =&gt; ./bar.cgi
       # Dispatch: /bim =&gt; ./bar.cgi
       # Dispatch: / =&gt; ../../foo.cgi (default)
-
-
     app =&gt; &quot;../../foo.cgi&quot;,
     app =&gt; &quot;/=./bar.cgi&quot;,
       # Dispatch: /foo.cgi =&gt; ../../foo.cgi
       # Dispatch: / =&gt; ./bar.cgi
-
     # you could also do this on the commandline
     net-server HTTP app ../../foo.cgi app /=./bar.cgi
-
     # extended options when configured from code
-
     Net::Server::HTTP-&gt;run(app =&gt; { # loses order of matching
       '/' =&gt; sub { ... },
       '/foo' =&gt; sub { ... },
       '/bar' =&gt; '/path/to/some.cgi',
     });
-
     Net::Server::HTTP-&gt;run(app =&gt; [
       '/' =&gt; sub { ... },
       '/foo' =&gt; sub { ... },

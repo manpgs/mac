@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::SQL::Nano(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- BEGIN { $ENV{DBI_SQL_NANO}=1 } # forces use of Nano rather than SQL::Statement
+<pre> BEGIN { $ENV{DBI_SQL_NANO}=1 } # forces use of Nano rather than SQL::Statement
  use DBI::SQL::Nano;
  use Data::Dumper;
  my $stmt = DBI::SQL::Nano::Statement-&gt;new(
@@ -69,17 +69,14 @@
     running your script (with SET or EXPORT or whatever), or else you can set it
     in your script by putting this at the top of the script:</p>
 <p class="Pp"></p>
-<pre>
- BEGIN { $ENV{DBI_SQL_NANO} = 1 }
+<pre> BEGIN { $ENV{DBI_SQL_NANO} = 1 }
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Supported_"><a class="permalink" href="#Supported_">Supported
   SQL syntax</a></h2>
-<pre>
- Here's a pseudo-BNF.  Square brackets [] indicate optional items;
+<pre> Here's a pseudo-BNF.  Square brackets [] indicate optional items;
  Angle brackets &lt;&gt; indicate items defined elsewhere in the BNF.
-
   statement ::=
       DROP TABLE [IF EXISTS] &lt;table_name&gt;
     | CREATE TABLE &lt;table_name&gt; &lt;col_def_list&gt;
@@ -88,21 +85,17 @@
     | UPDATE &lt;table_name&gt; SET &lt;set_clause&gt; &lt;where_clause&gt;
     | SELECT &lt;select_col_list&gt; FROM &lt;table_name&gt; [&lt;where_clause&gt;]
                                                  [&lt;order_clause&gt;]
-
   the optional IF EXISTS clause ::=
     * similar to MySQL - prevents errors when trying to drop
       a table that doesn't exist
-
   identifiers ::=
     * table and column names should be valid SQL identifiers
     * especially avoid using spaces and commas in identifiers
     * note: there is no error checking for invalid names, some
       will be accepted, others will cause parse failures
-
   table_name ::=
     * only one table (no multiple table operations)
     * see identifier for valid table names
-
   col_def_list ::=
     * a parens delimited, comma-separated list of column names
     * see identifier for valid column names
@@ -113,15 +106,12 @@
         (id INT PRIMARY KEY, phrase VARCHAR(40) NOT NULL)
     * you are *strongly* advised to put in column types even though
       they are ignored ... it increases portability
-
   insert_col_list ::=
     * a parens delimited, comma-separated list of column names
     * as in standard SQL, this is optional
-
   select_col_list ::=
     * a comma-separated list of column names
     * or an asterisk denoting all columns
-
   val_list ::=
     * a parens delimited, comma-separated list of values which can be:
        * placeholders (an unquoted question mark)
@@ -134,11 +124,9 @@
          the LIKE and CLIKE operators
        * note: escaped single quotation marks within strings are not
          supported, neither are embedded commas, use placeholders instead
-
   set_clause ::=
     * a comma-separated list of column = value pairs
     * see val_list for acceptable value formats
-
   where_clause ::=
     * a single &quot;column/value &lt;op&gt; column/value&quot; predicate, optionally
       preceded by &quot;NOT&quot;
@@ -147,7 +135,6 @@
     * op may be one of:
          &lt; &gt; &gt;= &lt;= = &lt;&gt; LIKE CLIKE IS
     * CLIKE is a case insensitive LIKE
-
   order_clause ::= column_name [ASC|DESC]
     * a single column optional ORDER BY clause is supported
     * as in standard SQL, if neither ASC (ascending) nor
@@ -161,8 +148,7 @@
     table will be opened by inherit from DBI::SQL::Nano::Statement and
     implements the <span class="Li">&quot;open_table&quot;</span> method.</p>
 <p class="Pp"></p>
-<pre>
-  sub open_table ($$$$$)
+<pre>  sub open_table ($$$$$)
   {
       ...
       return Your::Table-&gt;new( \%attributes );
@@ -171,12 +157,9 @@
 <p class="Pp">DBI::SQL::Nano::Statement_ expects a rudimentary interface is
     implemented by the table object, as well as SQL::Statement expects.</p>
 <p class="Pp"></p>
-<pre>
-  package Your::Table;
-
+<pre>  package Your::Table;
   use vars qw(@ISA);
   @ISA = qw(DBI::SQL::Nano::Table);
-
   sub drop ($$)        { ... }
   sub fetch_row ($$$)  { ... }
   sub push_row ($$$)   { ... }

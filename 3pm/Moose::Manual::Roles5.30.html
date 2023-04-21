@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Roles(3)</title>
 </head>
@@ -61,21 +62,15 @@
   SIMPLE ROLE</a></h1>
 <p class="Pp">Creating a role looks a lot like creating a Moose class:</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   has 'is_broken' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Bool',
   );
-
   sub break {
       my $self = shift;
-
       print &quot;I broke\n&quot;;
-
       $self-&gt;is_broken(1);
   }
 </pre>
@@ -85,13 +80,9 @@
 <p class="Pp">Instead, its attributes and methods will be composed into classes
     which use the role:</p>
 <p class="Pp"></p>
-<pre>
-  package Car;
-
+<pre>  package Car;
   use Moose;
-
   with 'Breakable';
-
   has 'engine' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Engine',
@@ -105,32 +96,24 @@
     <span class="Li">&quot;Car&quot;</span> class also
     <span class="Li">&quot;does('Breakable')&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  my $car = Car-&gt;new( engine =&gt; Engine-&gt;new );
-
+<pre>  my $car = Car-&gt;new( engine =&gt; Engine-&gt;new );
   print $car-&gt;is_broken ? 'Busted' : 'Still working';
   $car-&gt;break;
   print $car-&gt;is_broken ? 'Busted' : 'Still working';
-
   $car-&gt;does('Breakable'); # true
 </pre>
 <p class="Pp">This prints:</p>
 <p class="Pp"></p>
-<pre>
-  Still working
+<pre>  Still working
   I broke
   Busted
 </pre>
 <p class="Pp">We could use this same role in a
     <span class="Li">&quot;Bone&quot;</span> class:</p>
 <p class="Pp"></p>
-<pre>
-  package Bone;
-
+<pre>  package Bone;
   use Moose;
-
   with 'Breakable';
-
   has 'marrow' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Marrow',
@@ -144,11 +127,8 @@
     and <span class="Li">&quot;Package&quot;</span> roles to any class which
     consumes it:</p>
 <p class="Pp"></p>
-<pre>
-  package HandleWithCare;
-
+<pre>  package HandleWithCare;
   use Moose::Role;
-
   with 'Breakable', 'Package';
 </pre>
 </section>
@@ -161,21 +141,15 @@
     that consuming classes implement their own
     <span class="Li">&quot;break&quot;</span> methods:</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   requires 'break';
-
   has 'is_broken' =&gt; (
       is  =&gt; 'rw',
       isa =&gt; 'Bool',
   );
-
   after 'break' =&gt; sub {
       my $self = shift;
-
       $self-&gt;is_broken(1);
   };
 </pre>
@@ -188,21 +162,15 @@
     <span class="Li">&quot;is_broken&quot;</span> attribute is always set to
     true when <span class="Li">&quot;break&quot;</span> is called.</p>
 <p class="Pp"></p>
-<pre>
-  package Car
-
+<pre>  package Car
   use Moose;
-
   with 'Breakable';
-
   has 'engine' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Engine',
   );
-
   sub break {
       my $self = shift;
-
       if ( $self-&gt;is_moving ) {
           $self-&gt;stop;
       }
@@ -248,24 +216,16 @@
     consuming the role, or else the role will not see the generated accessor.
     These attributes are Moose Attributes.</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   requires 'stress';
-
   ########
-
   package Car;
-
   use Moose;
-
   has 'stress' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Int',
   );
-
   with 'Breakable';
 </pre>
 <p class="Pp">In general, we recommend that you always consume roles
@@ -274,30 +234,19 @@
     where one role has an attribute providing a required method for another. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   requires 'stress';
-
   ########
-
   package Stressable;
-
   use Moose::Role;
-
   has 'stress' =&gt; (
       is  =&gt; 'ro',
       isa =&gt; 'Int',
   );
-
   ########
-
   package Car;
-
   use Moose;
-
   # XXX - this will not work
   with 'Breakable', 'Stressable';
 </pre>
@@ -307,11 +256,8 @@
 <p class="Pp">There are two possible workarounds. The recommended one is to use
     &quot;stub&quot; subroutine(s) in the role providing the accessor(s):</p>
 <p class="Pp"></p>
-<pre>
-  package Stressable;
-
+<pre>  package Stressable;
   use Moose::Role;
-
   sub stress;
   has 'stress' =&gt; (
       is  =&gt; 'ro',
@@ -326,11 +272,8 @@
 <p class="Pp">The other alternative is to use two separate calls to
     <span class="Li">&quot;with&quot;</span> in the consuming class:</p>
 <p class="Pp"></p>
-<pre>
-  package Car;
-
+<pre>  package Car;
   use Moose;
-
   # Not recommended
   with 'Stressable';
   with 'Breakable';
@@ -365,13 +308,9 @@
     each of which modify the same method, those modifiers will be applied in the
     same order as the roles are used:</p>
 <p class="Pp"></p>
-<pre>
-  package MovieCar;
-
+<pre>  package MovieCar;
   use Moose;
-
   extends 'Car';
-
   with 'Breakable', 'ExplodesOnBreakage';
 </pre>
 <p class="Pp">Assuming that the new
@@ -390,35 +329,24 @@
     of the same name, we will have a conflict. In that case, the composing class
     is required to provide its <i>own</i> method of the same name.</p>
 <p class="Pp"></p>
-<pre>
-  package Breakdancer;
-
+<pre>  package Breakdancer;
   use Moose::Role;
-
   sub break {
-
   }
 </pre>
 <p class="Pp">If we compose both <span class="Li">&quot;Breakable&quot;</span>
     and <span class="Li">&quot;Breakdancer&quot;</span> in a class, we must
     provide our own <span class="Li">&quot;break&quot;</span> method:</p>
 <p class="Pp"></p>
-<pre>
-  package FragileDancer;
-
+<pre>  package FragileDancer;
   use Moose;
-
   with 'Breakable', 'Breakdancer';
-
   sub break { ... }
 </pre>
 <p class="Pp">A role can be a collection of other roles:</p>
 <p class="Pp"></p>
-<pre>
-  package Break::Bundle;
-
+<pre>  package Break::Bundle;
   use Moose::Role;
-
   with ('Breakable', 'Breakdancer');
 </pre>
 <p class="Pp">When a role consumes another a role, the <i>consuming</i> role's
@@ -432,19 +360,15 @@
     class to be able to call the methods from both its roles, we can alias the
     methods:</p>
 <p class="Pp"></p>
-<pre>
-  package FragileDancer;
-
+<pre>  package FragileDancer;
   use Moose;
-
   with 'Breakable'   =&gt; { -alias =&gt; { break =&gt; 'break_bone' } },
        'Breakdancer' =&gt; { -alias =&gt; { break =&gt; 'break_dance' } };
 </pre>
 <p class="Pp">However, aliasing a method simply makes a <i>copy</i> of the
     method with the new name. We also need to exclude the original name:</p>
 <p class="Pp"></p>
-<pre>
-  with 'Breakable' =&gt; {
+<pre>  with 'Breakable' =&gt; {
       -alias    =&gt; { break =&gt; 'break_bone' },
       -excludes =&gt; 'break',
       },
@@ -498,11 +422,8 @@
     This should be used with great caution, since it limits the re-usability of
     the role.</p>
 <p class="Pp"></p>
-<pre>
-  package Breakable;
-
+<pre>  package Breakable;
   use Moose::Role;
-
   excludes 'BreakDancer';
 </pre>
 </section>
@@ -518,9 +439,7 @@
     <span class="Li">&quot;apply_all_roles()&quot;</span> function from
     Moose::Util:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose::Util qw( apply_all_roles );
-
+<pre>  use Moose::Util qw( apply_all_roles );
   my $car = Car-&gt;new;
   apply_all_roles( $car, 'Breakable' );
 </pre>
@@ -534,28 +453,23 @@
 <p class="Pp">Application of some roles will require additional parameters being
     specified to satisfy them, for example:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         package Car;
         use Moose;
     }
     {
         package Breakable;
         use Moose::Role;
-
         has 'breakable_parts' =&gt; ( is =&gt; 'ro', required =&gt; 1 );
     }
-
     my $car = Car-&gt;new;
-
     # next line dies with: Attribute (breakable_parts) is required
     apply_all_roles( $car, 'Breakable' );
 </pre>
 <p class="Pp">This will require passing the additional parameters at application
     time as follows:</p>
 <p class="Pp"></p>
-<pre>
-    apply_all_roles( $car, 'Breakable' =&gt; {
+<pre>    apply_all_roles( $car, 'Breakable' =&gt; {
             rebless_params =&gt; {
                 # Parameters to 'Breakable'
                 breakable_parts =&gt; [qw( tires wheels windscreen )],
@@ -565,12 +479,10 @@
 <p class="Pp">Obviously, this interface is better simplified as a method on
     <span class="Li">&quot;Car&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    sub make_breakable {
+<pre>    sub make_breakable {
         my ( $self, %params ) = @_;
         apply_all_roles($self, 'Breakable', { rebless_params =&gt; \%params });
     }
-
     my $car = Car-&gt;new();
     $car-&gt;make_breakable( breakable_parts =&gt; [qw( tires wheels windscreen )] );
 </pre>

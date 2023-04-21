@@ -5,6 +5,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MAGIC(5)</title>
 </head>
@@ -287,12 +288,10 @@
       <dd>This is a quad value indicating the current offset of the file. It can
           be used to determine the size of the file or the magic buffer. For
           example the magic entries:
-        <div class="Bd Pp Bd-indent">
-        <pre>
--0	offset	x	this file is %lld bytes
+        <div class="Bd Pp Bd-indent Li">
+        <pre>-0	offset	x	this file is %lld bytes
 -0	offset	&lt;=100	must be more than 100 \
-    bytes and is only %lld
-        </pre>
+    bytes and is only %lld</pre>
         </div>
       </dd>
     </dl>
@@ -390,27 +389,21 @@
 </dl>
 <p class="Pp">An APPLE 4+4 character APPLE creator and type can be specified
   as:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-!:apple	CREATYPE
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>!:apple	CREATYPE</pre>
 </div>
 <p class="Pp">A MIME type is given on a separate line, which must be the next
     non-blank or comment line after the magic line that identifies the file
     type, and has the following format:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-!:mime	MIMETYPE
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>!:mime	MIMETYPE</pre>
 </div>
 <p class="Pp">i.e. the literal string &#x201C;!:mime&#x201D; followed by the
     MIME type.</p>
 <p class="Pp">An optional strength can be supplied on a separate line which
     refers to the current magic description using the following format:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-!:strength OP VALUE
-</pre>
+<div class="Bd Pp Bd-indent Li">
+<pre>!:strength OP VALUE</pre>
 </div>
 <p class="Pp">The operand <code class="Dv">OP</code> can be:
     <code class="Dv">+</code>, <code class="Dv">-</code>,
@@ -431,12 +424,10 @@
     <i class="Em">n</i> (or less) appears. For more complex files, one can use
     empty messages to get just the &quot;if/then&quot; effect, in the following
     way:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0      string   MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0      string   MZ
 &gt;0x18  leshort  &lt;0x40   MS-DOS executable
-&gt;0x18  leshort  &gt;0x3f   extended PC executable (e.g., MS Windows)
-</pre>
+&gt;0x18  leshort  &gt;0x3f   extended PC executable (e.g., MS Windows)</pre>
 </div>
 <p class="Pp" id="(">Offsets do not need to be constant, but can also be read
     from the file being examined. If the first character following the last
@@ -529,16 +520,14 @@
   </tr>
 </table>
 <p class="Pp">That way variable length structures can be examined:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# MS Windows executables are also valid MS-DOS executables
+<div class="Bd Pp Bd-indent Li">
+<pre># MS Windows executables are also valid MS-DOS executables
 0           string  MZ
 &gt;0x18       leshort &lt;0x40   MZ executable (MS-DOS)
 # skip the whole block below if it is not an extended executable
 &gt;0x18       leshort &gt;0x3f
 &gt;&gt;(0x3c.l)  string  PE\0\0  PE executable (MS-Windows)
-&gt;&gt;(0x3c.l)  string  LX\0\0  LX executable (OS/2)
-</pre>
+&gt;&gt;(0x3c.l)  string  LX\0\0  LX executable (OS/2)</pre>
 </div>
 <p class="Pp">This strategy of examining has a drawback: you must make sure that
     you eventually print something, or users may get empty output (such as when
@@ -548,94 +537,80 @@
     <a class="permalink" href="#_+-*/_&amp;___number"><i class="Em">[+-*/%&amp;|^]number</i></a>
     inside parentheses allows one to modify the value read from the file before
     it is used as an offset:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# MS Windows executables are also valid MS-DOS executables
+<div class="Bd Pp Bd-indent Li">
+<pre># MS Windows executables are also valid MS-DOS executables
 0           string  MZ
 # sometimes, the value at 0x18 is less that 0x40 but there's still an
 # extended executable, simply appended to the file
 &gt;0x18       leshort &lt;0x40
 &gt;&gt;(4.s*512) leshort 0x014c  COFF executable (MS-DOS, DJGPP)
-&gt;&gt;(4.s*512) leshort !0x014c MZ executable (MS-DOS)
-</pre>
+&gt;&gt;(4.s*512) leshort !0x014c MZ executable (MS-DOS)</pre>
 </div>
 <p class="Pp">Sometimes you do not know the exact offset as this depends on the
     length or position (when indirection was used before) of preceding fields.
     You can specify an offset relative to the end of the last up-level field
     using &#x2018;&amp;&#x2019; as a prefix to the offset:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0           string  MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0           string  MZ
 &gt;0x18       leshort &gt;0x3f
 &gt;&gt;(0x3c.l)  string  PE\0\0    PE executable (MS-Windows)
 # immediately following the PE signature is the CPU type
 &gt;&gt;&gt;&amp;0       leshort 0x14c     for Intel 80386
-&gt;&gt;&gt;&amp;0       leshort 0x184     for DEC Alpha
-</pre>
+&gt;&gt;&gt;&amp;0       leshort 0x184     for DEC Alpha</pre>
 </div>
 <p class="Pp">Indirect and relative offsets can be combined:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0             string  MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0             string  MZ
 &gt;0x18         leshort &lt;0x40
 &gt;&gt;(4.s*512)   leshort !0x014c MZ executable (MS-DOS)
 # if it's not COFF, go back 512 bytes and add the offset taken
 # from byte 2/3, which is yet another way of finding the start
 # of the extended executable
-&gt;&gt;&gt;&amp;(2.s-514) string  LE      LE executable (MS Windows VxD driver)
-</pre>
+&gt;&gt;&gt;&amp;(2.s-514) string  LE      LE executable (MS Windows VxD driver)</pre>
 </div>
 <p class="Pp">Or the other way around:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0                 string  MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0                 string  MZ
 &gt;0x18             leshort &gt;0x3f
 &gt;&gt;(0x3c.l)        string  LE\0\0  LE executable (MS-Windows)
 # at offset 0x80 (-4, since relative offsets start at the end
 # of the up-level match) inside the LE header, we find the absolute
 # offset to the code area, where we look for a specific signature
-&gt;&gt;&gt;(&amp;0x7c.l+0x26) string  UPX     \b, UPX compressed
-</pre>
+&gt;&gt;&gt;(&amp;0x7c.l+0x26) string  UPX     \b, UPX compressed</pre>
 </div>
 <p class="Pp">Or even both!</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0                string  MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0                string  MZ
 &gt;0x18            leshort &gt;0x3f
 &gt;&gt;(0x3c.l)       string  LE\0\0 LE executable (MS-Windows)
 # at offset 0x58 inside the LE header, we find the relative offset
 # to a data area where we look for a specific signature
-&gt;&gt;&gt;&amp;(&amp;0x54.l-3)  string  UNACE  \b, ACE self-extracting archive
-</pre>
+&gt;&gt;&gt;&amp;(&amp;0x54.l-3)  string  UNACE  \b, ACE self-extracting archive</pre>
 </div>
 <p class="Pp">If you have to deal with offset/length pairs in your file, even
     the second value in a parenthesized expression can be taken from the file
     itself, using another set of parentheses. Note that this additional indirect
     offset is always relative to the start of the main indirect offset.</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-0                 string       MZ
+<div class="Bd Pp Bd-indent Li">
+<pre>0                 string       MZ
 &gt;0x18             leshort      &gt;0x3f
 &gt;&gt;(0x3c.l)        string       PE\0\0 PE executable (MS-Windows)
 # search for the PE section called &quot;.idata&quot;...
 &gt;&gt;&gt;&amp;0xf4          search/0x140 .idata
 # ...and go to the end of it, calculated from start+length;
 # these are located 14 and 10 bytes after the section name
-&gt;&gt;&gt;&gt;(&amp;0xe.l+(-4)) string       PK\3\4 \b, ZIP self-extracting archive
-</pre>
+&gt;&gt;&gt;&gt;(&amp;0xe.l+(-4)) string       PK\3\4 \b, ZIP self-extracting archive</pre>
 </div>
 <p class="Pp">If you have a list of known values at a particular continuation
     level, and you want to provide a switch-like default case:</p>
-<div class="Bd Pp Bd-indent">
-<pre>
-# clear that continuation level match
+<div class="Bd Pp Bd-indent Li">
+<pre># clear that continuation level match
 &gt;18	clear
 &gt;18	lelong	1	one
 &gt;18	lelong	2	two
 &gt;18	default	x
 # print default match
-&gt;&gt;18	lelong	x	unmatched 0x%x
-</pre>
+&gt;&gt;18	lelong	x	unmatched 0x%x</pre>
 </div>
 </section>
 <section class="Sh">
@@ -672,7 +647,7 @@
 <table class="foot">
   <tr>
     <td class="foot-date">May 9, 2021</td>
-    <td class="foot-os">macOS 12.6</td>
+    <td class="foot-os">macOS 13.3</td>
   </tr>
 </table>
 </body>

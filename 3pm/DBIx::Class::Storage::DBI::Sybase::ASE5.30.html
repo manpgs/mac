@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBIx::Class::Storage::DBI::Sybase::ASE(3)</title>
 </head>
@@ -45,8 +46,7 @@
     PLACEHOLDERS&quot;.</p>
 <p class="Pp">A recommended connect_info setting:</p>
 <p class="Pp"></p>
-<pre>
-  on_connect_call =&gt; [['datetime_setup'], ['blob_setup', log_on_update =&gt; 0]]
+<pre>  on_connect_call =&gt; [['datetime_setup'], ['blob_setup', log_on_update =&gt; 0]]
 </pre>
 </section>
 <section class="Sh">
@@ -55,8 +55,7 @@
 <h2 class="Ss" id="connect_call_blob_setup"><a class="permalink" href="#connect_call_blob_setup">connect_call_blob_setup</a></h2>
 <p class="Pp">Used as:</p>
 <p class="Pp"></p>
-<pre>
-  on_connect_call =&gt; [ [ 'blob_setup', log_on_update =&gt; 0 ] ]
+<pre>  on_connect_call =&gt; [ [ 'blob_setup', log_on_update =&gt; 0 ] ]
 </pre>
 <p class="Pp">Does <span class="Li">&quot;$dbh-&gt;{syb_binary_images} =
     1;&quot;</span> to return <span class="Li">&quot;IMAGE&quot;</span> data as
@@ -73,13 +72,11 @@
 <h2 class="Ss" id="connect_call_datetime_setup"><a class="permalink" href="#connect_call_datetime_setup">connect_call_datetime_setup</a></h2>
 <p class="Pp">Used as:</p>
 <p class="Pp"></p>
-<pre>
-  on_connect_call =&gt; 'datetime_setup'
+<pre>  on_connect_call =&gt; 'datetime_setup'
 </pre>
 <p class="Pp">In connect_info to set:</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;syb_date_fmt('ISO_strict'); # output fmt: 2004-08-21T14:36:48.080Z
+<pre>  $dbh-&gt;syb_date_fmt('ISO_strict'); # output fmt: 2004-08-21T14:36:48.080Z
   $dbh-&gt;do('set dateformat mdy');   # input fmt:  08/13/1979 18:08:55.080
 </pre>
 <p class="Pp">This works for both <span class="Li">&quot;DATETIME&quot;</span>
@@ -108,8 +105,7 @@
     &lt;http://response.sybase.com/forms/ASE_Linux_Download&gt;.</p>
 <p class="Pp">To see if you're using FreeTDS run:</p>
 <p class="Pp"></p>
-<pre>
-  perl -MDBI -le 'my $dbh = DBI-&gt;connect($dsn, $user, $pass); print $dbh-&gt;{syb_oc_version}'
+<pre>  perl -MDBI -le 'my $dbh = DBI-&gt;connect($dsn, $user, $pass); print $dbh-&gt;{syb_oc_version}'
 </pre>
 <p class="Pp">It is recommended to set <span class="Li">&quot;tds
     version&quot;</span> for your ASE server to <span class="Li">5.0</span> in
@@ -158,8 +154,7 @@
     reset.</p>
 <p class="Pp">For example, this will not work:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;txn_do(sub {
+<pre>  $schema-&gt;txn_do(sub {
     my $rs = $schema-&gt;resultset('Book');
     while (my $result = $rs-&gt;next) {
       $schema-&gt;resultset('MetaData')-&gt;create({
@@ -171,8 +166,7 @@
 </pre>
 <p class="Pp">This won't either:</p>
 <p class="Pp"></p>
-<pre>
-  my $first_row = $large_rs-&gt;first;
+<pre>  my $first_row = $large_rs-&gt;first;
   $schema-&gt;txn_do(sub { ... });
 </pre>
 <p class="Pp">Transactions done for inserts in
@@ -224,13 +218,11 @@
 <p class="Pp">Setting <span class="Li">&quot;$dbh-&gt;{LongReadLen}&quot;</span>
     will also not work with FreeTDS use either:</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;storage-&gt;dbh-&gt;do(&quot;SET TEXTSIZE $bytes&quot;);
+<pre>  $schema-&gt;storage-&gt;dbh-&gt;do(&quot;SET TEXTSIZE $bytes&quot;);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  $schema-&gt;storage-&gt;set_textsize($bytes);
+<pre>  $schema-&gt;storage-&gt;set_textsize($bytes);
 </pre>
 <p class="Pp">instead.</p>
 <p class="Pp">However, the <span class="Li">&quot;LongReadLen&quot;</span> you
@@ -247,8 +239,7 @@
 <p class="Pp">To use this feature effectively, use a large number of rows for
     each populate call, eg.:</p>
 <p class="Pp"></p>
-<pre>
-  while (my $rows = $data_source-&gt;get_100_rows()) {
+<pre>  while (my $rows = $data_source-&gt;get_100_rows()) {
     $rs-&gt;populate($rows);
   }
 </pre>
@@ -266,13 +257,11 @@
   COLUMNS</a></h1>
 <p class="Pp">If you have columns such as:</p>
 <p class="Pp"></p>
-<pre>
-  created_dtm AS getdate()
+<pre>  created_dtm AS getdate()
 </pre>
 <p class="Pp">represent them in your Result classes as:</p>
 <p class="Pp"></p>
-<pre>
-  created_dtm =&gt; {
+<pre>  created_dtm =&gt; {
     data_type =&gt; undef,
     default_value =&gt; \'getdate()',
     is_nullable =&gt; 0,
@@ -291,8 +280,7 @@
     &lt;http://dba.fyicenter.com/Interview-Questions/SYBASE/The_timestamp_datatype_in_Sybase_.html&gt;.</p>
 <p class="Pp">They should be defined in your Result classes as:</p>
 <p class="Pp"></p>
-<pre>
-  ts =&gt; {
+<pre>  ts =&gt; {
     data_type =&gt; 'timestamp',
     is_nullable =&gt; 0,
     inflate_datetime =&gt; 0,

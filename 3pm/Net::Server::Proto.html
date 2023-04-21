@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Net::Server::Proto(3)</title>
 </head>
@@ -28,24 +29,19 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    NOTE: beginning in Net::Server 2.005, the default value for
+<pre>    NOTE: beginning in Net::Server 2.005, the default value for
           ipv is IPv* meaning that if no host is passed, or
           a hostname is past, all available socket types will be
           bound.  You can force IPv4 only by adding an ipv =&gt; 4
           configuration in any of the half dozen ways we let you
           specify it.
-
     # Net::Server::Proto and its accompanying modules are not
     # intended to be used outside the scope of Net::Server.
-
     # That being said, here is how you use them.  This is
     # only intended for anybody wishing to extend the
     # protocols to include some other set (ie maybe a
     # database connection protocol)
-
     use Net::Server::Proto;
-
     my @info = Net::Server::Proto-&gt;parse_info(
         $port,            # port to connect to
         $default_host,    # host to use if none found in port
@@ -53,24 +49,19 @@
         $default_ipv,     # default of IPv6 or IPv4 if none found in port
         $server_obj,      # Net::Server object
     );
-
     my @raw_info = Net::Server::Proto-&gt;get_addr_info($host, $port, $proto);
     # returns arrayref of resolved ips, ports, and ipv values
-
     my $sock = Net::Server::Proto-&gt;object({
         port  =&gt; $port,
         host  =&gt; $host,
         proto =&gt; $proto,
         ipv   =&gt; $ipv, # * (IPv*) if false (default false)
     }, $server);
-
     # Net::Server::Proto will attempt to interface with
     # sub modules named similar to Net::Server::Proto::TCP
     # Individual sub modules will be loaded by
     # Net::Server::Proto as they are needed.
-
     use Net::Server::Proto::TCP; # or UDP or UNIX etc
-
     # Return an object which is a sub class of IO::Socket
     # At this point the object is not connected.
     # The method can gather any other information that it
@@ -81,24 +72,18 @@
         proto =&gt; $proto,
         ipv   =&gt; 6, # IPv6 - default is * - can also be '4'
     }, $server);
-
-
     # Log that a connection is about to occur.
     # Use the facilities of the passed Net::Server object.
     $sock-&gt;log_connect( $server );
-
     # Actually bind to port or socket file.  This
     # is typically done by calling the configure method.
     $sock-&gt;connect();
-
     # Allow for rebinding to an already open fileno.
     # Typically will just do an fdopen.
     $sock-&gt;reconnect();
-
     ### Return a unique identifying string for this sock that
     # can be used when reconnecting.
     my $str = $sock-&gt;hup_string();
-
     # Return the proto that is being used by this module.
     my $proto = $sock-&gt;NS_proto();
 </pre>
@@ -170,30 +155,19 @@
 <p class="Pp">The hostname may be either blank, '*', be an IPv4 address, an IPv6
     address, a bare hostname, or a hostname with IPv* specifications.</p>
 <p class="Pp"></p>
-<pre>
-    host =&gt; &quot;127.0.0.1&quot;,  # an IPv4 address
-
+<pre>    host =&gt; &quot;127.0.0.1&quot;,  # an IPv4 address
     host =&gt; &quot;::1&quot;,        # an IPv6 address
-
     host =&gt; 'localhost',  # addresses returned by localhost (default IPv* - IPv4 and/or IPv6)
-
     host =&gt; 'localhost/IPv*',  # same
-
     ipv  =&gt; '*',
     host =&gt; 'localhost',  # same
-
     ipv  =&gt; 6,
     host =&gt; 'localhost',  # addresses returned by localhost (IPv6)
-
     ipv  =&gt; 'IPv4 IPv6',
     host =&gt; 'localhost',  # addresses returned by localhost (requires IPv6 and IPv4)
-
-
     host =&gt; '*',          # any local interfaces (default IPv*)
-
     ipv  =&gt; '*',
     host =&gt; '*',          # any local interfaces (any IPv6 or IPv4)
-
     host =&gt; '*/IPv*',     # same
 </pre>
 </section>
@@ -204,8 +178,7 @@
     of the protocol or may be specified via <span class="Li">$ENV</span>{'IPV'}.
     The order of precidence is as follows:</p>
 <p class="Pp"></p>
-<pre>
-     1) Explicit IPv4 or IPv6 address - wins
+<pre>     1) Explicit IPv4 or IPv6 address - wins
      2) ipv specified in port
      3) ipv specified in host
      4) ipv specified in proto
@@ -227,8 +200,7 @@
 <p class="Pp">To help overcome parsing ambiguity, it is also possible to pass
     port as a hashref (or as an array of hashrefs) of information such as:</p>
 <p class="Pp"></p>
-<pre>
-    port =&gt; {
+<pre>    port =&gt; {
         host  =&gt; &quot;localhost&quot;,
         ipv   =&gt; 6, # could also pass IPv6 (* is default)
         port  =&gt; 20203,
@@ -254,8 +226,7 @@
     logs to see what log_connect said. You could also include a post_bind_hook
     similar to the following to debug what happened:</p>
 <p class="Pp"></p>
-<pre>
-    sub post_bind_hook {
+<pre>    sub post_bind_hook {
         my $self = shift;
         foreach my $sock ( @{ $self-&gt;{server}-&gt;{sock} } ){
             $self-&gt;log(2,$sock-&gt;show);
@@ -265,9 +236,7 @@
 <p class="Pp">Rather than try to explain further, please look at the following
     examples:</p>
 <p class="Pp"></p>
-<pre>
-    # example 1 #----------------------------------
-
+<pre>    # example 1 #----------------------------------
     $port      = &quot;20203&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = undef;
@@ -279,9 +248,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; *, # IPv*
     # };
-
     # example 2 #----------------------------------
-
     $port      = &quot;someother.com:20203&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -293,9 +260,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; *,
     # };
-
     # example 3 #----------------------------------
-
     $port      = &quot;someother.com:20203/udp&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -307,9 +272,7 @@
     #     proto =&gt; 'udp', # will use Net::Server::Proto::UDP
     #     ipv   =&gt; *,
     # };
-
     # example 4 #----------------------------------
-
     $port      = &quot;someother.com:20203/Net::Server::Proto::UDP&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;TCP&quot;;
@@ -321,9 +284,7 @@
     #     proto =&gt; 'Net::Server::Proto::UDP',
     #     ipv   =&gt; 4,
     # };
-
     # example 5 #----------------------------------
-
     $port      = &quot;someother.com:20203/MyObject::TCP&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -333,9 +294,7 @@
     #     port  =&gt; 20203,
     #     proto =&gt; 'MyObject::TCP',
     # };
-
     # example 6 #----------------------------------
-
     $port      = &quot;/tmp/mysock.file|unix&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -347,9 +306,7 @@
     #     proto =&gt; 'unix', # will use Net::Server::Proto::UNIX
     #     ipv   =&gt; '*', # irrelevant for UNIX socket
     # };
-
     # example 7 #----------------------------------
-
     $port      = &quot;/tmp/mysock.file|unixdgram&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -361,9 +318,7 @@
     #     proto =&gt; 'unixdgram', # will use Net::Server::Proto::UNIXDGRAM
     #     ipv   =&gt; '*', # irrelevant for UNIX socket
     # };
-
     # example 8 #----------------------------------
-
     $port      = &quot;/tmp/mysock.file|SOCK_STREAM|unix&quot;; # legacy
     $def_host  = &quot;&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -376,9 +331,7 @@
     #     unix_type =&gt; 'SOCK_STREAM',
     #     ipv   =&gt; '*', # irrelevant for UNIX socket
     # };
-
     # example 9 #----------------------------------
-
     $port      = &quot;/tmp/mysock.file|SOCK_DGRAM|unix&quot;; # legacy
     $def_host  = &quot;&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -391,9 +344,7 @@
     #     unix_type =&gt; 'SOCK_DGRAM',
     #     ipv   =&gt; '*', # irrelevant for UNIX socket
     # };
-
     # example 10 #----------------------------------
-
     $port = &quot;someother.com:20203/ssleay&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -405,9 +356,7 @@
     #     proto =&gt; 'ssleay', # will use Net::Server::Proto::SSLEAY
     #     ipv   =&gt; *,
     # };
-
     # example 11 #----------------------------------
-
     $port = &quot;[::1]:20203 ipv6 tcp&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -419,9 +368,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; 6,
     # };
-
     # example 12 #----------------------------------
-
     $port = &quot;[::1]:20203 tcp&quot;;
     $def_host  = &quot;default-domain.com/IPv6&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -433,9 +380,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; 6,
     # };
-
     # example 13 #----------------------------------
-
     $port = &quot;[someother.com]:20203 ipv6 ipv4 tcp&quot;;
     $def_host  = &quot;default-domain.com&quot;;
     $def_proto = &quot;tcp&quot;;
@@ -452,9 +397,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; 6,
     # });
-
     # example 14 #----------------------------------
-
     # depending upon your configuration
     $port = &quot;localhost:20203&quot;;
     $def_host  = &quot;default-domain.com&quot;;
@@ -472,9 +415,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; 6, # IPv6
     # });
-
     # example 15 #----------------------------------
-
     # depending upon your configuration
     $port = &quot;localhost:20203&quot;;
     $def_host  = &quot;default-domain.com IPv*&quot;;
@@ -492,9 +433,7 @@
     #     proto =&gt; 'tcp', # will use Net::Server::Proto::TCP
     #     ipv   =&gt; 6, # IPv6
     # });
-
     # example 16 #----------------------------------
-
     # depending upon your configuration
     $ENV{'IPV'} = '4';
     $port = &quot;localhost:20203&quot;;

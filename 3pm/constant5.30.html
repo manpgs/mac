@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>constant(3pm)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use constant PI    =&gt; 4 * atan2(1, 1);
+<pre>    use constant PI    =&gt; 4 * atan2(1, 1);
     use constant DEBUG =&gt; 0;
-
     print &quot;Pi equals &quot;, PI, &quot;...\n&quot; if DEBUG;
-
     use constant {
         SEC   =&gt; 0,
         MIN   =&gt; 1,
@@ -45,11 +43,9 @@
         YDAY  =&gt; 7,
         ISDST =&gt; 8,
     };
-
     use constant WEEKDAYS =&gt; qw(
         Sunday Monday Tuesday Wednesday Thursday Friday Saturday
     );
-
     print &quot;Today is &quot;, (WEEKDAYS)[ (localtime)[WDAY] ], &quot;.\n&quot;;
 </pre>
 </section>
@@ -78,15 +74,13 @@
 <p class="Pp">Constants defined using this module cannot be interpolated into
     strings like variables. However, concatenation works just fine:</p>
 <p class="Pp"></p>
-<pre>
-    print &quot;Pi equals PI...\n&quot;;        # WRONG: does not expand &quot;PI&quot;
+<pre>    print &quot;Pi equals PI...\n&quot;;        # WRONG: does not expand &quot;PI&quot;
     print &quot;Pi equals &quot;.PI.&quot;...\n&quot;;    # right
 </pre>
 <p class="Pp">Even though a reference may be declared as a constant, the
     reference may point to data which may be changed, as this code shows.</p>
 <p class="Pp"></p>
-<pre>
-    use constant ARRAY =&gt; [ 1,2,3,4 ];
+<pre>    use constant ARRAY =&gt; [ 1,2,3,4 ];
     print ARRAY-&gt;[1];
     ARRAY-&gt;[1] = &quot; be changed&quot;;
     print ARRAY-&gt;[1];
@@ -105,8 +99,7 @@
     packages other than the caller, by including the package name in the name of
     the constant:</p>
 <p class="Pp"></p>
-<pre>
-    use constant &quot;OtherPackage::FWIBBLE&quot; =&gt; 7865;
+<pre>    use constant &quot;OtherPackage::FWIBBLE&quot; =&gt; 7865;
     constant-&gt;import(&quot;Other::FWOBBLE&quot;,$value); # dynamically at run time
 </pre>
 <p class="Pp">The use of all caps for constant names is merely a convention,
@@ -128,8 +121,7 @@
 <p class="Pp"><b>NOTE:</b> This implies that the expression defining the value
     of a constant is evaluated in list context. This may produce surprises:</p>
 <p class="Pp"></p>
-<pre>
-    use constant TIMESTAMP =&gt; localtime;                # WRONG!
+<pre>    use constant TIMESTAMP =&gt; localtime;                # WRONG!
     use constant TIMESTAMP =&gt; scalar localtime;         # right
 </pre>
 <p class="Pp">The first line above defines
@@ -141,8 +133,7 @@
 <p class="Pp">List constants are lists, not arrays. To index or slice them, they
     must be placed in parentheses.</p>
 <p class="Pp"></p>
-<pre>
-    my @workdays = WEEKDAYS[1 .. 5];            # WRONG!
+<pre>    my @workdays = WEEKDAYS[1 .. 5];            # WRONG!
     my @workdays = (WEEKDAYS)[1 .. 5];          # right
 </pre>
 </section>
@@ -155,8 +146,7 @@
     hash where the keys are the names of the constants to be defined. Obviously,
     all constants defined using this method must have a single value.</p>
 <p class="Pp"></p>
-<pre>
-    use constant {
+<pre>    use constant {
         FOO =&gt; &quot;A single value&quot;,
         BAR =&gt; &quot;This&quot;, &quot;won't&quot;, &quot;work!&quot;,        # Error!
     };
@@ -170,8 +160,7 @@
     package doesn't know about any constant within that group until <i>after</i>
     the <span class="Li">&quot;use&quot;</span> statement is finished.</p>
 <p class="Pp"></p>
-<pre>
-    use constant {
+<pre>    use constant {
         BITMASK =&gt; 0xAFBAEBA8,
         NEGMASK =&gt; ~BITMASK,                    # Error!
     };
@@ -184,8 +173,7 @@
     compile time, allowing for way cool stuff like this. (These error numbers
     aren't totally portable, alas.)</p>
 <p class="Pp"></p>
-<pre>
-    use constant E2BIG =&gt; ($! = 7);
+<pre>    use constant E2BIG =&gt; ($! = 7);
     print   E2BIG, &quot;\n&quot;;        # something like &quot;Arg list too long&quot;
     print 0+E2BIG, &quot;\n&quot;;        # &quot;7&quot;
 </pre>
@@ -208,8 +196,7 @@
     the given constant name does not include a package name, the current package
     is used.</p>
 <p class="Pp"></p>
-<pre>
-    sub declared ($) {
+<pre>    sub declared ($) {
         use constant 1.01;              # don't omit this!
         my $name = shift;
         $name =~ s/^::/main::/;

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>File::Copy::Recursive(3)</title>
 </head>
@@ -29,13 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use File::Copy::Recursive qw(fcopy rcopy dircopy fmove rmove dirmove);
-
+<pre>  use File::Copy::Recursive qw(fcopy rcopy dircopy fmove rmove dirmove);
   fcopy($orig,$new[,$buf]) or die $!;
   rcopy($orig,$new[,$buf]) or die $!;
   dircopy($orig,$new[,$buf]) or die $!;
-
   fmove($orig,$new[,$buf]) or die $!;
   rmove($orig,$new[,$buf]) or die $!;
   dirmove($orig,$new[,$buf]) or die $!;
@@ -82,16 +80,14 @@
     it returns the number of files and directories, number of directories only,
     depth level traversed.</p>
 <p class="Pp"></p>
-<pre>
-  my $num_of_files_and_dirs = dircopy($orig,$new);
+<pre>  my $num_of_files_and_dirs = dircopy($orig,$new);
   my($num_of_files_and_dirs,$num_of_dirs,$depth_traversed) = dircopy($orig,$new);
 </pre>
 <p class="Pp">Normally it stops and returns if a copy fails. To continue on
     regardless, set <span class="Li">$File::Copy::Recursive::SkipFlop</span> to
     true.</p>
 <p class="Pp"></p>
-<pre>
-    local $File::Copy::Recursive::SkipFlop = 1;
+<pre>    local $File::Copy::Recursive::SkipFlop = 1;
 </pre>
 <p class="Pp">That way it will copy everythging it can in a directory and won't
     stop because of permissions, etc...</p>
@@ -136,14 +132,13 @@
 <h2 class="Ss"><b>rmove_glob()</b></h2>
 <p class="Pp">Like <b>rcopy_glob()</b> but calls <b>rmove()</b> instead of
     <b>rcopy()</b></p>
-<p class="Pp"><i></i><i>$RemvBase</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$RemvBase</i></span><i></i></p>
 <p class="Pp">Default is false. When set to true the *<b>move()</b> functions
     will not only attempt to remove the original file or directory but will
     remove the given path it is in.</p>
 <p class="Pp">So if you:</p>
 <p class="Pp"></p>
-<pre>
-   rmove('foo/bar/baz', '/etc/');
+<pre>   rmove('foo/bar/baz', '/etc/');
    # &quot;baz&quot; is removed from foo/bar after it is successfully copied to /etc/
    
    local $File::Copy::Recursive::Remvbase = 1;
@@ -160,13 +155,13 @@
 <section class="Ss">
 <h2 class="Ss" id="Creating_and_Removing_Paths"><a class="permalink" href="#Creating_and_Removing_Paths">Creating
   and Removing Paths</a></h2>
-<p class="Pp"><i></i><i>$NoFtlPth</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$NoFtlPth</i></span><i></i></p>
 <p class="Pp">Default is false. If set to true <b>rmdir()</b>, <b>mkdir()</b>,
     and <b>pathempty()</b> calls in <b>pathrm()</b> and <b>pathmk()</b> do not
     <b>return()</b> on failure.</p>
 <p class="Pp">If its set to true they just silently go about their business
     regardless. This isn't a good idea but it's there if you want it.</p>
-<p class="Pp"><i></i><i>$DirPerms</i><i></i></p>
+<p class="Pp"><i></i><span class="Li"><i>$DirPerms</i></span><i></i></p>
 <p class="Pp">Mode to pass to any <b>mkdir()</b> calls. Defaults to 0777 as per
     <b>umask()</b>'s POD. Explicitly having this allows older perls to be able
     to use FCR and might add a bit of flexibility for you.</p>
@@ -182,28 +177,24 @@
     be careful!!!</p>
 <p class="Pp">Returns 2 if the given path is not a directory.</p>
 <p class="Pp"></p>
-<pre>
-  File::Copy::Recursive::pathrm('foo/bar/baz') or die $!;
+<pre>  File::Copy::Recursive::pathrm('foo/bar/baz') or die $!;
   # foo no longer exists
 </pre>
 <p class="Pp">Same as:</p>
 <p class="Pp"></p>
-<pre>
-  rmdir 'foo/bar/baz' or die $!;
+<pre>  rmdir 'foo/bar/baz' or die $!;
   rmdir 'foo/bar' or die $!;
   rmdir 'foo' or die $!;
 </pre>
 <p class="Pp">An optional second argument makes it call <b>pathempty()</b>
     before any <b>rmdir()</b>'s when set to true.</p>
 <p class="Pp"></p>
-<pre>
-  File::Copy::Recursive::pathrm('foo/bar/baz', 1) or die $!;
+<pre>  File::Copy::Recursive::pathrm('foo/bar/baz', 1) or die $!;
   # foo no longer exists
 </pre>
 <p class="Pp">Same as:PFSCheck</p>
 <p class="Pp"></p>
-<pre>
-  File::Copy::Recursive::pathempty('foo/bar/baz') or die $!;
+<pre>  File::Copy::Recursive::pathempty('foo/bar/baz') or die $!;
   rmdir 'foo/bar/baz' or die $!;
   File::Copy::Recursive::pathempty('foo/bar/') or die $!;
   rmdir 'foo/bar' or die $!;
@@ -218,16 +209,14 @@
     Returns 2 if the given argument is not a directory, 1 on successfully
     emptying the directory.</p>
 <p class="Pp"></p>
-<pre>
-   File::Copy::Recursive::pathempty($pth) or die $!;
+<pre>   File::Copy::Recursive::pathempty($pth) or die $!;
    # $pth is now an empty directory
 </pre>
 <p class="Pp"><b>pathmk()</b></p>
 <p class="Pp">Creates a given path recursively. Creates foo/bar/baz even if foo
     does not exist.</p>
 <p class="Pp"></p>
-<pre>
-   File::Copy::Recursive::pathmk('foo/bar/baz') or die $!;
+<pre>   File::Copy::Recursive::pathmk('foo/bar/baz') or die $!;
 </pre>
 <p class="Pp">An optional second argument if true acts just like
     <span class="Li">$File::Copy::Recursive::NoFtlPth</span>, which means you'd
@@ -268,8 +257,7 @@
     system's support of symlinks so you can check it with an if statement to see
     how it will behave:</p>
 <p class="Pp"></p>
-<pre>
-    if($File::Copy::Recursive::CopyLink) {
+<pre>    if($File::Copy::Recursive::CopyLink) {
         print &quot;Symlinks will be preserved\n&quot;;
     } else {
         print &quot;Symlinks will not be preserved because your system does not support it\n&quot;;
@@ -280,8 +268,7 @@
     carp when it copies a link whose target does not exist. It's false by
     default.</p>
 <p class="Pp"></p>
-<pre>
-    local $File::Copy::Recursive::BdTrgWrn  = 1;
+<pre>    local $File::Copy::Recursive::BdTrgWrn  = 1;
 </pre>
 </section>
 <section class="Ss">
@@ -295,11 +282,9 @@
 <p class="Pp">1 = <b>carp()</b> $! if removal fails</p>
 <p class="Pp">2 = return if removal fails</p>
 <p class="Pp"></p>
-<pre>
-    local $File::Copy::Recursive::RMTrgFil = 1;
+<pre>    local $File::Copy::Recursive::RMTrgFil = 1;
     fcopy($orig, $target) or die $!;
     # if it fails it does warn() and keeps going
-
     local $File::Copy::Recursive::RMTrgDir = 2;
     dircopy($orig, $target) or die $!;
     # if it fails it does your &quot;or die&quot;
@@ -339,11 +324,9 @@
     <span class="Li">$dir2</span> like normal (also like cp -rf).</p>
 <p class="Pp">So assuming 'foo/file':</p>
 <p class="Pp"></p>
-<pre>
-    dircopy('foo', 'bar') or die $!;
+<pre>    dircopy('foo', 'bar') or die $!;
     # if bar does not exist the result is bar/file
     # if bar does exist the result is bar/file
-
     $File::Copy::Recursive::CPRFComp = 1;
     dircopy('foo', 'bar') or die $!;
     # if bar does not exist the result is bar/file
@@ -351,11 +334,9 @@
 </pre>
 <p class="Pp">You can also specify a star for cp -rf glob type behavior:</p>
 <p class="Pp"></p>
-<pre>
-    dircopy('foo/*', 'bar') or die $!;
+<pre>    dircopy('foo/*', 'bar') or die $!;
     # if bar does not exist the result is bar/file
     # if bar does exist the result is bar/file
-
     $File::Copy::Recursive::CPRFComp = 1;
     dircopy('foo/*', 'bar') or die $!;
     # if bar does not exist the result is bar/file
@@ -370,8 +351,7 @@
   Copy Loops</a></h2>
 <p class="Pp">If you want to allow:</p>
 <p class="Pp"></p>
-<pre>
-  cp -rf . foo/
+<pre>  cp -rf . foo/
 </pre>
 <p class="Pp">type behavior set
     <span class="Li">$File::Copy::Recursive::CopyLoop</span> to true.</p>

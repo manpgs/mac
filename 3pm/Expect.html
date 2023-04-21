@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Expect(3)</title>
 </head>
@@ -29,31 +30,23 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Expect;
-
+<pre>  use Expect;
   # create an Expect object by spawning another process
   my $exp = Expect-&gt;spawn($command, @params)
     or die &quot;Cannot spawn $command: $!\n&quot;;
-
   # or by using an already opened filehandle (e.g. from Net::Telnet)
   my $exp = Expect-&gt;exp_init(\*FILEHANDLE);
-
   # if you prefer the OO mindset:
   my $exp = Expect-&gt;new;
   $exp-&gt;raw_pty(1);
   $exp-&gt;spawn($command, @parameters)
     or die &quot;Cannot spawn $command: $!\n&quot;;
-
   # send some string there:
   $exp-&gt;send(&quot;string\n&quot;);
-
   # or, for the filehandle mindset:
   print $exp &quot;string\n&quot;;
-
   # then do some pattern matching with either the simple interface
   $patidx = $exp-&gt;expect($timeout, @match_patterns);
-
   # or multi-match on several spawned commands with callbacks,
   # just like the Tcl version
   $exp-&gt;expect($timeout,
@@ -62,10 +55,8 @@
                        exp_continue; } ],
              [ &quot;regexp2&quot; , \&amp;callback, @cbparms ],
             );
-
   # if no longer needed, do a soft_close to nicely shut down the command
   $exp-&gt;soft_close();
-
   # or be less patient with
   $exp-&gt;hard_close();
 </pre>
@@ -75,8 +66,7 @@
     already familiar with the versatile Tcl version of Expect. The public
     functions that make up Expect.pm are:</p>
 <p class="Pp"></p>
-<pre>
-  Expect-&gt;new()
+<pre>  Expect-&gt;new()
   Expect::interconnect(@objects_to_be_read_from)
   Expect::test_handles($timeout, @objects_to_test)
   Expect::version($version_requested | undef);
@@ -114,8 +104,7 @@
 <p class="Pp">There are several configurable package variables that affect the
     behavior of Expect. They are:</p>
 <p class="Pp"></p>
-<pre>
-  $Expect::Debug;
+<pre>  $Expect::Debug;
   $Expect::Exp_Internal;
   $Expect::IgnoreEintr;
   $Expect::Log_Group;
@@ -224,8 +213,7 @@
   <dd>Returns a filehandle to the slave part of the pty. Very useful in
       modifying the terminal settings:
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;slave-&gt;stty(qw(raw -echo));
+    <pre>  $object-&gt;slave-&gt;stty(qw(raw -echo));
     </pre>
     <p class="Pp">Typical values are 'sane', 'raw', and 'raw -echo'. Note that I
         recommend setting the terminal to 'raw' or 'raw -echo', as this avoids a
@@ -253,8 +241,7 @@
       match_patterns, which are matched exactly by default. If you want a regexp
       match, prefix the pattern with '-re'.
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;expect(15, 'match me exactly','-re','match\s+me\s+exactly');
+    <pre>  $object-&gt;expect(15, 'match me exactly','-re','match\s+me\s+exactly');
     </pre>
     <p class="Pp">Due to o/s limitations <span class="Li">$timeout</span> should
         be a round number. If <span class="Li">$timeout</span> is 0 Expect will
@@ -308,15 +295,13 @@
         is '^]'.\r\n&quot;. To find this you might use
         <span class="Li">$match</span>='^Escape char.*\.\r?$';</p>
     <p class="Pp"></p>
-    <pre>
-  $telnet-&gt;expect(10,'-re',$match);
+    <pre>  $telnet-&gt;expect(10,'-re',$match);
     </pre>
   </dd>
   <dt id="New"><a class="permalink" href="#New">New more Tcl/Expect-like
     interface</a></dt>
   <dd>
-    <pre>
-  expect($timeout,
+    <pre>  expect($timeout,
        '-i', [ $obj1, $obj2, ... ],
              [ $re_pattern, sub { ...; exp_continue; }, @subparms, ],
              [ 'eof', sub { ... } ],
@@ -332,8 +317,7 @@
         time by specifying '<span class="Li">&quot;-i&quot;</span>' and a single
         Expect object or a ref to an array containing Expect objects, e.g.</p>
     <p class="Pp"></p>
-    <pre>
- expect($timeout,
+    <pre> expect($timeout,
         '-i', $exp1, @patterns_1,
         '-i', [ $exp2, $exp3 ], @patterns_2_3,
        )
@@ -347,8 +331,7 @@
         starting anew or return the symbol `exp_continue_timeout' for continuing
         expect without resetting the timeout count.</p>
     <p class="Pp"></p>
-    <pre>
- $exp-&gt;expect($timeout,
+    <pre> $exp-&gt;expect($timeout,
               [ qr/username: /i, sub { my $self = shift;
                                        $self-&gt;send(&quot;$username\n&quot;);
                                        exp_continue; }],
@@ -436,8 +419,7 @@
       is received from the spawned command. This allows to perform some
       aliveness testing and still expect for patterns.
     <p class="Pp"></p>
-    <pre>
-    $exp-&gt;restart_timeout_upon_receive(1);
+    <pre>    $exp-&gt;restart_timeout_upon_receive(1);
     $exp-&gt;expect($timeout,
                  [ timeout =&gt; \&amp;report_timeout ],
                  [ qr/pattern/ =&gt; \&amp;handle_pattern],
@@ -454,13 +436,11 @@
       to have normal acting patterns that truncate the accumulator, you have to
       add a
     <p class="Pp"></p>
-    <pre>
-    $exp-&gt;set_accum($exp-&gt;after);
+    <pre>    $exp-&gt;set_accum($exp-&gt;after);
     </pre>
     <p class="Pp">to their callback, e.g.</p>
     <p class="Pp"></p>
-    <pre>
-    $exp-&gt;notransfer(1);
+    <pre>    $exp-&gt;notransfer(1);
     $exp-&gt;expect($timeout,
                  # accumulator not truncated, pattern1 will match again
                  [ &quot;pattern1&quot; =&gt; sub { my $self = shift;
@@ -541,26 +521,22 @@
       can pass an additional mode of &quot;w&quot; to truncate the file upon
       <b>open()</b>:
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;log_file(&quot;filename&quot;, &quot;w&quot;);
+    <pre>  $object-&gt;log_file(&quot;filename&quot;, &quot;w&quot;);
     </pre>
     <p class="Pp">Returns the logfilehandle.</p>
     <p class="Pp">If called with an undef value, stops logging and closes
         logfile:</p>
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;log_file(undef);
+    <pre>  $object-&gt;log_file(undef);
     </pre>
     <p class="Pp">If called without argument, returns the logfilehandle:</p>
     <p class="Pp"></p>
-    <pre>
-  $fh = $object-&gt;log_file();
+    <pre>  $fh = $object-&gt;log_file();
     </pre>
     <p class="Pp">Can be set to a code ref, which will be called instead of
         printing to the logfile:</p>
     <p class="Pp"></p>
-    <pre>
-  $object-&gt;log_file(\&amp;myloggerfunc);
+    <pre>  $object-&gt;log_file(\&amp;myloggerfunc);
     </pre>
   </dd>
   <dt>$object-&gt;print_log_file(@strings)</dt>
@@ -760,25 +736,21 @@
   can I find out what Expect is doing?</a></h2>
 <p class="Pp">If you set</p>
 <p class="Pp"></p>
-<pre>
-  $Expect::Exp_Internal = 1;
+<pre>  $Expect::Exp_Internal = 1;
 </pre>
 <p class="Pp">Expect will tell you very verbosely what it is receiving and
     sending, what matching it is trying and what it found. You can do this on a
     per-command base with</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;exp_internal(1);
+<pre>  $exp-&gt;exp_internal(1);
 </pre>
 <p class="Pp">You can also set</p>
 <p class="Pp"></p>
-<pre>
-  $Expect::Debug = 1;  # or 2, 3 for more verbose output
+<pre>  $Expect::Debug = 1;  # or 2, 3 for more verbose output
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;debug(1);
+<pre>  $exp-&gt;debug(1);
 </pre>
 <p class="Pp">which gives you even more output.</p>
 </section>
@@ -787,13 +759,11 @@
   am seeing the output of the command I spawned. Can I turn that off?</a></h2>
 <p class="Pp">Yes, just set</p>
 <p class="Pp"></p>
-<pre>
-  $Expect::Log_Stdout = 0;
+<pre>  $Expect::Log_Stdout = 0;
 </pre>
 <p class="Pp">to globally disable it or</p>
 <p class="Pp"></p>
-<pre>
-   $exp-&gt;log_stdout(0);
+<pre>   $exp-&gt;log_stdout(0);
 </pre>
 <p class="Pp">for just that command. 'log_user' is provided as an alias so
     Tcl/Expect user get a DWIM experience... :-)</p>
@@ -820,13 +790,11 @@
     Note that this will not work if you single-quote your string. So, to send
     control-C to a process in <span class="Li">$exp</span>, do:</p>
 <p class="Pp"></p>
-<pre>
-  print $exp &quot;\cC&quot;;
+<pre>  print $exp &quot;\cC&quot;;
 </pre>
 <p class="Pp">Or, if you prefer:</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;send(&quot;\cC&quot;);
+<pre>  $exp-&gt;send(&quot;\cC&quot;);
 </pre>
 <p class="Pp">The ability to include control characters in a string like this is
     provided by Perl, not by Expect.pm . Trying to learn Expect.pm without a
@@ -882,8 +850,7 @@
     threads. The reason is that <b>spawn()</b> uses <b>fork()</b>, and
     perlthrtut:</p>
 <p class="Pp"></p>
-<pre>
-  &quot;Thinking of mixing fork() and threads?  Please lie down and wait until the feeling passes.&quot;
+<pre>  &quot;Thinking of mixing fork() and threads?  Please lie down and wait until the feeling passes.&quot;
 </pre>
 </section>
 <section class="Ss">
@@ -891,30 +858,25 @@
   want to log the whole session to a file.</a></h2>
 <p class="Pp">Use</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;log_file(&quot;filename&quot;);
+<pre>  $exp-&gt;log_file(&quot;filename&quot;);
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;log_file($filehandle);
+<pre>  $exp-&gt;log_file($filehandle);
 </pre>
 <p class="Pp">or even</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;log_file(\&amp;log_procedure);
+<pre>  $exp-&gt;log_file(\&amp;log_procedure);
 </pre>
 <p class="Pp">for maximum flexibility.</p>
 <p class="Pp">Note that the logfile is appended to by default, but you can
     specify an optional mode &quot;w&quot; to truncate the logfile:</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;log_file(&quot;filename&quot;, &quot;w&quot;);
+<pre>  $exp-&gt;log_file(&quot;filename&quot;, &quot;w&quot;);
 </pre>
 <p class="Pp">To stop logging, just call it with a false argument:</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;log_file(undef);
+<pre>  $exp-&gt;log_file(undef);
 </pre>
 </section>
 <section class="Ss">
@@ -922,8 +884,7 @@
   can I turn off multi-line matching for my regexps?</a></h2>
 <p class="Pp">To globally unset multi-line matching for all regexps:</p>
 <p class="Pp"></p>
-<pre>
-  $Expect::Multiline_Matching = 0;
+<pre>  $Expect::Multiline_Matching = 0;
 </pre>
 <p class="Pp">You can do that on a per-regexp basis by stating
     <span class="Li">&quot;(?-m)&quot;</span> inside the regexp (you need
@@ -963,8 +924,7 @@
     open(&quot;prog|&quot;)? ]</p>
 <p class="Pp">By using expect without any patterns to match.</p>
 <p class="Pp"></p>
-<pre>
-  $process-&gt;expect(undef); # Forever until EOF
+<pre>  $process-&gt;expect(undef); # Forever until EOF
   $process-&gt;expect($timeout); # For a few seconds
   $process-&gt;expect(0); # Is there anything ready on the handle now?
 </pre>
@@ -972,8 +932,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Ok,_so_now_how_do_I_get_what_was_read_on_the_handle?"><a class="permalink" href="#Ok,_so_now_how_do_I_get_what_was_read_on_the_handle?">Ok,
   so now how do I get what was read on the handle?</a></h2>
-<pre>
-  $read = $process-&gt;before();
+<pre>  $read = $process-&gt;before();
 </pre>
 </section>
 <section class="Ss">
@@ -991,14 +950,12 @@
     processes is to die in this circumstance. Two ways you can make this not
     happen are:</p>
 <p class="Pp"></p>
-<pre>
-  $process-&gt;soft_close();
+<pre>  $process-&gt;soft_close();
 </pre>
 <p class="Pp">This will wait 15 seconds for a process to come up with an EOF by
     itself before killing it.</p>
 <p class="Pp"></p>
-<pre>
-  $process-&gt;expect(undef);
+<pre>  $process-&gt;expect(undef);
 </pre>
 <p class="Pp">This will wait forever for the process to match an empty set of
     patterns. It will return when the process hits an EOF.</p>
@@ -1013,13 +970,11 @@
     the process, during <b>expect()</b>, <b>send_slow()</b> and
     <b>interconnect()</b>. One way you can force this is to make use of</p>
 <p class="Pp"></p>
-<pre>
-  $process-&gt;expect(undef);
+<pre>  $process-&gt;expect(undef);
 </pre>
 <p class="Pp">and</p>
 <p class="Pp"></p>
-<pre>
-  $process-&gt;expect(0);
+<pre>  $process-&gt;expect(0);
 </pre>
 <p class="Pp">which will make <b>expect()</b> run with an empty pattern set
     forever or just for an instant to capture the output of
@@ -1048,15 +1003,13 @@
     like a pipe and is more WYGIWYE (what you get is what you expect), so I
     suggest you set it to 'raw' by yourself:</p>
 <p class="Pp"></p>
-<pre>
-  $exp = Expect-&gt;new;
+<pre>  $exp = Expect-&gt;new;
   $exp-&gt;raw_pty(1);
   $exp-&gt;spawn(...);
 </pre>
 <p class="Pp">To disable echo:</p>
 <p class="Pp"></p>
-<pre>
-  $exp-&gt;slave-&gt;stty(qw(-echo));
+<pre>  $exp-&gt;slave-&gt;stty(qw(-echo));
 </pre>
 </section>
 <section class="Ss">
@@ -1067,8 +1020,7 @@
     IO::Pty already has a method for that, so modify your code to look like
     this:</p>
 <p class="Pp"></p>
-<pre>
-  my $exp = Expect-&gt;new;
+<pre>  my $exp = Expect-&gt;new;
   $exp-&gt;slave-&gt;clone_winsize_from(\*STDIN);
   $exp-&gt;spawn(&quot;telnet somehost);
 </pre>
@@ -1088,18 +1040,15 @@
     changed&quot;), change the terminal size and propagate the signal to the
     spawned application:</p>
 <p class="Pp"></p>
-<pre>
-  my $exp = Expect-&gt;new;
+<pre>  my $exp = Expect-&gt;new;
   $exp-&gt;slave-&gt;clone_winsize_from(\*STDIN);
   $exp-&gt;spawn(&quot;ssh somehost);
   $SIG{WINCH} = \&amp;winch;
-
   sub winch {
     $exp-&gt;slave-&gt;clone_winsize_from(\*STDIN);
     kill WINCH =&gt; $exp-&gt;pid if $exp-&gt;pid;
     $SIG{WINCH} = \&amp;winch;
   }
-
   $exp-&gt;interact();
 </pre>
 <p class="Pp">There is an example file ssh.pl in the examples/ subdir that shows
@@ -1131,8 +1080,7 @@
 <p class="Pp">One possible solution is when you spawn a process, follow it with
     a unique string that would indicate the process is finished.</p>
 <p class="Pp"></p>
-<pre>
-  $process = Expect-&gt;spawn('telnet somehost; echo ____END____');
+<pre>  $process = Expect-&gt;spawn('telnet somehost; echo ____END____');
 </pre>
 <p class="Pp">And then
     <span class="Li">$process</span>-&gt;expect($timeout,'____END____','other','patterns');</p>
@@ -1144,15 +1092,12 @@
 <section class="Ss">
 <h2 class="Ss" id="How_to_automate_login"><a class="permalink" href="#How_to_automate_login">How
   to automate login</a></h2>
-<pre>
-  my $telnet = Net::Telnet-&gt;new(&quot;remotehost&quot;) # see Net::Telnet
+<pre>  my $telnet = Net::Telnet-&gt;new(&quot;remotehost&quot;) # see Net::Telnet
     or die &quot;Cannot telnet to remotehost: $!\n&quot;;;
   my $exp = Expect-&gt;exp_init($telnet);
-
   # deprecated use of spawned telnet command
   # my $exp = Expect-&gt;spawn(&quot;telnet localhost&quot;)
   #   or die &quot;Cannot spawn telnet: $!\n&quot;;;
-
   my $spawn_ok;
   $exp-&gt;expect($timeout,
            [
@@ -1195,11 +1140,9 @@
 <section class="Ss">
 <h2 class="Ss" id="How_to_expect_on_multiple_spawned_commands"><a class="permalink" href="#How_to_expect_on_multiple_spawned_commands">How
   to expect on multiple spawned commands</a></h2>
-<pre>
-  foreach my $cmd (@list_of_commands) {
+<pre>  foreach my $cmd (@list_of_commands) {
     push @commands, Expect-&gt;spawn($cmd);
   }
-
   expect($timeout,
      '-i', \@commands,
      [
@@ -1216,7 +1159,6 @@
       sub {
         my ($obj, $parmref) = @_;
         # ...
-
         # now we exit the expect command
       },
       \$parm
@@ -1227,18 +1169,15 @@
 <section class="Ss">
 <h2 class="Ss" id="How_to_propagate_terminal_sizes"><a class="permalink" href="#How_to_propagate_terminal_sizes">How
   to propagate terminal sizes</a></h2>
-<pre>
-  my $exp = Expect-&gt;new;
+<pre>  my $exp = Expect-&gt;new;
   $exp-&gt;slave-&gt;clone_winsize_from(\*STDIN);
   $exp-&gt;spawn(&quot;ssh somehost);
   $SIG{WINCH} = \&amp;winch;
-
   sub winch {
     $exp-&gt;slave-&gt;clone_winsize_from(\*STDIN);
     kill WINCH =&gt; $exp-&gt;pid if $exp-&gt;pid;
     $SIG{WINCH} = \&amp;winch;
   }
-
   $exp-&gt;interact();
 </pre>
 </section>
@@ -1255,13 +1194,11 @@
 <p class="Pp">There are two mailing lists available, expectperl-announce and
     expectperl-discuss, at</p>
 <p class="Pp"></p>
-<pre>
-  http://lists.sourceforge.net/lists/listinfo/expectperl-announce
+<pre>  http://lists.sourceforge.net/lists/listinfo/expectperl-announce
 </pre>
 <p class="Pp">and</p>
 <p class="Pp"></p>
-<pre>
-  http://lists.sourceforge.net/lists/listinfo/expectperl-discuss
+<pre>  http://lists.sourceforge.net/lists/listinfo/expectperl-discuss
 </pre>
 </section>
 <section class="Sh">
@@ -1270,8 +1207,7 @@
 <p class="Pp">You can use the CPAN Request Tracker http://rt.cpan.org/ and
     submit new bugs under</p>
 <p class="Pp"></p>
-<pre>
-  http://rt.cpan.org/Ticket/Create.html?Queue=Expect
+<pre>  http://rt.cpan.org/Ticket/Create.html?Queue=Expect
 </pre>
 </section>
 <section class="Sh">

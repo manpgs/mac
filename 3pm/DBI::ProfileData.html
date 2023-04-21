@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBI::ProfileData(3)</title>
 </head>
@@ -31,49 +32,35 @@
 <p class="Pp">The easiest way to use this module is through the dbiprof frontend
     (see dbiprof for details):</p>
 <p class="Pp"></p>
-<pre>
-  dbiprof --number 15 --sort count
+<pre>  dbiprof --number 15 --sort count
 </pre>
 <p class="Pp">This module can also be used to roll your own profile
   analysis:</p>
 <p class="Pp"></p>
-<pre>
-  # load data from dbi.prof
+<pre>  # load data from dbi.prof
   $prof = DBI::ProfileData-&gt;new(File =&gt; &quot;dbi.prof&quot;);
-
   # get a count of the records (unique paths) in the data set
   $count = $prof-&gt;count();
-
   # sort by longest overall time
   $prof-&gt;sort(field =&gt; &quot;longest&quot;);
-
   # sort by longest overall time, least to greatest
   $prof-&gt;sort(field =&gt; &quot;longest&quot;, reverse =&gt; 1);
-
   # exclude records with key2 eq 'disconnect'
   $prof-&gt;exclude(key2 =&gt; 'disconnect');
-
   # exclude records with key1 matching /^UPDATE/i
   $prof-&gt;exclude(key1 =&gt; qr/^UPDATE/i);
-
   # remove all records except those where key1 matches /^SELECT/i
   $prof-&gt;match(key1 =&gt; qr/^SELECT/i);
-
   # produce a formatted report with the given number of items
   $report = $prof-&gt;report(number =&gt; 10);
-
   # clone the profile data set
   $clone = $prof-&gt;clone();
-
   # get access to hash of header values
   $header = $prof-&gt;header();
-
   # get access to sorted array of nodes
   $nodes = $prof-&gt;nodes();
-
   # format a single node in the same style as report()
   $text = $prof-&gt;format($nodes-&gt;[0]);
-
   # get access to Data hash in DBI::Profile format
   $Data = $prof-&gt;Data();
 </pre>
@@ -125,8 +112,7 @@
     slightly different statements in the raw data will be merged and aggregated
     in the loaded data. For example:</p>
 <p class="Pp"></p>
-<pre>
-  Filter =&gt; sub {
+<pre>  Filter =&gt; sub {
       my ($path_ref, $data_ref) = @_;
       s/foo = '.*?'/foo = '...'/ for @$path_ref;
   }
@@ -139,8 +125,7 @@
 <p class="Pp">It's aggressive and simplistic, but it's often sufficient, and
     serves as an example that you can tailor to suit your own needs:</p>
 <p class="Pp"></p>
-<pre>
-  Filter =&gt; sub {
+<pre>  Filter =&gt; sub {
       my ($path_ref, $data_ref) = @_;
       local $_ = $path_ref-&gt;[0]; # whichever element contains the SQL Statement
       s/\b\d+\b/N/g;             # 42 -&gt; N
@@ -170,8 +155,7 @@
     value pairs included in the header section of the DBI::ProfileDumper data
     format. For example:</p>
 <p class="Pp"></p>
-<pre>
-  $header = {
+<pre>  $header = {
     Path    =&gt; [ '!Statement', '!MethodName' ],
     Program =&gt; 't/42profile_data.t',
   };
@@ -187,8 +171,7 @@
     same as the elements provided by DBI::Profile. After that each key is in a
     separate element. For example:</p>
 <p class="Pp"></p>
-<pre>
- $nodes = [
+<pre> $nodes = [
             [
               2,                      # 0, count
               0.0312958955764771,     # 1, total duration
@@ -219,8 +202,7 @@
   1)</h2>
 <p class="Pp">Sorts data by the given field. Available fields are:</p>
 <p class="Pp"></p>
-<pre>
-  longest
+<pre>  longest
   total
   count
   shortest

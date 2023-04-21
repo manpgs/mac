@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Exception::Class(3)</title>
 </head>
@@ -33,17 +34,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use Exception::Class (
+<pre>  use Exception::Class (
       'MyException',
-
       'AnotherException' =&gt; { isa =&gt; 'MyException' },
-
       'YetAnotherException' =&gt; {
           isa         =&gt; 'AnotherException',
           description =&gt; 'These exceptions are related to IPC'
       },
-
       'ExceptionWithFields' =&gt; {
           isa    =&gt; 'YetAnotherException',
           fields =&gt; [ 'grandiosity', 'quixotic' ],
@@ -52,17 +49,14 @@
   );
   use Scalar::Util qw( blessed );
   use Try::Tiny;
-
   try {
       MyException-&gt;throw( error =&gt; 'I feel funny.' );
   }
   catch {
       die $_ unless blessed $_ &amp;&amp; $_-&gt;can('rethrow');
-
       if ( $_-&gt;isa('Exception::Class') ) {
           warn $_-&gt;error, &quot;\n&quot;, $_-&gt;trace-&gt;as_string, &quot;\n&quot;;
           warn join ' ', $_-&gt;euid, $_-&gt;egid, $_-&gt;uid, $_-&gt;gid, $_-&gt;pid, $_-&gt;time;
-
           exit;
       }
       elsif ( $_-&gt;isa('ExceptionWithFields') ) {
@@ -77,11 +71,9 @@
           $_-&gt;rethrow;
       }
   };
-
   # without Try::Tiny
   eval { ... };
   if ( my $e = Exception::Class-&gt;caught ) { ... }
-
   # use an alias - without parens subroutine name is checked at
   # compile time
   throw_fields error =&gt; &quot;No strawberry&quot;, grandiosity =&gt; &quot;quite a bit&quot;;
@@ -119,8 +111,7 @@
     automagic import, if you desired this.</p>
 <p class="Pp">The syntax for the magic declarations is as follows:</p>
 <p class="Pp"></p>
-<pre>
-  'MANDATORY CLASS NAME' =&gt; \%optional_hashref
+<pre>  'MANDATORY CLASS NAME' =&gt; \%optional_hashref
 </pre>
 <p class="Pp">The hashref may contain the following options:</p>
 <ul class="Bl-bullet">
@@ -137,8 +128,7 @@
         <i>before</i> calling <span class="Li">&quot;import&quot;</span>. To do
         this simply do something like this:</p>
     <p class="Pp"></p>
-    <pre>
-  BEGIN { $Exception::Class::BASE_EXC_CLASS = 'SomeExceptionClass'; }
+    <pre>  BEGIN { $Exception::Class::BASE_EXC_CLASS = 'SomeExceptionClass'; }
     </pre>
     <p class="Pp">If anyone can come up with a more elegant way to do this
         please let me know.</p>
@@ -198,11 +188,9 @@
     <span class="Li">&quot;eval&quot;</span> and <span class="Li">$@</span>.
     Here's an example of how the two modules work together:</p>
 <p class="Pp"></p>
-<pre>
-  use Exception::Class ( 'My::Exception' );
+<pre>  use Exception::Class ( 'My::Exception' );
   use Scalar::Util qw( blessed );
   use Try::Tiny;
-
   try {
       might_throw();
   }
@@ -225,9 +213,7 @@
 <p class="Pp"><span class="Li">&quot;Exception::Class&quot;</span> provides some
     syntactic sugar for catching exceptions in a safe manner:</p>
 <p class="Pp"></p>
-<pre>
-  eval {...};
-
+<pre>  eval {...};
   if ( my $e = Exception::Class-&gt;caught('My::Error') ) {
       cleanup();
       do_something_with_exception($e);
@@ -247,8 +233,7 @@
 <p class="Pp">Exception objects also provide a caught method so you can
   write:</p>
 <p class="Pp"></p>
-<pre>
-  if ( my $e = My::Error-&gt;caught ) {
+<pre>  if ( my $e = My::Error-&gt;caught ) {
       cleanup();
       do_something_with_exception($e);
   }
@@ -261,9 +246,7 @@
     You could make an exception &quot;uncatchable&quot; by overriding
     <span class="Li">&quot;isa&quot;</span> in that class like this:</p>
 <p class="Pp"></p>
-<pre>
- package Exception::Uncatchable;
-
+<pre> package Exception::Uncatchable;
  sub isa { shift-&gt;rethrow }
 </pre>
 <p class="Pp">Of course, this only works if you always call
@@ -284,25 +267,20 @@
     and makes it easier to keep track of them.</p>
 <p class="Pp">This might look something like this:</p>
 <p class="Pp"></p>
-<pre>
-  package Foo::Bar::Exceptions;
-
+<pre>  package Foo::Bar::Exceptions;
   use Exception::Class (
       Foo::Bar::Exception::Senses =&gt;
           { description =&gt; 'sense-related exception' },
-
       Foo::Bar::Exception::Smell =&gt; {
           isa         =&gt; 'Foo::Bar::Exception::Senses',
           fields      =&gt; 'odor',
           description =&gt; 'stinky!'
       },
-
       Foo::Bar::Exception::Taste =&gt; {
           isa         =&gt; 'Foo::Bar::Exception::Senses',
           fields      =&gt; [ 'taste', 'bitterness' ],
           description =&gt; 'like, gag me with a spoon!'
       },
-
       ...
   );
 </pre>

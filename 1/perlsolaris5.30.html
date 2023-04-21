@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLSOLARIS(1)</title>
 </head>
@@ -71,8 +72,7 @@
     can do this by changing the appropriate symlinks under /usr/perl5 as follows
     (example for Solaris 9):</p>
 <p class="Pp"></p>
-<pre>
- # cd /usr/perl5
+<pre> # cd /usr/perl5
  # rm bin man pod
  # ln -s ./5.00503/bin
  # ln -s ./5.00503/man
@@ -93,8 +93,7 @@
     performs some minor manipulations on the operating system name and version
     number as reported by uname. Here's a partial translation table:</p>
 <p class="Pp"></p>
-<pre>
-          Sun:                      perl's Configure:
+<pre>          Sun:                      perl's Configure:
  uname    uname -r   Name           osname     osvers
  SunOS    4.1.3     Solaris 1.1     sunos      4.1.3
  SunOS    5.6       Solaris 2.6     solaris    2.6
@@ -168,8 +167,7 @@
 <p class="Pp">If you are in doubt which package contains a file you are missing,
     try to find an installation that has that file. Then do a</p>
 <p class="Pp"></p>
-<pre>
- $ grep /my/missing/file /var/sadm/install/contents
+<pre> $ grep /my/missing/file /var/sadm/install/contents
 </pre>
 <p class="Pp">This will display a line like this:</p>
 <p class="Pp">/usr/include/sys/errno.h f none 0644 root bin 7471 37605 956241356
@@ -189,8 +187,7 @@
     Solaris &gt;= 2.6.</p>
 <p class="Pp">You must Configure perl with</p>
 <p class="Pp"></p>
-<pre>
- $ sh Configure -Dcc=gcc
+<pre> $ sh Configure -Dcc=gcc
 </pre>
 <p class="Pp">If you don't, you may experience strange build errors.</p>
 <p class="Pp">If you have updated your Solaris version, you may also have to
@@ -224,8 +221,7 @@
     flag. The hints/solaris_2.sh file tries to do this automatically by setting
     the following Configure variables:</p>
 <p class="Pp"></p>
-<pre>
- ccdlflags=&quot;$ccdlflags -Wl,-E&quot;
+<pre> ccdlflags=&quot;$ccdlflags -Wl,-E&quot;
  lddlflags=&quot;$lddlflags -Wl,-E -G&quot;
 </pre>
 <p class="Pp">However, over the years, changes in gcc, GNU ld, and Solaris ld
@@ -238,14 +234,12 @@
     -B/usr/ccs/bin/ to the gcc command line. One convenient way to do that is
     with</p>
 <p class="Pp"></p>
-<pre>
- $ sh Configure -Dcc='gcc -B/usr/ccs/bin/'
+<pre> $ sh Configure -Dcc='gcc -B/usr/ccs/bin/'
 </pre>
 <p class="Pp">Note that the trailing slash is required. This will result in some
     harmless warnings as Configure is run:</p>
 <p class="Pp"></p>
-<pre>
- gcc: file path prefix `/usr/ccs/bin/' never used
+<pre> gcc: file path prefix `/usr/ccs/bin/' never used
 </pre>
 <p class="Pp">These messages may safely be ignored. (Note that for a SunOS4
     system, you must use -B/bin/ instead.)</p>
@@ -290,8 +284,7 @@
     directory with that library (e.g. /usr/local/lib).</p>
 <p class="Pp">If you get an error message</p>
 <p class="Pp"></p>
-<pre>
- dlopen: stub interception failed
+<pre> dlopen: stub interception failed
 </pre>
 <p class="Pp">it is probably because your LD_LIBRARY_PATH environment variable
     includes a directory which is a symlink to /usr/lib (such as /lib). The
@@ -331,8 +324,7 @@
   &lt;http://docs.sun.com/&gt;</p>
 <p class="Pp">You can detect the OS mode using &quot;isainfo -v&quot;, e.g.</p>
 <p class="Pp"></p>
-<pre>
- $ isainfo -v   # Ultra 30 in 64 bit mode
+<pre> $ isainfo -v   # Ultra 30 in 64 bit mode
  64-bit sparcv9 applications
  32-bit sparc applications
 </pre>
@@ -348,8 +340,7 @@
 <p class="Pp">First is the &quot;transitional compilation environment&quot;,
     described in <b>lfcompile64</b>(5). According to the man page,</p>
 <p class="Pp"></p>
-<pre>
- The transitional compilation  environment  exports  all  the
+<pre> The transitional compilation  environment  exports  all  the
  explicit 64-bit functions (xxx64()) and types in addition to
  all the regular functions (xxx()) and types. Both xxx()  and
  xxx64()  functions  are  available to the program source.  A
@@ -360,21 +351,18 @@
 <p class="Pp">The transitional compilation environment is obtained with the
     following compiler and linker flags:</p>
 <p class="Pp"></p>
-<pre>
- getconf LFS64_CFLAGS        -D_LARGEFILE64_SOURCE
+<pre> getconf LFS64_CFLAGS        -D_LARGEFILE64_SOURCE
  getconf LFS64_LDFLAG        # nothing special needed
  getconf LFS64_LIBS          # nothing special needed
 </pre>
 <p class="Pp">Second is the &quot;large file compilation environment&quot;,
     described in <b>lfcompile</b>(5). According to the man page,</p>
 <p class="Pp"></p>
-<pre>
- Each interface named xxx() that needs to access 64-bit entities
+<pre> Each interface named xxx() that needs to access 64-bit entities
  to  access  large  files maps to a xxx64() call in the
  resulting binary. All relevant data types are defined to  be
  of correct size (for example, off_t has a typedef definition
  for a 64-bit entity).
-
  An application compiled in this environment is able  to  use
  the  xxx()  source interfaces to access both large and small
  files, rather than having to explicitly utilize the  transitional
@@ -385,8 +373,7 @@
     automatically mapped to <b>fseeko64()</b> and <b>ftello64()</b>.</p>
 <p class="Pp">The large file compilation environment is obtained with</p>
 <p class="Pp"></p>
-<pre>
- getconf LFS_CFLAGS      -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+<pre> getconf LFS_CFLAGS      -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
  getconf LFS_LDFLAGS     # nothing special needed
  getconf LFS_LIBS        # nothing special needed
 </pre>
@@ -397,8 +384,7 @@
     Compiler, you need to use the flag &quot;-xarch=v9&quot;. <b>getconf</b>(1)
     will tell you this, e.g.</p>
 <p class="Pp"></p>
-<pre>
- $ getconf -a | grep v9
+<pre> $ getconf -a | grep v9
  XBS5_LP64_OFF64_CFLAGS:         -xarch=v9
  XBS5_LP64_OFF64_LDFLAGS:        -xarch=v9
  XBS5_LP64_OFF64_LINTFLAGS:      -xarch=v9
@@ -419,8 +405,7 @@
     This option is not yet supported as of gcc 2.95.2; from install/SPECIFIC in
     that release:</p>
 <p class="Pp"></p>
-<pre>
- GCC version 2.95 is not able to compile code correctly for sparc64
+<pre> GCC version 2.95 is not able to compile code correctly for sparc64
  targets. Users of the Linux kernel, at least, can use the sparc32
  program to start up a new shell invocation with an environment that
  causes configure to recognize (via uname -a) the system as sparc-*-*
@@ -449,8 +434,7 @@
     really need to use perl's malloc, you can rebuild perl from the sources and
     Configure the build with</p>
 <p class="Pp"></p>
-<pre>
- $ sh Configure -Dusemymalloc
+<pre> $ sh Configure -Dusemymalloc
 </pre>
 <p class="Pp">You should not use perl's malloc if you are building with gcc.
     There are reports of core dumps, especially in the PDL module. The problem
@@ -516,8 +500,7 @@
     cross-compiler available; A usual Configure invocation when targetting a
     Solaris x86 looks something like this:</p>
 <p class="Pp"></p>
-<pre>
-    sh ./Configure -des -Dusecrosscompile \
+<pre>    sh ./Configure -des -Dusecrosscompile \
         -Dcc=i386-pc-solaris2.11-gcc      \
         -Dsysroot=$SYSROOT                \
         -Alddlflags=&quot; -Wl,-z,notext&quot;      \
@@ -615,8 +598,7 @@
     seem to work for building Perl anymore. When linking the extensions, the GNU
     ld gets very unhappy and spews a lot of errors like this</p>
 <p class="Pp"></p>
-<pre>
-  ... relocation truncated to fit: BASE13 ...
+<pre>  ... relocation truncated to fit: BASE13 ...
 </pre>
 <p class="Pp">and dies. Therefore the SunOS 4.1 hints file explicitly sets the
     ld to be <i>/usr/bin/ld</i>.</p>
@@ -637,15 +619,13 @@
 <p class="Pp">This is the &quot;make test&quot; result from the said
     combination:</p>
 <p class="Pp"></p>
-<pre>
-  Failed 27 test scripts out of 745, 96.38% okay.
+<pre>  Failed 27 test scripts out of 745, 96.38% okay.
 </pre>
 <p class="Pp">Running the <span class="Li">&quot;harness&quot;</span> is painful
     because of the many failing Unicode-related tests will output megabytes of
     failure messages, but if one patiently waits, one gets these results:</p>
 <p class="Pp"></p>
-<pre>
- Failed Test                     Stat Wstat Total Fail  Failed  List of Failed
+<pre> Failed Test                     Stat Wstat Total Fail  Failed  List of Failed
  -----------------------------------------------------------------------------
  ...
  ../ext/Encode/t/at-cn.t            4  1024    29    4  13.79%  14-17

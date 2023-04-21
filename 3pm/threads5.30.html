@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>threads(3pm)</title>
 </head>
@@ -41,74 +42,58 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use threads ('yield',
+<pre>    use threads ('yield',
                  'stack_size' =&gt; 64*4096,
                  'exit' =&gt; 'threads_only',
                  'stringify');
-
     sub start_thread {
         my @args = @_;
         print('Thread started: ', join(' ', @args), &quot;\n&quot;);
     }
     my $thr = threads-&gt;create('start_thread', 'argument');
     $thr-&gt;join();
-
     threads-&gt;create(sub { print(&quot;I am a thread\n&quot;); })-&gt;join();
-
     my $thr2 = async { foreach (@files) { ... } };
     $thr2-&gt;join();
     if (my $err = $thr2-&gt;error()) {
         warn(&quot;Thread error: $err\n&quot;);
     }
-
     # Invoke thread in list context (implicit) so it can return a list
     my ($thr) = threads-&gt;create(sub { return (qw/a b c/); });
     # or specify list context explicitly
     my $thr = threads-&gt;create({'context' =&gt; 'list'},
                               sub { return (qw/a b c/); });
     my @results = $thr-&gt;join();
-
     $thr-&gt;detach();
-
     # Get a thread's object
     $thr = threads-&gt;self();
     $thr = threads-&gt;object($tid);
-
     # Get a thread's ID
     $tid = threads-&gt;tid();
     $tid = $thr-&gt;tid();
     $tid = &quot;$thr&quot;;
-
     # Give other threads a chance to run
     threads-&gt;yield();
     yield();
-
     # Lists of non-detached threads
     my @threads = threads-&gt;list();
     my $thread_count = threads-&gt;list();
-
     my @running = threads-&gt;list(threads::running);
     my @joinable = threads-&gt;list(threads::joinable);
-
     # Test thread objects
     if ($thr1 == $thr2) {
         ...
     }
-
     # Manage thread stack size
     $stack_size = threads-&gt;get_stack_size();
     $old_size = threads-&gt;set_stack_size(32*4096);
-
     # Create a thread with a specific context and stack size
     my $thr = threads-&gt;create({ 'context'    =&gt; 'list',
                                 'stack_size' =&gt; 32*4096,
                                 'exit'       =&gt; 'thread_only' },
                               \&amp;foo);
-
     # Get thread's context
     my $wantarray = $thr-&gt;wantarray();
-
     # Check thread's state
     if ($thr-&gt;is_running()) {
         sleep(1);
@@ -116,10 +101,8 @@
     if ($thr-&gt;is_joinable()) {
         $thr-&gt;join();
     }
-
     # Send a signal to a thread
     $thr-&gt;kill('SIGUSR1');
-
     # Exit a thread
     threads-&gt;exit();
 </pre>
@@ -136,8 +119,7 @@
 <p class="Pp">As just mentioned, all variables are, by default, thread local. To
     use shared variables, you need to also load threads::shared:</p>
 <p class="Pp"></p>
-<pre>
-    use threads;
+<pre>    use threads;
     use threads::shared;
 </pre>
 <p class="Pp">When loading threads::shared, you must <span class="Li">&quot;use
@@ -150,8 +132,7 @@
 <p class="Pp">If needed, scripts can be written so as to run on both threaded
     and non-threaded Perls:</p>
 <p class="Pp"></p>
-<pre>
-    my $can_use_threads = eval 'use threads; 1';
+<pre>    my $can_use_threads = eval 'use threads; 1';
     if ($can_use_threads) {
         # Do processing using threads
         ...
@@ -169,8 +150,7 @@
     <p class="Pp"><i>FUNCTION</i> may either be the name of a function, an
         anonymous subroutine, or a code ref.</p>
     <p class="Pp"></p>
-    <pre>
-    my $thr = threads-&gt;create('func_name', ...);
+    <pre>    my $thr = threads-&gt;create('func_name', ...);
         # or
     my $thr = threads-&gt;create(sub { ... }, ...);
         # or
@@ -187,8 +167,7 @@
         <span class="Li">&quot;-&gt;join()&quot;</span> is determined at the
         time of thread creation.</p>
     <p class="Pp"></p>
-    <pre>
-    # Create thread in list context (implicit)
+    <pre>    # Create thread in list context (implicit)
     my ($thr1) = threads-&gt;create(sub {
                                     my @results = qw(a b c);
                                     return (@results);
@@ -201,7 +180,6 @@
                                });
     # Retrieve list results from thread
     my @res1 = $thr1-&gt;join();
-
     # Create thread in scalar context (implicit)
     my $thr2 = threads-&gt;create(sub {
                                     my $result = 42;
@@ -209,7 +187,6 @@
                                  });
     # Retrieve scalar result from thread
     my $res2 = $thr2-&gt;join();
-
     # Create a thread in void context (explicit)
     my $thr3 = threads-&gt;create({'void' =&gt; 1},
                                sub { print(&quot;Hello, world\n&quot;); });
@@ -250,9 +227,7 @@
       using a threads object in a string or a string context (e.g., as a hash
       key) will cause its ID to be used as the value:
     <p class="Pp"></p>
-    <pre>
-    use threads qw(stringify);
-
+    <pre>    use threads qw(stringify);
     my $thr = threads-&gt;create(...);
     print(&quot;Thread $thr started\n&quot;);  # Prints: Thread 1 started
     </pre>
@@ -299,8 +274,7 @@
   <dd>Tests if two threads objects are the same thread or not. This is
       overloaded to the more natural forms:
     <p class="Pp"></p>
-    <pre>
-    if ($thr1 == $thr2) {
+    <pre>    if ($thr1 == $thr2) {
         print(&quot;Threads are the same\n&quot;);
     }
     # or
@@ -378,8 +352,7 @@
     <p class="Pp">If <span class="Li">&quot;exit()&quot;</span> really is
         needed, then consider using the following:</p>
     <p class="Pp"></p>
-    <pre>
-    threads-&gt;exit() if threads-&gt;can('exit');   # Thread friendly
+    <pre>    threads-&gt;exit() if threads-&gt;can('exit');   # Thread friendly
     exit(status);
     </pre>
   </dd>
@@ -455,8 +428,7 @@
     <span class="Li">&quot;-&gt;create()&quot;</span> with a hash reference as
     the first argument:</p>
 <p class="Pp"></p>
-<pre>
-    my $thr = threads-&gt;create({'context' =&gt; 'list'}, \&amp;foo);
+<pre>    my $thr = threads-&gt;create({'context' =&gt; 'list'}, \&amp;foo);
     ...
     my @results = $thr-&gt;join();
 </pre>
@@ -471,16 +443,14 @@
     not be returning a value (i.e., <i>void</i> context), you would do the
     following:</p>
 <p class="Pp"></p>
-<pre>
-    my $thr = threads-&gt;create({'context' =&gt; 'void'}, \&amp;foo);
+<pre>    my $thr = threads-&gt;create({'context' =&gt; 'void'}, \&amp;foo);
     ...
     $thr-&gt;join();
 </pre>
 <p class="Pp">The context type may also be used as the <i>key</i> in the hash
     reference followed by a <i>true</i> value:</p>
 <p class="Pp"></p>
-<pre>
-    threads-&gt;create({'scalar' =&gt; 1}, \&amp;foo);
+<pre>    threads-&gt;create({'scalar' =&gt; 1}, \&amp;foo);
     ...
     my ($thr) = threads-&gt;list();
     my $result = $thr-&gt;join();
@@ -492,13 +462,10 @@
 <p class="Pp">If not explicitly stated, the thread's context is implied from the
     context of the <span class="Li">&quot;-&gt;create()&quot;</span> call:</p>
 <p class="Pp"></p>
-<pre>
-    # Create thread in list context
+<pre>    # Create thread in list context
     my ($thr) = threads-&gt;create(...);
-
     # Create thread in scalar context
     my $thr = threads-&gt;create(...);
-
     # Create thread in void context
     threads-&gt;create(...);
 </pre>
@@ -564,8 +531,7 @@
       application through the use of the environment variable
       <span class="Li">&quot;PERL5_ITHREADS_STACK_SIZE&quot;</span>:
     <p class="Pp"></p>
-    <pre>
-    PERL5_ITHREADS_STACK_SIZE=1048576
+    <pre>    PERL5_ITHREADS_STACK_SIZE=1048576
     export PERL5_ITHREADS_STACK_SIZE
     perl -e'use threads; print(threads-&gt;get_stack_size(), &quot;\n&quot;)'
     </pre>
@@ -581,8 +547,7 @@
       <span class="Li">&quot;-&gt;create()&quot;</span> with a hash reference as
       the first argument:
     <p class="Pp"></p>
-    <pre>
-    my $thr = threads-&gt;create({'stack_size' =&gt; 32*4096},
+    <pre>    my $thr = threads-&gt;create({'stack_size' =&gt; 32*4096},
                               \&amp;foo, @args);
     </pre>
   </dd>
@@ -591,8 +556,7 @@
       the stack size from an existing thread (<span class="Li">$thr1</span>).
       This is shorthand for the following:
     <p class="Pp"></p>
-    <pre>
-    my $stack_size = $thr1-&gt;get_stack_size();
+    <pre>    my $stack_size = $thr1-&gt;get_stack_size();
     my $thr2 = threads-&gt;create({'stack_size' =&gt; $stack_size},
                                FUNCTION, ARGS);
     </pre>
@@ -613,8 +577,7 @@
       arguments to <span class="Li">&quot;-&gt;kill()&quot;</span>.
     <p class="Pp">Returns the thread object to allow for method chaining:</p>
     <p class="Pp"></p>
-    <pre>
-    $thr-&gt;kill('SIG...')-&gt;join();
+    <pre>    $thr-&gt;kill('SIG...')-&gt;join();
     </pre>
   </dd>
 </dl>
@@ -622,22 +585,16 @@
     they are expected to act upon. Here's an example for <i>cancelling</i> a
     thread:</p>
 <p class="Pp"></p>
-<pre>
-    use threads;
-
+<pre>    use threads;
     sub thr_func
     {
         # Thread 'cancellation' signal handler
         $SIG{'KILL'} = sub { threads-&gt;exit(); };
-
         ...
     }
-
     # Create a thread
     my $thr = threads-&gt;create('thr_func');
-
     ...
-
     # Signal the thread to terminate, and then detach
     # it so that it will get cleaned up automatically
     $thr-&gt;kill('KILL')-&gt;detach();
@@ -646,33 +603,25 @@
     thread signalling in conjunction with a semaphore to provide rudimentary
     <i>suspend</i> and <i>resume</i> capabilities:</p>
 <p class="Pp"></p>
-<pre>
-    use threads;
+<pre>    use threads;
     use Thread::Semaphore;
-
     sub thr_func
     {
         my $sema = shift;
-
         # Thread 'suspend/resume' signal handler
         $SIG{'STOP'} = sub {
             $sema-&gt;down();      # Thread suspended
             $sema-&gt;up();        # Thread resumes
         };
-
         ...
     }
-
     # Create a semaphore and pass it to a thread
     my $sema = Thread::Semaphore-&gt;new();
     my $thr = threads-&gt;create('thr_func', $sema);
-
     # Suspend the thread
     $sema-&gt;down();
     $thr-&gt;kill('STOP');
-
     ...
-
     # Allow the thread to continue
     $sema-&gt;up();
 </pre>
@@ -731,8 +680,7 @@
 </dl>
 <p class="Pp">If needed, thread warnings can be suppressed by using:</p>
 <p class="Pp"></p>
-<pre>
-    no warnings 'threads';
+<pre>    no warnings 'threads';
 </pre>
 <p class="Pp">in the appropriate scope.</p>
 </section>
@@ -753,8 +701,7 @@
   <dd>The stack size of currently extant threads cannot be changed, therefore,
       the following results in the above error:
     <p class="Pp"></p>
-    <pre>
-    $thr-&gt;set_stack_size($size);
+    <pre>    $thr-&gt;set_stack_size($size);
     </pre>
   </dd>
   <dt id="Cannot~2"><a class="permalink" href="#Cannot~2">Cannot signal threads
@@ -793,12 +740,10 @@
         <span class="Li">&quot;require&quot;</span> (and
         <span class="Li">&quot;import&quot;</span> if needed):</p>
     <p class="Pp"></p>
-    <pre>
-    sub thr_func
+    <pre>    sub thr_func
     {
         require Unsafe::Module
         # Unsafe::Module-&gt;import(...);
-
         ....
     }
     </pre>
@@ -846,21 +791,18 @@
     <p class="Pp">If you want to inherit the parent thread's locale, you can, in
         the parent, set a variable like so:</p>
     <p class="Pp"></p>
-    <pre>
-    $foo = POSIX::setlocale(LC_ALL, NULL);
+    <pre>    $foo = POSIX::setlocale(LC_ALL, NULL);
     </pre>
     <p class="Pp">and then pass to threads-&gt;<b>create()</b> a sub that closes
         over <span class="Li">$foo</span>. Then, in the child, you say</p>
     <p class="Pp"></p>
-    <pre>
-    POSIX::setlocale(LC_ALL, $foo);
+    <pre>    POSIX::setlocale(LC_ALL, $foo);
     </pre>
     <p class="Pp">Or you can use the facilities in threads::shared to pass
         <span class="Li">$foo</span>; or if the environment hasn't changed, in
         the child, do</p>
     <p class="Pp"></p>
-    <pre>
-    POSIX::setlocale(LC_ALL, &quot;&quot;);
+    <pre>    POSIX::setlocale(LC_ALL, &quot;&quot;);
     </pre>
   </dd>
   <dt id="Environment"><a class="permalink" href="#Environment">Environment
@@ -873,8 +815,7 @@
     <p class="Pp">To work around this, set environment variables as part of the
         <i>system</i> call. For example:</p>
     <p class="Pp"></p>
-    <pre>
-    my $msg = 'hello';
+    <pre>    my $msg = 'hello';
     system(&quot;FOO=$msg; echo \$FOO&quot;);   # Outputs 'hello' to STDOUT
     </pre>
     <p class="Pp">On MSWin32, each thread maintains its own set of environment
@@ -891,8 +832,7 @@
         alarms in threads, set up a signal handler in the main thread, and then
         use &quot;THREAD SIGNALLING&quot; to relay the signal to the thread:</p>
     <p class="Pp"></p>
-    <pre>
-  # Create thread with a task that may time out
+    <pre>  # Create thread with a task that may time out
   my $thr = threads-&gt;create(sub {
       threads-&gt;yield();
       eval {
@@ -905,10 +845,8 @@
           warn(&quot;Task in thread timed out\n&quot;);
       }
   };
-
   # Set signal handler to relay SIGALRM to thread
   $SIG{ALRM} = sub { $thr-&gt;kill('ALRM') };
-
   ... # Main thread continues working
     </pre>
   </dd>

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>List::Util(3pm)</title>
 </head>
@@ -28,14 +29,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use List::Util qw(
+<pre>    use List::Util qw(
       reduce any all none notall first
-
       max maxstr min minstr product sum sum0
-
       pairs unpairs pairkeys pairvalues pairfirst pairgrep pairmap
-
       shuffle uniq uniqnum uniqstr
     );
 </pre>
@@ -57,8 +54,7 @@
     value.</p>
 <section class="Ss">
 <h2 class="Ss" id="reduce"><a class="permalink" href="#reduce">reduce</a></h2>
-<pre>
-    $result = reduce { BLOCK } @list
+<pre>    $result = reduce { BLOCK } @list
 </pre>
 <p class="Pp">Reduces <span class="Li">@list</span> by calling
     <span class="Li">&quot;BLOCK&quot;</span> in a scalar context multiple
@@ -79,18 +75,15 @@
     implemented like this, but instead in a more efficient manner in individual
     C functions).</p>
 <p class="Pp"></p>
-<pre>
-    $foo = reduce { defined($a)            ? $a :
+<pre>    $foo = reduce { defined($a)            ? $a :
                     $code-&gt;(local $_ = $b) ? $b :
                                              undef } undef, @list # first
-
     $foo = reduce { $a &gt; $b ? $a : $b } 1..10       # max
     $foo = reduce { $a gt $b ? $a : $b } 'A'..'Z'   # maxstr
     $foo = reduce { $a &lt; $b ? $a : $b } 1..10       # min
     $foo = reduce { $a lt $b ? $a : $b } 'aa'..'zz' # minstr
     $foo = reduce { $a + $b } 1 .. 10               # sum
     $foo = reduce { $a . $b } @bar                  # concat
-
     $foo = reduce { $a || $code-&gt;(local $_ = $b) } 0, @bar   # any
     $foo = reduce { $a &amp;&amp; $code-&gt;(local $_ = $b) } 1, @bar   # all
     $foo = reduce { $a &amp;&amp; !$code-&gt;(local $_ = $b) } 1, @bar  # none
@@ -102,8 +95,7 @@
     make sure that you always pass that identity value as the first argument to
     prevent <span class="Li">&quot;undef&quot;</span> being returned</p>
 <p class="Pp"></p>
-<pre>
-  $foo = reduce { $a + $b } 0, @values;             # sum with 0 identity value
+<pre>  $foo = reduce { $a + $b } 0, @values;             # sum with 0 identity value
 </pre>
 <p class="Pp">The above example code blocks also suggest how to use
     <span class="Li">&quot;reduce&quot;</span> to build a more efficient
@@ -111,8 +103,7 @@
     <span class="Li">&quot;map&quot;</span> block. For example, to find the
     total length of all the strings in a list, we could use</p>
 <p class="Pp"></p>
-<pre>
-    $total = sum map { length } @strings;
+<pre>    $total = sum map { length } @strings;
 </pre>
 <p class="Pp">However, this produces a list of temporary integer values as long
     as the original list of strings, only to reduce it down to a single value
@@ -120,16 +111,14 @@
     <span class="Li">&quot;reduce&quot;</span> with a code block that
     accumulates lengths by writing this instead as:</p>
 <p class="Pp"></p>
-<pre>
-    $total = reduce { $a + length $b } 0, @strings
+<pre>    $total = reduce { $a + length $b } 0, @strings
 </pre>
 <p class="Pp">The remaining list-reduction functions are all specialisations of
     this generic idea.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="any"><a class="permalink" href="#any">any</a></h2>
-<pre>
-    my $bool = any { BLOCK } @list;
+<pre>    my $bool = any { BLOCK } @list;
 </pre>
 <p class="Pp"><i>Since version 1.33.</i></p>
 <p class="Pp">Similar to <span class="Li">&quot;grep&quot;</span> in that it
@@ -143,8 +132,7 @@
     conditional can be written using <span class="Li">&quot;any&quot;</span>
     instead, as it can short-circuit after the first true result.</p>
 <p class="Pp"></p>
-<pre>
-    if( any { length &gt; 10 } @strings ) {
+<pre>    if( any { length &gt; 10 } @strings ) {
         # at least one string has more than 10 characters
     }
 </pre>
@@ -154,8 +142,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="all"><a class="permalink" href="#all">all</a></h2>
-<pre>
-    my $bool = all { BLOCK } @list;
+<pre>    my $bool = all { BLOCK } @list;
 </pre>
 <p class="Pp"><i>Since version 1.33.</i></p>
 <p class="Pp">Similar to &quot;any&quot;, except that it requires all elements
@@ -173,9 +160,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="notall"><a class="permalink" href="#notall">notall</a></h2>
-<pre>
-    my $bool = none { BLOCK } @list;
-
+<pre>    my $bool = none { BLOCK } @list;
     my $bool = notall { BLOCK } @list;
 </pre>
 <p class="Pp"><i>Since version 1.33.</i></p>
@@ -191,8 +176,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="first"><a class="permalink" href="#first">first</a></h2>
-<pre>
-    my $val = first { BLOCK } @list;
+<pre>    my $val = first { BLOCK } @list;
 </pre>
 <p class="Pp">Similar to <span class="Li">&quot;grep&quot;</span> in that it
     evaluates <span class="Li">&quot;BLOCK&quot;</span> setting
@@ -203,109 +187,95 @@
     <span class="Li">@list</span> was empty then
     <span class="Li">&quot;undef&quot;</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = first { defined($_) } @list    # first defined value in @list
+<pre>    $foo = first { defined($_) } @list    # first defined value in @list
     $foo = first { $_ &gt; $value } @list    # first value in @list which
                                           # is greater than $value
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="max"><a class="permalink" href="#max">max</a></h2>
-<pre>
-    my $num = max @list;
+<pre>    my $num = max @list;
 </pre>
 <p class="Pp">Returns the entry in the list with the highest numerical value. If
     the list is empty then <span class="Li">&quot;undef&quot;</span> is
     returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = max 1..10                # 10
+<pre>    $foo = max 1..10                # 10
     $foo = max 3,9,12               # 12
     $foo = max @bar, @baz           # whatever
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="maxstr"><a class="permalink" href="#maxstr">maxstr</a></h2>
-<pre>
-    my $str = maxstr @list;
+<pre>    my $str = maxstr @list;
 </pre>
 <p class="Pp">Similar to &quot;max&quot;, but treats all the entries in the list
     as strings and returns the highest string as defined by the
     <span class="Li">&quot;gt&quot;</span> operator. If the list is empty then
     <span class="Li">&quot;undef&quot;</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = maxstr 'A'..'Z'          # 'Z'
+<pre>    $foo = maxstr 'A'..'Z'          # 'Z'
     $foo = maxstr &quot;hello&quot;,&quot;world&quot;   # &quot;world&quot;
     $foo = maxstr @bar, @baz        # whatever
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="min"><a class="permalink" href="#min">min</a></h2>
-<pre>
-    my $num = min @list;
+<pre>    my $num = min @list;
 </pre>
 <p class="Pp">Similar to &quot;max&quot; but returns the entry in the list with
     the lowest numerical value. If the list is empty then
     <span class="Li">&quot;undef&quot;</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = min 1..10                # 1
+<pre>    $foo = min 1..10                # 1
     $foo = min 3,9,12               # 3
     $foo = min @bar, @baz           # whatever
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="minstr"><a class="permalink" href="#minstr">minstr</a></h2>
-<pre>
-    my $str = minstr @list;
+<pre>    my $str = minstr @list;
 </pre>
 <p class="Pp">Similar to &quot;min&quot;, but treats all the entries in the list
     as strings and returns the lowest string as defined by the
     <span class="Li">&quot;lt&quot;</span> operator. If the list is empty then
     <span class="Li">&quot;undef&quot;</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = minstr 'A'..'Z'          # 'A'
+<pre>    $foo = minstr 'A'..'Z'          # 'A'
     $foo = minstr &quot;hello&quot;,&quot;world&quot;   # &quot;hello&quot;
     $foo = minstr @bar, @baz        # whatever
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="product"><a class="permalink" href="#product">product</a></h2>
-<pre>
-    my $num = product @list;
+<pre>    my $num = product @list;
 </pre>
 <p class="Pp"><i>Since version 1.35.</i></p>
 <p class="Pp">Returns the numerical product of all the elements in
     <span class="Li">@list</span>. If <span class="Li">@list</span> is empty
     then <span class="Li">1</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = product 1..10            # 3628800
+<pre>    $foo = product 1..10            # 3628800
     $foo = product 3,9,12           # 324
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="sum"><a class="permalink" href="#sum">sum</a></h2>
-<pre>
-    my $num_or_undef = sum @list;
+<pre>    my $num_or_undef = sum @list;
 </pre>
 <p class="Pp">Returns the numerical sum of all the elements in
     <span class="Li">@list</span>. For backwards compatibility, if
     <span class="Li">@list</span> is empty then
     <span class="Li">&quot;undef&quot;</span> is returned.</p>
 <p class="Pp"></p>
-<pre>
-    $foo = sum 1..10                # 55
+<pre>    $foo = sum 1..10                # 55
     $foo = sum 3,9,12               # 24
     $foo = sum @bar, @baz           # whatever
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="sum0"><a class="permalink" href="#sum0">sum0</a></h2>
-<pre>
-    my $num = sum0 @list;
+<pre>    my $num = sum0 @list;
 </pre>
 <p class="Pp"><i>Since version 1.26.</i></p>
 <p class="Pp">Similar to &quot;sum&quot;, except this returns 0 when given an
@@ -336,9 +306,7 @@
     inside of the control block. In particular, the following example is
     <b>UNSAFE</b>:</p>
 <p class="Pp"></p>
-<pre>
- my @kvlist = ...
-
+<pre> my @kvlist = ...
  foreach (qw( some keys here )) {
     my @items = pairgrep { $a eq $_ } @kvlist;
     ...
@@ -346,16 +314,14 @@
 </pre>
 <p class="Pp">Instead, write this using a lexical variable:</p>
 <p class="Pp"></p>
-<pre>
- foreach my $key (qw( some keys here )) {
+<pre> foreach my $key (qw( some keys here )) {
     my @items = pairgrep { $a eq $key } @kvlist;
     ...
  }
 </pre>
 <section class="Ss">
 <h2 class="Ss" id="pairs"><a class="permalink" href="#pairs">pairs</a></h2>
-<pre>
-    my @pairs = pairs @kvlist;
+<pre>    my @pairs = pairs @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.29.</i></p>
 <p class="Pp">A convenient shortcut to operating on even-sized lists of pairs,
@@ -363,14 +329,12 @@
     references, each containing two items from the given list. It is a more
     efficient version of</p>
 <p class="Pp"></p>
-<pre>
-    @pairs = pairmap { [ $a, $b ] } @kvlist
+<pre>    @pairs = pairmap { [ $a, $b ] } @kvlist
 </pre>
 <p class="Pp">It is most convenient to use in a
     <span class="Li">&quot;foreach&quot;</span> loop, for example:</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $pair ( pairs @kvlist ) {
+<pre>    foreach my $pair ( pairs @kvlist ) {
        my ( $key, $value ) = @$pair;
        ...
     }
@@ -381,8 +345,7 @@
     <span class="Li">&quot;value&quot;</span>. The following code is
   equivalent:</p>
 <p class="Pp"></p>
-<pre>
-    foreach my $pair ( pairs @kvlist ) {
+<pre>    foreach my $pair ( pairs @kvlist ) {
        my $key   = $pair-&gt;key;
        my $value = $pair-&gt;value;
        ...
@@ -391,8 +354,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="unpairs"><a class="permalink" href="#unpairs">unpairs</a></h2>
-<pre>
-    my @kvlist = unpairs @pairs
+<pre>    my @kvlist = unpairs @pairs
 </pre>
 <p class="Pp"><i>Since version 1.42.</i></p>
 <p class="Pp">The inverse function to <span class="Li">&quot;pairs&quot;</span>;
@@ -401,8 +363,7 @@
     two values from each of the pairs, in order. This is notionally equivalent
     to</p>
 <p class="Pp"></p>
-<pre>
-    my @kvlist = map { @{$_}[0,1] } @pairs
+<pre>    my @kvlist = map { @{$_}[0,1] } @pairs
 </pre>
 <p class="Pp">except that it is implemented more efficiently internally.
     Specifically, for any input item it will extract exactly two values for the
@@ -414,10 +375,8 @@
     near-equivalents of the other <span class="Li">&quot;pair*&quot;</span>
     higher-order functions:</p>
 <p class="Pp"></p>
-<pre>
-    @kvlist = unpairs grep { FUNC } pairs @kvlist
+<pre>    @kvlist = unpairs grep { FUNC } pairs @kvlist
     # Like pairgrep, but takes $_ instead of $a and $b
-
     @kvlist = unpairs map { FUNC } pairs @kvlist
     # Like pairmap, but takes $_ instead of $a and $b
 </pre>
@@ -426,43 +385,36 @@
 <p class="Pp">Finally, this technique can be used to implement a sort on a
     keyvalue pair list; e.g.:</p>
 <p class="Pp"></p>
-<pre>
-    @kvlist = unpairs sort { $a-&gt;key cmp $b-&gt;key } pairs @kvlist
+<pre>    @kvlist = unpairs sort { $a-&gt;key cmp $b-&gt;key } pairs @kvlist
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pairkeys"><a class="permalink" href="#pairkeys">pairkeys</a></h2>
-<pre>
-    my @keys = pairkeys @kvlist;
+<pre>    my @keys = pairkeys @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.29.</i></p>
 <p class="Pp">A convenient shortcut to operating on even-sized lists of pairs,
     this function returns a list of the the first values of each of the pairs in
     the given list. It is a more efficient version of</p>
 <p class="Pp"></p>
-<pre>
-    @keys = pairmap { $a } @kvlist
+<pre>    @keys = pairmap { $a } @kvlist
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pairvalues"><a class="permalink" href="#pairvalues">pairvalues</a></h2>
-<pre>
-    my @values = pairvalues @kvlist;
+<pre>    my @values = pairvalues @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.29.</i></p>
 <p class="Pp">A convenient shortcut to operating on even-sized lists of pairs,
     this function returns a list of the the second values of each of the pairs
     in the given list. It is a more efficient version of</p>
 <p class="Pp"></p>
-<pre>
-    @values = pairmap { $b } @kvlist
+<pre>    @values = pairmap { $b } @kvlist
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pairgrep"><a class="permalink" href="#pairgrep">pairgrep</a></h2>
-<pre>
-    my @kvlist = pairgrep { BLOCK } @kvlist;
-
+<pre>    my @kvlist = pairgrep { BLOCK } @kvlist;
     my $count = pairgrep { BLOCK } @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.29.</i></p>
@@ -478,8 +430,7 @@
     in scalar context that it returns a number half the size of the count of
     items it would have returned in list context).</p>
 <p class="Pp"></p>
-<pre>
-    @subset = pairgrep { $a =~ m/^[[:upper:]]+$/ } @kvlist
+<pre>    @subset = pairgrep { $a =~ m/^[[:upper:]]+$/ } @kvlist
 </pre>
 <p class="Pp">As with <span class="Li">&quot;grep&quot;</span> aliasing
     <span class="Li">$_</span> to list elements,
@@ -490,9 +441,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pairfirst"><a class="permalink" href="#pairfirst">pairfirst</a></h2>
-<pre>
-    my ( $key, $val ) = pairfirst { BLOCK } @kvlist;
-
+<pre>    my ( $key, $val ) = pairfirst { BLOCK } @kvlist;
     my $found = pairfirst { BLOCK } @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.30.</i></p>
@@ -506,8 +455,7 @@
     an empty list of no such pair was found. In scalar context it returns a
     simple boolean value, rather than either the key or the value found.</p>
 <p class="Pp"></p>
-<pre>
-    ( $key, $value ) = pairfirst { $a =~ m/^[[:upper:]]+$/ } @kvlist
+<pre>    ( $key, $value ) = pairfirst { $a =~ m/^[[:upper:]]+$/ } @kvlist
 </pre>
 <p class="Pp">As with <span class="Li">&quot;grep&quot;</span> aliasing
     <span class="Li">$_</span> to list elements,
@@ -518,9 +466,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pairmap"><a class="permalink" href="#pairmap">pairmap</a></h2>
-<pre>
-    my @list = pairmap { BLOCK } @kvlist;
-
+<pre>    my @list = pairmap { BLOCK } @kvlist;
     my $count = pairmap { BLOCK } @kvlist;
 </pre>
 <p class="Pp"><i>Since version 1.29.</i></p>
@@ -533,8 +479,7 @@
     <span class="Li">&quot;BLOCK&quot;</span> in list context, or the count of
     the number of items that would have been returned in scalar context.</p>
 <p class="Pp"></p>
-<pre>
-    @result = pairmap { &quot;The key $a has value $b&quot; } @kvlist
+<pre>    @result = pairmap { &quot;The key $a has value $b&quot; } @kvlist
 </pre>
 <p class="Pp">As with <span class="Li">&quot;map&quot;</span> aliasing
     <span class="Li">$_</span> to list elements,
@@ -551,19 +496,16 @@
   FUNCTIONS</a></h1>
 <section class="Ss">
 <h2 class="Ss" id="shuffle"><a class="permalink" href="#shuffle">shuffle</a></h2>
-<pre>
-    my @values = shuffle @values;
+<pre>    my @values = shuffle @values;
 </pre>
 <p class="Pp">Returns the values of the input in a random order</p>
 <p class="Pp"></p>
-<pre>
-    @cards = shuffle 0..51      # 0..51 in a random order
+<pre>    @cards = shuffle 0..51      # 0..51 in a random order
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="uniq"><a class="permalink" href="#uniq">uniq</a></h2>
-<pre>
-    my @subset = uniq @values
+<pre>    my @subset = uniq @values
 </pre>
 <p class="Pp"><i>Since version 1.45.</i></p>
 <p class="Pp">Filters a list of values to remove subsequent duplicates, as
@@ -571,8 +513,7 @@
     <span class="Li">&quot;undef&quot;</span> test. Preserves the order of
     unique elements, and retains the first value of any duplicate set.</p>
 <p class="Pp"></p>
-<pre>
-    my $count = uniq @values
+<pre>    my $count = uniq @values
 </pre>
 <p class="Pp">In scalar context, returns the number of elements that would have
     been returned as a list.</p>
@@ -584,16 +525,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="uniqnum"><a class="permalink" href="#uniqnum">uniqnum</a></h2>
-<pre>
-    my @subset = uniqnum @values
+<pre>    my @subset = uniqnum @values
 </pre>
 <p class="Pp"><i>Since version 1.44.</i></p>
 <p class="Pp">Filters a list of values to remove subsequent duplicates, as
     judged by a numerical equality test. Preserves the order of unique elements,
     and retains the first value of any duplicate set.</p>
 <p class="Pp"></p>
-<pre>
-    my $count = uniqnum @values
+<pre>    my $count = uniqnum @values
 </pre>
 <p class="Pp">In scalar context, returns the number of elements that would have
     been returned as a list.</p>
@@ -613,16 +552,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="uniqstr"><a class="permalink" href="#uniqstr">uniqstr</a></h2>
-<pre>
-    my @subset = uniqstr @values
+<pre>    my @subset = uniqstr @values
 </pre>
 <p class="Pp"><i>Since version 1.45.</i></p>
 <p class="Pp">Filters a list of values to remove subsequent duplicates, as
     judged by a string equality test. Preserves the order of unique elements,
     and retains the first value of any duplicate set.</p>
 <p class="Pp"></p>
-<pre>
-    my $count = uniqstr @values
+<pre>    my $count = uniqstr @values
 </pre>
 <p class="Pp">In scalar context, returns the number of elements that would have
     been returned as a list.</p>
@@ -637,36 +574,30 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="head"><a class="permalink" href="#head">head</a></h2>
-<pre>
-    my @values = head $size, @list;
+<pre>    my @values = head $size, @list;
 </pre>
 <p class="Pp">Returns the first <span class="Li">$size</span> elements from
     <span class="Li">@list</span>. If <span class="Li">$size</span> is negative,
     returns all but the last <span class="Li">$size</span> elements from
     <span class="Li">@list</span>.</p>
 <p class="Pp"></p>
-<pre>
-    @result = head 2, qw( foo bar baz );
+<pre>    @result = head 2, qw( foo bar baz );
     # foo, bar
-
     @result = head -2, qw( foo bar baz );
     # foo
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="tail"><a class="permalink" href="#tail">tail</a></h2>
-<pre>
-    my @values = tail $size, @list;
+<pre>    my @values = tail $size, @list;
 </pre>
 <p class="Pp">Returns the last <span class="Li">$size</span> elements from
     <span class="Li">@list</span>. If <span class="Li">$size</span> is negative,
     returns all but the first <span class="Li">$size</span> elements from
     <span class="Li">@list</span>.</p>
 <p class="Pp"></p>
-<pre>
-    @result = tail 2, qw( foo bar baz );
+<pre>    @result = tail 2, qw( foo bar baz );
     # bar, baz
-
     @result = tail -2, qw( foo bar baz );
     # baz
 </pre>
@@ -683,18 +614,15 @@
     executed after the block has been re-used for the next iteration, these
     lexicals will not see the correct values. For example:</p>
 <p class="Pp"></p>
-<pre>
- my @subs = pairmap {
+<pre> my @subs = pairmap {
     my $var = &quot;$a is $b&quot;;
     sub { print &quot;$var\n&quot; };
  } one =&gt; 1, two =&gt; 2, three =&gt; 3;
-
  $_-&gt;() for @subs;
 </pre>
 <p class="Pp">Will incorrectly print</p>
 <p class="Pp"></p>
-<pre>
- three is 3
+<pre> three is 3
  three is 3
  three is 3
 </pre>
@@ -708,8 +636,7 @@
     <span class="Li">&quot;MULTICALL&quot;</span> logic, and does get fresh SVs
     allocated each time:</p>
 <p class="Pp"></p>
-<pre>
- my @subs = pairmap {
+<pre> my @subs = pairmap {
     {
        my $var = &quot;$a is $b&quot;;
        sub { print &quot;$var\n&quot;; }
@@ -728,10 +655,8 @@
     (especially bigints) that are too large to fit in the native platform types.
     For example,</p>
 <p class="Pp"></p>
-<pre>
- my $x = Math::BigInt-&gt;new( &quot;1&quot; x 100 );
+<pre> my $x = Math::BigInt-&gt;new( &quot;1&quot; x 100 );
  my $y = $x + 1;
-
  say for uniqnum( $x, $y );
 </pre>
 <p class="Pp">Will print just the value of <span class="Li">$x</span>, believing
@@ -746,13 +671,9 @@
 <p class="Pp">The following are additions that have been requested, but I have
     been reluctant to add due to them being very simple to implement in perl</p>
 <p class="Pp"></p>
-<pre>
-  # How many elements are true
-
+<pre>  # How many elements are true
   sub true { scalar grep { $_ } @_ }
-
   # How many elements are false
-
   sub false { scalar grep { !$_ } @_ }
 </pre>
 </section>

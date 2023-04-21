@@ -9,15 +9,16 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>Test2::API::Context(3)</title>
+  <title>Test2::API::Context(3pm)</title>
 </head>
 <body>
 <table class="head">
   <tr>
-    <td class="head-ltitle">Test2::API::Context(3)</td>
-    <td class="head-vol">User Contributed Perl Documentation</td>
-    <td class="head-rtitle">Test2::API::Context(3)</td>
+    <td class="head-ltitle">Test2::API::Context(3pm)</td>
+    <td class="head-vol">Perl Programmers Reference Guide</td>
+    <td class="head-rtitle">Test2::API::Context(3pm)</td>
   </tr>
 </table>
 <div class="manual-text">
@@ -40,20 +41,16 @@
     context you should always use <span class="Li">&quot;context()&quot;</span>
     which is exported by the Test2::API module.</p>
 <p class="Pp"></p>
-<pre>
-    use Test2::API qw/context/;
-
+<pre>    use Test2::API qw/context/;
     sub my_ok {
         my ($bool, $name) = @_;
         my $ctx = context();
-
         if ($bool) {
             $ctx-&gt;pass($name);
         }
         else {
             $ctx-&gt;fail($name);
         }
-
         $ctx-&gt;release; # You MUST do this!
         return $bool;
     }
@@ -62,12 +59,10 @@
     context. Once you grab a context, any tool you call before releasing your
     context will inherit it:</p>
 <p class="Pp"></p>
-<pre>
-    sub wrapper {
+<pre>    sub wrapper {
         my ($bool, $name) = @_;
         my $ctx = context();
         $ctx-&gt;diag(&quot;wrapping my_ok&quot;);
-
         my $out = my_ok($bool, $name);
         $ctx-&gt;release; # You MUST do this!
         return $out;
@@ -174,8 +169,7 @@
     <p class="Pp">This <b>DOES NOT</b> affect context on other hubs, only the
         hub used by the context will be affected.</p>
     <p class="Pp"></p>
-    <pre>
-    my $ctx = ...;
+    <pre>    my $ctx = ...;
     $ctx-&gt;do_in_context(sub {
         my $ctx = context(); # returns the $ctx the sub is called on
     });
@@ -230,25 +224,20 @@
       not plan to do anything with the context after sending the event. This
       helps write more clear and compact code.
     <p class="Pp"></p>
-    <pre>
-    sub shorthand {
+    <pre>    sub shorthand {
         my ($bool, $name) = @_;
         my $ctx = context();
         return $ctx-&gt;pass_and_release($name) if $bool;
-
         ... Handle a failure ...
     }
-
     sub longform {
         my ($bool, $name) = @_;
         my $ctx = context();
-
         if ($bool) {
             $ctx-&gt;pass($name);
             $ctx-&gt;release;
             return 1;
         }
-
         ... Handle a failure ...
     }
     </pre>
@@ -280,25 +269,20 @@
       <span class="Li">&quot;release()&quot;</span>. This can be used to write
       clearer and shorter code.
     <p class="Pp"></p>
-    <pre>
-    sub shorthand {
+    <pre>    sub shorthand {
         my ($bool, $name) = @_;
         my $ctx = context();
         return $ctx-&gt;fail_and_release($name) unless $bool;
-
         ... Handle a success ...
     }
-
     sub longform {
         my ($bool, $name) = @_;
         my $ctx = context();
-
         unless ($bool) {
             $ctx-&gt;pass($name);
             $ctx-&gt;release;
             return 1;
         }
-
         ... Handle a success ...
     }
     </pre>
@@ -344,8 +328,7 @@
     <p class="Pp">This example sends a single assertion, a note (comment for
         stdout in Test::Builder talk) and sets the plan to 1.</p>
     <p class="Pp"></p>
-    <pre>
-    my $event = $ctx-&gt;send_event(
+    <pre>    my $event = $ctx-&gt;send_event(
         plan   =&gt; {count =&gt; 1},
         assert =&gt; {pass  =&gt; 1, details =&gt; &quot;A passing assert&quot;},
         info =&gt; [{tag =&gt; 'NOTE', details =&gt; &quot;This is a note&quot;}],
@@ -359,12 +342,10 @@
   <dd>This is a combination of <span class="Li">&quot;send_ev2()&quot;</span>
       and <span class="Li">&quot;release()&quot;</span>.
     <p class="Pp"></p>
-    <pre>
-    sub shorthand {
+    <pre>    sub shorthand {
         my $ctx = context();
         return $ctx-&gt;send_ev2_and_release(assert =&gt; {pass =&gt; 1, details =&gt; 'foo'});
     }
-
     sub longform {
         my $ctx = context();
         my $event = $ctx-&gt;send_ev2(assert =&gt; {pass =&gt; 1, details =&gt; 'foo'});
@@ -381,13 +362,11 @@
         fully qualified package name prefixed with a '+'. The event is returned
         after it is sent.</p>
     <p class="Pp"></p>
-    <pre>
-    my $event = $ctx-&gt;send_event('Ok', ...);
+    <pre>    my $event = $ctx-&gt;send_event('Ok', ...);
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    my $event = $ctx-&gt;send_event('+Test2::Event::Ok', ...);
+    <pre>    my $event = $ctx-&gt;send_event('+Test2::Event::Ok', ...);
     </pre>
   </dd>
   <dt>$event = $ctx-&gt;build_event($Type, %parameters)</dt>
@@ -403,12 +382,10 @@
         <span class="Li">&quot;send_event()&quot;</span> and
         <span class="Li">&quot;release()&quot;</span>.</p>
     <p class="Pp"></p>
-    <pre>
-    sub shorthand {
+    <pre>    sub shorthand {
         my $ctx = context();
         return $ctx-&gt;send_event_and_release(Pass =&gt; { name =&gt; 'foo' });
     }
-
     sub longform {
         my $ctx = context();
         my $event = $ctx-&gt;send_event(Pass =&gt; { name =&gt; 'foo' });
@@ -434,8 +411,7 @@
 <p class="Pp">This is how you add a global init callback. Global callbacks
     happen for every context for any hub or stack.</p>
 <p class="Pp"></p>
-<pre>
-    Test2::API::test2_add_callback_context_init(sub {
+<pre>    Test2::API::test2_add_callback_context_init(sub {
         my $ctx = shift;
         ...
     });
@@ -444,8 +420,7 @@
 <p class="Pp">This is how you add an init callback for all contexts created for
     a given hub. These callbacks will not run for other hubs.</p>
 <p class="Pp"></p>
-<pre>
-    $hub-&gt;add_context_init(sub {
+<pre>    $hub-&gt;add_context_init(sub {
         my $ctx = shift;
         ...
     });
@@ -457,8 +432,7 @@
     <span class="Li">&quot;context()&quot;</span> is returning an existing
     context.</p>
 <p class="Pp"></p>
-<pre>
-    my $ctx = context(on_init =&gt; sub {
+<pre>    my $ctx = context(on_init =&gt; sub {
         my $ctx = shift;
         ...
     });
@@ -474,8 +448,7 @@
 <p class="Pp">This is how you add a global release callback. Global callbacks
     happen for every context for any hub or stack.</p>
 <p class="Pp"></p>
-<pre>
-    Test2::API::test2_add_callback_context_release(sub {
+<pre>    Test2::API::test2_add_callback_context_release(sub {
         my $ctx = shift;
         ...
     });
@@ -484,8 +457,7 @@
 <p class="Pp">This is how you add a release callback for all contexts created
     for a given hub. These callbacks will not run for other hubs.</p>
 <p class="Pp"></p>
-<pre>
-    $hub-&gt;add_context_release(sub {
+<pre>    $hub-&gt;add_context_release(sub {
         my $ctx = shift;
         ...
     });
@@ -496,8 +468,7 @@
     does not matter if a new one is generated, or if an existing one is
     returned.</p>
 <p class="Pp"></p>
-<pre>
-    my $ctx = context(on_release =&gt; sub {
+<pre>    my $ctx = context(on_release =&gt; sub {
         my $ctx = shift;
         ...
     });
@@ -537,7 +508,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<p class="Pp">Copyright 2020 Chad Granum &lt;exodist@cpan.org&gt;.</p>
+<p class="Pp">Copyright 2019 Chad Granum &lt;exodist@cpan.org&gt;.</p>
 <p class="Pp">This program is free software; you can redistribute it and/or
     modify it under the same terms as Perl itself.</p>
 <p class="Pp">See <i>http://dev.perl.org/licenses/</i></p>
@@ -545,8 +516,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2020-10-22</td>
-    <td class="foot-os">perl v5.30.2</td>
+    <td class="foot-date">2019-10-21</td>
+    <td class="foot-os">perl v5.30.3</td>
   </tr>
 </table>
 </body>

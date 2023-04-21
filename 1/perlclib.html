@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLCLIB(1)</title>
 </head>
@@ -66,13 +67,10 @@
     See also the <span class="Li">&quot;perlapio&quot;</span> documentation for
     more information about the following functions:</p>
 <p class="Pp"></p>
-<pre>
- Instead Of:                 Use:
-
+<pre> Instead Of:                 Use:
  stdin                       PerlIO_stdin()
  stdout                      PerlIO_stdout()
  stderr                      PerlIO_stderr()
-
  fopen(fn, mode)             PerlIO_open(fn, mode)
  freopen(fn, mode, stream)   PerlIO_reopen(fn, mode, perlio) (Dep-
                                recated)
@@ -83,11 +81,8 @@
 <section class="Ss">
 <h2 class="Ss" id="File_Input_and_Output"><a class="permalink" href="#File_Input_and_Output">File
   Input and Output</a></h2>
-<pre>
- Instead Of:                 Use:
-
+<pre> Instead Of:                 Use:
  fprintf(stream, fmt, ...)   PerlIO_printf(perlio, fmt, ...)
-
  [f]getc(stream)             PerlIO_getc(perlio)
  [f]putc(stream, n)          PerlIO_putc(perlio, n)
  ungetc(n, stream)           PerlIO_ungetc(perlio, n)
@@ -97,33 +92,26 @@
     <span class="Li">&quot;fwrite&quot;</span> are slightly different from their
     C library counterparts:</p>
 <p class="Pp"></p>
-<pre>
- fread(p, size, n, stream)   PerlIO_read(perlio, buf, numbytes)
+<pre> fread(p, size, n, stream)   PerlIO_read(perlio, buf, numbytes)
  fwrite(p, size, n, stream)  PerlIO_write(perlio, buf, numbytes)
-
  fputs(s, stream)            PerlIO_puts(perlio, s)
 </pre>
 <p class="Pp">There is no equivalent to
     <span class="Li">&quot;fgets&quot;</span>; one should use
     <span class="Li">&quot;sv_gets&quot;</span> instead:</p>
 <p class="Pp"></p>
-<pre>
- fgets(s, n, stream)         sv_gets(sv, perlio, append)
+<pre> fgets(s, n, stream)         sv_gets(sv, perlio, append)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="File_Positioning"><a class="permalink" href="#File_Positioning">File
   Positioning</a></h2>
-<pre>
- Instead Of:                 Use:
-
+<pre> Instead Of:                 Use:
  feof(stream)                PerlIO_eof(perlio)
  fseek(stream, n, whence)    PerlIO_seek(perlio, n, whence)
  rewind(stream)              PerlIO_rewind(perlio)
-
  fgetpos(stream, p)          PerlIO_getpos(perlio, sv)
  fsetpos(stream, p)          PerlIO_setpos(perlio, sv)
-
  ferror(stream)              PerlIO_error(perlio)
  clearerr(stream)            PerlIO_clearerr(perlio)
 </pre>
@@ -131,9 +119,7 @@
 <section class="Ss">
 <h2 class="Ss" id="Memory_Management_and_String_Handling"><a class="permalink" href="#Memory_Management_and_String_Handling">Memory
   Management and String Handling</a></h2>
-<pre>
- Instead Of:                    Use:
-
+<pre> Instead Of:                    Use:
  t* p = malloc(n)               Newx(p, n, t)
  t* p = calloc(n, s)            Newxz(p, n, t)
  p = realloc(p, n)              Renew(p, n, t)
@@ -143,16 +129,13 @@
  memset(dst, 0, n * sizeof(t))  Zero(dst, n, t)
  memzero(dst, 0)                Zero(dst, n, char)
  free(p)                        Safefree(p)
-
  strdup(p)                      savepv(p)
  strndup(p, n)                  savepvn(p, n) (Hey, strndup doesn't
                                                exist!)
-
  strstr(big, little)            instr(big, little)
  strcmp(s1, s2)                 strLE(s1, s2) / strEQ(s1, s2)
                                               / strGT(s1,s2)
  strncmp(s1, s2, n)             strnNE(s1, s2, n) / strnEQ(s1, s2, n)
-
  memcmp(p1, p2, n)              memNE(p1, p2, n)
  !memcmp(p1, p2, n)             memEQ(p1, p2, n)
 </pre>
@@ -165,8 +148,7 @@
     internally instead of raw <span class="Li">&quot;char *&quot;</span>
     strings:</p>
 <p class="Pp"></p>
-<pre>
- strlen(s)                   sv_len(sv)
+<pre> strlen(s)                   sv_len(sv)
  strcpy(dt, src)             sv_setpv(sv, s)
  strncpy(dt, src, n)         sv_setpvn(sv, s, n)
  strcat(dt, src)             sv_catpv(sv, s)
@@ -185,8 +167,7 @@
     sooner rather than later. Poisoning can be done using the <b>Poison()</b>
     macros, which have similar arguments to <b>Zero()</b>:</p>
 <p class="Pp"></p>
-<pre>
- PoisonWith(dst, n, t, b)    scribble memory with byte b
+<pre> PoisonWith(dst, n, t, b)    scribble memory with byte b
  PoisonNew(dst, n, t)        equal to PoisonWith(dst, n, t, 0xAB)
  PoisonFree(dst, n, t)       equal to PoisonWith(dst, n, t, 0xEF)
  Poison(dst, n, t)           equal to PoisonFree(dst, n, t)
@@ -210,9 +191,7 @@
     8-bit characters are as Unicode defines, them, the same as ISO-8859-1, often
     called Latin 1.</p>
 <p class="Pp"></p>
-<pre>
- Instead Of:  Use for ASCII:   Use for Latin1:      Use for locale:
-
+<pre> Instead Of:  Use for ASCII:   Use for Latin1:      Use for locale:
  isalnum(c)  isALPHANUMERIC(c) isALPHANUMERIC_L1(c) isALPHANUMERIC_LC(c)
  isalpha(c)  isALPHA(c)        isALPHA_L1(c)        isALPHA_LC(u )
  isascii(c)  isASCII(c)                             isASCII_LC(c)
@@ -226,7 +205,6 @@
  isspace(c)  isSPACE(c)        isSPACE_L1(c)        isSPACE_LC(c)
  isupper(c)  isUPPER(c)        isUPPER_L1(c)        isUPPER_LC(c)
  isxdigit(c) isXDIGIT(c)       isXDIGIT_L1(c)       isXDIGIT_LC(c)
-
  tolower(c)  toLOWER(c)        toLOWER_L1(c)        toLOWER_LC(c)
  toupper(c)  toUPPER(c)                             toUPPER_LC(c)
 </pre>
@@ -245,9 +223,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss"><i>stdlib.h</i> functions</h2>
-<pre>
- Instead Of:                 Use:
-
+<pre> Instead Of:                 Use:
  atof(s)                     Atof(s)
  atoi(s)                     grok_atoUV(s, &amp;uv, &amp;e)
  atol(s)                     grok_atoUV(s, &amp;uv, &amp;e)
@@ -258,8 +234,7 @@
 <p class="Pp">Typical use is to do range checks on
     <span class="Li">&quot;uv&quot;</span> before casting:</p>
 <p class="Pp"></p>
-<pre>
-  int i; UV uv;
+<pre>  int i; UV uv;
   char* end_ptr = input_end;
   if (grok_atoUV(input, &amp;uv, &amp;end_ptr)
       &amp;&amp; uv &lt;= INT_MAX)
@@ -285,14 +260,11 @@
     those 2 functions are part of the 1989 ANSI C spec we suspect you'll find
     them everywhere by now.</p>
 <p class="Pp"></p>
-<pre>
- int rand()                  double Drand01()
+<pre> int rand()                  double Drand01()
  srand(n)                    { seedDrand01((Rand_seed_t)n);
                                PL_srand_called = TRUE; }
-
  exit(n)                     my_exit(n)
  system(s)                   Don't. Look at pp_system or use my_popen.
-
  getenv(s)                   PerlEnv_getenv(s)
  setenv(s, val)              my_setenv(s, val)
 </pre>

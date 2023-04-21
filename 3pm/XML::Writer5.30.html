@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Writer(3)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use XML::Writer;
+<pre>  use XML::Writer;
   use IO::File;
-
   my $output = IO::File-&gt;new(&quot;&gt;output.xml&quot;);
-
   my $writer = XML::Writer-&gt;new(OUTPUT =&gt; $output);
   $writer-&gt;startTag(&quot;greeting&quot;,
                     &quot;class&quot; =&gt; &quot;simple&quot;);
@@ -69,8 +67,7 @@
   <dt id="new(_$params_)"><a class="permalink" href="#new(_$params_)">new([$params])</a></dt>
   <dd>Create a new XML::Writer object:
     <p class="Pp"></p>
-    <pre>
-  my $writer = XML::Writer-&gt;new(OUTPUT =&gt; $output, NEWLINES =&gt; 1);
+    <pre>  my $writer = XML::Writer-&gt;new(OUTPUT =&gt; $output, NEWLINES =&gt; 1);
     </pre>
     <p class="Pp">Arguments are an anonymous hash array of parameters:</p>
   </dd>
@@ -89,11 +86,8 @@
         <span class="Li">&quot;to_string()&quot;</span> method, or by calling
         the object in a string context.</p>
     <p class="Pp"></p>
-    <pre>
-    my $writer = XML::Writer-&gt;new( OUTPUT =&gt; 'self' );
-
+    <pre>    my $writer = XML::Writer-&gt;new( OUTPUT =&gt; 'self' );
     $writer-&gt;dataElement( hello =&gt; 'world' );
-
     print $writer-&gt;to_string;  # outputs &lt;hello&gt;world&lt;/hello&gt;
     print &quot;$writer&quot;;           # ditto
     </pre>
@@ -103,8 +97,7 @@
       value is true, then the module will accept two-member array reference in
       the place of element and attribute names, as in the following example:
     <p class="Pp"></p>
-    <pre>
-  my $rdfns = &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;;
+    <pre>  my $rdfns = &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;;
   my $writer = XML::Writer-&gt;new(NAMESPACES =&gt; 1);
   $writer-&gt;startTag([$rdfns, &quot;Description&quot;]);
     </pre>
@@ -119,8 +112,7 @@
       module will use this hash to look up preferred prefixes for namespace
       URIs:
     <p class="Pp"></p>
-    <pre>
-  my $rdfns = &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;;
+    <pre>  my $rdfns = &quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;;
   my $writer = XML::Writer-&gt;new(NAMESPACES =&gt; 1,
                                PREFIX_MAP =&gt; {$rdfns =&gt; 'rdf'});
     </pre>
@@ -176,8 +168,7 @@
   <dd>Finish creating an XML document. This method will check that the document
       has exactly one document element, and that all start tags are closed:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;end();
+    <pre>  $writer-&gt;end();
     </pre>
     <p class="Pp">If <i>OUTPUT</i> as been set to <i>self</i>,
         <span class="Li">&quot;end()&quot;</span> will return the generated
@@ -192,8 +183,7 @@
       to 'yes'). If not given here, the encoding will be taken from the ENCODING
       argument. Pass the empty string to suppress this behaviour.
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;xmlDecl(&quot;UTF-8&quot;);
+    <pre>  $writer-&gt;xmlDecl(&quot;UTF-8&quot;);
     </pre>
   </dd>
   <dt id="doctype($name,"><a class="permalink" href="#doctype($name,">doctype($name,
@@ -203,8 +193,7 @@
       must provide a systemId as well, but you may provide just a system ID by
       passing 'undef' for the publicId.
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;doctype(&quot;html&quot;);
+    <pre>  $writer-&gt;doctype(&quot;html&quot;);
     </pre>
   </dd>
   <dt id="comment($text)"><a class="permalink" href="#comment($text)">comment($text)</a></dt>
@@ -213,16 +202,14 @@
       tag), the module will add a carriage return after it to improve
       readability. In data mode, comments will be treated as empty tags:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;comment(&quot;This is a comment&quot;);
+    <pre>  $writer-&gt;comment(&quot;This is a comment&quot;);
     </pre>
   </dd>
   <dt id="pi($target"><a class="permalink" href="#pi($target">pi($target [,
     $data])</a></dt>
   <dd>Add a processing instruction to an XML document:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;pi('xml-stylesheet', 'href=&quot;style.css&quot; type=&quot;text/css&quot;');
+    <pre>  $writer-&gt;pi('xml-stylesheet', 'href=&quot;style.css&quot; type=&quot;text/css&quot;');
     </pre>
     <p class="Pp">If the processing instruction appears outside the document
         element (either before the first start tag or after the last end tag),
@@ -241,8 +228,7 @@
       all '&amp;', '&lt;', '&gt;', and '&quot;' characters in the attribute
       values using the predefined XML entities:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;startTag('doc', 'version' =&gt; '1.0',
+    <pre>  $writer-&gt;startTag('doc', 'version' =&gt; '1.0',
                            'status' =&gt; 'draft',
                            'topic' =&gt; 'AT&amp;T');
     </pre>
@@ -254,8 +240,7 @@
       are assumed to be name/value pairs for attributes (see <b>startTag()</b>
       for details):
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;emptyTag('img', 'src' =&gt; 'portrait.jpg',
+    <pre>  $writer-&gt;emptyTag('img', 'src' =&gt; 'portrait.jpg',
                            'alt' =&gt; 'Portrait of Emma.');
     </pre>
   </dd>
@@ -264,15 +249,13 @@
       start tag, and there must be a matching and properly-nested end tag for
       every start tag:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;endTag('doc');
+    <pre>  $writer-&gt;endTag('doc');
     </pre>
     <p class="Pp">If the <span class="Li">$name</span> argument is omitted, then
         the module will automatically supply the name of the currently open
         element:</p>
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;startTag('p');
+    <pre>  $writer-&gt;startTag('p');
   $writer-&gt;endTag();
     </pre>
   </dd>
@@ -281,8 +264,7 @@
   <dd>Print an entire element containing only character data. This is equivalent
       to
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;startTag($name [, $aname1 =&gt; $value1, ...]);
+    <pre>  $writer-&gt;startTag($name [, $aname1 =&gt; $value1, ...]);
   $writer-&gt;characters($data);
   $writer-&gt;endTag($name);
     </pre>
@@ -292,8 +274,7 @@
       characters in the <span class="Li">$data</span> argument will
       automatically be escaped using the predefined XML entities:
     <p class="Pp"></p>
-    <pre>
-  $writer-&gt;characters(&quot;Here is the formula: &quot;);
+    <pre>  $writer-&gt;characters(&quot;Here is the formula: &quot;);
   $writer-&gt;characters(&quot;a &lt; 100 &amp;&amp; a &gt; 5&quot;);
     </pre>
     <p class="Pp">You may invoke this method only within the document element
@@ -348,8 +329,7 @@
   <dd>Return a true value if the most recent open element matches
       <span class="Li">$name:</span>
     <p class="Pp"></p>
-    <pre>
-  if ($writer-&gt;in_element('dl')) {
+    <pre>  if ($writer-&gt;in_element('dl')) {
     $writer-&gt;startTag('dt');
   } else {
     $writer-&gt;startTag('li');
@@ -360,8 +340,7 @@
   <dd>Return a true value if any open element matches
       <span class="Li">$name:</span>
     <p class="Pp"></p>
-    <pre>
-  if ($writer-&gt;within_element('body')) {
+    <pre>  if ($writer-&gt;within_element('body')) {
     $writer-&gt;startTag('h1');
   } else {
     $writer-&gt;startTag('title');
@@ -371,13 +350,11 @@
   <dt id="current_element()"><a class="permalink" href="#current_element()"><b>current_element()</b></a></dt>
   <dd>Return the name of the currently open element:
     <p class="Pp"></p>
-    <pre>
-  my $name = $writer-&gt;current_element();
+    <pre>  my $name = $writer-&gt;current_element();
     </pre>
     <p class="Pp">This is the equivalent of</p>
     <p class="Pp"></p>
-    <pre>
-  my $name = $writer-&gt;ancestor(0);
+    <pre>  my $name = $writer-&gt;ancestor(0);
     </pre>
   </dd>
   <dt id="ancestor($n)"><a class="permalink" href="#ancestor($n)">ancestor($n)</a></dt>
@@ -435,8 +412,7 @@
 <p class="Pp">To ensure full error detection, a program must also invoke the end
     method when it has finished writing a document:</p>
 <p class="Pp"></p>
-<pre>
-  $writer-&gt;startTag('greeting');
+<pre>  $writer-&gt;startTag('greeting');
   $writer-&gt;characters(&quot;Hello, world!&quot;);
   $writer-&gt;endTag('greeting');
   $writer-&gt;end();
@@ -445,8 +421,7 @@
     that create XML documents; however, if necessary, it can be turned off by
     providing an UNSAFE parameter:</p>
 <p class="Pp"></p>
-<pre>
-  my $writer = XML::Writer-&gt;new(OUTPUT =&gt; $output, UNSAFE =&gt; 1);
+<pre>  my $writer = XML::Writer-&gt;new(OUTPUT =&gt; $output, UNSAFE =&gt; 1);
 </pre>
 <section class="Ss">
 <h2 class="Ss">PRINTING OUTPUT</h2>

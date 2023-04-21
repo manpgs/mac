@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Extending::ExtensionOverview(3)</title>
 </head>
@@ -114,11 +115,8 @@
     do anything special. You simply create a role and document that it should be
     used via the normal <span class="Li">&quot;with&quot;</span> sugar:</p>
 <p class="Pp"></p>
-<pre>
-   package MyApp::User;
-
+<pre>   package MyApp::User;
    use Moose;
-
    with 'My::Role';
 </pre>
 <p class="Pp">Don't use &quot;MooseX&quot; in the name for such packages.</p>
@@ -165,9 +163,7 @@
     to simply specify it in a list of traits. Currently, this only works for
     (class) metaclass and attribute metaclass traits:</p>
 <p class="Pp"></p>
-<pre>
-  use Moose -traits =&gt; [ 'Big', 'Blue' ];
-
+<pre>  use Moose -traits =&gt; [ 'Big', 'Blue' ];
   has 'animal' =&gt; (
       traits =&gt; [ 'Big', 'Blue' ],
       ...
@@ -197,16 +193,12 @@
     extensions. Most uses of Moose::Util::MetaRole can be handled by
     Moose::Exporter directly; see the Moose::Exporter docs.</p>
 <p class="Pp"></p>
-<pre>
-  package MooseX::Embiggen;
-
+<pre>  package MooseX::Embiggen;
   use Moose::Exporter;
-
   use MooseX::Embiggen::Role::Meta::Class;
   use MooseX::Embiggen::Role::Meta::Attribute;
   use MooseX::Embiggen::Role::Meta::Method::Constructor;
   use MooseX::Embiggen::Role::Object;
-
   Moose::Exporter-&gt;setup_import_methods(
       class_metaroles =&gt; {
           class     =&gt; ['MooseX::Embiggen::Role::Meta::Class'],
@@ -229,18 +221,14 @@
 <p class="Pp">With Moose::Exporter, you can also export your own sugar
     functions:</p>
 <p class="Pp"></p>
-<pre>
-  package MooseX::Embiggen;
-
+<pre>  package MooseX::Embiggen;
   use Moose::Exporter;
-
   Moose::Exporter-&gt;setup_import_methods(
       with_meta       =&gt; ['embiggen'],
       class_metaroles =&gt; {
           class =&gt; ['MooseX::Embiggen::Role::Meta::Class'],
       },
   );
-
   sub embiggen {
       my $meta = shift;
       $meta-&gt;embiggen(@_);
@@ -249,14 +237,10 @@
 <p class="Pp">And then the consumer of your extension can use your
     <span class="Li">&quot;embiggen&quot;</span> sub:</p>
 <p class="Pp"></p>
-<pre>
-  package Consumer;
-
+<pre>  package Consumer;
   use Moose;
   use MooseX::Embiggen;
-
   extends 'Thing';
-
   embiggen ...;
 </pre>
 <p class="Pp">This can be combined with metaclass and base class roles quite
@@ -274,11 +258,8 @@
     <span class="Li">&quot;init_meta&quot;</span> method in your exporter. For
     instance:</p>
 <p class="Pp"></p>
-<pre>
-  package MooseX::Embiggen;
-
+<pre>  package MooseX::Embiggen;
   use Moose::Exporter;
-
   my ($import, $unimport, $init_meta) = Moose::Exporter-&gt;build_import_methods(
       install         =&gt; ['import', 'unimport'],
       with_meta       =&gt; ['embiggen'],
@@ -286,12 +267,10 @@
           class =&gt; ['MooseX::Embiggen::Role::Meta::Class'],
       },
   );
-
   sub embiggen {
       my $meta = shift;
       $meta-&gt;embiggen(@_);
   }
-
   sub init_meta {
       my $package = shift;
       my %options = @_;

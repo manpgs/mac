@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Pod::Parser(3pm)</title>
 </head>
@@ -29,12 +30,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    use Pod::Parser;
-
+<pre>    use Pod::Parser;
     package MyParser;
     @ISA = qw(Pod::Parser);
-
     sub command { 
         my ($parser, $command, $paragraph, $line_num) = @_;
         ## Interpret the command and its text; sample actions might be:
@@ -45,14 +43,12 @@
         my $expansion = $parser-&gt;interpolate($paragraph, $line_num);
         print $out_fh $expansion;
     }
-
     sub verbatim { 
         my ($parser, $paragraph, $line_num) = @_;
         ## Format verbatim paragraph; sample actions might be:
         my $out_fh = $parser-&gt;output_handle();
         print $out_fh $paragraph;
     }
-
     sub textblock { 
         my ($parser, $paragraph, $line_num) = @_;
         ## Translate/Format this block of text; sample actions might be:
@@ -60,7 +56,6 @@
         my $expansion = $parser-&gt;interpolate($paragraph, $line_num);
         print $out_fh $expansion;
     }
-
     sub interior_sequence { 
         my ($parser, $seq_command, $seq_argument) = @_;
         ## Expand an interior sequence; sample actions might be:
@@ -69,9 +64,7 @@
         return &quot;_${seq_argument}_'&quot;  if ($seq_command eq 'I');
         ## ... other sequence commands and their resulting text
     }
-
     package main;
-
     ## Create a parser object and have it parse file whose name was
     ## given on the command-line (use STDIN if no files were given).
     $parser = new MyParser();
@@ -202,8 +195,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>command()</b></h1>
-<pre>
-            $parser-&gt;command($cmd,$text,$line_num,$pod_para);
+<pre>            $parser-&gt;command($cmd,$text,$line_num,$pod_para);
 </pre>
 <p class="Pp">This method should be overridden by subclasses to take the
     appropriate action when a POD command paragraph (denoted by a line beginning
@@ -229,8 +221,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>verbatim()</b></h1>
-<pre>
-            $parser-&gt;verbatim($text,$line_num,$pod_para);
+<pre>            $parser-&gt;verbatim($text,$line_num,$pod_para);
 </pre>
 <p class="Pp">This method may be overridden by subclasses to take the
     appropriate action when a block of verbatim text is encountered. It is
@@ -250,8 +241,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>textblock()</b></h1>
-<pre>
-            $parser-&gt;textblock($text,$line_num,$pod_para);
+<pre>            $parser-&gt;textblock($text,$line_num,$pod_para);
 </pre>
 <p class="Pp">This method may be overridden by subclasses to take the
     appropriate action when a normal block of POD text is encountered (although
@@ -278,8 +268,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>interior_sequence()</b></h1>
-<pre>
-            $parser-&gt;interior_sequence($seq_cmd,$seq_arg,$pod_seq);
+<pre>            $parser-&gt;interior_sequence($seq_cmd,$seq_arg,$pod_seq);
 </pre>
 <p class="Pp">This method should be overridden by subclasses to take the
     appropriate action when an interior sequence is encountered. An interior
@@ -314,16 +303,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>new()</b></h1>
-<pre>
-            my $parser = Pod::Parser-&gt;new();
+<pre>            my $parser = Pod::Parser-&gt;new();
 </pre>
 <p class="Pp">This is the constructor for <b>Pod::Parser</b> and its subclasses.
     You <i>do not</i> need to override this method! It is capable of
     constructing subclass objects as well as base class objects, provided you
     use any of the following constructor invocation styles:</p>
 <p class="Pp"></p>
-<pre>
-    my $parser1 = MyParser-&gt;new();
+<pre>    my $parser1 = MyParser-&gt;new();
     my $parser2 = new MyParser();
     my $parser3 = $parser2-&gt;new();
 </pre>
@@ -342,8 +329,7 @@
     hash-table) my be passed to the <b></b><b>new()</b><b></b> constructor, as
     in:</p>
 <p class="Pp"></p>
-<pre>
-    my $parser1 = MyParser-&gt;new( MYDATA =&gt; $value1, MOREDATA =&gt; $value2 );
+<pre>    my $parser1 = MyParser-&gt;new( MYDATA =&gt; $value1, MOREDATA =&gt; $value2 );
     my $parser2 = new MyParser( -myflag =&gt; 1 );
 </pre>
 <p class="Pp">All arguments passed to the <b></b><b>new()</b><b></b> constructor
@@ -355,8 +341,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>initialize()</b></h1>
-<pre>
-            $parser-&gt;initialize();
+<pre>            $parser-&gt;initialize();
 </pre>
 <p class="Pp">This method performs any necessary object initialization. It takes
     no arguments (other than the object instance of course, which is typically
@@ -366,8 +351,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>begin_pod()</b></h1>
-<pre>
-            $parser-&gt;begin_pod();
+<pre>            $parser-&gt;begin_pod();
 </pre>
 <p class="Pp">This method is invoked at the beginning of processing for each POD
     document that is encountered in the input. Subclasses should override this
@@ -375,8 +359,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>begin_input()</b></h1>
-<pre>
-            $parser-&gt;begin_input();
+<pre>            $parser-&gt;begin_input();
 </pre>
 <p class="Pp">This method is invoked by
     <b></b><b>parse_from_filehandle()</b><b></b> immediately <i>before</i>
@@ -392,8 +375,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>end_input()</b></h1>
-<pre>
-            $parser-&gt;end_input();
+<pre>            $parser-&gt;end_input();
 </pre>
 <p class="Pp">This method is invoked by
     <b></b><b>parse_from_filehandle()</b><b></b> immediately <i>after</i>
@@ -409,8 +391,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>end_pod()</b></h1>
-<pre>
-            $parser-&gt;end_pod();
+<pre>            $parser-&gt;end_pod();
 </pre>
 <p class="Pp">This method is invoked at the end of processing for each POD
     document that is encountered in the input. Subclasses should override this
@@ -418,8 +399,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>preprocess_line()</b></h1>
-<pre>
-          $textline = $parser-&gt;preprocess_line($text, $line_num);
+<pre>          $textline = $parser-&gt;preprocess_line($text, $line_num);
 </pre>
 <p class="Pp">This method should be overridden by subclasses that wish to
     perform any kind of preprocessing for each <i>line</i> of input
@@ -441,8 +421,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>preprocess_paragraph()</b></h1>
-<pre>
-            $textblock = $parser-&gt;preprocess_paragraph($text, $line_num);
+<pre>            $textblock = $parser-&gt;preprocess_paragraph($text, $line_num);
 </pre>
 <p class="Pp">This method should be overridden by subclasses that wish to
     perform any kind of preprocessing for each block (paragraph) of POD
@@ -482,8 +461,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>parse_text()</b></h1>
-<pre>
-            $ptree1 = $parser-&gt;parse_text($text, $line_num);
+<pre>            $ptree1 = $parser-&gt;parse_text($text, $line_num);
             $ptree2 = $parser-&gt;parse_text({%opts}, $text, $line_num);
             $ptree3 = $parser-&gt;parse_text(\%opts, $text, $line_num);
 </pre>
@@ -516,13 +494,11 @@
       result.
     <p class="Pp">If a subroutine reference was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  &amp;$code_ref( $parser, $sequence )
+    <pre>  &amp;$code_ref( $parser, $sequence )
     </pre>
     <p class="Pp">and if a method-name was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  $parser-&gt;method_name( $sequence )
+    <pre>  $parser-&gt;method_name( $sequence )
     </pre>
     <p class="Pp">where <span class="Li">$parser</span> is a reference to the
         parser object, and <span class="Li">$sequence</span> is a reference to
@@ -545,13 +521,11 @@
       handled by the specified callback routine.]
     <p class="Pp">If a subroutine reference was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  &amp;$code_ref( $parser, $text, $ptree_node )
+    <pre>  &amp;$code_ref( $parser, $text, $ptree_node )
     </pre>
     <p class="Pp">and if a method-name was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  $parser-&gt;method_name( $text, $ptree_node )
+    <pre>  $parser-&gt;method_name( $text, $ptree_node )
     </pre>
     <p class="Pp">where <span class="Li">$parser</span> is a reference to the
         parser object, <span class="Li">$text</span> is the text-string
@@ -567,13 +541,11 @@
       object) and return the result instead of the parse-tree object.
     <p class="Pp">If a subroutine reference was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  &amp;$code_ref( $parser, $ptree )
+    <pre>  &amp;$code_ref( $parser, $ptree )
     </pre>
     <p class="Pp">and if a method-name was given, it is invoked as:</p>
     <p class="Pp"></p>
-    <pre>
-  $parser-&gt;method_name( $ptree )
+    <pre>  $parser-&gt;method_name( $ptree )
     </pre>
     <p class="Pp">where <span class="Li">$parser</span> is a reference to the
         parser object, and <span class="Li">$ptree</span> is a reference to the
@@ -583,8 +555,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>interpolate()</b></h1>
-<pre>
-            $textblock = $parser-&gt;interpolate($text, $line_num);
+<pre>            $textblock = $parser-&gt;interpolate($text, $line_num);
 </pre>
 <p class="Pp">This method translates all text (including any embedded interior
     sequences) in the given text string <span class="Li">$text</span> and
@@ -598,8 +569,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>parse_from_filehandle()</b></h1>
-<pre>
-            $parser-&gt;parse_from_filehandle($in_fh,$out_fh);
+<pre>            $parser-&gt;parse_from_filehandle($in_fh,$out_fh);
 </pre>
 <p class="Pp">This method takes an input filehandle (which is assumed to already
     be opened for reading) and reads the entire input stream looking for blocks
@@ -629,8 +599,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>parse_from_file()</b></h1>
-<pre>
-            $parser-&gt;parse_from_file($filename,$outfile);
+<pre>            $parser-&gt;parse_from_file($filename,$outfile);
 </pre>
 <p class="Pp">This method takes a filename and does the following:</p>
 <ul class="Bl-bullet">
@@ -669,8 +638,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>errorsub()</b></h1>
-<pre>
-            $parser-&gt;errorsub(&quot;method_name&quot;);
+<pre>            $parser-&gt;errorsub(&quot;method_name&quot;);
             $parser-&gt;errorsub(\&amp;warn_user);
             $parser-&gt;errorsub(sub { print STDERR, @_ });
 </pre>
@@ -680,8 +648,7 @@
     <span class="Li">&quot;undef&quot;</span> is given, then the <b>carp</b>
     builtin is used to issue error messages (this is the default behavior).</p>
 <p class="Pp"></p>
-<pre>
-            my $errorsub = $parser-&gt;errorsub()
+<pre>            my $errorsub = $parser-&gt;errorsub()
             my $errmsg = &quot;This is an error message!\n&quot;
             (ref $errorsub) and &amp;{$errorsub}($errmsg)
                 or (defined $errorsub) and $parser-&gt;$errorsub($errmsg)
@@ -694,16 +661,14 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>cutting()</b></h1>
-<pre>
-            $boolean = $parser-&gt;cutting();
+<pre>            $boolean = $parser-&gt;cutting();
 </pre>
 <p class="Pp">Returns the current <span class="Li">&quot;cutting&quot;</span>
     state: a boolean-valued scalar which evaluates to true if text from the
     input file is currently being &quot;cut&quot; (meaning it is <i>not</i>
     considered part of the POD document).</p>
 <p class="Pp"></p>
-<pre>
-            $parser-&gt;cutting($boolean);
+<pre>            $parser-&gt;cutting($boolean);
 </pre>
 <p class="Pp">Sets the current <span class="Li">&quot;cutting&quot;</span> state
     to the given value and returns the result.</p>
@@ -713,8 +678,7 @@
 <p class="Pp">When invoked with no additional arguments, <b>parseopts</b>
     returns a hashtable of all the current parsing options.</p>
 <p class="Pp"></p>
-<pre>
-            ## See if we are parsing non-POD sections as well as POD ones
+<pre>            ## See if we are parsing non-POD sections as well as POD ones
             my %opts = $parser-&gt;parseopts();
             $opts{'-want_nonPODs}' and print &quot;-want_nonPODs\n&quot;;
 </pre>
@@ -723,8 +687,7 @@
     it exists (returns <span class="Li">&quot;undef&quot;</span> if it
   doesn't).</p>
 <p class="Pp"></p>
-<pre>
-            ## Did we ask to see '=cut' paragraphs?
+<pre>            ## Did we ask to see '=cut' paragraphs?
             my $want_cut = $parser-&gt;parseopts('-process_cut_cmd');
             $want_cut and print &quot;-process_cut_cmd\n&quot;;
 </pre>
@@ -732,16 +695,14 @@
     as key/value pairs and the specified parse-option names are set to the given
     values. Any unspecified parse-options are unaffected.</p>
 <p class="Pp"></p>
-<pre>
-            ## Set them back to the default
+<pre>            ## Set them back to the default
             $parser-&gt;parseopts(-warnings =&gt; 0);
 </pre>
 <p class="Pp">When passed a single hash-ref, <b>parseopts</b> uses that hash to
     completely reset the existing parse-options, all previous parse-option
     values are lost.</p>
 <p class="Pp"></p>
-<pre>
-            ## Reset all options to default 
+<pre>            ## Reset all options to default 
             $parser-&gt;parseopts( { } );
 </pre>
 <p class="Pp">See &quot;PARSING OPTIONS&quot; for more information on the name
@@ -749,29 +710,25 @@
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>output_file()</b></h1>
-<pre>
-            $fname = $parser-&gt;output_file();
+<pre>            $fname = $parser-&gt;output_file();
 </pre>
 <p class="Pp">Returns the name of the output file being written.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>output_handle()</b></h1>
-<pre>
-            $fhandle = $parser-&gt;output_handle();
+<pre>            $fhandle = $parser-&gt;output_handle();
 </pre>
 <p class="Pp">Returns the output filehandle object.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>input_file()</b></h1>
-<pre>
-            $fname = $parser-&gt;input_file();
+<pre>            $fname = $parser-&gt;input_file();
 </pre>
 <p class="Pp">Returns the name of the input file being read.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh"><b>input_handle()</b></h1>
-<pre>
-            $fhandle = $parser-&gt;input_handle();
+<pre>            $fhandle = $parser-&gt;input_handle();
 </pre>
 <p class="Pp">Returns the current input filehandle object.</p>
 </section>
@@ -841,39 +798,30 @@
     <span class="Li">%options</span>. Then we might do something like the
     following:</p>
 <p class="Pp"></p>
-<pre>
-    package MyPodParserTree;
-
+<pre>    package MyPodParserTree;
     @ISA = qw( Pod::Parser );
-
     ...
-
     sub begin_pod {
         my $self = shift;
         $self-&gt;{'-paragraphs'} = [];  ## initialize paragraph list
     }
-
     sub command { 
         my ($parser, $command, $paragraph, $line_num, $pod_para) = @_;
         my $ptree = $parser-&gt;parse_text({%options}, $paragraph, ...);
         $pod_para-&gt;parse_tree( $ptree );
         push @{ $self-&gt;{'-paragraphs'} }, $pod_para;
     }
-
     sub verbatim { 
         my ($parser, $paragraph, $line_num, $pod_para) = @_;
         push @{ $self-&gt;{'-paragraphs'} }, $pod_para;
     }
-
     sub textblock { 
         my ($parser, $paragraph, $line_num, $pod_para) = @_;
         my $ptree = $parser-&gt;parse_text({%options}, $paragraph, ...);
         $pod_para-&gt;parse_tree( $ptree );
         push @{ $self-&gt;{'-paragraphs'} }, $pod_para;
     }
-
     ...
-
     package main;
     ...
     my $parser = new MyPodParserTree(...);
@@ -886,43 +834,34 @@
     the same core interface for all parse-tree nodes. The result would look
     something like:</p>
 <p class="Pp"></p>
-<pre>
-    package MyPodParserTree2;
-
+<pre>    package MyPodParserTree2;
     ...
-
     sub begin_pod {
         my $self = shift;
         $self-&gt;{'-ptree'} = new Pod::ParseTree;  ## initialize parse-tree
     }
-
     sub parse_tree {
         ## convenience method to get/set the parse-tree for the entire POD
         (@_ &gt; 1)  and  $_[0]-&gt;{'-ptree'} = $_[1];
         return $_[0]-&gt;{'-ptree'};
     }
-
     sub command { 
         my ($parser, $command, $paragraph, $line_num, $pod_para) = @_;
         my $ptree = $parser-&gt;parse_text({&lt;&lt;options&gt;&gt;}, $paragraph, ...);
         $pod_para-&gt;parse_tree( $ptree );
         $parser-&gt;parse_tree()-&gt;append( $pod_para );
     }
-
     sub verbatim { 
         my ($parser, $paragraph, $line_num, $pod_para) = @_;
         $parser-&gt;parse_tree()-&gt;append( $pod_para );
     }
-
     sub textblock { 
         my ($parser, $paragraph, $line_num, $pod_para) = @_;
         my $ptree = $parser-&gt;parse_text({&lt;&lt;options&gt;&gt;}, $paragraph, ...);
         $pod_para-&gt;parse_tree( $ptree );
         $parser-&gt;parse_tree()-&gt;append( $pod_para );
     }
-
     ...
-
     package main;
     ...
     my $parser = new MyPodParserTree2(...);

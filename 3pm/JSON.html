@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>JSON(3)</title>
 </head>
@@ -28,8 +29,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
- use JSON; # imports encode_json, decode_json, to_json and from_json.
+<pre> use JSON; # imports encode_json, decode_json, to_json and from_json.
  
  # simple and fast interfaces (expect/generate UTF-8)
  
@@ -48,8 +48,7 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="VERSION"><a class="permalink" href="#VERSION">VERSION</a></h1>
-<pre>
-    4.02
+<pre>    4.02
 </pre>
 </section>
 <section class="Sh">
@@ -83,13 +82,11 @@
     <span class="Li">&quot;set&quot;</span> and the likes, depending on your
     environment):</p>
 <p class="Pp"></p>
-<pre>
-  &gt; export PERL_JSON_BACKEND=JSON::XS
+<pre>  &gt; export PERL_JSON_BACKEND=JSON::XS
 </pre>
 <p class="Pp">If you prefer Cpanel::JSON::XS to JSON::XS, then:</p>
 <p class="Pp"></p>
-<pre>
-  &gt; export PERL_JSON_BACKEND=Cpanel::JSON::XS,JSON::XS,JSON::PP
+<pre>  &gt; export PERL_JSON_BACKEND=Cpanel::JSON::XS,JSON::XS,JSON::PP
 </pre>
 <p class="Pp">You may also want to set this variable at the top of your test
     files, in order not to be bothered with incompatibilities between backends
@@ -97,8 +94,7 @@
     before actually <span class="Li">&quot;use&quot;</span>-ing JSON module, as
     it decides its backend as soon as it's loaded):</p>
 <p class="Pp"></p>
-<pre>
-  BEGIN { $ENV{PERL_JSON_BACKEND}='JSON::backportPP'; }
+<pre>  BEGIN { $ENV{PERL_JSON_BACKEND}='JSON::backportPP'; }
   use JSON;
 </pre>
 </section>
@@ -112,8 +108,7 @@
 <dl class="Bl-tag">
   <dt id="support_by_pp"><a class="permalink" href="#support_by_pp">-support_by_pp</a></dt>
   <dd>
-    <pre>
-   BEGIN { $ENV{PERL_JSON_BACKEND} = 'JSON::XS' }
+    <pre>   BEGIN { $ENV{PERL_JSON_BACKEND} = 'JSON::XS' }
    
    use JSON -support_by_pp;
    
@@ -139,9 +134,7 @@
   </dd>
   <dt id="convert_blessed_universally"><a class="permalink" href="#convert_blessed_universally">-convert_blessed_universally</a></dt>
   <dd>
-    <pre>
-   use JSON -convert_blessed_universally;
-
+    <pre>   use JSON -convert_blessed_universally;
    my $json = JSON-&gt;new-&gt;allow_nonref-&gt;convert_blessed;
    my $object = bless {foo =&gt; 'bar'}, 'Foo';
    $json-&gt;encode($object); # =&gt; {&quot;foo&quot;:&quot;bar&quot;}
@@ -182,15 +175,13 @@
       usually supply <span class="Li">&quot;()&quot;</span> to its
       <span class="Li">&quot;use&quot;</span> statement.
     <p class="Pp"></p>
-    <pre>
-    use JSON (); # no functional interfaces
+    <pre>    use JSON (); # no functional interfaces
     </pre>
     <p class="Pp">If you don't want to import functional interfaces, but you
         also want to use any of the above options, add
         <span class="Li">&quot;-no_export&quot;</span> to the option list.</p>
     <p class="Pp"></p>
-    <pre>
-   # no functional interfaces, while JSON::PP support is enabled.
+    <pre>   # no functional interfaces, while JSON::PP support is enabled.
    use JSON -support_by_pp, -no_export;
     </pre>
   </dd>
@@ -212,44 +203,38 @@
     two functions.</p>
 <section class="Ss">
 <h2 class="Ss" id="encode_json"><a class="permalink" href="#encode_json">encode_json</a></h2>
-<pre>
-    $json_text = encode_json $perl_scalar
+<pre>    $json_text = encode_json $perl_scalar
 </pre>
 <p class="Pp">Converts the given Perl data structure to a UTF-8 encoded, binary
     string (that is, the string contains octets only). Croaks on error.</p>
 <p class="Pp">This function call is functionally identical to:</p>
 <p class="Pp"></p>
-<pre>
-    $json_text = JSON-&gt;new-&gt;utf8-&gt;encode($perl_scalar)
+<pre>    $json_text = JSON-&gt;new-&gt;utf8-&gt;encode($perl_scalar)
 </pre>
 <p class="Pp">Except being faster.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="decode_json"><a class="permalink" href="#decode_json">decode_json</a></h2>
-<pre>
-    $perl_scalar = decode_json $json_text
+<pre>    $perl_scalar = decode_json $json_text
 </pre>
 <p class="Pp">The opposite of <span class="Li">&quot;encode_json&quot;</span>:
     expects an UTF-8 (binary) string and tries to parse that as an UTF-8 encoded
     JSON text, returning the resulting reference. Croaks on error.</p>
 <p class="Pp">This function call is functionally identical to:</p>
 <p class="Pp"></p>
-<pre>
-    $perl_scalar = JSON-&gt;new-&gt;utf8-&gt;decode($json_text)
+<pre>    $perl_scalar = JSON-&gt;new-&gt;utf8-&gt;decode($json_text)
 </pre>
 <p class="Pp">Except being faster.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="to_json"><a class="permalink" href="#to_json">to_json</a></h2>
-<pre>
-   $json_text = to_json($perl_scalar[, $optional_hashref])
+<pre>   $json_text = to_json($perl_scalar[, $optional_hashref])
 </pre>
 <p class="Pp">Converts the given Perl data structure to a Unicode string by
     default. Croaks on error.</p>
 <p class="Pp">Basically, this function call is functionally identical to:</p>
 <p class="Pp"></p>
-<pre>
-   $json_text = JSON-&gt;new-&gt;encode($perl_scalar)
+<pre>   $json_text = JSON-&gt;new-&gt;encode($perl_scalar)
 </pre>
 <p class="Pp">Except being slower.</p>
 <p class="Pp">You can pass an optional hash reference to modify its behavior,
@@ -257,38 +242,33 @@
     expects/generates (see <span class="Li">&quot;ENCODING/CODESET FLAG
     NOTES&quot;</span> for details).</p>
 <p class="Pp"></p>
-<pre>
-   $json_text = to_json($perl_scalar, {utf8 =&gt; 1, pretty =&gt; 1})
+<pre>   $json_text = to_json($perl_scalar, {utf8 =&gt; 1, pretty =&gt; 1})
    # =&gt; JSON-&gt;new-&gt;utf8(1)-&gt;pretty(1)-&gt;encode($perl_scalar)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="from_json"><a class="permalink" href="#from_json">from_json</a></h2>
-<pre>
-   $perl_scalar = from_json($json_text[, $optional_hashref])
+<pre>   $perl_scalar = from_json($json_text[, $optional_hashref])
 </pre>
 <p class="Pp">The opposite of <span class="Li">&quot;to_json&quot;</span>:
     expects a Unicode string and tries to parse it, returning the resulting
     reference. Croaks on error.</p>
 <p class="Pp">Basically, this function call is functionally identical to:</p>
 <p class="Pp"></p>
-<pre>
-    $perl_scalar = JSON-&gt;new-&gt;decode($json_text)
+<pre>    $perl_scalar = JSON-&gt;new-&gt;decode($json_text)
 </pre>
 <p class="Pp">You can pass an optional hash reference to modify its behavior,
     but that may change what <span class="Li">&quot;from_json&quot;</span>
     expects/generates (see <span class="Li">&quot;ENCODING/CODESET FLAG
     NOTES&quot;</span> for details).</p>
 <p class="Pp"></p>
-<pre>
-    $perl_scalar = from_json($json_text, {utf8 =&gt; 1})
+<pre>    $perl_scalar = from_json($json_text, {utf8 =&gt; 1})
     # =&gt; JSON-&gt;new-&gt;utf8(1)-&gt;decode($json_text)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="JSON::is_bool"><a class="permalink" href="#JSON::is_bool">JSON::is_bool</a></h2>
-<pre>
-    $is_boolean = JSON::is_bool($scalar)
+<pre>    $is_boolean = JSON::is_bool($scalar)
 </pre>
 <p class="Pp">Returns true if the passed scalar represents either JSON::true or
     JSON::false, two constants that act like <span class="Li">1</span> and
@@ -307,8 +287,7 @@
     or decoding style, within the limits of supported formats.</p>
 <section class="Ss">
 <h2 class="Ss" id="new"><a class="permalink" href="#new">new</a></h2>
-<pre>
-    $json = JSON-&gt;new
+<pre>    $json = JSON-&gt;new
 </pre>
 <p class="Pp">Creates a new JSON::XS-compatible backend object that can be used
     to de/encode JSON strings. All boolean flags described below are by default
@@ -318,15 +297,13 @@
 <p class="Pp">The mutators for flags all return the backend object again and
     thus calls can be chained:</p>
 <p class="Pp"></p>
-<pre>
-   my $json = JSON-&gt;new-&gt;utf8-&gt;space_after-&gt;encode({a =&gt; [1,2]})
+<pre>   my $json = JSON-&gt;new-&gt;utf8-&gt;space_after-&gt;encode({a =&gt; [1,2]})
    =&gt; {&quot;a&quot;: [1, 2]}
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="ascii"><a class="permalink" href="#ascii">ascii</a></h2>
-<pre>
-    $json = $json-&gt;ascii([$enable])
+<pre>    $json = $json-&gt;ascii([$enable])
     
     $enabled = $json-&gt;get_ascii
 </pre>
@@ -348,15 +325,13 @@
     transmitted over a 7-bit channel, as the encoded JSON texts will not contain
     any 8 bit characters.</p>
 <p class="Pp"></p>
-<pre>
-  JSON-&gt;new-&gt;ascii(1)-&gt;encode([chr 0x10401])
+<pre>  JSON-&gt;new-&gt;ascii(1)-&gt;encode([chr 0x10401])
   =&gt; [&quot;\ud801\udc01&quot;]
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="latin1"><a class="permalink" href="#latin1">latin1</a></h2>
-<pre>
-    $json = $json-&gt;latin1([$enable])
+<pre>    $json = $json-&gt;latin1([$enable])
     
     $enabled = $json-&gt;get_latin1
 </pre>
@@ -381,15 +356,13 @@
     you want to store data structures known to contain binary data efficiently
     in files or databases, not when talking to other JSON encoders/decoders.</p>
 <p class="Pp"></p>
-<pre>
-  JSON-&gt;new-&gt;latin1-&gt;encode ([&quot;\x{89}\x{abc}&quot;]
+<pre>  JSON-&gt;new-&gt;latin1-&gt;encode ([&quot;\x{89}\x{abc}&quot;]
   =&gt; [&quot;\x{89}\\u0abc&quot;]    # (perl syntax, U+abc escaped, U+89 not)
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="utf8"><a class="permalink" href="#utf8">utf8</a></h2>
-<pre>
-    $json = $json-&gt;utf8([$enable])
+<pre>    $json = $json-&gt;utf8([$enable])
     
     $enabled = $json-&gt;get_utf8
 </pre>
@@ -412,21 +385,18 @@
     this document.</p>
 <p class="Pp">Example, output UTF-16BE-encoded JSON:</p>
 <p class="Pp"></p>
-<pre>
-  use Encode;
+<pre>  use Encode;
   $jsontext = encode &quot;UTF-16BE&quot;, JSON-&gt;new-&gt;encode ($object);
 </pre>
 <p class="Pp">Example, decode UTF-32LE-encoded JSON:</p>
 <p class="Pp"></p>
-<pre>
-  use Encode;
+<pre>  use Encode;
   $object = JSON-&gt;new-&gt;decode (decode &quot;UTF-32LE&quot;, $jsontext);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="pretty"><a class="permalink" href="#pretty">pretty</a></h2>
-<pre>
-    $json = $json-&gt;pretty([$enable])
+<pre>    $json = $json-&gt;pretty([$enable])
 </pre>
 <p class="Pp">This enables (or disables) all of the
     <span class="Li">&quot;indent&quot;</span>,
@@ -437,8 +407,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="indent"><a class="permalink" href="#indent">indent</a></h2>
-<pre>
-    $json = $json-&gt;indent([$enable])
+<pre>    $json = $json-&gt;indent([$enable])
     
     $enabled = $json-&gt;get_indent
 </pre>
@@ -453,8 +422,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="space_before"><a class="permalink" href="#space_before">space_before</a></h2>
-<pre>
-    $json = $json-&gt;space_before([$enable])
+<pre>    $json = $json-&gt;space_before([$enable])
     
     $enabled = $json-&gt;get_space_before
 </pre>
@@ -471,14 +439,12 @@
 <p class="Pp">Example, space_before enabled, space_after and indent
   disabled:</p>
 <p class="Pp"></p>
-<pre>
-   {&quot;key&quot; :&quot;value&quot;}
+<pre>   {&quot;key&quot; :&quot;value&quot;}
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="space_after"><a class="permalink" href="#space_after">space_after</a></h2>
-<pre>
-    $json = $json-&gt;space_after([$enable])
+<pre>    $json = $json-&gt;space_after([$enable])
     
     $enabled = $json-&gt;get_space_after
 </pre>
@@ -495,14 +461,12 @@
 <p class="Pp">Example, space_before and indent disabled, space_after
   enabled:</p>
 <p class="Pp"></p>
-<pre>
-   {&quot;key&quot;: &quot;value&quot;}
+<pre>   {&quot;key&quot;: &quot;value&quot;}
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="relaxed"><a class="permalink" href="#relaxed">relaxed</a></h2>
-<pre>
-    $json = $json-&gt;relaxed([$enable])
+<pre>    $json = $json-&gt;relaxed([$enable])
     
     $enabled = $json-&gt;get_relaxed
 </pre>
@@ -524,8 +488,7 @@
         to be able to quickly append elements, so this extension accepts comma
         at the end of such items not just between them:</p>
     <p class="Pp"></p>
-    <pre>
-   [
+    <pre>   [
       1,
       2, &lt;- this comma not normally allowed
    ]
@@ -541,8 +504,7 @@
         or line-feed character, after which more white-space and comments are
         allowed.</p>
     <p class="Pp"></p>
-    <pre>
-  [
+    <pre>  [
      1, # this comment not allowed in JSON
         # neither this one...
   ]
@@ -552,8 +514,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="canonical"><a class="permalink" href="#canonical">canonical</a></h2>
-<pre>
-    $json = $json-&gt;canonical([$enable])
+<pre>    $json = $json-&gt;canonical([$enable])
     
     $enabled = $json-&gt;get_canonical
 </pre>
@@ -574,8 +535,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="allow_nonref"><a class="permalink" href="#allow_nonref">allow_nonref</a></h2>
-<pre>
-    $json = $json-&gt;allow_nonref([$enable])
+<pre>    $json = $json-&gt;allow_nonref([$enable])
     
     $enabled = $json-&gt;get_allow_nonref
 </pre>
@@ -596,15 +556,13 @@
     <span class="Li">&quot;allow_nonref&quot;</span>, resulting in an invalid
     JSON text:</p>
 <p class="Pp"></p>
-<pre>
-   JSON-&gt;new-&gt;allow_nonref-&gt;encode (&quot;Hello, World!&quot;)
+<pre>   JSON-&gt;new-&gt;allow_nonref-&gt;encode (&quot;Hello, World!&quot;)
    =&gt; &quot;Hello, World!&quot;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="allow_unknown"><a class="permalink" href="#allow_unknown">allow_unknown</a></h2>
-<pre>
-    $json = $json-&gt;allow_unknown ([$enable])
+<pre>    $json = $json-&gt;allow_unknown ([$enable])
     
     $enabled = $json-&gt;get_allow_unknown
 </pre>
@@ -624,8 +582,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="allow_blessed"><a class="permalink" href="#allow_blessed">allow_blessed</a></h2>
-<pre>
-    $json = $json-&gt;allow_blessed([$enable])
+<pre>    $json = $json-&gt;allow_blessed([$enable])
     
     $enabled = $json-&gt;get_allow_blessed
 </pre>
@@ -643,8 +600,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="convert_blessed"><a class="permalink" href="#convert_blessed">convert_blessed</a></h2>
-<pre>
-    $json = $json-&gt;convert_blessed([$enable])
+<pre>    $json = $json-&gt;convert_blessed([$enable])
     
     $enabled = $json-&gt;get_convert_blessed
 </pre>
@@ -673,9 +629,7 @@
 <section class="Ss">
 <h2 class="Ss" id="allow_tags_(since_version_3.0)"><a class="permalink" href="#allow_tags_(since_version_3.0)">allow_tags
   (since version 3.0)</a></h2>
-<pre>
-    $json = $json-&gt;allow_tags([$enable])
-
+<pre>    $json = $json-&gt;allow_tags([$enable])
     $enabled = $json-&gt;get_allow_tags
 </pre>
 <p class="Pp">See &quot;OBJECT SERIALISATION&quot; for details.</p>
@@ -697,9 +651,7 @@
 <section class="Ss">
 <h2 class="Ss" id="boolean_values_(since_version_4.0)"><a class="permalink" href="#boolean_values_(since_version_4.0)">boolean_values
   (since version 4.0)</a></h2>
-<pre>
-    $json-&gt;boolean_values([$false, $true])
-
+<pre>    $json-&gt;boolean_values([$false, $true])
     ($false,  $true) = $json-&gt;get_boolean_values
 </pre>
 <p class="Pp">By default, JSON booleans will be decoded as overloaded
@@ -729,8 +681,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="filter_json_object"><a class="permalink" href="#filter_json_object">filter_json_object</a></h2>
-<pre>
-    $json = $json-&gt;filter_json_object([$coderef])
+<pre>    $json = $json-&gt;filter_json_object([$coderef])
 </pre>
 <p class="Pp">When <span class="Li">$coderef</span> is specified, it will be
     called from <span class="Li">&quot;decode&quot;</span> each time it decodes
@@ -747,8 +698,7 @@
     hash in any way.</p>
 <p class="Pp">Example, convert all JSON objects into the integer 5:</p>
 <p class="Pp"></p>
-<pre>
-   my $js = JSON-&gt;new-&gt;filter_json_object(sub { 5 });
+<pre>   my $js = JSON-&gt;new-&gt;filter_json_object(sub { 5 });
    # returns [5]
    $js-&gt;decode('[{}]');
    # returns 5
@@ -757,8 +707,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="filter_json_single_key_object"><a class="permalink" href="#filter_json_single_key_object">filter_json_single_key_object</a></h2>
-<pre>
-    $json = $json-&gt;filter_json_single_key_object($key [=&gt; $coderef])
+<pre>    $json = $json-&gt;filter_json_single_key_object($key [=&gt; $coderef])
 </pre>
 <p class="Pp">Works remotely similar to
     <span class="Li">&quot;filter_json_object&quot;</span>, but is only called
@@ -792,33 +741,28 @@
     &quot;__widget__&quot; =&gt; &lt;id&gt; }&quot;</span> into the
     corresponding <span class="Li">$WIDGET{&lt;id&gt;}</span> object:</p>
 <p class="Pp"></p>
-<pre>
-   # return whatever is in $WIDGET{5}:
+<pre>   # return whatever is in $WIDGET{5}:
    JSON
       -&gt;new
       -&gt;filter_json_single_key_object (__widget__ =&gt; sub {
             $WIDGET{ $_[0] }
          })
       -&gt;decode ('{&quot;__widget__&quot;: 5')
-
    # this can be used with a TO_JSON method in some &quot;widget&quot; class
    # for serialisation to json:
    sub WidgetBase::TO_JSON {
       my ($self) = @_;
-
       unless ($self-&gt;{id}) {
          $self-&gt;{id} = ..get..some..id..;
          $WIDGET{$self-&gt;{id}} = $self;
       }
-
       { __widget__ =&gt; $self-&gt;{id} }
    }
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="max_depth"><a class="permalink" href="#max_depth">max_depth</a></h2>
-<pre>
-    $json = $json-&gt;max_depth([$maximum_nesting_depth])
+<pre>    $json = $json-&gt;max_depth([$maximum_nesting_depth])
     
     $max_depth = $json-&gt;get_max_depth
 </pre>
@@ -840,8 +784,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="max_size"><a class="permalink" href="#max_size">max_size</a></h2>
-<pre>
-    $json = $json-&gt;max_size([$maximum_string_size])
+<pre>    $json = $json-&gt;max_size([$maximum_string_size])
     
     $max_size = $json-&gt;get_max_size
 </pre>
@@ -858,16 +801,14 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="encode"><a class="permalink" href="#encode">encode</a></h2>
-<pre>
-    $json_text = $json-&gt;encode($perl_scalar)
+<pre>    $json_text = $json-&gt;encode($perl_scalar)
 </pre>
 <p class="Pp">Converts the given Perl value or data structure to its JSON
     representation. Croaks on error.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="decode"><a class="permalink" href="#decode">decode</a></h2>
-<pre>
-    $perl_scalar = $json-&gt;decode($json_text)
+<pre>    $perl_scalar = $json-&gt;decode($json_text)
 </pre>
 <p class="Pp">The opposite of <span class="Li">&quot;encode&quot;</span>:
     expects a JSON text and tries to parse it, returning the resulting simple
@@ -875,8 +816,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="decode_prefix"><a class="permalink" href="#decode_prefix">decode_prefix</a></h2>
-<pre>
-    ($perl_scalar, $characters) = $json-&gt;decode_prefix($json_text)
+<pre>    ($perl_scalar, $characters) = $json-&gt;decode_prefix($json_text)
 </pre>
 <p class="Pp">This works like the <span class="Li">&quot;decode&quot;</span>
     method, but instead of raising an exception when there is trailing garbage
@@ -885,8 +825,7 @@
 <p class="Pp">This is useful if your JSON texts are not delimited by an outer
     protocol and you need to know where the JSON text ends.</p>
 <p class="Pp"></p>
-<pre>
-   JSON-&gt;new-&gt;decode_prefix (&quot;[1] the tail&quot;)
+<pre>   JSON-&gt;new-&gt;decode_prefix (&quot;[1] the tail&quot;)
    =&gt; ([1], 3)
 </pre>
 </section>
@@ -897,8 +836,7 @@
 <p class="Pp">The following methods are for this module only.</p>
 <section class="Ss">
 <h2 class="Ss" id="backend"><a class="permalink" href="#backend">backend</a></h2>
-<pre>
-    $backend = $json-&gt;backend
+<pre>    $backend = $json-&gt;backend
 </pre>
 <p class="Pp">Since 2.92, <span class="Li">&quot;backend&quot;</span> method
     returns an abstract backend module used currently, which should be
@@ -910,37 +848,32 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="is_xs"><a class="permalink" href="#is_xs">is_xs</a></h2>
-<pre>
-    $boolean = $json-&gt;is_xs
+<pre>    $boolean = $json-&gt;is_xs
 </pre>
 <p class="Pp">Returns true if the backend inherits JSON::XS or
   Cpanel::JSON::XS.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="is_pp"><a class="permalink" href="#is_pp">is_pp</a></h2>
-<pre>
-    $boolean = $json-&gt;is_pp
+<pre>    $boolean = $json-&gt;is_pp
 </pre>
 <p class="Pp">Returns true if the backend inherits JSON::PP.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="property"><a class="permalink" href="#property">property</a></h2>
-<pre>
-    $settings = $json-&gt;property()
+<pre>    $settings = $json-&gt;property()
 </pre>
 <p class="Pp">Returns a reference to a hash that holds all the common flag
     settings.</p>
 <p class="Pp"></p>
-<pre>
-    $json = $json-&gt;property('utf8' =&gt; 1)
+<pre>    $json = $json-&gt;property('utf8' =&gt; 1)
     $value = $json-&gt;property('utf8') # 1
 </pre>
 <p class="Pp">You can use this to get/set a value of a particular flag.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="boolean"><a class="permalink" href="#boolean">boolean</a></h2>
-<pre>
-    $boolean_object = JSON-&gt;boolean($scalar)
+<pre>    $boolean_object = JSON-&gt;boolean($scalar)
 </pre>
 <p class="Pp">Returns <span class="Li">$JSON::true</span> if
     <span class="Li">$scalar</span> contains a true value,
@@ -972,8 +905,7 @@
 <p class="Pp">The following methods implement this incremental parser.</p>
 <section class="Ss">
 <h2 class="Ss" id="incr_parse"><a class="permalink" href="#incr_parse">incr_parse</a></h2>
-<pre>
-    $json-&gt;incr_parse( [$string] ) # void context
+<pre>    $json-&gt;incr_parse( [$string] ) # void context
     
     $obj_or_undef = $json-&gt;incr_parse( [$string] ) # scalar context
     
@@ -1005,14 +937,12 @@
 <p class="Pp">Example: Parse some JSON arrays/objects in a given string and
     return them.</p>
 <p class="Pp"></p>
-<pre>
-    my @objs = JSON-&gt;new-&gt;incr_parse (&quot;[5][7][1,2]&quot;);
+<pre>    my @objs = JSON-&gt;new-&gt;incr_parse (&quot;[5][7][1,2]&quot;);
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="incr_text"><a class="permalink" href="#incr_text">incr_text</a></h2>
-<pre>
-    $lvalue_string = $json-&gt;incr_text
+<pre>    $lvalue_string = $json-&gt;incr_text
 </pre>
 <p class="Pp">This method returns the currently stored JSON fragment as an
     lvalue, that is, you can manipulate it. This <i>only</i> works when a
@@ -1031,8 +961,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="incr_skip"><a class="permalink" href="#incr_skip">incr_skip</a></h2>
-<pre>
-    $json-&gt;incr_skip
+<pre>    $json-&gt;incr_skip
 </pre>
 <p class="Pp">This will reset the state of the incremental parser and will
     remove the parsed text from the input buffer so far. This is useful after
@@ -1044,8 +973,7 @@
 </section>
 <section class="Ss">
 <h2 class="Ss" id="incr_reset"><a class="permalink" href="#incr_reset">incr_reset</a></h2>
-<pre>
-    $json-&gt;incr_reset
+<pre>    $json-&gt;incr_reset
 </pre>
 <p class="Pp">This completely resets the incremental parser, that is, after this
     call, it will be as if the parser had never parsed anything.</p>
@@ -1153,8 +1081,7 @@
       <span class="Li">&quot;JSON::false&quot;</span> and
       <span class="Li">&quot;JSON::true&quot;</span> to improve readability.
     <p class="Pp"></p>
-    <pre>
-   encode_json [\0,JSON::true]      # yields [false,true]
+    <pre>   encode_json [\0,JSON::true]      # yields [false,true]
     </pre>
   </dd>
   <dt id="JSON::true,"><a class="permalink" href="#JSON::true,">JSON::true,
@@ -1174,31 +1101,26 @@
       last been used in a string context before encoding as JSON strings, and
       anything else as number value:
     <p class="Pp"></p>
-    <pre>
-   # dump as number
+    <pre>   # dump as number
    encode_json [2]                      # yields [2]
    encode_json [-3.0e17]                # yields [-3e+17]
    my $value = 5; encode_json [$value]  # yields [5]
-
    # used as string, so dump as string
    print $value;
    encode_json [$value]                 # yields [&quot;5&quot;]
-
    # undef becomes null
    encode_json [undef]                  # yields [null]
     </pre>
     <p class="Pp">You can force the type to be a string by stringifying it:</p>
     <p class="Pp"></p>
-    <pre>
-   my $x = 3.1; # some variable containing a number
+    <pre>   my $x = 3.1; # some variable containing a number
    &quot;$x&quot;;        # stringified
    $x .= &quot;&quot;;    # another, more awkward way to stringify
    print $x;    # perl does it for you, too, quite often
     </pre>
     <p class="Pp">You can force the type to be a number by numifying it:</p>
     <p class="Pp"></p>
-    <pre>
-   my $x = &quot;3&quot;; # some variable containing a string
+    <pre>   my $x = &quot;3&quot;; # some variable containing a string
    $x += 0;     # numify it, ensuring it will be dumped as a number
    $x *= 1;     # same thing, the choice is yours.
     </pre>
@@ -1267,13 +1189,11 @@
         paclkage/classname of the object will then be encoded as a tagged JSON
         value in the following format:</p>
     <p class="Pp"></p>
-    <pre>
-   (&quot;classname&quot;)[FREEZE return values...]
+    <pre>   (&quot;classname&quot;)[FREEZE return values...]
     </pre>
     <p class="Pp">e.g.:</p>
     <p class="Pp"></p>
-    <pre>
-   (&quot;URI&quot;)[&quot;http://www.google.com/&quot;]
+    <pre>   (&quot;URI&quot;)[&quot;http://www.google.com/&quot;]
    (&quot;MyDate&quot;)[2013,10,29]
    (&quot;ImageData::JPEG&quot;)[&quot;Z3...VlCg==&quot;]
     </pre>
@@ -1283,10 +1203,8 @@
         <span class="Li">&quot;type&quot;</span> and
         <span class="Li">&quot;id&quot;</span> members to encode the object:</p>
     <p class="Pp"></p>
-    <pre>
-   sub My::Object::FREEZE {
+    <pre>   sub My::Object::FREEZE {
       my ($self, $serialiser) = @_;
-
       ($self-&gt;{type}, $self-&gt;{id})
    }
     </pre>
@@ -1302,8 +1220,7 @@
         objects to JSON strings when serialised. The fact that these values
         originally were URI objects is lost.</p>
     <p class="Pp"></p>
-    <pre>
-   sub URI::TO_JSON {
+    <pre>   sub URI::TO_JSON {
       my ($uri) = @_;
       $uri-&gt;as_string
    }
@@ -1347,10 +1264,8 @@
     <span class="Li">&quot;My::Object&quot;</span> from the
     <span class="Li">&quot;FREEZE&quot;</span> example earlier:</p>
 <p class="Pp"></p>
-<pre>
-   sub My::Object::THAW {
+<pre>   sub My::Object::THAW {
       my ($class, $serialiser, $type, $id) = @_;
-
       $class-&gt;new (type =&gt; $type, id =&gt; $id)
    }
 </pre>
@@ -1471,9 +1386,7 @@
     that expects they are stringified as &quot;true&quot; or &quot;false&quot;
     doesn't work as you have expected any more.</p>
 <p class="Pp"></p>
-<pre>
-    if (JSON::true eq 'true') {  # now fails
-
+<pre>    if (JSON::true eq 'true') {  # now fails
     print &quot;The result is $JSON::true now.&quot;; # =&gt; The result is 1 now.
 </pre>
 <p class="Pp">And now these boolean values don't inherit JSON::Boolean, either.

@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLFAQ3(1)</title>
 </head>
@@ -218,8 +219,7 @@
 <p class="Pp">The typical approach uses the Perl debugger, described in the
     <b>perldebug</b>(1) manpage, on an &quot;empty&quot; program, like this:</p>
 <p class="Pp"></p>
-<pre>
-    perl -de 42
+<pre>    perl -de 42
 </pre>
 <p class="Pp">Now just type in any legal Perl code, and it will be immediately
     evaluated. You can also examine the symbol table, get stack backtraces,
@@ -236,34 +236,28 @@
     <span class="Li">&quot;cpan&quot;</span> command's
     <span class="Li">&quot;-l&quot;</span> switch:</p>
 <p class="Pp"></p>
-<pre>
-    $ cpan -l
+<pre>    $ cpan -l
 </pre>
 <p class="Pp">You can also use <span class="Li">&quot;cpan&quot;</span>'s
     <span class="Li">&quot;-a&quot;</span> switch to create an autobundle file
     that <span class="Li">&quot;CPAN.pm&quot;</span> understands and can use to
     re-install every module:</p>
 <p class="Pp"></p>
-<pre>
-    $ cpan -a
+<pre>    $ cpan -a
 </pre>
 <p class="Pp">Inside a Perl program, you can use the ExtUtils::Installed module
     to show all installed distributions, although it can take awhile to do its
     magic. The standard library which comes with Perl just shows up as
     &quot;Perl&quot; (although you can get those with Module::CoreList).</p>
 <p class="Pp"></p>
-<pre>
-    use ExtUtils::Installed;
-
+<pre>    use ExtUtils::Installed;
     my $inst    = ExtUtils::Installed-&gt;new();
     my @modules = $inst-&gt;modules();
 </pre>
 <p class="Pp">If you want a list of all of the Perl module filenames, you can
     use File::Find::Rule:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Find::Rule;
-
+<pre>    use File::Find::Rule;
     my @files = File::Find::Rule-&gt;
         extras({follow =&gt; 1})-&gt;
         file()-&gt;
@@ -274,10 +268,8 @@
 <p class="Pp">If you do not have that module, you can do the same thing with
     File::Find which is part of the standard library:</p>
 <p class="Pp"></p>
-<pre>
-    use File::Find;
+<pre>    use File::Find;
     my @files;
-
     find(
         {
         wanted =&gt; sub {
@@ -289,7 +281,6 @@
         },
         @INC
     );
-
     print join &quot;\n&quot;, @files;
 </pre>
 <p class="Pp">If you simply need to check quickly to see if a module is
@@ -297,14 +288,12 @@
     documentation the module is most likely installed. If you cannot read the
     documentation, the module might not have any (in rare cases):</p>
 <p class="Pp"></p>
-<pre>
-    $ perldoc Module::Name
+<pre>    $ perldoc Module::Name
 </pre>
 <p class="Pp">You can also try to include the module in a one-liner to see if
     perl finds it:</p>
 <p class="Pp"></p>
-<pre>
-    $ perl -MModule::Name -e1
+<pre>    $ perl -MModule::Name -e1
 </pre>
 <p class="Pp">(If you don't receive a &quot;Can't locate ... in
     <span class="Li">@INC</span>&quot; error message, then Perl found the module
@@ -319,8 +308,7 @@
     warnings and strictures, you can head off many problems before they get too
     big. You can find out more about these in strict and warnings.</p>
 <p class="Pp"></p>
-<pre>
-    #!/usr/bin/perl
+<pre>    #!/usr/bin/perl
     use strict;
     use warnings;
 </pre>
@@ -328,13 +316,11 @@
     <span class="Li">&quot;print&quot;</span> function. Use it to look at values
     as you run your program:</p>
 <p class="Pp"></p>
-<pre>
-    print STDERR &quot;The value is [$value]\n&quot;;
+<pre>    print STDERR &quot;The value is [$value]\n&quot;;
 </pre>
 <p class="Pp">The Data::Dumper module can pretty-print Perl data structures:</p>
 <p class="Pp"></p>
-<pre>
-    use Data::Dumper qw( Dumper );
+<pre>    use Data::Dumper qw( Dumper );
     print STDERR &quot;The hash is &quot; . Dumper( \%hash ) . &quot;\n&quot;;
 </pre>
 <p class="Pp">Perl comes with an interactive debugger, which you can start with
@@ -364,15 +350,13 @@
     and subroutine profiling. It's available from CPAN and you also invoke it
     with the <span class="Li">&quot;-d&quot;</span> switch:</p>
 <p class="Pp"></p>
-<pre>
-    perl -d:NYTProf some_perl.pl
+<pre>    perl -d:NYTProf some_perl.pl
 </pre>
 <p class="Pp">It creates a database of the profile information that you can turn
     into reports. The <span class="Li">&quot;nytprofhtml&quot;</span> command
     turns the data into an HTML report similar to the Devel::Cover report:</p>
 <p class="Pp"></p>
-<pre>
-    nytprofhtml
+<pre>    nytprofhtml
 </pre>
 <p class="Pp">You might also be interested in using the Benchmark to measure and
     compare code snippets.</p>
@@ -401,8 +385,7 @@
 <p class="Pp">The B::Xref module can be used to generate cross-reference reports
     for Perl programs.</p>
 <p class="Pp"></p>
-<pre>
-    perl -MO=Xref[,OPTIONS] scriptname.plx
+<pre>    perl -MO=Xref[,OPTIONS] scriptname.plx
 </pre>
 </section>
 <section class="Ss">
@@ -420,8 +403,7 @@
     provide significant assistance. Tom Christiansen and many other VI users
     swear by the following settings in vi and its clones:</p>
 <p class="Pp"></p>
-<pre>
-    set ai sw=4
+<pre>    set ai sw=4
     map! ^O {^M}^[O^T
 </pre>
 <p class="Pp">Put that in your <i>.exrc</i> file (replacing the caret characters
@@ -722,8 +704,7 @@
   <dd>Don't read an entire file into memory if you can process it line by line.
       Or more concretely, use a loop like this:
     <p class="Pp"></p>
-    <pre>
-    #
+    <pre>    #
     # Good Idea
     #
     while (my $line = &lt;$file_handle&gt;) {
@@ -732,8 +713,7 @@
     </pre>
     <p class="Pp">instead of this:</p>
     <p class="Pp"></p>
-    <pre>
-    #
+    <pre>    #
     # Bad Idea
     #
     my @data = &lt;$file_handle&gt;;
@@ -749,14 +729,12 @@
     selectively</a></dt>
   <dd>Remember that both map and grep expect a LIST argument, so doing this:
     <p class="Pp"></p>
-    <pre>
-        @wanted = grep {/pattern/} &lt;$file_handle&gt;;
+    <pre>        @wanted = grep {/pattern/} &lt;$file_handle&gt;;
     </pre>
     <p class="Pp">will cause the entire file to be slurped. For large files,
         it's better to loop:</p>
     <p class="Pp"></p>
-    <pre>
-        while (&lt;$file_handle&gt;) {
+    <pre>        while (&lt;$file_handle&gt;) {
                 push(@wanted, $_) if /pattern/;
         }
     </pre>
@@ -765,34 +743,29 @@
     stringification</a></dt>
   <dd>Don't quote large strings unless absolutely necessary:
     <p class="Pp"></p>
-    <pre>
-        my $copy = &quot;$large_string&quot;;
+    <pre>        my $copy = &quot;$large_string&quot;;
     </pre>
     <p class="Pp">makes 2 copies of <span class="Li">$large_string</span> (one
         for <span class="Li">$copy</span> and another for the quotes),
       whereas</p>
     <p class="Pp"></p>
-    <pre>
-        my $copy = $large_string;
+    <pre>        my $copy = $large_string;
     </pre>
     <p class="Pp">only makes one copy.</p>
     <p class="Pp">Ditto for stringifying large arrays:</p>
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
     local $, = &quot;\n&quot;;
     print @big_array;
     }
     </pre>
     <p class="Pp">is much more memory-efficient than either</p>
     <p class="Pp"></p>
-    <pre>
-    print join &quot;\n&quot;, @big_array;
+    <pre>    print join &quot;\n&quot;, @big_array;
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    {
+    <pre>    {
     local $&quot; = &quot;\n&quot;;
     print &quot;@big_array&quot;;
     }
@@ -819,18 +792,14 @@
 <p class="Pp">Yes. Perl's garbage collection system takes care of this so
     everything works out right.</p>
 <p class="Pp"></p>
-<pre>
-    sub makeone {
+<pre>    sub makeone {
         my @a = ( 1 .. 10 );
         return \@a;
     }
-
     for ( 1 .. 10 ) {
         push @many, makeone();
     }
-
     print $many[4][5], &quot;\n&quot;;
-
     print &quot;@many\n&quot;;
 </pre>
 </section>
@@ -955,8 +924,7 @@
   can I get &quot;#!perl&quot; to work on [MS-DOS,NT,...]?</a></h2>
 <p class="Pp">For OS/2 just use</p>
 <p class="Pp"></p>
-<pre>
-    extproc perl -S -your_switches
+<pre>    extproc perl -S -your_switches
 </pre>
 <p class="Pp">as the first line in <span class="Li">&quot;*.cmd&quot;</span>
     file (<span class="Li">&quot;-S&quot;</span> due to a bug in cmd.exe's
@@ -991,22 +959,16 @@
 <p class="Pp">Yes. Read perlrun for more information. Some examples follow.
     (These assume standard Unix shell quoting rules.)</p>
 <p class="Pp"></p>
-<pre>
-    # sum first and last fields
+<pre>    # sum first and last fields
     perl -lane 'print $F[0] + $F[-1]' *
-
     # identify text files
     perl -le 'for(@ARGV) {print if -f &amp;&amp; -T _}' *
-
     # remove (most) comments from C program
     perl -0777 -pe 's{/\*.*?\*/}{}gs' foo.c
-
     # make file a month younger than today, defeating reaper daemons
     perl -e '$X=24*60*60; utime(time(),time() + 30 * $X,@ARGV)' *
-
     # find first unused uid
     perl -le '$i++ while getpwuid($i); print $i'
-
     # display reasonable manpath
     echo $PATH | perl -nl -072 -e '
     s![^/+]*$!man!&amp;&amp;-d&amp;&amp;!$s{$_}++&amp;&amp;push@m,$_;END{print&quot;@m&quot;}'
@@ -1024,20 +986,15 @@
     systems. You might also have to change a single % to a %%.</p>
 <p class="Pp">For example:</p>
 <p class="Pp"></p>
-<pre>
-    # Unix (including Mac OS X)
+<pre>    # Unix (including Mac OS X)
     perl -e 'print &quot;Hello world\n&quot;'
-
     # DOS, etc.
     perl -e &quot;print \&quot;Hello world\n\&quot;&quot;
-
     # Mac Classic
     print &quot;Hello world\n&quot;
      (then Run &quot;Myscript&quot; or Shift-Command-R)
-
     # MPW
     perl -e 'print &quot;Hello world\n&quot;'
-
     # VMS
     perl -e &quot;print &quot;&quot;Hello world\n&quot;&quot;&quot;
 </pre>
@@ -1046,8 +1003,7 @@
     Under DOS, it's entirely possible that neither works. If 4DOS was the
     command shell, you'd probably have better luck like this:</p>
 <p class="Pp"></p>
-<pre>
-  perl -e &quot;print &lt;Ctrl-x&gt;&quot;Hello world\n&lt;Ctrl-x&gt;&quot;&quot;
+<pre>  perl -e &quot;print &lt;Ctrl-x&gt;&quot;Hello world\n&lt;Ctrl-x&gt;&quot;&quot;
 </pre>
 <p class="Pp">Under the Mac, it depends which environment you are using. The
     MacPerl shell, or MPW, is much like Unix shells in its support for several
@@ -1069,8 +1025,7 @@
     fine on the command line&quot;, see the troubleshooting guides and
     references in perlfaq9 or in the CGI MetaFAQ:</p>
 <p class="Pp"></p>
-<pre>
-    L&lt;http://www.perl.org/CGI_MetaFAQ.html&gt;
+<pre>    L&lt;http://www.perl.org/CGI_MetaFAQ.html&gt;
 </pre>
 <p class="Pp">Looking in to Plack and modern Perl web frameworks is highly
     recommended, though; web programming in Perl has evolved a long way from the
@@ -1115,19 +1070,16 @@
     explanatory text can be found in perldiag. You can also use the splain
     program (distributed with Perl) to explain the error messages:</p>
 <p class="Pp"></p>
-<pre>
-    perl program 2&gt;diag.out
+<pre>    perl program 2&gt;diag.out
     splain [-v] [-p] diag.out
 </pre>
 <p class="Pp">or change your program to explain the messages for you:</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics;
+<pre>    use diagnostics;
 </pre>
 <p class="Pp">or</p>
 <p class="Pp"></p>
-<pre>
-    use diagnostics -verbose;
+<pre>    use diagnostics -verbose;
 </pre>
 </section>
 <section class="Ss">

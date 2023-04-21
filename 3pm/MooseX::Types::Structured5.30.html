@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MooseX::Types::Structured(3pm)</title>
 </head>
@@ -35,13 +36,10 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">The following is example usage for this module.</p>
 <p class="Pp"></p>
-<pre>
-    package Person;
-
+<pre>    package Person;
     use Moose;
     use MooseX::Types::Moose qw(Str Int HashRef);
     use MooseX::Types::Structured qw(Dict Tuple Optional);
-
     ## A name has a first and last part, but middle names are not required
     has name =&gt; (
         isa=&gt;Dict[
@@ -50,7 +48,6 @@
             middle =&gt; Optional[Str],
         ],
     );
-
     ## description is a string field followed by a HashRef of tagged data.
     has description =&gt; (
       isa=&gt;Tuple[
@@ -58,13 +55,11 @@
         Optional[HashRef],
      ],
     );
-
     ## Remainder of your class attributes and methods
 </pre>
 <p class="Pp">Then you can instantiate this class with something like:</p>
 <p class="Pp"></p>
-<pre>
-    my $john = Person-&gt;new(
+<pre>    my $john = Person-&gt;new(
         name =&gt; {
             first =&gt; 'John',
             middle =&gt; 'James'
@@ -80,8 +75,7 @@
 </pre>
 <p class="Pp">Or with:</p>
 <p class="Pp"></p>
-<pre>
-    my $vanessa = Person-&gt;new(
+<pre>    my $vanessa = Person-&gt;new(
         name =&gt; {
             first =&gt; 'Vanessa',
             last =&gt; 'Li'
@@ -92,21 +86,17 @@
 <p class="Pp">But all of these would cause a constraint error for the
     <span class="Li">&quot;name&quot;</span> attribute:</p>
 <p class="Pp"></p>
-<pre>
-    ## Value for 'name' not a HashRef
+<pre>    ## Value for 'name' not a HashRef
     Person-&gt;new( name =&gt; 'John' );
-
     ## Value for 'name' has incorrect hash key and missing required keys
     Person-&gt;new( name =&gt; {
         first_name =&gt; 'John'
     });
-
     ## Also incorrect keys
     Person-&gt;new( name =&gt; {
         first_name =&gt; 'John',
         age =&gt; 39,
     });
-
     ## key 'middle' incorrect type, should be a Str not a ArrayRef
     Person-&gt;new( name =&gt; {
         first =&gt; 'Vanessa',
@@ -117,10 +107,8 @@
 <p class="Pp">And these would cause a constraint error for the
     <span class="Li">&quot;description&quot;</span> attribute:</p>
 <p class="Pp"></p>
-<pre>
-    ## Should be an ArrayRef
+<pre>    ## Should be an ArrayRef
     Person-&gt;new( description =&gt; 'Hello I am a String' );
-
     ## First element must be a string not a HashRef.
     Person-&gt;new (description =&gt; [{
         tag1 =&gt; 'value1',
@@ -137,8 +125,7 @@
     allow you to explicitly name all the allowed type constraints inside the
     structure. The generalized form is:</p>
 <p class="Pp"></p>
-<pre>
-    TypeConstraint[@TypeParameters or %TypeParameters]
+<pre>    TypeConstraint[@TypeParameters or %TypeParameters]
 </pre>
 <p class="Pp">Where <span class="Li">&quot;TypeParameters&quot;</span> is an
     array reference or hash references of Moose::Meta::TypeConstraint
@@ -156,16 +143,14 @@
     functionality, so their syntax is likewise similar. For example, you could
     define a parameterized constraint like:</p>
 <p class="Pp"></p>
-<pre>
-    subtype ArrayOfInts,
+<pre>    subtype ArrayOfInts,
      as ArrayRef[Int];
 </pre>
 <p class="Pp">which would constrain a value to something like [1,2,3,...] and so
     on. On the other hand, a structured type constraint explicitly names all
     it's allowed 'internal' type parameter constraints. For the example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype StringFollowedByInt,
+<pre>    subtype StringFollowedByInt,
      as Tuple[Str,Int];
 </pre>
 <p class="Pp">would constrain its value to things like
@@ -174,13 +159,10 @@
     as <span class="Li">&quot;['hello', 111, 'world']&quot;</span> and so on.
     Here's another example:</p>
 <p class="Pp"></p>
-<pre>
-        package MyApp::Types;
-
+<pre>        package MyApp::Types;
     use MooseX::Types -declare [qw(StringIntOptionalHashRef)];
     use MooseX::Types::Moose qw(Str Int);
     use MooseX::Types::Structured qw(Tuple Optional);
-
     subtype StringIntOptionalHashRef,
      as Tuple[
         Str, Int,
@@ -189,8 +171,7 @@
 </pre>
 <p class="Pp">This defines a type constraint that validates values like:</p>
 <p class="Pp"></p>
-<pre>
-    ['Hello', 100, {key1 =&gt; 'value1', key2 =&gt; 'value2'}];
+<pre>    ['Hello', 100, {key1 =&gt; 'value1', key2 =&gt; 'value2'}];
     ['World', 200];
 </pre>
 <p class="Pp">Notice that the last type constraint in the structure is optional.
@@ -201,20 +182,16 @@
     to validate if they exist, while <span class="Li">&quot;Maybe&quot;</span>
     permits undefined values. So the following example would not validate:</p>
 <p class="Pp"></p>
-<pre>
-    StringIntOptionalHashRef-&gt;validate(['Hello Undefined', 1000, undef]);
+<pre>    StringIntOptionalHashRef-&gt;validate(['Hello Undefined', 1000, undef]);
 </pre>
 <p class="Pp">Please note the subtle difference between undefined and null. If
     you wish to allow both null and undefined, you should use the core Moose
     <span class="Li">&quot;Maybe&quot;</span> type constraint instead:</p>
 <p class="Pp"></p>
-<pre>
-    package MyApp::Types;
-
+<pre>    package MyApp::Types;
     use MooseX::Types -declare [qw(StringIntMaybeHashRef)];
     use MooseX::Types::Moose qw(Str Int Maybe);
     use MooseX::Types::Structured qw(Tuple);
-
     subtype StringIntMaybeHashRef,
      as Tuple[
         Str, Int, Maybe[HashRef]
@@ -222,8 +199,7 @@
 </pre>
 <p class="Pp">This would validate the following:</p>
 <p class="Pp"></p>
-<pre>
-    ['Hello', 100, {key1 =&gt; 'value1', key2 =&gt; 'value2'}];
+<pre>    ['Hello', 100, {key1 =&gt; 'value1', key2 =&gt; 'value2'}];
     ['World', 200, undef];
     ['World', 200];
 </pre>
@@ -232,8 +208,7 @@
     <span class="Li">&quot;Dict&quot;</span> type constraint as in this
   example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype FirstNameLastName,
+<pre>    subtype FirstNameLastName,
      as Dict[
         firstname =&gt; Str,
         lastname =&gt; Str,
@@ -242,18 +217,14 @@
 <p class="Pp">This would constrain a <span class="Li">&quot;HashRef&quot;</span>
     that validates something like:</p>
 <p class="Pp"></p>
-<pre>
-    {firstname =&gt; 'Christopher', lastname =&gt; 'Parsons'};
+<pre>    {firstname =&gt; 'Christopher', lastname =&gt; 'Parsons'};
 </pre>
 <p class="Pp">but all the following would fail validation:</p>
 <p class="Pp"></p>
-<pre>
-    ## Incorrect keys
+<pre>    ## Incorrect keys
     {first =&gt; 'Christopher', last =&gt; 'Parsons'};
-
     ## Too many keys
     {firstname =&gt; 'Christopher', lastname =&gt; 'Parsons', middlename =&gt; 'Allen'};
-
     ## Not a HashRef
     ['Christopher', 'Parsons'];
 </pre>
@@ -261,8 +232,7 @@
     can even combine various structured, parameterized and simple constraints
     all together:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Crazy,
+<pre>    subtype Crazy,
      as Tuple[
         Int,
         Dict[name=&gt;Str, age=&gt;Int],
@@ -271,8 +241,7 @@
 </pre>
 <p class="Pp">Which would match:</p>
 <p class="Pp"></p>
-<pre>
-    [1, {name=&gt;'John', age=&gt;25},[10,11,12]];
+<pre>    [1, {name=&gt;'John', age=&gt;25},[10,11,12]];
 </pre>
 <p class="Pp">Please notice how the type parameters can be visually arranged to
     your liking and to improve the clarity of your meaning. You don't need to
@@ -280,8 +249,7 @@
     <span class="Li">&quot;Dict&quot;</span> type constraint defines a hash
     constraint, the key order is not meaningful. For example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype AnyKeyOrder,
+<pre>    subtype AnyKeyOrder,
       as Dict[
         key1=&gt;Int,
         key2=&gt;Str,
@@ -290,8 +258,7 @@
 </pre>
 <p class="Pp">Would validate both:</p>
 <p class="Pp"></p>
-<pre>
-    {key1 =&gt; 1, key2 =&gt; &quot;Hi!&quot;, key3 =&gt; 2};
+<pre>    {key1 =&gt; 1, key2 =&gt; &quot;Hi!&quot;, key3 =&gt; 2};
     {key2 =&gt; &quot;Hi!&quot;, key1 =&gt; 100, key3 =&gt; 300};
 </pre>
 <p class="Pp">As you would expect, since underneath it's just a plain old Perl
@@ -303,18 +270,13 @@
     structured constraints would be better off contained by a real object as in
     the following example:</p>
 <p class="Pp"></p>
-<pre>
-    package MyApp::MyStruct;
+<pre>    package MyApp::MyStruct;
     use Moose;
-
     ## lazy way to make a bunch of attributes
     has $_ for qw(full_name age_in_years);
-
     package MyApp::MyClass;
     use Moose;
-
     has person =&gt; (isa =&gt; 'MyApp::MyStruct');
-
     my $instance = MyApp::MyClass-&gt;new(
         person=&gt;MyApp::MyStruct-&gt;new(
             full_name =&gt; 'John',
@@ -327,28 +289,21 @@
     with this method, granting some interesting possibilities for coercion.
   Try:</p>
 <p class="Pp"></p>
-<pre>
-    package MyApp::MyClass;
-
+<pre>    package MyApp::MyClass;
     use Moose;
     use MyApp::MyStruct;
-
     ## It's recommended your type declarations live in a separate class in order
     ## to promote reusability and clarity.  Inlined here for brevity.
-
     use MooseX::Types::DateTime qw(DateTime);
     use MooseX::Types -declare [qw(MyStruct)];
     use MooseX::Types::Moose qw(Str Int);
     use MooseX::Types::Structured qw(Dict);
-
     ## Use class_type to create an ISA type constraint if your object doesn't
     ## inherit from Moose::Object.
     class_type 'MyApp::MyStruct';
-
     ## Just a shorter version really.
     subtype MyStruct,
      as 'MyApp::MyStruct';
-
     ## Add the coercions.
     coerce MyStruct,
      from Dict[
@@ -364,27 +319,23 @@
      ], via {
         my $name = $_-&gt;{firstname} .' '. $_-&gt;{lastname};
         my $age = DateTime-&gt;now - $_-&gt;{dob};
-
         MyApp::MyStruct-&gt;new(
             full_name=&gt;$name,
             age_in_years=&gt;$age-&gt;years,
         );
      };
-
     has person =&gt; (isa=&gt;MyStruct);
 </pre>
 <p class="Pp">This would allow you to instantiate with something like:</p>
 <p class="Pp"></p>
-<pre>
-    my $obj = MyApp::MyClass-&gt;new( person =&gt; {
+<pre>    my $obj = MyApp::MyClass-&gt;new( person =&gt; {
         full_name=&gt;'John Napiorkowski',
         age_in_years=&gt;39,
     });
 </pre>
 <p class="Pp">Or even:</p>
 <p class="Pp"></p>
-<pre>
-    my $obj = MyApp::MyClass-&gt;new( person =&gt; {
+<pre>    my $obj = MyApp::MyClass-&gt;new( person =&gt; {
         lastname=&gt;'John',
         firstname=&gt;'Napiorkowski',
         dob=&gt;DateTime-&gt;new(year=&gt;1969),
@@ -400,10 +351,8 @@
 <p class="Pp">You need to exercise some care when you try to subtype a
     structured type as in this example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Person,
+<pre>    subtype Person,
      as Dict[name =&gt; Str];
-
     subtype FriendlyPerson,
      as Person[
         name =&gt; Str,
@@ -423,19 +372,16 @@
 <p class="Pp">Coercions currently work for 'one level' deep. That is you can
   do:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Person,
+<pre>    subtype Person,
      as Dict[
         name =&gt; Str,
         age =&gt; Int
     ];
-
     subtype Fullname,
      as Dict[
         first =&gt; Str,
         last =&gt; Str
      ];
-
     coerce Person,
      ## Coerce an object of a particular class
      from BlessedPersonObject, via {
@@ -444,7 +390,6 @@
             age=&gt;$_-&gt;age,
         };
      },
-
      ## Coerce from [$name, $age]
      from ArrayRef, via {
         +{
@@ -478,8 +423,7 @@
     constraints. That is you can include a type constraint as a contained type
     constraint of itself. For example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Person,
+<pre>    subtype Person,
      as Dict[
          name=&gt;Str,
          friends=&gt;Optional[
@@ -492,8 +436,7 @@
     <span class="Li">&quot;ArrayRef&quot;</span> of
     <span class="Li">&quot;Person&quot;</span>s who are friends as in:</p>
 <p class="Pp"></p>
-<pre>
-    {
+<pre>    {
         name =&gt; 'Mike',
         friends =&gt; [
             { name =&gt; 'John' },
@@ -512,8 +455,7 @@
     <span class="Li">&quot;Optional&quot;</span>, or declare a union with an
     non-recursive option such as:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Value
+<pre>    subtype Value
      as Tuple[
          Str,
          Str|Tuple,
@@ -521,8 +463,7 @@
 </pre>
 <p class="Pp">Which validates:</p>
 <p class="Pp"></p>
-<pre>
-    [
+<pre>    [
         'Hello', [
             'World', [
                 'Is', [
@@ -548,8 +489,7 @@
 <p class="Pp">This defines an ArrayRef based constraint which allows you to
     validate a specific list of contained constraints. For example:</p>
 <p class="Pp"></p>
-<pre>
-    Tuple[Int,Str]; ## Validates [1,'hello']
+<pre>    Tuple[Int,Str]; ## Validates [1,'hello']
     Tuple[Str|Object, Int]; ## Validates ['hello', 1] or [$object, 2]
 </pre>
 <p class="Pp">The Values of <span class="Li">@constraints</span> should ideally
@@ -565,8 +505,7 @@
 <p class="Pp">This defines a HashRef based constraint which allowed you to
     validate a specific hashref. For example:</p>
 <p class="Pp"></p>
-<pre>
-    Dict[name=&gt;Str, age=&gt;Int]; ## Validates {name=&gt;'John', age=&gt;39}
+<pre>    Dict[name=&gt;Str, age=&gt;Int]; ## Validates {name=&gt;'John', age=&gt;39}
 </pre>
 <p class="Pp">The keys in <span class="Li">%constraints</span> follow the same
     rules as <span class="Li">@constraints</span> in the above section.</p>
@@ -579,8 +518,7 @@
     constraints. For example, to map hostnames to IP addresses, you might
   say:</p>
 <p class="Pp"></p>
-<pre>
-  Map[ HostName, IPAddress ]
+<pre>  Map[ HostName, IPAddress ]
 </pre>
 <p class="Pp">The type constraint would only be met if every key was a valid
     <span class="Li">&quot;HostName&quot;</span> and every value was a valid
@@ -597,8 +535,7 @@
     makes it easy to make a Dict where one or more of the keys doesn't have to
     exist or a tuple where some of the values are not required. For example:</p>
 <p class="Pp"></p>
-<pre>
-    subtype Name() =&gt; as Dict[
+<pre>    subtype Name() =&gt; as Dict[
         first=&gt;Str,
         last=&gt;Str,
         middle=&gt;Optional[Str],
@@ -609,8 +546,7 @@
     'middle' is must be a string if it appears but doesn't have to appear. So in
     this case both the following are valid:</p>
 <p class="Pp"></p>
-<pre>
-    {first=&gt;'John', middle=&gt;'James', last=&gt;'Napiorkowski'}
+<pre>    {first=&gt;'John', middle=&gt;'James', last=&gt;'Napiorkowski'}
     {first=&gt;'Vanessa', last=&gt;'Li'}
 </pre>
 <p class="Pp">If you use the <span class="Li">&quot;Maybe&quot;</span> type
@@ -634,8 +570,7 @@
     additional elements. At first thought you might think you could do it this
     way:</p>
 <p class="Pp"></p>
-<pre>
-    #  I want to validate stuff like: [1,&quot;hello&quot;, $obj, 2,3,4,5,6,...]
+<pre>    #  I want to validate stuff like: [1,&quot;hello&quot;, $obj, 2,3,4,5,6,...]
     subtype AllowTailingArgs,
      as Tuple[
        Int,
@@ -647,16 +582,13 @@
 <p class="Pp">However what this will actually validate are structures like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    [10,&quot;Hello&quot;, $obj, [11,12,13,...] ]; # Notice element 4 is an ArrayRef
+<pre>    [10,&quot;Hello&quot;, $obj, [11,12,13,...] ]; # Notice element 4 is an ArrayRef
 </pre>
 <p class="Pp">In order to allow structured validation of, &quot;and then
     some&quot;, arguments, you can use the &quot;slurpy&quot; method against a
     type constraint. For example:</p>
 <p class="Pp"></p>
-<pre>
-    use MooseX::Types::Structured qw(Tuple slurpy);
-
+<pre>    use MooseX::Types::Structured qw(Tuple slurpy);
     subtype AllowTailingArgs,
      as Tuple[
        Int,
@@ -668,8 +600,7 @@
 <p class="Pp">This will now work as expected, validating ArrayRef structures
     such as:</p>
 <p class="Pp"></p>
-<pre>
-    [1,&quot;hello&quot;, $obj, 2,3,4,5,6,...]
+<pre>    [1,&quot;hello&quot;, $obj, 2,3,4,5,6,...]
 </pre>
 <p class="Pp">A few caveats apply. First, the slurpy type constraint must be the
     last one in the list of type constraint parameters. Second, the parent type
@@ -720,23 +651,18 @@
     coercions. This example also shows structured types mixed which other
     MooseX::Types libraries.</p>
 <p class="Pp"></p>
-<pre>
-    package Test::MooseX::Meta::TypeConstraint::Structured::Examples::Normalize;
-
+<pre>    package Test::MooseX::Meta::TypeConstraint::Structured::Examples::Normalize;
     use Moose;
     use DateTime;
-
     use MooseX::Types::Structured qw(Dict Tuple);
     use MooseX::Types::DateTime qw(DateTime);
     use MooseX::Types::Moose qw(Int Str Object);
     use MooseX::Types -declare =&gt; [qw(Name Age Person)];
-
     subtype Person,
      as Dict[
          name=&gt;Str,
          age=&gt;Int,
      ];
-
     coerce Person,
      from Dict[
          first=&gt;Str,
@@ -760,19 +686,16 @@
         name =&gt; &quot;$_-&gt;{fullname}{first} $_-&gt;{fullname}{last}&quot;,
         age =&gt; ($_-&gt;{dob} - 'DateTime'-&gt;now)-&gt;years,
      }};
-
     has person =&gt; (is=&gt;'rw', isa=&gt;Person, coerce=&gt;1);
 </pre>
 <p class="Pp">And now you can instantiate with all the following:</p>
 <p class="Pp"></p>
-<pre>
-    __PACKAGE__-&gt;new(
+<pre>    __PACKAGE__-&gt;new(
         person=&gt;{
             name=&gt;'John Napiorkowski',
             age=&gt;39,
         },
     );
-
     __PACKAGE__-&gt;new(
         person=&gt;{
             first=&gt;'John',
@@ -780,7 +703,6 @@
             years=&gt;39,
         },
     );
-
     __PACKAGE__-&gt;new(
         person=&gt;{
             fullname =&gt; {

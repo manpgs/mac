@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Importer(3)</title>
 </head>
@@ -38,30 +39,22 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    # Import defaults
+<pre>    # Import defaults
     use Importer 'Some::Module';
-
     # Import a list
     use Importer 'Another::Module' =&gt; qw/foo bar baz/;
-
     # Import a specific version:
     use Importer 'That::Module' =&gt; '1.00';
-
     # Require a sepcific version of Importer
     use Importer 0.001, 'Foo::Bar' =&gt; qw/a b c/;
-
     foo()
     bar()
     baz()
-
     # Remove all subroutines imported by Importer
     no Importer;
-
     # Import symbols into variables
     my $croak = Importer-&gt;get_one(Carp =&gt; qw/croak/);
     $croak-&gt;(&quot;This will croak&quot;);
-
     my $CARP = Importer-&gt;get(Carp =&gt; qw/croak confess cluck/);
     $CARP-&gt;{croak}-&gt;(&quot;This will croak&quot;);
     $CARP-&gt;{cluck}-&gt;(&quot;This will cluck&quot;);
@@ -119,8 +112,7 @@
 <section class="Sh">
 <h1 class="Sh" id="IMPORT_PARAMETERS"><a class="permalink" href="#IMPORT_PARAMETERS">IMPORT
   PARAMETERS</a></h1>
-<pre>
-    use Importer $IMPORTER_VERSION, $FROM_MODULE, $FROM_MODULE_VERSION, \&amp;SET_SYMBOL, @SYMBOLS;
+<pre>    use Importer $IMPORTER_VERSION, $FROM_MODULE, $FROM_MODULE_VERSION, \&amp;SET_SYMBOL, @SYMBOLS;
 </pre>
 <dl class="Bl-tag">
   <dt>$IMPORTER_VERSION (optional)</dt>
@@ -144,13 +136,11 @@
         how the <span class="Li">&quot;get()&quot;</span> method is
         implemented).</p>
     <p class="Pp"></p>
-    <pre>
-    my %CARP;
+    <pre>    my %CARP;
     use Importer Carp =&gt; sub {
         my ($name, $ref) = @_;
         $CARP{$name} = $ref;
     };
-
     $CARP{cluck}-&gt;(&quot;This will cluck&quot;);
     $CARP{croak}-&gt;(&quot;This will croak&quot;);
     </pre>
@@ -158,8 +148,7 @@
         sigil), and the reference. The additional arguments are key/value
       pairs:</p>
     <p class="Pp"></p>
-    <pre>
-    sub set_symbol {
+    <pre>    sub set_symbol {
         my ($name, $ref, %info) = @_;
     }
     </pre>
@@ -194,8 +183,7 @@
 <p class="Pp">You can define/import subsets of symbols using predefined
   tags.</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing' =&gt; ':tag';
+<pre>    use Importer 'Some::Thing' =&gt; ':tag';
 </pre>
 <p class="Pp">Importer will automatically populate the
     <span class="Li">&quot;:DEFAULT&quot;</span> tag for you. Importer will also
@@ -210,9 +198,7 @@
     be supplied a string starting and ending with '/', or you can provide a
     <span class="Li">&quot;qr/../&quot;</span> reference.</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing' =&gt; '/oo/';
-
+<pre>    use Importer 'Some::Thing' =&gt; '/oo/';
     use Importer 'Some::Thing' =&gt; qr/oo/;
 </pre>
 </section>
@@ -220,8 +206,7 @@
 <h2 class="Ss">EXCLUDING SYMBOLS</h2>
 <p class="Pp">You can exclude symbols by prefixing them with '!'.</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing'
+<pre>    use Importer 'Some::Thing'
         '!foo',         # Exclude one specific symbol
         '!/pattern/',   # Exclude all matching symbols
         '!' =&gt; qr/oo/,  # Exclude all that match the following arg
@@ -235,15 +220,13 @@
 <p class="Pp">You can rename symbols at import time using a specification hash
     following the import name:</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing' =&gt; (
+<pre>    use Importer 'Some::Thing' =&gt; (
         foo =&gt; { -as =&gt; 'my_foo' },
     );
 </pre>
 <p class="Pp">You can also add a prefix and/or postfix:</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing' =&gt; (
+<pre>    use Importer 'Some::Thing' =&gt; (
         foo =&gt; { -prefix =&gt; 'my_' },
     );
 </pre>
@@ -273,9 +256,7 @@
 <section class="Sh">
 <h1 class="Sh" id="UNIMPORT_PARAMETERS"><a class="permalink" href="#UNIMPORT_PARAMETERS">UNIMPORT
   PARAMETERS</a></h1>
-<pre>
-    no Importer;    # Remove all subs brought in with Importer
-
+<pre>    no Importer;    # Remove all subs brought in with Importer
     no Importer qw/foo bar/;    # Remove only the specified subs
 </pre>
 <p class="Pp"><b>Only subs can be unimported</b>.</p>
@@ -291,8 +272,7 @@
     listed here are exported by default. If possible you should put symbols in
     <span class="Li">@EXPORT_OK</span> instead.</p>
 <p class="Pp"></p>
-<pre>
-    our @EXPORT = qw/foo bar &amp;baz $BAT/;
+<pre>    our @EXPORT = qw/foo bar &amp;baz $BAT/;
 </pre>
 </section>
 <section class="Ss">
@@ -302,23 +282,19 @@
     Symbols listed here are not exported by default. This is preferred over
     <span class="Li">@EXPORT</span>.</p>
 <p class="Pp"></p>
-<pre>
-    our @EXPORT_OK = qw/foo bar &amp;baz $BAT/;
+<pre>    our @EXPORT_OK = qw/foo bar &amp;baz $BAT/;
 </pre>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="_EXPORT_TAGS"><a class="permalink" href="#_EXPORT_TAGS">%EXPORT_TAGS</a></h2>
 <p class="Pp">This module supports tags exactly the way Exporter does.</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Some::Thing'  =&gt; ':DEFAULT';
-
+<pre>    use Importer 'Some::Thing'  =&gt; ':DEFAULT';
     use Importer 'Other::Thing' =&gt; ':some_tag';
 </pre>
 <p class="Pp">Tags can be specified this way:</p>
 <p class="Pp"></p>
-<pre>
-    our %EXPORT_TAGS = (
+<pre>    our %EXPORT_TAGS = (
         oos =&gt; [qw/foo boo zoo/],
         ees =&gt; [qw/fee bee zee/],
     );
@@ -333,8 +309,7 @@
     to try to resolve the issue. See Exporter for documentation of this
   feature.</p>
 <p class="Pp"></p>
-<pre>
-    our @EXPORT_FAIL = qw/maybe_bad/;
+<pre>    our @EXPORT_FAIL = qw/maybe_bad/;
 </pre>
 </section>
 <section class="Ss">
@@ -344,8 +319,7 @@
     package symbol table. The keys should be the symbol names, the values are
     the references for the symbols.</p>
 <p class="Pp"></p>
-<pre>
-    our %EXPORT_ANON = (
+<pre>    our %EXPORT_ANON = (
         '&amp;foo' =&gt; sub { 'foo' }
         '$foo' =&gt; \$foo,
         ...
@@ -362,8 +336,7 @@
     package the symbol is being exported into, and the symbol being imported
     (name may or may not include sigil for subs).</p>
 <p class="Pp"></p>
-<pre>
-    our %EXPORT_GEN = (
+<pre>    our %EXPORT_GEN = (
         '&amp;foo' =&gt; sub {
             my $from_package = shift;
             my ($into_package, $symbol_name) = @_;
@@ -382,17 +355,14 @@
     enable parser hooks like with Devel::Declare. These will NOT be run if a
     consumer uses a custom assignment callback.</p>
 <p class="Pp"></p>
-<pre>
-    our %EXPORT_MAGIC = (
+<pre>    our %EXPORT_MAGIC = (
         foo =&gt; sub {
             my $from = shift;    # Should be the package doing the exporting
             my %args = @_;
-
             my $into      = $args{into};         # Package symbol was exported into
             my $orig_name = $args{orig_name};    # Original name of the export (in the exporter)
             my $new_name  = $args{new_name};     # Name the symbol was imported as
             my $ref       = $args{ref};          # The reference to the symbol
-
             ...; # whatever you want, return is ignored.
         },
     );
@@ -471,11 +441,9 @@
     putting this sub in your package. <b></b><b>IMPORTER_MENU()</b><b> must be
     defined in your package, not a base class!</b></p>
 <p class="Pp"></p>
-<pre>
-    sub IMPORTER_MENU {
+<pre>    sub IMPORTER_MENU {
         my $class = shift;
         my ($into, $caller) = @_;
-
         return (
             export       =&gt; \@EXPORT,          # Default exports
             export_ok    =&gt; \@EXPORT_OK,       # Other allowed exports
@@ -483,7 +451,6 @@
             export_fail  =&gt; \@EXPORT_FAIL,     # For subs that may not always be available
             export_anon  =&gt; \%EXPORT_ANON,     # Anonymous symbols to export
             export_magic =&gt; \%EXPORT_MAGIC,    # Magic to apply after a symbol is exported
-
             generate   =&gt; \&amp;GENERATE,          # Sub to generate dynamic exports
                                                # OR
             export_gen =&gt; \%EXPORT_GEN,        # Hash of builders, key is symbol
@@ -491,12 +458,9 @@
                                                # the symbol ref.
         );
     }
-
     sub GENERATE {
         my ($symbol) = @_;
-
         ...
-
         return $ref;
     }
 </pre>
@@ -512,11 +476,9 @@
     <span class="Li">&quot;IMPORTER_MENU()&quot;</span> method will need to
     build an anonymous sub that closes over them:</p>
 <p class="Pp"></p>
-<pre>
-    sub IMPORTER_MENU {
+<pre>    sub IMPORTER_MENU {
         my $class = shift;
         my ($into, $caller) = @_;
-
         return (
             ...
             generate =&gt; sub { $class-&gt;GENERATE($into, $caller, @_) },
@@ -527,18 +489,14 @@
 <section class="Sh">
 <h1 class="Sh" id="OO_Interface"><a class="permalink" href="#OO_Interface">OO
   Interface</a></h1>
-<pre>
-    use Importer;
-
+<pre>    use Importer;
     my $imp = Importer-&gt;new(from =&gt; 'Some::Exporter');
-
     $imp-&gt;do_import('Destination::Package');
     $imp-&gt;do_import('Another::Destination', @symbols);
 </pre>
 <p class="Pp">Or, maybe more useful:</p>
 <p class="Pp"></p>
-<pre>
-    my $imp = Importer-&gt;new(from =&gt; 'Carp');
+<pre>    my $imp = Importer-&gt;new(from =&gt; 'Carp');
     my $croak = $imp-&gt;get_one('croak');
     $croak-&gt;(&quot;This will croak&quot;);
 </pre>
@@ -617,30 +575,24 @@
       <span class="Li">&quot;$imp-&gt;reload_menu()&quot;</span> to refresh it.
     <p class="Pp">The menu structure looks like this:</p>
     <p class="Pp"></p>
-    <pre>
-    $menu = {
+    <pre>    $menu = {
         # every valid export has a key in the lookup hashref, value is always
         # 1, key always includes the sigil
         lookup =&gt; {'&amp;symbol_a' =&gt; 1, '$symbol_b' =&gt; 1, ...},
-
         # most exports are listed here, symbol name with sigil is key, value is
         # a reference to the symbol. If a symbol is missing it may be generated.
         exports =&gt; {'&amp;symbol_a' =&gt; \&amp;symbol_a, '$symbol_b' =&gt; \$symbol_b, ...},
-
         # Hashref of tags, tag name (without ':' prefix) is key, value is an
         # arrayref of symbol names, subs may have a sigil, but are not required
         # to.
         tags =&gt; { DEFAULT =&gt; [...], foo =&gt; [...], ... },
-
         # Magic to apply
         magic =&gt; { foo =&gt; sub { ... }, ... },
-
         # This is a hashref just like 'lookup'. Keys are symbols which may not
         # always be available. If there are no symbols in this category then
         # the value of the 'fail' key will be undef instead of a hashref.
         fail =&gt; { '&amp;iffy_symbol' =&gt; 1, '\&amp;only_on_linux' =&gt; 1 },
         # OR fail =&gt; undef,
-
         # If present, this subroutine knows how to generate references for the
         # symbols listed in 'lookup', but missing from 'exports'. References
         # this returns are NEVER cached.
@@ -669,8 +621,7 @@
 <h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
 <p class="Pp">These can be imported:</p>
 <p class="Pp"></p>
-<pre>
-    use Importer 'Importer' =&gt; qw/import optimal_import/;
+<pre>    use Importer 'Importer' =&gt; qw/import optimal_import/;
 </pre>
 <dl class="Bl-tag">
   <dt>$bool = optimal_import($from, $into, \@caller, @imports)</dt>
@@ -689,12 +640,9 @@
       direct consumers of your class, you can import this
       <span class="Li">&quot;import()&quot;</span> method.
     <p class="Pp"></p>
-    <pre>
-    package My::Exporter;
-
+    <pre>    package My::Exporter;
     # This will give you 'import()' much like 'use base &quot;Exporter&quot;;'
     use Importer 'Importer' =&gt; qw/import/;
-
     ...
     </pre>
   </dd>

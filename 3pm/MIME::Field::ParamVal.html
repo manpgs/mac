@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>MIME::Field::ParamVal(3)</title>
 </head>
@@ -29,26 +30,20 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    # Create an object for a content-type field:
+<pre>    # Create an object for a content-type field:
     $field = new Mail::Field 'Content-type';
-
     # Set some attributes:
     $field-&gt;param('_'        =&gt; 'text/html');
     $field-&gt;param('charset'  =&gt; 'us-ascii');
     $field-&gt;param('boundary' =&gt; '---ABC---');
-
     # Same:
     $field-&gt;set('_'        =&gt; 'text/html',
                 'charset'  =&gt; 'us-ascii',
                 'boundary' =&gt; '---ABC---');
-
     # Get an attribute, or undefined if not present:
     print &quot;no id!&quot;  if defined($field-&gt;param('id'));
-
     # Same, but use empty string for missing values:
     print &quot;no id!&quot;  if ($field-&gt;paramstr('id') eq '');
-
     # Output as string:
     print $field-&gt;stringify, &quot;\n&quot;;
 </pre>
@@ -58,15 +53,13 @@
 <p class="Pp">This is an abstract superclass of most MIME fields. It handles
     fields with a general syntax like this:</p>
 <p class="Pp"></p>
-<pre>
-    Content-Type: Message/Partial;
+<pre>    Content-Type: Message/Partial;
         number=2; total=3;
         id=&quot;oc=jpbe0M2Yt4s@thumper.bellcore.com&quot;
 </pre>
 <p class="Pp">Comments are supported <i>between</i> items, like this:</p>
 <p class="Pp"></p>
-<pre>
-    Content-Type: Message/Partial; (a comment)
+<pre>    Content-Type: Message/Partial; (a comment)
         number=2  (another comment) ; (yet another comment) total=3;
         id=&quot;oc=jpbe0M2Yt4s@thumper.bellcore.com&quot;
 </pre>
@@ -82,8 +75,7 @@
       <span class="Li">&quot;_&quot;</span> parameter name signifying the
       &quot;default&quot; (unnamed) parameter for the field:
     <p class="Pp"></p>
-    <pre>
-   # Set up to be...
+    <pre>   # Set up to be...
    #
    #     Content-type: Message/Partial; number=2; total=3; id=&quot;ocj=pbe0M2&quot;
    #
@@ -105,15 +97,13 @@
       structured field, and return it as a hash reference. For example, here is
       a field with parameters:
     <p class="Pp"></p>
-    <pre>
-    Content-Type: Message/Partial;
+    <pre>    Content-Type: Message/Partial;
         number=2; total=3;
         id=&quot;oc=jpbe0M2Yt4s@thumper.bellcore.com&quot;
     </pre>
     <p class="Pp">Here is how you'd extract them:</p>
     <p class="Pp"></p>
-    <pre>
-    $params = $class-&gt;parse_params('content-type');
+    <pre>    $params = $class-&gt;parse_params('content-type');
     if ($$params{'_'} eq 'message/partial') {
         $number = $$params{'number'};
         $total  = $$params{'total'};

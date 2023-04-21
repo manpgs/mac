@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>IO::All(3)</title>
 </head>
@@ -34,9 +35,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">First, some safe examples:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;
-
+<pre>    use IO::All;
     # Some of the many ways to read a whole file into a scalar
     $contents = io-&gt;file('file.txt')-&gt;slurp;    # Read an entire file
     @files    = io-&gt;dir('lib')-&gt;all;            # Get a list of files
@@ -47,9 +46,7 @@
     and will help you write code very quickly, though they should be used
     judiciously:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;                                # Let the madness begin...
-
+<pre>    use IO::All;                                # Let the madness begin...
     # Some of the many ways to read a whole file into a scalar
     io('file.txt') &gt; $contents;                 # Overloaded &quot;arrow&quot;
     $contents &lt; io 'file.txt';                  # Flipped but same operation
@@ -62,7 +59,6 @@
     $io-&gt;tie;                                   # Tie the object as a handle
     $contents = join '', &lt;$io&gt;;                 # And use it in builtins
     # and the list goes on ...
-
     # Other file operations:
     @lines = io('file.txt')-&gt;slurp;             # List context slurp
     $content &gt; io('file.txt');                  # Print to a file
@@ -76,17 +72,14 @@
     io('dir/') &lt; io('file.txt');                $ Copy a file to a directory
     io('file.txt') &gt; io('dir/');                # Invokes File::Copy
     io('more.txt') &gt;&gt; io('dir/');               # Add on to a file in the dir
-
     # UTF-8 Support
     $contents = io('file.txt')-&gt;utf8-&gt;all;      # Turn on utf8
     use IO::All -utf8;                          # Turn on utf8 for all io
     $contents = io('file.txt')-&gt;all;            #   by default in this package.
-
     # General Encoding Support
     $contents = io('file.txt')-&gt;encoding('big5')-&gt;all;
     use IO::All -encoding =&gt; 'big5';            # Turn on big5 for all io
     $contents = io('file.txt')-&gt;all;            #   by default in this package.
-
     # Print the path name of a file:
     print $io-&gt;name;                            # The direct method
     print &quot;$io&quot;;                                # Object stringifies to name
@@ -97,8 +90,6 @@
     print $io-&gt;ext;                             # The file extension only
     print $io-&gt;mimetype;                        # The mimetype, requires a
                                                 #  working File::MimeType
-
-
     # Read all the files/directories in a directory:
     $io = io('my/directory/');                  # Create new directory object
     @contents = $io-&gt;all;                       # Get all contents of dir
@@ -106,23 +97,18 @@
     @contents = values %$io;                    # Directory as a hash
     push @contents, $subdir                     # One at a time
       while $subdir = $io-&gt;next;
-
     # Print the name and file type for all the contents above:
     print &quot;$_ is a &quot; . $_-&gt;type . &quot;\n&quot;          # Each element of @contents
       for @contents;                            # is an IO::All object!!
-
     # Print first line of each file:
     print $_-&gt;getline                           # getline gets one line
       for io('dir')-&gt;all_files;                 # Files only
-
     # Print names of all files/dirs three directories deep:
     print &quot;$_\n&quot; for $io-&gt;all(3);               # Pass in the depth. Default=1
-
     # Print names of all files/dirs recursively:
     print &quot;$_\n&quot; for $io-&gt;all(0);               # Zero means all the way down
     print &quot;$_\n&quot; for $io-&gt;All;                  # Capitalized shortcut
     print &quot;$_\n&quot; for $io-&gt;deep-&gt;all;            # Another way
-
     # There are some special file names:
     print io('-');                              # Print STDIN to STDOUT
     io('-') &gt; io('-');                          # Do it again
@@ -130,7 +116,6 @@
     &quot;Bad puppy&quot; &gt; io('=');                      # Message to STDERR
     $string_file = io('$');                     # Create string based filehandle
     $temp_file = io('?');                       # Create a temporary file
-
     # Socket operations:
     $server = io('localhost:5555')-&gt;fork;       # Create a daemon socket
     $connection = $server-&gt;accept;              # Get a connection socket
@@ -138,20 +123,17 @@
     &quot;Thank you!&quot; &gt; $connection;                 # Thank the caller
     $connection-&gt;close;                         # Hang up
     io(':6666')-&gt;accept-&gt;slurp &gt; io-&gt;devnull;   # Take a complaint and file it
-
     # DBM database operations:
     $dbm = io 'my/database';                    # Create a database object
     print $dbm-&gt;{grocery_list};                 # Hash context makes it a DBM
     $dbm-&gt;{todo} = $new_list;                   # Write to database
     $dbm-&gt;dbm('GDBM_file');                     # Demand specific DBM
     io('mydb')-&gt;mldbm-&gt;{env} = \%ENV;           # MLDBM support
-
     # Tie::File support:
     $io = io 'file.txt';
     $io-&gt;[42] = 'Line Forty Three';             # Change a line
     print $io-&gt;[@$io / 2];                      # Print middle line
     @$io = reverse @$io;                        # Reverse lines in a file
-
     # Stat functions:
     printf &quot;%s %s %s\n&quot;,                        # Print name, uid and size of
       $_-&gt;name, $_-&gt;uid, $_-&gt;size               # contents of current directory
@@ -159,10 +141,8 @@
     print &quot;$_\n&quot; for sort                       # Use mtime method to sort all
       {$b-&gt;mtime &lt;=&gt; $a-&gt;mtime}                 # files under current directory
         io('.')-&gt;All_Files;                     # by recent modification time.
-
     # File::Spec support:
     $contents &lt; io-&gt;catfile(qw(dir file.txt));  # Portable IO operation
-
     # Miscellaneous:
     @lines = io('file.txt')-&gt;chomp-&gt;slurp;      # Chomp as you slurp
     @chunks =
@@ -170,12 +150,10 @@
     $binary = io('file.bin')-&gt;binary-&gt;all;      # Read a binary file
     io('a-symlink')-&gt;readlink-&gt;slurp;           # Readlink returns an object
     print io('foo')-&gt;absolute-&gt;pathname;        # Print absolute path of foo
-
     # IO::All External Plugin Methods
     io(&quot;myfile&quot;) &gt; io-&gt;(&quot;ftp://store.org&quot;);     # Upload a file using ftp
     $html &lt; io-&gt;http(&quot;www.google.com&quot;);         # Grab a web page
     io('mailto:worst@enemy.net')-&gt;print($spam); # Email a &quot;friend&quot;
-
     # This is just the beginning, read on...
 </pre>
 </section>
@@ -204,8 +182,7 @@
     <span class="Li">&quot;&gt;&gt;&quot;</span>, etc), since it is determined
     by the usage context. That means you can replace this:</p>
 <p class="Pp"></p>
-<pre>
-    open STUFF, '&lt;', './mystuff'
+<pre>    open STUFF, '&lt;', './mystuff'
       or die &quot;Can't open './mystuff' for input:\n$!&quot;;
     local $/;
     my $stuff = &lt;STUFF&gt;;
@@ -213,8 +190,7 @@
 </pre>
 <p class="Pp">with this:</p>
 <p class="Pp"></p>
-<pre>
-    my $stuff &lt; io './mystuff';
+<pre>    my $stuff &lt; io './mystuff';
 </pre>
 <p class="Pp">And that is a <b>good thing</b>!</p>
 </section>
@@ -222,8 +198,7 @@
 <h1 class="Sh" id="USAGE"><a class="permalink" href="#USAGE">USAGE</a></h1>
 <p class="Pp">Normally just say:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;
+<pre>    use IO::All;
 </pre>
 <p class="Pp">and IO::All will export a single function called
     <span class="Li">&quot;io&quot;</span>, which constructs all IO objects.</p>
@@ -240,8 +215,7 @@
     <span class="Li">&quot;IO::All::File&quot;</span>.</p>
 <p class="Pp">In other words, these 2 statements are usually the same:</p>
 <p class="Pp"></p>
-<pre>
-    $content = io('file.txt')-&gt;all;
+<pre>    $content = io('file.txt')-&gt;all;
     $content = io-&gt;file('file.txt')-&gt;all;
 </pre>
 <p class="Pp">Use the first form when you are demonstrating your Perl virtues of
@@ -325,13 +299,11 @@
     stringification. IO::All objects stringify to their file or directory name.
     Here we print the contents of the current directory:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MIO::All -le 'print for io(&quot;.&quot;)-&gt;all'
+<pre>    perl -MIO::All -le 'print for io(&quot;.&quot;)-&gt;all'
 </pre>
 <p class="Pp">is the same as:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MIO::All -le 'print $_-&gt;name for io(&quot;.&quot;)-&gt;all'
+<pre>    perl -MIO::All -le 'print $_-&gt;name for io(&quot;.&quot;)-&gt;all'
 </pre>
 <p class="Pp">Stringification is important because it allows IO::All operations
     to return objects when they might otherwise return file names. Then the
@@ -340,8 +312,7 @@
     <span class="Li">&quot;&lt;&quot;</span> move data between objects in the
     direction pointed to by the operator.</p>
 <p class="Pp"></p>
-<pre>
-    $content1 &lt; io('file1');
+<pre>    $content1 &lt; io('file1');
     $content1 &gt; io('file2');
     io('file2') &gt; $content3;
     io('file3') &lt; $content3;
@@ -354,8 +325,7 @@
 <p class="Pp">An IO::All file used as an array reference becomes tied using
     Tie::File:</p>
 <p class="Pp"></p>
-<pre>
-    $file = io &quot;file&quot;;
+<pre>    $file = io &quot;file&quot;;
     # Print last line of file
     print $file-&gt;[-1];
     # Insert new line in middle of file
@@ -364,25 +334,21 @@
 <p class="Pp">An IO::All file used as a hash reference becomes tied to a DBM
     class:</p>
 <p class="Pp"></p>
-<pre>
-    io('mydbm')-&gt;{ingy} = 'YAML';
+<pre>    io('mydbm')-&gt;{ingy} = 'YAML';
 </pre>
 <p class="Pp">An IO::All directory used as an array reference, will expose each
     file or subdirectory as an element of the array.</p>
 <p class="Pp"></p>
-<pre>
-    print &quot;$_\n&quot; for @{io 'dir'};
+<pre>    print &quot;$_\n&quot; for @{io 'dir'};
 </pre>
 <p class="Pp">IO::All directories used as hash references have file names as
     keys, and IO::All objects as values:</p>
 <p class="Pp"></p>
-<pre>
-    print io('dir')-&gt;{'foo.txt'}-&gt;slurp;
+<pre>    print io('dir')-&gt;{'foo.txt'}-&gt;slurp;
 </pre>
 <p class="Pp">Files used as scalar references get slurped:</p>
 <p class="Pp"></p>
-<pre>
-    print ${io('dir')-&gt;{'foo.txt'}};
+<pre>    print ${io('dir')-&gt;{'foo.txt'}};
 </pre>
 <p class="Pp">Not all combinations of operations and object types are supported.
     Some just haven't been added yet, and some just don't make sense. If you use
@@ -399,17 +365,14 @@
     <span class="Li">&quot;lock&quot;</span> method. Here's a standalone program
     that demonstrates locking for both write and read:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;
+<pre>    use IO::All;
     my $io1 = io('myfile')-&gt;lock;
     $io1-&gt;println('line 1');
-
     fork or do {
       my $io2 = io('myfile')-&gt;lock;
       print $io2-&gt;slurp;
       exit;
     };
-
     sleep 1;
     $io1-&gt;println('line 2');
     $io1-&gt;println('line 3');
@@ -435,19 +398,14 @@
     operations on arrays are supported transparently (using Tie::File) so a file
     can be modified in the same way you would modify an array.</p>
 <p class="Pp"></p>
-<pre>
-    &gt; cat &gt; x.txt
+<pre>    &gt; cat &gt; x.txt
     The sexy saxophone,
-
     got the axe.
     ^d
-
     &gt; perl -MIO::All -e 'map { s/x/X/g; $_ } @{ io(shift) }' x.txt
     &gt; cat x.txt
     The seXy saXophone,
-
     got the aXe.
-
  This one liner uses shift() to grab the file from STDIN and create an io
  object that is dereferenced using @{ } and fed to map() like any perl array
  reference.
@@ -459,8 +417,7 @@
 <p class="Pp">This simple example will read lines from a file forever. When the
     last line is read, it will reopen the file and read the first one again.</p>
 <p class="Pp"></p>
-<pre>
-    my $io = io 'file1.txt';
+<pre>    my $io = io 'file1.txt';
     $io-&gt;autoclose(1);
     while (my $line = $io-&gt;getline || $io-&gt;getline) {
       print $line;
@@ -475,8 +432,7 @@
     and <span class="Li">&quot;getlines&quot;</span> will work in reverse. They
     will read the lines in the file from the end to the beginning.</p>
 <p class="Pp"></p>
-<pre>
-    my @reversed;
+<pre>    my @reversed;
     my $io = io('file1.txt');
     $io-&gt;backwards;
     while (my $line = $io-&gt;getline) {
@@ -485,8 +441,7 @@
 </pre>
 <p class="Pp">or more simply:</p>
 <p class="Pp"></p>
-<pre>
-    my @reversed = io('file1.txt')-&gt;backwards-&gt;getlines;
+<pre>    my @reversed = io('file1.txt')-&gt;backwards-&gt;getlines;
 </pre>
 <p class="Pp">The <span class="Li">&quot;backwards&quot;</span> method returns
     the IO::All object so that you can chain the calls.</p>
@@ -503,13 +458,10 @@
 <p class="Pp">In this example, a server will return 3 lines of text, to every
     client that calls it. Here is the server code:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;
-
+<pre>    use IO::All;
     my $socket = io(':12345')-&gt;fork-&gt;accept;
     $socket-&gt;print($_) while &lt;DATA&gt;;
     $socket-&gt;close;
-
     __DATA__
     On your mark,
     Get set,
@@ -517,9 +469,7 @@
 </pre>
 <p class="Pp">Here is the client code:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::All;
-
+<pre>    use IO::All;
     my $io = io('localhost:12345');
     print while $_ = $io-&gt;getline;
 </pre>
@@ -535,8 +485,7 @@
 <p class="Pp">Here is how you could write a simplistic web server that works
     with static and dynamic pages:</p>
 <p class="Pp"></p>
-<pre>
-    perl -MIO::All -e 'io(&quot;:8080&quot;)-&gt;fork-&gt;accept-&gt;(sub { $_[0] &lt; io(-x $1 ? &quot;./$1 |&quot; : $1) if /^GET \/(.*) / })'
+<pre>    perl -MIO::All -e 'io(&quot;:8080&quot;)-&gt;fork-&gt;accept-&gt;(sub { $_[0] &lt; io(-x $1 ? &quot;./$1 |&quot; : $1) if /^GET \/(.*) / })'
 </pre>
 <p class="Pp">There is are a lot of subtle things going on here. First we accept
     a socket and fork the server. Then we overload the new socket as a code ref.
@@ -559,19 +508,16 @@
 <p class="Pp">IO::All file objects used as a hash reference, treat the file as a
     DBM tied to a hash. Here I write my DB record to STDERR:</p>
 <p class="Pp"></p>
-<pre>
-    io(&quot;names.db&quot;)-&gt;{ingy} &gt; io('=');
+<pre>    io(&quot;names.db&quot;)-&gt;{ingy} &gt; io('=');
 </pre>
 <p class="Pp">Since their are several DBM formats available in Perl, IO::All
     picks the first one of these that is installed on your system:</p>
 <p class="Pp"></p>
-<pre>
-    DB_File GDBM_File NDBM_File ODBM_File SDBM_File
+<pre>    DB_File GDBM_File NDBM_File ODBM_File SDBM_File
 </pre>
 <p class="Pp">You can override which DBM you want for each IO::All object:</p>
 <p class="Pp"></p>
-<pre>
-    my @keys = keys %{io('mydbm')-&gt;dbm('SDBM_File')};
+<pre>    my @keys = keys %{io('mydbm')-&gt;dbm('SDBM_File')};
 </pre>
 </section>
 <section class="Ss">
@@ -580,8 +526,7 @@
 <p class="Pp">Subclassing is easy with IO::All. Just create a new module and use
     IO::All as the base class, like this:</p>
 <p class="Pp"></p>
-<pre>
-    package NewModule;
+<pre>    package NewModule;
     use IO::All -base;
 </pre>
 <p class="Pp">You need to do it this way so that IO::All will export the
@@ -596,23 +541,18 @@
     pass control to the real <span class="Li">&quot;open&quot;</span>.</p>
 <p class="Pp">First the code using the module:</p>
 <p class="Pp"></p>
-<pre>
-    use IO::Dumper;
-
+<pre>    use IO::Dumper;
     io('./mydump')-&gt;dump($hash);
 </pre>
 <p class="Pp">And next the IO::Dumper module itself:</p>
 <p class="Pp"></p>
-<pre>
-    package IO::Dumper;
+<pre>    package IO::Dumper;
     use IO::All -base;
     use Data::Dumper;
-
     sub dump {
       my $self = shift;
       Dumper(@_) &gt; $self;
     }
-
     1;
 </pre>
 </section>
@@ -624,14 +564,11 @@
     line. Since you don't &quot;use&quot; IO::Dumper, you need to still call its
     <span class="Li">&quot;import&quot;</span> method manually.</p>
 <p class="Pp"></p>
-<pre>
-    IO::Dumper-&gt;import;
+<pre>    IO::Dumper-&gt;import;
     io('./mydump')-&gt;dump($hash);
-
     package IO::Dumper;
     use IO::All -base;
     use Data::Dumper;
-
     sub dump {
       my $self = shift;
       Dumper(@_) &gt; $self;
@@ -659,16 +596,14 @@
       instance method. In this final case, the new objects attributes are copied
       from the instance object.
     <p class="Pp"></p>
-    <pre>
-    io(file-descriptor);
+    <pre>    io(file-descriptor);
     IO::All-&gt;new(file-descriptor);
     $io-&gt;new(file-descriptor);
     </pre>
     <p class="Pp">All three forms take a single argument, a file descriptor. A
         file descriptor can be any of the following:</p>
     <p class="Pp"></p>
-    <pre>
-    - A file name
+    <pre>    - A file name
     - A file handle
     - A directory name
     - A directory handle
@@ -690,8 +625,7 @@
   </dd>
   <dt id="file"><a class="permalink" href="#file">file</a></dt>
   <dd>
-    <pre>
-    io-&gt;file(&quot;path/to/my/file.txt&quot;);
+    <pre>    io-&gt;file(&quot;path/to/my/file.txt&quot;);
     </pre>
     <p class="Pp">Using the <span class="Li">&quot;file&quot;</span> method sets
         the type of the object to <i>file</i> and sets the pathname of the file
@@ -701,42 +635,36 @@
         if the name might otherwise be confused with a directory or a socket. In
         this case, either of these statements would work the same:</p>
     <p class="Pp"></p>
-    <pre>
-    my $file = io('-')-&gt;file;
+    <pre>    my $file = io('-')-&gt;file;
     my $file = io-&gt;file('-');
     </pre>
   </dd>
   <dt id="dir"><a class="permalink" href="#dir">dir</a></dt>
   <dd>
-    <pre>
-    io-&gt;dir($dir_name);
+    <pre>    io-&gt;dir($dir_name);
     </pre>
     <p class="Pp">Make the object be of type <i>directory</i>.</p>
   </dd>
   <dt id="socket"><a class="permalink" href="#socket">socket</a></dt>
   <dd>
-    <pre>
-    io-&gt;socket(&quot;${domain}:${port}&quot;);
+    <pre>    io-&gt;socket(&quot;${domain}:${port}&quot;);
     </pre>
     <p class="Pp">Make the object be of type <i>socket</i>.</p>
   </dd>
   <dt id="link"><a class="permalink" href="#link">link</a></dt>
   <dd>
-    <pre>
-    io-&gt;link($link_name);
+    <pre>    io-&gt;link($link_name);
     </pre>
     <p class="Pp">Make the object be of type <i>link</i>.</p>
   </dd>
   <dt id="pipe"><a class="permalink" href="#pipe">pipe</a></dt>
   <dd>
-    <pre>
-    io-&gt;pipe($pipe_command);
+    <pre>    io-&gt;pipe($pipe_command);
     </pre>
     <p class="Pp">Make the object be of type <i>pipe</i>. The following three
         statements are equivalent:</p>
     <p class="Pp"></p>
-    <pre>
-    my $io = io('ls -l |');
+    <pre>    my $io = io('ls -l |');
     my $io = io('ls -l')-&gt;pipe;
     my $io = io-&gt;pipe('ls -l');
     </pre>
@@ -745,14 +673,12 @@
   <dd>This method takes the names of zero or more DBM modules. The first one
       that is available is used to process the dbm file.
     <p class="Pp"></p>
-    <pre>
-    io('mydbm')-&gt;dbm('NDBM_File', 'SDBM_File')-&gt;{author} = 'ingy';
+    <pre>    io('mydbm')-&gt;dbm('NDBM_File', 'SDBM_File')-&gt;{author} = 'ingy';
     </pre>
     <p class="Pp">If no module names are provided, the first available of the
         following is used:</p>
     <p class="Pp"></p>
-    <pre>
-    DB_File GDBM_File NDBM_File ODBM_File SDBM_File
+    <pre>    DB_File GDBM_File NDBM_File ODBM_File SDBM_File
     </pre>
   </dd>
   <dt id="mldbm"><a class="permalink" href="#mldbm">mldbm</a></dt>
@@ -763,16 +689,14 @@
         used to process the MLDBM file. The serialization module can be
         Data::Dumper, Storable or FreezeThaw.</p>
     <p class="Pp"></p>
-    <pre>
-    io('mymldbm')-&gt;mldbm('GDBM_File', 'Storable')-&gt;{author} =
+    <pre>    io('mymldbm')-&gt;mldbm('GDBM_File', 'Storable')-&gt;{author} =
       {nickname =&gt; 'ingy'};
     </pre>
   </dd>
   <dt id="string"><a class="permalink" href="#string">string</a></dt>
   <dd>Make the object be an in memory filehandle. These are equivalent:
     <p class="Pp"></p>
-    <pre>
-    my $io = io('$');
+    <pre>    my $io = io('$');
     my $io = io-&gt;string;
     </pre>
   </dd>
@@ -783,8 +707,7 @@
   <dd>Make the object represent either STDIN or STDOUT depending on how it is
       used subsequently. These are equivalent:
     <p class="Pp"></p>
-    <pre>
-    my $io = io('-');
+    <pre>    my $io = io('-');
     my $io = io-&gt;stdin;
     </pre>
   </dd>
@@ -796,14 +719,12 @@
   <dd>Make the object represent STDERR.</dd>
   <dt id="handle"><a class="permalink" href="#handle">handle</a></dt>
   <dd>
-    <pre>
-    io-&gt;handle($io_handle);
+    <pre>    io-&gt;handle($io_handle);
     </pre>
     <p class="Pp">Forces the object to be created from an pre-existing IO
         handle. You can chain calls together to indicate the type of handle:</p>
     <p class="Pp"></p>
-    <pre>
-    my $file_object = io-&gt;file-&gt;handle($file_handle);
+    <pre>    my $file_object = io-&gt;file-&gt;handle($file_handle);
     my $dir_object = io-&gt;dir-&gt;handle($dir_handle);
     </pre>
   </dd>
@@ -821,8 +742,7 @@
     and don't want to duplicate the code, just create a dummy object with the
     options you want, and use that object to spawn other objects.</p>
 <p class="Pp"></p>
-<pre>
-    my $lt = io-&gt;lock-&gt;tie;
+<pre>    my $lt = io-&gt;lock-&gt;tie;
     ...
     my $io1 = $lt-&gt;new('file1');
     my $io2 = $lt-&gt;new('file2');
@@ -842,20 +762,16 @@
     invoke them. This is so that the option methods can be chained together. For
     example:</p>
 <p class="Pp"></p>
-<pre>
-    my $io = io('path/file')-&gt;tie-&gt;assert-&gt;chomp-&gt;lock;
+<pre>    my $io = io('path/file')-&gt;tie-&gt;assert-&gt;chomp-&gt;lock;
 </pre>
 <dl class="Bl-tag">
   <dt id="absolute"><a class="permalink" href="#absolute">absolute</a></dt>
   <dd>Indicates that the <span class="Li">&quot;pathname&quot;</span> for the
       object should be made absolute.
     <p class="Pp"></p>
-    <pre>
-    # Print the full path of the current working directory
+    <pre>    # Print the full path of the current working directory
     # (like pwd).
-
     use IO::All;
-
     print io-&gt;curdir-&gt;absolute;
     </pre>
   </dd>
@@ -865,26 +781,19 @@
     <p class="Pp">For example, here is a program called
         &quot;create-cat-to&quot; that outputs to a file that it creates.</p>
     <p class="Pp"></p>
-    <pre>
-    #!/usr/bin/perl
-
+    <pre>    #!/usr/bin/perl
     # create-cat-to.pl
     # cat to a file that can be created.
-
     use strict;
     use warnings;
-
     use IO::All;
-
     my $filename = shift(@ARGV);
-
     # Create a file called $filename, including all leading components.
     io('-') &gt; io-&gt;file($filename)-&gt;assert;
     </pre>
     <p class="Pp">Here's an example use of it:</p>
     <p class="Pp"></p>
-    <pre>
-    $ ls -l
+    <pre>    $ ls -l
     total 0
     $ echo &quot;Hello World&quot; | create-cat-to one/two/three/four.txt
     $ ls -l
@@ -902,8 +811,7 @@
     <p class="Pp">This option is on by default, so if you don't want this
         behaviour, say so like this:</p>
     <p class="Pp"></p>
-    <pre>
-    $io-&gt;autoclose(0);
+    <pre>    $io-&gt;autoclose(0);
     </pre>
     <p class="Pp">The object will then be closed when
         <span class="Li">$io</span> goes out of scope, or you manually call
@@ -935,13 +843,11 @@
         <span class="Li">&quot;chomp&quot;</span> is in effect, then this
         command will stop reading at the first blank line):</p>
     <p class="Pp"></p>
-    <pre>
-    while ( my $line = $io-&gt;getline ) {...}
+    <pre>    while ( my $line = $io-&gt;getline ) {...}
     </pre>
     <p class="Pp">Try the following instead:</p>
     <p class="Pp"></p>
-    <pre>
-    while ( defined(my $line = $io-&gt;getline) ) {...}
+    <pre>    while ( defined(my $line = $io-&gt;getline) ) {...}
     </pre>
   </dd>
   <dt id="confess"><a class="permalink" href="#confess">confess</a></dt>
@@ -973,8 +879,7 @@
   <dd>Indicate that the object should be tied to itself, thus allowing it to be
       used as a filehandle in any of Perl's builtin IO operations.
     <p class="Pp"></p>
-    <pre>
-    my $io = io('foo')-&gt;tie;
+    <pre>    my $io = io('foo')-&gt;tie;
     @lines = &lt;$io&gt;;
     </pre>
   </dd>
@@ -1014,8 +919,7 @@
         <span class="Li">&quot;write&quot;</span> will use by default.</p>
     <p class="Pp">You can easily have IO::All objects use the same buffer:</p>
     <p class="Pp"></p>
-    <pre>
-    my $input = io('abc');
+    <pre>    my $input = io('abc');
     my $output = io('xyz');
     my $buffer;
     $output-&gt;buffer($input-&gt;buffer($buffer));
@@ -1040,8 +944,7 @@
       objects get returned on a call to one of the
       <span class="Li">&quot;all&quot;</span> methods. For example:
     <p class="Pp"></p>
-    <pre>
-    my @odd = io-&gt;curdir-&gt;filter(sub {$_-&gt;size % 2})-&gt;All_Files;
+    <pre>    my @odd = io-&gt;curdir-&gt;filter(sub {$_-&gt;size % 2})-&gt;All_Files;
     </pre>
     <p class="Pp"><span class="Li">@odd</span> will contain all the files under
         the current directory whose size is an odd number of bytes.</p>
@@ -1054,13 +957,10 @@
   <dt id="mode"><a class="permalink" href="#mode">mode</a></dt>
   <dd>Set the mode for which the file should be opened. Examples:
     <p class="Pp"></p>
-    <pre>
-    $io-&gt;mode('&gt;&gt;')-&gt;open;
+    <pre>    $io-&gt;mode('&gt;&gt;')-&gt;open;
     $io-&gt;mode(O_RDONLY);
-
     my $log_appender = io-&gt;file('/var/log/my-application.log')
                          -&gt;mode('&gt;&gt;')-&gt;open();
-
     $log_appender-&gt;print(&quot;Stardate 5987.6: Mission accomplished.&quot;);
     </pre>
   </dd>
@@ -1111,8 +1011,7 @@
   <dt id="all"><a class="permalink" href="#all">all</a></dt>
   <dd>Read all contents into a single string.
     <p class="Pp"></p>
-    <pre>
-    compare(io('file1')-&gt;all, io('file2')-&gt;all);
+    <pre>    compare(io('file1')-&gt;all, io('file2')-&gt;all);
     </pre>
   </dd>
   <dt>all (For directories)</dt>
@@ -1176,8 +1075,7 @@
   <dt id="filename"><a class="permalink" href="#filename">filename</a></dt>
   <dd>Return the name portion of the file path in the object. For example:
     <p class="Pp"></p>
-    <pre>
-    io('my/path/file.txt')-&gt;filename;
+    <pre>    io('my/path/file.txt')-&gt;filename;
     </pre>
     <p class="Pp">would return <span class="Li">&quot;file.txt&quot;</span>.</p>
   </dd>
@@ -1186,8 +1084,7 @@
   <dt id="filepath"><a class="permalink" href="#filepath">filepath</a></dt>
   <dd>Return the path portion of the file path in the object. For example:
     <p class="Pp"></p>
-    <pre>
-    io('my/path/file.txt')-&gt;filepath;
+    <pre>    io('my/path/file.txt')-&gt;filepath;
     </pre>
     <p class="Pp">would return <span class="Li">&quot;my/path&quot;</span>.</p>
   </dd>
@@ -1205,8 +1102,7 @@
   <dd>Creates IO::All objects for the files matching the glob in the
       IO::All::Dir. For example:
     <p class="Pp"></p>
-    <pre>
-    io-&gt;dir($ENV{HOME})-&gt;glob('*.txt')
+    <pre>    io-&gt;dir($ENV{HOME})-&gt;glob('*.txt')
     </pre>
   </dd>
   <dt id="head"><a class="permalink" href="#head">head</a></dt>
@@ -1339,8 +1235,7 @@
   <dd>Proxy for IO::Socket::recv</dd>
   <dt id="rename"><a class="permalink" href="#rename">rename</a></dt>
   <dd>
-    <pre>
-    my $new = $io-&gt;rename('new-name');
+    <pre>    my $new = $io-&gt;rename('new-name');
     </pre>
     <p class="Pp">Calls Perl's rename function and returns an IO::All object for
         the renamed file. Returns false if the rename failed.</p>
@@ -1388,8 +1283,7 @@
   <dt id="type"><a class="permalink" href="#type">type</a></dt>
   <dd>Returns a string indicated the type of io object. Possible values are:
     <p class="Pp"></p>
-    <pre>
-    file
+    <pre>    file
     dir
     link
     socket
@@ -1476,13 +1370,11 @@
       an active IO::All object is not needed for this function, you can code it
       like:
     <p class="Pp"></p>
-    <pre>
-    IO::All-&gt;case_tolerant;
+    <pre>    IO::All-&gt;case_tolerant;
     </pre>
     <p class="Pp">or more simply:</p>
     <p class="Pp"></p>
-    <pre>
-    io-&gt;case_tolerant;
+    <pre>    io-&gt;case_tolerant;
     </pre>
   </dd>
   <dt id="catdir"><a class="permalink" href="#catdir">catdir</a></dt>
@@ -1492,8 +1384,7 @@
   <dd>Concatenate the directory and file components together, and return a new
       IO::All object representing the resulting file.
     <p class="Pp"></p>
-    <pre>
-    my $contents = io-&gt;catfile(qw(dir subdir file))-&gt;slurp;
+    <pre>    my $contents = io-&gt;catfile(qw(dir subdir file))-&gt;slurp;
     </pre>
     <p class="Pp">This is a very portable way to read
         <span class="Li">&quot;dir/subdir/file&quot;</span>.</p>
@@ -1544,8 +1435,7 @@
       IO::All can determine what type of object it should be. Sometimes it gets
       reblessed more than once:
     <p class="Pp"></p>
-    <pre>
-    my $io = io('mydbm.db');
+    <pre>    my $io = io('mydbm.db');
     $io-&gt;dbm('DB_File');
     $io-&gt;{foo} = 'bar';
     </pre>
@@ -1567,8 +1457,7 @@
       EOD). For output, the object closes when it goes out of scope.
     <p class="Pp">To keep input objects from closing at EOF, do this:</p>
     <p class="Pp"></p>
-    <pre>
-    $io-&gt;autoclose(0);
+    <pre>    $io-&gt;autoclose(0);
     </pre>
   </dd>
   <dt id="Explicit"><a class="permalink" href="#Explicit">Explicit open and
@@ -1582,14 +1471,12 @@
     <p class="Pp">This would set <span class="Li">$xxx</span> to the IO::All
         object:</p>
     <p class="Pp"></p>
-    <pre>
-    my $xxx = $contents &gt; io('file.txt');
+    <pre>    my $xxx = $contents &gt; io('file.txt');
     </pre>
     <p class="Pp">While this would set <span class="Li">$xxx</span> to the
         content string:</p>
     <p class="Pp"></p>
-    <pre>
-    my $xxx = $contents &lt; io('file.txt');
+    <pre>    my $xxx = $contents &lt; io('file.txt');
     </pre>
   </dd>
 </dl>

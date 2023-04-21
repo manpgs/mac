@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>ExtUtils::MakeMaker::FAQ(3pm)</title>
 </head>
@@ -43,8 +44,7 @@
     <p class="Pp">Otherwise, you can install it for your own use into your home
         directory like so:</p>
     <p class="Pp"></p>
-    <pre>
-    # Non-unix folks, replace ~ with /path/to/your/home/dir
+    <pre>    # Non-unix folks, replace ~ with /path/to/your/home/dir
     perl Makefile.PL INSTALL_BASE=~
     </pre>
     <p class="Pp">This will put modules into <i>~/lib/perl5</i>, man pages into
@@ -54,14 +54,12 @@
         environment variable to <i>~/lib/perl5</i> or tell each of your programs
         to look in that directory with the following:</p>
     <p class="Pp"></p>
-    <pre>
-    use lib &quot;$ENV{HOME}/lib/perl5&quot;;
+    <pre>    use lib &quot;$ENV{HOME}/lib/perl5&quot;;
     </pre>
     <p class="Pp">or if <span class="Li">$ENV</span>{HOME} isn't set and you
         don't want to set it for some reason, do it the long way.</p>
     <p class="Pp"></p>
-    <pre>
-    use lib &quot;/path/to/your/home/dir/lib/perl5&quot;;
+    <pre>    use lib &quot;/path/to/your/home/dir/lib/perl5&quot;;
     </pre>
   </dd>
   <dt id="How~2"><a class="permalink" href="#How~2">How do I get MakeMaker and
@@ -81,8 +79,7 @@
         <span class="Li">&quot;--install_base&quot;</span> in MB to the same
         location.</p>
     <p class="Pp"></p>
-    <pre>
-    perl Makefile.PL INSTALL_BASE=/whatever
+    <pre>    perl Makefile.PL INSTALL_BASE=/whatever
     perl Build.PL    --install_base /whatever
     </pre>
     <p class="Pp">This works most like other language's behavior when you
@@ -93,8 +90,7 @@
         <span class="Li">&quot;--prefix&quot;</span> which works like
         MakeMaker's PREFIX.</p>
     <p class="Pp"></p>
-    <pre>
-    perl Makefile.PL PREFIX=/whatever
+    <pre>    perl Makefile.PL PREFIX=/whatever
     perl Build.PL    --prefix /whatever
     </pre>
     <p class="Pp">We highly discourage this method. It should only be used if
@@ -108,8 +104,7 @@
       operating systems.
     <p class="Pp">For an individual module:</p>
     <p class="Pp"></p>
-    <pre>
-        perl Makefile.PL INSTALLMAN1DIR=none INSTALLMAN3DIR=none
+    <pre>        perl Makefile.PL INSTALLMAN1DIR=none INSTALLMAN3DIR=none
     </pre>
     <p class="Pp">If you want to suppress man page installation for all modules
         you have to reconfigure Perl and tell it 'none' when it asks where to
@@ -119,23 +114,20 @@
     without installing it?</a></dt>
   <dd>Two ways. One is to build the module normally...
     <p class="Pp"></p>
-    <pre>
-        perl Makefile.PL
+    <pre>        perl Makefile.PL
         make
         make test
     </pre>
     <p class="Pp">...and then use blib to point Perl at the built but
         uninstalled module:</p>
     <p class="Pp"></p>
-    <pre>
-        perl -Mblib script.pl
+    <pre>        perl -Mblib script.pl
         perl -Mblib -e '...'
     </pre>
     <p class="Pp">The other is to install the module in a temporary
       location.</p>
     <p class="Pp"></p>
-    <pre>
-        perl Makefile.PL INSTALL_BASE=~/tmp
+    <pre>        perl Makefile.PL INSTALL_BASE=~/tmp
         make
         make test
         make install
@@ -149,8 +141,7 @@
     into subdirectories and have them run?</a></dt>
   <dd>Let's take the following test directory structure:
     <p class="Pp"></p>
-    <pre>
-    t/foo/sometest.t
+    <pre>    t/foo/sometest.t
     t/bar/othertest.t
     t/bar/baz/anothertest.t
     </pre>
@@ -159,8 +150,7 @@
         <i>Makefile.PL</i>, specify where your tests are located with the
         <span class="Li">&quot;test&quot;</span> directive:</p>
     <p class="Pp"></p>
-    <pre>
-    test =&gt; {TESTS =&gt; 't/*.t t/*/*.t t/*/*/*.t'}
+    <pre>    test =&gt; {TESTS =&gt; 't/*.t t/*/*.t t/*/*/*.t'}
     </pre>
     <p class="Pp">The first entry in the string will run all tests in the
         top-level <i>t/</i> directory. The second will run all test files
@@ -170,8 +160,7 @@
     <p class="Pp">Note that you do not have to use wildcards. You can specify
         explicitly which subdirectories to run tests in:</p>
     <p class="Pp"></p>
-    <pre>
-    test =&gt; {TESTS =&gt; 't/*.t t/foo/*.t t/bar/baz/*.t'}
+    <pre>    test =&gt; {TESTS =&gt; 't/*.t t/foo/*.t t/bar/baz/*.t'}
     </pre>
   </dd>
   <dt id="PREFIX"><a class="permalink" href="#PREFIX">PREFIX vs INSTALL_BASE
@@ -197,8 +186,7 @@
       automatically run each <i>*.PL</i> it finds to generate its basename. For
       instance:
     <p class="Pp"></p>
-    <pre>
-    # Makefile.PL:
+    <pre>    # Makefile.PL:
     require 'common.pl';
     my $version = get_version();
     my @pms = qw(Foo.pm);
@@ -208,12 +196,10 @@
       PM =&gt; { map { ($_ =&gt; &quot;\$(INST_LIB)/$_&quot;) } @pms },
       clean =&gt; { FILES =&gt; join ' ', @pms },
     );
-
     # common.pl:
     sub get_version { '0.04' }
     sub process { my $v = get_version(); s/__VERSION__/$v/g; }
     1;
-
     # Foo.pm.PL:
     require 'common.pl';
     $_ = join '', &lt;DATA&gt;;
@@ -310,8 +296,7 @@
     <p class="Pp">Probably the easiest way to do this is using
         <i>perl-reversion</i> in Perl::Version:</p>
     <p class="Pp"></p>
-    <pre>
-  perl-reversion -bump
+    <pre>  perl-reversion -bump
     </pre>
     <p class="Pp">If your version control system supports revision numbers (git
         doesn't easily), the simplest way to do it automatically is to use its
@@ -324,22 +309,19 @@
         <span class="Li">$Revision</span>$ so you can adapt it for your
         <span class="Li">$VERSION</span> like so:</p>
     <p class="Pp"></p>
-    <pre>
-    ($VERSION) = q$Revision$ =~ /(\d+)/;
+    <pre>    ($VERSION) = q$Revision$ =~ /(\d+)/;
     </pre>
     <p class="Pp">In CVS and RCS version 1.9 is followed by 1.10. Since CPAN
         compares version numbers numerically we use a <b>sprintf()</b> to
         convert 1.9 to 1.009 and 1.10 to 1.010 which compare properly.</p>
     <p class="Pp"></p>
-    <pre>
-    $VERSION = sprintf &quot;%d.%03d&quot;, q$Revision$ =~ /(\d+)\.(\d+)/g;
+    <pre>    $VERSION = sprintf &quot;%d.%03d&quot;, q$Revision$ =~ /(\d+)\.(\d+)/g;
     </pre>
     <p class="Pp">If branches are involved (ie.
         <span class="Li">$Revision:</span> 1.5.3.4$) it's a little more
         complicated.</p>
     <p class="Pp"></p>
-    <pre>
-    # must be all on one line or MakeMaker will get confused.
+    <pre>    # must be all on one line or MakeMaker will get confused.
     $VERSION = do { my @r = (q$Revision$ =~ /\d+/g); sprintf &quot;%d.&quot;.&quot;%03d&quot; x $#r, @r };
     </pre>
     <p class="Pp">In SVN, <span class="Li">$Revision</span>$ should be the same
@@ -377,31 +359,23 @@
         careful. Here's a script to do that. Use at your own risk. Have fun
         blowing holes in your foot.</p>
     <p class="Pp"></p>
-    <pre>
-    #!/usr/bin/perl -w
-
+    <pre>    #!/usr/bin/perl -w
     use strict;
-
     use File::Spec;
     use File::Find;
     use ExtUtils::Manifest qw(maniread);
-
     my %manifest = map  {( $_ =&gt; 1 )}
                    grep { File::Spec-&gt;canonpath($_) }
                         keys %{ maniread() };
-
     if( !keys %manifest ) {
         print &quot;No files found in MANIFEST.  Stopping.\n&quot;;
         exit;
     }
-
     find({
           wanted   =&gt; sub {
               my $path = File::Spec-&gt;canonpath($_);
-
               return unless -f $path;
               return if exists $manifest{ $path };
-
               print &quot;unlink $path\n&quot;;
               unlink $path;
           },
@@ -435,8 +409,7 @@
         whenever you change the module containing the version number by adding
         this to your <b>WriteMakefile()</b> arguments.</p>
     <p class="Pp"></p>
-    <pre>
-    depend =&gt; { '$(FIRST_MAKEFILE)' =&gt; '$(VERSION_FROM)' }
+    <pre>    depend =&gt; { '$(FIRST_MAKEFILE)' =&gt; '$(VERSION_FROM)' }
     </pre>
   </dd>
   <dt id="How~9"><a class="permalink" href="#How~9">How do I make two or more XS
@@ -471,9 +444,7 @@
       <span class="Li">&quot;Cool::Bar&quot;</span> modules each having a
       separate XS file. First we use the following <i>Makefile.PL</i>:
     <p class="Pp"></p>
-    <pre>
-  use ExtUtils::MakeMaker;
-
+    <pre>  use ExtUtils::MakeMaker;
   WriteMakefile(
       NAME              =&gt; 'Cool::Foo',
       VERSION_FROM      =&gt; 'Foo.pm',
@@ -485,8 +456,7 @@
         attribute. MakeMaker generates the following variables in
         <i>Makefile</i>:</p>
     <p class="Pp"></p>
-    <pre>
-  # Handy lists of source code files:
+    <pre>  # Handy lists of source code files:
   XS_FILES= Bar.xs \
         Foo.xs
   C_FILES = Bar.c \
@@ -504,9 +474,7 @@
     <p class="Pp">The only issue left is to how to bootstrap <i>Bar.xs</i>. This
         is done from <i>Foo.xs</i>:</p>
     <p class="Pp"></p>
-    <pre>
-  MODULE = Cool::Foo PACKAGE = Cool::Foo
-
+    <pre>  MODULE = Cool::Foo PACKAGE = Cool::Foo
   BOOT:
   # boot the second XS file
   boot_Cool__Bar(aTHX_ cv);
@@ -516,65 +484,47 @@
     <p class="Pp">The following four files sum up all the details discussed so
         far.</p>
     <p class="Pp"></p>
-    <pre>
-  Foo.pm:
+    <pre>  Foo.pm:
   -------
   package Cool::Foo;
-
   require DynaLoader;
-
   our @ISA = qw(DynaLoader);
   our $VERSION = '0.01';
   bootstrap Cool::Foo $VERSION;
-
   1;
-
   Bar.pm:
   -------
   package Cool::Bar;
-
   use Cool::Foo; # bootstraps Bar.xs
-
   1;
-
   Foo.xs:
   -------
   #include &quot;EXTERN.h&quot;
   #include &quot;perl.h&quot;
   #include &quot;XSUB.h&quot;
-
   MODULE = Cool::Foo  PACKAGE = Cool::Foo
-
   BOOT:
   # boot the second XS file
   boot_Cool__Bar(aTHX_ cv);
-
   MODULE = Cool::Foo  PACKAGE = Cool::Foo  PREFIX = cool_foo_
-
   void
   cool_foo_perl_rules()
-
       CODE:
       fprintf(stderr, &quot;Cool::Foo says: Perl Rules\n&quot;);
-
   Bar.xs:
   -------
   #include &quot;EXTERN.h&quot;
   #include &quot;perl.h&quot;
   #include &quot;XSUB.h&quot;
-
   MODULE = Cool::Bar  PACKAGE = Cool::Bar PREFIX = cool_bar_
-
   void
   cool_bar_perl_rules()
-
       CODE:
       fprintf(stderr, &quot;Cool::Bar says: Perl Rules\n&quot;);
     </pre>
     <p class="Pp">And of course a very basic test:</p>
     <p class="Pp"></p>
-    <pre>
-  t/cool.t:
+    <pre>  t/cool.t:
   --------
   use Test;
   BEGIN { plan tests =&gt; 1 };
@@ -601,8 +551,7 @@
   object hierarchy (simplified)</a></h2>
 <p class="Pp">What most people need to know (superclasses on top.)</p>
 <p class="Pp"></p>
-<pre>
-        ExtUtils::MM_Any
+<pre>        ExtUtils::MM_Any
                 |
         ExtUtils::MM_Unix
                 |
@@ -621,8 +570,7 @@
   object hierarchy (real)</a></h2>
 <p class="Pp">Here's how it really works:</p>
 <p class="Pp"></p>
-<pre>
-                                    ExtUtils::MM_Any
+<pre>                                    ExtUtils::MM_Any
                                             |
                                     ExtUtils::MM_Unix
                                             |
@@ -663,8 +611,7 @@
 <section class="Ss">
 <h2 class="Ss" id="The_MM_*_hierarchy"><a class="permalink" href="#The_MM_*_hierarchy">The
   MM_* hierarchy</a></h2>
-<pre>
-                                MM_Win95   MM_NW5
+<pre>                                MM_Win95   MM_NW5
                                      \      /
  MM_BeOS  MM_Cygwin  MM_OS2  MM_VMS  MM_Win32  MM_DOS  MM_UWIN
        \        |      |         |        /      /      /

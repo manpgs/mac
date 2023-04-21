@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Cookbook::Basics::BankAccount_MethodModifiersAndSubclassing(3)</title>
 </head>
@@ -33,17 +34,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  package BankAccount;
+<pre>  package BankAccount;
   use Moose;
-
   has 'balance' =&gt; ( isa =&gt; 'Int', is =&gt; 'rw', default =&gt; 0 );
-
   sub deposit {
       my ( $self, $amount ) = @_;
       $self-&gt;balance( $self-&gt;balance + $amount );
   }
-
   sub withdraw {
       my ( $self, $amount ) = @_;
       my $current_balance = $self-&gt;balance();
@@ -51,14 +48,10 @@
           || confess &quot;Account overdrawn&quot;;
       $self-&gt;balance( $current_balance - $amount );
   }
-
   package CheckingAccount;
   use Moose;
-
   extends 'BankAccount';
-
   has 'overdraft_account' =&gt; ( isa =&gt; 'BankAccount', is =&gt; 'rw' );
-
   before 'withdraw' =&gt; sub {
       my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self-&gt;balance();
@@ -88,8 +81,7 @@
 <p class="Pp">The first class, <b>BankAccount</b>, introduces a new attribute
     feature, a default value:</p>
 <p class="Pp"></p>
-<pre>
-  has 'balance' =&gt; ( isa =&gt; 'Int', is =&gt; 'rw', default =&gt; 0 );
+<pre>  has 'balance' =&gt; ( isa =&gt; 'Int', is =&gt; 'rw', default =&gt; 0 );
 </pre>
 <p class="Pp">This says that a <b>BankAccount</b> has a
     <span class="Li">&quot;balance&quot;</span> attribute, which has an
@@ -109,8 +101,7 @@
     line introduces yet another new attribute feature, class-based type
     constraints:</p>
 <p class="Pp"></p>
-<pre>
-  has 'overdraft_account' =&gt; ( isa =&gt; 'BankAccount', is =&gt; 'rw' );
+<pre>  has 'overdraft_account' =&gt; ( isa =&gt; 'BankAccount', is =&gt; 'rw' );
 </pre>
 <p class="Pp">Up until now, we have only seen the
     <span class="Li">&quot;Int&quot;</span> type constraint, which (as we saw in
@@ -130,8 +121,7 @@
 <p class="Pp">In <b>CheckingAccount</b>, we see another method modifier, the
     <span class="Li">&quot;before&quot;</span> modifier.</p>
 <p class="Pp"></p>
-<pre>
-  before 'withdraw' =&gt; sub {
+<pre>  before 'withdraw' =&gt; sub {
       my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self-&gt;balance();
       if ( $self-&gt;overdraft_account &amp;&amp; $overdraft_amount &gt; 0 ) {
@@ -153,8 +143,7 @@
 <p class="Pp">As with the method modifier in the first recipe, we could use
     <span class="Li">&quot;SUPER::&quot;</span> to get the same effect:</p>
 <p class="Pp"></p>
-<pre>
-  sub withdraw {
+<pre>  sub withdraw {
       my ( $self, $amount ) = @_;
       my $overdraft_amount = $amount - $self-&gt;balance();
       if ( $self-&gt;overdraft_account &amp;&amp; $overdraft_amount &gt; 0 ) {
@@ -180,9 +169,7 @@
     <span class="Li">&quot;new&quot;</span> method, which accepts named
     parameters.</p>
 <p class="Pp"></p>
-<pre>
-  my $savings_account = BankAccount-&gt;new( balance =&gt; 250 );
-
+<pre>  my $savings_account = BankAccount-&gt;new( balance =&gt; 250 );
   my $checking_account = CheckingAccount-&gt;new(
       balance           =&gt; 100,
       overdraft_account =&gt; $savings_account,

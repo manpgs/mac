@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Test2::Compare(3)</title>
 </head>
@@ -35,33 +36,25 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-    package Test2::Tools::MyCheck;
-
+<pre>    package Test2::Tools::MyCheck;
     use Test2::Compare::MyCheck;
     use Test2::Compare qw/compare/;
-
     sub MyCheck {
         my ($got, $exp, $name, @diag) = @_;
         my $ctx = context();
-
         my $delta = compare($got, $exp, \&amp;convert);
-
         if ($delta) {
             $ctx-&gt;fail($name, $delta-&gt;diag, @diag);
         }
         else {
             $ctx-&gt;ok(1, $name);
         }
-
         $ctx-&gt;release;
         return !$delta;
     }
-
     sub convert {
         my $thing = shift;
         return $thing if blessed($thing) &amp;&amp; $thing-&gt;isa('Test2::Compare::MyCheck');
-
         return Test2::Compare::MyCheck-&gt;new(stuff =&gt; $thing);
     }
 </pre>
@@ -99,8 +92,7 @@
     <p class="Pp">If you want to use it with a custom configuration you should
         wrap it in another sub like so:</p>
     <p class="Pp"></p>
-    <pre>
-    sub my_convert {
+    <pre>    sub my_convert {
         my $thing_to_convert = shift;
         return convert(
             $thing_to_convert,
@@ -110,8 +102,7 @@
     </pre>
     <p class="Pp">Or the short variant:</p>
     <p class="Pp"></p>
-    <pre>
-    sub my_convert { convert($_[0], { ... }) }
+    <pre>    sub my_convert { convert($_[0], { ... }) }
     </pre>
     <p class="Pp">There are several configuration options, here they are with
         the default setting listed first:</p>
@@ -182,13 +173,10 @@
 <section class="Sh">
 <h1 class="Sh" id="WRITING_A_VARIANT_OF_IS/LIKE"><a class="permalink" href="#WRITING_A_VARIANT_OF_IS/LIKE">WRITING
   A VARIANT OF IS/LIKE</a></h1>
-<pre>
-    use Test2::Compare qw/compare convert/;
-
+<pre>    use Test2::Compare qw/compare convert/;
     sub my_like($$;$@) {
         my ($got, $exp, $name, @diag) = @_;
         my $ctx = context();
-
         # A custom converter that does the same thing as the one used by like()
         my $convert = sub {
             my $thing = shift;
@@ -201,16 +189,13 @@
                 }
             );
         };
-
         my $delta = compare($got, $exp, $convert);
-
         if ($delta) {
             $ctx-&gt;fail($name, $delta-&gt;diag, @diag);
         }
         else {
             $ctx-&gt;ok(1, $name);
         }
-
         $ctx-&gt;release;
         return !$delta;
     }

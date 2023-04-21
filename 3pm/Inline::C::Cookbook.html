@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Inline::C::Cookbook(3)</title>
 </head>
@@ -59,14 +60,11 @@
 <dl class="Bl-tag">
   <dt id="Solution"><a class="permalink" href="#Solution">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline C =&gt; &lt;&lt;'...';
-
+    <pre>    use Inline C =&gt; &lt;&lt;'...';
     void greet() {
       printf(&quot;Hello, world\n&quot;);
     }
     ...
-
     greet;
     </pre>
   </dd>
@@ -100,8 +98,7 @@
     one-liner?</dd>
   <dt id="Solution~2"><a class="permalink" href="#Solution~2">Solution</a></dt>
   <dd>
-    <pre>
-    perl -e 'use Inline C=&gt;q{void greet(){printf(&quot;Hello, world\n&quot;);}};greet'
+    <pre>    perl -e 'use Inline C=&gt;q{void greet(){printf(&quot;Hello, world\n&quot;);}};greet'
     </pre>
   </dd>
   <dt id="Discussion~2"><a class="permalink" href="#Discussion~2">Discussion</a></dt>
@@ -109,8 +106,7 @@
   <dt id="See~2"><a class="permalink" href="#See~2">See Also</a></dt>
   <dd>My email signature of late is:
     <p class="Pp"></p>
-    <pre>
-    perl -le 'use Inline C=&gt;q{SV*JAxH(char*x){return newSVpvf(&quot;Just Another %s Hacker&quot;,x);}};print JAxH+Perl'
+    <pre>    perl -le 'use Inline C=&gt;q{SV*JAxH(char*x){return newSVpvf(&quot;Just Another %s Hacker&quot;,x);}};print JAxH+Perl'
     </pre>
     <p class="Pp">A bit fancier but a few bytes too long to qualify as a true
         one liner :-(</p>
@@ -133,21 +129,16 @@
       strings, numbers and integers?</dd>
   <dt id="Solution~3"><a class="permalink" href="#Solution~3">Solution</a></dt>
   <dd>
-    <pre>
-    # vowels.pl
+    <pre>    # vowels.pl
     use Inline 'C';
-
     $filename = $ARGV[0];
     die &quot;Usage: perl vowels.pl filename\n&quot; unless -f $filename;
-
     $text = join '', &lt;&gt;;           # slurp input file
     $vp = vowel_scan($text);       # call our function
     $vp = sprintf(&quot;%03.1f&quot;, $vp * 100);  # format for printing
     print &quot;The letters in $filename are $vp% vowels.\n&quot;;
-
     __END__
     __C__
-
     /* Find percentage of vowels to letters */
     double vowel_scan(char* str) {
       int letters = 0;
@@ -162,7 +153,6 @@
       char O = normalize | 'o';
       char U = normalize | 'u';
       char Z = normalize | 'z';
-
       while(c = str[i++]) {
         c |= normalize;
         if (c &gt;= A &amp;&amp; c &lt;= Z) {
@@ -171,7 +161,6 @@
              vowels++;
         }
       }
-
       return letters ? ((double) vowels / letters) : 0.0;
     }
     </pre>
@@ -186,8 +175,7 @@
       ASCII and EBCDIC. It is also quite fast.
     <p class="Pp">Running this script produces:</p>
     <p class="Pp"></p>
-    <pre>
-    &gt; perl vowels.pl /usr/dict/words
+    <pre>    &gt; perl vowels.pl /usr/dict/words
     The letters in /usr/dict/words are 37.5% vowels.
     </pre>
     <p class="Pp">It is very important to note that the examples in this
@@ -219,21 +207,15 @@
 <dl class="Bl-tag">
   <dt id="Solution~4"><a class="permalink" href="#Solution~4">Solution</a></dt>
   <dd>
-    <pre>
-    greet(qw(Sarathy Jan Sparky Murray Mike));
-
+    <pre>    greet(qw(Sarathy Jan Sparky Murray Mike));
     use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
-
     void greet(SV* name1, ...) {
       Inline_Stack_Vars;
       int i;
-
       for (i = 0; i &lt; Inline_Stack_Items; i++)
         printf(&quot;Hello %s!\n&quot;, SvPV(Inline_Stack_Item(i), PL_na));
-
       Inline_Stack_Void;
     }
-
     END_OF_C_CODE
     </pre>
   </dd>
@@ -281,18 +263,13 @@
   <dd>How do I return a list of values from a C function?</dd>
   <dt id="Solution~5"><a class="permalink" href="#Solution~5">Solution</a></dt>
   <dd>
-    <pre>
-    print map {&quot;$_\n&quot;} get_localtime(time);
-
+    <pre>    print map {&quot;$_\n&quot;} get_localtime(time);
     use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
-
     #include &lt;time.h&gt;
-
     void get_localtime(SV * utc) {
       const time_t utc_ = (time_t)SvIV(utc);
       struct tm *ltime = localtime(&amp;utc_);
       Inline_Stack_Vars;
-
       Inline_Stack_Reset;
       Inline_Stack_Push(sv_2mortal(newSViv(ltime-&gt;tm_year)));
       Inline_Stack_Push(sv_2mortal(newSViv(ltime-&gt;tm_mon)));
@@ -340,18 +317,13 @@
   <dd>How can I pass back more than one value without using the Perl Stack?</dd>
   <dt id="Solution~6"><a class="permalink" href="#Solution~6">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline::Files;
+    <pre>    use Inline::Files;
     use Inline 'C';
-
     my ($foo, $bar);
     change($foo, $bar);
-
     print &quot;\$foo = $foo\n&quot;;
     print &quot;\$bar = $bar\n&quot;;
-
     __C__
-
     int change(SV* var1, SV* var2) {
       sv_setpvn(var1, &quot;Perl Rocks!&quot;, 11);
       sv_setpvn(var2, &quot;Inline Rules!&quot;, 13);
@@ -391,8 +363,7 @@
   <dd>How can I take a Perl array-ref as an argument in my C function?</dd>
   <dt id="Solution~7"><a class="permalink" href="#Solution~7">Solution</a></dt>
   <dd>
-    <pre>
-    SV *sum(SV *array) {
+    <pre>    SV *sum(SV *array) {
         int total = 0;
         int numelts, i;
         if ((!SvROK(array))
@@ -422,15 +393,11 @@
   <dd>How should I allocate buffers in my Inline C code?</dd>
   <dt id="Solution~8"><a class="permalink" href="#Solution~8">Solution</a></dt>
   <dd>
-    <pre>
-    print greeting('Ingy');
-
+    <pre>    print greeting('Ingy');
     use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
-
     SV* greeting(SV* sv_name) {
       return (newSVpvf(&quot;Hello %s!\n&quot;, SvPV(sv_name, PL_na)));
     }
-
     END_OF_C_CODE
     </pre>
   </dd>
@@ -478,29 +445,22 @@
       without having to pass it as an argument?</dd>
   <dt id="Solution~9"><a class="permalink" href="#Solution~9">Solution</a></dt>
   <dd>
-    <pre>
-    use strict;
+    <pre>    use strict;
     use warnings;
     use Inline C =&gt; &quot;DATA&quot;;
-
     our $mesh_data = &quot;MESH-POINTS 0.0 0.0 0.5 0.25 1.0 0.5 1.5 0.75&quot;;
     CalcSurfaceHeights();
-
     __DATA__
     __C__
     #define N_MP 4
-
     void CalcSurfaceHeights() {
        double x[N_MP], y[N_MP], z;
        int    ix;
        char   *mesh_data = SvPV_nolen(get_sv(&quot;main::mesh_data&quot;, 0));
-
        sscanf(mesh_data, &quot;MESH-POINTS %lf%lf%lf%lf%lf%lf%lf%lf&quot;,
                          x, y, x+1, y+1, x+2, y+2, x+3, y+3);
-
        for (ix=0; ix &lt; N_MP; ix++) {
           z = 0.5*( sin(x[ix]) + sin(y[ix]) );
-
           printf(&quot;Surface-Height: %6.3f Mesh-Point: %6.2f, %6.2f\n&quot;,
                  z, x[ix], y[ix]);
        }
@@ -512,8 +472,7 @@
       why the above code works. In the Perl section, you will notice the
       declaration
     <p class="Pp"></p>
-    <pre>
-    our $mesh_data = &quot;...&quot;;
+    <pre>    our $mesh_data = &quot;...&quot;;
     </pre>
     <p class="Pp">For Perl variables to be directly accessible from Inline::C
         functions, they must be declared as package variables. Lexical
@@ -522,8 +481,7 @@
     <p class="Pp">In the C code section of the example, the following line is
         what makes direct access to the Perl variable work;</p>
     <p class="Pp"></p>
-    <pre>
-    char *mesh_data = SvPV_nolen(get_sv(&quot;main::mesh_data&quot;, 0))
+    <pre>    char *mesh_data = SvPV_nolen(get_sv(&quot;main::mesh_data&quot;, 0))
     </pre>
     <p class="Pp">Here <b>SvPV_nolen()</b> returns a pointer to the C string
         contained in the scalar variable. The &quot;_nolen&quot; variation
@@ -534,8 +492,7 @@
         length, specified <b>PL_na</b> for the second argument. The function
         call would then change to,</p>
     <p class="Pp"></p>
-    <pre>
-    SvPV(get_sv(&quot;main::mesh_data&quot;, 0), PL_na)
+    <pre>    SvPV(get_sv(&quot;main::mesh_data&quot;, 0), PL_na)
     </pre>
     <p class="Pp">The function <b></b><b>get_sv()</b><b></b> returns the SV* of
         a named scalar package variable. It takes a C string, containing the
@@ -572,19 +529,15 @@
   <dd>How do I use Inline securely in a CGI environment?</dd>
   <dt id="Solution~10"><a class="permalink" href="#Solution~10">Solution</a></dt>
   <dd>
-    <pre>
-    #!/usr/bin/perl
-
+    <pre>    #!/usr/bin/perl
     use CGI qw(:standard);
     use Inline Config =&gt;
       DIRECTORY =&gt; '/usr/local/apache/Inline';
-
     print
       header,
       start_html('Inline CGI Example'),
       h1(JAxH('Inline')),
       end_html;
-
     use Inline C =&gt; &lt;&lt;END;
     SV* JAxH(char* x) {
       return newSVpvf(&quot;Just Another %s Hacker&quot;, x);
@@ -627,22 +580,19 @@
 <dl class="Bl-tag">
   <dt id="Solution~11"><a class="permalink" href="#Solution~11">Solution</a></dt>
   <dd>
-    <pre>
-    package Factorial;
+    <pre>    package Factorial;
     use strict;
     use Inline Config =&gt;
                DIRECTORY =&gt; '/usr/local/apache/Inline',
                enable =&gt; 'UNTAINT';
     use Inline 'C';
     Inline-&gt;init;
-
     sub handler {
       my $r = shift;
       $r-&gt;send_http_header('text/plain');
       printf &quot;%3d! = %10d\n&quot;, $_, factorial($_) for 1..100;
       return Apache::Constants::OK;
     }
-
     1;
     __DATA__
     __C__
@@ -684,23 +634,17 @@
 <dl class="Bl-tag">
   <dt id="Solution~12"><a class="permalink" href="#Solution~12">Solution</a></dt>
   <dd>
-    <pre>
-    my $obj1 = Soldier-&gt;new('Benjamin', 'Private', 11111);
+    <pre>    my $obj1 = Soldier-&gt;new('Benjamin', 'Private', 11111);
     my $obj2 = Soldier-&gt;new('Sanders', 'Colonel', 22222);
     my $obj3 = Soldier-&gt;new('Matt', 'Sergeant', 33333);
-
     for my $obj ($obj1, $obj2, $obj3) {
       print $obj-&gt;get_serial, &quot;) &quot;,
             $obj-&gt;get_name, &quot; is a &quot;,
             $obj-&gt;get_rank, &quot;\n&quot;;
     }
-
     #---------------------------------------------------------
-
     package Soldier;
-
     use Inline C =&gt; &lt;&lt;'END';
-
     /*
     Allocate memory with Newx if it's
     available - if it's an older perl
@@ -710,51 +654,41 @@
     #ifndef Newx
     #  define Newx(v,n,t) New(0,v,n,t)
     #endif
-
     typedef struct {
       char* name;
       char* rank;
       long  serial;
     } Soldier;
-
     SV* new(const char * classname, const char * name,
             const char * rank, long serial) {
       Soldier * soldier;
       SV      * obj;
       SV      * obj_ref;
-
       Newx(soldier, 1, Soldier);
       soldier-&gt;name = savepv(name);
       soldier-&gt;rank = savepv(rank);
       soldier-&gt;serial = serial;
-
       obj = newSViv((IV)soldier);
       obj_ref = newRV_noinc(obj);
       sv_bless(obj_ref, gv_stashpv(classname, GV_ADD));
       SvREADONLY_on(obj);
-
       return obj_ref;
     }
-
     char* get_name(SV* obj) {
       return ((Soldier*)SvIV(SvRV(obj)))-&gt;name;
     }
-
     char* get_rank(SV* obj) {
       return ((Soldier*)SvIV(SvRV(obj)))-&gt;rank;
     }
-
     long get_serial(SV* obj) {
       return ((Soldier*)SvIV(SvRV(obj)))-&gt;serial;
     }
-
     void DESTROY(SV* obj) {
       Soldier* soldier = (Soldier*)SvIV(SvRV(obj));
       Safefree(soldier-&gt;name);
       Safefree(soldier-&gt;rank);
       Safefree(soldier);
     }
-
     END
     </pre>
   </dd>
@@ -814,35 +748,24 @@
       it with Perl.</dd>
   <dt id="Solution~13"><a class="permalink" href="#Solution~13">Solution</a></dt>
   <dd>
-    <pre>
-    print get('http://www.axkit.org');
-
+    <pre>    print get('http://www.axkit.org');
     use Inline C =&gt; Config =&gt;
                LIBS =&gt; '-lghttp';
     use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
-
     #include &lt;ghttp.h&gt;
-
     char *get(SV* uri) {
       SV* buffer;
       ghttp_request* request;
-
       buffer = NEWSV(0,0);
       request = ghttp_request_new();
       ghttp_set_uri(request, SvPV(uri, PL_na));
-
       ghttp_set_header(request, http_hdr_Connection, &quot;close&quot;);
-
       ghttp_prepare(request);
       ghttp_process(request);
-
       sv_catpv(buffer, ghttp_get_body(request));
-
       ghttp_request_destroy(request);
-
       return SvPV(buffer, PL_na);
     }
-
     END_OF_C_CODE
     </pre>
   </dd>
@@ -856,24 +779,20 @@
     <p class="Pp">With version 0.30 and higher, you can specify the use of
         shared libraries easily with something like this:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; Config =&gt; LIBS =&gt; '-lghttp';
+    <pre>    use Inline C =&gt; Config =&gt; LIBS =&gt; '-lghttp';
     use Inline C =&gt; &quot;code ...&quot;;
     </pre>
     <p class="Pp">or</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; &quot;code ...&quot;, LIBS =&gt; '-lghttp';
+    <pre>    use Inline C =&gt; &quot;code ...&quot;, LIBS =&gt; '-lghttp';
     </pre>
     <p class="Pp">To specify a specific library path, use:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; &quot;code ...&quot;, LIBS =&gt; '-L/your/lib/path -lyourlib';
+    <pre>    use Inline C =&gt; &quot;code ...&quot;, LIBS =&gt; '-L/your/lib/path -lyourlib';
     </pre>
     <p class="Pp">To specify an include path use:</p>
     <p class="Pp"></p>
-    <pre>
-    use Inline C =&gt; &quot;code ...&quot;,
+    <pre>    use Inline C =&gt; &quot;code ...&quot;,
                LIBS =&gt; '-lghttp',
                INC =&gt; '-I/your/inc/path';
     </pre>
@@ -901,8 +820,7 @@
       defined in your standard math library. Annoyingly, Perl does not let you
       access it. To print out a small table of its values, just say:
     <p class="Pp"></p>
-    <pre>
-    perl -le 'use Inline C =&gt; q{ double erf(double); }, enable =&gt; &quot;autowrap&quot;; print &quot;$_ @{[erf($_)]}&quot; for (0..10)'
+    <pre>    perl -le 'use Inline C =&gt; q{ double erf(double); }, enable =&gt; &quot;autowrap&quot;; print &quot;$_ @{[erf($_)]}&quot; for (0..10)'
     </pre>
     <p class="Pp">The excellent
         <span class="Li">&quot;Term::ReadLine::Gnu&quot;</span> implements
@@ -910,14 +828,11 @@
         access just <span class="Li">&quot;readline()&quot;</span> from that
         library:</p>
     <p class="Pp"></p>
-    <pre>
-    package MyTerm;
-
+    <pre>    package MyTerm;
     use Inline C =&gt; Config =&gt;
                enable =&gt; autowrap =&gt;
                LIBS =&gt; &quot;-lreadline -lncurses -lterminfo -ltermcap &quot;;
     use Inline C =&gt; q{ char * readline(char *); };
-
     package main;
     my $x = MyTerm::readline(&quot;xyz: &quot;);
     </pre>
@@ -977,8 +892,7 @@
   <dt id="Solution~15"><a class="permalink" href="#Solution~15">Solution</a></dt>
   <dd>Just say:
     <p class="Pp"></p>
-    <pre>
-    use IO::All;
+    <pre>    use IO::All;
     use Inline C =&gt; sub { io('allheaders.h')-&gt;all =~ s/LEPT_DLL extern//gr },
       enable =&gt; &quot;autowrap&quot;,
       libs =&gt; '-lleptonica';
@@ -1008,19 +922,15 @@
 <dl class="Bl-tag">
   <dt id="Solution~16"><a class="permalink" href="#Solution~16">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
-
+    <pre>    use Inline C =&gt; &lt;&lt;'END_OF_C_CODE';
     void dump_hash(SV* hash_ref) {
       HV* hash;
       HE* hash_entry;
       int num_keys, i;
       SV* sv_key;
       SV* sv_val;
-
       if (! SvROK(hash_ref))
         croak(&quot;hash_ref is not a reference&quot;);
-
       hash = (HV*)SvRV(hash_ref);
       num_keys = hv_iterinit(hash);
       for (i = 0; i &lt; num_keys; i++) {
@@ -1031,9 +941,7 @@
       }
       return;
     }
-
     END_OF_C_CODE
-
     my %hash = (
       Author =&gt; &quot;Ingy d&#x00F6;t Net&quot;,
       Nickname =&gt; &quot;INGY&quot;,
@@ -1041,7 +949,6 @@
       Version =&gt; &quot;0.30&quot;,
       Language =&gt; &quot;C&quot;,
     );
-
     dump_hash(\%hash);
     </pre>
   </dd>
@@ -1076,24 +983,18 @@
 <dl class="Bl-tag">
   <dt id="Solution~17"><a class="permalink" href="#Solution~17">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline 'C';
+    <pre>    use Inline 'C';
     use Data::Dumper;
-
     $hash_ref = load_data(&quot;./cartoon.txt&quot;);
     print Dumper $hash_ref;
-
     __END__
     __C__
-
     static int next_word(char**, char*);
-
     SV* load_data(char* file_name) {
       char buffer[100], word[100], * pos;
       AV* array;
       HV* hash = newHV();
       FILE* fh = fopen(file_name, &quot;r&quot;);
-
       while (fgets(pos = buffer, sizeof(buffer), fh)) {
         if (next_word(&amp;pos, word)) {
           array = newAV();
@@ -1106,7 +1007,6 @@
       fclose(fh);
       return newRV_noinc((SV*) hash);
     }
-
     static int next_word(char** text_ptr, char* word) {
       char* text = *text_ptr;
       while(*text != '\0' &amp;&amp;
@@ -1131,8 +1031,7 @@
       it's input. The file <span class="Li">&quot;cartoon.text&quot;</span>
       might look like:
     <p class="Pp"></p>
-    <pre>
-    flintstones fred barney
+    <pre>    flintstones fred barney
     jetsons     george jane elroy
     simpsons    homer marge bart
     </pre>
@@ -1141,8 +1040,7 @@
         a hash key and the remaining words are put into an array whose reference
         becomes the hash value. The output looks like this:</p>
     <p class="Pp"></p>
-    <pre>
-    $VAR1 = {
+    <pre>    $VAR1 = {
               'flintstones' =&gt; [
                                  'fred',
                                  'barney'
@@ -1179,19 +1077,13 @@
   <dd>How do I access Win32 DLL-s using Inline?</dd>
   <dt id="Solution~18"><a class="permalink" href="#Solution~18">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline C =&gt; DATA =&gt;
+    <pre>    use Inline C =&gt; DATA =&gt;
                LIBS =&gt; '-luser32';
-
     $text = &quot;@ARGV&quot; || 'Inline.pm works with MSWin32. Scary...';
-
     WinBox('Inline Text Box', $text);
-
     __END__
     __C__
-
     #include &lt;windows.h&gt;
-
     int WinBox(char* Caption, char* Text) {
       return MessageBoxA(0, Text, Caption, 0);
     }
@@ -1222,16 +1114,12 @@
   <dd>How do I use Perl from a regular C program?</dd>
   <dt id="Solution~19"><a class="permalink" href="#Solution~19">Solution</a></dt>
   <dd>
-    <pre>
-    #!/usr/bin/cpr
-
+    <pre>    #!/usr/bin/cpr
     int main(void) {
       printf(&quot;Using Perl version %s from a C program!\n\n&quot;,
              CPR_eval(&quot;use Config; $Config{version};&quot;));
-
       CPR_eval(&quot;use Data::Dumper;&quot;);
       CPR_eval(&quot;print Dumper \\%INC;&quot;);
-
       return 0;
     }
     </pre>
@@ -1271,8 +1159,7 @@
     with other modules that want to expose a C API of their own. The general
     syntax for doing this is:</p>
 <p class="Pp"></p>
-<pre>
-    use Inline with =&gt; 'Module';
+<pre>    use Inline with =&gt; 'Module';
     use Inline C =&gt; ... ;
 </pre>
 <p class="Pp">This tells <span class="Li">&quot;Module&quot;</span> to pass
@@ -1289,26 +1176,20 @@
       easily with Inline?</dd>
   <dt id="Solution~20"><a class="permalink" href="#Solution~20">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline with =&gt; 'Event';
-
+    <pre>    use Inline with =&gt; 'Event';
     Event-&gt;timer(desc     =&gt; 'Timer #1',
                  interval =&gt; 2,
                  cb       =&gt; \&amp;my_callback,
                 );
-
     Event-&gt;timer(desc     =&gt; 'Timer #2',
                  interval =&gt; 3,
                  cb       =&gt; \&amp;my_callback,
                 );
-
     print &quot;Starting...\n&quot;;
     Event::loop;
-
     use Inline C =&gt; &lt;&lt;'END';
     void my_callback(pe_event* event) {
       pe_timer * watcher = event-&gt;up;
-
       printf(&quot;%s\n\tEvent priority = %d\n\tWatcher priority = %d\n\n&quot;,
              SvPVX(watcher-&gt;base.desc),
              event-&gt;prio,
@@ -1326,8 +1207,7 @@
       objects. The parameters that <span class="Li">&quot;Event&quot;</span>
       returns look like:
     <p class="Pp"></p>
-    <pre>
-    INC =&gt; &quot;-I $path/Event&quot;,
+    <pre>    INC =&gt; &quot;-I $path/Event&quot;,
     TYPEMAPS =&gt; &quot;$path/Event/typemap&quot;,
     MYEXTLIB =&gt; &quot;$path/auto/Event/Event.$so&quot;,
     AUTO_INCLUDE =&gt; '#include &quot;EventAPI.h&quot;',
@@ -1373,11 +1253,9 @@
       do I do that?</dd>
   <dt id="Solution~21"><a class="permalink" href="#Solution~21">Solution</a></dt>
   <dd>
-    <pre>
-    print &quot;9 + 5 = &quot;, add(9, 5), &quot;\n&quot;;
+    <pre>    print &quot;9 + 5 = &quot;, add(9, 5), &quot;\n&quot;;
     print &quot;SQRT(9^2 + 5^2) = &quot;, pyth(9, 5), &quot;\n&quot;;
     print &quot;9 * 5 = &quot;, mult(9, 5), &quot;\n&quot;;
-
     use Inline C =&gt; &lt;&lt;'END_C';
     int add(int x, int y) {
       return x + y;
@@ -1394,8 +1272,7 @@
   <dt id="Discussion~21"><a class="permalink" href="#Discussion~21">Discussion</a></dt>
   <dd>The program produces:
     <p class="Pp"></p>
-    <pre>
-    9 + 5 = 14
+    <pre>    9 + 5 = 14
     SQRT(9^2 + 5^2) = 10.295630140987
     Can't locate auto/main/mult.al in @INC ...
     </pre>
@@ -1424,37 +1301,27 @@
       an Inline C function.</dd>
   <dt id="Solution~22"><a class="permalink" href="#Solution~22">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline 'C';
-
+    <pre>    use Inline 'C';
     for(1..5) {
       c_func_1('This is the first line');
       c_func_2('This is the second line');
       print &quot;\n&quot;;
     }
-
     sub perl_sub_1 {
       print map &quot;$_\n&quot;, @_;
     }
-
     __DATA__
     __C__
-
     void c_func_2(SV* text) {
       dSP;
-
       ENTER;
       SAVETMPS;
-
       XPUSHs(sv_2mortal(newSVpvf(&quot;Plus an extra line&quot;)));
       PUTBACK;
-
       call_pv(&quot;perl_sub_1&quot;, G_DISCARD);
-
       FREETMPS;
       LEAVE;
     }
-
     void c_func_1(SV* text) {
       c_func_2(text);
     }
@@ -1506,14 +1373,10 @@
       this?</dd>
   <dt id="Solution~23"><a class="permalink" href="#Solution~23">Solution</a></dt>
   <dd>
-    <pre>
-    use Inline;
+    <pre>    use Inline;
     use Code::Generator;
-
     my $c_code = generate('foo_function');
-
     Inline-&gt;bind(C =&gt; $c_code);
-
     foo_function(1, 2, 3);
     </pre>
   </dd>
@@ -1542,33 +1405,26 @@
       Inline::C is not already installed. How do I do this?</dd>
   <dt id="Solution~24"><a class="permalink" href="#Solution~24">Solution</a></dt>
   <dd>
-    <pre>
-    use strict;
+    <pre>    use strict;
     use warnings;
-
     eval {
       require Inline;
       Inline-&gt;import (C =&gt; Config =&gt;
                       BUILD_NOISY =&gt; 1);
       Inline-&gt;import (C =&gt;&lt;&lt;'EOC');
-
       int foo() {
         warn(&quot;Using Inline\n&quot;);
         return 42;
       }
-
     EOC
     };
-
     if ($@) {
       *foo =\&amp;bar;
     }
-
     sub bar {
       warn(&quot;Using Pure Perl Implementation\n&quot;);
       return 42;
     }
-
     my $x = foo();
     print &quot;$x\n&quot;;
     </pre>
@@ -1592,8 +1448,7 @@
       sub as is from Inline::C. By way of example, let's say that the fortran
       source file is named 'prod.f', and that it looks like this:
     <p class="Pp"></p>
-    <pre>
-    integer function sqarea(r,s)
+    <pre>    integer function sqarea(r,s)
     integer r, s
     sqarea = r*s
     return
@@ -1604,26 +1459,19 @@
   <dd>We can't access that code directly, but we can compile it into a library
       which we <b>can</b> then access from Inline::C. Using gcc we could run:
     <p class="Pp"></p>
-    <pre>
-    gfortran -c prod.f -o prod.o
+    <pre>    gfortran -c prod.f -o prod.o
     ar cru libprod.a prod.o
     </pre>
     <p class="Pp">The function is then accessible as follows:</p>
     <p class="Pp"></p>
-    <pre>
-    use warnings;
-
+    <pre>    use warnings;
     use Inline C =&gt; Config =&gt;
       LIBS =&gt; '-L/full/path/to/libprod_location -lprod -lgfortran';
-
     use Inline C =&gt; &lt;&lt;'  EOC';
-
     int wrap_sqarea(int a, int b) {
       return sqarea_(&amp;a, &amp;b);
     }
-
     EOC
-
     $x = 15;
     $y = $x + 3;
     $ret = wrap_sqarea($x, $y);

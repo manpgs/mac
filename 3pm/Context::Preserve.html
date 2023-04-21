@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Context::Preserve(3)</title>
 </head>
@@ -36,9 +37,7 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <p class="Pp">Have you ever written this?</p>
 <p class="Pp"></p>
-<pre>
-    my ($result, @result);
-
+<pre>    my ($result, @result);
     # run a sub in the correct context
     if(!defined wantarray){
         some::code();
@@ -66,9 +65,7 @@
 </pre>
 <p class="Pp">Now you can just write this instead:</p>
 <p class="Pp"></p>
-<pre>
-  use Context::Preserve;
-
+<pre>  use Context::Preserve;
   return preserve_context { some::code() }
              after =&gt; sub { $_ += 42 for @_ };
 </pre>
@@ -119,15 +116,12 @@
 <p class="Pp">Run <span class="Li">&quot;preserve_context&quot;</span> like
     this:</p>
 <p class="Pp"></p>
-<pre>
-  sub whatever {
+<pre>  sub whatever {
       ...
       return preserve_context { orginal_function() }
                  after =&gt; sub { modify @_          };
   }
-
   or
-
   sub whatever {
       ...
       return preserve_context   { orginal_function() }
@@ -140,8 +134,7 @@
     <span class="Li">&quot;(&amp;@)&quot;</span> prototype. The alternative is
     to say:</p>
 <p class="Pp"></p>
-<pre>
-      preserve_context(sub { original }, after =&gt; sub { after });
+<pre>      preserve_context(sub { original }, after =&gt; sub { after });
 </pre>
 <p class="Pp">You can pick the one you like, but I think the first version is
     much prettier.</p>

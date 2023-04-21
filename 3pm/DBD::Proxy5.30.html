@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::Proxy(3)</title>
 </head>
@@ -28,12 +29,9 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  use DBI;
-
+<pre>  use DBI;
   $dbh = DBI-&gt;connect(&quot;dbi:Proxy:hostname=$host;port=$port;dsn=$db&quot;,
                       $user, $passwd);
-
   # See the DBI module documentation for full details
 </pre>
 </section>
@@ -68,13 +66,11 @@
     &quot;mydb&quot; as user &quot;joe&quot; with password &quot;hello&quot;.
     When using DBD::ODBC directly, you'd do a</p>
 <p class="Pp"></p>
-<pre>
-  $dbh = DBI-&gt;connect(&quot;DBI:ODBC:mydb&quot;, &quot;joe&quot;, &quot;hello&quot;);
+<pre>  $dbh = DBI-&gt;connect(&quot;DBI:ODBC:mydb&quot;, &quot;joe&quot;, &quot;hello&quot;);
 </pre>
 <p class="Pp">With DBD::Proxy this becomes</p>
 <p class="Pp"></p>
-<pre>
-  $dsn = &quot;DBI:Proxy:hostname=alpha;port=3334;dsn=DBI:ODBC:mydb&quot;;
+<pre>  $dsn = &quot;DBI:Proxy:hostname=alpha;port=3334;dsn=DBI:ODBC:mydb&quot;;
   $dbh = DBI-&gt;connect($dsn, &quot;joe&quot;, &quot;hello&quot;);
 </pre>
 <p class="Pp">You see, this is mainly the same. The DBD::Proxy module will
@@ -85,8 +81,7 @@
     automatically use DBD::Proxy without having to change your code.</p>
 <p class="Pp">DBD::Proxy's DSN string has the format</p>
 <p class="Pp"></p>
-<pre>
-  $dsn = &quot;DBI:Proxy:key1=val1; ... ;keyN=valN;dsn=valDSN&quot;;
+<pre>  $dsn = &quot;DBI:Proxy:key1=val1; ... ;keyN=valN;dsn=valDSN&quot;;
 </pre>
 <p class="Pp">In other words, it is a collection of key/value pairs. The
     following keys are recognized:</p>
@@ -97,8 +92,7 @@
   <dd>Hostname and port of the Proxy server; these keys must be present, no
       defaults. Example:
     <p class="Pp"></p>
-    <pre>
-    hostname=alpha;port=3334
+    <pre>    hostname=alpha;port=3334
     </pre>
   </dd>
   <dt id="dsn"><a class="permalink" href="#dsn">dsn</a></dt>
@@ -109,8 +103,7 @@
       key *must* be the last and it's value will be the complete remaining part
       of the dsn. Example:
     <p class="Pp"></p>
-    <pre>
-    dsn=DBI:ODBC:mydb
+    <pre>    dsn=DBI:ODBC:mydb
     </pre>
   </dd>
   <dt id="cipher"><a class="permalink" href="#cipher">cipher</a></dt>
@@ -122,20 +115,17 @@
   <dt id="userkey"><a class="permalink" href="#userkey">userkey</a></dt>
   <dd>By using these fields you can enable encryption. If you set, for example,
     <p class="Pp"></p>
-    <pre>
-    cipher=$class;key=$key
+    <pre>    cipher=$class;key=$key
     </pre>
     <p class="Pp">(note the semicolon) then DBD::Proxy will create a new cipher
         object by executing</p>
     <p class="Pp"></p>
-    <pre>
-    $cipherRef = $class-&gt;new(pack(&quot;H*&quot;, $key));
+    <pre>    $cipherRef = $class-&gt;new(pack(&quot;H*&quot;, $key));
     </pre>
     <p class="Pp">and pass this object to the RPC::PlClient module when creating
         a client. See RPC::PlClient. Example:</p>
     <p class="Pp"></p>
-    <pre>
-    cipher=IDEA;key=97cd2375efa329aceef2098babdc9721
+    <pre>    cipher=IDEA;key=97cd2375efa329aceef2098babdc9721
     </pre>
     <p class="Pp">The usercipher/userkey attributes allow you to use two phase
         encryption: The cipher/key encryption will be used in the login and
@@ -154,16 +144,14 @@
       object, thus logging will not use <b>syslog()</b>, but redirected to
       stderr. This is the default under Windows.
     <p class="Pp"></p>
-    <pre>
-    stderr=1
+    <pre>    stderr=1
     </pre>
   </dd>
   <dt id="logfile"><a class="permalink" href="#logfile">logfile</a></dt>
   <dd>Similar to the stderr attribute, but output will be redirected to the
       given file.
     <p class="Pp"></p>
-    <pre>
-    logfile=/dev/null
+    <pre>    logfile=/dev/null
     </pre>
   </dd>
   <dt id="RowCacheSize"><a class="permalink" href="#RowCacheSize">RowCacheSize</a></dt>
@@ -204,8 +192,7 @@
     appropriate package (DBD::Proxy::db for a dbh method, and DBD::Proxy::st for
     an sth method). For example:</p>
 <p class="Pp"></p>
-<pre>
-    sub DBD::Proxy::db::selectall_arrayref;
+<pre>    sub DBD::Proxy::db::selectall_arrayref;
 </pre>
 <p class="Pp">That will enable selectall_arrayref to be proxied.</p>
 <p class="Pp">Currently many methods aren't explicitly proxied and so you get
@@ -223,8 +210,7 @@
     array refs and not simple strings or integers. For example, with DBD::CSV,
     you would like to write something like</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;{&quot;csv_tables&quot;}-&gt;{&quot;passwd&quot;} =
+<pre>  $dbh-&gt;{&quot;csv_tables&quot;}-&gt;{&quot;passwd&quot;} =
         { &quot;sep_char&quot; =&gt; &quot;:&quot;, &quot;eol&quot; =&gt; &quot;\n&quot;;
 </pre>
 <p class="Pp">The above example would advice the CSV driver to assume the file
@@ -246,8 +232,7 @@
 <p class="Pp">This becomes a little bit clearer, if we rewrite the above
   code:</p>
 <p class="Pp"></p>
-<pre>
-  $tables = $dbh-&gt;{&quot;csv_tables&quot;};
+<pre>  $tables = $dbh-&gt;{&quot;csv_tables&quot;};
   $tables-&gt;{&quot;passwd&quot;} = { &quot;sep_char&quot; =&gt; &quot;:&quot;, &quot;eol&quot; =&gt; &quot;\n&quot;;
 </pre>
 <p class="Pp">While the examples work fine without the proxy, the fail due to a
@@ -259,8 +244,7 @@
 <p class="Pp">The workaround is storing the modified local copy back to the
     server:</p>
 <p class="Pp"></p>
-<pre>
-  $tables = $dbh-&gt;{&quot;csv_tables&quot;};
+<pre>  $tables = $dbh-&gt;{&quot;csv_tables&quot;};
   $tables-&gt;{&quot;passwd&quot;} = { &quot;sep_char&quot; =&gt; &quot;:&quot;, &quot;eol&quot; =&gt; &quot;\n&quot;;
   $dbh-&gt;{&quot;csv_tables&quot;} = $tables;
 </pre>
@@ -278,12 +262,10 @@
   AND COPYRIGHT</a></h1>
 <p class="Pp">This module is Copyright (c) 1997, 1998</p>
 <p class="Pp"></p>
-<pre>
-    Jochen Wiedmann
+<pre>    Jochen Wiedmann
     Am Eisteich 9
     72555 Metzingen
     Germany
-
     Email: joe@ispsoft.de
     Phone: +49 7123 14887
 </pre>

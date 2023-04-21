@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>DBD::SQLite::VirtualTable(3)</title>
 </head>
@@ -29,13 +30,10 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # register the virtual table module within sqlite
+<pre>  # register the virtual table module within sqlite
   $dbh-&gt;sqlite_create_module(mod_name =&gt; &quot;DBD::SQLite::VirtualTable::Subclass&quot;);
-
   # create a virtual table
   $dbh-&gt;do(&quot;CREATE VIRTUAL TABLE vtbl USING mod_name(arg1, arg2, ...)&quot;)
-
   # use it as any regular table
   my $sth = $dbh-&gt;prepare(&quot;SELECT * FROM vtbl WHERE ...&quot;);
 </pre>
@@ -96,19 +94,16 @@
   methods for registering the module</a></h2>
 <p class="Pp"><i>CREATE_MODULE</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;CREATE_MODULE($sqlite_module_name);
+<pre>  $class-&gt;CREATE_MODULE($sqlite_module_name);
 </pre>
 <p class="Pp">Called when the client code invokes</p>
 <p class="Pp"></p>
-<pre>
-  $dbh-&gt;sqlite_create_module($sqlite_module_name =&gt; $class);
+<pre>  $dbh-&gt;sqlite_create_module($sqlite_module_name =&gt; $class);
 </pre>
 <p class="Pp">The default implementation is empty.</p>
 <p class="Pp"><i>DESTROY_MODULE</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;DESTROY_MODULE();
+<pre>  $class-&gt;DESTROY_MODULE();
 </pre>
 <p class="Pp">Called automatically when the database handle is disconnected. The
     default implementation is empty.</p>
@@ -118,19 +113,16 @@
   methods for creating a vtable instance</a></h2>
 <p class="Pp"><i>CREATE</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;CREATE($dbh_ref, $module_name, $db_name, $vtab_name, @args);
+<pre>  $class-&gt;CREATE($dbh_ref, $module_name, $db_name, $vtab_name, @args);
 </pre>
 <p class="Pp">Called when sqlite receives a statement</p>
 <p class="Pp"></p>
-<pre>
-  CREATE VIRTUAL TABLE $db_name.$vtab_name USING $module_name(@args)
+<pre>  CREATE VIRTUAL TABLE $db_name.$vtab_name USING $module_name(@args)
 </pre>
 <p class="Pp">The default implementation just calls &quot;NEW&quot;.</p>
 <p class="Pp"><i>CONNECT</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;CONNECT($dbh_ref, $module_name, $db_name, $vtab_name, @args);
+<pre>  $class-&gt;CONNECT($dbh_ref, $module_name, $db_name, $vtab_name, @args);
 </pre>
 <p class="Pp">Called when attempting to access a virtual table that had been
     created during previous database connection. The creation arguments were
@@ -139,8 +131,7 @@
 <p class="Pp">The default implementation just calls &quot;NEW&quot;.</p>
 <p class="Pp"><i>_PREPARE_SELF</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;_PREPARE_SELF($dbh_ref, $module_name, $db_name, $vtab_name, @args);
+<pre>  $class-&gt;_PREPARE_SELF($dbh_ref, $module_name, $db_name, $vtab_name, @args);
 </pre>
 <p class="Pp">Prepares the datastructure for a virtual table instance.
     <span class="Li">@args</span> is
@@ -182,8 +173,7 @@
     may override the &quot;NEW&quot; method.</p>
 <p class="Pp"><i>NEW</i></p>
 <p class="Pp"></p>
-<pre>
-  $class-&gt;NEW($dbh_ref, $module_name, $db_name, $vtab_name, @args);
+<pre>  $class-&gt;NEW($dbh_ref, $module_name, $db_name, $vtab_name, @args);
 </pre>
 <p class="Pp">Instantiates a virtual table.</p>
 </section>
@@ -226,13 +216,11 @@
   explanations.</p>
 <p class="Pp">The default implementation returns:</p>
 <p class="Pp"></p>
-<pre>
-  CREATE TABLE $self-&gt;{vtab_name}(@{$self-&gt;{columns}})
+<pre>  CREATE TABLE $self-&gt;{vtab_name}(@{$self-&gt;{columns}})
 </pre>
 <p class="Pp"><i>BEST_INDEX</i></p>
 <p class="Pp"></p>
-<pre>
-  my $index_info = $vtab-&gt;BEST_INDEX($constraints, $order_by)
+<pre>  my $index_info = $vtab-&gt;BEST_INDEX($constraints, $order_by)
 </pre>
 <p class="Pp">This is the most complex method to redefined in subclasses. This
     method will be called at the beginning of a new query on the virtual table;
@@ -351,8 +339,7 @@
     reason to override this method in subclasses.</p>
 <p class="Pp"><i>INSERT</i></p>
 <p class="Pp"></p>
-<pre>
-  my $rowid = $vtab-&gt;INSERT($new_rowid, @values);
+<pre>  my $rowid = $vtab-&gt;INSERT($new_rowid, @values);
 </pre>
 <p class="Pp">This method should be overridden in subclasses to implement
     insertion of a new row into the virtual table. The size of the
@@ -363,28 +350,24 @@
     compute a new id and return it as the result of the method call.</p>
 <p class="Pp"><i>DELETE</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;INSERT($old_rowid);
+<pre>  $vtab-&gt;INSERT($old_rowid);
 </pre>
 <p class="Pp">This method should be overridden in subclasses to implement
     deletion of a row from the virtual table.</p>
 <p class="Pp"><i>UPDATE</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;UPDATE($old_rowid, $new_rowid, @values);
+<pre>  $vtab-&gt;UPDATE($old_rowid, $new_rowid, @values);
 </pre>
 <p class="Pp">This method should be overridden in subclasses to implement a row
     update within the virtual table. Usually <span class="Li">$old_rowid</span>
     is equal to <span class="Li">$new_rowid</span>, which is a regular update;
     however, the rowid could be changed from a SQL statement such as</p>
 <p class="Pp"></p>
-<pre>
-  UPDATE table SET rowid=rowid+1 WHERE ...;
+<pre>  UPDATE table SET rowid=rowid+1 WHERE ...;
 </pre>
 <p class="Pp"><i>FIND_FUNCTION</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;FIND_FUNCTION($num_args, $func_name);
+<pre>  $vtab-&gt;FIND_FUNCTION($num_args, $func_name);
 </pre>
 <p class="Pp">When a function uses a column from a virtual table as its first
     argument, this method is called to see if the virtual table would like to
@@ -406,29 +389,25 @@
 <p class="Pp">Called to rollback a virtual table transaction.</p>
 <p class="Pp"><i>RENAME</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;RENAME($new_name)
+<pre>  $vtab-&gt;RENAME($new_name)
 </pre>
 <p class="Pp">Called to rename a virtual table.</p>
 <p class="Pp"><i>SAVEPOINT</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;SAVEPOINT($savepoint)
+<pre>  $vtab-&gt;SAVEPOINT($savepoint)
 </pre>
 <p class="Pp">Called to signal the virtual table to save its current state at
     savepoint <span class="Li">$savepoint</span> (an integer).</p>
 <p class="Pp"><i>ROLLBACK_TO</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;ROLLBACK_TO($savepoint)
+<pre>  $vtab-&gt;ROLLBACK_TO($savepoint)
 </pre>
 <p class="Pp">Called to signal the virtual table to return to the state
     <span class="Li">$savepoint</span>. This will invalidate all savepoints with
     values greater than <span class="Li">$savepoint</span>.</p>
 <p class="Pp"><i>RELEASE</i></p>
 <p class="Pp"></p>
-<pre>
-  $vtab-&gt;RELEASE($savepoint)
+<pre>  $vtab-&gt;RELEASE($savepoint)
 </pre>
 <p class="Pp">Called to invalidate all savepoints with values greater or equal
     to <span class="Li">$savepoint</span>.</p>
@@ -453,8 +432,7 @@
   methods</a></h2>
 <p class="Pp"><i>NEW</i></p>
 <p class="Pp"></p>
-<pre>
-  my $cursor = $cursor_class-&gt;NEW($vtable, @args)
+<pre>  my $cursor = $cursor_class-&gt;NEW($vtable, @args)
 </pre>
 <p class="Pp">Instantiates a new cursor. The default implementation just returns
     a blessed hashref with keys <span class="Li">&quot;vtable&quot;</span> and
@@ -465,8 +443,7 @@
   methods</a></h2>
 <p class="Pp"><i>FILTER</i></p>
 <p class="Pp"></p>
-<pre>
-  $cursor-&gt;FILTER($idxNum, $idxStr, @values);
+<pre>  $cursor-&gt;FILTER($idxNum, $idxStr, @values);
 </pre>
 <p class="Pp">This method begins a search of a virtual table.</p>
 <p class="Pp">The <span class="Li">$idxNum</span> and
@@ -503,16 +480,14 @@
     subsequent calls to &quot;EOF&quot; must return false.</p>
 <p class="Pp"><i>COLUMN</i></p>
 <p class="Pp"></p>
-<pre>
-  my $value = $cursor-&gt;COLUMN($idxCol);
+<pre>  my $value = $cursor-&gt;COLUMN($idxCol);
 </pre>
 <p class="Pp">The SQLite core invokes this method in order to find the value for
     the N-th column of the current row. N is zero-based so the first column is
     numbered 0.</p>
 <p class="Pp"><i>ROWID</i></p>
 <p class="Pp"></p>
-<pre>
-  my $value = $cursor-&gt;ROWID;
+<pre>  my $value = $cursor-&gt;ROWID;
 </pre>
 <p class="Pp">Returns the <i>rowid</i> of row that the cursor is currently
     pointing at.</p>

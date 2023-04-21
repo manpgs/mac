@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Encode::Guess(3pm)</title>
 </head>
@@ -28,14 +29,11 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre>
-  # if you are sure $data won't contain anything bogus
-
+<pre>  # if you are sure $data won't contain anything bogus
   use Encode;
   use Encode::Guess qw/euc-jp shiftjis 7bit-jis/;
   my $utf8 = decode(&quot;Guess&quot;, $data);
   my $data = encode(&quot;Guess&quot;, $utf8);   # this doesn't work!
-
   # more elaborate way
   use Encode::Guess;
   my $enc = guess_encoding($data, qw/euc-jp shiftjis 7bit-jis/);
@@ -54,8 +52,7 @@
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">By default, it checks only ascii, utf8 and UTF-16/32 with BOM.</p>
 <p class="Pp"></p>
-<pre>
-  use Encode::Guess; # ascii/utf8/BOMed UTF
+<pre>  use Encode::Guess; # ascii/utf8/BOMed UTF
 </pre>
 <p class="Pp">To use it more practically, you have to give the names of
     encodings to check (<i>suspects</i> as follows). The name of suspects can
@@ -63,8 +60,7 @@
 <p class="Pp">CAVEAT: Unlike UTF-(16|32), BOM in utf8 is NOT AUTOMATICALLY
     STRIPPED.</p>
 <p class="Pp"></p>
-<pre>
- # tries all major Japanese Encodings as well
+<pre> # tries all major Japanese Encodings as well
   use Encode::Guess qw/euc-jp shiftjis 7bit-jis/;
 </pre>
 <p class="Pp">If the <span class="Li">$Encode::Guess::NoUTFAutoGuess</span>
@@ -76,8 +72,7 @@
   <dd>You can also change the internal suspects list via
       <span class="Li">&quot;set_suspects&quot;</span> method.
     <p class="Pp"></p>
-    <pre>
-  use Encode::Guess;
+    <pre>  use Encode::Guess;
   Encode::Guess-&gt;set_suspects(qw/euc-jp shiftjis 7bit-jis/);
     </pre>
   </dd>
@@ -87,8 +82,7 @@
       flushes the current suspects list while
       <span class="Li">&quot;add_suspects&quot;</span> adds.
     <p class="Pp"></p>
-    <pre>
-  use Encode::Guess;
+    <pre>  use Encode::Guess;
   Encode::Guess-&gt;add_suspects(qw/euc-jp shiftjis 7bit-jis/);
   # now the suspects are euc-jp,shiftjis,7bit-jis, AND
   # euc-kr,euc-cn, and big5-eten
@@ -99,8 +93,7 @@
     ...)</a></dt>
   <dd>When you are content with suspects list, you can now
     <p class="Pp"></p>
-    <pre>
-  my $utf8 = Encode::decode(&quot;Guess&quot;, $data);
+    <pre>  my $utf8 = Encode::decode(&quot;Guess&quot;, $data);
     </pre>
   </dd>
   <dt id="Encode::Guess~3"><a class="permalink" href="#Encode::Guess~3">Encode::Guess-&gt;guess($data)</a></dt>
@@ -115,20 +108,17 @@
 <div class="Bd-indent">
 <p class="Pp">So you should instead try this;</p>
 <p class="Pp"></p>
-<pre>
-  my $decoder = Encode::Guess-&gt;guess($data);
+<pre>  my $decoder = Encode::Guess-&gt;guess($data);
 </pre>
 <p class="Pp">On success, <span class="Li">$decoder</span> is an object that is
     documented in Encode::Encoding. So you can now do this;</p>
 <p class="Pp"></p>
-<pre>
-  my $utf8 = $decoder-&gt;decode($data);
+<pre>  my $utf8 = $decoder-&gt;decode($data);
 </pre>
 <p class="Pp">On failure, <span class="Li">$decoder</span> now contains an error
     message so the whole thing would be as follows;</p>
 <p class="Pp"></p>
-<pre>
-  my $decoder = Encode::Guess-&gt;guess($data);
+<pre>  my $decoder = Encode::Guess-&gt;guess($data);
   die $decoder unless ref($decoder);
   my $utf8 = $decoder-&gt;decode($data);
 </pre>
@@ -142,8 +132,7 @@
       suspects by option. The optional suspect list is <i>not reflected</i> to
       the internal suspects list.
     <p class="Pp"></p>
-    <pre>
-  my $decoder = guess_encoding($data, qw/euc-jp euc-kr euc-cn/);
+    <pre>  my $decoder = guess_encoding($data, qw/euc-jp euc-kr euc-cn/);
   die $decoder unless ref($decoder);
   my $utf8 = $decoder-&gt;decode($data);
   # check only ascii, utf8 and UTF-(16|32) with BOM
@@ -159,8 +148,7 @@
       encodings do not work well unless either one of ISO-8859 is the only one
       suspect (besides ascii and utf8).
     <p class="Pp"></p>
-    <pre>
-  use Encode::Guess;
+    <pre>  use Encode::Guess;
   # perhaps ok
   my $decoder = guess_encoding($data, 'latin1');
   # definitely NOT ok
@@ -176,8 +164,7 @@
   <li>Do not mix national standard encodings and the corresponding vendor
       encodings.
     <p class="Pp"></p>
-    <pre>
-  # a very bad idea
+    <pre>  # a very bad idea
   my $decoder
      = guess_encoding($data, qw/shiftjis MacJapanese cp932/);
     </pre>
@@ -188,8 +175,7 @@
       automagically works unless <span class="Li">$data</span> is too short to
       allow for guessing.
     <p class="Pp"></p>
-    <pre>
- # This is ok if $data is long enough
+    <pre> # This is ok if $data is long enough
  my $decoder =  
   guess_encoding($data, qw/euc-cn
                            euc-jp shiftjis 7bit-jis
@@ -199,8 +185,7 @@
   </li>
   <li>DO NOT PUT TOO MANY SUSPECTS! Don't you try something like this!
     <p class="Pp"></p>
-    <pre>
-  my $decoder = guess_encoding($data, 
+    <pre>  my $decoder = guess_encoding($data, 
                                Encode-&gt;encodings(&quot;:all&quot;));
     </pre>
   </li>

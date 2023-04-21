@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>Moose::Manual::Delegation(3)</title>
 </head>
@@ -55,11 +56,8 @@
     mapping, ranging from simple to complex.</p>
 <p class="Pp">The simplest form is to simply specify a list of methods:</p>
 <p class="Pp"></p>
-<pre>
-  package Website;
-
+<pre>  package Website;
   use Moose;
-
   has 'uri' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'URI',
@@ -78,11 +76,8 @@
 <p class="Pp">We can also define a mapping as a hash reference. This allows you
     to rename methods as part of the mapping:</p>
 <p class="Pp"></p>
-<pre>
-  package Website;
-
+<pre>  package Website;
   use Moose;
-
   has 'uri' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'URI',
@@ -101,8 +96,7 @@
 <p class="Pp">These two mapping forms are the ones you will use most often. The
     remaining methods are a bit more complex.</p>
 <p class="Pp"></p>
-<pre>
-  has 'uri' =&gt; (
+<pre>  has 'uri' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'URI',
       handles =&gt; qr/^(?:host|path|query.*)/,
@@ -116,8 +110,7 @@
 <p class="Pp">You can use a role name as the value of
     <span class="Li">&quot;handles&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-  has 'uri' =&gt; (
+<pre>  has 'uri' =&gt; (
       is      =&gt; 'ro',
       isa     =&gt; 'URI',
       handles =&gt; 'HasURI',
@@ -136,8 +129,7 @@
 <p class="Pp">Native delegations allow you to delegate to standard Perl data
     structures as if they were objects.</p>
 <p class="Pp"></p>
-<pre>
-  has 'queue' =&gt; (
+<pre>  has 'queue' =&gt; (
       traits  =&gt; ['Array'],
       isa     =&gt; 'ArrayRef[Item]',
       default =&gt; sub { [ ] },
@@ -155,14 +147,11 @@
     work&quot;. Behind the scenes <span class="Li">&quot;add_item&quot;</span>
     is something like</p>
 <p class="Pp"></p>
-<pre>
-  sub add_item {
+<pre>  sub add_item {
       my ($self, @items) = @_;
-
       for my $item (@items) {
           $Item_TC-&gt;validate($item);
       }
-
       push @{ $self-&gt;queue }, @items;
   }
 </pre>
@@ -171,8 +160,7 @@
     <span class="Li">&quot;add_appointment&quot;</span> methods to a Calendar
     class:</p>
 <p class="Pp"></p>
-<pre>
-  has 'tasks' =&gt; (
+<pre>  has 'tasks' =&gt; (
       traits =&gt; ['Array'],
       isa =&gt; 'ArrayRef[Task]',
       default =&gt; sub { [ ] },
@@ -181,7 +169,6 @@
           next_task =&gt; 'shift',
       },
   );
-
   has 'appointments' =&gt; (
       traits  =&gt; ['Array'],
       isa =&gt; 'ArrayRef[Appointment]',
@@ -194,8 +181,7 @@
 </pre>
 <p class="Pp">Which you would call as:</p>
 <p class="Pp"></p>
-<pre>
-  $calendar-&gt;add_task( $task_obj );
+<pre>  $calendar-&gt;add_task( $task_obj );
   $calendar-&gt;add_appointment( $appointment_obj );
 </pre>
 <p class="Pp">As mentioned above, each trait provides a number of methods which
@@ -250,10 +236,8 @@
 <p class="Pp">Currying allows you to create a method with some pre-set
     parameters. You can create a curried delegation method:</p>
 <p class="Pp"></p>
-<pre>
-    package Spider;
+<pre>    package Spider;
     use Moose;
-
     has request =&gt; (
         is      =&gt; 'ro'
         isa     =&gt; 'HTTP::Request',

@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 2019, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) 2022 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -21,10 +21,13 @@
    * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
    * KIND, either express or implied.
    *
+   * SPDX-License-Identifier: curl
+   *
    **************************************************************************
    -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>CURLOPT_MAXAGE_CONN(3)</title>
 </head>
@@ -45,19 +48,18 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<p class="Pp">#include &lt;curl/curl.h&gt;</p>
-<p class="Pp">CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MAXAGE_CONN, long
-    maxage);</p>
+<pre>#include &lt;curl/curl.h&gt;
+CURLcode curl_easy_setopt(CURL *handle, CURLOPT_MAXAGE_CONN, long maxage);</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">Pass a long as parameter containing <i>maxage</i> - the maximum
-    time in seconds that you allow an existing connection to have to be
-    considered for reuse for this request.</p>
+    time in seconds that you allow an existing connection to have been idle to
+    be considered for reuse for this request.</p>
 <p class="Pp">The &quot;connection cache&quot; that holds previously used
     connections. When a new request is to be done, it will consider any
     connection that matches for reuse. The <i>CURLOPT_MAXAGE_CONN(3)</i> limit
-    prevents libcurl from trying very old connections for reuse, since old
+    prevents libcurl from trying too old connections for reuse, since old
     connections have a high risk of not working and thus trying them is a
     performance loss and sometimes service loss due to the difficulties to
     figure out the situation. If a connection is found in the cache that is
@@ -73,19 +75,17 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
-CURL *curl = curl_easy_init();
+<pre>CURL *curl = curl_easy_init();
 if(curl) {
   curl_easy_setopt(curl, CURLOPT_URL, &quot;https://example.com&quot;);
   /* only allow 30 seconds idle time */
   curl_easy_setopt(curl, CURLOPT_MAXAGE_CONN, 30L);
   curl_easy_perform(curl);
-}
-</pre>
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
-<p class="Pp">Added in libcurl 7.65.0</p>
+<p class="Pp">Added in 7.65.0</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
@@ -96,13 +96,13 @@ if(curl) {
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp"><b>CURLOPT_TIMEOUT</b>(3), <b>CURLOPT_FORBID_REUSE</b>(3),
-    <b>CURLOPT_FRESH_CONNECT</b>(3), </p>
+    <b>CURLOPT_FRESH_CONNECT</b>(3), <b>CURLOPT_MAXLIFETIME_CONN</b>(3), </p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 4, 2020</td>
-    <td class="foot-os">libcurl 7.79.1</td>
+    <td class="foot-date">May 17, 2022</td>
+    <td class="foot-os">libcurl 7.85.0</td>
   </tr>
 </table>
 </body>

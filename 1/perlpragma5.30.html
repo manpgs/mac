@@ -9,6 +9,7 @@
  -->
 <head>
   <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>PERLPRAGMA(1)</title>
 </head>
@@ -43,31 +44,23 @@
     that functions much like <span class="Li">&quot;use integer;&quot;</span>
     You'd like this code</p>
 <p class="Pp"></p>
-<pre>
-    use MyMaths;
-
+<pre>    use MyMaths;
     my $l = MyMaths-&gt;new(1.2);
     my $r = MyMaths-&gt;new(3.4);
-
     print &quot;A: &quot;, $l + $r, &quot;\n&quot;;
-
     use myint;
     print &quot;B: &quot;, $l + $r, &quot;\n&quot;;
-
     {
         no myint;
         print &quot;C: &quot;, $l + $r, &quot;\n&quot;;
     }
-
     print &quot;D: &quot;, $l + $r, &quot;\n&quot;;
-
     no myint;
     print &quot;E: &quot;, $l + $r, &quot;\n&quot;;
 </pre>
 <p class="Pp">to give the output</p>
 <p class="Pp"></p>
-<pre>
-    A: 4.6
+<pre>    A: 4.6
     B: 4
     C: 4.6
     D: 4
@@ -81,8 +74,7 @@
     <span class="Li">&quot;MyMaths&quot;</span> would be something like
   this:</p>
 <p class="Pp"></p>
-<pre>
-    package MyMaths;
+<pre>    package MyMaths;
     use warnings;
     use strict;
     use myint();
@@ -95,12 +87,10 @@
             $$l + $$r;
         }
     };
-
     sub new {
         my ($class, $value) = @_;
         bless \$value, $class;
     }
-
     1;
 </pre>
 <p class="Pp">Note how we load the user pragma
@@ -110,41 +100,33 @@
 <p class="Pp">The interaction with the Perl compilation happens inside package
     <span class="Li">&quot;myint&quot;</span>:</p>
 <p class="Pp"></p>
-<pre>
-    package myint;
-
+<pre>    package myint;
     use strict;
     use warnings;
-
     sub import {
         $^H{&quot;myint/in_effect&quot;} = 1;
     }
-
     sub unimport {
         $^H{&quot;myint/in_effect&quot;} = 0;
     }
-
     sub in_effect {
         my $level = shift // 0;
         my $hinthash = (caller($level))[10];
         return $hinthash-&gt;{&quot;myint/in_effect&quot;};
     }
-
     1;
 </pre>
 <p class="Pp">As pragmata are implemented as modules, like any other module,
     <span class="Li">&quot;use myint;&quot;</span> becomes</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         require myint;
         myint-&gt;import();
     }
 </pre>
 <p class="Pp">and <span class="Li">&quot;no myint;&quot;</span> is</p>
 <p class="Pp"></p>
-<pre>
-    BEGIN {
+<pre>    BEGIN {
         require myint;
         myint-&gt;unimport();
     }
