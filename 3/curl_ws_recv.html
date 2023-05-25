@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<!-- This is an automatically generated file.  Do not edit.
+   **************************************************************************
+   *                                  _   _ ____  _
+   *  Project                     ___| | | |  _ \| |
+   *                             / __| | | | |_) | |
+   *                            | (__| |_| |  _ <| |___
+   *                             \___|\___/|_| \_\_____|
+   *
+   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   *
+   * This software is licensed as described in the file COPYING, which
+   * you should have received as part of this distribution. The terms
+   * are also available at https://curl.se/docs/copyright.html.
+   *
+   * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+   * copies of the Software, and permit persons to whom the Software is
+   * furnished to do so, under the terms of the COPYING file.
+   *
+   * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+   * KIND, either express or implied.
+   *
+   * SPDX-License-Identifier: curl
+   *
+   **************************************************************************
+   -->
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>curl_ws_recv(3)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">curl_ws_recv(3)</td>
+    <td class="head-vol">libcurl Manual</td>
+    <td class="head-rtitle">curl_ws_recv(3)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<p class="Pp"></p>
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp">curl_ws_recv - receive WebSocket data</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<pre>#include &lt;curl/easy.h&gt;
+CURLcode curl_ws_recv(CURL *curl, void *buffer, size_t buflen,
+                      size_t *recv, struct curl_ws_frame **meta);</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">This function call is EXPERIMENTAL.</p>
+<p class="Pp">Retrieves as much as possible of a received WebSocket data
+    fragment into the <b>buffer</b>, but not more than <b>buflen</b> bytes.
+    <i>recv</i> is set to the number of bytes actually stored.</p>
+<p class="Pp">If there is more fragment data to deliver than what fits in the
+    provided <i>buffer</i>, libcurl returns a full buffer and the application
+    needs to call this function again to continue draining the buffer.</p>
+<p class="Pp">The <i>meta</i> pointer gets set to point to a <i>struct
+    curl_ws_frame</i> that contains information about the received data. See the
+    <i>curl_ws_meta(3)</i> for details on that struct.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<pre>
+  size_t rlen;
+  struct curl_ws_frame *meta;
+  char buffer[256];
+  CURLcode result = curl_ws_recv(curl, buffer, sizeof(buffer), &amp;rlen, &amp;meta);</pre>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
+<p class="Pp">Added in 7.86.0.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="RETURN_VALUE"><a class="permalink" href="#RETURN_VALUE">RETURN
+  VALUE</a></h1>
+<p class="Pp">Returns <b>CURLE_OK</b> if everything is okay, and a non-zero
+    number for errors. Returns <b>CURLE_GOT_NOTHING</b> if the associated
+    connection is closed.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><b>curl_easy_setopt</b>(3), <b>curl_easy_perform</b>(3),
+    <b>curl_easy_getinfo</b>(3), <b>curl_ws_send</b>(3) </p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">December 12, 2022</td>
+    <td class="foot-os">libcurl 7.87.0</td>
+  </tr>
+</table>
+</body>
+</html>

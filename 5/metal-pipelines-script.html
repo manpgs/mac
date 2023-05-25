@@ -44,6 +44,10 @@
   <dd>An array of objects describing the named predicate definitions. Predicates
       can be used to control whether a pipeline should be compiled or ignored.
       See <i>PREDICATES</i>.</dd>
+  <dt id="named_function_constant_values"><a class="permalink" href="#named_function_constant_values"><b>named_function_constant_values</b></a></dt>
+  <dd>An array of objects describing the named function constant values
+      definitions. These can be referenced by name from specialized function
+      library definitions. See <i>NAMED FUNCTION CONSTANT VALUES</i>.</dd>
 </dl>
 </div>
 <br/>
@@ -92,14 +96,37 @@
   <dt id="specialized_name"><a class="permalink" href="#specialized_name"><b>specialized_name</b></a></dt>
   <dd>Name of the function after specialization. If not specified, the original
       name is used.</dd>
+  <dt id="named_constant_values"><a class="permalink" href="#named_constant_values"><b>named_constant_values</b></a></dt>
+  <dd>Name of the named function constant values object to use for the constant
+      specialization values. See <i>NAMED FUNCTION CONSTANT VALUES</i>.</dd>
   <dt id="constant_values"><a class="permalink" href="#constant_values"><b>constant_values</b></a></dt>
-  <dd>An array of objects describing the constant specialization values. See
-      <i>FUNCTION CONSTANT VALUE</i>.</dd>
+  <dd>An array of objects describing the constant specialization values. The
+      constant specialization values defined in this array <i>overrides</i> the
+      corresponding values provided by the named function constant values object
+      specified via <i>named_function_constant_values</i>. See <i>FUNCTION
+      CONSTANT VALUE</i>.</dd>
 </dl>
 </div>
 <br/>
 </div>
 <br/>
+<section class="Ss">
+<h2 class="Ss" id="NAMED_FUNCTION_CONSTANT_VALUES"><a class="permalink" href="#NAMED_FUNCTION_CONSTANT_VALUES">NAMED
+  FUNCTION CONSTANT VALUES</a></h2>
+<p class="Pp">A named function constant values object can define the
+  members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="name"><a class="permalink" href="#name"><b>name
+    <i>(required)</i></b></a></dt>
+  <dd>The name for the named function constant values being defined.</dd>
+  <dt><b>constant_values <i>(required)</i></b></dt>
+  <dd>An array of objects describing the constant specialization values. See
+      <i>FUNCTION CONSTANT VALUE</i>.</dd>
+</dl>
+</div>
+<br/>
+</section>
 <section class="Ss">
 <h2 class="Ss" id="FUNCTION_CONSTANT_VALUE"><a class="permalink" href="#FUNCTION_CONSTANT_VALUE">FUNCTION
   CONSTANT VALUE</a></h2>
@@ -1095,9 +1122,11 @@
     script. Each object describing a named predicate can define the members:</p>
 <div class="Bd-indent">
 <dl class="Bl-tag">
-  <dt id="name"><a class="permalink" href="#name"><b>name</b></a></dt>
+  <dt id="name~2"><a class="permalink" href="#name~2"><b>name
+    <i>(required)</i></b></a></dt>
   <dd>The name for the predicate being defined.</dd>
-  <dt id="predicate"><a class="permalink" href="#predicate"><b>predicate</b></a></dt>
+  <dt id="predicate"><a class="permalink" href="#predicate"><b>predicate
+    <i>(required)</i></b></a></dt>
   <dd>Predicate expression. It can reference other named predicates previously
       defined.</dd>
 </dl>
@@ -1208,22 +1237,38 @@
 <div class="Bd-indent">
 <p class="Pp"></p>
 <pre>{
+  &quot;named_function_constant_values&quot;: [
+    {
+      &quot;name&quot;: &quot;my_common_fc_values&quot;,
+      &quot;constant_values&quot;: [
+        {
+          &quot;id_type&quot;: &quot;FunctionConstantIndex&quot;,
+          &quot;id&quot;: {
+            &quot;data&quot;: 0
+          },
+          &quot;value_type&quot;: &quot;ConstantUInt&quot;,
+          &quot;value&quot;: {
+            &quot;data&quot;: 42
+          }
+        },
+        {
+          &quot;id_type&quot;: &quot;FunctionConstantName&quot;,
+          &quot;id&quot;: &quot;base_color&quot;,
+          &quot;value_type&quot;: &quot;ConstantFloat4&quot;,
+          &quot;value&quot;: {
+            &quot;data&quot;: [0.5, 0.22, 0.25, 1.0]
+          }
+        }
+      ]
+    }
+  ],
   &quot;libraries&quot;: {
     &quot;specialized_functions&quot;: [
       {
         &quot;label&quot;: &quot;fragment_1_lib&quot;,
         &quot;function&quot;: &quot;my_fragment&quot;,
+        &quot;named_constant_values&quot;: &quot;my_common_fc_values&quot;,
         &quot;constant_values&quot;: [
-          {
-            &quot;id_type&quot;: &quot;FunctionConstantIndex&quot;,
-            &quot;id&quot;: {
-              &quot;data&quot;: 0
-            },
-            &quot;value_type&quot;: &quot;ConstantUInt&quot;,
-            &quot;value&quot;: {
-              &quot;data&quot;: 42
-            }
-          },
           {
             &quot;id_type&quot;: &quot;FunctionConstantName&quot;,
             &quot;id&quot;: &quot;base_color&quot;,
@@ -1237,6 +1282,7 @@
       {
         &quot;label&quot;: &quot;fragment_2_lib&quot;,
         &quot;function&quot;: &quot;my_fragment&quot;,
+        &quot;named_constant_values&quot;: &quot;my_common_fc_values&quot;,
         &quot;constant_values&quot;: [
           {
             &quot;id_type&quot;: &quot;FunctionConstantIndex&quot;,
@@ -1247,15 +1293,7 @@
             &quot;value&quot;: {
               &quot;data&quot;: 23
             }
-          },
-          {
-            &quot;id_type&quot;: &quot;FunctionConstantName&quot;,
-            &quot;id&quot;: &quot;base_color&quot;,
-            &quot;value_type&quot;: &quot;ConstantFloat4&quot;,
-            &quot;value&quot;: {
-              &quot;data&quot;: [0.5, 0.22, 0.25, 1.0]
-            }
-          },
+          }
         ]
       }
     ]
@@ -1288,6 +1326,11 @@
 <br/>
 </div>
 <br/>
+<p class="Pp">Note that in <i>fragment_1_lib</i> the function constant value for
+    the variable <i>base_color</i> provided by <i>my_common_fc_values</i> is
+    overriden locally. Similarly in <i>fragment_2_lib</i> the function constant
+    value for the variable with index <i>0</i> provided by
+    <i>my_common_fc_values</i> is overridden locally.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Explicit_Metal_libraries_on_disk"><a class="permalink" href="#Explicit_Metal_libraries_on_disk">Explicit
@@ -1351,13 +1394,13 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<p class="Pp">2014-2022, The Metal Team</p>
+<p class="Pp">2014-2023, The Metal Team</p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 14, 2022</td>
-    <td class="foot-os">Metal 31001.801</td>
+    <td class="foot-date">February 8, 2023</td>
+    <td class="foot-os">Metal 31001.812</td>
   </tr>
 </table>
 </body>

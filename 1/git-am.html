@@ -5,9 +5,9 @@
        Title: git-am
       Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
    Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-        Date: 06/27/2022
+        Date: 12/12/2022
       Manual: Git Manual
-      Source: Git 2.37.0
+      Source: Git 2.39.0
     Language: English
    -->
 <head>
@@ -116,8 +116,12 @@
   override am.threeWay configuration variable. For more information, see
   am.threeWay in <b>git-config</b>(1).</div>
 <p class="Pp">--rerere-autoupdate, --no-rerere-autoupdate</p>
-<div class="Bd-indent">Allow the rerere mechanism to update the index with the
-  result of auto-conflict resolution if possible.</div>
+<div class="Bd-indent">After the rerere mechanism reuses a recorded resolution
+  on the current conflict to update the files in the working tree, allow it to
+  also update the index with the result of resolution.
+  <b>--no-rerere-autoupdate</b> is a good way to double-check what <b>rerere</b>
+  did and catch potential mismerges, before committing the result to the index
+  with a separate <b>git add</b>.</div>
 <p class="Pp">--ignore-space-change, --ignore-whitespace,
     --whitespace=&lt;option&gt;, -C&lt;n&gt;, -p&lt;n&gt;,
     --directory=&lt;dir&gt;, --exclude=&lt;path&gt;, --include=&lt;path&gt;,
@@ -231,6 +235,25 @@
     information.</p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<p class="Pp">Everything below this line in this section is selectively included
+    from the <b>git-config</b>(1) documentation. The content is the same as
+    what&#x2019;s found there:</p>
+<p class="Pp">am.keepcr</p>
+<div class="Bd-indent">If true, git-am will call git-mailsplit for patches in
+  mbox format with parameter <b>--keep-cr</b>. In this case git-mailsplit will
+  not remove <b>\r</b> from lines ending with <b>\r\n</b>. Can be overridden by
+  giving <b>--no-keep-cr</b> from the command line. See <b>git-am</b>(1),
+  <b>git-mailsplit</b>(1).</div>
+<p class="Pp">am.threeWay</p>
+<div class="Bd-indent">By default, <b>git am</b> will fail if the patch does not
+  apply cleanly. When set to true, this setting tells <b>git am</b> to fall back
+  on 3-way merge if the patch records the identity of blobs it is supposed to
+  apply to and we have those blobs available locally (equivalent to giving the
+  <b>--3way</b> option from the command line). Defaults to <b>false</b>. See
+  <b>git-am</b>(1).</div>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
 <p class="Pp"><b>git-apply</b>(1).</p>
@@ -242,8 +265,8 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">06/27/2022</td>
-    <td class="foot-os">Git 2.37.0</td>
+    <td class="foot-date">12/12/2022</td>
+    <td class="foot-os">Git 2.39.0</td>
   </tr>
 </table>
 </body>
