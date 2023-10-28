@@ -379,6 +379,10 @@
       <dd style="width: auto;">&#x00A0;</dd>
       <dt>&#x2022; bridgeos</dt>
       <dd style="width: auto;">&#x00A0;</dd>
+      <dt>&#x2022; visionos</dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+      <dt>&#x2022; xros</dt>
+      <dd style="width: auto;">&#x00A0;</dd>
       <dt>&#x2022; mac-catalyst</dt>
       <dd style="width: auto;">&#x00A0;</dd>
       <dt>&#x2022; ios-simulator</dt>
@@ -386,6 +390,10 @@
       <dt>&#x2022; tvos-simulator</dt>
       <dd style="width: auto;">&#x00A0;</dd>
       <dt>&#x2022; watchos-simulator</dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+      <dt>&#x2022; visionos-simulator</dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+      <dt>&#x2022; xros-simulator</dt>
       <dd style="width: auto;">&#x00A0;</dd>
       <dt>&#x2022; driverkit</dt>
       <dd style="width: auto;">&#x00A0;</dd>
@@ -444,6 +452,17 @@
       created that are larger than the maximum branch distance. Useful with
       -preload when code is in multiple sections but all are within the branch
       range.</dd>
+  <dt id="O0"><a class="permalink" href="#O0"><code class="Fl">-O0</code></a></dt>
+  <dd>Disables certain optimizations and layout algorithms to optimize build
+      time. This option should be used with debug builds to speed up incremental
+      development. The exact implementation might change to match the
+    intent.</dd>
+  <dt id="reproducible"><a class="permalink" href="#reproducible"><code class="Fl">-reproducible</code></a></dt>
+  <dd>By default output content will be deterministic, but small changes in
+      input files such as a compilation time might affect certain data
+      structures in the linked binary. This option instructs
+      <code class="Nm">ld</code> to create a reproducible output binary by
+      ignoring certain input properties or using alternative algorithms.</dd>
 </dl>
 </section>
 <section class="Ss">
@@ -795,6 +814,10 @@
   <dd>Error if the output contains any static initializers</dd>
   <dt id="no_warn_inits"><a class="permalink" href="#no_warn_inits"><code class="Fl">-no_warn_inits</code></a></dt>
   <dd>Do not warn if the output contains any static initializers</dd>
+  <dt id="warn_duplicate_libraries"><a class="permalink" href="#warn_duplicate_libraries"><code class="Fl">-warn_duplicate_libraries</code></a></dt>
+  <dd>Warn if the input contains duplicate library options.</dd>
+  <dt id="no_warn_duplicate_libraries"><a class="permalink" href="#no_warn_duplicate_libraries"><code class="Fl">-no_warn_duplicate_libraries</code></a></dt>
+  <dd>Do not warn if the input contains duplicate library options.</dd>
   <dt id="debug_variant"><a class="permalink" href="#debug_variant"><code class="Fl">-debug_variant</code></a></dt>
   <dd>Do not warn about issues that are only problems for binaries shipping to
       customers.</dd>
@@ -1202,6 +1225,46 @@
       will follow Foo.framework/Foo if it is a symbolic link, append _suffix and
       search for a file with that path. When this option is used, the linker
       will also search for Foo.framework/Versions/Current/Foo_suffix.</dd>
+  <dt id="ld_classic"><a class="permalink" href="#ld_classic"><code class="Fl">-ld_classic</code></a></dt>
+  <dd>Override the choice of linker, and force the use of
+      <code class="Nm">ld-classic</code> to link the binary. This is
+      incompatible with options such as -merge*, used to build/merge
+    libraries.</dd>
+  <dt id="ld_new"><a class="permalink" href="#ld_new"><code class="Fl">-ld_new</code></a></dt>
+  <dd>Override the choice of linker, and force the use of
+      <code class="Nm">ld</code> to link the binary. This is incompatible with
+      older architectures such as armv7k and i386.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Mergeable_Library_Options"><a class="permalink" href="#Mergeable_Library_Options">Mergeable
+  Library Options</a></h2>
+<dl class="Bl-tag">
+  <dt id="make_mergeable"><a class="permalink" href="#make_mergeable"><code class="Fl">-make_mergeable</code></a></dt>
+  <dd>Adds additional metadata to a dylib which makes it a mergeable library. It
+      can still be used as a dylib, or can be merged into other binaries when
+      they link it with a -merge* option.</dd>
+  <dt id="merge-l"><a class="permalink" href="#merge-l"><code class="Fl">-merge-l</code></a><var class="Ar">x</var></dt>
+  <dd>This is the same as the -lx option but means to merge the contents of the
+      library x into this binary.</dd>
+  <dt id="merge_library"><a class="permalink" href="#merge_library"><code class="Fl">-merge_library</code></a>
+    <var class="Ar">path_to_library</var></dt>
+  <dd>This is the same as listing a file name path to a library on the link line
+      but also merges the contents of the library into this binary.</dd>
+  <dt id="merge_framework"><a class="permalink" href="#merge_framework"><code class="Fl">-merge_framework</code></a>
+    <var class="Ar">name[,suffix]</var></dt>
+  <dd>This is the same as the -framework name[,suffix] but means that the
+      contents of the framework should be merged into this binary.</dd>
+  <dt id="no_merged_libraries_hook"><a class="permalink" href="#no_merged_libraries_hook"><code class="Fl">-no_merged_libraries_hook</code></a></dt>
+  <dd>When using mergeable libraries <code class="Nm">ld</code> automatically
+      adds a hook to redirect bundle resource lookups from mergeable frameworks
+      into the merged binary. Use this option to disable the hook.
+    <p class="Pp">The hook requires a minimum deployment version of iOS 12, you
+        can use the option to disable the hook with a lower deployment target if
+        your frameworks don't require bundle resource lookups. Disabling the
+        hook might also improve launch time performance, so it's good to disable
+        it regardless of the deployment target if it's not required.</p>
+  </dd>
 </dl>
 </section>
 <section class="Ss">
@@ -1344,13 +1407,13 @@
 <section class="Sh">
 <h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
   ALSO</a></h1>
-<p class="Pp">as(1), ar(1), cc(1), nm(1), otool(1) lipo(1), arch(3), dyld(3),
-    Mach-O(5), strip(1), rebase(1)</p>
+<p class="Pp">ld-classic(1), as(1), ar(1), cc(1), dyld_info(1), nm(1), otool(1)
+    lipo(1), arch(3), dyld(3), Mach-O(5), strip(1), rebase(1)</p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 10, 2020</td>
+    <td class="foot-date">June 21, 2023</td>
     <td class="foot-os">Darwin</td>
   </tr>
 </table>

@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">CURLOPT_DEBUGFUNCTION(3)</td>
-    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">CURLOPT_DEBUGFUNCTION(3)</td>
   </tr>
 </table>
@@ -62,7 +62,7 @@ int debug_callback(CURL *handle,
                    curl_infotype type,
                    char *data,
                    size_t size,
-                   void *userptr);
+                   void *clientp);
 CURLcode curl_easy_setopt(CURL *handle, CURLOPT_DEBUGFUNCTION,
                           debug_callback);</pre>
 </section>
@@ -76,7 +76,7 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_DEBUGFUNCTION,
     function must return 0. The <i>data</i> pointed to by the char * passed to
     this function WILL NOT be null-terminated, but will be exactly of the
     <i>size</i> as told by the <i>size</i> argument.</p>
-<p class="Pp">The <i>userptr</i> argument is the pointer set with
+<p class="Pp">The <i>clientp</i> argument is the pointer set with
     <i>CURLOPT_DEBUGDATA(3)</i>.</p>
 <p class="Pp">Available <b>curl_infotype</b> values:</p>
 <dl class="Bl-tag">
@@ -138,11 +138,11 @@ void dump(const char *text,
 static
 int my_trace(CURL *handle, curl_infotype type,
              char *data, size_t size,
-             void *userp)
+             void *clientp)
 {
   const char *text;
   (void)handle; /* prevent compiler warning */
-  (void)userp;
+  (void)clientp;
   switch (type) {
   case CURLINFO_TEXT:
     fputs(&quot;== Info: &quot;, stderr);
@@ -211,8 +211,8 @@ int main(void)
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 16, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">ibcurl 8.1.2</td>
   </tr>
 </table>
 </body>

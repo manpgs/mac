@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">CURLMOPT_PUSHFUNCTION(3)</td>
-    <td class="head-vol">curl_multi_setopt options</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">CURLMOPT_PUSHFUNCTION(3)</td>
   </tr>
 </table>
@@ -55,7 +55,7 @@ int curl_push_callback(CURL *parent,
                        CURL *easy,
                        size_t num_headers,
                        struct curl_pushheaders *headers,
-                       void *userp);
+                       void *clientp);
 CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHFUNCTION,
                             curl_push_callback func);</pre>
 </section>
@@ -81,7 +81,7 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_PUSHFUNCTION,
     accessor functions described below. This only accesses and provides the
     PUSH_PROMISE headers, the normal response headers will be provided in the
     header callback as usual.</p>
-<p class="Pp"><i>userp</i> is the pointer set with
+<p class="Pp"><i>clientp</i> is the pointer set with
   <i>CURLMOPT_PUSHDATA(3)</i></p>
 <p class="Pp">If the callback returns CURL_PUSH_OK, the 'easy' handle will be
     added to the multi handle, the callback must not do that by itself.</p>
@@ -142,10 +142,10 @@ int push_callback(CURL *parent,
                   CURL *easy,
                   size_t num_headers,
                   struct curl_pushheaders *headers,
-                  void *userp)
+                  void *clientp)
 {
   char *headp;
-  int *transfers = (int *)userp;
+  int *transfers = (int *)clientp;
   FILE *out;
   headp = curl_pushheader_byname(headers, &quot;:path&quot;);
   if(headp &amp;&amp; !strncmp(headp, &quot;/push-&quot;, 6)) {
@@ -181,8 +181,8 @@ curl_multi_setopt(multi, CURLMOPT_PUSHDATA, &amp;counter);</pre>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 20, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">ibcurl 8.1.2</td>
   </tr>
 </table>
 </body>

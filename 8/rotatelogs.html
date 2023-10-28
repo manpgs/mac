@@ -86,6 +86,10 @@
       a log is processed in real time by a command like tail, and there is no
       need for archived data. No suffix will be added to the filename, however
       format strings containing '%' characters will be respected.</dd>
+  <dt id="T"><a class="permalink" href="#T"><b>-T</b></a></dt>
+  <dd>Causes all but the initial logfile to be truncated when opened. This is
+      useful when the format string contains something that will loop around,
+      such as the day of the month. Available in 2.4.56 and later.</dd>
   <dt id="v"><a class="permalink" href="#v"><b>-v</b></a></dt>
   <dd>Produce verbose output on STDERR. The output contains the result of the
       configuration parsing, and all file open and close actions.</dd>
@@ -161,8 +165,9 @@
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
 <pre>
+ 
      CustomLog &quot;|bin/rotatelogs /var/log/logfile 86400&quot; common
-</pre>
+ </pre>
 <p class="Pp"></p>
 <p class="Pp">This creates the files /var/log/logfile.nnnn where nnnn is the
     system time at which the log nominally starts (this time will always be a
@@ -171,36 +176,51 @@
   started.</p>
 <p class="Pp"></p>
 <pre>
+ 
      CustomLog &quot;|bin/rotatelogs -l /var/log/logfile.%Y.%m.%d 86400&quot; common
-</pre>
+ </pre>
 <p class="Pp"></p>
 <p class="Pp">This creates the files /var/log/logfile.yyyy.mm.dd where yyyy is
     the year, mm is the month, and dd is the day of the month. Logging will
     switch to a new file every day at midnight, local time.</p>
 <p class="Pp"></p>
 <pre>
+ 
      CustomLog &quot;|bin/rotatelogs /var/log/logfile 5M&quot; common
-</pre>
+ </pre>
 <p class="Pp"></p>
 <p class="Pp">This configuration will rotate the logfile whenever it reaches a
     size of 5 megabytes.</p>
 <p class="Pp"></p>
 <pre>
+ 
      ErrorLog &quot;|bin/rotatelogs /var/log/errorlog.%Y-%m-%d-%H_%M_%S 5M&quot;
-</pre>
+ </pre>
 <p class="Pp"></p>
 <p class="Pp">This configuration will rotate the error logfile whenever it
     reaches a size of 5 megabytes, and the suffix to the logfile name will be
     created of the form <b>errorlog.YYYY-mm-dd-HH_MM_SS</b>.</p>
 <p class="Pp"></p>
 <pre>
+ 
      CustomLog &quot;|bin/rotatelogs -t /var/log/logfile 86400&quot; common
-</pre>
+ </pre>
 <p class="Pp"></p>
-<p class="Pp">This creates the file /var/log/logfile, truncating the file at
-    startup and then truncating the file once per day. It is expected in this
+<p class="Pp">This creates the file <b>/var/log/logfile</b>, truncating the file
+    at startup and then truncating the file once per day. It is expected in this
     scenario that a separate process (such as tail) would process the file in
     real time.</p>
+<p class="Pp"></p>
+<pre>
+ 
+     CustomLog &quot;|bin/rotatelogs -T /var/log/logfile.%d 86400&quot; common
+ </pre>
+<p class="Pp"></p>
+<p class="Pp">If the server is started (or restarted) on the first of the month,
+    this appends to <b>/var/log/logfile.01</b>. When a log entry is written on
+    the second of the month, <b>/var/log/logfile.02</b> is truncated and new
+    entries will be added to the top. This example keeps approximately 1 months
+    worth of logs without external maintenance.</p>
 <p class="Pp"></p>
 </section>
 <section class="Sh">
@@ -303,7 +323,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2022-03-28</td>
+    <td class="foot-date">2023-03-05</td>
     <td class="foot-os">Apache HTTP Server</td>
   </tr>
 </table>

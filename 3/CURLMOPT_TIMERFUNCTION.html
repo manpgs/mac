@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">CURLMOPT_TIMERFUNCTION(3)</td>
-    <td class="head-vol">curl_multi_setopt options</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">CURLMOPT_TIMERFUNCTION(3)</td>
   </tr>
 </table>
@@ -50,7 +50,7 @@
 <pre>#include &lt;curl/curl.h&gt;
 int timer_callback(CURLM *multi,    /* multi handle */
                    long timeout_ms, /* timeout in number of ms */
-                   void *userp);    /* private callback pointer */
+                   void *clientp);    /* private callback pointer */
 CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERFUNCTION, timer_callback);</pre>
 </section>
 <section class="Sh">
@@ -68,8 +68,8 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERFUNCTION, timer_callbac
     of milliseconds.</p>
 <p class="Pp">The <b>timer_callback</b> will only be called when the timeout
     expire time is changed.</p>
-<p class="Pp">The <b>userp</b> pointer is set with
-  <i>CURLMOPT_TIMERDATA(3)</i>.</p>
+<p class="Pp">The <b>clientp</b> pointer is set with
+    <i>CURLMOPT_TIMERDATA(3)</i>.</p>
 <p class="Pp">The timer callback should return 0 on success, and -1 on error. If
     this callback returns error, <b>all</b> transfers currently in progress in
     this multi handle will be aborted and fail.</p>
@@ -100,9 +100,9 @@ CURLMcode curl_multi_setopt(CURLM *handle, CURLMOPT_TIMERFUNCTION, timer_callbac
   curl_multi_socket_action(multi, CURL_SOCKET_TIMEOUT, 0, &amp;running);
   return G_SOURCE_REMOVE;
 }
-static int timerfunc(CURLM *multi, long timeout_ms, void *userp)
+static int timerfunc(CURLM *multi, long timeout_ms, void *clientp)
 {
-  guint *id = userp;
+  guint *id = clientp;
   if(id)
     g_source_remove(*id);
   /* -1 means we should just delete our timer. */
@@ -139,8 +139,8 @@ curl_multi_setopt(multi, CURLMOPT_TIMERFUNCTION, timerfunc);</pre>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">May 17, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">ibcurl 8.1.2</td>
   </tr>
 </table>
 </body>

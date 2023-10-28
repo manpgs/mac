@@ -159,9 +159,10 @@
       <code class="Dv">PF_KEY</code> socket, including messages sent from other
       processes to the kernel.</dd>
 </dl>
-<section class="Ss">
-<h2 class="Ss" id="Configuration_syntax"><a class="permalink" href="#Configuration_syntax">Configuration
-  syntax</a></h2>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="Configuration_syntax"><a class="permalink" href="#Configuration_syntax">Configuration
+  syntax</a></h1>
 <p class="Pp">With <code class="Fl">-c</code> or <code class="Fl">-f</code> on
     the command line, <code class="Nm">setkey</code> accepts the following
     configuration syntax. Lines starting with hash signs (&#x2018;#&#x2019;) are
@@ -369,9 +370,9 @@
 <var class="Ar">address/prefixlen[port]</var></pre>
     </div>
     <p class="Pp"><var class="Ar">prefixlen</var> and <var class="Ar">port</var>
-        must be decimal numbers. The square brackets around
-        <var class="Ar">port</var> are really necessary, they are not man page
-        meta-characters. For FQDN resolution, the rules applicable to
+        must be a decimal number. The square brackets around
+        <var class="Ar">port</var> are necessary and are not manpage
+        metacharacters. For FQDN resolution, the rules applicable to
         <var class="Ar">src</var> and <var class="Ar">dst</var> apply here as
         well.</p>
     <p class="Pp"></p>
@@ -383,223 +384,158 @@
       <code class="Li">any</code>. <code class="Li">any</code> stands for
       &#x201C;any protocol&#x201D;. You can also use the protocol number. You
       can specify a type and/or a code of ICMPv6 when the upper-layer protocol
-      is ICMPv6. The specification can be placed after
+      is ICMPv6. The specification must be placed after
       <code class="Li">icmp6</code>. A type is separated from a code by single
       comma. A code must always be specified. When a zero is specified, the
       kernel deals with it as a wildcard. Note that the kernel can not
-      distinguish a wildcard from an ICPMv6 type of zero. For example, the
+      distinguish a wildcard from an ICMPv6 type of zero. For example, the
       following means that the policy doesn't require IPsec for any inbound
-      Neighbor Solicitation.
+      Neighbor Solicitation:
+    <p class="Pp"></p>
     <div class="Bd Bd-indent"><code class="Li">spdadd ::/0 ::/0 icmp6 135,0 -P
-      in none</code></div>
-    ;
-    <p class="Pp" id="Note"><a class="permalink" href="#Note"><i class="Em">Note</i></a>:
+      in none ;</code></div>
+    <p class="Pp" id="NOTE:"><a class="permalink" href="#NOTE:"><i class="Em">NOTE:</i></a>
         <var class="Ar">upperspec</var> does not work against forwarding case at
-        this moment, as it requires extra reassembly at the forwarding node (not
-        implemented at this moment). There are many protocols in
-        <span class="Pa">/etc/protocols</span>, but all protocols except of TCP,
-        UDP, and ICMP may not be suitable to use with IPsec. You have to
-        consider carefully what to use.</p>
+        this moment, as it requires extra reassembly at the forwarding node
+        (currently not implemented). There are many protocols in
+        <span class="Pa">/etc/protocols</span>, protocols other than TCP, UDP,
+        and ICMP may not be suitable to use with IPsec. You have to consider
+        carefully what to use.</p>
     <p class="Pp"></p>
   </dd>
   <dt><var class="Ar">policy</var></dt>
   <dd><var class="Ar">policy</var> is in one of the following three formats:
-    <div class="Bd Pp Bd-indent Li"></div>
-  </dd>
-  <pre>
-<dt id="P"><a class="permalink" href="#P"><code class="Fl">-P</code></a> <var class="Ar">direction [priority specification]</var> <code class="Li">discard</code></dt>
-<dd style="width: auto;">&#x00A0;</dd>
-<dt id="P~2"><a class="permalink" href="#P~2"><code class="Fl">-P</code></a> <var class="Ar">direction [priority specification]</var> <code class="Li">none</code></dt>
-<dd style="width: auto;">&#x00A0;</dd>
-<dt id="P~3"><a class="permalink" href="#P~3"><code class="Fl">-P</code></a> <var class="Ar">direction [priority specification]</var> <code class="Li">ipsec</code>
-<var class="Ar">protocol/mode/src-dst/level</var> [...]</dt>
-<dd>
-
-You must specify the direction of its policy as
-<var class="Ar">direction</var>.
-Either
-<var class="Ar">out</var>,
-<var class="Ar">in</var>,
-or
-<var class="Ar">fwd</var>
-can be used.
-
-<var class="Ar">priority specification</var>
-is used to control the placement of the policy within the SPD.
-Policy position is determined by
-a signed integer where higher priorities indicate the policy is placed
-closer to the beginning of the list and lower priorities indicate the
-policy is placed closer to the end of the list.
-Policies with equal priorities are added at the end of groups
-of such policies.
-
-Priority can only
-be specified when setkey has been compiled against kernel headers that
-support policy priorities (Linux &gt;= 2.6.6).
-If the kernel does not support priorities, a warning message will
-be printed the first time a priority specification is used.
-Policy priority takes one of the following formats:
-<dl class="Bl-tag">
-<dt>
-<var class="Ar">{priority,prio} offset</var></dt>
-<dd>
-<var class="Ar">offset</var>
-is an integer in the range from -2147483647 to 214783648.</dd>
-<dt>
-<var class="Ar">{priority,prio} base {+,-} offset</var></dt>
-<dd>
-<var class="Ar">base</var>
-is either
-<code class="Li">low (-1073741824)</code>,
-<code class="Li">def (0)</code>,
-or
-<code class="Li">high (1073741824)</code>
-
-<var class="Ar">offset</var>
-is an unsigned integer.
-It can be up to 1073741824 for
-positive offsets, and up to 1073741823 for negative offsets.</dd>
-</dl>
-
-<code class="Li">discard</code>
-means the packet matching indexes will be discarded.
-<code class="Li">none</code>
-means that IPsec operation will not take place onto the packet.
-<code class="Li">ipsec</code>
-means that IPsec operation will take place onto the packet.
-
-The
-<var class="Ar">protocol/mode/src-dst/level</var>
-part specifies the rule how to process the packet.
-Either
-<code class="Li">ah</code>,
-<code class="Li">esp</code>,
-or
-<code class="Li">ipcomp</code>
-must be used as
-<var class="Ar">protocol</var>.
-<var class="Ar">mode</var>
-is either
-<code class="Li">transport</code>
-or
-<code class="Li">tunnel</code>.
-If
-<var class="Ar">mode</var>
-is
-<code class="Li">tunnel</code>,
-you must specify the end-point addresses of the SA as
-<var class="Ar">src</var>
-and
-<var class="Ar">dst</var>
-with
-&#x2018;-&#x2019;
-between these addresses, which is used to specify the SA to use.
-If
-<var class="Ar">mode</var>
-is
-<code class="Li">transport</code>,
-both
-<var class="Ar">src</var>
-and
-<var class="Ar">dst</var>
-can be omitted.
-<var class="Ar">level</var>
-is to be one of the following:
-<code class="Li">default</code>, <code class="Li">use</code>, <code class="Li">require</code>,
-or
-<code class="Li">unique</code>.
-If the SA is not available in every level, the kernel will
-ask the key exchange daemon to establish a suitable SA.
-<code class="Li">default</code>
-means the kernel consults the system wide default for the protocol
-you specified, e.g. the
-<code class="Li">esp_trans_deflev</code>
-sysctl variable, when the kernel processes the packet.
-<code class="Li">use</code>
-means that the kernel uses an SA if it's available,
-otherwise the kernel keeps normal operation.
-<code class="Li">require</code>
-means SA is required whenever the kernel sends a packet matched
-with the policy.
-<code class="Li">unique</code>
-is the same as
-<code class="Li">require</code>;
-in addition, it allows the policy to match the unique out-bound SA.
-You just specify the policy level
-<code class="Li">unique</code>,
-<a class="Xr" href="../8/racoon">racoon(8)</a>
-will configure the SA for the policy.
-If you configure the SA by manual keying for that policy,
-you can put a decimal number as the policy identifier after
-<code class="Li">unique</code>
-separated by a colon
-&#x2018;:&#x2019;
-like:
-<code class="Li">unique:number</code>
-in order to bind this policy to the SA.
-<code class="Li">number</code>
-must be between 1 and 32767.
-It corresponds to
-<var class="Ar">extensions</var> <code class="Fl">-u</code>
-of the manual SA configuration.
-When you want to use SA bundle, you can define multiple rules.
-For example, if an IP header was followed by an AH header followed
-by an ESP header followed by an upper layer protocol header, the
-rule would be:
-<div class="Bd Bd-indent"><code class="Li">esp/transport//require ah/transport//require</code></div>
-;
-The rule order is very important.
-
-When NAT-T is enabled in the kernel, policy matching for ESP over
-UDP packets may be done on endpoint addresses and port
-(this depends on the system.
-System that do not perform the port check cannot support
-multiple endpoints behind the same NAT).
-When using ESP over UDP, you can specify port numbers in the endpoint
-addresses to get the correct matching.
-Here is an example:
-<div class="Bd Pp Li">
-spdadd 10.0.11.0/24[any] 10.0.11.33/32[any] any -P out ipsec
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt id="P"><a class="permalink" href="#P"><code class="Fl">-P</code></a>
+        <var class="Ar">direction [priority specification]</var>
+        <code class="Li">discard</code></dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+      <dt id="P~2"><a class="permalink" href="#P~2"><code class="Fl">-P</code></a>
+        <var class="Ar">direction [priority specification]</var>
+        <code class="Li">none</code></dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+      <dt id="P~3"><a class="permalink" href="#P~3"><code class="Fl">-P</code></a>
+        <var class="Ar">direction [priority specification]</var>
+        <code class="Li">ipsec</code>
+        <var class="Ar">protocol/mode/src-dst/level</var> [...]</dt>
+      <dd style="width: auto;">&#x00A0;</dd>
+    </dl>
+    <p class="Pp">You must specify the direction of its policy as
+        <var class="Ar">direction</var>. Either <var class="Ar">out</var>,
+        <var class="Ar">in</var>, or <var class="Ar">fwd</var> can be used.</p>
+    <p class="Pp"><var class="Ar">priority specification</var> is used to
+        control the placement of the policy within the SPD. Policy position is
+        determined by a signed integer where higher priorities indicate the
+        policy is placed closer to the beginning of the list and lower
+        priorities indicate the policy is placed closer to the end of the list.
+        Policies with equal priorities are added at the end of groups of such
+        policies.</p>
+    <p class="Pp">Priority can only be specified when setkey has been compiled
+        against kernel headers that support policy priorities (Linux &gt;=
+        2.6.6). If the kernel does not support priorities, a warning message
+        will be printed the first time a priority specification is used. Policy
+        priority takes one of the following formats:</p>
+    <dl class="Bl-tag">
+      <dt><var class="Ar">{priority,prio} offset</var></dt>
+      <dd><var class="Ar">offset</var> is an integer in the range from
+          -2147483647 to 214783648.</dd>
+      <dt><var class="Ar">{priority,prio} base {+,-} offset</var></dt>
+      <dd><var class="Ar">base</var> is either <code class="Li">low
+          (-1073741824)</code>, <code class="Li">def (0)</code>, or
+          <code class="Li">high (1073741824)</code>
+        <p class="Pp"><var class="Ar">offset</var> is an unsigned integer. It
+            can be up to 1073741824 for positive offsets, and up to 1073741823
+            for negative offsets.</p>
+      </dd>
+    </dl>
+    <p class="Pp"><code class="Li">discard</code> means the packet matching
+        indexes will be discarded. <code class="Li">none</code> means that IPsec
+        operation will not take place onto the packet.
+        <code class="Li">ipsec</code> means that IPsec operation will take place
+        onto the packet.</p>
+    <p class="Pp">The <var class="Ar">protocol/mode/src-dst/level</var> part
+        specifies the rule how to process the packet. Either
+        <code class="Li">ah</code>, <code class="Li">esp</code>, or
+        <code class="Li">ipcomp</code> must be used as
+        <var class="Ar">protocol</var>. <var class="Ar">mode</var> is either
+        <code class="Li">transport</code> or <code class="Li">tunnel</code>. If
+        <var class="Ar">mode</var> is <code class="Li">tunnel</code>, you must
+        specify the end-point addresses of the SA as <var class="Ar">src</var>
+        and <var class="Ar">dst</var> with &#x2018;-&#x2019; between these
+        addresses, which is used to specify the SA to use. If
+        <var class="Ar">mode</var> is <code class="Li">transport</code>, both
+        <var class="Ar">src</var> and <var class="Ar">dst</var> can be omitted.
+        <var class="Ar">level</var> is to be one of the following:
+        <code class="Li">default</code>, <code class="Li">use</code>,
+        <code class="Li">require</code>, or <code class="Li">unique</code>. If
+        the SA is not available in every level, the kernel will ask the key
+        exchange daemon to establish a suitable SA.
+        <code class="Li">default</code> means the kernel consults the system
+        wide default for the protocol you specified, e.g. the
+        <code class="Li">esp_trans_deflev</code> sysctl variable, when the
+        kernel processes the packet. <code class="Li">use</code> means that the
+        kernel uses an SA if it's available, otherwise the kernel keeps normal
+        operation. <code class="Li">require</code> means SA is required whenever
+        the kernel sends a packet matched with the policy.
+        <code class="Li">unique</code> is the same as
+        <code class="Li">require</code>; in addition, it allows the policy to
+        match the unique out-bound SA. You just specify the policy level
+        <code class="Li">unique</code>,
+        <a class="Xr" href="../8/racoon">racoon(8)</a> will configure the SA for
+        the policy. If you configure the SA by manual keying for that policy,
+        you can put a decimal number as the policy identifier after
+        <code class="Li">unique</code> separated by a colon &#x2018;:&#x2019;
+        like: <code class="Li">unique:number</code> in order to bind this policy
+        to the SA. <code class="Li">number</code> must be between 1 and 32767.
+        It corresponds to <var class="Ar">extensions</var>
+        <code class="Fl">-u</code> of the manual SA configuration.</p>
+    <p class="Pp">When you want to use an SA bundle, you can define multiple
+        rules. For example, if an IP header was followed by an AH header
+        followed by an ESP header followed by an upper layer protocol header,
+        the rule would be:</p>
+    <p class="Pp"></p>
+    <div class="Bd Bd-indent"><code class="Li">esp/transport//require
+      ah/transport//require</code></div>
+    ;
+    <p class="Pp">The rule order is very important.</p>
+    <p class="Pp">When NAT-T is enabled in the kernel, policy matching for ESP
+        over UDP packets may be done on endpoint addresses and port (this
+        depends on the system. System that do not perform the port check cannot
+        support multiple endpoints behind the same NAT). When using ESP over
+        UDP, you can specify port numbers in the endpoint addresses to get the
+        correct matching. Here is an example:</p>
+    <div class="Bd Pp Li">
+    <pre>spdadd 10.0.11.0/24[any] 10.0.11.33/32[any] any -P out ipsec
     esp/tunnel/192.168.0.1[4500]-192.168.1.2[30000]/require ;
 
-</div>
-These ports must be left unspecified (which defaults to 0) for
-anything other than ESP over UDP.
-They can be displayed in SPD dump using
-<code class="Nm"></code></dd>
-  </pre>
-  setkey
-  <code class="Fl">-DPp</code>.
-
-  Note that
-  &#x201C;<code class="Li">discard</code>&#x201D;
-  and
-  &#x201C;<code class="Li">none</code>&#x201D;
-  are not in the syntax described in
-  <a class="Xr" href="../3/ipsec_set_policy">ipsec_set_policy(3)</a>.
-  There are a few differences in the syntax.
-  See
-  <a class="Xr" href="../3/ipsec_set_policy">ipsec_set_policy(3)</a>
-  for detail.
+    </pre>
+    </div>
+    These ports must be left unspecified (which defaults to 0) for anything
+      other than ESP over UDP. They can be displayed in SPD dump using
+      <code class="Nm">setkey</code> <code class="Fl">-DPp</code>.
+    <p class="Pp">Note that &#x201C;<code class="Li">discard</code>&#x201D; and
+        &#x201C;<code class="Li">none</code>&#x201D; are not in the syntax
+        described in
+        <a class="Xr" href="../3/ipsec_set_policy">ipsec_set_policy(3)</a>.
+        There are a few differences in the syntax. See
+        <a class="Xr" href="../3/ipsec_set_policy">ipsec_set_policy(3)</a> for
+        detail.</p>
+  </dd>
 </dl>
 </section>
-<section class="Ss">
-<h2 class="Ss" id="Algorithms"><a class="permalink" href="#Algorithms">Algorithms</a></h2>
-<pre>The following list shows the supported algorithms.
-<a class="permalink" href="#protocol"><b class="Sy" id="protocol">protocol</b></a>
-and
-<a class="permalink" href="#algorithm"><b class="Sy" id="algorithm">algorithm</b></a>
-are almost orthogonal.
-These authentication algorithms can be used as
-<var class="Ar">aalgo</var>
-in
-<code class="Fl">-A</code> <var class="Ar">aalgo</var>
-of the
-<var class="Ar">protocol</var>
-parameter:
-</pre>
+<section class="Sh">
+<h1 class="Sh" id="Algorithms"><a class="permalink" href="#Algorithms">Algorithms</a></h1>
+<p class="Pp">The following list shows the supported algorithms.
+    <a class="permalink" href="#protocol"><b class="Sy" id="protocol">protocol</b></a>
+    and
+    <a class="permalink" href="#algorithm"><b class="Sy" id="algorithm">algorithm</b></a>
+    are almost orthogonal. These authentication algorithms can be used as
+    <var class="Ar">aalgo</var> in <code class="Fl">-A</code>
+    <var class="Ar">aalgo</var> of the <var class="Ar">protocol</var>
+  parameter:</p>
 <div class="Bd Pp Bd-indent Li">
-algorithm	keylen (bits)
+<pre>algorithm	keylen (bits)   comment
 hmac-md5	128		ah: rfc2403
 		128		ah-old: rfc2085
 hmac-sha1	160		ah: rfc2404
@@ -620,17 +556,14 @@ hmac-ripemd160	160		ah: 96bit ICV (RFC2857)
 				ah-old: 128bit ICV (no document)
 aes-xcbc-mac	128		ah: 96bit ICV (RFC3566)
 		128		ah-old: 128bit ICV (no document)
-tcp-md5		8 to 640	tcp: rfc2385</div>
-
-These encryption algorithms can be used as
-<var class="Ar">ealgo</var>
-in
-<code class="Fl">-E</code> <var class="Ar">ealgo</var>
-of the
-<var class="Ar">protocol</var>
-parameter:
+tcp-md5		8 to 640	tcp: rfc2385</pre>
+</div>
+<p class="Pp">These encryption algorithms can be used as
+    <var class="Ar">ealgo</var> in <code class="Fl">-E</code>
+    <var class="Ar">ealgo</var> of the <var class="Ar">protocol</var>
+  parameter:</p>
 <div class="Bd Pp Bd-indent Li">
-algorithm	keylen (bits)
+<pre>algorithm	keylen (bits)   comment
 des-cbc		64		esp-old: rfc1829, esp: rfc2405
 3des-cbc	192		rfc2451
 null		0 to 2048	rfc2410
@@ -640,56 +573,34 @@ des-deriv	64		ipsec-ciph-des-derived-01
 3des-deriv	192		no document
 rijndael-cbc	128/192/256	rfc3602
 twofish-cbc	0 to 256	draft-ietf-ipsec-ciph-aes-cbc-01
-aes-ctr		160/224/288	draft-ietf-ipsec-ciph-aes-ctr-03</div>
-
-Note that the first 128 bits of a key for
-<code class="Li">aes-ctr</code>
-will be used as AES key, and the remaining 32 bits will be used as nonce.
-
-These compression algorithms can be used as
-<var class="Ar">calgo</var>
-in
-<code class="Fl">-C</code> <var class="Ar">calgo</var>
-of the
-<var class="Ar">protocol</var>
-parameter:
+aes-ctr		160/224/288	draft-ietf-ipsec-ciph-aes-ctr-03</pre>
+</div>
+<p class="Pp">Note that the first 128 bits of a key for
+    <code class="Li">aes-ctr</code> will be used as AES key, and the remaining
+    32 bits will be used as nonce.</p>
+<p class="Pp">These compression algorithms can be used as
+    <var class="Ar">calgo</var> in <code class="Fl">-C</code>
+    <var class="Ar">calgo</var> of the <var class="Ar">protocol</var>
+  parameter:</p>
 <div class="Bd Pp Bd-indent Li">
-algorithm
-deflate		rfc2394</div>
+<pre>algorithm   comment
+deflate		rfc2394</pre>
+</div>
 </section>
-<section class="Ss">
-<h2 class="Ss" id="RFC_vs_Linux_kernel_semantics"><a class="permalink" href="#RFC_vs_Linux_kernel_semantics">RFC
-  vs Linux kernel semantics</a></h2>
-<pre>The Linux kernel uses the
-<var class="Ar">fwd</var>
-policy instead of the
-<var class="Ar">in</var>
-policy for packets what are forwarded through that particular box.
-
-In
-<var class="Ar">kernel</var>
-mode,
-<code class="Nm"></code></pre>
-setkey
-manages and shows policies and SAs exactly as they are stored in the kernel.
-
-In
-<var class="Ar">RFC</var>
-mode,
-<code class="Nm"></code>setkey
-<ul class="Bl-item">
-  <li>
-    creates
-    <var class="Ar">fwd</var>
-    policies for every
-    <var class="Ar">in</var>
-    policy inserted</li>
-  <li>
-    (not implemented yet) filters out all
-    <var class="Ar">fwd</var>
-    policies</li>
-</ul>
-</section>
+<section class="Sh">
+<h1 class="Sh" id="RFC_vs_Linux_kernel_semantics"><a class="permalink" href="#RFC_vs_Linux_kernel_semantics">RFC
+  vs Linux kernel semantics</a></h1>
+<p class="Pp">The Linux kernel uses the <var class="Ar">fwd</var> policy instead
+    of the <var class="Ar">in</var> policy for packets what are forwarded
+    through that particular box.</p>
+<p class="Pp">In <var class="Ar">kernel</var> mode,
+    <code class="Nm">setkey</code> manages and shows policies and SAs exactly as
+    they are stored in the kernel.</p>
+<p class="Pp">In <var class="Ar">RFC</var> mode, <code class="Nm">setkey</code>
+    creates <var class="Ar">fwd</var> policies for every
+    <var class="Ar">in</var> policy inserted
+  <br/>
+  (not implemented yet) filters out all <var class="Ar">fwd</var> policies</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
@@ -750,7 +661,7 @@ add 10.1.10.34 10.1.10.36 tcp 0x1000 -A tcp-md5 &quot;TCP-MD5 BGP secret&quot; ;
 <table class="foot">
   <tr>
     <td class="foot-date">March 19, 2004</td>
-    <td class="foot-os">macOS 13.5</td>
+    <td class="foot-os">macOS 14.1</td>
   </tr>
 </table>
 </body>

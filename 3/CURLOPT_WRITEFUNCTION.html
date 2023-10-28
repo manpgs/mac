@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">CURLOPT_WRITEFUNCTION(3)</td>
-    <td class="head-vol">curl_easy_setopt options</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">CURLOPT_WRITEFUNCTION(3)</td>
   </tr>
 </table>
@@ -99,29 +99,38 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_WRITEFUNCTION, write_callback);<
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
-<pre>
- struct memory {
-   char *response;
-   size_t size;
- };
- static size_t cb(void *data, size_t size, size_t nmemb, void *userp)
- {
-   size_t realsize = size * nmemb;
-   struct memory *mem = (struct memory *)userp;
-   char *ptr = realloc(mem-&gt;response, mem-&gt;size + realsize + 1);
-   if(ptr == NULL)
-     return 0;  /* out of memory! */
-   mem-&gt;response = ptr;
-   memcpy(&amp;(mem-&gt;response[mem-&gt;size]), data, realsize);
-   mem-&gt;size += realsize;
-   mem-&gt;response[mem-&gt;size] = 0;
-   return realsize;
- }
- struct memory chunk = {0};
- /* send all data to this function  */
- curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, cb);
- /* we pass our 'chunk' struct to the callback function */
- curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&amp;chunk);</pre>
+<pre>struct memory {
+  char *response;
+  size_t size;
+};
+static size_t cb(void *data, size_t size, size_t nmemb, void *clientp)
+{
+  size_t realsize = size * nmemb;
+  struct memory *mem = (struct memory *)clientp;
+  char *ptr = realloc(mem-&gt;response, mem-&gt;size + realsize + 1);
+  if(ptr == NULL)
+    return 0;  /* out of memory! */
+  mem-&gt;response = ptr;
+  memcpy(&amp;(mem-&gt;response[mem-&gt;size]), data, realsize);
+  mem-&gt;size += realsize;
+  mem-&gt;response[mem-&gt;size] = 0;
+  return realsize;
+}
+struct memory chunk = {0};
+CURLcode res;
+CURL *curl_handle = curl_easy_init();
+if (curl_handle)
+{
+  /* send all data to this function  */
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, cb);
+  /* we pass our 'chunk' struct to the callback function */
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&amp;chunk);
+  /* send a request */
+  res = curl_easy_perform(curl_handle);
+  /* remember to free the buffer */
+  free(chunk.response);
+  curl_easy_cleanup(curl_handle);
+}</pre>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="AVAILABILITY"><a class="permalink" href="#AVAILABILITY">AVAILABILITY</a></h1>
@@ -142,8 +151,8 @@ CURLcode curl_easy_setopt(CURL *handle, CURLOPT_WRITEFUNCTION, write_callback);<
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">November 8, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">ibcurl 8.1.2</td>
   </tr>
 </table>
 </body>

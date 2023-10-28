@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">curl_global_sslset(3)</td>
-    <td class="head-vol">libcurl Manual</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">curl_global_sslset(3)</td>
   </tr>
 </table>
@@ -54,7 +54,7 @@ typedef struct {
 } curl_ssl_backend;
 typedef enum {
   CURLSSLBACKEND_NONE = 0,
-  CURLSSLBACKEND_OPENSSL = 1,
+  CURLSSLBACKEND_OPENSSL = 1, /* or one of its forks */
   CURLSSLBACKEND_GNUTLS = 2,
   CURLSSLBACKEND_NSS = 3,
   CURLSSLBACKEND_GSKIT = 5,
@@ -64,8 +64,9 @@ typedef enum {
   CURLSSLBACKEND_SECURETRANSPORT = 9,
   CURLSSLBACKEND_AXTLS = 10, /* deprecated */
   CURLSSLBACKEND_MBEDTLS = 11,
-  CURLSSLBACKEND_MESALINK = 12,
-  CURLSSLBACKEND_BEARSSL = 13
+  CURLSSLBACKEND_MESALINK = 12, /* deprecated */
+  CURLSSLBACKEND_BEARSSL = 13,
+  CURLSSLBACKEND_RUSTLS = 14
 } curl_sslbackend;
 CURLsslset curl_global_sslset(curl_sslbackend id,
                               const char *name,
@@ -101,6 +102,16 @@ CURLsslset curl_global_sslset(curl_sslbackend id,
 <p class="Pp">If this is not thread-safe, you must not call this function when
     any other thread in the program (i.e. a thread sharing the same memory) is
     running. This does not just mean no other thread that is using libcurl.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OpenSSL"><a class="permalink" href="#OpenSSL">OpenSSL</a></h1>
+<p class="Pp">The name &quot;OpenSSL&quot; is used for all versions of OpenSSL
+    and its associated forks/flavors in this function. OpenSSL, BoringSSL,
+    libressl, quictls and AmiSSL are all supported by libcurl, but in the eyes
+    of <i>curl_global_sslset(3)</i> they are all just &quot;OpenSSL&quot;. They
+    all mostly provide the same API.</p>
+<p class="Pp"><i>curl_version_info(3)</i> can return more specific info about
+    the exact OpenSSL flavor and version number is use.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
@@ -141,8 +152,8 @@ CURLsslset curl_global_sslset(curl_sslbackend id,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">September 20, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">libcurl 8.1.2</td>
   </tr>
 </table>
 </body>

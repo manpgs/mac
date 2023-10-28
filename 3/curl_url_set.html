@@ -8,7 +8,7 @@
    *                            | (__| |_| |  _ <| |___
    *                             \___|\___/|_| \_\_____|
    *
-   * Copyright (C) 1998 - 2022, Daniel Stenberg, <daniel@haxx.se>, et al.
+   * Copyright (C) Daniel Stenberg, <daniel@haxx.se>, et al.
    *
    * This software is licensed as described in the file COPYING, which
    * you should have received as part of this distribution. The terms
@@ -35,7 +35,7 @@
 <table class="head">
   <tr>
     <td class="head-ltitle">curl_url_set(3)</td>
-    <td class="head-vol">libcurl Manual</td>
+    <td class="head-vol">libcurl</td>
     <td class="head-rtitle">curl_url_set(3)</td>
   </tr>
 </table>
@@ -70,6 +70,14 @@ CURLUcode curl_url_set(CURLU *url,
     schemes it does not know about, the <b>CURLU_NON_SUPPORT_SCHEME</b> flags
     bit must be set. Otherwise, this function returns
     <i>CURLUE_UNSUPPORTED_SCHEME</i> on URL schemes it does not recognize.</p>
+<p class="Pp">This function call has no particular maximum length for any
+    provided input string. In the real world, excessively long field in URLs
+    will cause problems even if this API accepts them.</p>
+<p class="Pp">When setting or updating contents of individual URL parts, this
+    API might accept data that would not be otherwise possible to set in the
+    string when it gets populated as a result of a full URL parse. Beware. If
+    done so, extracting a full URL later on from such components might render an
+    invalid URL.</p>
 <p class="Pp">The <i>flags</i> argument is a bitmask with independent
   features.</p>
 </section>
@@ -85,6 +93,8 @@ CURLUcode curl_url_set(CURLU *url,
     <p class="Pp">Pass a pointer to a null-terminated string to the <i>url</i>
         parameter. The string must point to a correctly formatted &quot;RFC
         3986+&quot; URL or be a NULL pointer.</p>
+    <p class="Pp">Unless <i>CURLU_NO_AUTHORITY</i> is set, a blank host name is
+        not allowed in the URL.</p>
   </dd>
   <dt id="CURLUPART_SCHEME"><a class="permalink" href="#CURLUPART_SCHEME">CURLUPART_SCHEME</a></dt>
   <dd>Scheme cannot be URL decoded on set. libcurl only accepts setting schemes
@@ -94,12 +104,18 @@ CURLUcode curl_url_set(CURLU *url,
   <dt id="CURLUPART_PASSWORD"><a class="permalink" href="#CURLUPART_PASSWORD">CURLUPART_PASSWORD</a></dt>
   <dd></dd>
   <dt id="CURLUPART_OPTIONS"><a class="permalink" href="#CURLUPART_OPTIONS">CURLUPART_OPTIONS</a></dt>
-  <dd></dd>
+  <dd>The options field is an optional field that might follow the password in
+      the userinfo part. It is only recognized/used when parsing URLs for the
+      following schemes: pop3, smtp and imap. This function however allows users
+      to independently set this field at will.</dd>
   <dt id="CURLUPART_HOST"><a class="permalink" href="#CURLUPART_HOST">CURLUPART_HOST</a></dt>
   <dd>The host name. If it is IDNA the string must then be encoded as your
       locale says or UTF-8 (when WinIDN is used). If it is a bracketed IPv6
       numeric address it may contain a zone id (or you can use
-      CURLUPART_ZONEID).</dd>
+      CURLUPART_ZONEID).
+    <p class="Pp">Unless <i>CURLU_NO_AUTHORITY</i> is set, a blank host name is
+        not allowed to set.</p>
+  </dd>
   <dt id="CURLUPART_ZONEID"><a class="permalink" href="#CURLUPART_ZONEID">CURLUPART_ZONEID</a></dt>
   <dd>If the host name is a numeric IPv6 address, this field can also be
     set.</dd>
@@ -222,8 +238,8 @@ CURLUcode curl_url_set(CURLU *url,
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">December 15, 2022</td>
-    <td class="foot-os">libcurl 7.87.0</td>
+    <td class="foot-date">April 26, 2023</td>
+    <td class="foot-os">libcurl 8.1.2</td>
   </tr>
 </table>
 </body>
