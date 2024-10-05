@@ -38,9 +38,13 @@
   <dd>An object describing the input Metal libraries from file or generated via
       the function constants specialization process. See <i>LIBRARIES</i>.</dd>
   <dt id="pipelines"><a class="permalink" href="#pipelines"><b>pipelines</b></a></dt>
-  <dd>An object describing of the compute pipelines, render pipelines, and
+  <dd>An object describing the compute pipelines, render pipelines, and
       tile-render pipelines that need to be compiled into GPU binaries. See
       <i>PIPELINES</i>.</dd>
+  <dt id="functions"><a class="permalink" href="#functions"><b>functions</b></a></dt>
+  <dd>An object describing the intersection functions, and visible functions
+      that need to be compiled separately into GPU binaries. See
+      <i>FUNCTIONS</i>.</dd>
   <dt id="named_predicates"><a class="permalink" href="#named_predicates"><b>named_predicates</b></a></dt>
   <dd>An array of objects describing the named predicate definitions. Predicates
       can be used to control whether a pipeline should be compiled or ignored.
@@ -93,7 +97,8 @@
   <dt id="function"><a class="permalink" href="#function"><b>function
     <i>(required)</i></b></a></dt>
   <dd>Reference to the function to be specialized. See <i>FUNCTION REFERENCE</i>
-      for more details about the different syntax to reference a function.</dd>
+      for more details about the different syntaxes to reference a
+    function.</dd>
   <dt id="specialized_name"><a class="permalink" href="#specialized_name"><b>specialized_name</b></a></dt>
   <dd>Name of the function after specialization. If not specified, the original
       name is used.</dd>
@@ -106,6 +111,31 @@
       corresponding values provided by the named function constant values object
       specified via <i>named_function_constant_values</i>. See <i>FUNCTION
       CONSTANT VALUE</i>.</dd>
+</dl>
+</div>
+<br/>
+<dl class="Bl-tag">
+  <dt id="stitched_libraries"><a class="permalink" href="#stitched_libraries"><b>stitched_libraries</b></a></dt>
+  <dd>An array of objects describing a Metal stitched library. Each object is
+      the equivalent structure of <b>MTLStitchedLibraryDescriptor</b> in the
+      Metal API, and can define the members:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="label~3"><a class="permalink" href="#label~3"><b>label
+    <i>(required)</i></b></a></dt>
+  <dd>Unique identifier for the library in a Metal pipelines script. The label
+      value is used for the <i>alias:</i> URIs to reference a function from the
+      library with the given label. See <i>FUNCTION REFERENCE</i>.</dd>
+  <dt id="functions~2"><a class="permalink" href="#functions~2"><b>functions</b></a></dt>
+  <dd>An array of functions. Each element is a reference to a stitchable
+      function that is used for generating the functions associated with the
+      function graphs of the given stitched library. See <i>FUNCTION
+      REFERENCE</i> for more details about the different syntaxes to reference a
+      function.</dd>
+  <dt id="function_graphs"><a class="permalink" href="#function_graphs"><b>function_graphs</b></a></dt>
+  <dd>An array of objects describing a function graph. See <i>FUNCTION
+      GRAPH</i>.</dd>
 </dl>
 </div>
 <br/>
@@ -153,7 +183,7 @@
       between <b>0</b> and <b>65535</b> representing the index of a function
       constant variable.
     <p class="Pp">If <b>id_type</b> is <b>FunctionConstantName</b> then
-        <b>id</b> must be a string whose value represent the name of function
+        <b>id</b> must be a string whose value represents the name of function
         constant variable.</p>
   </dd>
   <dt id="value_type"><a class="permalink" href="#value_type"><b>value_type
@@ -220,6 +250,100 @@
 </div>
 <br/>
 </section>
+<section class="Ss">
+<h2 class="Ss" id="FUNCTION_GRAPH"><a class="permalink" href="#FUNCTION_GRAPH">FUNCTION
+  GRAPH</a></h2>
+<p class="Pp">This is the equivalent structure of
+    <b>MTLFunctionStitchingGraph</b> in the Metal API. A function graph object
+    can define the members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="function_name"><a class="permalink" href="#function_name"><b>function_name</b></a></dt>
+  <dd>The name of the new stitched function.</dd>
+  <dt id="nodes"><a class="permalink" href="#nodes"><b>nodes</b></a></dt>
+  <dd>An array of objects describing the nodes in the function's call graph.
+      Each object can define the members:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="node_type"><a class="permalink" href="#node_type"><b>node_type
+    <i>(required)</i></b></a></dt>
+  <dd>String with one of the following values:</dd>
+</dl>
+<div class="Bd-indent">
+<ul class="Bl-bullet">
+  <li><b>InputNode</b></li>
+  <li><b>FunctionNode</b></li>
+</ul>
+</div>
+<br/>
+<dl class="Bl-tag">
+  <dt id="node"><a class="permalink" href="#node"><b>node
+    <i>(required)</i></b></a></dt>
+  <dd>An object describing the given node.
+    <p class="Pp">If <b>node_type</b> is <b>InputNode</b> then <b>node</b> must
+        be an object with a single member <b>index</b> whose value represents
+        the index of the given input node.</p>
+    <p class="Pp">If <b>node_type</b> is <b>FunctionNode</b> then <b>node</b>
+        must be an object with the following members:</p>
+  </dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="name~2"><a class="permalink" href="#name~2"><b>name
+    <i>(required)</i></b></a></dt>
+  <dd>The name of the function associated with the given function node.</dd>
+  <dt id="arguments"><a class="permalink" href="#arguments"><b>arguments</b></a></dt>
+  <dd>An array of objects representing the node indices of the arguments used by
+      the given function node. Each element must be an object with a single
+      member <b>id</b> whose value is the position of the node in <b>nodes</b>
+      representing the given argument. Valid values must be less than the
+      position of the function node being defined.</dd>
+  <dt id="control_dependencies"><a class="permalink" href="#control_dependencies"><b>control_dependencies</b></a></dt>
+  <dd>An array of objects representing the node indices of the control
+      dependencies by the given function node. Each element must be an object
+      with a single member <b>id</b> whose value is the position of the function
+      node in <b>nodes</b> representing the given control dependency. Valid
+      values must be less than the position of the function node being
+    defined.</dd>
+</dl>
+</div>
+<br/>
+</div>
+<br/>
+<dl class="Bl-tag">
+  <dt id="output_node"><a class="permalink" href="#output_node"><b>output_node</b></a></dt>
+  <dd>An object with a single member <b>id</b> whose value is the position of
+      the function node in <b>nodes</b> that produces the return value of the
+      new stitched function.</dd>
+  <dt id="attributes"><a class="permalink" href="#attributes"><b>attributes</b></a></dt>
+  <dd>An array of objects describing function attributes. Each element must be
+      an object with the following members:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="attribute_type"><a class="permalink" href="#attribute_type"><b>attribute_type</b></a></dt>
+  <dd>String with one of the following values:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt>&#x2022;</dt>
+  <dd><b>AlwaysInlineAttribute</b></dd>
+</dl>
+</div>
+<br/>
+<dl class="Bl-tag">
+  <dt id="attribute"><a class="permalink" href="#attribute"><b>attribute</b></a></dt>
+  <dd>An object describing the given attribute.
+    <p class="Pp">If <b>attribute_type</b> is <b>AlwaysInlineAttribute</b> then
+        <b>attribute</b> must be an empty object.</p>
+  </dd>
+</dl>
+</div>
+<br/>
+</div>
+<br/>
+</section>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="PIPELINES"><a class="permalink" href="#PIPELINES">PIPELINES</a></h1>
@@ -254,7 +378,7 @@
   <dt id="compute_function"><a class="permalink" href="#compute_function"><b>compute_function
     <i>(required)</i></b></a></dt>
   <dd>Reference to a kernel function. See <i>FUNCTION REFERENCE</i> for more
-      details about the different syntax to reference a function.</dd>
+      details about the different syntaxes to reference a function.</dd>
   <dt id="threadgroup_size_is_multiple_of_thread_execution_width"><a class="permalink" href="#threadgroup_size_is_multiple_of_thread_execution_width"><b>threadgroup_size_is_multiple_of_thread_execution_width</b></a></dt>
   <dd>A boolean value that indicates if the threadgroup size is always a
       multiple of the thread execution width. The default value is
@@ -275,6 +399,9 @@
       the compute function. Each array index corresponds to the same index in
       the buffer argument table for the compute function. See <i>PIPELINE BUFFER
       DESCRIPTOR</i>.</dd>
+  <dt id="linked_functions"><a class="permalink" href="#linked_functions"><b>linked_functions</b></a></dt>
+  <dd>The functions linked in the compute pipeline. See <i>LINKED
+    FUNCTIONS</i>.</dd>
   <dt id="support_indirect_command_buffers"><a class="permalink" href="#support_indirect_command_buffers"><b>support_indirect_command_buffers</b></a></dt>
   <dd>A boolean value that indicates if the resulting pipeline state can be
       referenced by commands in an indirect command buffer. The default value is
@@ -302,10 +429,10 @@
   <dt id="vertex_function"><a class="permalink" href="#vertex_function"><b>vertex_function
     <i>(required)</i></b></a></dt>
   <dd>Reference to a vertex function. See <i>FUNCTION REFERENCE</i> for more
-      details about the different syntax to reference a function.</dd>
+      details about the different syntaxes to reference a function.</dd>
   <dt id="fragment_function"><a class="permalink" href="#fragment_function"><b>fragment_function</b></a></dt>
   <dd>Reference to a fragment function. See <i>FUNCTION REFERENCE</i> for more
-      details about the different syntax to reference a function.</dd>
+      details about the different syntaxes to reference a function.</dd>
   <dt id="max_vertex_call_stack_depth"><a class="permalink" href="#max_vertex_call_stack_depth"><b>max_vertex_call_stack_depth</b></a></dt>
   <dd>The maximum function call depth from the vertex function. The default
       value is <b>1</b>.</dd>
@@ -487,6 +614,12 @@
       the fragment function. Each array index corresponds to the same index in
       the buffer argument table for the fragment function. See <i>PIPELINE
       BUFFER DESCRIPTOR</i>.</dd>
+  <dt id="vertex_linked_functions"><a class="permalink" href="#vertex_linked_functions"><b>vertex_linked_functions</b></a></dt>
+  <dd>The functions linked in the vertex stage of the render pipeline. See
+      <i>LINKED FUNCTIONS</i>.</dd>
+  <dt id="fragment_linked_functions"><a class="permalink" href="#fragment_linked_functions"><b>fragment_linked_functions</b></a></dt>
+  <dd>The functions linked in the fragment stage of the render pipeline. See
+      <i>LINKED FUNCTIONS</i>.</dd>
   <dt id="support_indirect_command_buffers~2"><a class="permalink" href="#support_indirect_command_buffers~2"><b>support_indirect_command_buffers</b></a></dt>
   <dd>A boolean value that indicates if the resulting pipeline state can be
       referenced by commands in an indirect command buffer. The default value is
@@ -518,7 +651,8 @@
   <dt id="tile_function"><a class="permalink" href="#tile_function"><b>tile_function
     <i>(required)</i></b></a></dt>
   <dd>Reference to a kernel or fragment function. See <i>FUNCTION REFERENCE</i>
-      for more details about the different syntax to reference a function.</dd>
+      for more details about the different syntaxes to reference a
+    function.</dd>
   <dt id="threadgroup_size_matches_tile_size"><a class="permalink" href="#threadgroup_size_matches_tile_size"><b>threadgroup_size_matches_tile_size</b></a></dt>
   <dd>A boolean value that indicates if all threadgroups completely cover tiles.
       The default value is <b>false</b>.</dd>
@@ -553,6 +687,9 @@
       the tile function. Each array index corresponds to the same index in the
       buffer argument table for the tile function. See <i>PIPELINE BUFFER
       DESCRIPTOR</i>.</dd>
+  <dt id="linked_functions~2"><a class="permalink" href="#linked_functions~2"><b>linked_functions</b></a></dt>
+  <dd>The functions linked in the tile render pipeline. See <i>LINKED
+      FUNCTIONS</i>.</dd>
   <dt id="support_adding_binary_functions~2"><a class="permalink" href="#support_adding_binary_functions~2"><b>support_adding_binary_functions</b></a></dt>
   <dd>A boolean value that indicates if the resulting pipeline state can be used
       to create new pipelines by adding binary functions to its callable
@@ -569,7 +706,7 @@
     descriptor object can have the members:</p>
 <div class="Bd-indent">
 <dl class="Bl-tag">
-  <dt id="attributes"><a class="permalink" href="#attributes"><b>attributes</b></a></dt>
+  <dt id="attributes~2"><a class="permalink" href="#attributes~2"><b>attributes</b></a></dt>
   <dd>An array of objects describing where and how to fetch data for the
       function. Each object is the equivalent structure of
       <b>MTLAttributeDescriptor</b> in the Metal API, and can define the
@@ -649,7 +786,7 @@
     the Metal API. A Metal vertex descriptor object can have the members:</p>
 <div class="Bd-indent">
 <dl class="Bl-tag">
-  <dt id="attributes~2"><a class="permalink" href="#attributes~2"><b>attributes</b></a></dt>
+  <dt id="attributes~3"><a class="permalink" href="#attributes~3"><b>attributes</b></a></dt>
   <dd>An array of objects describing where and how to fetch data for the
       function. Each object is the equivalent structure of
       <b>MTLVertexAttributeDescriptor</b> in the Metal API, and can define the
@@ -724,6 +861,53 @@
 </ul>
 </div>
 <br/>
+</div>
+<br/>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="LINKED_FUNCTIONS"><a class="permalink" href="#LINKED_FUNCTIONS">LINKED
+  FUNCTIONS</a></h2>
+<p class="Pp">This is the equivalent structure of <b>MTLLinkedFunctions</b> in
+    the Metal API. A Metal linked functions object can have the members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="functions~3"><a class="permalink" href="#functions~3"><b>functions</b></a></dt>
+  <dd>An array of functions. Each element is a reference to a visible or
+      intersection function that is linked into the given pipeline stage. See
+      <i>FUNCTION REFERENCE</i> for more details about the different syntaxes to
+      reference a function.</dd>
+  <dt id="private_functions"><a class="permalink" href="#private_functions"><b>private_functions</b></a></dt>
+  <dd>An array of functions. Each element is a reference to a visible or
+      intersection function that is linked into the given pipeline stage without
+      exporting the function publicly. See <i>FUNCTION REFERENCE</i> for more
+      details about the different syntaxes to reference a function.</dd>
+  <dt id="binary_functions"><a class="permalink" href="#binary_functions"><b>binary_functions</b></a></dt>
+  <dd>An array of binary functions. Each element is the name of a binary
+      function linked to the given pipeline stage.</dd>
+  <dt id="groups"><a class="permalink" href="#groups"><b>groups</b></a></dt>
+  <dd>An array of objects describing a group of functions. These describe the
+      definition of groups referenced in a Metal program via the
+      <i>[[function_groups(...)]]</i> attribute. Each object can define the
+      members:</dd>
+</dl>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="name~3"><a class="permalink" href="#name~3"><b>name
+    <i>(required)</i></b></a></dt>
+  <dd></dd>
+</dl>
+</div>
+<br/>
+<p class="Pp">The name of the group of functions.</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="functions~4"><a class="permalink" href="#functions~4"><b>functions</b></a></dt>
+  <dd></dd>
+</dl>
+</div>
+<br/>
+<p class="Pp">An array of functions. Each element is the name of function listed
+    in the <i>functions</i> array.</p>
 </div>
 <br/>
 </section>
@@ -937,6 +1121,11 @@
   <li><b>BGRA10_XR_sRGB</b></li>
   <li><b>BGR10_XR</b></li>
   <li><b>BGR10_XR_sRGB</b></li>
+  <li><b>BGRA10Uint</b></li>
+  <li><b>BGRA10Unorm</b></li>
+  <li><b>BGRA10Unorm_sRGB</b></li>
+  <li><b>BGRA10Unorm_HLG</b></li>
+  <li><b>BGRA10Unorm_PQ</b></li>
 </ul>
 </div>
 <br/>
@@ -989,6 +1178,60 @@
 </section>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
+<p class="Pp">The object describing the collection of Metal binary functions can
+    have the members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="intersection_functions"><a class="permalink" href="#intersection_functions"><b>intersection_functions</b></a></dt>
+  <dd>An array of objects describing a Metal binary intersection function. See
+      <i>INTERSECTION FUNCTION DESCRIPTOR</i>.</dd>
+  <dt id="visible_functions"><a class="permalink" href="#visible_functions"><b>visible_functions</b></a></dt>
+  <dd>An array of objects describing a Metal binary visible function. See
+      <i>VISIBLE FUNCTION DESCRIPTOR</i>.</dd>
+</dl>
+</div>
+<br/>
+<section class="Ss">
+<h2 class="Ss" id="INTERSECTION_FUNCTION_DESCRIPTOR"><a class="permalink" href="#INTERSECTION_FUNCTION_DESCRIPTOR">INTERSECTION
+  FUNCTION DESCRIPTOR</a></h2>
+<p class="Pp">A Metal binary intersection function descriptor object can have
+    the members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="enable~4"><a class="permalink" href="#enable~4"><b>enable</b></a></dt>
+  <dd>A predicate expression that determines if the function should be compiled
+      or ignored. The default value is the empty expression. See
+      <i>PREDICATES</i>.</dd>
+  <dt id="function~2"><a class="permalink" href="#function~2"><b>function
+    <i>(required)</i></b></a></dt>
+  <dd>Reference to an intersection function. See <i>FUNCTION REFERENCE</i> for
+      more details about the different syntaxes to reference a function.</dd>
+</dl>
+</div>
+<br/>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="VISIBLE_FUNCTION_DESCRIPTOR"><a class="permalink" href="#VISIBLE_FUNCTION_DESCRIPTOR">VISIBLE
+  FUNCTION DESCRIPTOR</a></h2>
+<p class="Pp">A Metal binary visible function descriptor object can have the
+    members:</p>
+<div class="Bd-indent">
+<dl class="Bl-tag">
+  <dt id="enable~5"><a class="permalink" href="#enable~5"><b>enable</b></a></dt>
+  <dd>A predicate expression that determines if the function should be compiled
+      or ignored. The default value is the empty expression. See
+      <i>PREDICATES</i>.</dd>
+  <dt id="function~3"><a class="permalink" href="#function~3"><b>function
+    <i>(required)</i></b></a></dt>
+  <dd>Reference to a visible function. See <i>FUNCTION REFERENCE</i> for more
+      details about the different syntaxes to reference a function.</dd>
+</dl>
+</div>
+<br/>
+</section>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="FUNCTION_REFERENCE"><a class="permalink" href="#FUNCTION_REFERENCE">FUNCTION
   REFERENCE</a></h1>
 <p class="Pp">Referencing functions in Metal libraries can be done in different
@@ -1035,7 +1278,7 @@
         &quot;path&quot;: &quot;path/to/lib1.metallib&quot;
       }
     ]
-  }
+  },
   &quot;pipelines&quot;: {
     &quot;compute_pipelines&quot;: [
       {
@@ -1083,7 +1326,8 @@
 <p class="Pp">A predicate expression is an arbitrary boolean expression
     combining builtin predicates and user defined named predicates with the
     operator <b>&amp;&amp;</b> (logical AND), <b>||</b> (logical OR), and
-    <b>!</b> (logical NOT).</p>
+    <b>!</b> (logical NOT). If a predicate expression is empty it is evaluated
+    to <b>true</b>.</p>
 <section class="Ss">
 <h2 class="Ss" id="BUILTIN_PREDICATES"><a class="permalink" href="#BUILTIN_PREDICATES">BUILTIN
   PREDICATES</a></h2>
@@ -1105,6 +1349,7 @@
   <li><b>apple6</b></li>
   <li><b>apple7</b></li>
   <li><b>apple8</b></li>
+  <li><b>apple9</b></li>
   <li><b>mac2</b></li>
   <li><b>common1</b></li>
   <li><b>common2</b></li>
@@ -1123,7 +1368,7 @@
     script. Each object describing a named predicate can define the members:</p>
 <div class="Bd-indent">
 <dl class="Bl-tag">
-  <dt id="name~2"><a class="permalink" href="#name~2"><b>name
+  <dt id="name~4"><a class="permalink" href="#name~4"><b>name
     <i>(required)</i></b></a></dt>
   <dd>The name for the predicate being defined.</dd>
   <dt id="predicate"><a class="permalink" href="#predicate"><b>predicate
@@ -1142,7 +1387,7 @@
   &quot;named_predicates&quot;: [
     {
       &quot;name&quot;: &quot;myPredicate1&quot;,
-      &quot;predicate&quot;: &quot;supportsFamily(apple6) || supports(mac2)&quot;
+      &quot;predicate&quot;: &quot;supportsFamily(apple6) || supportsFamily(mac2)&quot;
     },
     {
       &quot;name&quot;: &quot;myPredicate2&quot;,
@@ -1329,7 +1574,7 @@
 <br/>
 <p class="Pp">Note that in <i>fragment_1_lib</i> the function constant value for
     the variable <i>base_color</i> provided by <i>my_common_fc_values</i> is
-    overriden locally. Similarly in <i>fragment_2_lib</i> the function constant
+    overridden locally. Similarly in <i>fragment_2_lib</i> the function constant
     value for the variable with index <i>0</i> provided by
     <i>my_common_fc_values</i> is overridden locally.</p>
 </section>
@@ -1392,16 +1637,237 @@
 </div>
 <br/>
 </section>
+<section class="Ss">
+<h2 class="Ss" id="Linked_functions"><a class="permalink" href="#Linked_functions">Linked
+  functions</a></h2>
+<p class="Pp">This example shows a Metal pipelines script with a compute
+    pipeline with a <i>linked_functions</i> object.</p>
+<div class="Bd-indent">
+<div class="Bd-indent">
+<p class="Pp"></p>
+<pre>{
+  &quot;libraries&quot;: {
+    &quot;paths&quot;: [
+      {
+        &quot;label&quot;: &quot;visible_functions&quot;,
+        &quot;path&quot;: &quot;libraries/visible_fns.metallib&quot;
+      },
+      {
+        &quot;label&quot;: &quot;intersection_functions&quot;,
+        &quot;path&quot;: &quot;libraries/intersection_fns.metallib&quot;
+      }
+    ]
+  },
+  &quot;pipelines&quot;: {
+    &quot;compute_pipelines&quot;: [
+      {
+        &quot;compute_function&quot;: &quot;my_kernel&quot;,
+        &quot;linked_functions&quot;: {
+          &quot;functions&quot;: [
+            &quot;my_visible_1&quot;,
+            &quot;alias:visible_functions#helper_visible_1&quot;,
+            &quot;alias:visible_functions#helper_visible_2&quot;,
+            &quot;alias:visible_functions#helper_visible_3&quot;,
+            &quot;alias:intersection_functions#triangle_intersection_1&quot;,
+            &quot;alias:intersection_functions#triangle_intersection_2&quot;,
+            &quot;alias:intersection_functions#triangle_intersection_3&quot;
+          ],
+          &quot;binary_functions&quot;: [
+            &quot;bounding_box_intersection_1&quot;,
+            &quot;bounding_box_intersection_2&quot;,
+            &quot;bounding_box_intersection_3&quot;
+          ],
+          &quot;groups&quot;: [
+            {
+              &quot;name&quot;: &quot;helpers_group_1&quot;,
+              &quot;functions&quot;: [&quot;helper_visible_1&quot;, &quot;helper_visible_2&quot;]
+            },
+            {
+              &quot;name&quot;: &quot;helpers_group_2&quot;,
+              &quot;functions&quot;: [&quot;helper_visible_3&quot;]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+</pre>
+</div>
+<br/>
+</div>
+<br/>
+<p class="Pp">Note that the elements in <i>binary_functions</i> array are simple
+    function names, while the elements in the <i>functions</i> array can be any
+    form of function reference.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Separately_compiled_functions"><a class="permalink" href="#Separately_compiled_functions">Separately
+  compiled functions</a></h2>
+<p class="Pp">This example shows a Metal pipelines script with separately
+    compiled visible and intersection functions.</p>
+<div class="Bd-indent">
+<div class="Bd-indent">
+<p class="Pp"></p>
+<pre>{
+  &quot;libraries&quot;: {
+    &quot;paths&quot;: [
+      {
+        &quot;label&quot;: &quot;visible_functions&quot;,
+        &quot;path&quot;: &quot;libraries/visible_fns.metallib&quot;
+      },
+      {
+        &quot;label&quot;: &quot;intersection_functions&quot;,
+        &quot;path&quot;: &quot;libraries/intersection_fns.metallib&quot;
+      }
+    ]
+  },
+  &quot;functions&quot;: {
+    &quot;visible_functions&quot;: [
+      {
+        &quot;function&quot;: &quot;file:/path/to/other.metallib#my_visible_1&quot;,
+      },
+      {
+        &quot;function&quot;: &quot;my_visible_2&quot;,
+      },
+      {
+        &quot;function&quot;: &quot;alias:visible_functions#my_visible_1&quot;,
+      }
+    ],
+    &quot;intersection_functions&quot;: [
+      {
+        &quot;function&quot;: &quot;my_intersection_1&quot;,
+      },
+      {
+        &quot;function&quot;: &quot;alias:intersection_functions#my_intersection_2&quot;,
+      },
+      {
+        &quot;function&quot;: &quot;file:/path/to/other.metallib#my_intersection_1&quot;,
+      }
+    ]
+  }
+}
+</pre>
+</div>
+<br/>
+</div>
+<br/>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Stitched_libraries"><a class="permalink" href="#Stitched_libraries">Stitched
+  libraries</a></h2>
+<p class="Pp">This example shows a Metal pipelines script with a compute
+    pipeline and separately compiled visible function using a stitched function.
+    The only way to reference the stitched libraries is via the library unique
+    identifier, the <i>ALIAS URI</i> syntax is used to reference the stitched
+    functions.</p>
+<div class="Bd-indent">
+<div class="Bd-indent">
+<p class="Pp"></p>
+<pre>{
+  &quot;libraries&quot;: {
+    &quot;stitched_libraries&quot;: [
+      {
+        &quot;label&quot;: &quot;stitched_functions&quot;,
+        &quot;functions&quot;: [
+          &quot;mul&quot;,
+          &quot;add&quot;
+        ],
+        &quot;function_graphs&quot;: [
+          {
+            &quot;function_name&quot;: &quot;muladd&quot;,
+            &quot;nodes&quot;: [
+              {
+                &quot;node_type&quot;: &quot;InputNode&quot;,
+                &quot;node&quot;: {
+                  &quot;index&quot;: 0
+                }
+              },
+              {
+                &quot;node_type&quot;: &quot;InputNode&quot;,
+                &quot;node&quot;: {
+                  &quot;index&quot;: 1
+                }
+              },
+              {
+                &quot;node_type&quot;: &quot;FunctionNode&quot;,
+                &quot;node&quot;: {
+                  &quot;name&quot;: &quot;mul&quot;,
+                  &quot;arguments&quot;: [
+                    {
+                      &quot;id&quot;: 0
+                    },
+                    {
+                      &quot;id&quot;: 1
+                    }
+                  ]
+                }
+              },
+              {
+                &quot;node_type&quot;: &quot;InputNode&quot;,
+                &quot;node&quot;: {
+                  &quot;index&quot;: 2
+                }
+              },
+              {
+                &quot;node_type&quot;: &quot;FunctionNode&quot;,
+                &quot;node&quot;: {
+                  &quot;name&quot;: &quot;add&quot;,
+                  &quot;arguments&quot;: [
+                    {
+                      &quot;id&quot;: 2
+                    },
+                    {
+                      &quot;id&quot;: 3
+                    }
+                  ]
+                }
+              }
+            ],
+            &quot;output_node&quot;: {
+              &quot;id&quot;: 4
+            }
+          }
+        ]
+      }
+    ]
+  },
+  &quot;pipelines&quot;: {
+    &quot;compute_pipelines&quot;: [
+      {
+        &quot;compute_function&quot;: &quot;my_kernel&quot;,
+        &quot;linked_functions&quot;: {
+          &quot;functions&quot;: [
+            &quot;alias:stitched_functions#muladd&quot;,
+          ]
+        }
+      }
+    ]
+  },
+  &quot;functions&quot;: {
+    &quot;visible_functions&quot;: [
+      {
+        &quot;function&quot;: &quot;alias:stitched_functions#muladd&quot;,
+      }
+    ]
+  }
+}
+</pre>
+</div>
+<br/>
+</div>
+<br/>
+</section>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="COPYRIGHT"><a class="permalink" href="#COPYRIGHT">COPYRIGHT</a></h1>
-<p class="Pp">2014-2023, The Metal Team</p>
+<p class="Pp">2014-2024, The Metal Team</p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 5, 2023</td>
-    <td class="foot-os">15</td>
+    <td class="foot-date">July 10, 2024</td>
+    <td class="foot-os">32023</td>
   </tr>
 </table>
 </body>

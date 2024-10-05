@@ -35,7 +35,7 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $OpenBSD: sshd_config.5,v 1.350 2023/07/28 05:42:36 jmc Exp $
+   $OpenBSD: sshd_config.5,v 1.365 2024/06/24 06:59:39 jmc Exp $
  -->
 <head>
   <meta charset="utf-8"/>
@@ -296,16 +296,21 @@ rsa-sha2-512,rsa-sha2-256</pre>
   <dd>Specifies whether and how quickly
       <a class="Xr" href="../8/sshd">sshd(8)</a> should close inactive channels.
       Timeouts are specified as one or more &#x201C;type=interval&#x201D; pairs
-      separated by whitespace, where the &#x201C;type&#x201D; must be a channel
-      type name (as described in the table below), optionally containing
-      wildcard characters.
+      separated by whitespace, where the &#x201C;type&#x201D; must be the
+      special keyword &#x201C;global&#x201D; or a channel type name from the
+      list below, optionally containing wildcard characters.
     <p class="Pp">The timeout value &#x201C;interval&#x201D; is specified in
         seconds or may use any of the units documented in the
         <a class="Sx" href="#TIME_FORMATS">TIME FORMATS</a> section. For
-        example, &#x201C;session:*=5m&#x201D; would cause all sessions to
+        example, &#x201C;session=5m&#x201D; would cause interactive sessions to
         terminate after five minutes of inactivity. Specifying a zero value
         disables the inactivity timeout.</p>
-    <p class="Pp">The available channel types include:</p>
+    <p class="Pp">The special timeout &#x201C;global&#x201D; applies to all
+        active channels, taken together. Traffic on any active channel will
+        reset the timeout, but when the timeout expires then all open channels
+        will be closed. Note that this global timeout is not matched by
+        wildcards and must be specified explicitly.</p>
+    <p class="Pp">The available channel type names include:</p>
     <dl class="Bl-tag">
       <dt id="agent-connection"><a class="permalink" href="#agent-connection"><code class="Cm">agent-connection</code></a></dt>
       <dd>Open connections to
@@ -322,14 +327,12 @@ rsa-sha2-512,rsa-sha2-256</pre>
           established to a <a class="Xr" href="../8/sshd">sshd(8)</a> listening
           on behalf of a <a class="Xr" href="../1/ssh">ssh(1)</a> remote
           forwarding, i.e. <code class="Cm">RemoteForward</code>.</dd>
-      <dt id="session:command"><a class="permalink" href="#session:command"><code class="Cm">session:command</code></a></dt>
-      <dd>Command execution sessions.</dd>
-      <dt id="session:shell"><a class="permalink" href="#session:shell"><code class="Cm">session:shell</code></a></dt>
-      <dd>Interactive shell sessions.</dd>
-      <dt id="session:subsystem:..."><a class="permalink" href="#session:subsystem:..."><code class="Cm">session:subsystem:...</code></a></dt>
-      <dd>Subsystem sessions, e.g. for
-          <a class="Xr" href="../1/sftp">sftp(1)</a>, which could be identified
-          as <code class="Cm">session:subsystem:sftp</code>.</dd>
+      <dt id="session"><a class="permalink" href="#session"><code class="Cm">session</code></a></dt>
+      <dd>The interactive main session, including shell session, command
+          execution, <a class="Xr" href="../1/scp">scp(1)</a>,
+          <a class="Xr" href="../1/sftp">sftp(1)</a>, etc.</dd>
+      <dt id="tun-connection"><a class="permalink" href="#tun-connection"><code class="Cm">tun-connection</code></a></dt>
+      <dd>Open <code class="Cm">TunnelForward</code> connections.</dd>
       <dt id="x11-connection"><a class="permalink" href="#x11-connection"><code class="Cm">x11-connection</code></a></dt>
       <dd>Open X11 forwarding sessions.</dd>
     </dl>
@@ -341,9 +344,7 @@ rsa-sha2-512,rsa-sha2-256</pre>
         necessarily close the SSH connection, nor does it prevent a client from
         requesting another channel of the same type. In particular, expiring an
         inactive forwarding session does not prevent another identical
-        forwarding from being subsequently created. See also
-        <code class="Cm">UnusedConnectionTimeout</code>, which may be used in
-        conjunction with this option.</p>
+        forwarding from being subsequently created.</p>
     <p class="Pp">The default is not to expire channels of any type for
         inactivity.</p>
   </dd>
@@ -352,7 +353,7 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <a class="Xr" href="../2/chroot">chroot(2)</a> to after authentication. At
       session startup <a class="Xr" href="../8/sshd">sshd(8)</a> checks that all
       components of the pathname are root-owned directories which are not
-      writable by any other user or group. After the chroot,
+      writable by group or others. After the chroot,
       <a class="Xr" href="../8/sshd">sshd(8)</a> changes the working directory
       to the user's home directory. Arguments to
       <code class="Cm">ChrootDirectory</code> accept the tokens described in the
@@ -703,15 +704,19 @@ rsa-sha2-512,rsa-sha2-256</pre>
   <dd>Specifies whether to automatically destroy the user's ticket cache file on
       logout. The default is <code class="Cm">yes</code>.</dd>
   <dt id="KexAlgorithms"><a class="permalink" href="#KexAlgorithms"><code class="Cm">KexAlgorithms</code></a></dt>
-  <dd>Specifies the available KEX (Key Exchange) algorithms. Multiple algorithms
-      must be comma-separated. Alternately if the specified list begins with a
-      &#x2018;+&#x2019; character, then the specified algorithms will be
-      appended to the default set instead of replacing them. If the specified
-      list begins with a &#x2018;-&#x2019; character, then the specified
-      algorithms (including wildcards) will be removed from the default set
-      instead of replacing them. If the specified list begins with a
-      &#x2018;^&#x2019; character, then the specified algorithms will be placed
-      at the head of the default set. The supported algorithms are:
+  <dd>Specifies the permitted KEX (Key Exchange) algorithms that the server will
+      offer to clients. The ordering of this list is not important, as the
+      client specifies the preference order. Multiple algorithms must be
+      comma-separated.
+    <p class="Pp">If the specified list begins with a &#x2018;+&#x2019;
+        character, then the specified algorithms will be appended to the default
+        set instead of replacing them. If the specified list begins with a
+        &#x2018;-&#x2019; character, then the specified algorithms (including
+        wildcards) will be removed from the default set instead of replacing
+        them. If the specified list begins with a &#x2018;^&#x2019; character,
+        then the specified algorithms will be placed at the head of the default
+        set.</p>
+    <p class="Pp">The supported algorithms are:</p>
     <p class="Pp"></p>
     <ul class="Bl-item Bd-indent Bl-compact">
       <li>curve25519-sha256</li>
@@ -737,7 +742,7 @@ diffie-hellman-group-exchange-sha256,
 diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,
 diffie-hellman-group14-sha256</pre>
     </div>
-    <p class="Pp">The list of available key exchange algorithms may also be
+    <p class="Pp">The list of supported key exchange algorithms may also be
         obtained using &quot;ssh -Q KexAlgorithms&quot;.</p>
   </dd>
   <dt id="ListenAddress"><a class="permalink" href="#ListenAddress"><code class="Cm">ListenAddress</code></a></dt>
@@ -780,9 +785,10 @@ diffie-hellman-group14-sha256</pre>
       specify higher levels of debugging output. Logging with a DEBUG level
       violates the privacy of users and is not recommended.</dd>
   <dt id="LogVerbose"><a class="permalink" href="#LogVerbose"><code class="Cm">LogVerbose</code></a></dt>
-  <dd>Specify one or more overrides to LogLevel. An override consists of a
-      pattern lists that matches the source file, function and line number to
-      force detailed logging for. For example, an override pattern of:
+  <dd>Specify one or more overrides to <code class="Cm">LogLevel</code>. An
+      override consists of a pattern lists that matches the source file,
+      function and line number to force detailed logging for. For example, an
+      override pattern of:
     <div class="Bd Pp Bd-indent Li">
     <pre>kex.c:*:1000,*:kex_exchange_identification():*,packet.c:*</pre>
     </div>
@@ -901,6 +907,7 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
         <code class="Cm">KerberosAuthentication</code>,
         <code class="Cm">LogLevel</code>, <code class="Cm">MaxAuthTries</code>,
         <code class="Cm">MaxSessions</code>,
+        <code class="Cm">PAMServiceName</code>,
         <code class="Cm">PasswordAuthentication</code>,
         <code class="Cm">PermitEmptyPasswords</code>,
         <code class="Cm">PermitListen</code>,
@@ -952,9 +959,14 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
       &#x201C;diffie-hellman-group-exchange-sha1&#x201D; and
       &#x201C;diffie-hellman-group-exchange-sha256&#x201D; key exchange methods.
       The default is <span class="Pa">/etc/moduli</span>.</dd>
+  <dt id="PAMServiceName"><a class="permalink" href="#PAMServiceName"><code class="Cm">PAMServiceName</code></a></dt>
+  <dd>Specifies the service name used for Pluggable Authentication Modules (PAM)
+      authentication, authorisation and session controls when
+      <code class="Cm">UsePAM</code> is enabled. The default is
+      <code class="Cm">sshd</code>.</dd>
   <dt id="PasswordAuthentication"><a class="permalink" href="#PasswordAuthentication"><code class="Cm">PasswordAuthentication</code></a></dt>
   <dd>Specifies whether password authentication is allowed. The default is
-      <code class="Cm">yes</code>.</dd>
+      <code class="Cm">sshd</code>.</dd>
   <dt id="PermitEmptyPasswords"><a class="permalink" href="#PermitEmptyPasswords"><code class="Cm">PermitEmptyPasswords</code></a></dt>
   <dd>When password authentication is allowed, it specifies whether the server
       allows login to accounts with empty password strings. The default is
@@ -1067,6 +1079,74 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
       and optionally IPv6 may be specified, separated by a colon. The default is
       <code class="Cm">32:128</code>, which means each address is considered
       individually.</dd>
+  <dt id="PerSourcePenalties"><a class="permalink" href="#PerSourcePenalties"><code class="Cm">PerSourcePenalties</code></a></dt>
+  <dd>Controls penalties for various conditions that may represent attacks on
+      <a class="Xr" href="../8/sshd">sshd(8)</a>. If a penalty is enforced
+      against a client then its source address and any others in the same
+      network, as defined by <code class="Cm">PerSourceNetBlockSize</code>, will
+      be refused connection for a period.
+    <p class="Pp">A penalty doesn't affect concurrent connections in progress,
+        but multiple penalties from the same source from concurrent connections
+        will accumulate up to a maximum. Conversely, penalties are not applied
+        until a minimum threshold time has been accumulated.</p>
+    <p class="Pp">Penalties are enabled by default with the default settings
+        listed below but may disabled using the <code class="Cm">off</code>
+        keyword. The defaults may be overridden by specifying one or more of the
+        keywords below, separated by whitespace. All keywords accept arguments,
+        e.g. &quot;crash:2m&quot;.</p>
+    <dl class="Bl-tag">
+      <dt id="crash:duration"><a class="permalink" href="#crash:duration"><code class="Cm">crash:duration</code></a></dt>
+      <dd>Specifies how long to refuse clients that cause a crash of
+          <a class="Xr" href="../8/sshd">sshd(8)</a> (default: 90s).</dd>
+      <dt id="authfail:duration"><a class="permalink" href="#authfail:duration"><code class="Cm">authfail:duration</code></a></dt>
+      <dd>Specifies how long to refuse clients that disconnect after making one
+          or more unsuccessful authentication attempts (default: 5s).</dd>
+      <dt id="noauth:duration"><a class="permalink" href="#noauth:duration"><code class="Cm">noauth:duration</code></a></dt>
+      <dd>Specifies how long to refuse clients that disconnect without
+          attempting authentication (default: 1s). This timeout should be used
+          cautiously otherwise it may penalise legitimate scanning tools such as
+          <a class="Xr" href="../1/ssh-keyscan">ssh-keyscan(1)</a>.</dd>
+      <dt id="grace-exceeded:duration"><a class="permalink" href="#grace-exceeded:duration"><code class="Cm">grace-exceeded:duration</code></a></dt>
+      <dd>Specifies how long to refuse clients that fail to authenticate after
+          <code class="Cm">LoginGraceTime</code> (default: 20s).</dd>
+      <dt id="max:duration"><a class="permalink" href="#max:duration"><code class="Cm">max:duration</code></a></dt>
+      <dd>Specifies the maximum time a particular source address range will be
+          refused access for (default: 10m). Repeated penalties will accumulate
+          up to this maximum.</dd>
+      <dt id="min:duration"><a class="permalink" href="#min:duration"><code class="Cm">min:duration</code></a></dt>
+      <dd>Specifies the minimum penalty that must accrue before enforcement
+          begins (default: 15s).</dd>
+      <dt id="max-sources4:number"><a class="permalink" href="#max-sources4:number"><code class="Cm">max-sources4:number</code></a>,
+        <code class="Cm">max-sources6:number</code></dt>
+      <dd>Specifies the maximum number of client IPv4 and IPv6 address ranges to
+          track for penalties (default: 65536 for both).</dd>
+      <dt id="overflow:mode"><a class="permalink" href="#overflow:mode"><code class="Cm">overflow:mode</code></a></dt>
+      <dd>Controls how the server behaves when
+          <code class="Cm">max-sources4</code> or
+          <code class="Cm">max-sources6</code> is exceeded. There are two
+          operating modes: <code class="Cm">deny-all</code>, which denies all
+          incoming connections other than those exempted via
+          <code class="Cm">PerSourcePenaltyExemptList</code> until a penalty
+          expires, and <code class="Cm">permissive</code>, which allows new
+          connections by removing existing penalties early (default:
+          permissive). Note that client penalties below the
+          <code class="Cm">min</code> threshold count against the total number
+          of tracked penalties. IPv4 and IPv6 addresses are tracked separately,
+          so an overflow in one will not affect the other.</dd>
+      <dt id="overflow6:mode"><a class="permalink" href="#overflow6:mode"><code class="Cm">overflow6:mode</code></a></dt>
+      <dd>Allows specifying a different overflow mode for IPv6 addresses. The
+          default it to use the same overflow mode as was specified for
+        IPv4.</dd>
+    </dl>
+  </dd>
+  <dt id="PerSourcePenaltyExemptList"><a class="permalink" href="#PerSourcePenaltyExemptList"><code class="Cm">PerSourcePenaltyExemptList</code></a></dt>
+  <dd>Specifies a comma-separated list of addresses to exempt from penalties.
+      This list may contain wildcards and CIDR address/masklen ranges. Note that
+      the mask length provided must be consistent with the address - it is an
+      error to specify a mask length that is too long for the address or one
+      with bits set in this host portion of the address. For example,
+      192.0.2.0/33 and 192.0.2.0/8, respectively. The default is not to exempt
+      any addresses.</dd>
   <dt id="PidFile"><a class="permalink" href="#PidFile"><code class="Cm">PidFile</code></a></dt>
   <dd>Specifies the file that contains the process ID of the SSH daemon, or
       <code class="Cm">none</code> to not write one. The default is
@@ -1187,6 +1267,11 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <code class="Cm">SetEnv</code> override the default environment and any
       variables specified by the user via <code class="Cm">AcceptEnv</code> or
       <code class="Cm">PermitUserEnvironment</code>.</dd>
+  <dt id="SshdSessionPath"><a class="permalink" href="#SshdSessionPath"><code class="Cm">SshdSessionPath</code></a></dt>
+  <dd>Overrides the default path to the <code class="Cm">sshd-session</code>
+      binary that is invoked to handle each connection. The default is
+      <span class="Pa">/usr/libexec/sshd-session</span>. This option is intended
+      for use by tests.</dd>
   <dt id="StreamLocalBindMask"><a class="permalink" href="#StreamLocalBindMask"><code class="Cm">StreamLocalBindMask</code></a></dt>
   <dd>Sets the octal file creation mode mask (umask) used when creating a
       Unix-domain socket file for local or remote port forwarding. This option
@@ -1223,7 +1308,11 @@ rsa-sha2-512,rsa-sha2-256</pre>
     <p class="Pp">Alternately the name <code class="Cm">internal-sftp</code>
         implements an in-process SFTP server. This may simplify configurations
         using <code class="Cm">ChrootDirectory</code> to force a different
-        filesystem root on clients.</p>
+        filesystem root on clients. It accepts the same command line arguments
+        as <code class="Cm">sftp-server</code> and even though it is in-process,
+        settings such as <code class="Cm">LogLevel</code> or
+        <code class="Cm">SyslogFacility</code> do not apply to it and must be
+        set explicitly via command line arguments.</p>
     <p class="Pp">By default no subsystems are defined.</p>
   </dd>
   <dt id="SyslogFacility"><a class="permalink" href="#SyslogFacility"><code class="Cm">SyslogFacility</code></a></dt>
@@ -1481,8 +1570,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 28, 2023</td>
-    <td class="foot-os">macOS 14.6</td>
+    <td class="foot-date">June 24, 2024</td>
+    <td class="foot-os">macOS 15.0</td>
   </tr>
 </table>
 </body>

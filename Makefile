@@ -2,7 +2,9 @@
 MANDIR = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man
 BASE_URL = https://manp.gs/mac/
 
-html = $(shell cd "$(MANDIR)" && find * ! -type d ! -name pcap_compile.3pcap.in | \
+html = $(shell cd "$(MANDIR)" && find * ! -type d \
+	! -name pcap_compile.3pcap.in \
+	! -name TextureProcessorMetal.metallib | \
 	sed -E '\
 		s/^[^/]*\/|\.gz$$//g; \
 		s/(\.[1n])tcl$$/\1/; \

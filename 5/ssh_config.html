@@ -35,7 +35,7 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $OpenBSD: ssh_config.5,v 1.391 2023/10/12 02:18:18 djm Exp $
+   $OpenBSD: ssh_config.5,v 1.396 2024/06/17 08:30:29 djm Exp $
  -->
 <head>
   <meta charset="utf-8"/>
@@ -118,7 +118,7 @@
       keywords are: <code class="Cm">canonical</code>,
       <code class="Cm">final</code>, <code class="Cm">exec</code>,
       <code class="Cm">localnetwork</code>, <code class="Cm">host</code>,
-      <code class="Cm">originalhost</code>, <code class="Cm">Tag</code>,
+      <code class="Cm">originalhost</code>, <code class="Cm">tagged</code>,
       <code class="Cm">user</code>, and <code class="Cm">localuser</code>. The
       <code class="Cm">all</code> criteria must appear alone or immediately
       after <code class="Cm">canonical</code> or <code class="Cm">final</code>.
@@ -306,15 +306,21 @@ rsa-sha2-512,rsa-sha2-256</pre>
   <dd>Specifies whether and how quickly <a class="Xr" href="../1/ssh">ssh(1)</a>
       should close inactive channels. Timeouts are specified as one or more
       &#x201C;type=interval&#x201D; pairs separated by whitespace, where the
-      &#x201C;type&#x201D; must be a channel type name (as described in the
-      table below), optionally containing wildcard characters.
+      &#x201C;type&#x201D; must be the special keyword &#x201C;global&#x201D; or
+      a channel type name from the list below, optionally containing wildcard
+      characters.
     <p class="Pp">The timeout value &#x201C;interval&#x201D; is specified in
         seconds or may use any of the units documented in the
         <a class="Sx" href="#TIME_FORMATS">TIME FORMATS</a> section. For
-        example, &#x201C;session=5m&#x201D; would cause the interactive session
-        to terminate after five minutes of inactivity. Specifying a zero value
+        example, &#x201C;session=5m&#x201D; would cause interactive sessions to
+        terminate after five minutes of inactivity. Specifying a zero value
         disables the inactivity timeout.</p>
-    <p class="Pp">The available channel types include:</p>
+    <p class="Pp">The special timeout &#x201C;global&#x201D; applies to all
+        active channels, taken together. Traffic on any active channel will
+        reset the timeout, but when the timeout expires then all open channels
+        will be closed. Note that this global timeout is not matched by
+        wildcards and must be specified explicitly.</p>
+    <p class="Pp">The available channel type names include:</p>
     <dl class="Bl-tag">
       <dt id="agent-connection"><a class="permalink" href="#agent-connection"><code class="Cm">agent-connection</code></a></dt>
       <dd>Open connections to
@@ -739,18 +745,17 @@ rsa-sha2-512,rsa-sha2-256</pre>
         section.</p>
   </dd>
   <dt id="IdentityFile"><a class="permalink" href="#IdentityFile"><code class="Cm">IdentityFile</code></a></dt>
-  <dd>Specifies a file from which the user's DSA, ECDSA, authenticator-hosted
-      ECDSA, Ed25519, authenticator-hosted Ed25519 or RSA authentication
-      identity is read. You can also specify a public key file to use the
-      corresponding private key that is loaded in
+  <dd>Specifies a file from which the user's ECDSA, authenticator-hosted ECDSA,
+      Ed25519, authenticator-hosted Ed25519 or RSA authentication identity is
+      read. You can also specify a public key file to use the corresponding
+      private key that is loaded in
       <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a> when the private key
       file is not present locally. The default is
       <span class="Pa">~/.ssh/id_rsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa_sk</span>,
-      <span class="Pa">~/.ssh/id_ed25519</span>,
-      <span class="Pa">~/.ssh/id_ed25519_sk</span> and
-      <span class="Pa">~/.ssh/id_dsa</span>. Additionally, any identities
+      <span class="Pa">~/.ssh/id_ed25519</span> and
+      <span class="Pa">~/.ssh/id_ed25519_sk</span>. Additionally, any identities
       represented by the authentication agent will be used for authentication
       unless <code class="Cm">IdentitiesOnly</code> is set. If no certificates
       have been explicitly specified by <code class="Cm">CertificateFile</code>,
@@ -831,15 +836,19 @@ rsa-sha2-512,rsa-sha2-256</pre>
       on what the server supports. For an OpenSSH server, it may be zero or more
       of: <code class="Cm">bsdauth</code> and <code class="Cm">pam</code>.</dd>
   <dt id="KexAlgorithms"><a class="permalink" href="#KexAlgorithms"><code class="Cm">KexAlgorithms</code></a></dt>
-  <dd>Specifies the available KEX (Key Exchange) algorithms. Multiple algorithms
-      must be comma-separated. If the specified list begins with a
-      &#x2018;+&#x2019; character, then the specified algorithms will be
-      appended to the default set instead of replacing them. If the specified
-      list begins with a &#x2018;-&#x2019; character, then the specified
-      algorithms (including wildcards) will be removed from the default set
-      instead of replacing them. If the specified list begins with a
-      &#x2018;^&#x2019; character, then the specified algorithms will be placed
-      at the head of the default set. The default is:
+  <dd>Specifies the permitted KEX (Key Exchange) algorithms that will be used
+      and their preference order. The selected algorithm will the the first
+      algorithm in this list that the server also supports. Multiple algorithms
+      must be comma-separated.
+    <p class="Pp">If the specified list begins with a &#x2018;+&#x2019;
+        character, then the specified algorithms will be appended to the default
+        set instead of replacing them. If the specified list begins with a
+        &#x2018;-&#x2019; character, then the specified algorithms (including
+        wildcards) will be removed from the default set instead of replacing
+        them. If the specified list begins with a &#x2018;^&#x2019; character,
+        then the specified algorithms will be placed at the head of the default
+        set.</p>
+    <p class="Pp">The default is:</p>
     <div class="Bd Pp Bd-indent Li">
     <pre>sntrup761x25519-sha512@openssh.com,
 curve25519-sha256,curve25519-sha256@libssh.org,
@@ -849,7 +858,7 @@ diffie-hellman-group16-sha512,
 diffie-hellman-group18-sha512,
 diffie-hellman-group14-sha256</pre>
     </div>
-    <p class="Pp">The list of available key exchange algorithms may also be
+    <p class="Pp">The list of supported key exchange algorithms may also be
         obtained using &quot;ssh -Q kex&quot;.</p>
   </dd>
   <dt id="KnownHostsCommand"><a class="permalink" href="#KnownHostsCommand"><code class="Cm">KnownHostsCommand</code></a></dt>
@@ -1605,8 +1614,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">October 12, 2023</td>
-    <td class="foot-os">macOS 14.6</td>
+    <td class="foot-date">June 17, 2024</td>
+    <td class="foot-os">macOS 15.0</td>
   </tr>
 </table>
 </body>
