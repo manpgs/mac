@@ -128,15 +128,6 @@
       Example: vim &quot;+set si&quot; main.c
     <br/>
     Note: You can use up to 10 &quot;+&quot; or &quot;-c&quot; commands.</dd>
-  <dt id="S"><a class="permalink" href="#S">-S {file}</a></dt>
-  <dd>{file} will be sourced after the first file has been read. This is
-      equivalent to -c &quot;source {file}&quot;. {file} cannot start with '-'.
-      If {file} is omitted &quot;Session.vim&quot; is used (only works when -S
-      is the last argument).</dd>
-  <dt id="cmd"><a class="permalink" href="#cmd">--cmd {command}</a></dt>
-  <dd>Like using &quot;-c&quot;, but the command is executed just before
-      processing any vimrc file. You can use up to 10 of these commands,
-      independently from &quot;-c&quot; commands.</dd>
   <dt id="A"><a class="permalink" href="#A">-A</a></dt>
   <dd>If <b>Vim</b> has been compiled with ARABIC support for editing
       right-to-left oriented files and Arabic keyboard mapping, this option
@@ -152,7 +143,7 @@
   <dd>Start in diff mode. There should between two to eight file name arguments.
       <b>Vim</b> will open all the files and show differences between them.
       Works like vimdiff(1).</dd>
-  <dt>-d {device}</dt>
+  <dt>-d {device}, -dev {device}</dt>
   <dd>Open {device} for use as a terminal. Only on the Amiga. Example: &quot;-d
       con:20/30/600/150&quot;.</dd>
   <dt id="D"><a class="permalink" href="#D">-D</a></dt>
@@ -171,21 +162,17 @@
       by a program that will wait for the edit session to finish (e.g. mail). On
       the Amiga the &quot;:sh&quot; and &quot;:!&quot; commands will not
     work.</dd>
-  <dt id="nofork"><a class="permalink" href="#nofork">--nofork</a></dt>
-  <dd>Foreground. For the GUI version, <b>Vim</b> will not fork and detach from
-      the shell it was started in.</dd>
   <dt id="F"><a class="permalink" href="#F">-F</a></dt>
   <dd>If <b>Vim</b> has been compiled with FKMAP support for editing
       right-to-left oriented files and Farsi keyboard mapping, this option
       starts <b>Vim</b> in Farsi mode, i.e. 'fkmap' and 'rightleft' are set.
-      Otherwise an error message is given and <b>Vim</b> aborts.</dd>
+      Otherwise an error message is given and <b>Vim</b> aborts.
+    <br/>
+    Note: Farsi support has been removed in patch 8.1.0932.</dd>
   <dt id="g"><a class="permalink" href="#g">-g</a></dt>
   <dd>If <b>Vim</b> has been compiled with GUI support, this option enables the
       GUI. If no GUI support was compiled in, an error message is given and
       <b>Vim</b> aborts.</dd>
-  <dt id="h"><a class="permalink" href="#h">-h</a></dt>
-  <dd>Give a bit of help about the command line arguments and options. After
-      this <b>Vim</b> exits.</dd>
   <dt id="H"><a class="permalink" href="#H">-H</a></dt>
   <dd>If <b>Vim</b> has been compiled with RIGHTLEFT support for editing
       right-to-left oriented files and Hebrew keyboard mapping, this option
@@ -196,10 +183,10 @@
       instead of the default &quot;~/.viminfo&quot;. This can also be used to
       skip the use of the .viminfo file, by giving the name
     &quot;NONE&quot;.</dd>
-  <dt id="L"><a class="permalink" href="#L">-L</a></dt>
-  <dd>Same as -r.</dd>
   <dt id="l"><a class="permalink" href="#l">-l</a></dt>
   <dd>Lisp mode. Sets the 'lisp' and 'showmatch' options on.</dd>
+  <dt id="L"><a class="permalink" href="#L">-L</a></dt>
+  <dd>Same as -r.</dd>
   <dt id="m"><a class="permalink" href="#m">-m</a></dt>
   <dd>Modifying files is disabled. Resets the 'write' option. You can still
       modify the buffer, but writing a file is not possible.</dd>
@@ -207,15 +194,15 @@
   <dd>Modifications not allowed. The 'modifiable' and 'write' options will be
       unset, so that changes are not allowed and files can not be written. Note
       that these options can be set to enable making modifications.</dd>
-  <dt id="N"><a class="permalink" href="#N">-N</a></dt>
-  <dd>No-compatible mode. Resets the 'compatible' option. This will make
-      <b>Vim</b> behave a bit better, but less Vi compatible, even though a
-      .vimrc file does not exist.</dd>
   <dt id="n"><a class="permalink" href="#n">-n</a></dt>
   <dd>No swap file will be used. Recovery after a crash will be impossible.
       Handy if you want to edit a file on a very slow medium (e.g. floppy). Can
       also be done with &quot;:set uc=0&quot;. Can be undone with &quot;:set
       uc=200&quot;.</dd>
+  <dt id="N"><a class="permalink" href="#N">-N</a></dt>
+  <dd>No-compatible mode. Resets the 'compatible' option. This will make
+      <b>Vim</b> behave a bit better, but less Vi compatible, even though a
+      .vimrc file does not exist.</dd>
   <dt id="nb"><a class="permalink" href="#nb">-nb</a></dt>
   <dd>Become an editor server for NetBeans. See the docs for details.</dd>
   <dt id="o_N_"><a class="permalink" href="#o_N_">-o[N]</a></dt>
@@ -226,6 +213,19 @@
       file.</dd>
   <dt id="p_N_"><a class="permalink" href="#p_N_">-p[N]</a></dt>
   <dd>Open N tab pages. When N is omitted, open one tab page for each file.</dd>
+  <dt id="P"><a class="permalink" href="#P">-P {parent-title}</a></dt>
+  <dd>Win32 GUI only: Specify the title of the parent application. When
+      possible, Vim will run in an MDI window inside the application.
+      {parent-title} must appear in the window title of the parent application.
+      Make sure that it is specific enough. Note that the implementation is
+      still primitive. It won't work with all applications and the menu doesn't
+      work.</dd>
+  <dt id="r"><a class="permalink" href="#r">-r</a></dt>
+  <dd>List swap files, with information about using them for recovery.</dd>
+  <dt>-r {file}</dt>
+  <dd>Recovery mode. The swap file is used to recover a crashed editing session.
+      The swap file is a file with the same filename as the text file with
+      &quot;.swp&quot; appended. See &quot;:help recovery&quot;.</dd>
   <dt id="R"><a class="permalink" href="#R">-R</a></dt>
   <dd>Read-only mode. The 'readonly' option will be set. You can still edit the
       buffer, but will be prevented from accidentally overwriting a file. If you
@@ -233,12 +233,6 @@
       in &quot;:w!&quot;. The -R option also implies the -n option (see above).
       The 'readonly' option can be reset with &quot;:set noro&quot;. See
       &quot;:help 'readonly'&quot;.</dd>
-  <dt id="r"><a class="permalink" href="#r">-r</a></dt>
-  <dd>List swap files, with information about using them for recovery.</dd>
-  <dt>-r {file}</dt>
-  <dd>Recovery mode. The swap file is used to recover a crashed editing session.
-      The swap file is a file with the same filename as the text file with
-      &quot;.swp&quot; appended. See &quot;:help recovery&quot;.</dd>
   <dt id="s"><a class="permalink" href="#s">-s</a></dt>
   <dd>Silent mode. Only when started as &quot;Ex&quot; or when the
       &quot;-e&quot; option was given before the &quot;-s&quot; option.</dd>
@@ -248,6 +242,11 @@
       command &quot;:source! {scriptin}&quot;. If the end of the file is reached
       before the editor exits, further characters are read from the
     keyboard.</dd>
+  <dt id="S"><a class="permalink" href="#S">-S {file}</a></dt>
+  <dd>{file} will be sourced after the first file has been read. This is
+      equivalent to -c &quot;source {file}&quot;. {file} cannot start with '-'.
+      If {file} is omitted &quot;Session.vim&quot; is used (only works when -S
+      is the last argument).</dd>
   <dt id="T"><a class="permalink" href="#T">-T {terminal}</a></dt>
   <dd>Tells <b>Vim</b> the name of the terminal you are using. Only required
       when the automatic way doesn't work. Should be a terminal known to
@@ -263,14 +262,20 @@
       other GUI initializations are skipped. It can also be used to skip all GUI
       initializations by giving the name &quot;NONE&quot;. See &quot;:help
       gui-init&quot; within vim for more details.</dd>
-  <dt id="V_N_"><a class="permalink" href="#V_N_">-V[N]</a></dt>
-  <dd>Verbose. Give messages about which files are sourced and for reading and
-      writing a viminfo file. The optional number N is the value for 'verbose'.
-      Default is 10.</dd>
   <dt id="v"><a class="permalink" href="#v">-v</a></dt>
   <dd>Start <b>Vim</b> in Vi mode, just like the executable was called
       &quot;vi&quot;. This only has effect when the executable is called
       &quot;ex&quot;.</dd>
+  <dt id="V_N_"><a class="permalink" href="#V_N_">-V[N]</a></dt>
+  <dd>Verbose. Give messages about which files are sourced and for reading and
+      writing a viminfo file. The optional number N is the value for 'verbose'.
+      Default is 10.</dd>
+  <dt id="V_N__filename_"><a class="permalink" href="#V_N__filename_">-V[N]{filename}</a></dt>
+  <dd>Like -V and set 'verbosefile' to {filename}. The result is that messages
+      are not displayed but written to the file {filename}. {filename} must not
+      start with a digit.</dd>
+  <dt id="w_number_"><a class="permalink" href="#w_number_">-w{number}</a></dt>
+  <dd>Set the 'window' option to {number}.</dd>
   <dt id="w"><a class="permalink" href="#w">-w {scriptout}</a></dt>
   <dd>All the characters that you type are recorded in the file {scriptout},
       until you exit <b>Vim.</b> This is useful if you want to create a script
@@ -279,7 +284,8 @@
   <dt id="W"><a class="permalink" href="#W">-W {scriptout}</a></dt>
   <dd>Like -w, but an existing file is overwritten.</dd>
   <dt id="x"><a class="permalink" href="#x">-x</a></dt>
-  <dd>Use encryption when writing files. Will prompt for a crypt key.</dd>
+  <dd>If <b>Vim</b> has been compiled with encryption support, use encryption
+      when writing files. Will prompt for a crypt key.</dd>
   <dt id="X"><a class="permalink" href="#X">-X</a></dt>
   <dd>Don't connect to the X server. Shortens startup time in a terminal, but
       the window title and clipboard will not be used.</dd>
@@ -296,15 +302,37 @@
   <dt id="clean"><a class="permalink" href="#clean">--clean</a></dt>
   <dd>Do not use any personal configuration (vimrc, plugins, etc.). Useful to
       see if a problem reproduces with a clean Vim setup.</dd>
+  <dt id="cmd"><a class="permalink" href="#cmd">--cmd {command}</a></dt>
+  <dd>Like using &quot;-c&quot;, but the command is executed just before
+      processing any vimrc file. You can use up to 10 of these commands,
+      independently from &quot;-c&quot; commands.</dd>
   <dt id="echo"><a class="permalink" href="#echo">--echo-wid</a></dt>
   <dd>GTK GUI only: Echo the Window ID on stdout.</dd>
-  <dt id="help"><a class="permalink" href="#help">--help</a></dt>
-  <dd>Give a help message and exit, just like &quot;-h&quot;.</dd>
+  <dt id="gui"><a class="permalink" href="#gui">--gui-dialog-file
+    {name}</a></dt>
+  <dd>When using the GUI, instead of showing a dialog, write the title and
+      message of the dialog to file {name}. The file is created or appended to.
+      Only useful for testing, to avoid that the test gets stuck on a dialog
+      that can't be seen. Without the GUI the argument is ignored.</dd>
+  <dt id="help,"><a class="permalink" href="#help,">--help, -h, -?</a></dt>
+  <dd>Give a bit of help about the command line arguments and options. After
+      this <b>Vim</b> exits.</dd>
   <dt id="literal"><a class="permalink" href="#literal">--literal</a></dt>
   <dd>Take file name arguments literally, do not expand wildcards. This has no
       effect on Unix where the shell expands wildcards.</dd>
+  <dt id="log"><a class="permalink" href="#log">--log {filename}</a></dt>
+  <dd>If <b>Vim</b> has been compiled with eval and channel feature, start
+      logging and write entries to {filename}. This works like calling
+      <i>ch_logfile({filename}, 'ao')</i> very early during startup.</dd>
+  <dt id="nofork"><a class="permalink" href="#nofork">--nofork</a></dt>
+  <dd>Foreground. For the GUI version, <b>Vim</b> will not fork and detach from
+      the shell it was started in.</dd>
   <dt id="noplugin"><a class="permalink" href="#noplugin">--noplugin</a></dt>
   <dd>Skip loading plugins. Implied by -u NONE.</dd>
+  <dt id="not"><a class="permalink" href="#not">--not-a-term</a></dt>
+  <dd>Tells <b>Vim</b> that the user knows that the input and/or output is not
+      connected to a terminal. This will avoid the warning and the two second
+      delay that would happen.</dd>
   <dt id="remote"><a class="permalink" href="#remote">--remote</a></dt>
   <dd>Connect to a Vim server and make it edit the files given in the rest of
       the arguments. If no server is found a warning is given and the files are
@@ -328,13 +356,19 @@
       a --remote argument, then it's the name of the server to connect to.</dd>
   <dt id="socketid"><a class="permalink" href="#socketid">--socketid
     {id}</a></dt>
-  <dd>GTK GUI only: Use the GtkPlug mechanism to run gvim in another
+  <dd>GTK GUI only: Use the GtkPlug mechanism to run gVim in another
     window.</dd>
   <dt id="startuptime"><a class="permalink" href="#startuptime">--startuptime
     {file}</a></dt>
   <dd>During startup write timing messages to the file {fname}.</dd>
+  <dt id="ttyfail"><a class="permalink" href="#ttyfail">--ttyfail</a></dt>
+  <dd>When stdin or stdout is not a a terminal (tty) then exit right away.</dd>
   <dt id="version"><a class="permalink" href="#version">--version</a></dt>
   <dd>Print version information and exit.</dd>
+  <dt id="windowid"><a class="permalink" href="#windowid">--windowid
+    {id}</a></dt>
+  <dd>Win32 GUI only: Make gVim try to use the window {id} as a parent, so that
+      it runs inside that window.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -352,38 +386,40 @@
 <section class="Sh">
 <h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
 <dl class="Bl-tag">
-  <dt>/usr/local/lib/vim/doc/*.txt</dt>
+  <dt>/usr/local/share/vim/vim??/doc/*.txt</dt>
   <dd>The <b>Vim</b> documentation files. Use &quot;:help doc-file-list&quot; to
-      get the complete list.</dd>
-  <dt>/usr/local/lib/vim/doc/tags</dt>
+      get the complete list.
+    <br/>
+    <i>vim??</i> is short version number, like vim91 for <b>Vim 9.1</b></dd>
+  <dt>/usr/local/share/vim/vim??/doc/tags</dt>
   <dd>The tags file used for finding information in the documentation
     files.</dd>
-  <dt>/usr/local/lib/vim/syntax/syntax.vim</dt>
+  <dt>/usr/local/share/vim/vim??/syntax/syntax.vim</dt>
   <dd>System wide syntax initializations.</dd>
-  <dt>/usr/local/lib/vim/syntax/*.vim</dt>
+  <dt>/usr/local/share/vim/vim??/syntax/*.vim</dt>
   <dd>Syntax files for various languages.</dd>
-  <dt>/usr/local/lib/vim/vimrc</dt>
+  <dt>/usr/local/share/vim/vimrc</dt>
   <dd>System wide <b>Vim</b> initializations.</dd>
-  <dt>~/.vimrc</dt>
-  <dd>Your personal <b>Vim</b> initializations.</dd>
-  <dt>/usr/local/lib/vim/gvimrc</dt>
+  <dt>~/.vimrc, ~/.vim/vimrc, $XDG_CONFIG_HOME/vim/vimrc</dt>
+  <dd>Your personal <b>Vim</b> initializations (first one found is used).</dd>
+  <dt>/usr/local/share/vim/gvimrc</dt>
   <dd>System wide gvim initializations.</dd>
-  <dt>~/.gvimrc</dt>
-  <dd>Your personal gvim initializations.</dd>
-  <dt>/usr/local/lib/vim/optwin.vim</dt>
+  <dt>~/.gvimrc, ~/.vim/gvimrc, $XDG_CONFIG_HOME/vim/gvimrc</dt>
+  <dd>Your personal <b>gVim</b> initializations (first one found is used).</dd>
+  <dt>/usr/local/share/vim/vim??/optwin.vim</dt>
   <dd>Script used for the &quot;:options&quot; command, a nice way to view and
       set options.</dd>
-  <dt>/usr/local/lib/vim/menu.vim</dt>
-  <dd>System wide menu initializations for gvim.</dd>
-  <dt>/usr/local/lib/vim/bugreport.vim</dt>
+  <dt>/usr/local/share/vim/vim??/menu.vim</dt>
+  <dd>System wide menu initializations for <b>gVim.</b></dd>
+  <dt>/usr/local/share/vim/vim??/bugreport.vim</dt>
   <dd>Script to generate a bug report. See &quot;:help bugs&quot;.</dd>
-  <dt>/usr/local/lib/vim/filetype.vim</dt>
+  <dt>/usr/local/share/vim/vim??/filetype.vim</dt>
   <dd>Script to detect the type of a file by its name. See &quot;:help
       'filetype'&quot;.</dd>
-  <dt>/usr/local/lib/vim/scripts.vim</dt>
+  <dt>/usr/local/share/vim/vim??/scripts.vim</dt>
   <dd>Script to detect the type of a file by its contents. See &quot;:help
       'filetype'&quot;.</dd>
-  <dt>/usr/local/lib/vim/print/*.ps</dt>
+  <dt>/usr/local/share/vim/vim??/print/*.ps</dt>
   <dd>Files used for PostScript printing.</dd>
 </dl>
 <p class="Pp">For recent info read the VIM home page:
@@ -417,7 +453,7 @@
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">2021 Jun 13</td>
+    <td class="foot-date">2024 Aug 12</td>
     <td class="foot-os"></td>
   </tr>
 </table>

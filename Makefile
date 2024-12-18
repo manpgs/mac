@@ -20,7 +20,7 @@ dirs = $(shell cd "$(MANDIR)" && printf "%s\n" * 1m 3G 3cc 3pcap 3pm 3tcl 3x | \
 MANDIRS=$(shell cat mandirs || :)
 
 all: mandirs $(dirs) index.html
-	for dir in $(MANDIRS); do $(MAKE) MANDIR=$$dir html; done
+	set -eu; for dir in $(MANDIRS); do $(MAKE) MANDIR=$$dir html; done
 	$(MAKE) sitemap.xml
 
 mandirs:
@@ -185,6 +185,9 @@ sitemap.xml:
 	$(BUILD)
 
 8/silhouette.html: $(MANDIR)/man1/silhouette.8
+	$(BUILD)
+
+8/usbctelemetryd.html: $(MANDIR)/man1/usbctelemetryd.8
 	$(BUILD)
 
 # Sections
