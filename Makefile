@@ -45,6 +45,7 @@ BUILD=$(CMD) > "$@"
 template = <!doctype html>\n<html lang="en">\n\
 \40<head>\n\
 \40\40\40<meta charset="utf-8">\n\
+\40\40\40<meta name="viewport" content="width=device-width, initial-scale=1.0">\n\
 \40\40\40<title>%s</title>\n\
 \40\40\40<link rel="stylesheet" href="%s">\n\
 \40</head>\n\
