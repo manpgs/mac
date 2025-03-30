@@ -1,46 +1,52 @@
+AWK = awk
+FIND = find
+MAKEWHATIS = /usr/libexec/makewhatis
+MANDOC = mandoc
+MKDIR_P = mkdir -p
+SED = sed
+
+BASE_URL = https://manp.gs/mac/
 # MANDIR=/usr/share/man
 MANDIR = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man
-BASE_URL = https://manp.gs/mac/
+MANDIRS = $(shell cat mandirs || :)
 
-html = $(shell cd "$(MANDIR)" && find * ! -type d \
+html = $(shell cd "$(MANDIR)" && $(FIND) * ! -type d \
 	! -name pcap_compile.3pcap.in \
 	! -name TextureProcessorMetal.metallib | \
-	sed -E '\
+	$(SED) -E '\
 		s/^[^/]*\/|\.gz$$//g; \
 		s/(\.[1n])tcl$$/\1/; \
-		s|Parse::Yapp.*\.3$$|&pm|; \
-		s|^index\.3$$|-&|; \
+		s/Parse::Yapp.*\.3$$/&pm/; \
+		s/^index\.3$$/-&/; \
 		s|(.*)\.([^.]*$$)|\2/\1.html|; \
-		s|[: ]|\\&|g; \
+		s/[: ]/\\&/g; \
 	')
 
 dirs = $(shell cd "$(MANDIR)" && printf "%s\n" * 1m 3G 3cc 3pcap 3pm 3tcl 3x | \
-	sed 's/man//g' | sort)
-
-MANDIRS=$(shell cat mandirs || :)
+	$(SED) 's/man//g' | sort)
 
 all: mandirs $(dirs) index.html
 	set -eu; for dir in $(MANDIRS); do $(MAKE) MANDIR=$$dir html; done
 	$(MAKE) sitemap.xml
 
 mandirs:
-	-find /Applications/Xcode.app -path '*/share/man' >mandirs
+	-$(FIND) /Applications/Xcode.app -path '*/share/man' >mandirs
 
 html: $(html)
 
 whatis: mandirs
-	/usr/libexec/makewhatis -o "$@" $(MANDIRS)
+	$(MAKEWHATIS) -o "$@" $(MANDIRS)
 
 clean:
 	$(RM) -r $(dirs) index.html sitemap.xml whatis mandirs
 
 $(dirs):
-	mkdir -p "$@"
+	$(MKDIR_P) "$@"
 
-MANDOC=mandoc
-FLAGS=-Oman=../%S/%N,style=../style.css
-CMD=$(MANDOC) $(FLAGS) -Thtml "$<" | sed '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}'
-BUILD=$(CMD) > "$@"
+man2html = $(MANDOC) -Oman=../%S/%N,style=../style.css -Thtml "$<" | \
+	$(SED) '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}'
+
+convert = $(man2html) > "$@"
 
 template = <!doctype html>\n<html lang="en">\n\
 \40<head>\n\
@@ -93,7 +99,7 @@ sitemap.xml:
 		(echo "" && printf '%s/\n' $(dirs)) | while read dir; do \
 			printf "  <url><loc>%s%s</loc></url>\n" "$(BASE_URL)" "$$dir"; \
 		done; \
-		find $(dirs) -type f ! -name index.htm | sort | awk '{ \
+		$(FIND) $(dirs) -type f ! -name index.htm | sort | $(AWK) '{ \
 			sub(/\.[^.]+$$/, ""); \
 			gsub(/ /, "%20"); \
 			gsub(/\[/, "%5B"); \
@@ -110,18 +116,18 @@ sitemap.xml:
 		if [ "$$sect" = 1 ] || [ "$$sect" = n ]; then \
 			sect="$$sect\(tcl\)\{0,1\}"; \
 		fi; \
-		sed -n -e ' \
+		$(SED) -n -e ' \
 			h; \
 			s/ - /\n/; \
-			s|.*\n||; \
+			s/.*\n//; \
 			x; \
-			s| - .*||; \
+			s/ - .*//; \
 		' -e "/($$sect)/!b" -e ' \
 			s|\([^, ][^(]*\)([0-9n][^)]*)|<a href="./\1">&</a>|g; \
 			s|href="\./index"|href="./-index"| ; \
-			s|^|        <li>|; \
+			s/^/        <li>/; \
 			G; \
-			s|\n| \&mdash; |; \
+			s/\n/ \&mdash; /; \
 			s|$$|</li>|p; \
 		' whatis; \
 		printf '      </ul>\n' \
@@ -130,116 +136,116 @@ sitemap.xml:
 # Special cases
 
 1/[.html: $(MANDIR)/man1/[.1
-	$(BUILD)
+	$(convert)
 
 3/-index.html: $(MANDIR)/man3/index.3
-	$(BUILD)
+	$(convert)
 
 3/MPSCNNBatchNormalizationDataSource\ -p.html: $(MANDIR)/man3/MPSCNNBatchNormalizationDataSource\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSCNNConvolutionDataSource\ -p.html: $(MANDIR)/man3/MPSCNNConvolutionDataSource\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSCNNInstanceNormalizationDataSource\ -p.html: $(MANDIR)/man3/MPSCNNInstanceNormalizationDataSource\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSHandle\ -p.html: $(MANDIR)/man3/MPSHandle\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSImageAllocator\ -p.html: $(MANDIR)/man3/MPSImageAllocator\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSImageSizeEncodingState\ -p.html: $(MANDIR)/man3/MPSImageSizeEncodingState\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSImageTransformProvider\ -p.html: $(MANDIR)/man3/MPSImageTransformProvider\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSNNPadding\ -p.html: $(MANDIR)/man3/MPSNNPadding\ -p.3
-	$(BUILD)
+	$(convert)
 
 3/MPSNNTrainableNode\ -p.html: $(MANDIR)/man3/MPSNNTrainableNode\ -p.3
-	$(BUILD)
+	$(convert)
 
 3cc/Common\ Crypto.html: $(MANDIR)/man3/Common\ Crypto.3cc
-	$(BUILD)
+	$(convert)
 
 8/Keychain\ Circle\ Notification.html: $(MANDIR)/man8/Keychain\ Circle\ Notification.8
-	$(BUILD)
+	$(convert)
 
 8/Photo\ Library\ Migration\ Utility.html: $(MANDIR)/man8/Photo\ Library\ Migration\ Utility.8
-	$(BUILD)
+	$(convert)
 
 8/Script\ Menu.html: $(MANDIR)/man8/Script\ Menu.8
-	$(BUILD)
+	$(convert)
 
 8/bluetoothuserd.html: $(MANDIR)/man1/bluetoothuserd.8
-	$(BUILD)
+	$(convert)
 
 8/deleted_helper.html: $(MANDIR)/man1/deleted_helper.8
-	$(BUILD)
+	$(convert)
 
 8/securityuploadd.html: $(MANDIR)/man1/securityuploadd.8
-	$(BUILD)
+	$(convert)
 
 8/silhouette.html: $(MANDIR)/man1/silhouette.8
-	$(BUILD)
+	$(convert)
 
 8/usbctelemetryd.html: $(MANDIR)/man1/usbctelemetryd.8
-	$(BUILD)
+	$(convert)
 
 # Sections
 
 1m/%.html: $(MANDIR)/man1/%.1m
-	$(BUILD)
+	$(convert)
 
 1/%.html: $(MANDIR)/man1/%.1*
-	$(BUILD)
+	$(convert)
 
 2/%.html: $(MANDIR)/man2/%.2
-	$(BUILD)
+	$(convert)
 
 3/%.html: $(MANDIR)/man3/%.3
-	$(BUILD)
+	$(convert)
 
 3G/%.html: $(MANDIR)/man3/%.3G
-	$(BUILD)
+	$(convert)
 
 3cc/%.html: $(MANDIR)/man3/%.3cc
-	$(BUILD)
+	$(convert)
 
 3pcap/%.html: $(MANDIR)/man3/%.3pcap
-	$(BUILD)
+	$(convert)
 
 # files have colons in them
 3pm/%.html: $(MANDIR)/man3/%.3*
-	$(CMD) > $@
+	$(man2html) >$@
 
 3tcl/%.html: $(MANDIR)/man3/%.3tcl
-	$(BUILD)
+	$(convert)
 
 3x/%.html: $(MANDIR)/man3/%.3x
-	$(BUILD)
+	$(convert)
 
 4/%.html: $(MANDIR)/man4/%.4
-	$(BUILD)
+	$(convert)
 
 5/%.html: $(MANDIR)/man5/%.5*
-	$(BUILD)
+	$(convert)
 
 6/%.html: $(MANDIR)/man6/%.6
-	$(BUILD)
+	$(convert)
 
 7/%.html: $(MANDIR)/man7/%.7
-	$(BUILD)
+	$(convert)
 
 8/%.html: $(MANDIR)/man8/%.8
-	$(BUILD)
+	$(convert)
 
 9/%.html: $(MANDIR)/man9/%.9
-	$(BUILD)
+	$(convert)
 
 # some files have colons in them
 n/%.html: $(MANDIR)/mann/%.n*
-	$(CMD) > $@
+	$(man2html) >$@
