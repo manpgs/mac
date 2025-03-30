@@ -116,9 +116,7 @@ sitemap.xml:
 			s|.*\n||; \
 			x; \
 			s| - .*||; \
-		' -e 't clear' -e :clear -e ' \
-			s|('"$$sect"')|&|; \
-		' -e 't link' -e b -e :link -e '\
+		' -e "/($$sect)/!b" -e ' \
 			s|\([^, ][^(]*\)([0-9n][^)]*)|<a href="./\1">&</a>|g; \
 			s|href="\./index"|href="./-index"| ; \
 			s|^|        <li>|; \
