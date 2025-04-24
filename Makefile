@@ -97,8 +97,8 @@ index.html: $(addsuffix /index.htm,$(dirs))
 	printf '$(template)' "macOS man pages" "style.css" "macOS" "Manual Pages" "$$(\
 		printf '      <table class="sections">\n        <thead><tr><th>Section</th><th>Title</th></tr></thead>\n        <tbody>\n'; \
 		for s in $(dirs); do \
-			printf '          <tr><td><a href="%s">%s</a></td><td><a href="%s">%s</a></td></tr>\n' \
-				"$$s" "$$s" "$$s" "$$(desc "$$s")"; \
+			printf '          <tr><td>%s</td><td><a href="%s">%s</a></td></tr>\n' \
+				"$$s" "$$s" "$$(desc "$$s")"; \
 		done; \
 		printf '        </tbody>\n      </table>\n' \
 	)" > "$@"
