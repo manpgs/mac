@@ -44,7 +44,11 @@ $(dirs):
 	$(MKDIR_P) "$@"
 
 man2html = $(MANDOC) -Oman=../%S/%N,style=../style.css -Thtml "$<" | \
-	$(SED) '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}'
+	$(SED) '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}; \
+		s/<html>/<html lang="en">/; \
+		/head-vol/s|>\(.*\)<|><a href=".">\1</a><|; \
+		/foot-os/s|>\(.*\)<|><a href="..">\1</a><| \
+	'
 
 convert = $(man2html) > "$@"
 
@@ -56,8 +60,11 @@ template = <!doctype html>\n<html lang="en">\n\
 \40\40\40<link rel="stylesheet" href="%s">\n\
 \40</head>\n\
 \40<body>\n\
-\40\40\40<main>\n\
-\40\40\40\40\40<h1>%s</h1>\n%s\n\
+\40\40\40<header>\n\
+\40\40\40\40\40%s\n\
+\40\40\40\40\40<h1>%s</h1>\n\
+\40\40\40</header>\n\
+\40\40\40<main>\n%s\n\
 \40\40\40</main>\n\
 \40</body>\n</html>\n
 
@@ -87,16 +94,18 @@ esac; \
 
 index.html: $(addsuffix /index.htm,$(dirs))
 	$(desc) \
-	printf '$(template)' "macOS Manpages" "style.css" "macOS Manpages" "$$(\
+	printf '$(template)' "macOS man pages" "style.css" "macOS" "Manual Pages" "$$(\
+		printf '      <table class="sections">\n        <thead><tr><th>Section</th><th>Title</th></tr></thead>\n        <tbody>\n'; \
 		for s in $(dirs); do \
-			printf '      <h2><a href="%s">%s &mdash; %s</a></h2>\n' \
-				"$$s" "$$s" "$$(desc "$$s")"; \
+			printf '          <tr><td><a href="%s">%s</a></td><td><a href="%s">%s</a></td></tr>\n' \
+				"$$s" "$$s" "$$s" "$$(desc "$$s")"; \
 		done; \
+		printf '        </tbody>\n      </table>\n' \
 	)" > "$@"
 
 sitemap.xml:
 	printf '$(sitemap)' "$$(\
-		(echo "" && printf '%s/\n' $(dirs)) | while read dir; do \
+		(echo && printf '%s/\n' $(dirs)) | while read dir; do \
 			printf "  <url><loc>%s%s</loc></url>\n" "$(BASE_URL)" "$$dir"; \
 		done; \
 		$(FIND) $(dirs) -type f ! -name index.htm | sort | $(AWK) '{ \
@@ -110,27 +119,43 @@ sitemap.xml:
 %/index.htm: whatis
 	$(desc) \
 	sect=$$(dirname "$@"); \
-	printf '$(template)' "man$$sect &mdash; macOS Manpages" "../style.css" \
-		"<a href=\"../\">macOS</a> &mdash; $$(desc "$$sect")" "$$(\
-		printf '      <ul class="whatis">\n'; \
+	printf '$(template)' "man$$sect &middot; macOS" "../style.css" \
+		"$$(printf '<nav><a href="../" class="os">macOS</a><div class="section">man%s</div></nav>' "$$sect")" \
+		"$$(desc "$$sect")" "$$(\
+		printf '      <table class="whatis">\n        <thead><tr><th>Name</th><th>Summary</th></tr></thead>\n        <tbody>\n'; \
 		if [ "$$sect" = 1 ] || [ "$$sect" = n ]; then \
 			sect="$$sect\(tcl\)\{0,1\}"; \
 		fi; \
 		$(SED) -n -e ' \
+			s/</\&lt;/g; \
+			s/>/\&gt;/g; \
 			h; \
 			s/ - /\n/; \
 			s/.*\n//; \
 			x; \
 			s/ - .*//; \
 		' -e "/($$sect)/!b" -e ' \
+			s/"/\&quot;/g; \
 			s|\([^, ][^(]*\)([0-9n][^)]*)|<a href="./\1">&</a>|g; \
-			s|href="\./index"|href="./-index"| ; \
-			s/^/        <li>/; \
+		' -e ':percent' -e ' \
+			s|\(href="[^"]*\)%\([^2]\)|\1%25\2|g; \
+		' -e 't percent' -e ' \
+		' -e ':escape' -e ' \
+			s|\(href="[^"]*\) |\1%20|g; \
+			s|\(href="[^"]*\)&quot;|\1%22|g; \
+			s|\(href="[^"]*\)&lt;|\1%3C|g; \
+			s|\(href="[^"]*\)&gt;|\1%3E|g; \
+			s|\(href="[^"]*\)\[|\1%5B|g; \
+			s|\(href="[^"]*\){|\1%7B|g; \
+			s|\(href="[^"]*\)}|\1%7D|g; \
+		' -e 't escape' -e ' \
+			s|href="\./index"|href="./-index"|; \
+			s|^|          <tr><td class="names">|; \
 			G; \
-			s/\n/ \&mdash; /; \
-			s|$$|</li>|p; \
+			s|\n|</td><td class="summary">|; \
+			s|$$|</td></tr>|p; \
 		' whatis; \
-		printf '      </ul>\n' \
+		printf '        </tbody>\n      </table>\n' \
 	)" > "$@"
 
 # Special cases
