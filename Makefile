@@ -31,6 +31,7 @@ all: mandirs $(dirs) index.html
 
 mandirs:
 	-$(FIND) /Applications/Xcode.app -path '*/share/man' >mandirs
+	-echo /System/Cryptexes/App/usr/share/man >>mandirs
 
 html: $(html)
 

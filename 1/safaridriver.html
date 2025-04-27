@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- This is an automatically generated file.  Do not edit.
+   DATE
+ -->
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SAFARIDRIVER(1)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SAFARIDRIVER(1)</td>
+    <td class="head-vol"><a href=".">General Commands Manual</a></td>
+    <td class="head-rtitle">SAFARIDRIVER(1)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">safaridriver</code> &#x2014;
+    <span class="Nd">Safari WebDriver REST API service</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">safaridriver</code></td>
+    <td><code class="Fl">-p</code> <var class="Ar">port</var>
+      [<code class="Fl">-h</code> | <code class="Fl">--help</code>]
+      [<code class="Fl">--version</code>] [<code class="Fl">--enable</code>]
+      [<code class="Fl">--diagnose</code>]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The <code class="Nm">safaridriver</code> utility is used to launch
+    an HTTP server that implements the Selenium WebDriver REST API. When
+    launched, <code class="Nm">safaridriver</code> allows for automated testing
+    of web content using the version of Safari that is installed with macOS.</p>
+<p class="Pp"><code class="Nm">safaridriver</code> supports several capabilities
+    that can customize an automation session's behavior for a particular testing
+    purpose. Capabilities are provided as arguments when requesting a new
+    session. The capabilities supported by <code class="Nm">safaridriver</code>
+    are listed in the <a class="Sx" href="#OPTIONS">OPTIONS</a> section below.
+    Unless noted below, the values of requested capability keys are not read and
+    are assumed to be true if present, and false otherwise.</p>
+<p class="Pp">To use capabilities in your tests, please refer to the relevant
+    3rd-party documentation to learn how to request extra capabilities with the
+    WebDriver client library that you are using.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<section class="Ss">
+<h2 class="Ss" id="Command_line_options"><a class="permalink" href="#Command_line_options">Command
+  line options</a></h2>
+<dl class="Bl-tag">
+  <dt id="p"><a class="permalink" href="#p"><code class="Fl">-p</code></a>,
+    <code class="Fl">--</code><var class="Ar">port</var>
+    &#x27E8;<var class="Ar">port</var>&#x27E9;</dt>
+  <dd>Specifies the port on which the HTTP server should listen for incoming
+      connections. If the port is already in use or otherwise unavailable,
+      <code class="Nm">safaridriver</code> will exit immediately with a non-zero
+      return code.</dd>
+  <dt id="h,"><a class="permalink" href="#h,"><code class="Fl">-h,</code></a>
+    <code class="Fl">--help</code></dt>
+  <dd>Prints a usage message and exits.</dd>
+  <dt id="version"><a class="permalink" href="#version"><code class="Fl">--version</code></a></dt>
+  <dd>Prints version information and exits.</dd>
+  <dt id="enable"><a class="permalink" href="#enable"><code class="Fl">--enable</code></a></dt>
+  <dd>Applies configuration changes so that subsequent WebDriver sessions will
+      run without further authentication. This includes checking &quot;Enable
+      Remote Automation&quot; in Safari's <i class="Em">Develop</i> menu. The
+      user must authenticate via password for the changes to be applied.
+    <p class="Pp">When this option is specified,
+        <code class="Nm">safaridriver</code> exits immediately without starting
+        up the REST API service. If the changes were successful or already
+        applied, <code class="Nm">safaridriver</code> exits 0; otherwise,
+        <code class="Nm">safaridriver</code> exits &gt;0 and prints an error
+        message to stderr.</p>
+  </dd>
+  <dt id="diagnose"><a class="permalink" href="#diagnose"><code class="Fl">--diagnose</code></a></dt>
+  <dd>Enables diagnostic logging for all sessions hosted by this
+      <code class="Nm">safaridriver</code> instance. See
+      <a class="Sx" href="#DIAGNOSTICS">DIAGNOSTICS</a> for more
+    information.</dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Session_Creation_Capabilities"><a class="permalink" href="#Session_Creation_Capabilities">Session
+  Creation Capabilities</a></h2>
+<dl class="Bl-tag">
+  <dt><var class="Ar">browserName</var></dt>
+  <dd><code class="Nm">safaridriver</code> can only create WebDriver sessions
+      for Safari. If the value of <i class="Em">browserName</i> is not equal to
+      `Safari', session creation will fail.
+    <p class="Pp">Values of <i class="Em">browserName</i> are compared
+        case-insensitively.</p>
+  </dd>
+  <dt><var class="Ar">browserVersion</var></dt>
+  <dd><code class="Nm">safaridriver</code> will only create a session using
+      hosts whose Safari version matches the value of
+      <i class="Em">browserVersion</i>.
+    <p class="Pp">Browser version numbers are prefix-matched. For example, if
+        the value of <i class="Em">browserVersion</i> is `12', this will allow
+        hosts with a Safari version of `12.0.1' or `12.1`.</p>
+  </dd>
+  <dt><var class="Ar">platformName</var></dt>
+  <dd>If the value of <i class="Em">platformName</i> is `mac' or `macOS',
+      <code class="Nm">safaridriver</code> will only create a session using the
+      macOS host on which <code class="Nm">safaridriver</code> is running.
+    <p class="Pp">If the value of <i class="Em">platformName</i> is `iOS',
+        <code class="Nm">safaridriver</code> will only create a session on a
+        paired iOS device or simulator.</p>
+    <p class="Pp">Values of <i class="Em">platformName</i> are compared
+        case-insensitively.</p>
+  </dd>
+  <dt><var class="Ar">safari:platformVersion</var></dt>
+  <dd><code class="Nm">safaridriver</code> will only create a session using
+      hosts whose OS version matches the value of
+      <i class="Em">safari:platformVersion</i>.
+    <p class="Pp">OS version numbers are prefix-matched. For example, if the
+        value of <i class="Em">safari:platformVersion</i> is `12', this will
+        allow hosts with an OS version of `12.0' or `12.1' but not `10.12'.</p>
+  </dd>
+  <dt id="safari:platformBuildVersion"><var class="Ar">safari:platformBuildVersion</var></dt>
+  <dd><code class="Nm">safaridriver</code> will only create a session using
+      hosts whose OS build version matches the value of
+      <a class="permalink" href="#safari:platformBuildVersion"><i class="Em">safari:platformBuildVersion</i></a>.
+      <span class="An">example of a macOS build version is `18E193'.</span>
+    <p class="Pp">On macOS, the OS build version can be determined by running
+        the <a class="Xr" href="../1/sw_vers">sw_vers(1)</a> utility.</p>
+  </dd>
+  <dt><var class="Ar">safari:useSimulator</var></dt>
+  <dd>If the value of <i class="Em">safari:useSimulator</i> is
+      <code class="Dv">true</code>, <code class="Nm">safaridriver</code> will
+      only use iOS Simulator hosts.
+    <p class="Pp">If the value of <i class="Em">safari:useSimulator</i> is
+        <code class="Dv">false</code>, <code class="Nm">safaridriver</code> will
+        not use iOS Simulator hosts.</p>
+    <p class="Pp"><i class="Em">NOTE:</i> An Xcode installation is required in
+        order to run WebDriver tests on iOS Simulator hosts.</p>
+  </dd>
+  <dt><var class="Ar">safari:deviceType</var></dt>
+  <dd>If the value of <i class="Em">safari:deviceType</i> is `iPhone',
+      <code class="Nm">safaridriver</code> will only create a session using an
+      iPhone device or iPhone simulator.
+    <p class="Pp">If the value of <i class="Em">safari:deviceType</i> is `iPad',
+        <code class="Nm">safaridriver</code> will only create a session using an
+        iPad device or iPad simulator.</p>
+    <p class="Pp">Values of <i class="Em">safari:deviceType</i> are compared
+        case-insensitively.</p>
+  </dd>
+  <dt id="safari:deviceName"><var class="Ar">safari:deviceName</var></dt>
+  <dd><code class="Nm">safaridriver</code> will only create a session using
+      hosts whose device name matches the value of
+      <a class="permalink" href="#safari:deviceName"><i class="Em">safari:deviceName</i></a>.
+      Device names are compared case-insensitively.
+    <p class="Pp"><i class="Em">NOTE:</i> Device names for connected devices are
+        shown in iTunes. If Xcode is installed, device names for connected
+        devices are available via the output of
+        <a class="Xr" href="../1/instruments">instruments(1)</a> and in the
+        Devices and Simulators window (accessed in Xcode via &quot;Window &gt;
+        Devices and Simulators&quot;).</p>
+  </dd>
+  <dt id="safari:deviceUDID"><var class="Ar">safari:deviceUDID</var></dt>
+  <dd><code class="Nm">safaridriver</code> will only create a session using
+      hosts whose device UDID matches the value of
+      <a class="permalink" href="#safari:deviceUDID"><i class="Em">safari:deviceUDID</i></a>.
+      Device UDIDs are compared case-insensitively.
+    <p class="Pp"><i class="Em">NOTE:</i> If Xcode is installed, UDIDs for
+        connected devices are available via the output of
+        <a class="Xr" href="../1/instruments">instruments(1)</a> and in the
+        Devices and Simulators window (accessed in Xcode via &quot;Window &gt;
+        Devices and Simulators&quot;).</p>
+  </dd>
+</dl>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Other_Capabilities"><a class="permalink" href="#Other_Capabilities">Other
+  Capabilities</a></h2>
+<dl class="Bl-tag">
+  <dt><var class="Ar">acceptInsecureCerts</var></dt>
+  <dd>This capability instructs Safari to complete all network requests
+      regardless of the trustworthiness of an SSL/TLS certificate, including
+      trusting expired certificates, certificates that do not match the host,
+      and certificates without a trusted root.</dd>
+  <dt><var class="Ar">safari:automaticInspection</var></dt>
+  <dd>This capability instructs Safari to preload the Web Inspector and
+      JavaScript debugger in the background prior to returning a newly-created
+      window. To pause the test's execution in JavaScript and bring up Web
+      Inspector's Debugger tab, you can simply evaluate a
+      <code class="Ic">debugger;</code> statement in the test page.</dd>
+  <dt><var class="Ar">safari:automaticProfiling</var></dt>
+  <dd>This capability instructs Safari to preload the Web Inspector and start a
+      Timeline recording in the background prior to returning a newly-created
+      window. To view the recording, open the Web Inspector through Safari's
+      <i class="Em">Develop</i> menu.</dd>
+  <dt><var class="Ar">safari:diagnose</var></dt>
+  <dd>This capability requests that diagnostics be enabled for the session. See
+      <a class="Sx" href="#DIAGNOSTICS">DIAGNOSTICS</a> for more
+    information.</dd>
+  <dt><var class="Ar">webauthn:virtualAuthenticators</var></dt>
+  <dd>This capability instructs Safari to allow use of the Virtual Authenticator
+      WebDriver commands.
+      https://www.w3.org/TR/webauthn-2/#sctn-automation-webdriver-capability</dd>
+  <dt><var class="Ar">webkit:WebRTC</var></dt>
+  <dd>This capability allows a test to temporarily change Safari's policies for
+      WebRTC and Media Capture. The value of the <i class="Em">webkit:WebRTC</i>
+      capability is a dictionary with the following sub-keys, all of which are
+      optional:
+    <dl class="Bl-ohang Bd-indent">
+      <dt><var class="Ar">DisableInsecureMediaCapture</var></dt>
+      <dd>Normally, Safari refuses to allow media capture over insecure
+          connections. This restriction is relaxed by default for WebDriver
+          sessions for testing purposes (for example, a test web server not
+          configured for HTTPS). When this capability is specified, Safari will
+          revert to the normal behavior of preventing media capture over
+          insecure connections.</dd>
+      <dt><var class="Ar">DisableICECandidateFiltering</var></dt>
+      <dd>To protect a user's privacy, Safari normally filters out WebRTC ICE
+          candidates that correspond to internal network addresses when capture
+          devices are not in use. This capability suppresses ICE candidate
+          filtering so that both internal and external network addresses are
+          always sent as ICE candidates.</dd>
+    </dl>
+  </dd>
+</dl>
+</section>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h1>
+<p class="Pp">The <code class="Nm">safaridriver</code> utility exits&#x00A0;0 on
+    success, and&#x00A0;&gt;0 if an error occurs.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<p class="Pp">When a REST API command fails,
+    <code class="Nm">safaridriver</code> includes a detailed error message in
+    the response. If you use a 3rd-party library on top of the REST API service,
+    consult the library's documentation for how to access these error
+  messages.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SESSION_CREATION"><a class="permalink" href="#SESSION_CREATION">SESSION
+  CREATION</a></h1>
+<p class="Pp"><code class="Nm">safaridriver</code> can create WebDriver sessions
+    using Safari on a macOS machine, a paired iOS device, or an iOS simulator.
+    Capabilities listed in the
+    <a class="Sx" href="#Session_Creation_Capabilities">Session Creation
+    Capabilities</a> subsection provide criteria that affect which hosts
+    <code class="Nm">safaridriver</code> will attempt to use when handling a New
+    Session command. A host must match all criteria to be usable. If no hosts
+    match all of the criteria, then the New Session command will fail. If
+    multiple hosts match all of the criteria, the order in which
+    <code class="Nm">safaridriver</code> will use them is unspecified, except
+    that booted simulators are used before unbooted simulators.</p>
+<p class="Pp">If a simulator host matches the criteria but is not booted,
+    <code class="Nm">safaridriver</code> will attempt to boot the simulator
+    instance and wait for it to become usable. If Safari is not running on a
+    host that otherwise matches the criteria,
+    <code class="Nm">safaridriver</code> will automatically launch Safari and
+    wait for it to become usable. If a host's Safari instance is associated with
+    an inactive WebDriver session, <code class="Nm">safaridriver</code> will
+    replace the old session unless the session was manually interrupted by the
+    user or is being inspected by Web Inspector.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<p class="Pp">For security reasons, Safari does not permit live media capture
+    during a WebDriver test session. Instead, mock capture devices and streams
+    with well-known contents are provided for testing purposes. Some media
+    capabilities are configurable for testing; see the extension capability
+    <i class="Em">webkit:WebRTC</i> in the
+    <a class="Sx" href="#Other_Capabilities">Other Capabilities</a>
+  subsection.</p>
+<p class="Pp">For security reasons, the HTTP server accepts connections from
+    localhost only. The HTTP server can accept connections from multiple test
+    clients. Safari on macOS and iOS can only host one WebDriver session at a
+    time, so it is not recommended to run multiple
+    <code class="Nm">safaridriver</code> instances at the same time.</p>
+<p class="Pp"><code class="Nm">safaridriver</code> is typically executed
+    manually at the command line or automatically by a WebDriver client library.
+    The Selenium project provides client libraries for most popular programming
+    languages. More information is available on the Selenium project
+  website:</p>
+<p class="Pp"><a class="Lk" href="https://www.seleniumhq.org/">https://www.seleniumhq.org/</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp">A summary of which REST API endpoints
+    <code class="Nm">safaridriver</code> supports, as well as the Safari version
+    in which each endpoint became available, can be found on the Apple Developer
+    website:</p>
+<p class="Pp"><a class="Lk" href="https://developer.apple.com/">https://developer.apple.com/</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<p class="Pp"><code class="Nm">safaridriver</code> implements the W3C WebDriver
+    specification:</p>
+<p class="Pp"></p>
+<div class="Bd Bd-indent"></div>
+<a class="Lk" href="https://www.w3.org/TR/webdriver/">https://www.w3.org/TR/webdriver/</a>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DIAGNOSTICS"><a class="permalink" href="#DIAGNOSTICS">DIAGNOSTICS</a></h1>
+<p class="Pp">When filing a bug report against
+    <code class="Nm">safaridriver</code>, it is highly recommended that you
+    capture and include diagnostics generated by
+    <code class="Nm">safaridriver</code>. This can be accomplished in several
+    ways:</p>
+<p class="Pp">To diagnose a single session, pass the
+    <i class="Em">safari:diagnose</i> capability when requesting a new
+  session.</p>
+<p class="Pp">To diagnose all sessions from one
+    <code class="Nm">safaridriver</code> instance, use the
+    <code class="Fl">--diagnose</code> command line option.</p>
+<p class="Pp">To diagnose all sessions in all instances of
+    <code class="Nm">safaridriver</code>, set the
+    <code class="Ic">DiagnosticsEnabled</code> default in the
+    <code class="Ic">com.apple.WebDriver</code> domain to
+    <code class="Ic">YES</code> using
+    <a class="Xr" href="../1/defaults">defaults(1)</a>.</p>
+<p class="Pp">Diagnostic files are saved to
+    <span class="Pa">~/Library/Logs/com.apple.WebDriver/</span> and are uniquely
+    named using the pid of <code class="Nm">safaridriver</code> and a timestamp.
+    When using the <i class="Em">safari:diagnose</i> capability to turn on
+    diagnostics for a particular session, diagnostic files additionally include
+    the session identifier in file names.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">4/19/17</td>
+    <td class="foot-os"><a href="..">Darwin</a></td>
+  </tr>
+</table>
+</body>
+</html>
