@@ -189,6 +189,10 @@ struct attrlist {
       <var class="Fa">path</var>. In addition an error is returned if a symlink
       is encountered before the last component of
     <var class="Fa">path</var>.</dd>
+  <dt>FSOPT_RESOLVE_BENEATH</dt>
+  <dd>If this bit is set, <code class="Fn">getattrlistat</code>() and
+      <var class="Fa">path</var> does not reside in the hierarchy beneath the
+      starting directory, an error is returned.</dd>
   <dt>FSOPT_REPORT_FULLSIZE</dt>
   <dd>The size of the attributes reported (in the first
       <var class="Vt">u_int32_t</var> field in the attribute buffer) will be the
@@ -269,7 +273,7 @@ struct attrlist {
     <var class="Fa">attrSize</var> ) ) or, indeed, for the attribute data to
     extend beyond the end of the attribute buffer (that is, ( ( (char *)
     <var class="Fa">attrRef</var> ) + <var class="Fa">attr_dataoffset</var> +
-    <var class="Fa">attr_datalength</var> ) &gt; ( ( (char *)
+    <var class="Fa">attr_length</var> ) &gt; ( ( (char *)
     <var class="Fa">attrBuf</var> ) + <var class="Fa">attrSize</var> ) ). If
     this happens you must increase the size of the buffer and call
     <a class="permalink" href="#getattrlist~5"><code class="Fn">getattrlist</code></a>()
@@ -288,7 +292,7 @@ struct attrlist {
       unsupported attributes will be skipped (i.e. not packed into the output
       buffer). This behavior can be over-ridden using the FSOPT_PACK_INVAL_ATTRS
       option flag. Both <a class="Xr" href="../2/getattrlist">getattrlist(2)</a>
-      and <a class="Xr" href="../2/getatttrlistbulk">getatttrlistbulk(2)</a>
+      and <a class="Xr" href="../2/getattrlistbulk">getattrlistbulk(2)</a>
       support this attribute while
       <a class="Xr" href="../2/searchfs">searchfs(2)</a> does not.</dd>
   <dt>ATTR_CMN_NAME</dt>
@@ -329,7 +333,7 @@ struct attrlist {
         similar (in whole or in part) to it's ATTR_CMN_FILEID (see description
         of ATTR_CMN_FILEID below), <b>no relation between the two attributes
         should ever be implied.</b></p>
-    <p class="Pp" id="getLinkIDInfo">ATTR_CMN_OBJID is deprecated sarting with
+    <p class="Pp" id="getLinkIDInfo">ATTR_CMN_OBJID is deprecated starting with
         macOS 10.13, iOS 11.0, watchOS 4.0 and tvOS 11.0 and ATTR_CMNEXT_LINKID
         should be used in its place. ATTR_CMN_OBJID can only be used on older
         operating systems only if the file system doesn't 64 bit IDs. See the
@@ -463,7 +467,7 @@ struct attrlist {
       which only the ACL entry is used.</dd>
   <dt>ATTR_CMN_UUID</dt>
   <dd>A <var class="Vt">guid_t</var> of the owner of the file system object.
-      Analoguous to <code class="Dv">ATTR_CMN_OWNERID</code>.</dd>
+      Analogous to <code class="Dv">ATTR_CMN_OWNERID</code>.</dd>
   <dt>ATTR_CMN_GRPUUID</dt>
   <dd>A <var class="Vt">guid_t</var> of the group to which the file system
       object belongs. Analoguous to <code class="Dv">ATTR_CMN_GRPID</code>.</dd>
@@ -793,7 +797,9 @@ struct attrlist {
       immediately if the file were deleted.</dd>
   <dt>ATTR_CMNEXT_LINKID</dt>
   <dd>A <var class="Vt">u_int64_t</var> that uniquely identifies the file system
-      object within a mounted volume for the duration of its mount.
+      object within a mounted volume for the duration of its mount. This
+      identifier is persistent on volumes that support the
+      VOL_CAP_FMT_PERSISTENTOBJECTIDS capability, such as HFS+ and APFS.
     <p class="Pp">On HFS+ and APFS volumes, the ATTR_CMNEXT_LINKID of a file
         system object is distinct from the ATTR_CMNEXT_LINKID of any hard link
         to that file system object. Although the ATTR_CMNEXT_LINKID of a file
@@ -859,7 +865,7 @@ struct attrlist {
       directory is not marked maintain-dir-stats, a zero is returned.</dd>
   <dt>ATTR_CMNEXT_ATTRIBUTION_TAG</dt>
   <dd>An optional <var class="Vt">u_int64_t</var> id that represents the bundle
-      id (owner) assoicated with the file (zero means the file isn't attributed
+      id (owner) associated with the file (zero means the file isn't attributed
       yet)</dd>
   <dt>ATTR_CMNEXT_CLONE_REFCNT</dt>
   <dd>A <var class="Vt">u_int32_t</var> that represents the number of full
@@ -1152,6 +1158,10 @@ typedef struct vol_capabilities_attr {
   <dd>If this bit is set, the file system supports the
       <code class="Dv">F_PUNCHOLE operation.</code> See
       <a class="Xr" href="../2/fcntl">fcntl(2)</a> for more details.</dd>
+  <dt>VOL_CAP_INT_BARRIERFSYNC</dt>
+  <dd>If this bit is set, the file system supports the
+      <code class="Dv">F_BARRIERFSYNC operation.</code> See
+      <a class="Xr" href="../2/fcntl">fcntl(2)</a> for more details.</dd>
 </dl>
 <p class="Pp">A volume can also report which attributes it supports. This
     information is returned by the <code class="Dv">ATTR_VOL_ATTRIBUTES</code>
@@ -1279,6 +1289,9 @@ typedef struct vol_attributes_attr {
   <dd>The <var class="Fa">path</var> argument is not an absolute path and
       <var class="Fa">fd</var> is neither <code class="Dv">AT_FDCWD</code> nor a
       file descriptor associated with a directory.</dd>
+  <dt id="ENOTCAPABLE">[<a class="permalink" href="#ENOTCAPABLE"><code class="Er">ENOTCAPABLE</code></a>]</dt>
+  <dd>if FSOPT_RESOLVE_BENEATH was passed and <var class="Fa">path</var> does
+      not reside in the directory hierarchy beneath the starting directory.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -1631,7 +1644,7 @@ main(int argc, char **argv)
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 31, 2024</td>
+    <td class="foot-date">March 7, 2025</td>
     <td class="foot-os"><a href="..">Darwin</a></td>
   </tr>
 </table>

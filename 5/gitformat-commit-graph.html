@@ -4,24 +4,24 @@
    t
        Title: gitformat-commit-graph
       Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
-        Date: 12/12/2022
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2025-07-22
       Manual: Git Manual
-      Source: Git 2.39.0
+      Source: Git 2.50.1.428.g0e8243a355
     Language: English
    -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>GITFORMAT-COMMIT-G(5)</title>
+  <title>GITFORMAT-COMMIT-GRAPH(5)</title>
 </head>
 <body>
 <table class="head">
   <tr>
-    <td class="head-ltitle">GITFORMAT-COMMIT-G(5)</td>
+    <td class="head-ltitle">GITFORMAT-COMMIT-GRAPH(5)</td>
     <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GITFORMAT-COMMIT-G(5)</td>
+    <td class="head-rtitle">GITFORMAT-COMMIT-GRAPH(5)</td>
   </tr>
 </table>
 <div class="manual-text">
@@ -33,7 +33,6 @@
 <h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
 <pre>$GIT_DIR/objects/info/commit-graph
 $GIT_DIR/objects/info/commit-graphs/*</pre>
-<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
@@ -78,13 +77,14 @@ $GIT_DIR/objects/info/commit-graphs/*</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>1-byte Hash Version
-    We infer the hash length (H) from this value:
-      1 =&gt; SHA-1
-      2 =&gt; SHA-256
-    If the hash type does not match the repository's hash algorithm, the
-    commit-graph file should be ignored with a warning presented to the
-    user.</pre>
+<pre>
+ 1-byte Hash Version
+     We infer the hash length (H) from this value:
+1 =&gt; SHA-1
+2 =&gt; SHA-256
+     If the hash type does not match the repository's hash algorithm, the
+     commit-graph file should be ignored with a warning presented to the
+     user.</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
@@ -194,7 +194,7 @@ number of commits (N).</pre>
   be stored within 31 bits.</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;Generation Data Overflow chunk is present only
-  when Generation Data chunk is present and atleast one corrected commit date
+  when Generation Data chunk is present and at least one corrected commit date
   offset cannot be stored within 31 bits.</div>
 </div>
 <p class="Pp"><b>Extra Edge List (ID: {E, D, G, E}) [Optional]</b>
@@ -234,12 +234,15 @@ bit on. The other bits correspond to the position of the last parent.</pre>
   unsigned 32-bit integers:
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;Version of the hash algorithm being used. We
-  currently only support value 1 which corresponds to the 32-bit version of the
+  currently support value 2 which corresponds to the 32-bit version of the
   murmur3 hash implemented exactly as described in
   <b>https://en.wikipedia.org/wiki/MurmurHash#Algorithm</b> and the double
   hashing technique using seed values 0x293ae76f and 0x7e646e2 as described in
   <b>https://doi.org/10.1007/978-3-540-30494-4_26</b> &quot;Bloom Filters in
-  Probabilistic Verification&quot;</div>
+  Probabilistic Verification&quot;. Version 1 Bloom filters have a bug that
+  appears when char is signed and the repository has path names that have
+  characters &gt;= 0x80; Git supports reading and writing them, but this ability
+  will be removed in a future version of Git.</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;The number of times a path is hashed and hence
   the number of bit positions that cumulatively determine whether a file is
@@ -297,8 +300,8 @@ base graphs.  If B is non-zero, this chunk must exist.</pre>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">12/12/2022</td>
-    <td class="foot-os"><a href="..">Git 2.39.0</a></td>
+    <td class="foot-date">2025-07-22</td>
+    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
   </tr>
 </table>
 </body>

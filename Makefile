@@ -18,6 +18,7 @@ html = $(shell cd "$(MANDIR)" && $(FIND) * ! -type d \
 		s/(\.[1n])tcl$$/\1/; \
 		s/Parse::Yapp.*\.3$$/&pm/; \
 		s/^index\.3$$/-&/; \
+		s|(perfpowermetricd)\.1|\1.8|; \
 		s|(.*)\.([^.]*$$)|\2/\1.html|; \
 		s/[: ]/\\&/g; \
 	')
@@ -212,7 +213,16 @@ sitemap.xml:
 8/deleted_helper.html: $(MANDIR)/man1/deleted_helper.8
 	$(convert)
 
+8/FeatureAccessAgent.html: $(MANDIR)/man1/FeatureAccessAgent.8
+	$(convert)
+
+8/perfpowermetricd.html: $(MANDIR)/man8/perfpowermetricd.1
+	$(convert)
+
 8/securityuploadd.html: $(MANDIR)/man1/securityuploadd.8
+	$(convert)
+
+8/sensingpredictd.html: $(MANDIR)/man1/sensingpredictd.8
 	$(convert)
 
 8/silhouette.html: $(MANDIR)/man1/silhouette.8

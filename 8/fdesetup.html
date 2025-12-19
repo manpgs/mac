@@ -501,6 +501,23 @@
     persistent location.</p>
 </section>
 <section class="Sh">
+<h1 class="Sh" id="REMOTE_UNLOCKING_VIA_SSH"><a class="permalink" href="#REMOTE_UNLOCKING_VIA_SSH">REMOTE
+  UNLOCKING VIA SSH</a></h1>
+<p class="Pp">When FileVault is enabled, the data volume is locked and
+    unavailable during and after booting, until an account has been
+    authenticated using a password. The macOS version of OpenSSH stores all of
+    its configuration files, both system-wide and per-account, in the data
+    volume. Therefore, the usually configured authentication methods and shell
+    access are not available during this time. However, when Remote Login is
+    enabled, it is possible to perform password authentication using SSH even in
+    this situation. This can be used to unlock the data volume remotely over the
+    network. It does not immediately permit an SSH session. Instead, once the
+    data volume has been unlocked using this method, macOS will disconnect SSH
+    briefly while it completes mounting the data volume and starting the
+    remaining services dependent on it. Thereafter, SSH (and other enabled
+    services) are fully available.</p>
+</section>
+<section class="Sh">
 <h1 class="Sh" id="AUTHORIZATION_POLICY"><a class="permalink" href="#AUTHORIZATION_POLICY">AUTHORIZATION
   POLICY</a></h1>
 <p class="Pp">Starting in macOS 10.15, you cannot use
@@ -515,6 +532,28 @@
 <p class="Pp">4) The user has explicitly authorized the enablement of FileVault
     via a confirmation dialog.</p>
 <dl class="Bl-tag">
+</dl>
+<p class="Pp">Organizations using Mobile Device Management (MDM) have several
+    configuration options to control FileVault behavior on managed devices:</p>
+<dl class="Bl-tag">
+  <dt>skip_setup_items</dt>
+  <dd>Including the string &quot;FileVault&quot; in this list for an automated
+      device enrollment profile prevents Setup Assistant from presenting screens
+      with decisions about enabling FileVault.</dd>
+  <dt id="Enable">FDEFileVault Enable</dt>
+  <dd>Setting the
+      <a class="permalink" href="#Enable"><b class="Sy">Enable</b></a> property
+      to &quot;Off&quot; in the
+      <a class="permalink" href="#FDEFileVault"><b class="Sy" id="FDEFileVault">FDEFileVault</b></a>
+      payload prevents macOS from automatically enabling FileVault.</dd>
+  <dt id="dontAllowFDEEnable">FDEFileVaultOptions dontAllowFDEEnable</dt>
+  <dd>Setting the
+      <a class="permalink" href="#dontAllowFDEEnable"><b class="Sy">dontAllowFDEEnable</b></a>
+      boolean property to true in the
+      <a class="permalink" href="#FDEFileVaultOptions"><b class="Sy" id="FDEFileVaultOptions">FDEFileVaultOptions</b></a>
+      payload removes the ability to manually enable FileVault after initial
+      setup, either through System Settings or via the
+      <code class="Nm">fdesetup</code> command-line tool.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -646,12 +685,17 @@
     <a class="Xr" href="../8/diskutil">diskutil(8)</a>,
     <a class="Xr" href="../1/base64">base64(1)</a>,
     <a class="Xr" href="../1/pmset">pmset(1)</a>,
-    <a class="Xr" href="../8/shutdown">shutdown(8)</a></p>
+    <a class="Xr" href="../8/shutdown">shutdown(8)</a>,
+    <a class="Xr" href="../8/sshd">sshd(8)</a></p>
+<p class="Pp">Apple Platform Deployment Guide:
+    https://support.apple.com/guide/deployment Apple Device Management
+    Documentation:
+  https://developer.apple.com/documentation/devicemanagement</p>
 </section>
 </div>
 <table class="foot">
   <tr>
-    <td class="foot-date">July 2, 2019</td>
+    <td class="foot-date">July 2, 2025</td>
     <td class="foot-os"><a href="..">macOS</a></td>
   </tr>
 </table>
