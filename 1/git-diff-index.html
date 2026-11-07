@@ -1,40 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-diff-index
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-DIFF-INDEX(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-diff-index
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-DIFF-INDEX(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-DIFF-INDEX(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-DIFF-INDEX(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-DIFF-INDEX(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-diff-index - Compare a tree to the working tree or index</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre><i>git diff-index</i> [-m] [--cached] [--merge-base] [&lt;common-diff-options&gt;] &lt;tree-ish&gt; [&lt;path&gt;...]</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">Compare the content and mode of the blobs found in a tree object
     with the corresponding tracked files in the working tree, or with the
     corresponding paths in the index. When &lt;path&gt; arguments are present,
@@ -42,7 +39,7 @@
     compared.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp"><b>-p</b>, <b>-u</b>, <b>--patch</b></p>
 <div class="Bd-indent">Generate patch (see the section called &#x201C;GENERATING
   PATCH TEXT WITH -P&#x201D;).</div>
@@ -52,8 +49,11 @@
   their output, or to cancel the effect of options like <b>--patch</b>,
   <b>--stat</b> earlier on the command line in an alias.</div>
 <p class="Pp"><b>-U</b><i>&lt;n&gt;</i>, <b>--unified=</b><i>&lt;n&gt;</i></p>
-<div class="Bd-indent">Generate diffs with <i>&lt;n&gt;</i> lines of context
-  instead of the usual three. Implies <b>--patch</b>.</div>
+<div class="Bd-indent">Generate diffs with <i>&lt;n&gt;</i> lines of context.
+  The number of context lines defaults to <b>diff.context</b> or 3 if the
+  configuration variable is unset. (<b>-U</b> without <i>&lt;n&gt;</i> is
+  silently accepted as a synonym for <b>-p</b> due to a historical accident).
+  Implies <b>--patch</b>.</div>
 <p class="Pp"><b>--output=</b><i>&lt;file&gt;</i></p>
 <div class="Bd-indent">Output to a specific file instead of stdout.</div>
 <p class="Pp"><b>--output-indicator-new=</b><i>&lt;char&gt;</i>,
@@ -338,7 +338,7 @@
 <p class="Pp"><b>--no-renames</b></p>
 <div class="Bd-indent">Turn off rename detection, even when the configuration
   file gives the default to do so.</div>
-<p class="Pp"><b>--</b>[<b>no-</b>]<b>rename-empty</b></p>
+<p class="Pp"><b>--rename-empty</b>, <b>--no-rename-empty</b></p>
 <div class="Bd-indent">Whether to use empty blobs as rename source.</div>
 <p class="Pp"><b>--check</b></p>
 <div class="Bd-indent">Warn if changes introduce conflict markers or whitespace
@@ -643,6 +643,35 @@
   <b>diff</b> <b>--cached</b>. This option could be reverted with
   <b>--ita-visible-in-index</b>. Both options are experimental and could be
   removed in future.</div>
+<p class="Pp">--max-depth=&lt;depth&gt;</p>
+<div class="Bd-indent">For each pathspec given on command line, descend at most
+  <i>&lt;depth&gt;</i> levels of directories. A value of <b>-1</b> means no
+  limit. Cannot be combined with wildcards in the pathspec. Given a tree
+  containing <b>foo/bar/baz</b>, the following list shows the matches generated
+  by each set of options:
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>--max-depth=0</b> <b>--</b> <b>foo</b>:
+  <b>foo</b></div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>--max-depth=1</b> <b>--</b> <b>foo</b>:
+  <b>foo/bar</b></div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>--max-depth=1</b> <b>--</b> <b>foo/bar</b>:
+  <b>foo/bar/baz</b></div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>--max-depth=1</b> <b>--</b> <b>foo</b>
+  <b>foo/bar</b>: <b>foo/bar/baz</b></div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>--max-depth=2</b> <b>--</b> <b>foo</b>:
+  <b>foo/bar/baz</b></div>
+<p class="Pp">If no pathspec is given, the depth is measured as if all top-level
+    entries were specified. Note that this is different than measuring from the
+    root, in that <b>--max-depth=0</b> would still return <b>foo</b>. This
+    allows you to still limit depth while asking for a subset of the top-level
+    entries.</p>
+<p class="Pp">Note that this option is only supported for diffs between tree
+    objects, not against the index or working tree.</p>
+</div>
 <p class="Pp">For more detailed explanation on these common options, see also
     <b>gitdiffcore</b>(7).</p>
 <p class="Pp">&lt;tree-ish&gt;</p>
@@ -659,8 +688,8 @@
   all non-checked-out files are up to date.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RAW_OUTPUT_FORMAT"><a class="permalink" href="#RAW_OUTPUT_FORMAT">RAW
-  OUTPUT FORMAT</a></h1>
+<h2 class="Sh" id="RAW_OUTPUT_FORMAT"><a class="permalink" href="#RAW_OUTPUT_FORMAT">RAW
+  OUTPUT FORMAT</a></h2>
 <p class="Pp">The raw output format from <b>git-diff-index</b>,
     <b>git-diff-tree</b>, <b>git-diff-files</b> and <b>git</b> <b>diff</b>
     <b>--raw</b> are very similar.</p>
@@ -766,8 +795,8 @@ unmerged       :000000 000000 0000000 0000000 U file6</pre>
     filename is output verbatim and the line is terminated by a NUL byte.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DIFF_FORMAT_FOR_MERGES"><a class="permalink" href="#DIFF_FORMAT_FOR_MERGES">DIFF
-  FORMAT FOR MERGES</a></h1>
+<h2 class="Sh" id="DIFF_FORMAT_FOR_MERGES"><a class="permalink" href="#DIFF_FORMAT_FOR_MERGES">DIFF
+  FORMAT FOR MERGES</a></h2>
 <p class="Pp"><b>git-diff-tree</b>, <b>git-diff-files</b> and <b>git-diff</b>
     <b>--raw</b> can take <b>-c</b> or <b>--cc</b> option to generate diff
     output also for merge commits. The output differs from the format described
@@ -808,8 +837,8 @@ unmerged       :000000 000000 0000000 0000000 U file6</pre>
     modified from all parents.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GENERATING_PATCH_TEXT_WITH_"><a class="permalink" href="#GENERATING_PATCH_TEXT_WITH_">GENERATING
-  PATCH TEXT WITH -P</a></h1>
+<h2 class="Sh" id="GENERATING_PATCH_TEXT_WITH_-P"><a class="permalink" href="#GENERATING_PATCH_TEXT_WITH_-P">GENERATING
+  PATCH TEXT WITH -P</a></h2>
 <p class="Pp">Running <b>git-diff</b>(1), <b>git-log</b>(1), <b>git-show</b>(1),
     <b>git-diff-index</b>(1), <b>git-diff-tree</b>(1), or
     <b>git-diff-files</b>(1) with the <b>-p</b> option produces patch text. You
@@ -888,8 +917,8 @@ rename to a</pre>
   languages.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="COMBINED_DIFF_FORMAT"><a class="permalink" href="#COMBINED_DIFF_FORMAT">COMBINED
-  DIFF FORMAT</a></h1>
+<h2 class="Sh" id="COMBINED_DIFF_FORMAT"><a class="permalink" href="#COMBINED_DIFF_FORMAT">COMBINED
+  DIFF FORMAT</a></h2>
 <p class="Pp">Any diff-generating command can take the <b>-c</b> or <b>--cc</b>
     option to produce a <i>combined diff</i> when showing a merge. This is the
     default format when showing merges with <b>git-diff</b>(1) or
@@ -1015,8 +1044,8 @@ The <b>mode</b>
     &quot;their version&quot;).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OTHER_DIFF_FORMATS"><a class="permalink" href="#OTHER_DIFF_FORMATS">OTHER
-  DIFF FORMATS</a></h1>
+<h2 class="Sh" id="OTHER_DIFF_FORMATS"><a class="permalink" href="#OTHER_DIFF_FORMATS">OTHER
+  DIFF FORMATS</a></h2>
 <p class="Pp">The <b>--summary</b> option describes newly added, deleted,
     renamed and copied files. The <b>--stat</b> option adds <b>diffstat</b>(1)
     graph to the output. These options can be combined with other options, such
@@ -1086,16 +1115,16 @@ The <b>mode</b>
     the pathname, but if that is <b>NUL</b>, the record will show two paths.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPERATING_MODES"><a class="permalink" href="#OPERATING_MODES">OPERATING
-  MODES</a></h1>
+<h2 class="Sh" id="OPERATING_MODES"><a class="permalink" href="#OPERATING_MODES">OPERATING
+  MODES</a></h2>
 <p class="Pp">You can choose whether you want to trust the index file entirely
     (using the <b>--cached</b> flag) or ask the diff logic to show any files
     that don&#x2019;t match the stat state as being &quot;tentatively
     changed&quot;. Both of these operations are very useful indeed.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CACHED_MODE"><a class="permalink" href="#CACHED_MODE">CACHED
-  MODE</a></h1>
+<h2 class="Sh" id="CACHED_MODE"><a class="permalink" href="#CACHED_MODE">CACHED
+  MODE</a></h2>
 <p class="Pp">If <b>--cached</b> is specified, it allows you to ask:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
@@ -1132,8 +1161,8 @@ contents (the ones I'd write using 'git write-tree')</pre>
     tree&quot;.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NON"><a class="permalink" href="#NON">NON-CACHED
-  MODE</a></h1>
+<h2 class="Sh" id="NON-CACHED_MODE"><a class="permalink" href="#NON-CACHED_MODE">NON-CACHED
+  MODE</a></h2>
 <p class="Pp">The &quot;non-cached&quot; mode takes a different approach, and is
     potentially the more useful of the two in that what it does can&#x2019;t be
     emulated with a <i>git write-tree</i> + <i>git diff-tree</i>. Thus
@@ -1188,15 +1217,13 @@ tree - index contents _and_ files that aren't up to date</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-DIFF-INDEX(1)</span></div>
 </body>
 </html>

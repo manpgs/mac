@@ -1,42 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-maintenance
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-MAINTENANCE(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-maintenance
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-MAINTENANCE(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-MAINTENANCE(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-MAINTENANCE(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-MAINTENANCE(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-maintenance - Run tasks to optimize Git repository data</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre><i>git maintenance</i> run [&lt;options&gt;]
 <i>git maintenance</i> start [--scheduler=&lt;scheduler&gt;]
-<i>git maintenance</i> (stop|register|unregister) [&lt;options&gt;]</pre>
+<i>git maintenance</i> (stop|register|unregister) [&lt;options&gt;]
+<i>git maintenance</i> is-needed [&lt;options&gt;]</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">Run tasks to optimize Git repository data, speeding up other Git
     commands and reducing storage requirements for the repository.</p>
 <p class="Pp">Git commands that add repository data, such as <b>git</b>
@@ -48,7 +46,7 @@
     how to optimize the Git repository.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SUBCOMMANDS"><a class="permalink" href="#SUBCOMMANDS">SUBCOMMANDS</a></h1>
+<h2 class="Sh" id="SUBCOMMANDS"><a class="permalink" href="#SUBCOMMANDS">SUBCOMMANDS</a></h2>
 <p class="Pp">run</p>
 <div class="Bd-indent">Run one or more maintenance tasks. If one or more
   <b>--task</b> options are specified, then those tasks are run in that order.
@@ -100,9 +98,18 @@
     current repository is not already registered. Use the <b>--force</b> option
     to return success even when the current repository is not registered.</p>
 </div>
+<p class="Pp">is-needed</p>
+<div class="Bd-indent">Check whether maintenance needs to be run without
+  actually running it. Exits with a 0 status code if maintenance needs to be
+  run, 1 otherwise. Ideally used with the <i>--auto</i> flag.
+<p class="Pp">If one or more <b>--task</b> options are specified, then those
+    tasks are checked in that order. Otherwise, the tasks are determined by
+    which <b>maintenance.</b><i>&lt;task&gt;</i><b>.enabled</b> config options
+    are true. By default, only <b>maintenance.gc.enabled</b> is true.</p>
+</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TASKS"><a class="permalink" href="#TASKS">TASKS</a></h1>
+<h2 class="Sh" id="TASKS"><a class="permalink" href="#TASKS">TASKS</a></h2>
 <p class="Pp">commit-graph</p>
 <div class="Bd-indent">The <b>commit-graph</b> job updates the
   <b>commit-graph</b> files incrementally, then verifies that the written data
@@ -184,14 +191,16 @@
   worktrees. See <b>git-worktree</b>(1) for more information.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp">--auto</p>
 <div class="Bd-indent">When combined with the <b>run</b> subcommand, run
   maintenance tasks only if certain thresholds are met. For example, the
   <b>gc</b> task runs when the number of loose objects exceeds the number stored
   in the <b>gc.auto</b> config setting, or when the number of pack-files exceeds
   the <b>gc.autoPackLimit</b> config setting. Not compatible with the
-  <b>--schedule</b> option.</div>
+  <b>--schedule</b> option. When combined with the <b>is-needed</b> subcommand,
+  check if the required thresholds are met without actually running
+  maintenance.</div>
 <p class="Pp">--schedule</p>
 <div class="Bd-indent">When combined with the <b>run</b> subcommand, run
   maintenance tasks only if certain time conditions are met, as specified by the
@@ -223,7 +232,7 @@
   otherwise <b>crontab</b>. Default is <b>auto</b>.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TROUBLESHOOTING"><a class="permalink" href="#TROUBLESHOOTING">TROUBLESHOOTING</a></h1>
+<h2 class="Sh" id="TROUBLESHOOTING"><a class="permalink" href="#TROUBLESHOOTING">TROUBLESHOOTING</a></h2>
 <p class="Pp">The <b>git</b> <b>maintenance</b> command is designed to simplify
     the repository maintenance patterns while minimizing user wait time during
     Git commands. A variety of configuration options are available to allow
@@ -269,8 +278,8 @@
     to customize them.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BACKGROUND_MAINTENANCE_ON_POSIX_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_POSIX_SYSTEMS">BACKGROUND
-  MAINTENANCE ON POSIX SYSTEMS</a></h1>
+<h2 class="Sh" id="BACKGROUND_MAINTENANCE_ON_POSIX_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_POSIX_SYSTEMS">BACKGROUND
+  MAINTENANCE ON POSIX SYSTEMS</a></h2>
 <p class="Pp">The standard mechanism for scheduling background tasks on POSIX
     systems is cron(8). This tool executes commands based on a given schedule.
     The current list of user-scheduled tasks can be found by running
@@ -318,8 +327,8 @@
     binaries in your schedule.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BACKGROUND_MAINTENANCE_ON_LINUX_SYSTEMD_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_LINUX_SYSTEMD_SYSTEMS">BACKGROUND
-  MAINTENANCE ON LINUX SYSTEMD SYSTEMS</a></h1>
+<h2 class="Sh" id="BACKGROUND_MAINTENANCE_ON_LINUX_SYSTEMD_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_LINUX_SYSTEMD_SYSTEMS">BACKGROUND
+  MAINTENANCE ON LINUX SYSTEMD SYSTEMS</a></h2>
 <p class="Pp">While Linux supports <b>cron</b>, depending on the distribution,
     <b>cron</b> may be an optional package not necessarily installed. On modern
     Linux distributions, systemd timers are superseding it.</p>
@@ -360,8 +369,8 @@ Mon 2021-05-03 00:00:00 CEST 3 days left   Mon 2021-04-26 00:00:11 CEST 3 days a
 <p class="Pp">For more details, see <b>systemd.timer</b>(<b>5</b>).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BACKGROUND_MAINTENANCE_ON_MACOS_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_MACOS_SYSTEMS">BACKGROUND
-  MAINTENANCE ON MACOS SYSTEMS</a></h1>
+<h2 class="Sh" id="BACKGROUND_MAINTENANCE_ON_MACOS_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_MACOS_SYSTEMS">BACKGROUND
+  MAINTENANCE ON MACOS SYSTEMS</a></h2>
 <p class="Pp">While macOS technically supports <b>cron</b>, using <b>crontab</b>
     <b>-e</b> requires elevated privileges and the executed process does not
     have a full user context. Without a full user context, Git and its
@@ -397,8 +406,8 @@ org.git-scm.git.weekly.plist</pre>
     see launchctl.plist(5) for more information.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BACKGROUND_MAINTENANCE_ON_WINDOWS_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_WINDOWS_SYSTEMS">BACKGROUND
-  MAINTENANCE ON WINDOWS SYSTEMS</a></h1>
+<h2 class="Sh" id="BACKGROUND_MAINTENANCE_ON_WINDOWS_SYSTEMS"><a class="permalink" href="#BACKGROUND_MAINTENANCE_ON_WINDOWS_SYSTEMS">BACKGROUND
+  MAINTENANCE ON WINDOWS SYSTEMS</a></h2>
 <p class="Pp">Windows does not support <b>cron</b> and instead has its own
     system for scheduling background tasks. The <b>git</b> <b>maintenance</b>
     <b>start</b> command uses the <b>schtasks</b> command to submit tasks to
@@ -418,7 +427,7 @@ org.git-scm.git.weekly.plist</pre>
     (<b>start</b>|<b>stop</b>) do not overwrite your custom tasks.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">Everything below this line in this section is selectively included
     from the <b>git-config</b>(1) documentation. The content is the same as
     what&#x2019;s found there:</p>
@@ -438,23 +447,42 @@ org.git-scm.git.weekly.plist</pre>
 </div>
 <p class="Pp">maintenance.strategy</p>
 <div class="Bd-indent">This string config option provides a way to specify one
-  of a few recommended schedules for background maintenance. This only affects
-  which tasks are run during <b>git</b> <b>maintenance</b> <b>run</b>
-  <b>--schedule=X</b> commands, provided no <b>--task=</b><i>&lt;task&gt;</i>
-  arguments are provided. Further, if a
-  <b>maintenance.</b><i>&lt;task&gt;</i><b>.schedule</b> config value is set,
-  then that value is used instead of the one provided by
-  <b>maintenance.strategy</b>. The possible strategy strings are:
+  of a few recommended strategies for repository maintenance. This affects which
+  tasks are run during <b>git</b> <b>maintenance</b> <b>run</b>, provided no
+  <b>--task=</b><i>&lt;task&gt;</i> arguments are provided. This setting impacts
+  manual maintenance, auto-maintenance as well as scheduled maintenance. The
+  tasks that run may be different depending on the maintenance type.
+<p class="Pp">The maintenance strategy can be further tweaked by setting
+    <b>maintenance.</b><i>&lt;task&gt;</i><b>.enabled</b> and
+    <b>maintenance.</b><i>&lt;task&gt;</i><b>.schedule</b>. If set, these values
+    are used instead of the defaults provided by
+  <b>maintenance.strategy</b>.</p>
+<p class="Pp">The possible strategies are:</p>
 <p class="Pp"></p>
-<div class="Bd-indent">&#x2022;<b>none</b>: This default setting implies no
-  tasks are run at any schedule.</div>
+<div class="Bd-indent">&#x2022;<b>none</b>: This strategy implies no tasks are
+  run at all. This is the default strategy for scheduled maintenance.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>gc</b>: This strategy runs the <b>gc</b>
+  task.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>geometric</b>: This strategy performs
+  geometric repacking of packfiles and keeps auxiliary data structures
+  up-to-date. The strategy expires data in the reflog and removes worktrees that
+  cannot be located anymore. When the geometric repacking strategy would decide
+  to do an all-into-one repack, then the strategy generates a cruft pack for all
+  unreachable objects. Objects that are already part of a cruft pack will be
+  expired.
+<p class="Pp">This repacking strategy is a full replacement for the <b>gc</b>
+    strategy and is recommended for large repositories. This is the default
+    strategy for manual maintenance.</p>
+</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;<b>incremental</b>: This setting optimizes for
   performing small maintenance activities that do not delete any data. This does
   not schedule the <b>gc</b> task, but runs the <b>prefetch</b> and
   <b>commit-graph</b> tasks hourly, the <b>loose-objects</b> and
-  <b>incremental-repack</b> tasks daily, and the <b>pack-refs</b> task
-  weekly.</div>
+  <b>incremental-repack</b> tasks daily, and the <b>pack-refs</b> task weekly.
+  Manual repository maintenance uses the <b>gc</b> task.</div>
 </div>
 <p class="Pp">maintenance.&lt;task&gt;.enabled</p>
 <div class="Bd-indent">This boolean config option controls whether the
@@ -498,6 +526,20 @@ org.git-scm.git.weekly.plist</pre>
   value implies the command should run when the number of pack-files not in the
   multi-pack-index is at least the value of
   <b>maintenance.incremental-repack.auto</b>. The default value is 10.</div>
+<p class="Pp">maintenance.geometric-repack.auto</p>
+<div class="Bd-indent">This integer config option controls how often the
+  <b>geometric-repack</b> task should be run as part of <b>git</b>
+  <b>maintenance</b> <b>run</b> <b>--auto</b>. If zero, then the
+  <b>geometric-repack</b> task will not run with the <b>--auto</b> option. A
+  negative value will force the task to run every time. Otherwise, a positive
+  value implies the command should run either when there are packfiles that need
+  to be merged together to retain the geometric progression, or when there are
+  at least this many loose objects that would be written into a new packfile.
+  The default value is 100.</div>
+<p class="Pp">maintenance.geometric-repack.splitFactor</p>
+<div class="Bd-indent">This integer config option controls the factor used for
+  the geometric sequence. See the <b>--geometric=</b> option in
+  <b>git-repack</b>(1) for more details. Defaults to <b>2</b>.</div>
 <p class="Pp">maintenance.reflog-expire.auto</p>
 <div class="Bd-indent">This integer config option controls how often the
   <b>reflog-expire</b> task should be run as part of <b>git</b>
@@ -526,15 +568,13 @@ org.git-scm.git.weekly.plist</pre>
   exceeds the value. The default value is 1.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-MAINTENANCE(1)</span></div>
 </body>
 </html>

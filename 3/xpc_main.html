@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2011 Apple Inc. All rights reserved.
- -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>xpc_main(3)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2011 Apple Inc. All rights reserved.
+ -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">xpc_main(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">xpc_main(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">xpc_main(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">xpc_main(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><code class="Nm">xpc_main</code> &#x2014; <span class="Nd">XPC
-    service runtime</span></p>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
+<p class="Pp"><code class="Nm">xpc_main</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">XPC service runtime</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     <a class="In">&lt;xpc/xpc.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">void</var>
@@ -39,37 +36,39 @@
   <code class="Fn">xpc_transaction_end</code>(<var class="Fa">void</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The
     <a class="permalink" href="#xpc_main"><code class="Fn" id="xpc_main">xpc_main</code></a>()
     function is called by an XPC service to initialize the runtime and start
     listening for incoming connections.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HANDLER"><a class="permalink" href="#HANDLER">HANDLER</a></h1>
+<h2 class="Sh" id="HANDLER"><a class="permalink" href="#HANDLER">HANDLER</a></h2>
 <p class="Pp">The <var class="Fa">handler</var> provided to
     <code class="Fn">xpc_main</code>() will be invoked when a new connection has
     been established with the service. For each new connection, an
     <var class="Ft">xpc_connection_t</var> will be passed as the parameter to
     the <var class="Fa">handler</var>. Each connection corresponds to a call to
-    <a class="Xr" href="../3/xpc_connection_create">xpc_connection_create(3)</a>
-    made by a client of the service.</p>
+    <a class="Xr" href="../3/xpc_connection_create" aria-label="xpc_connection_create,
+    section 3">xpc_connection_create(3)</a> made by a client of the service.</p>
 <p class="Pp" id="must">The <var class="Fa">handler</var>
     <a class="permalink" href="#must"><i class="Em">must</i></a> either accept
     the connection by setting an event handler with
-    <a class="Xr" href="../3/xpc_connection_set_event_handler">xpc_connection_set_event_handler(3)</a>
-    and calling
-    <a class="Xr" href="../3/xpc_connection_resume">xpc_connection_resume(3)</a>,
-    or reject the connection by calling
-    <a class="Xr" href="../3/xpc_connection_cancel">xpc_connection_cancel(3)</a>.
-    Failure to take one of these actions will result in the connection remaining
-    in an undefined state, potentially causing resource leaks or preventing
-    proper transaction cleanup.</p>
+    <a class="Xr" href="../3/xpc_connection_set_event_handler" aria-label="xpc_connection_set_event_handler,
+    section 3">xpc_connection_set_event_handler(3)</a> and calling
+    <a class="Xr" href="../3/xpc_connection_resume" aria-label="xpc_connection_resume,
+    section 3">xpc_connection_resume(3)</a>, or reject the connection by calling
+    <a class="Xr" href="../3/xpc_connection_cancel" aria-label="xpc_connection_cancel,
+    section 3">xpc_connection_cancel(3)</a>. Failure to take one of these
+    actions will result in the connection remaining in an undefined state,
+    potentially causing resource leaks or preventing proper transaction
+  cleanup.</p>
 <p class="Pp" id="handler">The new connection passed to
     <a class="permalink" href="#handler"><code class="Fn">handler</code></a>()
     must be retained using
-    <a class="Xr" href="../3/xpc_retain">xpc_retain(3)</a> if it will be stored
-    in data structures that persist beyond the scope of that function.</p>
+    <a class="Xr" href="../3/xpc_retain" aria-label="xpc_retain, section
+    3">xpc_retain(3)</a> if it will be stored in data structures that persist
+    beyond the scope of that function.</p>
 <div class="Bd Pp Bd-indent Li">
 <pre>static void
 new_connection_handler(xpc_connection_t peer)
@@ -92,16 +91,18 @@ main(void)
     <a class="permalink" href="#xpc_main~2"><code class="Fn" id="xpc_main~2">xpc_main</code></a>().</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RUNTIME_MANAGEMENT"><a class="permalink" href="#RUNTIME_MANAGEMENT">RUNTIME
-  MANAGEMENT</a></h1>
+<h2 class="Sh" id="RUNTIME_MANAGEMENT"><a class="permalink" href="#RUNTIME_MANAGEMENT">RUNTIME
+  MANAGEMENT</a></h2>
 <p class="Pp">The XPC runtime automatically keeps track of message activity to
     determine whether a service is busy or idle. If the service remains idle
     after a period of inactivity (defined by the system),
     <code class="Fn">xpc_main</code>() will exit the process. This behavior is
     automatically enabled for XPC services, but
-    <a class="Xr" href="../8/launchd">launchd(8)</a> jobs wishing to opt into
-    the same behavior may do so by adding the EnablePressuredExit key to their
-    <a class="Xr" href="../5/launchd.plist">launchd.plist(5)</a>.</p>
+    <a class="Xr" href="../8/launchd" aria-label="launchd, section
+    8">launchd(8)</a> jobs wishing to opt into the same behavior may do so by
+    adding the EnablePressuredExit key to their
+    <a class="Xr" href="../5/launchd.plist" aria-label="launchd.plist, section
+    5">launchd.plist(5)</a>.</p>
 <p class="Pp">Activity is tracked with a transaction count maintained by the XPC
     runtime. A service is deemed idle when its transaction count is zero. The
     transaction count is incremented immediately before the receipt and delivery
@@ -109,9 +110,10 @@ main(void)
     correspondingly decremented when the event handler returns.</p>
 <p class="Pp">The transaction count is also incremented when a reply message is
     created with
-    <a class="Xr" href="../3/xpc_dictionary_create_reply">xpc_dictionary_create_reply(3)</a>,
-    and decremented when the reply is sent. As a result, a service with
-    outstanding reply messages is not considered idle.</p>
+    <a class="Xr" href="../3/xpc_dictionary_create_reply" aria-label="xpc_dictionary_create_reply,
+    section 3">xpc_dictionary_create_reply(3)</a>, and decremented when the
+    reply is sent. As a result, a service with outstanding reply messages is not
+    considered idle.</p>
 <p class="Pp" id="xpc_transaction_begin">Services may extend the default
     behavior using
     <a class="permalink" href="#xpc_transaction_begin"><code class="Fn">xpc_transaction_begin</code></a>()
@@ -142,9 +144,10 @@ main(void)
     message or reply object, just like transactions. So while the service
     maintains a reference to a message which boosted it, the boost will remain.
     If a reply message is created using
-    <a class="Xr" href="../3/xpc_dictionary_create_reply">xpc_dictionary_create_reply(3)</a>,
-    the boost transfers to the reply object and will remain with the process
-    until the reply has been sent or deallocated.</p>
+    <a class="Xr" href="../3/xpc_dictionary_create_reply" aria-label="xpc_dictionary_create_reply,
+    section 3">xpc_dictionary_create_reply(3)</a>, the boost transfers to the
+    reply object and will remain with the process until the reply has been sent
+    or deallocated.</p>
 <p class="Pp">Note that boosts happen as a result of a message-send operation.
     So even if the service isn't running when a boosting message is sent, it
     will be launched on-demand at the elevated priority necessary to receive the
@@ -153,12 +156,12 @@ main(void)
     boosting by specifying their ProcessType as Adaptive. This will apply
     priority boosting behavior only to the MachServices that are in the
     launchd.plist. See
-    <a class="Xr" href="../5/launchd.plist">launchd.plist(5)</a> for more
-    details.</p>
+    <a class="Xr" href="../5/launchd.plist" aria-label="launchd.plist, section
+    5">launchd.plist(5)</a> for more details.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DEFAULT_ENVIRONMENT"><a class="permalink" href="#DEFAULT_ENVIRONMENT">DEFAULT
-  ENVIRONMENT</a></h1>
+<h2 class="Sh" id="DEFAULT_ENVIRONMENT"><a class="permalink" href="#DEFAULT_ENVIRONMENT">DEFAULT
+  ENVIRONMENT</a></h2>
 <p class="Pp">The execution environment for XPC services bundled with
     applications is tightly controlled. By default, services are executed in a
     new security audit session and therefore do not have access to the current
@@ -168,26 +171,26 @@ main(void)
 <p class="Pp" id="xpc_main~3">By default, the
     <a class="permalink" href="#xpc_main~3"><code class="Fn">xpc_main</code></a>()
     function will call the
-    <a class="Xr" href="../3/dispatch_main">dispatch_main(3)</a> function to
-    manage the service's main event loop. This behavior may be overridden with
-    the <var class="Ft">RunLoopType</var> key in the service's
-    <span class="Pa">Info.plist</span>.</p>
+    <a class="Xr" href="../3/dispatch_main" aria-label="dispatch_main, section
+    3">dispatch_main(3)</a> function to manage the service's main event loop.
+    This behavior may be overridden with the <var class="Ft">RunLoopType</var>
+    key in the service's <span class="Pa">Info.plist</span>.</p>
 <p class="Pp">See
-    <a class="Xr" href="../5/xpcservice.plist">xpcservice.plist(5)</a> for more
-    information about these keys.</p>
+    <a class="Xr" href="../5/xpcservice.plist" aria-label="xpcservice.plist,
+    section 5">xpcservice.plist(5)</a> for more information about these
+  keys.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../3/xpc">xpc(3)</a>,
-    <a class="Xr" href="../3/xpc_connection_create">xpc_connection_create(3)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../3/xpc" aria-label="xpc, section
+    3">xpc(3)</a>,
+    <a class="Xr" href="../3/xpc_connection_create" aria-label="xpc_connection_create,
+    section 3">xpc_connection_create(3)</a></p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">1 July, 2011</td>
-    <td class="foot-os"><a href="..">Darwin</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Darwin</a></span> <span class="foot-date">1 July,
+  2011</span> <span class="foot-right">xpc_main(3)</span></div>
 </body>
 </html>

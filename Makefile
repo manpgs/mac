@@ -48,8 +48,10 @@ $(dirs):
 man2html = $(MANDOC) -Oman=../%S/%N,style=../style.css -Thtml "$<" | \
 	$(SED) '/<pre>/,/<\/pre>/{/^<br\/>$$/d;}; \
 		s/<html>/<html lang="en">/; \
-		/head-vol/s|>\(.*\)<|><a href=".">\1</a><|; \
-		/foot-os/s|>\(.*\)<|><a href="..">\1</a><| \
+		/"head-vol"/N; \
+		/"foot-left"/N; \
+		s|\("head-vol">\)\([^<][^<]*\)|\1<a href=".">\2</a>|; \
+		s|\("foot-left">\)\([^<][^<]*\)|\1<a href="..">\2</a>| \
 	'
 
 convert = $(man2html) > "$@"

@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SSH-KEYSCAN(1)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
-  	$OpenBSD: ssh-keyscan.1,v 1.53 2025/10/04 21:41:35 naddy Exp $
+  	$OpenBSD: ssh-keyscan.1,v 1.54 2026/06/26 06:17:13 djm Exp $
   
    Copyright 1995, 1996 by David Mazieres <dm@lcs.mit.edu>.
   
@@ -9,28 +15,20 @@
    permitted provided that due credit is given to the author and the
    OpenBSD project by leaving this copyright notice intact.
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>SSH-KEYSCAN(1)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">SSH-KEYSCAN(1)</td>
-    <td class="head-vol"><a href=".">General Commands Manual</a></td>
-    <td class="head-rtitle">SSH-KEYSCAN(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">SSH-KEYSCAN(1)</span>
+  <span class="head-vol"><a href=".">General Commands Manual</a></span>
+  <span class="head-rtitle">SSH-KEYSCAN(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">ssh-keyscan</code> &#x2014;
-    <span class="Nd">gather SSH public keys from servers</span></p>
+    <span class="Nd" role="doc-subtitle">gather SSH public keys from
+    servers</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <table class="Nm">
   <tr>
     <td><code class="Nm">ssh-keyscan</code></td>
@@ -45,23 +43,30 @@
 </table>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><code class="Nm">ssh-keyscan</code> is a utility for gathering the
     public SSH host keys of a number of hosts. It was designed to aid in
     building and verifying <span class="Pa">ssh_known_hosts</span> files, the
-    format of which is documented in <a class="Xr" href="../8/sshd">sshd(8)</a>.
+    format of which is documented in
+    <a class="Xr" href="../8/sshd" aria-label="sshd, section 8">sshd(8)</a>.
     <code class="Nm">ssh-keyscan</code> provides a minimal interface suitable
     for use by shell and perl scripts.</p>
 <p class="Pp"><code class="Nm">ssh-keyscan</code> uses non-blocking socket I/O
     to contact as many hosts as possible in parallel, so it is very efficient.
     The keys from a domain of 1,000 hosts can be collected in tens of seconds,
     even when some of those hosts are down or do not run
-    <a class="Xr" href="../8/sshd">sshd(8)</a>. For scanning, one does not need
-    login access to the machines that are being scanned, nor does the scanning
-    process involve any encryption.</p>
+    <a class="Xr" href="../8/sshd" aria-label="sshd, section 8">sshd(8)</a>. For
+    scanning, one does not need login access to the machines that are being
+    scanned, nor does the scanning process involve any encryption.</p>
 <p class="Pp">Hosts to be scanned may be specified by hostname, address or by
     CIDR network range (e.g. 192.168.16/28). If a network range is specified,
     then all addresses in that range will be scanned.</p>
+<p class="Pp"><code class="Nm">ssh-keyscan</code> cannot verify the authenticity
+    of the host keys it obtains, and an attacker on the network with the ability
+    to intercept traffic could substitute their own host keys to enable
+    impersonation of servers. Because of this,
+    <code class="Nm">ssh-keyscan</code> output should be verified out of band,
+    or only used directly for host authentication if the network is trusted.</p>
 <p class="Pp">The options are as follows:</p>
 <dl class="Bl-tag">
   <dt id="4"><a class="permalink" href="#4"><code class="Fl">-4</code></a></dt>
@@ -72,8 +77,8 @@
   <dd>Request certificates from target hosts instead of plain keys.</dd>
   <dt id="D"><a class="permalink" href="#D"><code class="Fl">-D</code></a></dt>
   <dd>Print keys found as SSHFP DNS records. The default is to print keys in a
-      format usable as an <a class="Xr" href="../1/ssh">ssh(1)</a>
-      <span class="Pa">known_hosts</span> file.</dd>
+      format usable as an <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> <span class="Pa">known_hosts</span> file.</dd>
   <dt id="f"><a class="permalink" href="#f"><code class="Fl">-f</code></a>
     <var class="Ar">file</var></dt>
   <dd>Read hosts or &#x201C;addrlist namelist&#x201D; pairs from
@@ -92,9 +97,10 @@ happy.example.org
   </dd>
   <dt id="H"><a class="permalink" href="#H"><code class="Fl">-H</code></a></dt>
   <dd>Hash all hostnames and addresses in the output. Hashed names may be used
-      normally by <a class="Xr" href="../1/ssh">ssh(1)</a> and
-      <a class="Xr" href="../8/sshd">sshd(8)</a>, but they do not reveal
-      identifying information should the file's contents be disclosed.</dd>
+      normally by <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> and <a class="Xr" href="../8/sshd" aria-label="sshd, section
+      8">sshd(8)</a>, but they do not reveal identifying information should the
+      file's contents be disclosed.</dd>
   <dt id="O"><a class="permalink" href="#O"><code class="Fl">-O</code></a>
     <var class="Ar">option</var></dt>
   <dd>Specify a key/value option. At present, only a single option is supported:
@@ -137,11 +143,11 @@ happy.example.org
     ssh_known_hosts file was created.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<h2 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h2>
 <p class="Pp"><span class="Pa">/etc/ssh/ssh_known_hosts</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <p class="Pp">Print the RSA host key for machine
   <var class="Ar">hostname</var>:</p>
 <p class="Pp"></p>
@@ -160,28 +166,28 @@ happy.example.org
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/ssh">ssh(1)</a>,
-    <a class="Xr" href="../8/sshd">sshd(8)</a></p>
-<p class="Pp"><cite class="Rs"><span class="RsT">Using DNS to Securely Publish
-    Secure Shell (SSH) Key Fingerprints</span>, <span class="RsR">RFC
-    4255</span>, <span class="RsD">2006</span>.</cite></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/ssh" aria-label="ssh, section
+    1">ssh(1)</a>, <a class="Xr" href="../8/sshd" aria-label="sshd, section
+    8">sshd(8)</a></p>
+<p class="Pp"><span class="Rs"><cite class="RsB">Using DNS to Securely Publish
+    Secure Shell (SSH) Key Fingerprints</cite>,
+    <a class="RsR" href="https://www.rfc-editor.org/rfc/rfc4255.html">RFC
+    4255</a>, <span class="RsD">2006</span>.</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<h2 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h2>
 <p class="Pp"><span class="An">David Mazieres</span>
     &lt;<a class="Mt" href="mailto:dm@lcs.mit.edu">dm@lcs.mit.edu</a>&gt; wrote
     the initial version, and <span class="An">Wayne Davison</span>
     &lt;<a class="Mt" href="mailto:wayned@users.sourceforge.net">wayned@users.sourceforge.net</a>&gt;
     added support for protocol version 2.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">October 4, 2025</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">June 26, 2026</span>
+  <span class="foot-right">SSH-KEYSCAN(1)</span></div>
 </body>
 </html>

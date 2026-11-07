@@ -1,40 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: gitprotocol-pack
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GITPROTOCOL-PACK(5)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: gitprotocol-pack
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GITPROTOCOL-PACK(5)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GITPROTOCOL-PACK(5)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GITPROTOCOL-PACK(5)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GITPROTOCOL-PACK(5)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">gitprotocol-pack - How packs are transferred over-the-wire</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre>&lt;over-the-wire-protocol&gt;</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">Git supports transferring data in packfiles over the ssh://,
     git://, http:// and file:// transports. There exist two sets of protocols,
     one for pushing data from a client to a server and another for fetching data
@@ -50,8 +47,8 @@
     update one or the other.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PKT"><a class="permalink" href="#PKT">PKT-LINE
-  FORMAT</a></h1>
+<h2 class="Sh" id="PKT-LINE_FORMAT"><a class="permalink" href="#PKT-LINE_FORMAT">PKT-LINE
+  FORMAT</a></h2>
 <p class="Pp">The descriptions below build on the pkt-line format described in
     <b>gitprotocol-common</b>(5). When the grammar indicates
     <b>PKT-LINE</b>(<b>...</b>), unless otherwise noted the usual pkt-line LF
@@ -70,9 +67,10 @@
     terminated.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TRANSPORTS"><a class="permalink" href="#TRANSPORTS">TRANSPORTS</a></h1>
+<h2 class="Sh" id="TRANSPORTS"><a class="permalink" href="#TRANSPORTS">TRANSPORTS</a></h2>
 <p class="Pp">There are three transports over which the packfile protocol is
-    initiated. The Git transport is a simple, unauthenticated server that takes
+    initiated.</p>
+<p class="Pp">The Git transport is a simple, unauthenticated server that takes
     the command (almost always <i>upload-pack</i>, though Git servers can be
     configured to be globally writable, in which <i>receive- pack</i> initiation
     is also allowed) with which the client wishes to communicate and executes it
@@ -85,12 +83,12 @@
   pipe.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXTRA_PARAMETERS"><a class="permalink" href="#EXTRA_PARAMETERS">EXTRA
-  PARAMETERS</a></h1>
+<h2 class="Sh" id="EXTRA_PARAMETERS"><a class="permalink" href="#EXTRA_PARAMETERS">EXTRA
+  PARAMETERS</a></h2>
 <p class="Pp">The protocol provides a mechanism in which clients can send
-    additional information in its first message to the server. These are called
-    &quot;Extra Parameters&quot;, and are supported by the Git, SSH, and HTTP
-    protocols.</p>
+    additional information in their first message to the server. These are
+    called &quot;Extra Parameters&quot;, and are supported by the Git, SSH, and
+    HTTP protocols.</p>
 <p class="Pp">Each Extra Parameter takes the form of
     <i>&lt;key&gt;</i><b>=</b><i>&lt;value&gt;</i> or <i>&lt;key&gt;</i>.</p>
 <p class="Pp">Servers that receive any such Extra Parameters MUST ignore all
@@ -99,8 +97,8 @@
     <b>gitprotocol-v2</b>(5) for more information on protocol version 2.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT_TRANSPORT"><a class="permalink" href="#GIT_TRANSPORT">GIT
-  TRANSPORT</a></h1>
+<h2 class="Sh" id="GIT_TRANSPORT"><a class="permalink" href="#GIT_TRANSPORT">GIT
+  TRANSPORT</a></h2>
 <p class="Pp">The Git transport starts off by sending the command and repository
     on the wire using the pkt-line format, followed by a NUL byte and a hostname
     parameter, terminated by a NUL byte.</p>
@@ -139,11 +137,11 @@ extra-parameter   = 1*( %x01-ff ) NUL</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SSH_TRANSPORT"><a class="permalink" href="#SSH_TRANSPORT">SSH
-  TRANSPORT</a></h1>
-<p class="Pp">Initiating the upload-pack or receive-pack processes over SSH is
-    executing the binary on the server via SSH remote execution. It is basically
-    equivalent to running this:</p>
+<h2 class="Sh" id="SSH_TRANSPORT"><a class="permalink" href="#SSH_TRANSPORT">SSH
+  TRANSPORT</a></h2>
+<p class="Pp">Initiating the <i>upload-pack</i> or <i>receive-pack</i> processes
+    over SSH is executing the binary on the server via SSH remote execution. It
+    is basically equivalent to running this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>$ ssh git.example.com &quot;git-upload-pack '/project.git'&quot;</pre>
@@ -155,8 +153,8 @@ extra-parameter   = 1*( %x01-ff ) NUL</pre>
     or even just one of them.</p>
 <p class="Pp">In an ssh:// format URI, it&#x2019;s absolute in the URI, so the
     <i>/</i> after the host name (or port number) is sent as an argument, which
-    is then read by the remote git-upload-pack exactly as is, so it&#x2019;s
-    effectively an absolute path in the remote filesystem.</p>
+    is then read by the remote <i>git-upload-pack</i> exactly as is, so
+    it&#x2019;s effectively an absolute path in the remote filesystem.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
@@ -193,21 +191,21 @@ ssh user@example.com &quot;git-upload-pack '~alice/project.git'&quot;</pre>
 <p class="Pp">A few things to remember here:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;The &quot;command name&quot; is spelled with dash
-  (e.g. git-upload-pack), but this can be overridden by the client;</div>
+  (e.g. <i>git-upload-pack</i>), but this can be overridden by the client;</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;The repository path is always quoted with single
   quotes.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FETCHING_DATA_FROM_A_SERVER"><a class="permalink" href="#FETCHING_DATA_FROM_A_SERVER">FETCHING
-  DATA FROM A SERVER</a></h1>
+<h2 class="Sh" id="FETCHING_DATA_FROM_A_SERVER"><a class="permalink" href="#FETCHING_DATA_FROM_A_SERVER">FETCHING
+  DATA FROM A SERVER</a></h2>
 <p class="Pp">When one Git repository wants to get data that a second repository
     has, the first can <i>fetch</i> from the second. This operation determines
     what data the server has that the client does not then streams that data
     down to the client in packfile format.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">REFERENCE DISCOVERY</h1>
+<h2 class="Sh">REFERENCE DISCOVERY</h2>
 <p class="Pp">When the client initially connects the server will immediately
     respond with a version number (if &quot;version=1&quot; is sent as an Extra
     Parameter), and a listing of each reference it has (all branches and tags)
@@ -263,8 +261,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     capabilities and descriptions.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PACKFILE_NEGOTIATION"><a class="permalink" href="#PACKFILE_NEGOTIATION">PACKFILE
-  NEGOTIATION</a></h1>
+<h2 class="Sh" id="PACKFILE_NEGOTIATION"><a class="permalink" href="#PACKFILE_NEGOTIATION">PACKFILE
+  NEGOTIATION</a></h2>
 <p class="Pp">After reference and capabilities discovery, the client can decide
     to terminate the connection by sending a flush-pkt, telling the server it
     can now gracefully terminate, and disconnect, when it does not need any pack
@@ -295,7 +293,7 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
   depth             =  1*DIGIT
   filter-request    =  PKT-LINE(&quot;filter&quot; SP filter-spec)</pre>
 </div>
-<p class="Pp">Clients MUST send all the obj-ids it wants from the reference
+<p class="Pp">Clients MUST send all the obj-ids they want from the reference
     discovery phase as <i>want</i> lines. Clients MUST send at least one
     <i>want</i> command in the request body. Clients MUST NOT mention an obj-id
     in a <i>want</i> command which did not appear in the response obtained
@@ -383,13 +381,13 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
   lines.</div>
 <p class="Pp">Without either multi_ack or multi_ack_detailed:</p>
 <p class="Pp"></p>
-<div class="Bd-indent">&#x2022;upload-pack sends &quot;ACK obj-id&quot; on the
-  first common object it finds. After that it says nothing until the client
-  gives it a &quot;done&quot;.</div>
+<div class="Bd-indent">&#x2022;<i>upload-pack</i> sends &quot;ACK obj-id&quot;
+  on the first common object it finds. After that it says nothing until the
+  client gives it a &quot;done&quot;.</div>
 <p class="Pp"></p>
-<div class="Bd-indent">&#x2022;upload-pack sends &quot;NAK&quot; on a flush-pkt
-  if no common object has been found yet. If one has been found, and thus an ACK
-  was already sent, it&#x2019;s silent on the flush-pkt.</div>
+<div class="Bd-indent">&#x2022;<i>upload-pack</i> sends &quot;NAK&quot; on a
+  flush-pkt if no common object has been found yet. If one has been found, and
+  thus an ACK was already sent, it&#x2019;s silent on the flush-pkt.</div>
 <p class="Pp">After the client has gotten enough ACK responses that it can
     determine that the server has enough information to send an efficient
     packfile (in the canonical implementation, this is determined when it has
@@ -461,8 +459,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PACKFILE_DATA"><a class="permalink" href="#PACKFILE_DATA">PACKFILE
-  DATA</a></h1>
+<h2 class="Sh" id="PACKFILE_DATA"><a class="permalink" href="#PACKFILE_DATA">PACKFILE
+  DATA</a></h2>
 <p class="Pp">Now that the client and server have finished negotiation about
     what the minimal amount of data that needs to be sent to the client is, the
     server will construct and send the required data in packfile format.</p>
@@ -486,8 +484,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     stream the entire packfile without multiplexing.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PUSHING_DATA_TO_A_SERVER"><a class="permalink" href="#PUSHING_DATA_TO_A_SERVER">PUSHING
-  DATA TO A SERVER</a></h1>
+<h2 class="Sh" id="PUSHING_DATA_TO_A_SERVER"><a class="permalink" href="#PUSHING_DATA_TO_A_SERVER">PUSHING
+  DATA TO A SERVER</a></h2>
 <p class="Pp">Pushing data to a server will invoke the <i>receive-pack</i>
     process on the server, which will allow the client to tell it which
     references it should update and then send all the data the server will need
@@ -496,7 +494,7 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     specified.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHENTICATION"><a class="permalink" href="#AUTHENTICATION">AUTHENTICATION</a></h1>
+<h2 class="Sh" id="AUTHENTICATION"><a class="permalink" href="#AUTHENTICATION">AUTHENTICATION</a></h2>
 <p class="Pp">The protocol itself contains no authentication mechanisms. That is
     to be handled by the transport, such as SSH, before the <i>receive-pack</i>
     process is invoked. If <i>receive-pack</i> is configured over the Git
@@ -504,7 +502,7 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     port (9418) as that transport is unauthenticated.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">REFERENCE DISCOVERY</h1>
+<h2 class="Sh">REFERENCE DISCOVERY</h2>
 <p class="Pp">The reference discovery phase is done nearly the same way as it is
     in the fetching protocol. Each reference obj-id and name on the server is
     sent in packet-line format to the client, followed by a flush-pkt. The only
@@ -514,8 +512,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
   <i>push-options</i>.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="REFERENCE_UPDATE_REQUEST_AND_PACKFILE_TRANSFER"><a class="permalink" href="#REFERENCE_UPDATE_REQUEST_AND_PACKFILE_TRANSFER">REFERENCE
-  UPDATE REQUEST AND PACKFILE TRANSFER</a></h1>
+<h2 class="Sh" id="REFERENCE_UPDATE_REQUEST_AND_PACKFILE_TRANSFER"><a class="permalink" href="#REFERENCE_UPDATE_REQUEST_AND_PACKFILE_TRANSFER">REFERENCE
+  UPDATE REQUEST AND PACKFILE TRANSFER</a></h2>
 <p class="Pp">Once the client knows what references the server is at, it can
     send a list of reference update requests. For each reference on the server
     that it wants to update, it sends a line listing the obj-id currently on the
@@ -589,8 +587,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     If all of that is fine, the server will then update the references.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PUSH_CERTIFICATE"><a class="permalink" href="#PUSH_CERTIFICATE">PUSH
-  CERTIFICATE</a></h1>
+<h2 class="Sh" id="PUSH_CERTIFICATE"><a class="permalink" href="#PUSH_CERTIFICATE">PUSH
+  CERTIFICATE</a></h2>
 <p class="Pp">A push certificate begins with a set of header lines. After the
     header and an empty line, the protocol commands follow, one per line. Note
     that the trailing LF in push-cert PKT-LINEs is <i>not</i> optional; it must
@@ -613,8 +611,8 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
     pusher, who must be the signer.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="REPORT_STATUS"><a class="permalink" href="#REPORT_STATUS">REPORT
-  STATUS</a></h1>
+<h2 class="Sh" id="REPORT_STATUS"><a class="permalink" href="#REPORT_STATUS">REPORT
+  STATUS</a></h2>
 <p class="Pp">After receiving the pack data from the sender, the receiver sends
     a report if <i>report-status</i> or <i>report-status-v2</i> capability is in
     effect. It is a short listing of what happened in that update. It will first
@@ -690,15 +688,13 @@ side-band side-band-64k ofs-delta shallow no-progress include-tag
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GITPROTOCOL-PACK(5)</span></div>
 </body>
 </html>

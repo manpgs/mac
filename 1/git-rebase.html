@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-rebase
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-REBASE(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-rebase
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-REBASE(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-REBASE(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-REBASE(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-REBASE(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-rebase - Reapply commits on top of another base tip</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre><i>git rebase</i> [-i | --interactive] [&lt;options&gt;] [--exec &lt;cmd&gt;]
         [--onto &lt;newbase&gt; | --keep-base] [&lt;upstream&gt; [&lt;branch&gt;]]
 <i>git rebase</i> [-i | --interactive] [&lt;options&gt;] [--exec &lt;cmd&gt;] [--onto &lt;newbase&gt;]
@@ -38,54 +35,13 @@
 <i>git rebase</i> (--continue|--skip|--abort|--quit|--edit-todo|--show-current-patch)</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">If <i>&lt;branch&gt;</i> is specified, <b>git</b> <b>rebase</b>
-    will perform an automatic <b>git</b> <b>switch</b> <i>&lt;branch&gt;</i>
-    before doing anything else. Otherwise it remains on the current branch.</p>
-<p class="Pp">If <i>&lt;upstream&gt;</i> is not specified, the upstream
-    configured in <b>branch.</b><i>&lt;name&gt;</i><b>.remote</b> and
-    <b>branch.</b><i>&lt;name&gt;</i><b>.merge</b> options will be used (see
-    <b>git-config</b>(1) for details) and the <b>--fork-point</b> option is
-    assumed. If you are currently not on any branch or if the current branch
-    does not have a configured upstream, the rebase will abort.</p>
-<p class="Pp">All changes made by commits in the current branch but that are not
-    in <i>&lt;upstream&gt;</i> are saved to a temporary area. This is the same
-    set of commits that would be shown by <b>git</b> <b>log</b>
-    <i>&lt;upstream&gt;</i><b>..</b><b>HEAD</b>; or by <b>git</b> <b>log</b>
-    'fork_point'<b>..</b><b>HEAD</b>, if <b>--fork-point</b> is active (see the
-    description on <b>--fork-point</b> below); or by <b>git</b> <b>log</b>
-    <b>HEAD</b>, if the <b>--root</b> option is specified.</p>
-<p class="Pp">The current branch is reset to <i>&lt;upstream&gt;</i> or
-    <i>&lt;newbase&gt;</i> if the <b>--onto</b> option was supplied. This has
-    the exact same effect as <b>git</b> <b>reset</b> <b>--hard</b>
-    <i>&lt;upstream&gt;</i> (or <i>&lt;newbase&gt;</i>). <b>ORIG_HEAD</b> is set
-    to point at the tip of the branch before the reset.</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<br/>
-<b>Note</b>
-<p class="Pp"><b>ORIG_HEAD</b> is not guaranteed to still point to the previous
-    branch tip at the end of the rebase if other commands that write that
-    pseudo-ref (e.g. <b>git</b> <b>reset</b>) are used during the rebase. The
-    previous branch tip, however, is accessible using the reflog of the current
-    branch (i.e. <b>@</b>{1}, see <b>gitrevisions</b>(7)).</p>
-<p class="Pp"></p>
-</div>
-<p class="Pp">The commits that were previously saved into the temporary area are
-    then reapplied to the current branch, one by one, in order. Note that any
-    commits in <b>HEAD</b> which introduce the same textual changes as a commit
-    in <b>HEAD</b><b>..</b><i>&lt;upstream&gt;</i> are omitted (i.e., a patch
-    already accepted upstream with a different commit message or timestamp will
-    be skipped).</p>
-<p class="Pp">It is possible that a merge failure will prevent this process from
-    being completely automatic. You will have to resolve any such merge failure
-    and run <b>git</b> <b>rebase</b> <b>--continue</b>. Another option is to
-    bypass the commit that caused the merge failure with <b>git</b>
-    <b>rebase</b> <b>--skip</b>. To check out the original <i>&lt;branch&gt;</i>
-    and remove the .<b>git/rebase-apply</b> working files, use the command
-    <b>git</b> <b>rebase</b> <b>--abort</b> instead.</p>
-<p class="Pp">Assume the following history exists and the current branch is
-    &quot;topic&quot;:</p>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
+<p class="Pp">Transplant a series of commits onto a different starting point.
+    You can also use <b>git</b> <b>rebase</b> to reorder or combine commits: see
+    INTERACTIVE MODE below for how to do that.</p>
+<p class="Pp">For example, imagine that you have been working on the
+    <b>topic</b> branch in this history, and you want to &quot;catch up&quot; to
+    the work done on the <b>master</b> branch.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
@@ -93,14 +49,13 @@
          /
     D---E---F---G master</pre>
 </div>
-<p class="Pp">From this point, the result of either of the following
-  commands:</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>git rebase master
-git rebase master topic</pre>
-</div>
-<p class="Pp">would be:</p>
+<p class="Pp">You want to transplant the commits you made on <b>topic</b> since
+    it diverged from <b>master</b> (i.e. A, B, and C), on top of the current
+    <b>master</b>. You can do this by running <b>git</b> <b>rebase</b>
+    <b>master</b> while the <b>topic</b> branch is checked out. If you want to
+    rebase <b>topic</b> while on another branch, <b>git</b> <b>rebase</b>
+    <b>master</b> <b>topic</b> is a shortcut for <b>git</b> <b>checkout</b>
+    <b>topic</b> &amp;&amp; <b>git</b> <b>rebase</b> <b>master</b>.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>
@@ -108,32 +63,76 @@ git rebase master topic</pre>
                  /
     D---E---F---G master</pre>
 </div>
-<p class="Pp"><b>NOTE:</b> The latter form is just a short-hand of <b>git</b>
-    <b>checkout</b> <b>topic</b> followed by <b>git</b> <b>rebase</b>
-    <b>master</b>. When rebase exits <b>topic</b> will remain the checked-out
-    branch.</p>
-<p class="Pp">If the upstream branch already contains a change you have made
-    (e.g., because you mailed a patch which was applied upstream), then that
-    commit will be skipped and warnings will be issued (if the <i>merge</i>
-    backend is used). For example, running <b>git</b> <b>rebase</b>
-    <b>master</b> on the following history (in which <b>A</b>' and <b>A</b>
-    introduce the same set of changes, but have different committer
-    information):</p>
+<p class="Pp">If there is a merge conflict during this process, <b>git</b>
+    <b>rebase</b> will stop at the first problematic commit and leave conflict
+    markers. If this happens, you can do one of these things:</p>
+<p class="Pp"></p>
+<div class="Bd-indent"> 1.Resolve the conflict. You can use <b>git</b>
+  <b>diff</b> to find the markers (&lt;&lt;&lt;&lt;&lt;&lt;) and make edits to
+  resolve the conflict. For each file you edit, you need to tell Git that the
+  conflict has been resolved. You can mark the conflict as resolved with
+  <b>git</b> <b>add</b> <i>&lt;filename&gt;</i>. After resolving all of the
+  conflicts, you can continue the rebasing process with
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-          A---B---C topic
-         /
-    D---E---A'---F master</pre>
+<pre>git rebase --continue</pre>
 </div>
-<p class="Pp">will result in:</p>
+</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 2.Stop the <b>git</b> <b>rebase</b> and return your
+  branch to its original state with
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>
-                   B'---C' topic
-                  /
-    D---E---A'---F master</pre>
+<pre>git rebase --abort</pre>
 </div>
+</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 3.Skip the commit that caused the merge conflict with
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>git rebase --skip</pre>
+</div>
+</div>
+<p class="Pp">If you don&#x2019;t specify an <i>&lt;upstream&gt;</i> to rebase
+    onto, the upstream configured in
+    <b>branch.</b><i>&lt;name&gt;</i><b>.remote</b> and
+    <b>branch.</b><i>&lt;name&gt;</i><b>.merge</b> options will be used (see
+    <b>git-config</b>(1) for details) and the <b>--fork-point</b> option is
+    assumed. If you are currently not on any branch or if the current branch
+    does not have a configured upstream, the rebase will abort.</p>
+<p class="Pp">Here is a simplified description of what <b>git</b> <b>rebase</b>
+    <i>&lt;upstream&gt;</i> does:</p>
+<p class="Pp"></p>
+<div class="Bd-indent"> 1.Make a list of all commits on your current branch
+  since it branched off from <i>&lt;upstream&gt;</i> that do not have an
+  equivalent commit in <i>&lt;upstream&gt;</i>.</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 2.Check out <i>&lt;upstream&gt;</i> with the equivalent
+  of <b>git</b> <b>checkout</b> <b>--detach</b> <i>&lt;upstream&gt;</i>.</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 3.Replay the commits, one by one, in order. This is
+  similar to running <b>git</b> <b>cherry-pick</b> <i>&lt;commit&gt;</i> for
+  each commit. See REBASING MERGES for how merges are handled.</div>
+<p class="Pp"></p>
+<div class="Bd-indent"> 4.Update your branch to point to the final commit with
+  the equivalent of <b>git</b> <b>checkout</b> <b>-B</b>
+  <i>&lt;branch&gt;</i>.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<b>Note</b>
+<p class="Pp">When starting the rebase, <b>ORIG_HEAD</b> is set to point to the
+    commit at the tip of the to-be-rebased branch. However, <b>ORIG_HEAD</b> is
+    not guaranteed to still point to that commit at the end of the rebase if
+    other commands that change <b>ORIG_HEAD</b> (like <b>git</b> <b>reset</b>)
+    are used during the rebase. The previous branch tip, however, is accessible
+    using the reflog of the current branch (i.e. <b>@</b>{1}, see
+    <b>gitrevisions</b>(7)).</p>
+<p class="Pp"></p>
+</div>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="TRANSPLANTING_A_TOPIC_BRANCH_WITH_--ONTO"><a class="permalink" href="#TRANSPLANTING_A_TOPIC_BRANCH_WITH_--ONTO">TRANSPLANTING
+  A TOPIC BRANCH WITH --ONTO</a></h2>
 <p class="Pp">Here is how you would transplant a topic branch based on one
     branch to another, to pretend that you forked the topic branch from the
     latter branch, using <b>rebase</b> <b>--onto</b>.</p>
@@ -215,31 +214,10 @@ git rebase master topic</pre>
 <p class="Pp">This is useful if F and G were flawed in some way, or should not
     be part of topicA. Note that the argument to <b>--onto</b> and the
     <i>&lt;upstream&gt;</i> parameter can be any valid commit-ish.</p>
-<p class="Pp">In case of conflict, <b>git</b> <b>rebase</b> will stop at the
-    first problematic commit and leave conflict markers in the tree. You can use
-    <b>git</b> <b>diff</b> to locate the markers (&lt;&lt;&lt;&lt;&lt;&lt;) and
-    make edits to resolve the conflict. For each file you edit, you need to tell
-    Git that the conflict has been resolved, typically this would be done
-  with</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>git add &lt;filename&gt;</pre>
-</div>
-<p class="Pp">After resolving the conflict manually and updating the index with
-    the desired resolution, you can continue the rebasing process with</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>git rebase --continue</pre>
-</div>
-<p class="Pp">Alternatively, you can undo the <i>git rebase</i> with</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>git rebase --abort</pre>
-</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="MODE_OPTIONS"><a class="permalink" href="#MODE_OPTIONS">MODE
-  OPTIONS</a></h1>
+<h2 class="Sh" id="MODE_OPTIONS"><a class="permalink" href="#MODE_OPTIONS">MODE
+  OPTIONS</a></h2>
 <p class="Pp">The options in this section cannot be used with any other option,
     including not with each other:</p>
 <p class="Pp">--continue</p>
@@ -267,7 +245,7 @@ git rebase master topic</pre>
   <b>show</b> <b>REBASE_HEAD</b>.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp">--onto &lt;newbase&gt;</p>
 <div class="Bd-indent">Starting point at which to create the new commits. If the
   <b>--onto</b> option is not specified, the starting point is
@@ -277,6 +255,8 @@ git rebase master topic</pre>
     the merge base of A and B if there is exactly one merge base. You can leave
     out at most one of A and B, in which case it defaults to HEAD.</p>
 </div>
+<p class="Pp">See TRANSPLANTING A TOPIC BRANCH WITH --ONTO above for
+  examples.</p>
 <p class="Pp">--keep-base</p>
 <div class="Bd-indent">Set the starting point at which to create the new commits
   to the merge base of <i>&lt;upstream&gt;</i> and <i>&lt;branch&gt;</i>.
@@ -404,9 +384,9 @@ git rebase master topic</pre>
 <div class="Bd-indent">After the rerere mechanism reuses a recorded resolution
   on the current conflict to update the files in the working tree, allow it to
   also update the index with the result of resolution.
-  <b>--no-rerere-autoupdate</b> is a good way to double-check what <b>rerere</b>
-  did and catch potential mismerges, before committing the result to the index
-  with a separate <b>git</b> <b>add</b>.</div>
+  <b>--no-rerere-autoupdate</b> is a good way to double-check what
+  <b>git-rerere</b>(1) did and catch potential mismerges, before committing the
+  result to the index with a separate <b>git-add</b>(1).</div>
 <p class="Pp">-S[&lt;keyid&gt;], --gpg-sign[=&lt;keyid&gt;], --no-gpg-sign</p>
 <div class="Bd-indent">GPG-sign commits. The <b>keyid</b> argument is optional
   and defaults to the committer identity; if specified, it must be stuck to the
@@ -492,7 +472,20 @@ git rebase master topic</pre>
 <p class="Pp">--committer-date-is-author-date</p>
 <div class="Bd-indent">Instead of using the current time as the committer date,
   use the author date of the commit being rebased as the committer date. This
-  option implies <b>--force-rebase</b>.</div>
+  option implies <b>--force-rebase</b>.
+<p class="Pp"></p>
+<div class="Bd-indent">
+<br/>
+<b>Warning</b>
+<br/>
+The history walking machinery assumes that commits have non-decreasing commit
+  timestamps. You should consider if you really need to use this option. Then
+  you should only use this option to override the committer date when rebasing
+  commits on top of a base which commit is older (in terms of the commit date)
+  than the oldest commit you are applying (in terms of the author date).
+<p class="Pp"></p>
+</div>
+</div>
 <p class="Pp">--ignore-date, --reset-author-date</p>
 <div class="Bd-indent">Instead of using the author date of the original commit,
   use the current time as the author date of the rebased commit. This option
@@ -503,6 +496,12 @@ git rebase master topic</pre>
 <div class="Bd-indent">Add a <b>Signed-off-by</b> trailer to all the rebased
   commits. Note that if <b>--interactive</b> is given then only commits marked
   to be picked, edited or reworded will have the trailer added.
+<p class="Pp">See also INCOMPATIBLE OPTIONS below.</p>
+</div>
+<p class="Pp">--trailer=&lt;trailer&gt;</p>
+<div class="Bd-indent">Append the given trailer to every rebased commit message,
+  processed via <b>git-interpret-trailers</b>(1). This option implies
+  <b>--force-rebase</b>.
 <p class="Pp">See also INCOMPATIBLE OPTIONS below.</p>
 </div>
 <p class="Pp">-i, --interactive</p>
@@ -624,8 +623,8 @@ git rebase master topic</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="INCOMPATIBLE_OPTIONS"><a class="permalink" href="#INCOMPATIBLE_OPTIONS">INCOMPATIBLE
-  OPTIONS</a></h1>
+<h2 class="Sh" id="INCOMPATIBLE_OPTIONS"><a class="permalink" href="#INCOMPATIBLE_OPTIONS">INCOMPATIBLE
+  OPTIONS</a></h2>
 <p class="Pp">The following options:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;--apply</div>
@@ -659,6 +658,8 @@ git rebase master topic</pre>
 <div class="Bd-indent">&#x2022;--update-refs</div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;--root when used without --onto</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;--trailer</div>
 <p class="Pp">In addition, the following pairs of options are incompatible:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;--keep-base and --onto</div>
@@ -668,8 +669,8 @@ git rebase master topic</pre>
 <div class="Bd-indent">&#x2022;--fork-point and --root</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BEHAVIORAL_DIFFERENCES"><a class="permalink" href="#BEHAVIORAL_DIFFERENCES">BEHAVIORAL
-  DIFFERENCES</a></h1>
+<h2 class="Sh" id="BEHAVIORAL_DIFFERENCES"><a class="permalink" href="#BEHAVIORAL_DIFFERENCES">BEHAVIORAL
+  DIFFERENCES</a></h2>
 <p class="Pp"><b>git</b> <b>rebase</b> has two primary backends: <i>apply</i>
     and <i>merge</i>. (The <i>apply</i> backend used to be known as the
     <i>am</i> backend, but the name led to confusion as it looks like a verb
@@ -678,8 +679,8 @@ git rebase master topic</pre>
     Both were renamed based on lower-level functionality that underpinned each.)
     There are some subtle differences in how these two backends behave:</p>
 <section class="Ss">
-<h2 class="Ss" id="Empty_commits"><a class="permalink" href="#Empty_commits">Empty
-  commits</a></h2>
+<h3 class="Ss" id="Empty_commits"><a class="permalink" href="#Empty_commits">Empty
+  commits</a></h3>
 <p class="Pp">The <i>apply</i> backend unfortunately drops intentionally empty
     commits, i.e. commits that started empty, though these are rare in practice.
     It also drops commits that become empty and has no option for controlling
@@ -695,8 +696,8 @@ git rebase master topic</pre>
     changing the behavior of handling commits that become empty.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Directory_rename_detection"><a class="permalink" href="#Directory_rename_detection">Directory
-  rename detection</a></h2>
+<h3 class="Ss" id="Directory_rename_detection"><a class="permalink" href="#Directory_rename_detection">Directory
+  rename detection</a></h3>
 <p class="Pp">Due to the lack of accurate tree information (arising from
     constructing fake ancestors with the limited information available in
     patches), directory rename detection is disabled in the <i>apply</i>
@@ -709,7 +710,7 @@ git rebase master topic</pre>
     provide you warnings in such cases.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Context"><a class="permalink" href="#Context">Context</a></h2>
+<h3 class="Ss" id="Context"><a class="permalink" href="#Context">Context</a></h3>
 <p class="Pp">The <i>apply</i> backend works by creating a sequence of patches
     (by calling <b>format-patch</b> internally), and then applying the patches
     in sequence (calling <b>am</b> internally). Patches are composed of multiple
@@ -728,8 +729,8 @@ git rebase master topic</pre>
     file, insulating it from these types of problems.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Labelling_of_conflicts_markers"><a class="permalink" href="#Labelling_of_conflicts_markers">Labelling
-  of conflicts markers</a></h2>
+<h3 class="Ss" id="Labelling_of_conflicts_markers"><a class="permalink" href="#Labelling_of_conflicts_markers">Labelling
+  of conflicts markers</a></h3>
 <p class="Pp">When there are content conflicts, the merge machinery tries to
     annotate each side&#x2019;s conflict markers with the commits where the
     content came from. Since the <i>apply</i> backend drops the original
@@ -744,7 +745,7 @@ git rebase master topic</pre>
     of history and thus has no such limitations.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Hooks"><a class="permalink" href="#Hooks">Hooks</a></h2>
+<h3 class="Ss" id="Hooks"><a class="permalink" href="#Hooks">Hooks</a></h3>
 <p class="Pp">The <i>apply</i> backend has not traditionally called the
     post-commit hook, while the <i>merge</i> backend has. Both have called the
     post-checkout hook, though the <i>merge</i> backend has squelched its
@@ -759,7 +760,7 @@ git rebase master topic</pre>
     calling either of these hooks in the future.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Interruptability"><a class="permalink" href="#Interruptability">Interruptability</a></h2>
+<h3 class="Ss" id="Interruptability"><a class="permalink" href="#Interruptability">Interruptability</a></h3>
 <p class="Pp">The <i>apply</i> backend has safety problems with an ill-timed
     interrupt; if the user presses Ctrl-C at the wrong time to try to abort the
     rebase, the rebase can enter a state where it cannot be aborted with a
@@ -769,8 +770,8 @@ git rebase master topic</pre>
     details.)</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Commit_Rewording"><a class="permalink" href="#Commit_Rewording">Commit
-  Rewording</a></h2>
+<h3 class="Ss" id="Commit_Rewording"><a class="permalink" href="#Commit_Rewording">Commit
+  Rewording</a></h3>
 <p class="Pp">When a conflict occurs while rebasing, rebase stops and asks the
     user to resolve. Since the user may need to make notable changes while
     resolving conflicts, after conflicts are resolved and the user has run
@@ -780,8 +781,8 @@ git rebase master topic</pre>
     message.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Miscellaneous_differences"><a class="permalink" href="#Miscellaneous_differences">Miscellaneous
-  differences</a></h2>
+<h3 class="Ss" id="Miscellaneous_differences"><a class="permalink" href="#Miscellaneous_differences">Miscellaneous
+  differences</a></h3>
 <p class="Pp">There are a few more behavioral differences that most folks would
     probably consider inconsequential but which are mentioned for
   completeness:</p>
@@ -801,8 +802,8 @@ git rebase master topic</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="MERGE_STRATEGIES"><a class="permalink" href="#MERGE_STRATEGIES">MERGE
-  STRATEGIES</a></h1>
+<h2 class="Sh" id="MERGE_STRATEGIES"><a class="permalink" href="#MERGE_STRATEGIES">MERGE
+  STRATEGIES</a></h2>
 <p class="Pp">The merge mechanism (<b>git</b> <b>merge</b> and <b>git</b>
     <b>pull</b> commands) allows the backend <i>merge strategies</i> to be
     chosen with <b>-s</b> option. Some strategies can also take their own
@@ -937,7 +938,7 @@ git rebase master topic</pre>
     change at all, and substitutes the changed version instead.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<h2 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h2>
 <p class="Pp">You should understand the implications of using <b>git</b>
     <b>rebase</b> on a repository that you share. See also RECOVERING FROM
     UPSTREAM REBASE below.</p>
@@ -949,8 +950,8 @@ git rebase master topic</pre>
   branch.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="INTERACTIVE_MODE"><a class="permalink" href="#INTERACTIVE_MODE">INTERACTIVE
-  MODE</a></h1>
+<h2 class="Sh" id="INTERACTIVE_MODE"><a class="permalink" href="#INTERACTIVE_MODE">INTERACTIVE
+  MODE</a></h2>
 <p class="Pp">Rebasing interactively means that you have a chance to edit the
     commits which are rebased. You can reorder the commits, and you can remove
     them (weeding out bad or otherwise unwanted patches).</p>
@@ -1097,8 +1098,8 @@ exec make test</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SPLITTING_COMMITS"><a class="permalink" href="#SPLITTING_COMMITS">SPLITTING
-  COMMITS</a></h1>
+<h2 class="Sh" id="SPLITTING_COMMITS"><a class="permalink" href="#SPLITTING_COMMITS">SPLITTING
+  COMMITS</a></h2>
 <p class="Pp">In interactive mode, you can mark commits with the action
     &quot;edit&quot;. However, this does not necessarily mean that <b>git</b>
     <b>rebase</b> expects the result of this edit to be exactly one commit.
@@ -1136,8 +1137,8 @@ exec make test</pre>
     each commit, test, and amend the commit if fixes are necessary.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RECOVERING_FROM_UPSTREAM_REBASE"><a class="permalink" href="#RECOVERING_FROM_UPSTREAM_REBASE">RECOVERING
-  FROM UPSTREAM REBASE</a></h1>
+<h2 class="Sh" id="RECOVERING_FROM_UPSTREAM_REBASE"><a class="permalink" href="#RECOVERING_FROM_UPSTREAM_REBASE">RECOVERING
+  FROM UPSTREAM REBASE</a></h2>
 <p class="Pp">Rebasing (or any other form of rewriting) a branch that others
     have based work on is a bad idea: anyone downstream of it is forced to
     manually fix their history. This section explains how to do the fix from the
@@ -1196,8 +1197,8 @@ exec make test</pre>
   <b>reset</b>, or a full history rewriting command like
   <b></b><b>filter-repo</b>[2].</div>
 <section class="Ss">
-<h2 class="Ss" id="The_easy_case"><a class="permalink" href="#The_easy_case">The
-  easy case</a></h2>
+<h3 class="Ss" id="The_easy_case"><a class="permalink" href="#The_easy_case">The
+  easy case</a></h3>
 <p class="Pp">Only works if the changes (patch IDs based on the diff contents)
     on <i>subsystem</i> are literally the same before and after the rebase
     <i>subsystem</i> did.</p>
@@ -1222,8 +1223,8 @@ exec make test</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="The_hard_case"><a class="permalink" href="#The_hard_case">The
-  hard case</a></h2>
+<h3 class="Ss" id="The_hard_case"><a class="permalink" href="#The_hard_case">The
+  hard case</a></h3>
 <p class="Pp">Things get more complicated if the <i>subsystem</i> changes do not
     exactly correspond to the ones before the rebase.</p>
 <p class="Pp"></p>
@@ -1263,8 +1264,8 @@ exec make test</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="REBASING_MERGES"><a class="permalink" href="#REBASING_MERGES">REBASING
-  MERGES</a></h1>
+<h2 class="Sh" id="REBASING_MERGES"><a class="permalink" href="#REBASING_MERGES">REBASING
+  MERGES</a></h2>
 <p class="Pp">The interactive rebase command was originally designed to handle
     individual patch series. As such, it makes sense to exclude merge commits
     from the todo list, as the developer may have merged the then-current
@@ -1387,7 +1388,7 @@ merge cmake</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">Everything below this line in this section is selectively included
     from the <b>git-config</b>(1) documentation. The content is the same as
     what&#x2019;s found there:</p>
@@ -1475,11 +1476,11 @@ merge cmake</pre>
   default commit message editor is used instead.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES~2"><a class="permalink" href="#NOTES~2">NOTES</a></h1>
+<h2 class="Sh" id="NOTES~2"><a class="permalink" href="#NOTES~2">NOTES</a></h2>
 <dl class="Bl-tag">
   <dt> 1.</dt>
   <dd>revert-a-faulty-merge How-To</dd>
@@ -1491,12 +1492,10 @@ merge cmake</pre>
 </dl>
 <div class="Bd-indent">https://github.com/newren/git-filter-repo</div>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-REBASE(1)</span></div>
 </body>
 </html>

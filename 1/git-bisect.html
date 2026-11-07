@@ -1,58 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-bisect
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-BISECT(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-bisect
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-BISECT(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-BISECT(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-BISECT(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-BISECT(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-bisect - Use binary search to find the commit that introduced
     a bug</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre><i>git bisect</i> &lt;subcommand&gt; &lt;options&gt;</pre>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
+<pre><i>git bisect</i> start [--term-(bad|new)=&lt;term-new&gt; --term-(good|old)=&lt;term-old&gt;]
+                   [--no-checkout] [--first-parent] [&lt;bad&gt; [&lt;good&gt;...]] [--] [&lt;pathspec&gt;...]
+<i>git bisect</i> (bad|new|&lt;term-new&gt;) [&lt;rev&gt;]
+<i>git bisect</i> (good|old|&lt;term-old&gt;) [&lt;rev&gt;...]
+<i>git bisect</i> terms [--term-(good|old) | --term-(bad|new)]
+<i>git bisect</i> skip [(&lt;rev&gt;|&lt;range&gt;)...]
+<i>git bisect</i> next
+<i>git bisect</i> reset [&lt;commit&gt;]
+<i>git bisect</i> (visualize|view)
+<i>git bisect</i> replay &lt;logfile&gt;
+<i>git bisect</i> log
+<i>git bisect</i> run &lt;cmd&gt; [&lt;arg&gt;...]
+<i>git bisect</i> help</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">The command takes various subcommands, and different options
-    depending on the subcommand:</p>
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>git bisect start [--term-(bad|new)=&lt;term-new&gt; --term-(good|old)=&lt;term-old&gt;]
-	  [--no-checkout] [--first-parent] [&lt;bad&gt; [&lt;good&gt;...]] [--] [&lt;pathspec&gt;...]
-git bisect (bad|new|&lt;term-new&gt;) [&lt;rev&gt;]
-git bisect (good|old|&lt;term-old&gt;) [&lt;rev&gt;...]
-git bisect terms [--term-(good|old) | --term-(bad|new)]
-git bisect skip [(&lt;rev&gt;|&lt;range&gt;)...]
-git bisect reset [&lt;commit&gt;]
-git bisect (visualize|view)
-git bisect replay &lt;logfile&gt;
-git bisect log
-git bisect run &lt;cmd&gt; [&lt;arg&gt;...]
-git bisect help</pre>
-</div>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">This command uses a binary search algorithm to find which commit
     in your project&#x2019;s history introduced a bug. You use it by first
     telling it a &quot;bad&quot; commit that is known to contain the bug, and a
@@ -69,8 +61,8 @@ git bisect help</pre>
     &quot;bad&quot;, or you can choose your own terms. See section
     &quot;Alternate terms&quot; below for more information.</p>
 <section class="Ss">
-<h2 class="Ss" id="Basic_bisect_commands:_start,_bad,_good"><a class="permalink" href="#Basic_bisect_commands:_start,_bad,_good">Basic
-  bisect commands: start, bad, good</a></h2>
+<h3 class="Ss" id="Basic_bisect_commands:_start,_bad,_good"><a class="permalink" href="#Basic_bisect_commands:_start,_bad,_good">Basic
+  bisect commands: start, bad, good</a></h3>
 <p class="Pp">As an example, suppose you are trying to find the commit that
     broke a feature that was known to work in version <b>v2.6.13-rc2</b> of your
     project. You start a bisect session as follows:</p>
@@ -112,8 +104,8 @@ $ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good</pre>
     reference <b>refs/bisect/bad</b> will be left pointing at that commit.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Bisect_reset"><a class="permalink" href="#Bisect_reset">Bisect
-  reset</a></h2>
+<h3 class="Ss" id="Bisect_reset"><a class="permalink" href="#Bisect_reset">Bisect
+  reset</a></h3>
 <p class="Pp">After a bisect session, to clean up the bisection state and return
     to the original HEAD, issue the following command:</p>
 <p class="Pp"></p>
@@ -136,8 +128,8 @@ $ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good</pre>
     bisection commit and avoid switching commits at all.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Alternate_terms"><a class="permalink" href="#Alternate_terms">Alternate
-  terms</a></h2>
+<h3 class="Ss" id="Alternate_terms"><a class="permalink" href="#Alternate_terms">Alternate
+  terms</a></h3>
 <p class="Pp">Sometimes you are not looking for the commit that introduced a
     breakage, but rather for a commit that caused a change between some other
     &quot;old&quot; state and &quot;new&quot; state. For example, you might be
@@ -208,8 +200,8 @@ $ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good</pre>
     commits.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Bisect_visualize/view"><a class="permalink" href="#Bisect_visualize/view">Bisect
-  visualize/view</a></h2>
+<h3 class="Ss" id="Bisect_visualize/view"><a class="permalink" href="#Bisect_visualize/view">Bisect
+  visualize/view</a></h3>
 <p class="Pp">To see the currently remaining suspects in <i>gitk</i>, issue the
     following command during the bisection process (the subcommand <b>view</b>
     can be used as an alternative to <b>visualize</b>):</p>
@@ -232,8 +224,8 @@ $ git bisect good v2.6.13-rc2    # v2.6.13-rc2 is known to be good</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Bisect_log_and_bisect_replay"><a class="permalink" href="#Bisect_log_and_bisect_replay">Bisect
-  log and bisect replay</a></h2>
+<h3 class="Ss" id="Bisect_log_and_bisect_replay"><a class="permalink" href="#Bisect_log_and_bisect_replay">Bisect
+  log and bisect replay</a></h3>
 <p class="Pp">After having marked revisions as good or bad, issue the following
     command to show what has been done so far:</p>
 <p class="Pp"></p>
@@ -251,8 +243,8 @@ $ git bisect replay that-file</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Avoiding_testing_a_commit"><a class="permalink" href="#Avoiding_testing_a_commit">Avoiding
-  testing a commit</a></h2>
+<h3 class="Ss" id="Avoiding_testing_a_commit"><a class="permalink" href="#Avoiding_testing_a_commit">Avoiding
+  testing a commit</a></h3>
 <p class="Pp">If, in the middle of a bisect session, you know that the suggested
     revision is not a good one to test (e.g. it fails to build and you know that
     the failure does not have anything to do with the bug you are chasing), you
@@ -270,8 +262,8 @@ $ git reset --hard HEAD~3               # try 3 revisions before what
     revision as good or bad in the usual manner.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Bisect_skip"><a class="permalink" href="#Bisect_skip">Bisect
-  skip</a></h2>
+<h3 class="Ss" id="Bisect_skip"><a class="permalink" href="#Bisect_skip">Bisect
+  skip</a></h3>
 <p class="Pp">Instead of choosing a nearby commit by yourself, you can ask Git
     to do it for you by issuing the command:</p>
 <p class="Pp"></p>
@@ -299,8 +291,21 @@ $ git reset --hard HEAD~3               # try 3 revisions before what
     and <b>v2.6</b> (inclusive) should be skipped.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Cutting_down_bisection_by_giving_more_parameters_to_bisect_start"><a class="permalink" href="#Cutting_down_bisection_by_giving_more_parameters_to_bisect_start">Cutting
-  down bisection by giving more parameters to bisect start</a></h2>
+<h3 class="Ss" id="Bisect_next"><a class="permalink" href="#Bisect_next">Bisect
+  next</a></h3>
+<p class="Pp">Normally, after marking a revision as good or bad, Git
+    automatically computes and checks out the next revision to test. However, if
+    you need to explicitly request the next bisection step, you can use:</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>$ git bisect next</pre>
+</div>
+<p class="Pp">You might use this to resume the bisection process after
+    interrupting it by checking out a different revision.</p>
+</section>
+<section class="Ss">
+<h3 class="Ss" id="Cutting_down_bisection_by_giving_more_parameters_to_bisect_start"><a class="permalink" href="#Cutting_down_bisection_by_giving_more_parameters_to_bisect_start">Cutting
+  down bisection by giving more parameters to bisect start</a></h3>
 <p class="Pp">You can further cut down the number of trials, if you know what
     part of the tree is involved in the problem you are tracking down, by
     specifying pathspec parameters when issuing the <b>bisect</b> <b>start</b>
@@ -321,8 +326,8 @@ $ git reset --hard HEAD~3               # try 3 revisions before what
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Bisect_run"><a class="permalink" href="#Bisect_run">Bisect
-  run</a></h2>
+<h3 class="Ss" id="Bisect_run"><a class="permalink" href="#Bisect_run">Bisect
+  run</a></h3>
 <p class="Pp">If you have a script that can tell if the current source code is
     good or bad, you can bisect by issuing the command:</p>
 <p class="Pp"></p>
@@ -360,7 +365,7 @@ $ git reset --hard HEAD~3               # try 3 revisions before what
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp">--no-checkout</p>
 <div class="Bd-indent">Do not checkout the new working tree at each iteration of
   the bisection process. Instead just update the reference named
@@ -381,7 +386,7 @@ $ git reset --hard HEAD~3               # try 3 revisions before what
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <div class="Bd-indent">&#x2022;Automatically bisect a broken build between v1.2
   and HEAD:
 <p class="Pp"></p>
@@ -500,37 +505,35 @@ $ git bisect broken HEAD~10</pre>
 </div>
 </div>
 <section class="Ss">
-<h2 class="Ss" id="Getting_help"><a class="permalink" href="#Getting_help">Getting
-  help</a></h2>
+<h3 class="Ss" id="Getting_help"><a class="permalink" href="#Getting_help">Getting
+  help</a></h3>
 <p class="Pp">Use <b>git</b> <b>bisect</b> to get a short usage description, and
     <b>git</b> <b>bisect</b> <b>help</b> or <b>git</b> <b>bisect</b> <b>-h</b>
     to get a long usage description.</p>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
 <p class="Pp"><b>Fighting regressions with git bisect</b>[1],
     <b>git-blame</b>(1).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<h2 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h2>
 <dl class="Bl-tag">
   <dt> 1.</dt>
   <dd>Fighting regressions with git bisect</dd>
 </dl>
 <div class="Bd-indent">git-htmldocs/git-bisect-lk2009.html</div>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-BISECT(1)</span></div>
 </body>
 </html>

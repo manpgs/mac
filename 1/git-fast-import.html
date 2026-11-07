@@ -1,40 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-fast-import
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-FAST-IMPORT(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-fast-import
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-FAST-IMPORT(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-FAST-IMPORT(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-FAST-IMPORT(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-FAST-IMPORT(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-fast-import - Backend for fast Git data importers</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre>frontend | <i>git fast-import</i> [&lt;options&gt;]</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">This program is usually not what the end user wants to run
     directly. Most end users want to use one of the existing frontend programs,
     which parses a specific type of foreign source and feeds the contents stored
@@ -51,7 +48,7 @@
     program in use.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp">--force</p>
 <div class="Bd-indent">Force updating modified existing branches, even if doing
   so would cause commits to be lost (as the new commit does not contain the old
@@ -74,17 +71,51 @@
   are disabled by default, but can be allowed by providing this option on the
   command line. This currently impacts only the <b>export-marks</b>,
   <b>import-marks</b>, and <b>import-marks-if-exists</b> feature commands.
-<p class="Pp"></p>
-<div class="Bd-indent">
-<pre>Only enable this option if you trust the program generating the
-fast-import stream! This option is enabled automatically for
-remote-helpers that use the `import` capability, as they are
-already trusted to run their own code.</pre>
+<p class="Pp">Only enable this option if you trust the program generating the
+    fast-import stream! This option is enabled automatically for remote-helpers
+    that use the <b>import</b> capability, as they are already trusted to run
+    their own code.</p>
 </div>
+<p class="Pp"><b>--signed-tags=</b><i>&lt;mode&gt;</i></p>
+<div class="Bd-indent">Specify how to handle signed tags. Behaves in the same
+  way as the <b>--signed-commits=</b><i>&lt;mode&gt;</i> below. Like for signed
+  commits, the default mode is <b>verbatim</b>.</div>
+<p class="Pp"><b>--signed-commits=</b><i>&lt;mode&gt;</i></p>
+<div class="Bd-indent">Specify how to handle signed commits. The following
+  &lt;mode&gt;s are supported:
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>verbatim</b>, which is the default, will
+  silently import commit signatures.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>warn-verbatim</b> will import them, but will
+  display a warning.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>abort</b> will make this program die when
+  encountering a signed commit.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>strip</b> will silently make the commits
+  unsigned.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>warn-strip</b> will make them unsigned, but
+  will display a warning.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>strip-if-invalid</b> will check signatures
+  and, if they are invalid, will strip them and display a warning. The
+  validation is performed in the same way as <b>git-verify-commit</b>(1) does
+  it.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>sign-if-invalid</b>[<b>=</b><i>&lt;keyid&gt;</i>],
+  similar to <b>strip-if-invalid</b>, verifies commit signatures and replaces
+  invalid signatures with newly created ones. Valid signatures are left
+  unchanged. If <i>&lt;keyid&gt;</i> is provided, that key is used for signing;
+  otherwise the configured default signing key is used.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<b>abort-if-invalid</b> will make this program
+  die when encountering a signed commit that is unable to be verified.</div>
 </div>
 <section class="Ss">
-<h2 class="Ss" id="Options_for_Frontends"><a class="permalink" href="#Options_for_Frontends">Options
-  for Frontends</a></h2>
+<h3 class="Ss" id="Options_for_Frontends"><a class="permalink" href="#Options_for_Frontends">Options
+  for Frontends</a></h3>
 <p class="Pp">--cat-blob-fd=&lt;fd&gt;</p>
 <div class="Bd-indent">Write responses to <b>get-mark</b>, <b>cat-blob</b>, and
   <b>ls</b> queries to the file descriptor &lt;fd&gt; instead of <b>stdout</b>.
@@ -102,8 +133,8 @@ already trusted to run their own code.</pre>
   stream.</div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Locations_of_Marks_Files"><a class="permalink" href="#Locations_of_Marks_Files">Locations
-  of Marks Files</a></h2>
+<h3 class="Ss" id="Locations_of_Marks_Files"><a class="permalink" href="#Locations_of_Marks_Files">Locations
+  of Marks Files</a></h3>
 <p class="Pp">--export-marks=&lt;file&gt;</p>
 <div class="Bd-indent">Dumps the internal marks table to &lt;file&gt; when
   complete. Marks are written one per line as <b>:markid</b> <b>SHA-1</b>.
@@ -120,7 +151,7 @@ already trusted to run their own code.</pre>
 <p class="Pp">--import-marks-if-exists=&lt;file&gt;</p>
 <div class="Bd-indent">Like --import-marks but instead of erroring out, silently
   skips the file if it does not exist.</div>
-<p class="Pp">--[no-]relative-marks</p>
+<p class="Pp">--relative-marks, --no-relative-marks</p>
 <div class="Bd-indent">After specifying --relative-marks the paths specified
   with --import-marks= and --export-marks= are relative to an internal directory
   in the current repository. In git-fast-import this means that the paths are
@@ -131,8 +162,8 @@ already trusted to run their own code.</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Submodule_Rewriting"><a class="permalink" href="#Submodule_Rewriting">Submodule
-  Rewriting</a></h2>
+<h3 class="Ss" id="Submodule_Rewriting"><a class="permalink" href="#Submodule_Rewriting">Submodule
+  Rewriting</a></h3>
 <p class="Pp">--rewrite-submodules-from=&lt;name&gt;:&lt;file&gt;,
     --rewrite-submodules-to=&lt;name&gt;:&lt;file&gt;</p>
 <div class="Bd-indent">Rewrite the object IDs for the submodule specified by
@@ -152,8 +183,8 @@ already trusted to run their own code.</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Performance_and_Compression_Tuning"><a class="permalink" href="#Performance_and_Compression_Tuning">Performance
-  and Compression Tuning</a></h2>
+<h3 class="Ss" id="Performance_and_Compression_Tuning"><a class="permalink" href="#Performance_and_Compression_Tuning">Performance
+  and Compression Tuning</a></h3>
 <p class="Pp">--active-branches=&lt;n&gt;</p>
 <div class="Bd-indent">Maximum number of branches to maintain active at once.
   See &#x201C;Memory Utilization&#x201D; below for details. Default is 5.</div>
@@ -179,13 +210,13 @@ already trusted to run their own code.</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PERFORMANCE"><a class="permalink" href="#PERFORMANCE">PERFORMANCE</a></h1>
+<h2 class="Sh" id="PERFORMANCE"><a class="permalink" href="#PERFORMANCE">PERFORMANCE</a></h2>
 <p class="Pp">The design of fast-import allows it to import large projects in a
     minimum amount of memory usage and processing time. Assuming the frontend is
     able to keep up with fast-import and feed it a constant stream of data,
     import times for projects holding 10+ years of history and containing
     100,000+ individual commits are generally completed in just 1-2 hours on
-    quite modest (~$2,000 USD) hardware.</p>
+    quite modest hardware (~$2,000 USD in 2007).</p>
 <p class="Pp">Most bottlenecks appear to be in foreign source data access (the
     source just cannot extract revisions fast enough) or disk IO (fast-import
     writes as fast as the disk will take the data). Imports will run faster if
@@ -193,8 +224,8 @@ already trusted to run their own code.</pre>
     repository (due to less IO contention).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DEVELOPMENT_COST"><a class="permalink" href="#DEVELOPMENT_COST">DEVELOPMENT
-  COST</a></h1>
+<h2 class="Sh" id="DEVELOPMENT_COST"><a class="permalink" href="#DEVELOPMENT_COST">DEVELOPMENT
+  COST</a></h2>
 <p class="Pp">A typical frontend for fast-import tends to weigh in at
     approximately 200 lines of Perl/Python/Ruby code. Most developers have been
     able to create working importers in just a couple of hours, even though it
@@ -203,8 +234,8 @@ already trusted to run their own code.</pre>
     once, and never look back).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PARALLEL_OPERATION"><a class="permalink" href="#PARALLEL_OPERATION">PARALLEL
-  OPERATION</a></h1>
+<h2 class="Sh" id="PARALLEL_OPERATION"><a class="permalink" href="#PARALLEL_OPERATION">PARALLEL
+  OPERATION</a></h2>
 <p class="Pp">Like <i>git push</i> or <i>git fetch</i>, imports handled by
     fast-import are safe to run alongside parallel <b>git</b> <b>repack</b>
     <b>-a</b> <b>-d</b> or <b>git</b> <b>gc</b> invocations, or any other Git
@@ -223,8 +254,8 @@ already trusted to run their own code.</pre>
     --force is not necessary for an initial import into an empty repository.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TECHNICAL_DISCUSSION"><a class="permalink" href="#TECHNICAL_DISCUSSION">TECHNICAL
-  DISCUSSION</a></h1>
+<h2 class="Sh" id="TECHNICAL_DISCUSSION"><a class="permalink" href="#TECHNICAL_DISCUSSION">TECHNICAL
+  DISCUSSION</a></h2>
 <p class="Pp">fast-import tracks a set of branches in memory. Any branch can be
     created or modified at any point during the import process by sending a
     <b>commit</b> command on the input stream. This design allows a frontend
@@ -240,8 +271,8 @@ already trusted to run their own code.</pre>
     file update operations when switching between branches.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="INPUT_FORMAT"><a class="permalink" href="#INPUT_FORMAT">INPUT
-  FORMAT</a></h1>
+<h2 class="Sh" id="INPUT_FORMAT"><a class="permalink" href="#INPUT_FORMAT">INPUT
+  FORMAT</a></h2>
 <p class="Pp">With the exception of raw file data (which Git does not interpret)
     the fast-import input format is text (ASCII) based. This text based format
     simplifies development and debugging of frontend programs, especially when a
@@ -253,8 +284,8 @@ already trusted to run their own code.</pre>
     file names with leading or trailing spaces in their name, or early
     termination of fast-import when it encounters unexpected input.</p>
 <section class="Ss">
-<h2 class="Ss" id="Stream_Comments"><a class="permalink" href="#Stream_Comments">Stream
-  Comments</a></h2>
+<h3 class="Ss" id="Stream_Comments"><a class="permalink" href="#Stream_Comments">Stream
+  Comments</a></h3>
 <p class="Pp">To aid in debugging frontends fast-import ignores any line that
     begins with # (ASCII pound/hash) up to and including the line ending
     <b>LF</b>. A comment line may contain any sequence of bytes that does not
@@ -263,8 +294,8 @@ already trusted to run their own code.</pre>
     inspecting a fast-import data stream.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Date_Formats"><a class="permalink" href="#Date_Formats">Date
-  Formats</a></h2>
+<h3 class="Ss" id="Date_Formats"><a class="permalink" href="#Date_Formats">Date
+  Formats</a></h3>
 <p class="Pp">The following date formats are supported. A frontend should select
     the format it will use for this import by passing the format name in the
     --date-format=&lt;fmt&gt; command-line option.</p>
@@ -339,7 +370,7 @@ already trusted to run their own code.</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Commands"><a class="permalink" href="#Commands">Commands</a></h2>
+<h3 class="Ss" id="Commands"><a class="permalink" href="#Commands">Commands</a></h3>
 <p class="Pp">fast-import accepts several commands to update the current
     repository and control the current import process. More detailed discussion
     (with examples) of each command follows later.</p>
@@ -397,7 +428,7 @@ already trusted to run their own code.</pre>
   is optional and is not needed to perform an import.</div>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>commit</b></h2>
+<h3 class="Ss"><b>commit</b></h3>
 <p class="Pp">Create or update a branch with a new commit, recording one logical
     change to the project.</p>
 <p class="Pp"></p>
@@ -408,7 +439,7 @@ already trusted to run their own code.</pre>
         original-oid?
         ('author' (SP &lt;name&gt;)? SP LT &lt;email&gt; GT SP &lt;when&gt; LF)?
         'committer' (SP &lt;name&gt;)? SP LT &lt;email&gt; GT SP &lt;when&gt; LF
-        ('gpgsig' SP &lt;alg&gt; LF data)?
+        ('gpgsig' SP &lt;algo&gt; SP &lt;format&gt; LF data)?
         ('encoding' SP &lt;encoding&gt; LF)?
         data
         ('from' SP &lt;commit-ish&gt; LF)?
@@ -481,15 +512,40 @@ already trusted to run their own code.</pre>
 </p>
 <div class="Bd-indent">
 <p class="Pp">The optional <b>gpgsig</b> command is used to include a PGP/GPG
-    signature that signs the commit data.</p>
-<p class="Pp">Here &lt;alg&gt; specifies which hashing algorithm is used for
-    this signature, either <b>sha1</b> or <b>sha256</b>.</p>
+    signature or other cryptographic signature that signs the commit data.</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>
+        'gpgsig' SP &lt;git-hash-algo&gt; SP &lt;signature-format&gt; LF data</pre>
+</div>
+<p class="Pp">The <b>gpgsig</b> command takes two arguments:</p>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<i>&lt;git-hash-algo&gt;</i> specifies which Git
+  object format this signature applies to, either <b>sha1</b> or <b>sha256</b>.
+  This allows to know which representation of the commit was signed (the SHA-1
+  or the SHA-256 version) which helps with both signature verification and
+  interoperability between repos with different hash functions.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;<i>&lt;signature-format&gt;</i> specifies the
+  type of signature, such as <b>openpgp</b>, <b>x509</b>, <b>ssh</b>, or
+  <b>unknown</b>. This is a convenience for tools that process the stream, so
+  they don&#x2019;t have to parse the ASCII armor to identify the signature
+  type.</div>
+<p class="Pp">A commit may have at most one signature for the SHA-1 object
+    format (stored in the &quot;gpgsig&quot; header) and one for the SHA-256
+    object format (stored in the &quot;gpgsig-sha256&quot; header).</p>
+<p class="Pp">See below for a detailed description of the <b>data</b> command
+    which contains the raw signature data.</p>
+<p class="Pp">Signatures are not yet checked in the current implementation
+    though. (Already setting the <b>extensions.compatObjectFormat</b>
+    configuration option might help with verifying both SHA-1 and SHA-256 object
+    format signatures when it will be implemented.)</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <br/>
 <b>Note</b>
-<p class="Pp">This is highly experimental and the format of the data stream may
-    change in the future without compatibility guarantees.</p>
+<p class="Pp">This is highly experimental and the format of the <b>gpgsig</b>
+    command may change in the future without compatibility guarantees.</p>
 <p class="Pp"></p>
 </div>
 </div>
@@ -593,9 +649,9 @@ already trusted to run their own code.</pre>
 <p class="Pp">Here usually <i>&lt;dataref&gt;</i> must be either a mark
     reference (<b>:</b><i>&lt;idnum&gt;</i>) set by a prior <b>blob</b> command,
     or a full 40-byte SHA-1 of an existing Git blob object. If
-    <i>&lt;mode&gt;</i> is <b>040000</b>` then <i>&lt;dataref&gt;</i> must be
-    the full 40-byte SHA-1 of an existing Git tree object or a mark reference
-    set with <b>--import-marks</b>.</p>
+    <i>&lt;mode&gt;</i> is <b>040000</b> then <i>&lt;dataref&gt;</i> must be the
+    full 40-byte SHA-1 of an existing Git tree object or a mark reference set
+    with <b>--import-marks</b>.</p>
 </div>
 <p class="Pp">Inline data format</p>
 <div class="Bd-indent">The data content for the file has not been supplied yet.
@@ -808,7 +864,7 @@ already trusted to run their own code.</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>mark</b></h2>
+<h3 class="Ss"><b>mark</b></h3>
 <p class="Pp">Arranges for fast-import to save a reference to the current
     object, allowing the frontend to recall this object at a future point in
     time, without knowing its SHA-1. Here the current object is the object
@@ -829,7 +885,7 @@ already trusted to run their own code.</pre>
     <b>mark</b> command.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>original-oid</b></h2>
+<h3 class="Ss"><b>original-oid</b></h3>
 <p class="Pp">Provides the name of the object in the original source control
     system. fast-import will simply ignore this directive, but filter processes
     which operate on and modify the stream before feeding to fast-import may
@@ -843,7 +899,7 @@ already trusted to run their own code.</pre>
     containing LF.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>tag</b></h2>
+<h3 class="Ss"><b>tag</b></h3>
 <p class="Pp">Creates an annotated tag referring to a specific commit. To create
     lightweight (non-annotated) tags see the <b>reset</b> command below.</p>
 <p class="Pp"></p>
@@ -883,7 +939,7 @@ already trusted to run their own code.</pre>
     <i>git tag</i> process.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>reset</b></h2>
+<h3 class="Ss"><b>reset</b></h3>
 <p class="Pp">Creates (or recreates) the named branch, optionally starting from
     a specific revision. The reset command allows a frontend to issue a new
     <b>from</b> command for an existing branch, or to create a new branch from
@@ -910,7 +966,7 @@ from :938</pre>
     whatever commit mark <b>:938</b> references.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>blob</b></h2>
+<h3 class="Ss"><b>blob</b></h3>
 <p class="Pp">Requests writing one file revision to the packfile. The revision
     is not connected to any commit; this connection must be formed in a
     subsequent <b>commit</b> command by referencing the blob through an assigned
@@ -929,7 +985,7 @@ from :938</pre>
     as marks are inexpensive to store and easy to use.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>data</b></h2>
+<h3 class="Ss"><b>data</b></h3>
 <p class="Pp">Supplies raw data (for use as blob/file content, commit messages,
     or annotated tag messages) to fast-import. Data can be supplied using an
     exact byte count or delimited with a terminating line. Real frontends
@@ -982,7 +1038,7 @@ from :938</pre>
 </div>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>alias</b></h2>
+<h3 class="Ss"><b>alias</b></h3>
 <p class="Pp">Record that a mark refers to a given object without first creating
     any new object.</p>
 <p class="Pp"></p>
@@ -997,7 +1053,7 @@ from :938</pre>
     under <b>from</b>.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>checkpoint</b></h2>
+<h3 class="Ss"><b>checkpoint</b></h3>
 <p class="Pp">Forces fast-import to close the current packfile, start a new one,
     and to save out all current branch refs, tags and marks.</p>
 <p class="Pp"></p>
@@ -1023,7 +1079,7 @@ from :938</pre>
     required).</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>progress</b></h2>
+<h3 class="Ss"><b>progress</b></h3>
 <p class="Pp">Causes fast-import to print the entire <b>progress</b> line
     unmodified to its standard output channel (file descriptor 1) when the
     command is processed from the input stream. The command otherwise has no
@@ -1048,7 +1104,7 @@ from :938</pre>
     completed and it can safely access the refs that fast-import updated.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>get-mark</b></h2>
+<h3 class="Ss"><b>get-mark</b></h3>
 <p class="Pp">Causes fast-import to print the SHA-1 corresponding to a mark to
     stdout or to the file descriptor previously arranged with the
     <b>--cat-blob-fd</b> argument. The command otherwise has no impact on the
@@ -1063,7 +1119,7 @@ from :938</pre>
     how to read this output safely.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>cat-blob</b></h2>
+<h3 class="Ss"><b>cat-blob</b></h3>
 <p class="Pp">Causes fast-import to print a blob to a file descriptor previously
     arranged with the <b>--cat-blob-fd</b> argument. The command otherwise has
     no impact on the current import; its main purpose is to retrieve blobs that
@@ -1092,7 +1148,7 @@ from :938</pre>
     how to read this output safely.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>ls</b></h2>
+<h3 class="Ss"><b>ls</b></h3>
 <p class="Pp">Prints information about the object at a path to a file descriptor
     previously arranged with the <b>--cat-blob-fd</b> argument. This allows
     printing a blob from the active commit (with <b>cat-blob</b>) or copying a
@@ -1142,7 +1198,7 @@ from :938</pre>
     how to read this output safely.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>feature</b></h2>
+<h3 class="Ss"><b>feature</b></h3>
 <p class="Pp">Require that fast-import supports the specified feature, or abort
     if it does not.</p>
 <p class="Pp"></p>
@@ -1183,7 +1239,7 @@ from :938</pre>
   or SIGKILL at its subordinate git fast-import instance.</div>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>option</b></h2>
+<h3 class="Ss"><b>option</b></h3>
 <p class="Pp">Processes the specified option so that git fast-import behaves in
     a way that suits the frontend&#x2019;s needs. Note that options specified by
     the frontend are overridden by any options the user may specify to git
@@ -1213,7 +1269,7 @@ from :938</pre>
 <div class="Bd-indent">&#x2022;force</div>
 </section>
 <section class="Ss">
-<h2 class="Ss"><b>done</b></h2>
+<h3 class="Ss"><b>done</b></h3>
 <p class="Pp">If the <b>done</b> feature is not in use, treated as if EOF was
     read. This can be used to tell fast-import to finish early.</p>
 <p class="Pp">If the <b>--done</b> command-line option or <b>feature</b>
@@ -1222,8 +1278,8 @@ from :938</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RESPONSES_TO_COMMANDS"><a class="permalink" href="#RESPONSES_TO_COMMANDS">RESPONSES
-  TO COMMANDS</a></h1>
+<h2 class="Sh" id="RESPONSES_TO_COMMANDS"><a class="permalink" href="#RESPONSES_TO_COMMANDS">RESPONSES
+  TO COMMANDS</a></h2>
 <p class="Pp">New objects written by fast-import are not available immediately.
     Most fast-import commands have no visible effect until the next checkpoint
     (or completion). The frontend can send commands to fill fast-import&#x2019;s
@@ -1249,8 +1305,8 @@ git fast-import &gt;fast-import-output</pre>
   block.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CRASH_REPORTS"><a class="permalink" href="#CRASH_REPORTS">CRASH
-  REPORTS</a></h1>
+<h2 class="Sh" id="CRASH_REPORTS"><a class="permalink" href="#CRASH_REPORTS">CRASH
+  REPORTS</a></h2>
 <p class="Pp">If fast-import is supplied invalid input it will terminate with a
     non-zero exit status and create a crash report in the top level of the Git
     repository it was importing into. Crash reports contain a snapshot of the
@@ -1348,13 +1404,13 @@ END OF CRASH REPORT</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TIPS_AND_TRICKS"><a class="permalink" href="#TIPS_AND_TRICKS">TIPS
-  AND TRICKS</a></h1>
+<h2 class="Sh" id="TIPS_AND_TRICKS"><a class="permalink" href="#TIPS_AND_TRICKS">TIPS
+  AND TRICKS</a></h2>
 <p class="Pp">The following tips and tricks have been collected from various
     users of fast-import, and are offered here as suggestions.</p>
 <section class="Ss">
-<h2 class="Ss" id="Use_One_Mark_Per_Commit"><a class="permalink" href="#Use_One_Mark_Per_Commit">Use
-  One Mark Per Commit</a></h2>
+<h3 class="Ss" id="Use_One_Mark_Per_Commit"><a class="permalink" href="#Use_One_Mark_Per_Commit">Use
+  One Mark Per Commit</a></h3>
 <p class="Pp">When doing a repository conversion, use a unique mark per commit
     (<b>mark</b> <b>:</b><i>&lt;n&gt;</i>) and supply the --export-marks option
     on the command line. fast-import will dump a file which lists every mark and
@@ -1367,8 +1423,8 @@ END OF CRASH REPORT</pre>
     number or the Subversion revision number.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Freely_Skip_Around_Branches"><a class="permalink" href="#Freely_Skip_Around_Branches">Freely
-  Skip Around Branches</a></h2>
+<h3 class="Ss" id="Freely_Skip_Around_Branches"><a class="permalink" href="#Freely_Skip_Around_Branches">Freely
+  Skip Around Branches</a></h3>
 <p class="Pp">Don&#x2019;t bother trying to optimize the frontend to stick to
     one branch at a time during an import. Although doing so might be slightly
     faster for fast-import, it tends to increase the complexity of the frontend
@@ -1378,16 +1434,16 @@ END OF CRASH REPORT</pre>
     between branches has virtually no impact on import performance.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Handling_Renames"><a class="permalink" href="#Handling_Renames">Handling
-  Renames</a></h2>
+<h3 class="Ss" id="Handling_Renames"><a class="permalink" href="#Handling_Renames">Handling
+  Renames</a></h3>
 <p class="Pp">When importing a renamed file or directory, simply delete the old
     name(s) and modify the new name(s) during the corresponding commit. Git
     performs rename detection after-the-fact, rather than explicitly during a
     commit.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Use_Tag_Fixup_Branches"><a class="permalink" href="#Use_Tag_Fixup_Branches">Use
-  Tag Fixup Branches</a></h2>
+<h3 class="Ss" id="Use_Tag_Fixup_Branches"><a class="permalink" href="#Use_Tag_Fixup_Branches">Use
+  Tag Fixup Branches</a></h3>
 <p class="Pp">Some other SCM systems let the user create a tag from multiple
     files which are not from the same commit/changeset. Or to create tags which
     are a subset of the files available in the repository.</p>
@@ -1410,8 +1466,8 @@ END OF CRASH REPORT</pre>
     <b>rm</b> <b>.git/TAG_FIXUP</b> to remove the dummy branch.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Import_Now,_Repack_Later"><a class="permalink" href="#Import_Now,_Repack_Later">Import
-  Now, Repack Later</a></h2>
+<h3 class="Ss" id="Import_Now,_Repack_Later"><a class="permalink" href="#Import_Now,_Repack_Later">Import
+  Now, Repack Later</a></h3>
 <p class="Pp">As soon as fast-import completes the Git repository is completely
     valid and ready for use. Typically this takes only a very short time, even
     for considerably large projects (100,000+ commits).</p>
@@ -1427,8 +1483,8 @@ END OF CRASH REPORT</pre>
     situations.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Repacking_Historical_Data"><a class="permalink" href="#Repacking_Historical_Data">Repacking
-  Historical Data</a></h2>
+<h3 class="Ss" id="Repacking_Historical_Data"><a class="permalink" href="#Repacking_Historical_Data">Repacking
+  Historical Data</a></h3>
 <p class="Pp">If you are repacking very old imported data (e.g. older than the
     last year), consider expending some extra CPU time and supplying --window=50
     (or higher) when you run <i>git repack</i>. This will take longer, but will
@@ -1437,8 +1493,8 @@ END OF CRASH REPORT</pre>
   repository.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Include_Some_Progress_Messages"><a class="permalink" href="#Include_Some_Progress_Messages">Include
-  Some Progress Messages</a></h2>
+<h3 class="Ss" id="Include_Some_Progress_Messages"><a class="permalink" href="#Include_Some_Progress_Messages">Include
+  Some Progress Messages</a></h3>
 <p class="Pp">Every once in a while have your frontend emit a <b>progress</b>
     message to fast-import. The contents of the messages are entirely free-form,
     so one suggestion would be to output the current month and year each time
@@ -1447,8 +1503,8 @@ END OF CRASH REPORT</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PACKFILE_OPTIMIZATION"><a class="permalink" href="#PACKFILE_OPTIMIZATION">PACKFILE
-  OPTIMIZATION</a></h1>
+<h2 class="Sh" id="PACKFILE_OPTIMIZATION"><a class="permalink" href="#PACKFILE_OPTIMIZATION">PACKFILE
+  OPTIMIZATION</a></h2>
 <p class="Pp">When packing a blob fast-import always attempts to deltify against
     the last blob written. Unless specifically arranged for by the frontend,
     this will probably not be a prior version of the same file, so the generated
@@ -1483,16 +1539,16 @@ END OF CRASH REPORT</pre>
     it&#x2019;s known to be worthwhile.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="MEMORY_UTILIZATION"><a class="permalink" href="#MEMORY_UTILIZATION">MEMORY
-  UTILIZATION</a></h1>
+<h2 class="Sh" id="MEMORY_UTILIZATION"><a class="permalink" href="#MEMORY_UTILIZATION">MEMORY
+  UTILIZATION</a></h2>
 <p class="Pp">There are a number of factors which affect how much memory
     fast-import requires to perform an import. Like critical sections of core
     Git, fast-import uses its own memory allocators to amortize any overheads
     associated with malloc. In practice fast-import tends to amortize any malloc
     overheads to 0, due to its use of large block allocations.</p>
 <section class="Ss">
-<h2 class="Ss" id="per_object"><a class="permalink" href="#per_object">per
-  object</a></h2>
+<h3 class="Ss" id="per_object"><a class="permalink" href="#per_object">per
+  object</a></h3>
 <p class="Pp">fast-import maintains an in-memory structure for every object
     written in this execution. On a 32 bit system the structure is 32 bytes, on
     a 64 bit system the structure is 40 bytes (due to the larger pointer sizes).
@@ -1506,16 +1562,16 @@ END OF CRASH REPORT</pre>
     typically due to branch merges in the source.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="per_mark"><a class="permalink" href="#per_mark">per
-  mark</a></h2>
+<h3 class="Ss" id="per_mark"><a class="permalink" href="#per_mark">per
+  mark</a></h3>
 <p class="Pp">Marks are stored in a sparse array, using 1 pointer (4 bytes or 8
     bytes, depending on pointer size) per mark. Although the array is sparse,
     frontends are still strongly encouraged to use marks between 1 and n, where
     n is the total number of marks required for this import.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="per_branch"><a class="permalink" href="#per_branch">per
-  branch</a></h2>
+<h3 class="Ss" id="per_branch"><a class="permalink" href="#per_branch">per
+  branch</a></h3>
 <p class="Pp">Branches are classified as active and inactive. The memory usage
     of the two classes is significantly different.</p>
 <p class="Pp">Inactive branches are stored in a structure which uses 96 or 120
@@ -1537,16 +1593,16 @@ END OF CRASH REPORT</pre>
     increased or decreased on the command line with --active-branches=.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="per_active_tree"><a class="permalink" href="#per_active_tree">per
-  active tree</a></h2>
+<h3 class="Ss" id="per_active_tree"><a class="permalink" href="#per_active_tree">per
+  active tree</a></h3>
 <p class="Pp">Trees (aka directories) use just 12 bytes of memory on top of the
     memory required for their entries (see &#x201C;per active file&#x201D;
     below). The cost of a tree is virtually 0, as its overhead amortizes out
     over the individual file entries.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="per_active_file_entry"><a class="permalink" href="#per_active_file_entry">per
-  active file entry</a></h2>
+<h3 class="Ss" id="per_active_file_entry"><a class="permalink" href="#per_active_file_entry">per
+  active file entry</a></h3>
 <p class="Pp">Files (and pointers to subtrees) within active trees require 52 or
     64 bytes (32/64 bit platforms) per entry. To conserve space, file and tree
     names are pooled in a common string table, allowing the filename
@@ -1559,7 +1615,7 @@ END OF CRASH REPORT</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SIGNALS"><a class="permalink" href="#SIGNALS">SIGNALS</a></h1>
+<h2 class="Sh" id="SIGNALS"><a class="permalink" href="#SIGNALS">SIGNALS</a></h2>
 <p class="Pp">Sending <b>SIGUSR1</b> to the <i>git fast-import</i> process ends
     the current packfile early, simulating a <b>checkpoint</b> command. The
     impatient operator can use this facility to peek at the objects and refs
@@ -1567,7 +1623,7 @@ END OF CRASH REPORT</pre>
     compression.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">Everything below this line in this section is selectively included
     from the <b>git-config</b>(1) documentation. The content is the same as
     what&#x2019;s found there:</p>
@@ -1581,20 +1637,18 @@ END OF CRASH REPORT</pre>
   <b>transfer.unpackLimit</b> is used instead.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
 <p class="Pp"><b>git-fast-export</b>(1)</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-FAST-IMPORT(1)</span></div>
 </body>
 </html>

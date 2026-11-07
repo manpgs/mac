@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>OPENRSYNC(1)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 2019 Kristaps Dzonsons <kristaps@bsd.lv>
   
@@ -15,28 +21,20 @@
    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>OPENRSYNC(1)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">OPENRSYNC(1)</td>
-    <td class="head-vol"><a href=".">General Commands Manual</a></td>
-    <td class="head-rtitle">OPENRSYNC(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">OPENRSYNC(1)</span>
+  <span class="head-vol"><a href=".">General Commands Manual</a></span>
+  <span class="head-rtitle">OPENRSYNC(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">openrsync</code> &#x2014;
-    <span class="Nd">synchronise local and remote files</span></p>
+    <span class="Nd" role="doc-subtitle">synchronise local and remote
+    files</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <table class="Nm">
   <tr>
     <td><code class="Nm">openrsync</code></td>
@@ -122,7 +120,7 @@
 </table>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The <code class="Nm">openrsync</code> utility synchronises files
     in the destination <var class="Ar">directory</var> with one or more
     <var class="Ar">source</var> files. Either the <var class="Ar">source</var>
@@ -441,7 +439,7 @@
     <var class="Ar">program</var>,
     <code class="Fl">--rsh</code>=<var class="Ar">program</var></dt>
   <dd>Specify alternative communication program, defaults to
-      <a class="Xr" href="../1/ssh">ssh(1)</a>. The
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>. The
       <code class="Ev">RSYNC_RSH</code> environment variable will be used if an
       <code class="Fl">-e</code> option is not present. Note that
       <code class="Nm">openrsync</code> will generally handle quotes, but it
@@ -491,10 +489,14 @@
       must be considered prior to using it. For example, hardlinks will not be
       broken even if a file is no longer hardlinked in the source
     directory.</dd>
-  <dt id="keep-dirlinks"><a class="permalink" href="#keep-dirlinks"><code class="Fl">--keep-dirlinks</code></a></dt>
+  <dt id="K"><a class="permalink" href="#K"><code class="Fl">-K</code></a>,
+    <code class="Fl">--keep-dirlinks</code></dt>
   <dd>When a directory is sent, and the receiving side has a symlink to a
       directory in that place, follow that symlink and place the directory's
-      contents in that symlinked dir.</dd>
+      contents in that symlinked dir. This does not facilitate an escalation of
+      privilege, as in all cases <code class="Nm">openrsync</code> remains
+      constrained to making changes only as permitted by the credentials of the
+      caller, which mitigates some security concerns.</dd>
   <dt id="link-dest"><a class="permalink" href="#link-dest"><code class="Fl">--link-dest</code></a>=<var class="Ar">directory</var></dt>
   <dd>Use directory as an alternate base directory to compare files against on
       the destination machine. If file in <var class="Ar">directory</var> is
@@ -642,8 +644,8 @@
   <dt id="port"><a class="permalink" href="#port"><code class="Fl">--port</code></a>=<var class="Ar">service</var></dt>
   <dd>Specify an alternative TCP port number. The <var class="Ar">service</var>
       can be given as a decimal integer or as a name to be looked up in the
-      <a class="Xr" href="../5/services">services(5)</a> database. The default
-      is &#x201C;rsync&#x201D;.</dd>
+      <a class="Xr" href="../5/services" aria-label="services, section
+      5">services(5)</a> database. The default is &#x201C;rsync&#x201D;.</dd>
   <dt id="m"><a class="permalink" href="#m"><code class="Fl">-m</code></a>,
     <code class="Fl">--prune-empty-dirs</code></dt>
   <dd>Prune empty directories from the file list on the receiver side. Empty
@@ -694,8 +696,13 @@
       that implied directories do not have their attributes modified, or are
       created with default attributes, rather than the source attributes, if
       they do not exist. This allows the implied directories to differ,
-      including being a symlink on one side and a real directory on the
-    other.</dd>
+      including being a symlink on one side and a real directory on the other.
+      If an existing implied directory on the destination is a symlink, it will
+      be followed rather than removed and recreated as a real directory. The
+      <code class="Fl">--no-implied-dirs</code> option, like
+      <code class="Fl">--keep-dirlinks</code>, does not facilitate an elevation
+      of privilege as it remains constrained by the credentials of the caller,
+      which mitigates some security concerns.</dd>
   <dt id="rsync-path"><a class="permalink" href="#rsync-path"><code class="Fl">--rsync-path</code></a>=<var class="Ar">program</var></dt>
   <dd>Run <var class="Ar">program</var> on the remote host instead of the
       default <span class="Pa">rsync</span>.</dd>
@@ -709,8 +716,9 @@
       communicate with an rsync daemon. <var class="Ar">sockopts</var> should be
       of the form &#x201C;name[=value][,...]&#x201D;, where
       <var class="Ar">name</var> matches an <code class="Dv">SO_*</code> option
-      described in <a class="Xr" href="../2/setsockopt">setsockopt(2)</a>. Note
-      that only the following options are currently supported:
+      described in <a class="Xr" href="../2/setsockopt" aria-label="setsockopt,
+      section 2">setsockopt(2)</a>. Note that only the following options are
+      currently supported:
     <table class="Bl-column Bd-indent">
       <tr id="SO_KEEPALIVE">
         <td><a class="permalink" href="#SO_KEEPALIVE"><code class="Dv">SO_KEEPALIVE</code></a></td>
@@ -823,7 +831,7 @@
 <p class="Pp">A remote <var class="Ar">source</var> or
     <var class="Ar">directory</var> has the syntax
     <var class="Ar">host</var>:<var class="Ar">path</var> for connecting via
-    <a class="Xr" href="../1/ssh">ssh(1)</a>, or
+    <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>, or
     <code class="Cm">rsync</code>://<var class="Ar">host</var>/<var class="Ar">path</var>
     or <var class="Ar">host</var>::<var class="Ar">path</var> for connecting to
     a remote daemon. Subsequent to the first remote
@@ -847,9 +855,9 @@
     found.</p>
 <p class="Pp"><code class="Nm">openrsync</code> also supports a
     <code class="Fl">--daemon</code> mode, which may be run either standalone or
-    may be invoked by, e.g., <a class="Xr" href="../8/inetd">inetd(8)</a> or
-    similar services that hand a socket off to an external program for
-  handling.</p>
+    may be invoked by, e.g., <a class="Xr" href="../8/inetd" aria-label="inetd,
+    section 8">inetd(8)</a> or similar services that hand a socket off to an
+    external program for handling.</p>
 <p class="Pp">Daemon options that are shared with the non-daemon mode of
     <code class="Nm">openrsync</code> behave as described above. Options
     specific to daemon mode are as follows:</p>
@@ -859,21 +867,21 @@
       instead of the default location. By default,
       <code class="Nm">openrsync</code> will look for its configuration at
       <span class="Pa">/etc/rsyncd.conf</span>. See
-      <a class="Xr" href="../5/rsyncd.conf">rsyncd.conf(5)</a> for details of
-      the format of this file.</dd>
+      <a class="Xr" href="../5/rsyncd.conf" aria-label="rsyncd.conf, section
+      5">rsyncd.conf(5)</a> for details of the format of this file.</dd>
   <dt id="no-detach"><a class="permalink" href="#no-detach"><code class="Fl">--no-detach</code></a></dt>
   <dd>Run the <code class="Nm">openrsync</code> daemon in the foreground,
       instead of the background.</dd>
 </dl>
 <p class="Pp">Note that the <code class="Nm">openrsync</code> daemon mode will
-    log to <a class="Xr" href="../3/syslog">syslog(3)</a> by default unless
-    <code class="Fl">--log-file</code> is specified, regardless of whether
-    <code class="Fl">--no-detach</code> has been specified to run in the
-    foreground or not.</p>
+    log to <a class="Xr" href="../3/syslog" aria-label="syslog, section
+    3">syslog(3)</a> by default unless <code class="Fl">--log-file</code> is
+    specified, regardless of whether <code class="Fl">--no-detach</code> has
+    been specified to run in the foreground or not.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PATTERNS_AND_RULES"><a class="permalink" href="#PATTERNS_AND_RULES">PATTERNS
-  AND RULES</a></h1>
+<h2 class="Sh" id="PATTERNS_AND_RULES"><a class="permalink" href="#PATTERNS_AND_RULES">PATTERNS
+  AND RULES</a></h2>
 <p class="Pp">The <code class="Fl">-f</code>, <code class="Fl">--include</code>,
     <code class="Fl">--include-from</code>, <code class="Fl">--exclude</code>,
     and <code class="Fl">--exclude-from</code> options may be used to load a
@@ -982,8 +990,8 @@
     <a class="Sx" href="#Merge_Rules">Merge Rules</a> section for more details
     of the semantics.</p>
 <section class="Ss">
-<h2 class="Ss" id="Include_and_Exclude_Rules"><a class="permalink" href="#Include_and_Exclude_Rules">Include
-  and Exclude Rules</a></h2>
+<h3 class="Ss" id="Include_and_Exclude_Rules"><a class="permalink" href="#Include_and_Exclude_Rules">Include
+  and Exclude Rules</a></h3>
 <p class="Pp">The six basic types of include and exclude rules briefly described
     above are &#x201C;exclude&#x201D;, &#x201C;include&#x201D;,
     &#x201C;hide&#x201D;, &#x201C;show&#x201D;, &#x201C;protect&#x201D;,
@@ -1035,8 +1043,8 @@
     applied do not take a pattern.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Merge_Rules"><a class="permalink" href="#Merge_Rules">Merge
-  Rules</a></h2>
+<h3 class="Ss" id="Merge_Rules"><a class="permalink" href="#Merge_Rules">Merge
+  Rules</a></h3>
 <p class="Pp">The merge rules, &#x201C;merge&#x201D; and
     &#x201C;dir-merge&#x201D;, are another way to insert a filter rule file.
     &#x201C;merge&#x201D; rules are evaluated once as soon as they are
@@ -1093,7 +1101,7 @@
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
+<h2 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h2>
 <p class="Pp">The following environment variables affect execution of
     <code class="Nm">openrsync</code>:</p>
 <dl class="Bl-tag">
@@ -1107,8 +1115,8 @@
       <code class="Ev">LOGNAME</code> will be used.</dd>
   <dt id="RSYNC_RSH"><a class="permalink" href="#RSYNC_RSH"><code class="Ev">RSYNC_RSH</code></a></dt>
   <dd>This variable specifies the remote shell to use for remote connections.
-      The default remote shell is <a class="Xr" href="../1/ssh">ssh(1)</a> if
-      neither <code class="Ev">RSYNC_RSH</code> nor
+      The default remote shell is <a class="Xr" href="../1/ssh" aria-label="ssh,
+      section 1">ssh(1)</a> if neither <code class="Ev">RSYNC_RSH</code> nor
       <code class="Fl">--rsh</code> are specified.</dd>
   <dt id="RSYNC_PASSWORD"><a class="permalink" href="#RSYNC_PASSWORD"><code class="Ev">RSYNC_PASSWORD</code></a></dt>
   <dd>This variable specifies the password to use when connecting to an rsync
@@ -1120,14 +1128,14 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
-  STATUS</a></h1>
+<h2 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h2>
 <p class="Pp">The <code class="Nm">openrsync</code> utility exits 0 on success,
     1 if an error occurs, or 2 if the remote protocol version is older than the
     local protocol version.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <p class="Pp">A common invocation of <code class="Nm">openrsync</code> is for
     archiving from a remote host to the local computer:</p>
 <p class="Pp"></p>
@@ -1167,41 +1175,41 @@
 <p class="Pp">To update the out-of-date remote files in
     <span class="Pa">host:dest</span> on a remote host running
     <code class="Nm">openrsync</code> with the local host running
-    <a class="Xr" href="../1/rsync">rsync(1)</a>:</p>
+    <a class="Xr" href="../1/rsync" aria-label="rsync, section
+  1">rsync(1)</a>:</p>
 <p class="Pp"></p>
 <div class="Bd Bd-indent"><code class="Li">% rsync --rsync-path openrsync -t
   ../dest/* host:dest</code></div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/ssh">ssh(1)</a>,
-    <a class="Xr" href="../5/rsync">rsync(5)</a>,
-    <a class="Xr" href="../5/rsyncd">rsyncd(5)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/ssh" aria-label="ssh, section
+    1">ssh(1)</a>, <a class="Xr" href="../5/rsync" aria-label="rsync, section
+    5">rsync(5)</a>, <a class="Xr" href="../5/rsyncd" aria-label="rsyncd,
+    section 5">rsyncd(5)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<h2 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h2>
 <p class="Pp"><code class="Nm">openrsync</code> is compatible with rsync
     protocol versions 27 - 29 as supported by the samba.org implementation of
     rsync.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Nm">openrsync</code> utility has been available
     since <span class="Ux">OpenBSD 6.5</span>.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<h2 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h2>
 <p class="Pp">The <code class="Nm">openrsync</code> utility was written by
     <span class="An">Kristaps Dzonsons</span>
     &lt;<a class="Mt" href="mailto:kristaps@bsd.lv">kristaps@bsd.lv</a>&gt;.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">September 4, 2026</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">November 7, 2026</span>
+  <span class="foot-right">OPENRSYNC(1)</span></div>
 </body>
 </html>

@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-pack-objects
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-PACK-OBJECTS(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-pack-objects
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-PACK-OBJECTS(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-PACK-OBJECTS(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-PACK-OBJECTS(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-PACK-OBJECTS(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-pack-objects - Create a packed archive of objects</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre><i>git pack-objects</i> [-q | --progress | --all-progress] [--all-progress-implied]
                    [--no-reuse-delta] [--delta-base-offset] [--non-empty]
                    [--local] [--incremental] [--window=&lt;n&gt;] [--depth=&lt;n&gt;]
@@ -41,7 +38,7 @@
                    [--name-hash-version=&lt;n&gt;] [--path-walk] &lt; &lt;object-list&gt;</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">Reads list of objects from the standard input, and writes either
     one or more packed archives with the specified base-name to disk, or a
     packed archive to the standard output.</p>
@@ -64,7 +61,7 @@
     peers.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <p class="Pp">base-name</p>
 <div class="Bd-indent">Write into pairs of files (.pack and .idx), using
   &lt;base-name&gt; to determine the name of the created file. When this option
@@ -100,13 +97,22 @@
   revision arguments. The resulting pack contains all objects listed in the
   included packs (those not beginning with <b>^</b>), excluding any objects
   listed in the excluded packs (beginning with <b>^</b>).
-<p class="Pp">When <b>mode</b> is &quot;follow&quot;, objects from packs not
-    listed on stdin receive special treatment. Objects within unlisted packs
-    will be included if those objects are (1) reachable from the included packs,
-    and (2) not found in any excluded packs. This mode is useful, for example,
-    to resurrect once-unreachable objects found in cruft packs to generate packs
-    which are closed under reachability up to the boundary set by the excluded
-    packs.</p>
+<p class="Pp">When <b>mode</b> is &quot;follow&quot; packs may additionally be
+    prefixed with !, indicating that they are excluded but not necessarily
+    closed under reachability. In addition to objects in included packs, the
+    resulting pack may include additional objects based on the following:</p>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;If any packs are marked with !, then objects
+  reachable from such packs or included ones via objects outside of
+  excluded-closed packs will be included. In this case, all <b>^</b> packs are
+  treated as closed under reachability.</div>
+<p class="Pp"></p>
+<div class="Bd-indent">&#x2022;Otherwise (if there are no ! packs), objects
+  within unlisted packs will be included if those objects are (1) reachable from
+  the included packs, and (2) not found in any excluded packs.</div>
+<p class="Pp">This mode is useful, for example, to resurrect once-unreachable
+    objects found in cruft packs to generate packs which are closed under
+    reachability up to the boundary set by the excluded packs.</p>
 <p class="Pp">Incompatible with <b>--revs</b>, or options that imply
     <b>--revs</b> (such as <b>--all</b>), with the exception of
     <b>--unpacked</b>, which is compatible.</p>
@@ -224,7 +230,7 @@
   first by pack.compression, then by core.compression, and defaults to -1, the
   zlib default, if neither is set. Add --no-reuse-object if you want to force a
   uniform compression level on all data no matter the source.</div>
-<p class="Pp">--[no-]sparse</p>
+<p class="Pp">--sparse, --no-sparse</p>
 <div class="Bd-indent">Toggle the &quot;sparse&quot; algorithm to determine
   which objects to include in the pack, when combined with the
   &quot;--revs&quot; option. This algorithm only walks trees that appear in
@@ -356,8 +362,8 @@
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DELTA_ISLANDS"><a class="permalink" href="#DELTA_ISLANDS">DELTA
-  ISLANDS</a></h1>
+<h2 class="Sh" id="DELTA_ISLANDS"><a class="permalink" href="#DELTA_ISLANDS">DELTA
+  ISLANDS</a></h2>
 <p class="Pp">When possible, <b>pack-objects</b> tries to reuse existing on-disk
     deltas to avoid having to search for new ones on the fly. This is an
     important optimization for serving fetches, because it means the server can
@@ -439,7 +445,7 @@ island = refs/virtual/([0-9]+)/(pull)/</pre>
     take precedence over user-wide config, and so forth).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">Various configuration variables affect packing, see
     <b>git-config</b>(1) (search for &quot;pack&quot; and
   &quot;delta&quot;).</p>
@@ -448,21 +454,19 @@ island = refs/virtual/([0-9]+)/(pull)/</pre>
     attribute <b>delta</b> set to false.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
 <p class="Pp"><b>git-rev-list</b>(1) <b>git-repack</b>(1)
     <b>git-prune-packed</b>(1)</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-PACK-OBJECTS(1)</span></div>
 </body>
 </html>

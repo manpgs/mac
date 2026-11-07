@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>MEMINFO(1)</title>
+</head>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2026, Apple Inc.  All rights reserved.
+   -->
+<body>
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">MEMINFO(1)</span>
+  <span class="head-vol"><a href=".">General Commands Manual</a></span>
+  <span class="head-rtitle">MEMINFO(1)</span></div>
+<main class="manual-text">
+<section class="Sh">
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
+<p class="Pp"><code class="Nm">meminfo</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">display physical memory usage
+    breakdown</span></p>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
+<table class="Nm">
+  <tr>
+    <td><code class="Nm">meminfo</code></td>
+    <td>[<code class="Fl">--summary</code>] [<code class="Fl">--zones</code>]
+      [<code class="Fl">--raw</code>] [<code class="Fl">--all</code>]
+      [<code class="Fl">--quiet</code>] [<code class="Fl">--csv</code>
+      <var class="Ar">path</var>] [<code class="Fl">--perfdata</code>
+      <var class="Ar">path</var>] [<code class="Fl">--interval</code>
+      <var class="Ar">seconds</var>] [<code class="Fl">--count</code>
+      <var class="Ar">n</var>] [<code class="Fl">--duration</code>
+      <var class="Ar">seconds</var>]</td>
+  </tr>
+</table>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
+<p class="Pp"><code class="Nm">meminfo</code> displays a breakdown of physical
+    memory usage by category. By default each category is printed as its own
+    section: a header line with the category's page count and size, followed by
+    indented subcategory rows whose percentage bars are relative to that
+    category's total. Any portion of a category not covered by its subcategories
+    is shown as an <i class="Em">Unaccounted</i> row. A final
+    <i class="Em">Physical Memory</i> summary breaks the total down into the
+    main categories, and a <i class="Em">Swap</i> section follows.</p>
+<p class="Pp">The following options are available:</p>
+<dl class="Bl-tag">
+  <dt id="summary"><a class="permalink" href="#summary"><code class="Fl">--summary</code></a></dt>
+  <dd>Show only the <i class="Em">Physical Memory</i> summary and the
+      <i class="Em">Swap</i> section, omitting the per-category detail
+    sections.</dd>
+  <dt id="zones"><a class="permalink" href="#zones"><code class="Fl">--zones</code></a></dt>
+  <dd>Expand the aggregate wired <i class="Em">Zones</i> row into one row per
+      kernel zone. This requires root privileges; without them,
+      <code class="Nm">meminfo</code> prints a warning and shows the aggregate
+      <i class="Em">Zones</i> total instead.</dd>
+  <dt id="raw"><a class="permalink" href="#raw"><code class="Fl">--raw</code></a></dt>
+  <dd>Show raw metric names (e.g. <code class="Li">anonymous_purgeable</code>)
+      instead of human-readable display names (e.g.
+      <code class="Li">Purgeable</code>).</dd>
+  <dt id="all"><a class="permalink" href="#all"><code class="Fl">--all</code></a></dt>
+  <dd>Show all metrics, including those that are normally hidden when their
+      value is zero (e.g. Secluded) or below 1&#x00A0;MB (wired sites), and
+      overlapping subtotals that are normally excluded from the breakdown (e.g.
+      Purgeable, Shared cache). MTE-related metrics are also included regardless
+      of hardware capability. This implies <code class="Fl">--zones</code>, and
+      so is likewise subject to its root requirement: without privilege,
+      <code class="Nm">meminfo</code> prints a warning and shows the aggregate
+      <i class="Em">Zones</i> total instead of the per-zone rows.</dd>
+  <dt id="quiet"><a class="permalink" href="#quiet"><code class="Fl">--quiet</code></a></dt>
+  <dd>Suppress summary output to stdout. Useful when only CSV or perfdata output
+      is desired.</dd>
+  <dt id="csv"><a class="permalink" href="#csv"><code class="Fl">--csv</code></a>
+    <var class="Ar">path</var></dt>
+  <dd>Write CSV output to <var class="Ar">path</var>. The first line is a header
+      row; subsequent lines are data rows. All memory values are in bytes.
+      Without <code class="Fl">--interval</code>, a single data row is
+    written.</dd>
+  <dt id="interval"><a class="permalink" href="#interval"><code class="Fl">--interval</code></a>
+    <var class="Ar">seconds</var></dt>
+  <dd>Sample repeatedly, sleeping <var class="Ar">seconds</var> between samples.
+      Fractional values are accepted (e.g. <code class="Li">0.5</code>).
+    <p class="Pp">In the default formatted mode, the screen is cleared before
+        each sample. In CSV mode, each sample is emitted as an additional data
+        row after a single header.</p>
+  </dd>
+  <dt id="count"><a class="permalink" href="#count"><code class="Fl">--count</code></a>
+    <var class="Ar">n</var></dt>
+  <dd>Stop after <var class="Ar">n</var> samples. Requires
+      <code class="Fl">--interval</code> to have any effect; without it, only
+      one sample is taken regardless.</dd>
+  <dt id="duration"><a class="permalink" href="#duration"><code class="Fl">--duration</code></a>
+    <var class="Ar">seconds</var></dt>
+  <dd>Stop after <var class="Ar">seconds</var> have elapsed. Requires
+      <code class="Fl">--interval</code> to have any effect.</dd>
+  <dt id="perfdata"><a class="permalink" href="#perfdata"><code class="Fl">--perfdata</code></a>
+    <var class="Ar">path</var></dt>
+  <dd>Write output to a perfdata file at <var class="Ar">path</var>. Each memory
+      category is recorded as a separate metric in bytes. Individual wired sites
+      (<code class="Li">category=wired</code>) and carveout regions
+      (<code class="Li">category=static_carveouts</code>) are included as
+      additional metrics. When combined with <code class="Fl">--interval</code>,
+      each sample is written as a separate group in the same perfdata file.</dd>
+</dl>
+<p class="Pp">When <code class="Fl">--interval</code> is active,
+    <code class="Nm">meminfo</code> installs signal handlers for
+    <code class="Dv">SIGINT</code> and <code class="Dv">SIGTERM</code>. Both
+    <code class="Fl">--count</code> and <code class="Fl">--duration</code> may
+    be specified together; sampling stops when either limit is reached.</p>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="MEMORY_CATEGORIES"><a class="permalink" href="#MEMORY_CATEGORIES">MEMORY
+  CATEGORIES</a></h2>
+<p class="Pp">The following categories are displayed in the formatted output.
+    Together they make up the <i class="Em">Physical Memory</i> summary.</p>
+<dl class="Bl-tag">
+  <dt>Anonymous</dt>
+  <dd>Pageable memory allocated by applications that are not backed by a file.
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt>Active</dt>
+      <dd>The subset of anonymous pages on the active queue.</dd>
+      <dt>Inactive</dt>
+      <dd>The subset of anonymous pages on the inactive queue.</dd>
+      <dt>Purgeable</dt>
+      <dd>The subset of anonymous pages that the system may reclaim without
+          preserving contents (i.e. VM_PURGABLE_VOLATILE).</dd>
+    </dl>
+  </dd>
+  <dt>Cached files</dt>
+  <dd>Pageable memory backed by files on disk (e.g. mapped files, shared
+      libraries, caches).
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt>Active</dt>
+      <dd>The subset of file-backed pages on the active queue.</dd>
+      <dt>Inactive</dt>
+      <dd>The subset of file-backed pages on the inactive queue.</dd>
+      <dt>Speculative</dt>
+      <dd>Pages read speculatively from disk that have not yet been
+        referenced.</dd>
+      <dt>Secluded</dt>
+      <dd>File-backed pages that are secluded. Only shown when non-zero.</dd>
+      <dt>Shared cache</dt>
+      <dd>Pages used by the shared cache (dyld shared region).</dd>
+      <dt>Executable</dt>
+      <dd>Pages containing executable code from mapped binaries.</dd>
+    </dl>
+  </dd>
+  <dt>Compressor</dt>
+  <dd>Memory consumed by the in-memory compressor to store compressed data and,
+      on MTE-capable systems, compressed tags.
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt>Compressed data</dt>
+      <dd>The subset of compressor pages holding compressed page data (excluding
+          tag storage).</dd>
+      <dt>Compressed tags</dt>
+      <dd>The bytes consumed by compressed tag storage in the compressor. Only
+          shown on MTE-capable systems.</dd>
+    </dl>
+  </dd>
+  <dt>Free</dt>
+  <dd>Memory not currently in use.
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt>Tag storage</dt>
+      <dd>Tag storage pages that are not currently in use. Only shown on
+          MTE-capable systems.</dd>
+    </dl>
+  </dd>
+  <dt>Wired</dt>
+  <dd>Memory that cannot be paged out or compressed (kernel data structures,
+      IOSurfaces, etc.). Individual kernel allocation sites are listed as
+      indented subcategories. Expanding the aggregate <i class="Em">Zones</i>
+      row into per-zone detail additionally requires root (see
+      <code class="Fl">--zones</code>).</dd>
+  <dt id="Unmapped">Static carveouts</dt>
+  <dd>Memory reserved at boot time by the kernel. Individual carveout regions
+      from the device tree are listed as indented subcategories. Nested or
+      overlapping regions are clipped so each physical page is counted once, and
+      any unnamed remainder is aggregated into an
+      <a class="permalink" href="#Unmapped"><i class="Em">Unmapped</i></a>
+    row.</dd>
+</dl>
+<p class="Pp">The <i class="Em">Swap</i> category is displayed below the
+    <i class="Em">Physical Memory</i> summary and is not part of the physical
+    memory total.</p>
+<dl class="Bl-tag">
+  <dt>Swap</dt>
+  <dd>Compressor pages currently stored in the on-disk swapfile.
+    <p class="Pp"></p>
+    <dl class="Bl-tag Bl-compact">
+      <dt>Swapped data</dt>
+      <dd>The subset of swap pages holding compressed page data.</dd>
+    </dl>
+  </dd>
+</dl>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="OUTPUT_FORMATS"><a class="permalink" href="#OUTPUT_FORMATS">OUTPUT
+  FORMATS</a></h2>
+<section class="Ss">
+<h3 class="Ss" id="Default_human-readable"><a class="permalink" href="#Default_human-readable">Default
+  (human-readable)</a></h3>
+<p class="Pp">Each category is printed as a section headed by its page count and
+    size. Indented subcategory rows show a label, page count, size in megabytes,
+    a fixed-width visual bar, and a percentage relative to the enclosing
+    category; they are sorted largest first, and any remainder appears as an
+    <i class="Em">Unaccounted</i> row. A trailing <i class="Em">Physical
+    Memory</i> section breaks the total down into the main categories, with bars
+    and percentages relative to physical memory.</p>
+</section>
+<section class="Ss">
+<h3 class="Ss" id="CSV"><a class="permalink" href="#CSV">CSV</a></h3>
+<p class="Pp">A header row followed by one data row per sample. The first two
+    columns are <code class="Li">datetime</code> (ISO&#x00A0;8601) and
+    <code class="Li">abstime</code> (Unix epoch with millisecond precision). All
+    memory values are in bytes.</p>
+</section>
+<section class="Ss">
+<h3 class="Ss" id="Perfdata"><a class="permalink" href="#Perfdata">Perfdata</a></h3>
+<p class="Pp">A perfdata file containing one metric per memory category. With
+    <code class="Fl">--interval</code>, each sample is written as a separate
+    group. All values are in bytes.</p>
+</section>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h2>
+<p class="Pp">The <code class="Nm">meminfo</code> utility exits&#x00A0;0 on
+    success, and&#x00A0;&gt;0 if an error occurs.</p>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
+<p class="Pp">Display a one-shot breakdown:</p>
+<div class="Bd Bd-indent"><code class="Li">$ meminfo</code></div>
+<p class="Pp">Show only the physical-memory summary and swap:</p>
+<div class="Bd Bd-indent"><code class="Li">$ meminfo --summary</code></div>
+<p class="Pp">Expand wired zones into individual rows:</p>
+<div class="Bd Bd-indent"><code class="Li"># meminfo --zones</code></div>
+<p class="Pp">Show everything, including hidden and overlapping subtotals
+    (per-zone rows require root):</p>
+<div class="Bd Bd-indent"><code class="Li"># meminfo --all</code></div>
+<p class="Pp">Sample every 2 seconds, stop after 10 samples, output as CSV:</p>
+<div class="Bd Bd-indent"><code class="Li">$ meminfo --csv /tmp/mem.csv
+  --interval 2 --count 10</code></div>
+<p class="Pp">Stream CSV for 60 seconds at half-second intervals:</p>
+<div class="Bd Bd-indent"><code class="Li">$ meminfo --csv /tmp/mem.csv
+  --interval 0.5 --duration 60</code></div>
+</section>
+<section class="Sh">
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/footprint" aria-label="footprint, section
+    1">footprint(1)</a>,
+    <a class="Xr" href="../1/memory_pressure" aria-label="memory_pressure,
+    section 1">memory_pressure(1)</a>,
+    <a class="Xr" href="../1/top" aria-label="top, section 1">top(1)</a>,
+    <a class="Xr" href="../1/vm_stat" aria-label="vm_stat, section
+    1">vm_stat(1)</a>, <a class="Xr" href="../1/zprint" aria-label="zprint,
+    section 1">zprint(1)</a></p>
+</section>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">March 13, 2026</span>
+  <span class="foot-right">MEMINFO(1)</span></div>
+</body>
+</html>

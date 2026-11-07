@@ -1,31 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2004-2015, Apple Inc. All rights reserved.
- -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>libgmalloc(3)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2004-2015, Apple Inc. All rights reserved.
+ -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">libgmalloc(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">libgmalloc(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">libgmalloc(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">libgmalloc(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">libgmalloc</code> &#x2014;
-    <span class="Nd">(Guard Malloc), an aggressive debugging malloc
-    library</span></p>
+    <span class="Nd" role="doc-subtitle">(Guard Malloc), an aggressive debugging
+    malloc library</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><code class="Nm">libgmalloc</code> is a debugging malloc library
     that can track down insidious bugs in your code or library. If your
     application crashes when using libgmalloc, then you've found a bug.</p>
@@ -70,13 +67,13 @@
     the cause.</p>
 <p class="Pp">As of Mac OS X 10.6, libgmalloc can be used with the standard
     malloc stack logging by setting the MallocStackLogging environment variable.
-    The <a class="Xr" href="../1/malloc_history">malloc_history(1)</a> command
-    can then be used to show backtraces of all malloc and free events made when
-    using libgmalloc.</p>
+    The <a class="Xr" href="../1/malloc_history" aria-label="malloc_history,
+    section 1">malloc_history(1)</a> command can then be used to show backtraces
+    of all malloc and free events made when using libgmalloc.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="USING_libgmalloc_WITH_THE_XCODE_DEBUGGER_OR_LLDB"><a class="permalink" href="#USING_libgmalloc_WITH_THE_XCODE_DEBUGGER_OR_LLDB">USING
-  libgmalloc WITH THE XCODE DEBUGGER OR LLDB</a></h1>
+<h2 class="Sh" id="USING_libgmalloc_WITH_THE_XCODE_DEBUGGER_OR_LLDB"><a class="permalink" href="#USING_libgmalloc_WITH_THE_XCODE_DEBUGGER_OR_LLDB">USING
+  libgmalloc WITH THE XCODE DEBUGGER OR LLDB</a></h2>
 <p class="Pp">Because the goal of libgmalloc is to &quot;encourage&quot; your
     application to crash if memory access errors occur, it is best to run your
     application under a debugger such as the Xcode IDE's debugger, or lldb at
@@ -94,7 +91,7 @@
     alias.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<h2 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h2>
 <div class="Bd Li">
 <pre>% cat gmalloctest.c
 #include &lt;stdlib.h&gt;
@@ -154,7 +151,7 @@ Process 7895 stopped
     the freed memory was immediately reused and modified.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h1>
+<h2 class="Sh" id="ENVIRONMENT"><a class="permalink" href="#ENVIRONMENT">ENVIRONMENT</a></h2>
 <p class="Pp">libgmalloc's behavior can be changed with several additional
     environment variables:</p>
 <dl class="Bl-tag">
@@ -185,18 +182,12 @@ Process 7895 stopped
       vector instructions (e.g., SSE) require buffers to be on 16 byte
       boundaries. (The use of vector instructions is becoming more common in
       some Mac OS X system libraries.)</dd>
-  <dt id="MALLOC_WORD_SIZE"><a class="permalink" href="#MALLOC_WORD_SIZE"><code class="Ev">MALLOC_WORD_SIZE</code></a></dt>
-  <dd>This flag specifies that Guard Malloc should place allocations on word
-      (4-byte) boundaries, with the end of the buffer on the last 4 bytes of the
-      page. This option is useful because Carbon assumes that pointers are word
-      aligned, and without the word alignment, any program relying on Cocoa or
-      Carbon would immediately crash.</dd>
-  <dt id="MALLOC_STRICT_SIZE"><a class="permalink" href="#MALLOC_STRICT_SIZE"><code class="Ev">MALLOC_STRICT_SIZE</code></a></dt>
-  <dd>This flag specifies that Guard Malloc should always align all allocations
-      on single-byte boundaries such that the last byte of the buffer is at the
-      end of the page. This will immediately catch even one-byte buffer
-      overruns, but applications that use Carbon or Cocoa, or vector
-      instructions, may not run properly with this option.</dd>
+  <dt id="MALLOC_POINTER_SIZE"><a class="permalink" href="#MALLOC_POINTER_SIZE"><code class="Ev">MALLOC_POINTER_SIZE</code></a></dt>
+  <dd>This flag specifies that Guard Malloc should place allocations on
+      pointer-sized boundaries (8 bytes for 64-bit architectures), with the end
+      of the buffer on the last bytes of the page. This option is useful because
+      instructions may require values to be pointer-aligned and without this
+      alignment, most programs relying on Swift would immediately crash.</dd>
   <dt id="MALLOC_ALLOW_LARGE_REQUESTS"><a class="permalink" href="#MALLOC_ALLOW_LARGE_REQUESTS"><code class="Ev">MALLOC_ALLOW_LARGE_REQUESTS</code></a></dt>
   <dd>GuardMalloc tries to protect against requests for large amounts of memory
       by instructing the program to trap (if running under the debugger) if more
@@ -216,14 +207,14 @@ Process 7895 stopped
       variable to NO or 0.</dd>
   <dt id="MallocStackLogging"><a class="permalink" href="#MallocStackLogging"><code class="Ev">MallocStackLogging</code></a></dt>
   <dd>If this flag is set, then standard system malloc stack logging is enabled.
-      The <a class="Xr" href="../1/malloc_history">malloc_history(1)</a> command
-      can then be used to show backtraces of all malloc and free events made
-      when using libgmalloc.</dd>
+      The <a class="Xr" href="../1/malloc_history" aria-label="malloc_history,
+      section 1">malloc_history(1)</a> command can then be used to show
+      backtraces of all malloc and free events made when using libgmalloc.</dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="MEMORY_VALUES_USED_BY_GUARD_MALLOC"><a class="permalink" href="#MEMORY_VALUES_USED_BY_GUARD_MALLOC">MEMORY
-  VALUES USED BY GUARD MALLOC</a></h1>
+<h2 class="Sh" id="MEMORY_VALUES_USED_BY_GUARD_MALLOC"><a class="permalink" href="#MEMORY_VALUES_USED_BY_GUARD_MALLOC">MEMORY
+  VALUES USED BY GUARD MALLOC</a></h2>
 <p class="Pp">It's often useful to understand how Guard Malloc uses memory when
     debugging. Guard Malloc writes strange byte sequences to catch certain
     problems. If the MALLOC_FILL_SPACE environment variable is set, newly
@@ -243,28 +234,26 @@ Process 7895 stopped
   magic number again</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h1>
+<h2 class="Sh" id="CAVEATS"><a class="permalink" href="#CAVEATS">CAVEATS</a></h2>
 <p class="Pp">Because each allocation requires at least two pages of virtual
     memory, in 32-bit processes only about 500,000 malloc allocations could
     exist before the process runs out of virtual memory.</p>
 <p class="Pp">Processes using Guard Malloc may run more slowly. In addition, the
     extra pressure on the virtual memory system when running a process with
-    Guard Malloc can cause <a class="Xr" href="../1/top">top(1)</a> to update
-    its output more slowly.</p>
+    Guard Malloc can cause <a class="Xr" href="../1/top" aria-label="top,
+    section 1">top(1)</a> to update its output more slowly.</p>
 <p class="Pp">Don't forget -- if there's a memory bug in your program, the
     program will crash in Guard Malloc. This is a feature!</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/malloc_history">malloc_history(1)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/malloc_history" aria-label="malloc_history,
+    section 1">malloc_history(1)</a></p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">Mar. 18, 2015</td>
-    <td class="foot-os"><a href="..">Mac OS X</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Mac OS X</a></span> <span class="foot-date">Mar. 18,
+  2015</span> <span class="foot-right">libgmalloc(3)</span></div>
 </body>
 </html>

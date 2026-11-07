@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SYSCTL(3)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 1993
   	The Regents of the University of California.  All rights reserved.
@@ -31,34 +37,26 @@
   	@(#)sysctl.3	8.4 (Berkeley) 5/9/95
    $FreeBSD$
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>SYSCTL(3)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">SYSCTL(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">SYSCTL(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">SYSCTL(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">SYSCTL(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">sysctl</code>,
     <code class="Nm">sysctlbyname</code>,
-    <code class="Nm">sysctlnametomib</code> &#x2014; <span class="Nd">get or set
-    system information</span></p>
+    <code class="Nm">sysctlnametomib</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">get or set system
+  information</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<h2 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h2>
 <p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     &lt;<a class="In">sys/types.h</a>&gt;</code>
   <br/>
@@ -88,14 +86,15 @@
     *sizep</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The
     <a class="permalink" href="#sysctl"><code class="Fn" id="sysctl">sysctl</code></a>()
     function retrieves system information and allows processes with appropriate
     privileges to set system information. The information available from
     <code class="Fn">sysctl</code>() consists of integers, strings, and tables.
     Information may be retrieved and set from the command interface using the
-    <a class="Xr" href="../8/sysctl">sysctl(8)</a> utility.</p>
+    <a class="Xr" href="../8/sysctl" aria-label="sysctl, section
+    8">sysctl(8)</a> utility.</p>
 <p class="Pp" id="sysctl~2">Unless explicitly noted below,
     <a class="permalink" href="#sysctl~2"><code class="Fn">sysctl</code></a>()
     returns a consistent snapshot of the data requested. Consistency is obtained
@@ -218,25 +217,28 @@ p = malloc(len);
 sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </div>
 <section class="Ss">
-<h2 class="Ss" id="CTL_VFS"><a class="permalink" href="#CTL_VFS">CTL_VFS</a></h2>
+<h3 class="Ss" id="CTL_VFS"><a class="permalink" href="#CTL_VFS">CTL_VFS</a></h3>
 <p class="Pp">A distinguished second level name, VFS_GENERIC, is used to get
     general information about all file systems. One of its third level
     identifiers is VFS_MAXTYPENUM that gives the highest valid file system type
     number. Its other third level identifier is VFS_CONF that returns
     configuration information about the file system type given as a fourth level
-    identifier (see <a class="Xr" href="../3/getvfsbyname">getvfsbyname(3)</a>
-    as an example of its use). The remaining second level identifiers are the
-    file system type number returned by a
-    <a class="Xr" href="../2/statfs">statfs(2)</a> call or from VFS_CONF. The
-    third level identifiers available for each file system are given in the
-    header file that defines the mount argument structure for that file
-  system.</p>
+    identifier (see
+    <a class="Xr" href="../3/getvfsbyname" aria-label="getvfsbyname, section
+    3">getvfsbyname(3)</a> as an example of its use). The remaining second level
+    identifiers are the file system type number returned by a
+    <a class="Xr" href="../2/statfs" aria-label="statfs, section
+    2">statfs(2)</a> call or from VFS_CONF. The third level identifiers
+    available for each file system are given in the header file that defines the
+    mount argument structure for that file system.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_HW"><a class="permalink" href="#CTL_HW">CTL_HW</a></h2>
+<h3 class="Ss" id="CTL_HW"><a class="permalink" href="#CTL_HW">CTL_HW</a></h3>
 <p class="Pp">The string and integer information available for the CTL_HW level
     is detailed below. The changeable column shows whether a process with
-    appropriate privilege may change the value.</p>
+    appropriate privilege may change the value. Conditionalizing behavior on a
+    product identifier is error-prone and may yield unexpected results. Use
+    fine-grained device capabilities to control behavior instead.</p>
 <table class="Bl-column Bd-indent">
   <tr id="Name~2">
     <td><a class="permalink" href="#Name~2"><b class="Sy">Name</b></a></td>
@@ -412,7 +414,7 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </dl>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_KERN"><a class="permalink" href="#CTL_KERN">CTL_KERN</a></h2>
+<h3 class="Ss" id="CTL_KERN"><a class="permalink" href="#CTL_KERN">CTL_KERN</a></h3>
 <p class="Pp">The string and integer information available for the CTL_KERN
     level is detailed below. The changeable column shows whether a process with
     appropriate privilege may change the value. The types of data currently
@@ -684,7 +686,8 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 <dl class="Bl-tag">
   <dt id="kern.argmax"><a class="permalink" href="#kern.argmax"><code class="Li">kern.argmax</code></a></dt>
   <dd>The maximum bytes of argument to
-      <a class="Xr" href="../2/execve">execve(2)</a>.</dd>
+      <a class="Xr" href="../2/execve" aria-label="execve, section
+      2">execve(2)</a>.</dd>
   <dt id="kern.boottime"><a class="permalink" href="#kern.boottime"><code class="Li">kern.boottime</code></a></dt>
   <dd>A <var class="Va">struct timeval</var> structure is returned. This
       structure contains the time that the system was booted.</dd>
@@ -739,7 +742,7 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </dl>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_MACHDEP"><a class="permalink" href="#CTL_MACHDEP">CTL_MACHDEP</a></h2>
+<h3 class="Ss" id="CTL_MACHDEP"><a class="permalink" href="#CTL_MACHDEP">CTL_MACHDEP</a></h3>
 <p class="Pp">The set of variables defined is architecture dependent. The
     following variables are defined for the i386 architecture.</p>
 <table class="Bl-column Bd-indent">
@@ -956,7 +959,7 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </table>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_NET"><a class="permalink" href="#CTL_NET">CTL_NET</a></h2>
+<h3 class="Ss" id="CTL_NET"><a class="permalink" href="#CTL_NET">CTL_NET</a></h3>
 <p class="Pp">The string and integer information available for the CTL_NET level
     is detailed below. The changeable column shows whether a process with
     appropriate privilege may change the value.</p>
@@ -987,9 +990,9 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
   <dt id="PF_ROUTE"><a class="permalink" href="#PF_ROUTE"><code class="Li">PF_ROUTE</code></a></dt>
   <dd>Return the entire routing table or a subset of it. The data is returned as
       a sequence of routing messages (see
-      <a class="Xr" href="../4/route">route(4)</a> for the header file, format
-      and meaning). The length of each message is contained in the message
-      header.
+      <a class="Xr" href="../4/route" aria-label="route, section 4">route(4)</a>
+      for the header file, format and meaning). The length of each message is
+      contained in the message header.
     <p class="Pp">The third level name is a protocol number, which is currently
         always 0. The fourth level name is an address family, which may be set
         to 0 to select all address families. The fifth, sixth, and seventh level
@@ -1097,7 +1100,8 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
       <dd>Returns 1 when UDP checksums are being computed and checked. Disabling
           UDP checksums is strongly discouraged.
         <p class="Pp">For variables net.inet.*.ipsec, please refer to
-            <a class="Xr" href="../4/ipsec">ipsec(4)</a>.</p>
+            <a class="Xr" href="../4/ipsec" aria-label="ipsec, section
+            4">ipsec(4)</a>.</p>
       </dd>
     </dl>
   </dd>
@@ -1106,14 +1110,15 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
       version 6). The third level name is the protocol. The fourth level name is
       the variable name.
     <p class="Pp">For variables net.inet6.* please refer to
-        <a class="Xr" href="../4/inet6">inet6(4)</a>. For variables
-        net.inet6.*.ipsec6, please refer to
-        <a class="Xr" href="../4/ipsec">ipsec(4)</a>.</p>
+        <a class="Xr" href="../4/inet6" aria-label="inet6, section
+        4">inet6(4)</a>. For variables net.inet6.*.ipsec6, please refer to
+        <a class="Xr" href="../4/ipsec" aria-label="ipsec, section
+        4">ipsec(4)</a>.</p>
   </dd>
 </dl>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_USER"><a class="permalink" href="#CTL_USER">CTL_USER</a></h2>
+<h3 class="Ss" id="CTL_USER"><a class="permalink" href="#CTL_USER">CTL_USER</a></h3>
 <p class="Pp">The string and integer information available for the CTL_USER
     level is detailed below. The changeable column shows whether a process with
     appropriate privilege may change the value.</p>
@@ -1227,16 +1232,19 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 <dl class="Bl-tag">
   <dt id="user.bc_base_max"><a class="permalink" href="#user.bc_base_max"><code class="Li">user.bc_base_max</code></a></dt>
   <dd>The maximum ibase/obase values in the
-      <a class="Xr" href="../1/bc">bc(1)</a> utility.</dd>
+      <a class="Xr" href="../1/bc" aria-label="bc, section 1">bc(1)</a>
+    utility.</dd>
   <dt id="user.bc_dim_max"><a class="permalink" href="#user.bc_dim_max"><code class="Li">user.bc_dim_max</code></a></dt>
-  <dd>The maximum array size in the <a class="Xr" href="../1/bc">bc(1)</a>
-      utility.</dd>
+  <dd>The maximum array size in the <a class="Xr" href="../1/bc" aria-label="bc,
+      section 1">bc(1)</a> utility.</dd>
   <dt id="user.bc_scale_max"><a class="permalink" href="#user.bc_scale_max"><code class="Li">user.bc_scale_max</code></a></dt>
-  <dd>The maximum scale value in the <a class="Xr" href="../1/bc">bc(1)</a>
-      utility.</dd>
+  <dd>The maximum scale value in the
+      <a class="Xr" href="../1/bc" aria-label="bc, section 1">bc(1)</a>
+    utility.</dd>
   <dt id="user.bc_string_max"><a class="permalink" href="#user.bc_string_max"><code class="Li">user.bc_string_max</code></a></dt>
-  <dd>The maximum string length in the <a class="Xr" href="../1/bc">bc(1)</a>
-      utility.</dd>
+  <dd>The maximum string length in the
+      <a class="Xr" href="../1/bc" aria-label="bc, section 1">bc(1)</a>
+    utility.</dd>
   <dt id="user.coll_weights_max"><a class="permalink" href="#user.coll_weights_max"><code class="Li">user.coll_weights_max</code></a></dt>
   <dd>The maximum number of weights that can be assigned to any entry of the
       LC_COLLATE order keyword in the locale definition file.</dd>
@@ -1245,7 +1253,8 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
       that finds all the standard utilities.</dd>
   <dt id="user.expr_nest_max"><a class="permalink" href="#user.expr_nest_max"><code class="Li">user.expr_nest_max</code></a></dt>
   <dd>The maximum number of expressions that can be nested within parenthesis by
-      the <a class="Xr" href="../1/expr">expr(1)</a> utility.</dd>
+      the <a class="Xr" href="../1/expr" aria-label="expr, section
+      1">expr(1)</a> utility.</dd>
   <dt id="user.line_max"><a class="permalink" href="#user.line_max"><code class="Li">user.line_max</code></a></dt>
   <dd>The maximum length in bytes of a text-processing utility's input
     line.</dd>
@@ -1289,7 +1298,7 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </dl>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="CTL_VM"><a class="permalink" href="#CTL_VM">CTL_VM</a></h2>
+<h3 class="Ss" id="CTL_VM"><a class="permalink" href="#CTL_VM">CTL_VM</a></h3>
 <p class="Pp">The string and integer information available for the CTL_VM level
     is detailed below. The changeable column shows whether a process with
     appropriate privilege may change the value.</p>
@@ -1318,14 +1327,14 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">Upon successful completion, the value&#x00A0;0 is returned;
     otherwise the value&#x00A0;-1 is returned and the global variable
     <var class="Va">errno</var> is set to indicate the error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<h2 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h2>
 <dl class="Bl-tag Bl-compact">
   <dt><code class="In">&lt;<a class="In">sys/sysctl.h</a>&gt;</code></dt>
   <dd>definitions for top level identifiers, second level kernel and hardware
@@ -1344,7 +1353,7 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp">The following errors may be reported:</p>
 <dl class="Bl-tag">
   <dt id="EFAULT">[<a class="permalink" href="#EFAULT"><code class="Er">EFAULT</code></a>]</dt>
@@ -1384,23 +1393,23 @@ sysctlbyname(&quot;user.cs_path&quot;, p, &amp;len, NULL, 0);</pre>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../3/confstr">confstr(3)</a>,
-    <a class="Xr" href="../3/sysconf">sysconf(3)</a>,
-    <a class="Xr" href="../8/sysctl">sysctl(8)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../3/confstr" aria-label="confstr, section
+    3">confstr(3)</a>, <a class="Xr" href="../3/sysconf" aria-label="sysconf,
+    section 3">sysconf(3)</a>,
+    <a class="Xr" href="../8/sysctl" aria-label="sysctl, section
+    8">sysctl(8)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Fn">sysctl</code>() function first appeared in
     <span class="Ux">4.4BSD</span>.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">May 17, 2013</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">July 9, 2026</span>
+  <span class="foot-right">SYSCTL(3)</span></div>
 </body>
 </html>

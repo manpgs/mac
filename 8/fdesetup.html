@@ -7,21 +7,18 @@
   <title>fdesetup(8)</title>
 </head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">fdesetup(8)</td>
-    <td class="head-vol"><a href=".">System Manager's Manual</a></td>
-    <td class="head-rtitle">fdesetup(8)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">fdesetup(8)</span>
+  <span class="head-vol"><a href=".">System Manager's Manual</a></span>
+  <span class="head-rtitle">fdesetup(8)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">fdesetup</code> &#x2014;
-    <span class="Nd">FileVault configuration tool</span></p>
+    <span class="Nd" role="doc-subtitle">FileVault configuration tool</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <table class="Nm">
   <tr>
     <td><code class="Nm">fdesetup</code></td>
@@ -30,7 +27,7 @@
 </table>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><code class="Nm">fdesetup</code> is used to enable or disable
     FileVault, to list, add, or remove enabled FileVault users, and to obtain
     status about the current state of FileVault. Most commands require root
@@ -132,16 +129,17 @@
     <a class="permalink" href="#pmset"><b class="Sy">pmset
     destroyfvkeyonstandby</b></a> to prevent saving the key across standby
     modes. Once <b class="Sy">authrestart</b> is authenticated, it launches
-    <a class="Xr" href="../8/shutdown">shutdown(8)</a> and, upon successful
-    unlock, the unlock key will be removed. You can also use this as an option
-    to the <b class="Sy">enable</b> command if the system supports this feature.
-    The <b class="Sy">supportsauthrestart</b> command will check the system to
-    see if it supports the <b class="Sy">authrestart</b> command option, however
-    you should note that even if this returns true, FileVault must still be
-    enabled for <b class="Sy">authrestart</b> to work.</p>
+    <a class="Xr" href="../8/shutdown" aria-label="shutdown, section
+    8">shutdown(8)</a> and, upon successful unlock, the unlock key will be
+    removed. You can also use this as an option to the <b class="Sy">enable</b>
+    command if the system supports this feature. The
+    <b class="Sy">supportsauthrestart</b> command will check the system to see
+    if it supports the <b class="Sy">authrestart</b> command option, however you
+    should note that even if this returns true, FileVault must still be enabled
+    for <b class="Sy">authrestart</b> to work.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="VERBS"><a class="permalink" href="#VERBS">VERBS</a></h1>
+<h2 class="Sh" id="VERBS"><a class="permalink" href="#VERBS">VERBS</a></h2>
 <p class="Pp">Each command verb is listed with its description and individual
     arguments.</p>
 <dl class="Bl-hang">
@@ -165,13 +163,23 @@
       <var class="Ar">path_to_cer_file</var>]] [[<code class="Fl">-defer</code>
       <var class="Ar">file_path</var>] [<code class="Fl">-forceatlogin</code>
       <var class="Ar">max_cancel_attempts</var>]
-      [<code class="Fl">-dontaskatlogout</code>]]
+      [<code class="Fl">-dontaskatlogout</code>]
+      [<code class="Fl">-showrecoverykey</code>]]
       [<code class="Fl">-norecoverykey</code>]
       [<code class="Fl">-verbose</code>]
     <br/>
     Enables FileVault. This command will fail if no recovery partition was found
       on your disk. Additionally, all Secure Token users must contain valid
-      passwords.</dd>
+      passwords.
+    <p class="Pp">When <code class="Fl">-outputplist</code> is specified,
+        <code class="Nm">fdesetup</code> validates that the recovery key can be
+        written safely to the requested output path before starting encryption.
+        If the path parent is missing, any component is a symbolic link, the
+        pre-existing target is not a plain root-owned regular file with a single
+        hard link, or the target is marked immutable (uchg/schg), enablement is
+        refused before any disk state is changed and the tool exits with status
+        38. FileVault remains off.</p>
+  </dd>
   <dt id="disable"><a class="permalink" href="#disable"><b class="Sy">disable</b></a></dt>
   <dd>[<code class="Fl">-verbose</code>]
     <br/>
@@ -215,7 +223,18 @@
       generated. When changing either key, the old value will be removed and
       replaced. On CoreStorage volumes the -key option can be used to unlock
       FileVault. More information on this is described elsewhere in this
-      document.</dd>
+      document.
+    <p class="Pp">When rotating the personal recovery key with
+        <code class="Fl">-outputplist</code>, <code class="Nm">fdesetup</code>
+        first validates that the new key can be written safely to the requested
+        path (parent directory must exist, no component may be a symbolic link,
+        and any pre-existing target must be a plain root-owned regular file with
+        a single hard link and no immutable flags set). If preflight fails,
+        rotation is refused, the existing personal recovery key remains valid,
+        and the tool exits with status 38. This preserves the caller's ability
+        to recover the volume when the escrow destination is misconfigured or
+        under attack.</p>
+  </dd>
   <dt id="removerecovery"><a class="permalink" href="#removerecovery"><b class="Sy">removerecovery</b></a></dt>
   <dd><a class="permalink" href="#personal~2"><b class="Sy" id="personal~2">-personal</b></a>
       <b class="Sy">-user</b> | <b class="Sy">-institutional</b>
@@ -287,12 +306,30 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <dl class="Bl-tag">
   <dt id="defer"><a class="permalink" href="#defer"><code class="Fl">-defer</code></a>
     <var class="Ar">file_path</var></dt>
-  <dd>Defer enabling FileVault until the user password is obtained, and recovery
-      key and system information will be written to the file path.</dd>
+  <dd>Defer enabling FileVault until the user password is obtained. The recovery
+      key and system information will be written to
+      <var class="Ar">file_path</var> once enablement completes, as a root-owned
+      file with mode 0600.
+    <p class="Pp">The parent directory of <var class="Ar">file_path</var> must
+        exist before invoking <code class="Nm">fdesetup</code>; fdesetup does
+        not create parent directories. If any component of
+        <var class="Ar">file_path</var> is a symbolic link,
+        <code class="Nm">fdesetup</code> refuses the operation. If a file
+        already exists at <var class="Ar">file_path</var>, it is replaced only
+        when it is a plain regular file owned by root with a single hard link;
+        otherwise the operation is refused. Refusals are reported on standard
+        error, cause exit status 38, and (when managed preferences permit)
+        surface the recovery key to standard output so the operator can still
+        record it.</p>
+    <p class="Pp">Immutable flags (uchg/schg) on a pre-existing target are
+        treated as a preflight failure and reported by name on standard error;
+        clear them with <b class="Sy">sudo chflags nouchg noschg</b>
+        <var class="Ar">file_path</var> if the overwrite is intentional.</p>
+  </dd>
   <dt id="user"><a class="permalink" href="#user"><code class="Fl">-user</code></a>
     <var class="Ar">user_shortname</var></dt>
   <dd>Short user name.</dd>
@@ -318,7 +355,18 @@
       contain a Change key and the EnableDate key will contain the date of the
       change. Where possible, you should avoid writing this file to a persistent
       location since it may pose additional security risk, and at the very
-      least, securely remove the file as soon as possible.</dd>
+      least, securely remove the file as soon as possible.
+    <p class="Pp">When <code class="Nm">fdesetup</code> writes recovery
+        information to a file path (as opposed to standard output), the parent
+        directory must exist, no component may be a symbolic link, and any
+        pre-existing target must be a root-owned regular file with a single hard
+        link. Violations exit with status 38 and, when managed preferences
+        permit, surface the recovery key on standard output as a fallback.</p>
+    <p class="Pp">Immutable flags (uchg/schg) on a pre-existing target are
+        treated as a preflight failure and reported by name on standard error;
+        clear them with <b class="Sy">sudo chflags nouchg noschg</b> followed by
+        the target path if the overwrite is intentional.</p>
+  </dd>
   <dt id="keychain"><a class="permalink" href="#keychain"><code class="Fl">-keychain</code></a></dt>
   <dd>Use the institutional recovery key stored in
       /Library/Keychains/FileVaultMaster.keychain.</dd>
@@ -337,6 +385,14 @@
   <dt id="norecoverykey"><a class="permalink" href="#norecoverykey"><code class="Fl">-norecoverykey</code></a></dt>
   <dd>Do not return a personal recovery key. On APFS volumes, you can use this
       option to reuse an existing recovery key previously created.</dd>
+  <dt id="showrecoverykey"><a class="permalink" href="#showrecoverykey"><code class="Fl">-showrecoverykey</code></a></dt>
+  <dd>When using the -defer option, display the personal recovery key to the
+      user after FileVault is enabled. If this option is not specified, the
+      recovery key will be written to the defer plist file but will not be
+      displayed on screen. Note that if an MDM profile is installed with the
+      <b class="Sy">FDEFileVaultOptions</b> payload containing the
+      <b class="Sy">ShowRecoveryKey</b> property set to false, the recovery key
+      will not be displayed to the user even if this option is specified.</dd>
   <dt id="forceatlogin"><a class="permalink" href="#forceatlogin"><code class="Fl">-forceatlogin</code></a>
     <var class="Ar">max_cancel_attempts</var></dt>
   <dd>When using the -defer option, prompt the designated user at login time to
@@ -379,8 +435,8 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DEFERRED_ENABLEMENT"><a class="permalink" href="#DEFERRED_ENABLEMENT">DEFERRED
-  ENABLEMENT</a></h1>
+<h2 class="Sh" id="DEFERRED_ENABLEMENT"><a class="permalink" href="#DEFERRED_ENABLEMENT">DEFERRED
+  ENABLEMENT</a></h2>
 <p class="Pp">The <b class="Sy">-defer</b> option can be used with the
     <b class="Sy">enable</b> command option to delay enabling FileVault until
     after the current (or next) local user logs in or out, thus avoiding the
@@ -398,9 +454,23 @@
     the next user that logs in will become the designated user.</p>
 <p class="Pp">As recovery key information is not generated until the user
     password is obtained, the <b class="Sy">-defer</b> option requires a path
-    where this information will be written to. The property list file will be
-    created as a root-only readable file and should be placed in a secure
-    location. You can use the <b class="Sy">showdeferralinfo</b> command to view
+    where this information will be written to. The parent directory of this path
+    must already exist; <code class="Nm">fdesetup</code> does not create it. The
+    property list file will be created as a root-only readable file (mode 0600,
+    owned by root:wheel) and should be placed in a secure location.</p>
+<p class="Pp">A pre-existing file at the deferral path that is not root-owned
+    (for example, one left behind by a previous run under a different account,
+    or restored from backup), that is a symbolic link or other special file,
+    that is hard-linked to another location, or that has immutable flags
+    (uchg/schg) set will cause the eventual FileVault enablement to be refused
+    with exit status 38 and reported on standard error. The deferral
+    configuration itself is written normally when the <b class="Sy">-defer</b>
+    command is invoked, but when the designated user subsequently attempts to
+    enable, encryption will not begin until the path can be safely written. When
+    managed preferences permit, the recovery key is surfaced to standard output
+    as a fallback in the rare case that the failure is only detected after key
+    generation.</p>
+<p class="Pp">You can use the <b class="Sy">showdeferralinfo</b> command to view
     the current deferral configuration information.</p>
 <p class="Pp" id="keychain,">Options that can be used in conjunction with the
     <b class="Sy">-defer</b> option include:
@@ -409,6 +479,7 @@
     <a class="permalink" href="#forcerestart,"><b class="Sy" id="forcerestart,">-forcerestart,</b></a>
     <a class="permalink" href="#forceatlogin,"><b class="Sy" id="forceatlogin,">-forceatlogin,</b></a>
     <a class="permalink" href="#dontaskatlogout,"><b class="Sy" id="dontaskatlogout,">-dontaskatlogout,</b></a>
+    <a class="permalink" href="#showrecoverykey,"><b class="Sy" id="showrecoverykey,">-showrecoverykey,</b></a>
     <a class="permalink" href="#user,"><b class="Sy" id="user,">-user,</b></a>
     and
     <a class="permalink" href="#norecoverykey."><b class="Sy" id="norecoverykey.">-norecoverykey.</b></a></p>
@@ -443,8 +514,8 @@
     operation has completed.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="INPUT_PROPERTY_LIST"><a class="permalink" href="#INPUT_PROPERTY_LIST">INPUT
-  PROPERTY LIST</a></h1>
+<h2 class="Sh" id="INPUT_PROPERTY_LIST"><a class="permalink" href="#INPUT_PROPERTY_LIST">INPUT
+  PROPERTY LIST</a></h2>
 <div class="Bd Bd-indent Li">
 <pre>    &lt;plist&gt;
         &lt;dict&gt;
@@ -501,8 +572,8 @@
     persistent location.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="REMOTE_UNLOCKING_VIA_SSH"><a class="permalink" href="#REMOTE_UNLOCKING_VIA_SSH">REMOTE
-  UNLOCKING VIA SSH</a></h1>
+<h2 class="Sh" id="REMOTE_UNLOCKING_VIA_SSH"><a class="permalink" href="#REMOTE_UNLOCKING_VIA_SSH">REMOTE
+  UNLOCKING VIA SSH</a></h2>
 <p class="Pp">When FileVault is enabled, the data volume is locked and
     unavailable during and after booting, until an account has been
     authenticated using a password. The macOS version of OpenSSH stores all of
@@ -518,8 +589,8 @@
     services) are fully available.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHORIZATION_POLICY"><a class="permalink" href="#AUTHORIZATION_POLICY">AUTHORIZATION
-  POLICY</a></h1>
+<h2 class="Sh" id="AUTHORIZATION_POLICY"><a class="permalink" href="#AUTHORIZATION_POLICY">AUTHORIZATION
+  POLICY</a></h2>
 <p class="Pp">Starting in macOS 10.15, you cannot use
     <code class="Nm">fdesetup</code> to enable FileVault encryption unless one
     of the following occurs:</p>
@@ -549,15 +620,32 @@
   <dt id="dontAllowFDEEnable">FDEFileVaultOptions dontAllowFDEEnable</dt>
   <dd>Setting the
       <a class="permalink" href="#dontAllowFDEEnable"><b class="Sy">dontAllowFDEEnable</b></a>
-      boolean property to true in the
-      <a class="permalink" href="#FDEFileVaultOptions"><b class="Sy" id="FDEFileVaultOptions">FDEFileVaultOptions</b></a>
+      boolean property to true in the <b class="Sy">FDEFileVaultOptions</b>
       payload removes the ability to manually enable FileVault after initial
       setup, either through System Settings or via the
       <code class="Nm">fdesetup</code> command-line tool.</dd>
+  <dt>FDEFileVaultOptions ShowRecoveryKey</dt>
+  <dd>Setting the <b class="Sy">ShowRecoveryKey</b> boolean property to false in
+      the <b class="Sy">FDEFileVaultOptions</b> payload prevents the personal
+      recovery key from being displayed to the user during deferred enablement,
+      even when the <b class="Sy">-showrecoverykey</b> option is specified. The
+      recovery key will still be written to the defer plist file for escrow
+      purposes.
+    <p class="Pp">This preference is also honored by the write-failure fallback
+        path. If <code class="Nm">fdesetup</code> successfully rotates or
+        generates a recovery key but cannot write it to the requested
+        <code class="Fl">-outputplist</code> or <code class="Fl">-defer</code>
+        path, it would normally print the key to standard output so the operator
+        can still record it. When this preference is forced to false, that
+        fallback print is suppressed; the tool exits with status 38 and the
+        rotated key is unrecoverable from this run. Sites forcing this
+        preference off should ensure the escrow path is reliably writable to
+        avoid losing keys.</p>
+  </dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <dl class="Bl-tag">
   <dt>fdesetup enable</dt>
   <dd>Enable FileVault after prompting for an OpenDirectory user name and
@@ -573,10 +661,11 @@
   <dt>fdesetup enable -defer /MykeyAndInfo.plist -showrecoverykey -forceatlogin
     3 -dontaskatlogout</dt>
   <dd>Will prompt to enable FileVault when the user logs in, allowing a maximum
-      of 3 aborted enable attempts before requiring FileVault be enabled. After
-      the 3 attempts, the user will not be able to log in to the client until
-      either FileVault is enabled, or the deferral information is removed (via
-      fdesetup disable).</dd>
+      of 3 aborted enable attempts before requiring FileVault be enabled. The
+      personal recovery key will be displayed to the user after successful
+      enablement. After the 3 attempts, the user will not be able to log in to
+      the client until either FileVault is enabled, or the deferral information
+      is removed (via fdesetup disable).</dd>
   <dt>fdesetup enable -certificate /mycertfile.cer</dt>
   <dd>Enables FileVault with an institutional recovery key based off the
       certificate data in the DER encoded file. A FileVaultMaster.keychain file
@@ -607,8 +696,8 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
-  STATUS</a></h1>
+<h2 class="Sh" id="EXIT_STATUS"><a class="permalink" href="#EXIT_STATUS">EXIT
+  STATUS</a></h2>
 <p class="Pp">The exit status of the tool is set to indicate whether any error
     was detected. The values returned are:</p>
 <dl class="Bl-tag">
@@ -674,30 +763,44 @@
   <dd>This computer does not support enabling FileVault.</dd>
   <dt>37</dt>
   <dd>One or more users have a blank password. FileVault cannot be enabled.</dd>
+  <dt>38</dt>
+  <dd>Recovery key was generated but could not be written to the requested
+      output path, or (for <b class="Sy">enable</b> and
+      <b class="Sy">changerecovery -personal</b>) preflight refused the
+      operation before any state was changed. The parent directory may be
+      missing, a component of the path may be a symbolic link, the pre-existing
+      target may not be a plain root-owned file with a single hard link, the
+      target may have immutable flags set (uchg/schg), or the filesystem may be
+      full or read-only. For <b class="Sy">enable</b>, FileVault remains off;
+      for <b class="Sy">changerecovery -personal</b>, the previous personal
+      recovery key remains valid. When managed preferences permit and the
+      failure was detected after key generation, the recovery key was surfaced
+      to standard output as a last-resort fallback; when they do not, the key is
+      unrecoverable from this run. Re-run against a writable, root-owned parent
+      directory that is not a symbolic link.</dd>
   <dt>99</dt>
   <dd>Internal error.</dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/security">security(1)</a>,
-    <a class="Xr" href="../8/diskutil">diskutil(8)</a>,
-    <a class="Xr" href="../1/base64">base64(1)</a>,
-    <a class="Xr" href="../1/pmset">pmset(1)</a>,
-    <a class="Xr" href="../8/shutdown">shutdown(8)</a>,
-    <a class="Xr" href="../8/sshd">sshd(8)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/security" aria-label="security, section
+    1">security(1)</a>, <a class="Xr" href="../8/diskutil" aria-label="diskutil,
+    section 8">diskutil(8)</a>,
+    <a class="Xr" href="../1/base64" aria-label="base64, section
+    1">base64(1)</a>, <a class="Xr" href="../1/pmset" aria-label="pmset, section
+    1">pmset(1)</a>, <a class="Xr" href="../8/shutdown" aria-label="shutdown,
+    section 8">shutdown(8)</a>, <a class="Xr" href="../8/sshd" aria-label="sshd,
+    section 8">sshd(8)</a></p>
 <p class="Pp">Apple Platform Deployment Guide:
     https://support.apple.com/guide/deployment Apple Device Management
     Documentation:
   https://developer.apple.com/documentation/devicemanagement</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">July 2, 2025</td>
-    <td class="foot-os"><a href="..">macOS</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">macOS</a></span> <span class="foot-date">February 1,
+  2026</span> <span class="foot-right">fdesetup(8)</span></div>
 </body>
 </html>

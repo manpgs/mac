@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2008-2012 Apple Inc. All rights reserved.
- -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>dispatch_async(3)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2008-2012 Apple Inc. All rights reserved.
+ -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">dispatch_async(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">dispatch_async(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">dispatch_async(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">dispatch_async(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">dispatch_async</code>,
-    <code class="Nm">dispatch_sync</code> &#x2014; <span class="Nd">schedule
-    blocks for execution</span></p>
+    <code class="Nm">dispatch_sync</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">schedule blocks for
+  execution</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     <a class="In">&lt;dispatch/dispatch.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">void</var>
@@ -48,29 +46,32 @@
     (*function)(void *)</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The
     <a class="permalink" href="#dispatch_async"><code class="Fn" id="dispatch_async">dispatch_async</code></a>()
     and <code class="Fn">dispatch_sync</code>() functions schedule blocks for
     concurrent execution within the
-    <a class="Xr" href="../3/dispatch">dispatch(3)</a> framework. Blocks are
-    submitted to a queue which dictates the policy for their execution. See
-    <a class="Xr" href="../3/dispatch_queue_create">dispatch_queue_create(3)</a>
-    for more information about creating dispatch queues.</p>
+    <a class="Xr" href="../3/dispatch" aria-label="dispatch, section
+    3">dispatch(3)</a> framework. Blocks are submitted to a queue which dictates
+    the policy for their execution. See
+    <a class="Xr" href="../3/dispatch_queue_create" aria-label="dispatch_queue_create,
+    section 3">dispatch_queue_create(3)</a> for more information about creating
+    dispatch queues.</p>
 <p class="Pp">These functions support efficient temporal synchronization,
     background concurrency and data-level concurrency. These same functions can
     also be used for efficient notification of the completion of asynchronous
     blocks (a.k.a. callbacks).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TEMPORAL_SYNCHRONIZATION"><a class="permalink" href="#TEMPORAL_SYNCHRONIZATION">TEMPORAL
-  SYNCHRONIZATION</a></h1>
+<h2 class="Sh" id="TEMPORAL_SYNCHRONIZATION"><a class="permalink" href="#TEMPORAL_SYNCHRONIZATION">TEMPORAL
+  SYNCHRONIZATION</a></h2>
 <p class="Pp">Synchronization is often required when multiple threads of
     execution access shared data concurrently. The simplest form of
     synchronization is mutual-exclusion (a lock), whereby different subsystems
     execute concurrently until a shared critical section is entered. In the
-    <a class="Xr" href="../3/pthread">pthread(3)</a> family of procedures,
-    temporal synchronization is accomplished like so:</p>
+    <a class="Xr" href="../3/pthread" aria-label="pthread, section
+    3">pthread(3)</a> family of procedures, temporal synchronization is
+    accomplished like so:</p>
 <div class="Bd Pp Bd-indent Li">
 <pre>int r = pthread_mutex_lock(&amp;my_lock);
 assert(r == 0);
@@ -106,8 +107,8 @@ assert(r == 0);</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BACKGROUND_CONCURRENCY"><a class="permalink" href="#BACKGROUND_CONCURRENCY">BACKGROUND
-  CONCURRENCY</a></h1>
+<h2 class="Sh" id="BACKGROUND_CONCURRENCY"><a class="permalink" href="#BACKGROUND_CONCURRENCY">BACKGROUND
+  CONCURRENCY</a></h2>
 <p class="Pp">The <code class="Fn">dispatch_async</code>() function may be used
     to execute trivial background tasks on a global concurrent queue. For
     example:</p>
@@ -117,11 +118,12 @@ assert(r == 0);</pre>
 });</pre>
 </div>
 <p class="Pp">This approach is an efficient replacement for
-    <a class="Xr" href="../3/pthread_create">pthread_create(3)</a>.</p>
+    <a class="Xr" href="../3/pthread_create" aria-label="pthread_create, section
+    3">pthread_create(3)</a>.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="COMPLETION_CALLBACKS"><a class="permalink" href="#COMPLETION_CALLBACKS">COMPLETION
-  CALLBACKS</a></h1>
+<h2 class="Sh" id="COMPLETION_CALLBACKS"><a class="permalink" href="#COMPLETION_CALLBACKS">COMPLETION
+  CALLBACKS</a></h2>
 <p class="Pp">Completion callbacks can be accomplished via nested calls to the
     <a class="permalink" href="#dispatch_async~3"><code class="Fn" id="dispatch_async~3">dispatch_async</code></a>()
     function. It is important to remember to retain the destination queue before
@@ -154,8 +156,8 @@ async_read(object_t obj,
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RECURSIVE_LOCKS"><a class="permalink" href="#RECURSIVE_LOCKS">RECURSIVE
-  LOCKS</a></h1>
+<h2 class="Sh" id="RECURSIVE_LOCKS"><a class="permalink" href="#RECURSIVE_LOCKS">RECURSIVE
+  LOCKS</a></h2>
 <p class="Pp">While <code class="Fn">dispatch_sync</code>() can replace a lock,
     it cannot replace a recursive lock. Unlike locks, queues support both
     asynchronous and synchronous operations, and those operations are ordered by
@@ -198,8 +200,8 @@ sloppy_lock(object_t object, void (^block)(void))
     once the ultimate level of reentrancy is deployed (IPC or RPC).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="IMPLIED_REFERENCES"><a class="permalink" href="#IMPLIED_REFERENCES">IMPLIED
-  REFERENCES</a></h1>
+<h2 class="Sh" id="IMPLIED_REFERENCES"><a class="permalink" href="#IMPLIED_REFERENCES">IMPLIED
+  REFERENCES</a></h2>
 <p class="Pp">Synchronous functions within the dispatch framework hold an
     implied reference on the target queue. In other words, the synchronous
     function borrows the reference of the calling function (this is valid
@@ -222,16 +224,17 @@ dispatch_release(queue); // SAFELY balanced outside of the block provided to dis
     these objects).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FUNDAMENTALS"><a class="permalink" href="#FUNDAMENTALS">FUNDAMENTALS</a></h1>
+<h2 class="Sh" id="FUNDAMENTALS"><a class="permalink" href="#FUNDAMENTALS">FUNDAMENTALS</a></h2>
 <p class="Pp">Conceptually,
     <a class="permalink" href="#dispatch_sync~3"><code class="Fn" id="dispatch_sync~3">dispatch_sync</code></a>()
     is a convenient wrapper around <code class="Fn">dispatch_async</code>() with
     the addition of a semaphore to wait for completion of the block, and a
     wrapper around the block to signal its completion. See
-    <a class="Xr" href="../3/dispatch_semaphore_create">dispatch_semaphore_create(3)</a>
-    for more information about dispatch semaphores. The actual implementation of
-    the <code class="Fn">dispatch_sync</code>() function may be optimized and
-    differ from the above description.</p>
+    <a class="Xr" href="../3/dispatch_semaphore_create" aria-label="dispatch_semaphore_create,
+    section 3">dispatch_semaphore_create(3)</a> for more information about
+    dispatch semaphores. The actual implementation of the
+    <code class="Fn">dispatch_sync</code>() function may be optimized and differ
+    from the above description.</p>
 <p class="Pp" id="dispatch_async~4">The
     <a class="permalink" href="#dispatch_async~4"><code class="Fn">dispatch_async</code></a>()
     function is a wrapper around
@@ -248,20 +251,65 @@ dispatch_release(queue); // SAFELY balanced outside of the block provided to dis
     <var class="Fa">queue</var>.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../3/dispatch">dispatch(3)</a>,
-    <a class="Xr" href="../3/dispatch_apply">dispatch_apply(3)</a>,
-    <a class="Xr" href="../3/dispatch_once">dispatch_once(3)</a>,
-    <a class="Xr" href="../3/dispatch_queue_create">dispatch_queue_create(3)</a>,
-    <a class="Xr" href="../3/dispatch_semaphore_create">dispatch_semaphore_create(3)</a></p>
+<h2 class="Sh" id="QOS_CLASS_PROPAGATION"><a class="permalink" href="#QOS_CLASS_PROPAGATION">QOS
+  CLASS PROPAGATION</a></h2>
+<p class="Pp">A block submitted with <code class="Fn">dispatch_async</code>()
+    runs at a QoS class determined by the block's assigned QoS class and the
+    target queue's configuration.</p>
+<p class="Pp" id="dispatch_async~5">By default, a block submitted via
+    <a class="permalink" href="#dispatch_async~5"><code class="Fn">dispatch_async</code></a>()
+    is assigned the QoS class current on the calling thread (the value returned
+    by
+    <a class="permalink" href="#qos_class_self"><code class="Fn" id="qos_class_self">qos_class_self</code></a>()
+    at the moment of submission). To assign a specific QoS class instead, use
+    <code class="Fn">dispatch_block_create_with_qos_class</code>(). To submit a
+    block with no assigned QoS class, create it with
+    <code class="Dv">DISPATCH_BLOCK_NO_QOS_CLASS</code> or
+    <code class="Dv">DISPATCH_BLOCK_DETACHED</code>.</p>
+<p class="Pp" id="dispatch_queue_attr_make_with_qos_class">A queue created with
+    <a class="permalink" href="#dispatch_queue_attr_make_with_qos_class"><code class="Fn">dispatch_queue_attr_make_with_qos_class</code></a>()
+    has a specified QoS class. Blocks submitted to such a queue with
+    <code class="Fn">dispatch_async</code>() run at the queue's specified QoS
+    class, regardless of their assigned QoS class. A block created with
+    <code class="Dv">DISPATCH_BLOCK_ENFORCE_QOS_CLASS</code> preserves its
+    assigned QoS class instead, as long as that does not result in a lower QoS
+    class than the queue's specified one.</p>
+<p class="Pp" id="dispatch_set_qos_class_floor">A queue with a floor configured
+    via
+    <a class="permalink" href="#dispatch_set_qos_class_floor"><code class="Fn">dispatch_set_qos_class_floor</code></a>()
+    runs blocks at the higher of the floor and the block's assigned QoS class.
+    The floor raises QoS but never lowers it, regardless of any block flags. A
+    specified or floor QoS class configured on any queue in this queue's target
+    chain acts as a floor on this queue.</p>
+<p class="Pp" id="dispatch_block_create"><code class="Dv">QOS_CLASS_USER_INTERACTIVE</code>
+    is capped to <code class="Dv">QOS_CLASS_USER_INITIATED</code> when it is
+    acquired by propagation (bare blocks, blocks created via
+    <a class="permalink" href="#dispatch_block_create"><code class="Fn">dispatch_block_create</code></a>()
+    without an explicit QoS class, and the
+    <code class="Dv">DISPATCH_BLOCK_ASSIGN_CURRENT</code> flag). A QoS class set
+    directly via
+    <a class="permalink" href="#dispatch_block_create_with_qos_class"><code class="Fn" id="dispatch_block_create_with_qos_class">dispatch_block_create_with_qos_class</code></a>()
+    bypasses the cap, as does a queue's specified QoS class.</p>
+<p class="Pp">See <span class="Pa">&lt;dispatch/block.h&gt;</span> for the
+    complete resolution rules and the list of block flags.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">May 1, 2009</td>
-    <td class="foot-os"><a href="..">Darwin</a></td>
-  </tr>
-</table>
+<section class="Sh">
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../3/dispatch" aria-label="dispatch, section
+    3">dispatch(3)</a>,
+    <a class="Xr" href="../3/dispatch_apply" aria-label="dispatch_apply, section
+    3">dispatch_apply(3)</a>,
+    <a class="Xr" href="../3/dispatch_once" aria-label="dispatch_once, section
+    3">dispatch_once(3)</a>,
+    <a class="Xr" href="../3/dispatch_queue_create" aria-label="dispatch_queue_create,
+    section 3">dispatch_queue_create(3)</a>,
+    <a class="Xr" href="../3/dispatch_semaphore_create" aria-label="dispatch_semaphore_create,
+    section 3">dispatch_semaphore_create(3)</a></p>
+</section>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Darwin</a></span> <span class="foot-date">May 1,
+  2009</span> <span class="foot-right">dispatch_async(3)</span></div>
 </body>
 </html>

@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>NFSD(8)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 1999-2008 Apple Inc.  All rights reserved.
   
@@ -55,28 +61,18 @@
   
   	@(#)nfsd.8	8.4 (Berkeley) 3/29/95
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>NFSD(8)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">NFSD(8)</td>
-    <td class="head-vol"><a href=".">System Manager's Manual</a></td>
-    <td class="head-rtitle">NFSD(8)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">NFSD(8)</span> <span class="head-vol"><a href=".">System
+  Manager's Manual</a></span> <span class="head-rtitle">NFSD(8)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><code class="Nm">nfsd</code> &#x2014; <span class="Nd">NFS server
-    daemon</span></p>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
+<p class="Pp"><code class="Nm">nfsd</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">NFS server daemon</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <table class="Nm">
   <tr>
     <td><code class="Nm">nfsd</code></td>
@@ -104,7 +100,7 @@
 </table>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><code class="Nm">nfsd</code> runs on an NFS server machine to
     service NFS and MOUNT protocol requests from NFS client machines. In order
     for a machine to act as an NFS server an NFS exports file,
@@ -113,28 +109,31 @@
 <p class="Pp"><code class="Nm">nfsd</code> listens for NFS service requests at
     the port indicated in the NFS server specification (2049) and the mountd
     thread listens for MOUNT service requests at an available port registered
-    with <a class="Xr" href="../8/portmap">portmap(8)</a>.</p>
+    with <a class="Xr" href="../8/portmap" aria-label="portmap, section
+    8">portmap(8)</a>.</p>
 <p class="Pp">For more information on the NFS and MOUNT protocols see
-    <span class="RsT">Network File System Protocol Specification,</span> RFC1094
-    and <span class="RsT">NFS: Network File System Version 3 Protocol
-    Specification.</span></p>
+    <cite class="RsB">Network File System Protocol Specification,</cite> RFC1094
+    and <cite class="RsB">NFS: Network File System Version 3 Protocol
+    Specification.</cite></p>
 <p class="Pp">The <code class="Nm">nfsd</code> daemon is a multi-threaded
     process that includes a number of threads processing NFS requests, a thread
     to accept new socket connections and a thread that processes NFS MOUNT
     protocol requests.</p>
 <p class="Pp">When <code class="Nm">nfsd</code> is started, it loads the export
     host addresses and options into the kernel using the
-    <a class="Xr" href="../2/nfssvc">nfssvc(2)</a> system call. After changing
-    the list of exports (either directly or indirectly via a change in netgroup
-    membership), a hangup signal should be sent to the daemon to get it to
-    reload the export information. This can be accomplished with the
-    <code class="Cm">update</code> command described below.</p>
+    <a class="Xr" href="../2/nfssvc" aria-label="nfssvc, section
+    2">nfssvc(2)</a> system call. After changing the list of exports (either
+    directly or indirectly via a change in netgroup membership), a hangup signal
+    should be sent to the daemon to get it to reload the export information.
+    This can be accomplished with the <code class="Cm">update</code> command
+    described below.</p>
 <p class="Pp">Any errors encountered while processing the export entries will be
-    logged via <a class="Xr" href="../3/syslog">syslog(3)</a>.</p>
+    logged via <a class="Xr" href="../3/syslog" aria-label="syslog, section
+    3">syslog(3)</a>.</p>
 <p class="Pp"><code class="Nm">nfsd</code> is normally launched by
-    <a class="Xr" href="../8/launchd">launchd(8)</a>; however, the
-    <code class="Nm">nfsd</code> command may also be used to manipulate the
-    service using the following commands:</p>
+    <a class="Xr" href="../8/launchd" aria-label="launchd, section
+    8">launchd(8)</a>; however, the <code class="Nm">nfsd</code> command may
+    also be used to manipulate the service using the following commands:</p>
 <dl class="Bl-tag">
   <dt id="enable"><a class="permalink" href="#enable"><code class="Cm">enable</code></a></dt>
   <dd>Enables the <code class="Nm">nfsd</code> service.</dd>
@@ -171,27 +170,30 @@
       <code class="Nm">nfsd</code>'s logging).</dd>
 </dl>
 <p class="Pp">Logging is performed via
-    <a class="Xr" href="../3/syslog">syslog(3)</a> using the LOG_DAEMON
-    facility. By default, only messages up to priority LOG_WARNING are logged.
-    Setting the verbose level to one will add LOG_NOTICE messages which includes
-    logging failed mount attempts. A verbose level of two will increase the log
-    level to LOG_INFO which includes logging successful mount attempts. A log
-    level of three or more will add LOG_DEBUG messages and cause increasing
-    amounts of debug information to be logged. The debug information exposes
-    lots of information about <code class="Nm">nfsd</code>'s inner workings
-    which is typically only useful to developers. Note: the
-    <a class="Xr" href="../8/syslog">syslog(8)</a> configuration may need to be
-    adjusted in order to see the increased verbosity.</p>
+    <a class="Xr" href="../3/syslog" aria-label="syslog, section
+    3">syslog(3)</a> using the LOG_DAEMON facility. By default, only messages up
+    to priority LOG_WARNING are logged. Setting the verbose level to one will
+    add LOG_NOTICE messages which includes logging failed mount attempts. A
+    verbose level of two will increase the log level to LOG_INFO which includes
+    logging successful mount attempts. A log level of three or more will add
+    LOG_DEBUG messages and cause increasing amounts of debug information to be
+    logged. The debug information exposes lots of information about
+    <code class="Nm">nfsd</code>'s inner workings which is typically only useful
+    to developers. Note: the
+    <a class="Xr" href="../8/syslog" aria-label="syslog, section
+    8">syslog(8)</a> configuration may need to be adjusted in order to see the
+    increased verbosity.</p>
 <p class="Pp">The <code class="Nm">nfsd</code> utility exits 0 on success, and
     &gt;0 if an error occurs. When given the <code class="Cm">status</code>
     command, it exits 0 if the service is enabled, and 1 if the service is
     disabled.</p>
 <p class="Pp">The following is a list of command line options that are
     available. However, since <code class="Nm">nfsd</code> is normally started
-    by <a class="Xr" href="../8/launchd">launchd(8)</a>, configuration of these
-    options should be controlled using the equivalent settings in the NFS
-    configuration file (see
-  <a class="Xr" href="../5/nfs.conf">nfs.conf(5)</a>).</p>
+    by <a class="Xr" href="../8/launchd" aria-label="launchd, section
+    8">launchd(8)</a>, configuration of these options should be controlled using
+    the equivalent settings in the NFS configuration file (see
+    <a class="Xr" href="../5/nfs.conf" aria-label="nfs.conf, section
+    5">nfs.conf(5)</a>).</p>
 <dl class="Bl-tag">
   <dt id="F"><a class="permalink" href="#F"><code class="Fl">-F</code></a>
     <var class="Ar">exports_file</var></dt>
@@ -221,9 +223,10 @@
       2049).</dd>
   <dt id="r"><a class="permalink" href="#r"><code class="Fl">-r</code></a></dt>
   <dd>Register the NFS service with
-      <a class="Xr" href="../8/portmap">portmap(8)</a>. This option can be used
-      to re-register the NFS services if the portmap server is restarted. This
-      option is equivalent to the <code class="Cm">update</code> command.</dd>
+      <a class="Xr" href="../8/portmap" aria-label="portmap, section
+      8">portmap(8)</a>. This option can be used to re-register the NFS services
+      if the portmap server is restarted. This option is equivalent to the
+      <code class="Cm">update</code> command.</dd>
   <dt id="t"><a class="permalink" href="#t"><code class="Fl">-t</code></a></dt>
   <dd>Serve TCP NFS clients. Note: only TCP will be used if no other options are
       specified.</dd>
@@ -236,20 +239,21 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">Unless otherwise specified, eight NFS server threads are started
     and both UDP and TCP transports are supported.</p>
 <p class="Pp">A server should run enough threads to handle the maximum level of
     concurrency from its clients.</p>
-<p class="Pp">See <a class="Xr" href="../5/nfs.conf">nfs.conf(5)</a> for a list
-    of tunable parameters.</p>
+<p class="Pp">See <a class="Xr" href="../5/nfs.conf" aria-label="nfs.conf,
+    section 5">nfs.conf(5)</a> for a list of tunable parameters.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<h2 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h2>
 <p class="Pp">The exports list displayed via
-    <a class="Xr" href="../8/showmount">showmount(8)</a> may contain additional
-    information about the status of each export. This information is reported as
-    entries in the export's group list.</p>
+    <a class="Xr" href="../8/showmount" aria-label="showmount, section
+    8">showmount(8)</a> may contain additional information about the status of
+    each export. This information is reported as entries in the export's group
+    list.</p>
 <p class="Pp">If an export is currently unavailable, the group list will begin
     with the entry &quot;&lt;offline&gt;&quot; (or &quot;&lt;offline*&gt;&quot;
     if it is unavailable to some but not all clients exported to).</p>
@@ -273,7 +277,7 @@ This could be resolved by granting <code class="Nm">nfsd</code> &quot;Full Disk
   restart of <code class="Nm">nfsd</code> service.
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<h2 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h2>
 <dl class="Bl-tag Bl-compact">
   <dt><span class="Pa">/etc/exports</span></dt>
   <dd>The list of exported filesystems.</dd>
@@ -289,34 +293,38 @@ This could be resolved by granting <code class="Nm">nfsd</code> &quot;Full Disk
       ...).</dd>
   <dt><span class="Pa">/System/Library/LaunchDaemons/com.apple.nfsd.plist</span></dt>
   <dd>The <code class="Nm">nfsd</code> service's property list file for
-      <a class="Xr" href="../8/launchd">launchd(8)</a>.</dd>
+      <a class="Xr" href="../8/launchd" aria-label="launchd, section
+      8">launchd(8)</a>.</dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../5/exports">exports(5)</a>,
-    <a class="Xr" href="../5/nfs.conf">nfs.conf(5)</a>,
-    <a class="Xr" href="../8/showmount">showmount(8)</a>,
-    <a class="Xr" href="../1/nfsstat">nfsstat(1)</a>,
-    <a class="Xr" href="../2/nfssvc">nfssvc(2)</a>,
-    <a class="Xr" href="../8/portmap">portmap(8)</a>,
-    <a class="Xr" href="../8/rpc.rquotad">rpc.rquotad(8)</a>,
-    <a class="Xr" href="../8/launchd">launchd(8)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../5/exports" aria-label="exports, section
+    5">exports(5)</a>, <a class="Xr" href="../5/nfs.conf" aria-label="nfs.conf,
+    section 5">nfs.conf(5)</a>,
+    <a class="Xr" href="../8/showmount" aria-label="showmount, section
+    8">showmount(8)</a>, <a class="Xr" href="../1/nfsstat" aria-label="nfsstat,
+    section 1">nfsstat(1)</a>,
+    <a class="Xr" href="../2/nfssvc" aria-label="nfssvc, section
+    2">nfssvc(2)</a>, <a class="Xr" href="../8/portmap" aria-label="portmap,
+    section 8">portmap(8)</a>,
+    <a class="Xr" href="../8/rpc.rquotad" aria-label="rpc.rquotad, section
+    8">rpc.rquotad(8)</a>,
+    <a class="Xr" href="../8/launchd" aria-label="launchd, section
+    8">launchd(8)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Nm">nfsd</code> and
     <code class="Cm">mountd</code> utilities first appeared in 4.4BSD.
     <code class="Cm">mountd</code> functionality was merged into
     <code class="Nm">nfsd</code> in Darwin 9.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">November 10, 2008</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">November 10, 2008</span>
+  <span class="foot-right">NFSD(8)</span></div>
 </body>
 </html>

@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-multi-pack-index
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-MULTI-PACK-INDEX(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-multi-pack-index
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-MULTI-PACK-INDEX(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-MULTI-PACK-INDEX(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-MULTI-PACK-INDEX(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-MULTI-PACK-INDEX(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-multi-pack-index - Write and verify multi-pack-indexes</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre><i>git multi-pack-index</i> [--object-dir=&lt;dir&gt;] [--[no-]bitmap] &lt;sub-command&gt;</pre>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
+<pre><i>git multi-pack-index</i> [&lt;options&gt;] write [--preferred-pack=&lt;pack&gt;]
+                         [--[no-]bitmap] [--[no-]incremental] [--[no-]stdin-packs]
+                         [--refs-snapshot=&lt;path&gt;]
+<i>git multi-pack-index</i> [&lt;options&gt;] compact [--[no-]incremental]
+                         [--[no-]bitmap] &lt;from&gt; &lt;to&gt;
+<i>git multi-pack-index</i> [&lt;options&gt;] verify
+<i>git multi-pack-index</i> [&lt;options&gt;] expire
+<i>git multi-pack-index</i> [&lt;options&gt;] repack [--batch-size=&lt;size&gt;]</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">Write or verify a multi-pack-index (MIDX) file.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
+<p class="Pp">The following command-line options are applicable to all
+    sub-commands:</p>
 <p class="Pp">--object-dir=&lt;dir&gt;</p>
 <div class="Bd-indent">Use given directory for the location of Git objects. We
   check <i>&lt;dir&gt;</i><b>/packs/multi-pack-index</b> for the current MIDX
@@ -46,10 +52,11 @@
 <p class="Pp"><i>&lt;dir&gt;</i> must be an alternate of the current
   repository.</p>
 </div>
-<p class="Pp">--[no-]progress</p>
+<p class="Pp">--progress, --no-progress</p>
 <div class="Bd-indent">Turn progress on/off explicitly. If neither is specified,
   progress is shown if standard error is connected to a terminal. Supported by
-  sub-commands <b>write</b>, <b>verify</b>, <b>expire</b>, and `repack.</div>
+  sub-commands <b>write</b>, <b>verify</b>, <b>expire</b>, and
+  <b>repack</b>.</div>
 <p class="Pp">The following subcommands are available:</p>
 <p class="Pp">write</p>
 <div class="Bd-indent">Write a new MIDX file. The following options are
@@ -84,8 +91,20 @@
 <p class="Pp">--incremental</p>
 <div class="Bd-indent">Write an incremental MIDX file containing only objects
   and packs not present in an existing MIDX layer. Migrates non-incremental
-  MIDXs to incremental ones when necessary. Incompatible with
-  <b>--bitmap</b>.</div>
+  MIDXs to incremental ones when necessary.</div>
+</div>
+<p class="Pp">compact</p>
+<div class="Bd-indent">Write a new MIDX layer containing only objects and packs
+  present in the range <i>&lt;from&gt;</i> to <i>&lt;to&gt;</i>, where both
+  arguments are checksums of existing layers in the MIDX chain.
+<p class="Pp">--incremental</p>
+<div class="Bd-indent">Write the result to a MIDX chain instead of writing a
+  stand-alone MIDX.</div>
+<p class="Pp">--[no-]bitmap</p>
+<div class="Bd-indent">Control whether or not a multi-pack bitmap is
+  written.</div>
+<p class="Pp">Note that the compact command requires writing a version-2 midx
+    that cannot be read by versions of Git prior to v2.54.</p>
 </div>
 <p class="Pp">verify</p>
 <div class="Bd-indent">Verify the contents of the MIDX file.</div>
@@ -96,7 +115,9 @@
   references to these pack-files.
 <p class="Pp"></p>
 <div class="Bd-indent">
+<br/>
 <b>Note</b>
+<br/>
 this mode is incompatible with incremental MIDX files.
 <p class="Pp"></p>
 </div>
@@ -121,14 +142,16 @@ this mode is incompatible with incremental MIDX files.
     batch to repack.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
+<br/>
 <b>Note</b>
+<br/>
 this mode is incompatible with incremental MIDX files.
 <p class="Pp"></p>
 </div>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <div class="Bd-indent">&#x2022;Write a MIDX file for the packfiles in the
   current .<b>git</b> directory.
 <p class="Pp"></p>
@@ -162,30 +185,28 @@ this mode is incompatible with incremental MIDX files.
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
 <p class="Pp">See <b>The Multi-Pack-Index Design Document</b>[1] and
     <b>gitformat-pack</b>(5) for more information on the multi-pack-index
     feature and its file format.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<h2 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h2>
 <dl class="Bl-tag">
   <dt> 1.</dt>
   <dd>The Multi-Pack-Index Design Document</dd>
 </dl>
 <div class="Bd-indent">git-htmldocs/technical/multi-pack-index.html</div>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-MULTI-PACK-INDEX(1)</span></div>
 </body>
 </html>

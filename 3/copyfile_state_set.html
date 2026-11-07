@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   Copyright (c) 2024 Apple Computer, Inc.  All rights reserved.
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>COPYFILE(3)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   Copyright (c) 2024 Apple Computer, Inc.  All rights reserved.
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">COPYFILE(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">COPYFILE(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">COPYFILE(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">COPYFILE(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">copyfile</code>,
     <code class="Nm">fcopyfile</code>,
     <code class="Nm">copyfile_state_alloc</code>,
     <code class="Nm">copyfile_state_free</code>,
     <code class="Nm">copyfile_state_get</code>,
-    <code class="Nm">copyfile_state_set</code> &#x2014; <span class="Nd">copy a
-    file</span></p>
+    <code class="Nm">copyfile_state_set</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">copy a file</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h1>
+<h2 class="Sh" id="LIBRARY"><a class="permalink" href="#LIBRARY">LIBRARY</a></h2>
 <p class="Pp"><span class="Lb">Standard C&#x00A0;Library (libc, -lc)</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     &lt;<a class="In">copyfile.h</a>&gt;</code></p>
 <p class="Pp"><var class="Ft">int</var>
@@ -79,7 +76,7 @@
     <var class="Fa" style="white-space: nowrap;">void * ctx</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">These functions are used to copy a file's data and/or metadata.
     (Metadata consists of permissions, extended attributes, access control
     lists, and so forth.)</p>
@@ -114,8 +111,8 @@
       Note that setuid and setgid bits are by default not copied from source
       files or to destination files that reside on volumes that are mounted with
       the <code class="Dv">MNT_NOSUID</code>
-      <a class="Xr" href="../2/mount">mount(2)</a> flag, but this can be
-      overridden through the use of
+      <a class="Xr" href="../2/mount" aria-label="mount, section 2">mount(2)</a>
+      flag, but this can be overridden through the use of
       <code class="Dv">COPYFILE_STATE_PRESERVE_SUID</code> in the
       <var class="Vt">copyfile_state_t</var> object.</dd>
   <dt id="COPYFILE_XATTR"><a class="permalink" href="#COPYFILE_XATTR"><code class="Dv">COPYFILE_XATTR</code></a></dt>
@@ -173,41 +170,49 @@
       (This is only applicable for the <code class="Fn">copyfile</code>()
       function.)</dd>
   <dt id="COPYFILE_MOVE"><a class="permalink" href="#COPYFILE_MOVE"><code class="Dv">COPYFILE_MOVE</code></a></dt>
-  <dd>Unlink (using <a class="Xr" href="../3/remove">remove(3)</a>) the
-      <var class="Fa">from</var> file. (This is only applicable for the
-      <code class="Fn">copyfile</code>() function.) No error is returned if
-      <a class="Xr" href="../3/remove">remove(3)</a> fails. Note that
-      <a class="Xr" href="../3/remove">remove(3)</a> removes a symbolic link
-      itself, not the target of the link.</dd>
+  <dd>Unlink (using <a class="Xr" href="../3/remove" aria-label="remove, section
+      3">remove(3)</a>) the <var class="Fa">from</var> file. (This is only
+      applicable for the <code class="Fn">copyfile</code>() function.) No error
+      is returned if <a class="Xr" href="../3/remove" aria-label="remove,
+      section 3">remove(3)</a> fails. Note that
+      <a class="Xr" href="../3/remove" aria-label="remove, section
+      3">remove(3)</a> removes a symbolic link itself, not the target of the
+      link.</dd>
   <dt id="COPYFILE_UNLINK"><a class="permalink" href="#COPYFILE_UNLINK"><code class="Dv">COPYFILE_UNLINK</code></a></dt>
   <dd>Unlink the <var class="Va">to</var> file before starting. (This is only
       applicable for the <code class="Fn">copyfile</code>() function.)</dd>
   <dt id="COPYFILE_CLONE_FORCE"><a class="permalink" href="#COPYFILE_CLONE_FORCE"><code class="Dv">COPYFILE_CLONE_FORCE</code></a></dt>
-  <dd>Clone the file instead. This is a force flag i.e. if cloning fails, an
-      error is returned. This flag is equivalent to (COPYFILE_EXCL |
-      COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA | COPYFILE_NOFOLLOW_SRC).
-      Note that if cloning is successful, progress callbacks will not be
-      invoked, nor will any setuid or setgid bits be copied to the destination.
-      Note also that there is no support for cloning directories: if a directory
-      is provided as the source, an error will be returned. Since this flag
-      implies COPYFILE_NOFOLLOW_SRC, symbolic links themselves will be cloned
-      instead of their targets. (This is only applicable for the
-      <code class="Fn">copyfile</code>() function.) Finally, note that ACLs will
-      not be cloned unless COPYFILE_ACL is also passed.</dd>
+  <dd>Clone the file instead. Not supported by the
+      <code class="Fn">fcopyfile</code>() function. This is a force flag i.e. if
+      cloning fails, an error is returned. This flag is equivalent to
+      (COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA |
+      COPYFILE_NOFOLLOW_SRC). Note that if cloning is successful, progress
+      callbacks will not be invoked, nor will any setuid or setgid bits be
+      copied to the destination. Note also that there is no support for cloning
+      directories: if a directory is provided as the source, an error will be
+      returned. Since this flag implies COPYFILE_NOFOLLOW_SRC, symbolic links
+      themselves will be cloned instead of their targets. Finally, note that
+      ACLs will not be cloned unless COPYFILE_ACL is also passed.</dd>
   <dt id="COPYFILE_CLONE"><a class="permalink" href="#COPYFILE_CLONE"><code class="Dv">COPYFILE_CLONE</code></a></dt>
   <dd>Try to clone the file instead. This is a best try flag i.e. if cloning
       fails, fallback to copying the file. This flag is equivalent to
       (COPYFILE_EXCL | COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA |
       COPYFILE_NOFOLLOW_SRC). Note that if cloning is successful, progress
       callbacks will not be invoked, nor will any setuid or setgid bits be
-      copied to the destination. Note also that there is no support for cloning
-      directories: if a directory is provided as the source and
-      COPYFILE_CLONE_FORCE is not passed, this will instead copy the directory.
-      Since this flag implies COPYFILE_NOFOLLOW_SRC, symbolic links themselves
-      will be cloned instead of their targets. Recursive copying however is
-      supported, see below for more information. (This is only applicable for
-      the <code class="Fn">copyfile</code>() function.) Finally, note that ACLs
-      will not be cloned unless COPYFILE_ACL is also passed.</dd>
+      copied to the destination. This can't be overridden through the use of
+      <code class="Dv">COPYFILE_STATE_PRESERVE_SUID</code> in the
+      <var class="Vt">copyfile_state_t</var> object. If a directory is provided
+      as the source and COPYFILE_CLONE_FORCE is not passed, this will instead
+      copy the directory. If COPYFILE_RECURSIVE is passed, a recursive clone
+      operation invokes <code class="Fn">copyfile</code>() with
+      <code class="Dv">COPYFILE_CLONE</code> on every entry found in the source
+      file-system object. When called from <code class="Fn">fcopyfile</code>()
+      function, always fallbacks to regular copy. Since this flag implies
+      COPYFILE_NOFOLLOW_SRC, symbolic links themselves will be cloned instead of
+      their targets. Recursive copying however is supported, see below for more
+      information. (This is only applicable for the
+      <code class="Fn">copyfile</code>() function.) Finally, note that ACLs will
+      not be cloned unless COPYFILE_ACL is also passed.</dd>
   <dt id="COPYFILE_DATA_SPARSE"><a class="permalink" href="#COPYFILE_DATA_SPARSE"><code class="Dv">COPYFILE_DATA_SPARSE</code></a></dt>
   <dd>Copy a file sparsely. This requires that the source and destination file
       systems support sparse files with hole sizes at least as large as their
@@ -367,15 +372,15 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="Recursive_Copies"><a class="permalink" href="#Recursive_Copies">Recursive
-  Copies</a></h1>
+<h2 class="Sh" id="Recursive_Copies"><a class="permalink" href="#Recursive_Copies">Recursive
+  Copies</a></h2>
 <p class="Pp">When given the <code class="Dv">COPYFILE_RECURSIVE</code> flag,
     <code class="Fn">copyfile</code>() (but not
     <code class="Fn">fcopyfile</code>()) will use the
-    <a class="Xr" href="../3/fts">fts(3)</a> functions to recursively descend
-    into the source file-system object. It then calls
-    <code class="Fn">copyfile</code>() on each of the entries it finds that way.
-    If a call-back function is given (using
+    <a class="Xr" href="../3/fts" aria-label="fts, section 3">fts(3)</a>
+    functions to recursively descend into the source file-system object. It then
+    calls <code class="Fn">copyfile</code>() on each of the entries it finds
+    that way. If a call-back function is given (using
     <code class="Fn">copyfile_state_set</code>() and
     <code class="Dv">COPYFILE_STATE_STATUS_CB ),</code> the call-back function
     will be called four times for each directory object, and twice for all other
@@ -404,10 +409,10 @@
       flag was not passed to the recursive copy).</dd>
   <dt id="COPYFILE_RECURSE_ERROR"><a class="permalink" href="#COPYFILE_RECURSE_ERROR"><code class="Dv">COPYFILE_RECURSE_ERROR</code></a></dt>
   <dd>There was an error in processing an element of the source hierarchy; this
-      happens when <a class="Xr" href="../3/fts">fts(3)</a> returns an error or
-      unknown file type. (Currently, the second argument to the call-back
-      function will always be <code class="Dv">COPYFILE_ERR</code> in this
-      case.)</dd>
+      happens when <a class="Xr" href="../3/fts" aria-label="fts, section
+      3">fts(3)</a> returns an error or unknown file type. (Currently, the
+      second argument to the call-back function will always be
+      <code class="Dv">COPYFILE_ERR</code> in this case.)</dd>
 </dl>
 <p class="Pp">The second argument to the call-back function will indicate the
     stage of the copy, and will be one of the following values:</p>
@@ -462,11 +467,11 @@
     operation invokes
     <a class="permalink" href="#copyfile~4"><code class="Fn">copyfile</code></a>()
     with <code class="Dv">COPYFILE_CLONE</code> on every entry found in the
-    source file-system object. Because <code class="Fn">copyfile</code>() does
-    not allow the cloning of directories, a recursive clone will instead copy
-    any directory it finds (while cloning its contents). As symbolic links may
-    point to directories, they are not followed during recursive clones even if
-    the source is a symbolic link. Additionally, because the
+    source file-system object. <code class="Fn">copyfile</code>() does not clone
+    directories atomically. If the source hierarchy changes during the
+    traversal, the results are undefined. As symbolic links may point to
+    directories, they are not followed during recursive clones even if the
+    source is a symbolic link. Additionally, because the
     <code class="Dv">COPYFILE_CLONE</code> flag implies the
     <code class="Dv">COPYFILE_EXCL</code> flag, recursive clones require a
     nonexistent destination.</p>
@@ -488,18 +493,18 @@
     initially.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="Progress_Callback"><a class="permalink" href="#Progress_Callback">Progress
-  Callback</a></h1>
+<h2 class="Sh" id="Progress_Callback"><a class="permalink" href="#Progress_Callback">Progress
+  Callback</a></h2>
 <p class="Pp">In addition to the recursive callbacks described above,
     <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>()
     will also use a callback to report data (e.g.,
     <code class="Dv">COPYFILE_DATA</code>) progress. If given, the callback will
-    be invoked on each <a class="Xr" href="../2/write">write(2)</a> call. The
-    first argument to the callback function will be
-    <code class="Dv">COPYFILE_COPY_DATA</code>. The second argument will either
-    be <code class="Dv">COPYFILE_PROGRESS</code> (indicating that the write was
-    successful), or <code class="Dv">COPYFILE_ERR</code> (indicating that there
-    was an error of some sort).</p>
+    be invoked on each <a class="Xr" href="../2/write" aria-label="write,
+    section 2">write(2)</a> call. The first argument to the callback function
+    will be <code class="Dv">COPYFILE_COPY_DATA</code>. The second argument will
+    either be <code class="Dv">COPYFILE_PROGRESS</code> (indicating that the
+    write was successful), or <code class="Dv">COPYFILE_ERR</code> (indicating
+    that there was an error of some sort).</p>
 <p class="Pp" id="copyfile_state_get~2">The amount of data bytes copied so far
     can be retrieved using
     <a class="permalink" href="#copyfile_state_get~2"><code class="Fn">copyfile_state_get</code></a>(),
@@ -544,15 +549,15 @@
     cannot be performed and a copy is performed instead.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">Except when given the <code class="Dv">COPYFILE_CHECK</code> flag,
     <code class="Fn">copyfile</code>() and <code class="Fn">fcopyfile</code>()
     return less than 0 on error, and 0 on success. All of the other functions
     return 0 on success, and less than 0 on error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="WARNING"><a class="permalink" href="#WARNING">WARNING</a></h1>
+<h2 class="Sh" id="WARNING"><a class="permalink" href="#WARNING">WARNING</a></h2>
 <p class="Pp">When performing a recursive copy, if the source hierarchy changes
     while the copy is occurring, the results are undefined; however, an effort
     is made to detect this and return an error to the caller instead of
@@ -570,7 +575,7 @@
     their starting state.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <div class="Bd Bd-indent Li">
 <pre>/* Initialize a state variable */
 copyfile_state_t s;
@@ -594,7 +599,7 @@ copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);</pr
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp"><code class="Fn">copyfile</code>() and
     <code class="Fn">fcopyfile</code>() will fail if:</p>
 <dl class="Bl-tag">
@@ -613,8 +618,11 @@ copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);</pr
   <dt id="ENOTSUP">[<a class="permalink" href="#ENOTSUP"><code class="Er">ENOTSUP</code></a>]</dt>
   <dd>The source file was not a directory, symbolic link, or regular file.</dd>
   <dt id="ENOTSUP~2">[<a class="permalink" href="#ENOTSUP~2"><code class="Er">ENOTSUP</code></a>]</dt>
-  <dd>COPYFILE_CLONE_FORCE was specified and file cloning is not supported.</dd>
+  <dd>COPYFILE_CLONE_FORCE was passed to the <code class="Fn">fcopyfile</code>()
+      function</dd>
   <dt id="ENOTSUP~3">[<a class="permalink" href="#ENOTSUP~3"><code class="Er">ENOTSUP</code></a>]</dt>
+  <dd>COPYFILE_CLONE_FORCE was specified and file cloning is not supported.</dd>
+  <dt id="ENOTSUP~4">[<a class="permalink" href="#ENOTSUP~4"><code class="Er">ENOTSUP</code></a>]</dt>
   <dd>COPYFILE_DATA_SPARSE was specified, sparse copying is not supported, and
       COPYFILE_DATA was not specified.</dd>
   <dt id="ECANCELED">[<a class="permalink" href="#ECANCELED"><code class="Er">ECANCELED</code></a>]</dt>
@@ -640,28 +648,29 @@ copyfile(&quot;/dev/null&quot;, &quot;/tmp/bar&quot;, NULL, COPYFILE_XATTR);</pr
     via an underlying library or system call.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../2/getxattr">getxattr(2)</a>,
-    <a class="Xr" href="../2/listxattr">listxattr(2)</a>,
-    <a class="Xr" href="../2/setxattr">setxattr(2)</a>,
-    <a class="Xr" href="../3/acl">acl(3)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../2/getxattr" aria-label="getxattr, section
+    2">getxattr(2)</a>,
+    <a class="Xr" href="../2/listxattr" aria-label="listxattr, section
+    2">listxattr(2)</a>,
+    <a class="Xr" href="../2/setxattr" aria-label="setxattr, section
+    2">setxattr(2)</a>, <a class="Xr" href="../3/acl" aria-label="acl, section
+    3">acl(3)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Fn">copyfile</code>() API was introduced in Mac
     OS X 10.5.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h1>
+<h2 class="Sh" id="BUGS"><a class="permalink" href="#BUGS">BUGS</a></h2>
 <p class="Pp">Recursive copies do not honor hard links.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">March 29, 2024</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">March 29, 2024</span>
+  <span class="foot-right">COPYFILE(3)</span></div>
 </body>
 </html>

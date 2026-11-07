@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>FCNTL(2)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 2011-2022 Apple Inc.  All rights reserved.
   
@@ -57,28 +63,18 @@
   
        @(#)fcntl.2	8.2 (Berkeley) 1/12/94
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>FCNTL(2)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">FCNTL(2)</td>
-    <td class="head-vol"><a href=".">System Calls Manual</a></td>
-    <td class="head-rtitle">FCNTL(2)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">FCNTL(2)</span> <span class="head-vol"><a href=".">System
+  Calls Manual</a></span> <span class="head-rtitle">FCNTL(2)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><code class="Nm">fcntl</code> &#x2014; <span class="Nd">file
-    control</span></p>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
+<p class="Pp"><code class="Nm">fcntl</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">file control</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
   <a class="In">&lt;fcntl.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">int</var>
@@ -87,7 +83,7 @@
     <var class="Fa">int cmd</var>, <var class="Fa">...</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><a class="permalink" href="#fcntl"><code class="Fn" id="fcntl">fcntl</code></a>()
     provides for control over descriptors. The argument
     <var class="Fa">fildes</var> is a descriptor to be operated on by
@@ -105,13 +101,18 @@
       <li>Same access mode (read, write or read/write).</li>
       <li>Same file status flags (i.e., both file descriptors share the same
           file status flags).</li>
-      <li>The close-on-exec flag associated with the new file descriptor is
-          cleared so that the descriptor remains open across an
-          <a class="Xr" href="../2/execv">execv(2)</a> system call.</li>
+      <li>The close-on-exec and close-on-fork flags associated with the new file
+          descriptor are cleared so that the descriptor remains open across an
+          <a class="Xr" href="../2/fork" aria-label="fork, section
+          2">fork(2)</a> or <a class="Xr" href="../2/execv" aria-label="execv,
+          section 2">execv(2)</a> system call.</li>
     </ul>
   </dd>
   <dt id="F_DUPFD_CLOEXEC"><a class="permalink" href="#F_DUPFD_CLOEXEC"><code class="Dv">F_DUPFD_CLOEXEC</code></a></dt>
   <dd>Like <code class="Dv">F_DUPFD</code>, except that the close-on-exec flag
+      associated with the new file descriptor is set.</dd>
+  <dt id="F_DUPFD_CLOFORK"><a class="permalink" href="#F_DUPFD_CLOFORK"><code class="Dv">F_DUPFD_CLOFORK</code></a></dt>
+  <dd>Like <code class="Dv">F_DUPFD</code>, except that the close-on-fork flag
       associated with the new file descriptor is set.</dd>
   <dt id="F_GETFD"><a class="permalink" href="#F_GETFD"><code class="Dv">F_GETFD</code></a></dt>
   <dd>Get the flags associated with the file descriptor
@@ -158,9 +159,12 @@
       privileges to truncate a file without zeroing space. For security reasons,
       this operation is no longer supported and will instead truncate the file
       in the same manner as
-    <a class="Xr" href="../2/truncate">truncate(2)</a>.</dd>
+      <a class="Xr" href="../2/truncate" aria-label="truncate, section
+      2">truncate(2)</a>.</dd>
   <dt id="F_RDADVISE"><a class="permalink" href="#F_RDADVISE"><code class="Dv">F_RDADVISE</code></a></dt>
   <dd>Issue an advisory read async with no copy to user.</dd>
+  <dt id="F_RDADVISEV"><a class="permalink" href="#F_RDADVISEV"><code class="Dv">F_RDADVISEV</code></a></dt>
+  <dd>Issue multiple advisory reads async with no copy to user.</dd>
   <dt id="F_RDAHEAD"><a class="permalink" href="#F_RDAHEAD"><code class="Dv">F_RDAHEAD</code></a></dt>
   <dd>Turn read ahead off/on. A zero value in <var class="Fa">arg</var> disables
       read ahead. A non-zero value in <var class="Fa">arg</var> turns read ahead
@@ -177,34 +181,35 @@
   <dt id="F_LOG2PHYS_EXT"><a class="permalink" href="#F_LOG2PHYS_EXT"><code class="Dv">F_LOG2PHYS_EXT</code></a></dt>
   <dd>Variant of F_LOG2PHYS that uses the passed in file offset and length.</dd>
   <dt id="F_BARRIERFSYNC"><a class="permalink" href="#F_BARRIERFSYNC"><code class="Dv">F_BARRIERFSYNC</code></a></dt>
-  <dd>Does the same thing as <a class="Xr" href="../2/fsync">fsync(2)</a> then
-      issues a barrier command to the drive (<var class="Fa">arg</var> is
-      ignored). The barrier applies to I/O that have been flushed with
-      <a class="Xr" href="../2/fsync">fsync(2)</a> on the same device before.
-      These operations are guaranteed to be persisted before any other I/O that
-      would follow the barrier, although no assumption should be made on what
-      has been persisted or not when this call returns. After the barrier has
-      been issued, operations on other FDs that have been fsync'd before can
-      still be re-ordered by the device, but not after the barrier. This is
-      typically useful to guarantee valid state on disk when ordering is a
-      concern but durability is not. A barrier can be used to order two phases
-      of operations on a set of file descriptors and ensure that no file can
-      possibly get persisted with the effect of the second phase without the
-      effect of the first one. To do so, execute operations of phase one, then
-      <a class="Xr" href="../2/fsync">fsync(2)</a> each FD and issue a single
-      barrier. Finally execute operations of phase two. This is currently
-      implemented on HFS and APFS. It requires hardware support, which Apple
-      SSDs are guaranteed to provide.</dd>
+  <dd>Does the same thing as <a class="Xr" href="../2/fsync" aria-label="fsync,
+      section 2">fsync(2)</a> then issues a barrier command to the drive
+      (<var class="Fa">arg</var> is ignored). The barrier applies to I/O that
+      have been flushed with <a class="Xr" href="../2/fsync" aria-label="fsync,
+      section 2">fsync(2)</a> on the same device before. These operations are
+      guaranteed to be persisted before any other I/O that would follow the
+      barrier, although no assumption should be made on what has been persisted
+      or not when this call returns. After the barrier has been issued,
+      operations on other FDs that have been fsync'd before can still be
+      re-ordered by the device, but not after the barrier. This is typically
+      useful to guarantee valid state on disk when ordering is a concern but
+      durability is not. A barrier can be used to order two phases of operations
+      on a set of file descriptors and ensure that no file can possibly get
+      persisted with the effect of the second phase without the effect of the
+      first one. To do so, execute operations of phase one, then
+      <a class="Xr" href="../2/fsync" aria-label="fsync, section 2">fsync(2)</a>
+      each FD and issue a single barrier. Finally execute operations of phase
+      two. This is currently implemented on HFS and APFS. It requires hardware
+      support, which Apple SSDs are guaranteed to provide.</dd>
   <dt id="F_FULLFSYNC"><a class="permalink" href="#F_FULLFSYNC"><code class="Dv">F_FULLFSYNC</code></a></dt>
-  <dd>Does the same thing as <a class="Xr" href="../2/fsync">fsync(2)</a> then
-      asks the drive to flush all buffered data to the permanent storage device
-      (<var class="Fa">arg</var> is ignored). As this drains the entire queue of
-      the device and acts as a barrier, data that had been fsync'd on the same
-      device before is guaranteed to be persisted when this call returns. This
-      is currently implemented on HFS, MS-DOS (FAT), Universal Disk Format (UDF)
-      and APFS file systems. The operation may take quite a while to complete.
-      Certain FireWire drives have also been known to ignore the request to
-      flush their buffered data.</dd>
+  <dd>Does the same thing as <a class="Xr" href="../2/fsync" aria-label="fsync,
+      section 2">fsync(2)</a> then asks the drive to flush all buffered data to
+      the permanent storage device (<var class="Fa">arg</var> is ignored). As
+      this drains the entire queue of the device and acts as a barrier, data
+      that had been fsync'd on the same device before is guaranteed to be
+      persisted when this call returns. This is currently implemented on HFS,
+      MS-DOS (FAT), Universal Disk Format (UDF) and APFS file systems. The
+      operation may take quite a while to complete. Certain FireWire drives have
+      also been known to ignore the request to flush their buffered data.</dd>
   <dt id="F_SETNOSIGPIPE"><a class="permalink" href="#F_SETNOSIGPIPE"><code class="Dv">F_SETNOSIGPIPE</code></a></dt>
   <dd>Determines whether a <code class="Dv">SIGPIPE</code> signal will be
       generated when a write fails on a pipe or socket for which there is no
@@ -230,9 +235,13 @@
   <dt id="FD_CLOEXEC"><a class="permalink" href="#FD_CLOEXEC"><code class="Dv">FD_CLOEXEC</code></a></dt>
   <dd>Close-on-exec; the given file descriptor will be automatically closed in
       the successor process image when one of the
-      <a class="Xr" href="../2/execv">execv(2)</a> or
-      <a class="Xr" href="../2/posix_spawn">posix_spawn(2)</a> family of system
-      calls is invoked.</dd>
+      <a class="Xr" href="../2/execv" aria-label="execv, section 2">execv(2)</a>
+      or <a class="Xr" href="../2/posix_spawn" aria-label="posix_spawn, section
+      2">posix_spawn(2)</a> family of system calls is invoked.</dd>
+  <dt id="FD_CLOFORK"><a class="permalink" href="#FD_CLOFORK"><code class="Dv">FD_CLOFORK</code></a></dt>
+  <dd>Close-on-fork; the given file descriptor will be automatically closed in
+      any child process created from a process that has the descriptor
+    open.</dd>
 </dl>
 </div>
 <p class="Pp">The flags for the <code class="Dv">F_GETFL</code> and
@@ -241,14 +250,15 @@
 <dl class="Bl-tag">
   <dt id="O_NONBLOCK"><a class="permalink" href="#O_NONBLOCK"><code class="Dv">O_NONBLOCK</code></a></dt>
   <dd>Non-blocking I/O; if no data is available to a
-      <a class="Xr" href="../2/read">read(2)</a> call, or if a
-      <a class="Xr" href="../2/write">write(2)</a> operation would block, the
-      read or write call returns -1 with the error
-      <code class="Er">EAGAIN</code>.</dd>
+      <a class="Xr" href="../2/read" aria-label="read, section 2">read(2)</a>
+      call, or if a <a class="Xr" href="../2/write" aria-label="write, section
+      2">write(2)</a> operation would block, the read or write call returns -1
+      with the error <code class="Er">EAGAIN</code>.</dd>
   <dt id="O_APPEND"><a class="permalink" href="#O_APPEND"><code class="Dv">O_APPEND</code></a></dt>
   <dd>Force each write to append at the end of file; corresponds to the
       <code class="Dv">O_APPEND</code> flag of
-      <a class="Xr" href="../2/open">open(2)</a>.</dd>
+      <a class="Xr" href="../2/open" aria-label="open, section
+    2">open(2)</a>.</dd>
   <dt id="O_ASYNC"><a class="permalink" href="#O_ASYNC"><code class="Dv">O_ASYNC</code></a></dt>
   <dd>Enable the <code class="Dv">SIGIO</code> signal to be sent to the process
       group when I/O is possible, e.g., upon availability of data to be
@@ -279,10 +289,12 @@
       this function call except for the lock type which is set to
       <code class="Dv">F_UNLCK</code>. If a lock that does not support the
       discovery of lock ownership by process (such as an OFD lock (see below),
-      one created by the <a class="Xr" href="../2/flock">flock(2)</a> system
-      call or the <a class="Xr" href="../2/open">open(2)</a> system call with
-      the <code class="Dv">O_SHLOCK</code> or <code class="Dv">O_EXLOCK</code>
-      flag) is found, <var class="Fa">l_pid</var> is set to -1.</dd>
+      one created by the <a class="Xr" href="../2/flock" aria-label="flock,
+      section 2">flock(2)</a> system call or the
+      <a class="Xr" href="../2/open" aria-label="open, section 2">open(2)</a>
+      system call with the <code class="Dv">O_SHLOCK</code> or
+      <code class="Dv">O_EXLOCK</code> flag) is found,
+      <var class="Fa">l_pid</var> is set to -1.</dd>
   <dt id="F_SETLK"><a class="permalink" href="#F_SETLK"><code class="Dv">F_SETLK</code></a></dt>
   <dd>Set or clear a file segment lock according to the lock description pointed
       to by the third argument, <var class="Fa">arg</var>, taken as a pointer to
@@ -300,7 +312,8 @@
       received while <code class="Nm">fcntl</code> is waiting for a region, the
       <code class="Nm">fcntl</code> will be interrupted if the signal handler
       has not specified the <code class="Dv">SA_RESTART</code> (see
-      <a class="Xr" href="../2/sigaction">sigaction(2)</a>).</dd>
+      <a class="Xr" href="../2/sigaction" aria-label="sigaction, section
+      2">sigaction(2)</a>).</dd>
 </dl>
 <p class="Pp">When a shared lock has been set on a segment of a file, other
     processes can set shared locks on that segment or a portion of it. A shared
@@ -330,8 +343,8 @@
     <var class="Fa">l_whence</var> and <var class="Fa">l_start</var> point to
     the beginning of the file, and <var class="Fa">l_len</var> is zero, the
     entire file is locked. If an application wishes only to do entire file
-    locking, the <a class="Xr" href="../2/flock">flock(2)</a> system call is
-    more efficient.</p>
+    locking, the <a class="Xr" href="../2/flock" aria-label="flock, section
+    2">flock(2)</a> system call is more efficient.</p>
 <p class="Pp">There is at most one type of lock set for each byte in the file.
     Before a successful return from an <code class="Dv">F_SETLK</code> or an
     <code class="Dv">F_SETLKW</code> request when the calling process has
@@ -350,21 +363,25 @@
     process. This semantic means that applications must be aware of any files
     that a subroutine library may access. For example if an application for
     updating the password file locks the password file database while making the
-    update, and then calls <a class="Xr" href="../3/getpwnam">getpwnam(3)</a> to
-    retrieve a record, the lock will be lost because
-    <a class="Xr" href="../3/getpwnam">getpwnam(3)</a> opens, reads, and closes
-    the password database. The database close will release all locks that the
-    process has associated with the database, even if the library routine never
-    requested a lock on the database. Another minor semantic problem with this
-    interface is that locks are not inherited by a child process created using
-    the <a class="Xr" href="../2/fork">fork(2)</a> function. The
-    <a class="Xr" href="../2/flock">flock(2)</a> interface has much more
-    rational last close semantics and allows locks to be inherited by child
-    processes. <a class="Xr" href="../2/Flock">Flock(2)</a> is recommended for
-    applications that want to ensure the integrity of their locks when using
-    library routines or wish to pass locks to their children. Note that
-    <a class="Xr" href="../2/flock">flock(2)</a> and
-    <code class="Nm">fcntl</code> locks may be safely used concurrently.</p>
+    update, and then calls
+    <a class="Xr" href="../3/getpwnam" aria-label="getpwnam, section
+    3">getpwnam(3)</a> to retrieve a record, the lock will be lost because
+    <a class="Xr" href="../3/getpwnam" aria-label="getpwnam, section
+    3">getpwnam(3)</a> opens, reads, and closes the password database. The
+    database close will release all locks that the process has associated with
+    the database, even if the library routine never requested a lock on the
+    database. Another minor semantic problem with this interface is that locks
+    are not inherited by a child process created using the
+    <a class="Xr" href="../2/fork" aria-label="fork, section 2">fork(2)</a>
+    function. The <a class="Xr" href="../2/flock" aria-label="flock, section
+    2">flock(2)</a> interface has much more rational last close semantics and
+    allows locks to be inherited by child processes.
+    <a class="Xr" href="../2/Flock" aria-label="Flock, section 2">Flock(2)</a>
+    is recommended for applications that want to ensure the integrity of their
+    locks when using library routines or wish to pass locks to their children.
+    Note that <a class="Xr" href="../2/flock" aria-label="flock, section
+    2">flock(2)</a> and <code class="Nm">fcntl</code> locks may be safely used
+    concurrently.</p>
 <p class="Pp">All locks associated with a file for a given process are removed
     when the process terminates.</p>
 <p class="Pp">A potential for deadlock occurs if a process controlling a locked
@@ -381,12 +398,13 @@
     description</i></a> (OFD) locks are locks on the file associated with the
     open file description used to acquire them, and not with the process that
     created them. OFD locks are conceptually similar to locks managed by
-    <a class="Xr" href="../2/flock">flock(2)</a>, with the addition of record
-    locking capabilities.</p>
+    <a class="Xr" href="../2/flock" aria-label="flock, section 2">flock(2)</a>,
+    with the addition of record locking capabilities.</p>
 <p class="Pp" id="not">A new open file description can be obtained from e.g.,
-    <a class="Xr" href="../2/open">open(2)</a>. However, file descriptors that
-    have been duplicated using e.g., <a class="Xr" href="../2/dup">dup(2)</a> or
-    <a class="Xr" href="../2/fork">fork(2)</a> do
+    <a class="Xr" href="../2/open" aria-label="open, section 2">open(2)</a>.
+    However, file descriptors that have been duplicated using e.g.,
+    <a class="Xr" href="../2/dup" aria-label="dup, section 2">dup(2)</a> or
+    <a class="Xr" href="../2/fork" aria-label="fork, section 2">fork(2)</a> do
     <a class="permalink" href="#not"><b class="Sy">not</b></a> result in
     multiple instances of a lock, but create additional references to the same
     open file description, and thus reference the same lock. For example, if a
@@ -396,8 +414,8 @@
 <p class="Pp">Only the last close of the last file descriptor in any process
     still referencing the open file description causes an automatic unlock to
     occur, so this type of record lock avoids the more unfortunate
-    <a class="Xr" href="../2/close">close(2)</a> semantics of traditional
-    advisory record locks.</p>
+    <a class="Xr" href="../2/close" aria-label="close, section 2">close(2)</a>
+    semantics of traditional advisory record locks.</p>
 <p class="Pp">The commands used for OFD locks are direct analogs of traditional
     record locking commands:</p>
 <dl class="Bl-tag">
@@ -411,10 +429,12 @@
       this function call except for the lock type which is set to
       <code class="Dv">F_UNLCK</code>. If a lock that does not support the
       discovery of lock ownership by process (such as an OFD lock, one created
-      by the <a class="Xr" href="../2/flock">flock(2)</a> system call or the
-      <a class="Xr" href="../2/open">open(2)</a> system call with the
-      <code class="Dv">O_SHLOCK</code> or <code class="Dv">O_EXLOCK</code> flag)
-      is found, <var class="Fa">l_pid</var> is set to -1.</dd>
+      by the <a class="Xr" href="../2/flock" aria-label="flock, section
+      2">flock(2)</a> system call or the
+      <a class="Xr" href="../2/open" aria-label="open, section 2">open(2)</a>
+      system call with the <code class="Dv">O_SHLOCK</code> or
+      <code class="Dv">O_EXLOCK</code> flag) is found,
+      <var class="Fa">l_pid</var> is set to -1.</dd>
   <dt id="F_OFD_SETLK"><a class="permalink" href="#F_OFD_SETLK"><code class="Dv">F_OFD_SETLK</code></a></dt>
   <dd>Set or clear a file segment lock according to the lock description pointed
       to by the third argument, <var class="Fa">arg</var>, taken as a pointer to
@@ -432,7 +452,8 @@
       is received while <code class="Nm">fcntl</code> is waiting for a region,
       the <code class="Nm">fcntl</code> will be interrupted if the signal
       handler has not specified the <code class="Dv">SA_RESTART</code> (see
-      <a class="Xr" href="../2/sigaction">sigaction(2)</a>).</dd>
+      <a class="Xr" href="../2/sigaction" aria-label="sigaction, section
+      2">sigaction(2)</a>).</dd>
 </dl>
 <p class="Pp">No deadlock detection is performed for OFD file locks.</p>
 <p class="Pp">The <code class="Dv">F_PREALLOCATE</code> command operates on the
@@ -457,8 +478,8 @@
   <dd>Allocate all requested space or no space at all.</dd>
   <dt id="F_ALLOCATEPERSIST"><a class="permalink" href="#F_ALLOCATEPERSIST"><code class="Dv">F_ALLOCATEPERSIST</code></a></dt>
   <dd>Allocate space that is not freed when
-      <a class="Xr" href="../2/close">close(2)</a> is called. (Note that the
-      file system may ignore this request.)</dd>
+      <a class="Xr" href="../2/close" aria-label="close, section 2">close(2)</a>
+      is called. (Note that the file system may ignore this request.)</dd>
 </dl>
 </div>
 <p class="Pp">The position modes (fst_posmode) for the
@@ -493,6 +514,16 @@
            int     ra_count;   /* size of the read     */
         };</pre>
 </div>
+<p class="Pp">The <code class="Dv">F_RDADVISEV</code> command operates on the
+    following structure which holds information passed from the user to the
+    system:</p>
+<div class="Bd Pp Li">
+<pre>        struct radvisoryv {
+           unsigned int rav_flags;         /* flags word */
+           unsigned int rav_count;         /* number of ranges to read */
+           struct radvisory *rav_ranges;   /* array of ranges to read */
+        };</pre>
+</div>
 <p class="Pp">The <code class="Dv">F_LOG2PHYS</code> command operates on the
     following structure:</p>
 <div class="Bd Pp Li">
@@ -517,12 +548,14 @@
     <code class="Dv">F_SETNOSIGPIPE</code> and
     <code class="Dv">F_GETNOSIGPIPE</code> commands are directly analogous, and
     fully interoperate with the <code class="Dv">SO_NOSIGPIPE</code> option of
-    <a class="Xr" href="../2/setsockopt">setsockopt(2)</a> and
-    <a class="Xr" href="../2/getsockopt">getsockopt(2)</a> respectively.</p>
+    <a class="Xr" href="../2/setsockopt" aria-label="setsockopt, section
+    2">setsockopt(2)</a> and
+    <a class="Xr" href="../2/getsockopt" aria-label="getsockopt, section
+    2">getsockopt(2)</a> respectively.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">Upon successful completion, the value returned depends on
     <var class="Fa">cmd</var> as follows:</p>
 <div class="Bd-indent">
@@ -543,7 +576,7 @@
     <var class="Va">errno</var> is set to indicate the error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp">The <code class="Fn">fcntl</code>() system call will fail if:</p>
 <dl class="Bl-tag">
   <dt id="EAGAIN">[<a class="permalink" href="#EAGAIN"><code class="Er">EAGAIN</code></a>]</dt>
@@ -579,6 +612,10 @@
         <code class="Dv">F_PREALLOCATE</code> and the calling process does not
         have file write permission.</p>
     <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_RDADVISE</code> or
+        <code class="Dv">F_RDADVISEV</code> and <var class="Fa">fildes</var>
+        does not correspond to a valid regular file.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
         <code class="Dv">F_LOG2PHYS</code> or
         <code class="Dv">F_LOG2PHYS_EXT</code> and <var class="Fa">fildes</var>
         is not a valid file descriptor open for reading.</p>
@@ -586,6 +623,10 @@
         <code class="Dv">F_TRANSFEREXTENTS</code> and either file descriptor
         does not correspond to a valid regular file, or either file is not open
         for writing.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_GETPATH</code> or
+        <code class="Dv">F_GETPATH_NOFIRMLINK</code> and the file descriptor
+        refers to a vnode that has been revoked.</p>
   </dd>
   <dt id="EDEADLK">[<a class="permalink" href="#EDEADLK"><code class="Er">EDEADLK</code></a>]</dt>
   <dd>The argument <var class="Fa">cmd</var> is
@@ -596,7 +637,15 @@
       <code class="Dv">F_PREALLOCATE</code>,
       <code class="Dv">F_PEOFPOSMODE</code> is set and preallocating
       <var class="Fa">fst_length</var> bytes on <var class="Fa">fildes</var>
-      would exceed the maximum file size.</dd>
+      would exceed the maximum file size.
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_RDADVISE</code> and <var class="Fa">ra_offset</var>
+        exceeds the size of the file.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_RDADVISEV</code> and the
+        <var class="Fa">ra_offset</var> of any of the supplied ranges exceeds
+        the size of the file.</p>
+  </dd>
   <dt id="EINTR">[<a class="permalink" href="#EINTR"><code class="Er">EINTR</code></a>]</dt>
   <dd>The argument <var class="Fa">cmd</var> is <code class="Dv">F_SETLKW</code>
       or <code class="Dv">F_OFD_SETLKW</code>, and the function was interrupted
@@ -605,7 +654,8 @@
   <dd><var class="Fa">Cmd</var> is <code class="Dv">F_DUPFD</code> and
       <var class="Fa">arg</var> is negative or greater than the maximum
       allowable number (see
-      <a class="Xr" href="../2/getdtablesize">getdtablesize(2)</a>).
+      <a class="Xr" href="../2/getdtablesize" aria-label="getdtablesize, section
+      2">getdtablesize(2)</a>).
     <p class="Pp">The argument <var class="Fa">cmd</var> is
         <code class="Dv">F_GETLK</code>, <code class="Dv">F_SETLK</code>,
         <code class="Dv">F_SETLKW</code>, <code class="Dv">F_OFD_GETLK</code>,
@@ -628,6 +678,14 @@
         <var class="Fa">fp_length</var> are not multiples of the file system
         block size, or when either <var class="Fa">fp_flags</var> or
         <var class="Fa">reserved</var> is non-zero value.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_RDADVISE</code> and <var class="Fa">ra_offset</var>
+        or <var class="Fa">ra_count</var> is negative.</p>
+    <p class="Pp">The argument <var class="Fa">cmd</var> is
+        <code class="Dv">F_RDADVISEV</code> and <var class="Fa">rav_count</var>
+        is equal to 0 or greater than 64, or when the
+        <var class="Fa">ra_offset</var> or <var class="Fa">ra_count</var> of any
+        of the supplied ranges is negative.</p>
     <p class="Pp">The argument <var class="Fa">cmd</var> is
         <code class="Dv">F_TRANSFEREXTENTS</code> and the additional file
         descriptor is negative or both file descriptors reference the same
@@ -673,8 +731,8 @@
   <dt id="EPERM~2">[<a class="permalink" href="#EPERM~2"><code class="Er">EPERM</code></a>]</dt>
   <dd>The argument cmd is <code class="Dv">F_SETSIZE</code> and the named file
       has its append-only flag set, see the
-      <a class="Xr" href="../2/chflags">chflags(2)</a> manual page for more
-      information.</dd>
+      <a class="Xr" href="../2/chflags" aria-label="chflags, section
+      2">chflags(2)</a> manual page for more information.</dd>
   <dt id="EPERM~3">[<a class="permalink" href="#EPERM~3"><code class="Er">EPERM</code></a>]</dt>
   <dd>The argument cmd is <code class="Dv">F_SETFL</code> and O_APPEND flag is
       not present but the named file has its append-only flag set.</dd>
@@ -690,31 +748,32 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../2/close">close(2)</a>,
-    <a class="Xr" href="../2/execve">execve(2)</a>,
-    <a class="Xr" href="../2/flock">flock(2)</a>,
-    <a class="Xr" href="../2/fork">fork(2)</a>,
-    <a class="Xr" href="../2/getdtablesize">getdtablesize(2)</a>,
-    <a class="Xr" href="../2/open">open(2)</a>,
-    <a class="Xr" href="../2/pipe">pipe(2)</a>,
-    <a class="Xr" href="../2/setsockopt">setsockopt(2)</a>,
-    <a class="Xr" href="../2/socket">socket(2)</a>,
-    <a class="Xr" href="../3/sigaction">sigaction(3)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../2/close" aria-label="close, section
+    2">close(2)</a>, <a class="Xr" href="../2/execve" aria-label="execve,
+    section 2">execve(2)</a>, <a class="Xr" href="../2/flock" aria-label="flock,
+    section 2">flock(2)</a>, <a class="Xr" href="../2/fork" aria-label="fork,
+    section 2">fork(2)</a>,
+    <a class="Xr" href="../2/getdtablesize" aria-label="getdtablesize, section
+    2">getdtablesize(2)</a>, <a class="Xr" href="../2/open" aria-label="open,
+    section 2">open(2)</a>, <a class="Xr" href="../2/pipe" aria-label="pipe,
+    section 2">pipe(2)</a>,
+    <a class="Xr" href="../2/setsockopt" aria-label="setsockopt, section
+    2">setsockopt(2)</a>, <a class="Xr" href="../2/socket" aria-label="socket,
+    section 2">socket(2)</a>,
+    <a class="Xr" href="../3/sigaction" aria-label="sigaction, section
+    3">sigaction(3)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Fn">fcntl</code>() function call appeared in
     <span class="Ux">4.2BSD</span>.</p>
 <p class="Pp">Open file description locks first appeared in Linux 3.15</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">August 12, 2021</td>
-    <td class="foot-os"><a href="..">BSD 4.2</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">BSD 4.2</a></span> <span class="foot-date">August
+  12, 2021</span> <span class="foot-right">FCNTL(2)</span></div>
 </body>
 </html>

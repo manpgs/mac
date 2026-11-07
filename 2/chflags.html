@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>CHFLAGS(2)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
   	$NetBSD: chflags.2,v 1.6 1995/02/27 12:32:03 cgd Exp $
   
@@ -36,28 +42,20 @@
   
   	@(#)chflags.2	8.1 (Berkeley) 6/9/93
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>CHFLAGS(2)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">CHFLAGS(2)</td>
-    <td class="head-vol"><a href=".">System Calls Manual</a></td>
-    <td class="head-rtitle">CHFLAGS(2)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">CHFLAGS(2)</span>
+  <span class="head-vol"><a href=".">System Calls Manual</a></span>
+  <span class="head-rtitle">CHFLAGS(2)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
-<p class="Pp"><code class="Nm">chflags</code>, <code class="Nm">fchflags</code>
-    &#x2014; <span class="Nd">set file flags</span></p>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
+<p class="Pp"><code class="Nm">chflags</code>, <code class="Nm">fchflags</code>,
+    <code class="Nm">fchflagsat</code> &#x2014;
+    <span class="Nd" role="doc-subtitle">set file flags</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     <a class="In">&lt;sys/stat.h&gt;</a></code>
   <br/>
@@ -72,12 +70,51 @@
   <code class="Fn">fchflags</code>(<var class="Fa" style="white-space: nowrap;">int
     fd</var>, <var class="Fa" style="white-space: nowrap;">u_int
   flags</var>);</p>
+<p class="Pp"><var class="Ft">int</var>
+  <br/>
+  <code class="Fn">fchflagsat</code>(<var class="Fa" style="white-space: nowrap;">int
+    fd</var>, <var class="Fa" style="white-space: nowrap;">const char
+    *path</var>, <var class="Fa" style="white-space: nowrap;">u_int flags</var>,
+    <var class="Fa" style="white-space: nowrap;">int flag</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The file whose name is given by <var class="Fa">path</var> or
     referenced by the descriptor <var class="Fa">fd</var> has its flags changed
     to <var class="Fa">flags</var>.</p>
+<p class="Pp" id="fchflagsat">The
+    <a class="permalink" href="#fchflagsat"><code class="Fn">fchflagsat</code></a>()
+    is equivalent to
+    <a class="permalink" href="#chflag"><code class="Fn" id="chflag">chflag</code></a>()
+    except in the case where <var class="Fa">path</var> specifies a relative
+    path. In this case the file to be changed is determined relative to the
+    directory associated with the file descriptor <var class="Fa">fd</var>
+    instead of the current working directory. The values for the
+    <var class="Fa">flag</var> are constructed by a bitwise-inclusive OR of
+    flags from the following list, defined in
+    <code class="In">&lt;<a class="In">fcntl.h</a>&gt;</code>:</p>
+<dl class="Bl-tag">
+  <dt id="AT_SYMLINK_NOFOLLOW"><a class="permalink" href="#AT_SYMLINK_NOFOLLOW"><code class="Dv">AT_SYMLINK_NOFOLLOW</code></a></dt>
+  <dd>If <var class="Fa">path</var> names a symbolic link, then the flags of the
+      symbolic link is changed.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="AT_SYMLINK_NOFOLLOW_ANY"><a class="permalink" href="#AT_SYMLINK_NOFOLLOW_ANY"><code class="Dv">AT_SYMLINK_NOFOLLOW_ANY</code></a></dt>
+  <dd>If <var class="Fa">path</var> names a symbolic link, then the flags of the
+      symbolic link is changed and if the path has any other symbolic links, an
+      error is returned.</dd>
+</dl>
+<dl class="Bl-tag">
+  <dt id="AT_RESOLVE_BENEATH"><a class="permalink" href="#AT_RESOLVE_BENEATH"><code class="Dv">AT_RESOLVE_BENEATH</code></a></dt>
+  <dd>If <var class="Fa">path</var> does not reside in the hierarchy beneath the
+      starting directory, an error is returned.</dd>
+</dl>
+<p class="Pp" id="fchflagsat~2">If
+    <a class="permalink" href="#fchflagsat~2"><code class="Fn">fchflagsat</code></a>()
+    is passed the special value <code class="Dv">AT_FDCWD</code> in the
+    <var class="Fa">fd</var> parameter, the current working directory is used.
+    If also <var class="Fa">flag</var> is zero, the behavior is identical to a
+    call to <code class="Fn">chflags</code>().</p>
 <p class="Pp" id="or">The flags specified are formed by
     <a class="permalink" href="#or"><i class="Em">or</i></a>'ing the following
     values</p>
@@ -106,7 +143,8 @@
   <dd>The file is a dataless placeholder. The system will attempt to materialize
       it when accessed according to the dataless file materialization policy of
       the accessing thread or process. See
-      <a class="Xr" href="../3/getiopolicy_np">getiopolicy_np(3)</a>.</dd>
+      <a class="Xr" href="../3/getiopolicy_np" aria-label="getiopolicy_np,
+      section 3">getiopolicy_np(3)</a>.</dd>
 </dl>
 </div>
 <p class="Pp">The &#x201C;UF_IMMUTABLE&#x201D;, &#x201C;UF_APPEND&#x201D;,
@@ -122,18 +160,23 @@
     will result in undefined behaviour.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">Upon successful completion, a value of 0 is returned. Otherwise,
     -1 is returned and the global variable <var class="Va">errno</var> is set to
     indicate the error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp"><code class="Fn">chflags</code>() will fail if:</p>
 <dl class="Bl-tag">
   <dt id="ENOTDIR">[<a class="permalink" href="#ENOTDIR"><code class="Er">ENOTDIR</code></a>]</dt>
-  <dd>A component of the path prefix is not a directory.</dd>
+  <dd>A component of the path prefix of <var class="Fa">path</var> names an
+      existing file that is neither a directory nor a symbolic link to a
+      directory, or <var class="Fa">path</var> contains at least one
+      non-&lt;slash&gt; character and ends with one or more trailing
+      &lt;slash&gt; characters and the last pathname component names an existing
+      file that is neither a directory nor a symbolic link to a directory.</dd>
   <dt id="ENAMETOOLONG">[<a class="permalink" href="#ENAMETOOLONG"><code class="Er">ENAMETOOLONG</code></a>]</dt>
   <dd>A component of a pathname exceeded <code class="Dv">{NAME_MAX}</code>
       characters, or an entire path name exceeded
@@ -175,27 +218,52 @@
   <dt id="ENOTSUP~2">[<a class="permalink" href="#ENOTSUP~2"><code class="Er">ENOTSUP</code></a>]</dt>
   <dd>The operation isn't supported by the filesystem.</dd>
 </dl>
+<p class="Pp">In addition to the <code class="Fn">chflags</code>() errors,
+    <code class="Fn">fchflagsat</code>() fails if:</p>
+<dl class="Bl-tag">
+  <dt id="EBADF~2">[<a class="permalink" href="#EBADF~2"><code class="Er">EBADF</code></a>]</dt>
+  <dd>The <var class="Fa">path</var> argument does not specify an absolute path
+      and the <var class="Fa">fd</var> argument is neither
+      <var class="Fa">AT_FDCWD</var> nor a valid file descriptor open for
+      searching.</dd>
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The value of the <var class="Fa">flag</var> argument is not valid.</dd>
+  <dt id="ELOOP~2">[<a class="permalink" href="#ELOOP~2"><code class="Er">ELOOP</code></a>]</dt>
+  <dd>If AT_SYMLINK_NOFOLLOW_ANY was passed and a symbolic link was encountered
+      in translating the pathname.</dd>
+  <dt id="ENOTDIR~2">[<a class="permalink" href="#ENOTDIR~2"><code class="Er">ENOTDIR</code></a>]</dt>
+  <dd>The <var class="Fa">path</var> argument is not an absolute path and
+      <var class="Fa">fd</var> is neither <code class="Dv">AT_FDCWD</code> nor a
+      file descriptor associated with a directory.</dd>
+  <dt id="ENOTCAPABLE">[<a class="permalink" href="#ENOTCAPABLE"><code class="Er">ENOTCAPABLE</code></a>]</dt>
+  <dd>if AT_RESOLVE_BENEATH was passed and <var class="Fa">path</var> does not
+      reside in the directory hierarchy beneath the starting directory.</dd>
+</dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/chflags">chflags(1)</a>,
-    <a class="Xr" href="../3/fflagstostr">fflagstostr(3)</a>,
-    <a class="Xr" href="../3/lchflags">lchflags(3)</a>,
-    <a class="Xr" href="../3/strtofflags">strtofflags(3)</a>,
-    <a class="Xr" href="../8/launchd">launchd(8)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/chflags" aria-label="chflags, section
+    1">chflags(1)</a>,
+    <a class="Xr" href="../3/fflagstostr" aria-label="fflagstostr, section
+    3">fflagstostr(3)</a>,
+    <a class="Xr" href="../3/lchflags" aria-label="lchflags, section
+    3">lchflags(3)</a>,
+    <a class="Xr" href="../3/strtofflags" aria-label="strtofflags, section
+    3">strtofflags(3)</a>,
+    <a class="Xr" href="../8/launchd" aria-label="launchd, section
+    8">launchd(8)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Fn">chflags</code>() and
-    <code class="Nm">fchflags</code> functions first appeared in 4.4BSD.</p>
+    <code class="Nm">fchflags</code> functions first appeared in 4.4BSD.
+    <code class="Fn">fchflagsat</code>() system call appeared in macOS 27.0.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">June 9, 1993</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">June 9, 1993</span>
+  <span class="foot-right">CHFLAGS(2)</span></div>
 </body>
 </html>

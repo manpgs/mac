@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>REMOVEFILE(3)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 2015-23 Apple Inc.
    All rights reserved.
@@ -27,33 +33,24 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>REMOVEFILE(3)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">REMOVEFILE(3)</td>
-    <td class="head-vol"><a href=".">Library Functions Manual</a></td>
-    <td class="head-rtitle">REMOVEFILE(3)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">REMOVEFILE(3)</span>
+  <span class="head-vol"><a href=".">Library Functions Manual</a></span>
+  <span class="head-rtitle">REMOVEFILE(3)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">removefile</code>,
     <code class="Nm">removefileat</code>,
     <code class="Nm">removefile_state_alloc</code>,
     <code class="Nm">removefile_state_free</code>,
     <code class="Nm">removefile_state_get</code>,
     <code class="Nm">removefile_state_set</code> &#x2014;
-    <span class="Nd">remove files or directories</span></p>
+    <span class="Nd" role="doc-subtitle">remove files or directories</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     &lt;<a class="In">removefile.h</a>&gt;</code></p>
 <p class="Pp"><var class="Ft">int</var>
@@ -95,7 +92,7 @@
     state</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">These functions are used to remove a file or directory. Various
     levels of overwriting may be specified to prevent other people from
     recovering any information about the file.</p>
@@ -164,6 +161,37 @@
       remove the requirement that no component of the <var class="Va">path</var>
       location exceeds NAME_MAX characters, nor does it allow the
       <var class="Va">path</var> argument itself to exceed PATH_MAX.)</dd>
+  <dt id="REMOVEFILE_CLEAR_PURGEABLE"><a class="permalink" href="#REMOVEFILE_CLEAR_PURGEABLE"><code class="Dv">REMOVEFILE_CLEAR_PURGEABLE</code></a></dt>
+  <dd>Clear the purgeable state on any directory encountered during preorder
+      recursive traversal, before removing any descendant of it. Relevant for
+      APFS file-systems only.</dd>
+  <dt id="REMOVEFILE_RECURSIVE_SLIM"><a class="permalink" href="#REMOVEFILE_RECURSIVE_SLIM"><code class="Dv">REMOVEFILE_RECURSIVE_SLIM</code></a></dt>
+  <dd>If the <var class="Va">path</var> location is a directory, then
+      recursively delete the entire directory using a memory-efficient
+      depth-first traversal. This flag uses an alternative implementation that
+      reduces memory consumption compared to
+      <code class="Dv">REMOVEFILE_RECURSIVE</code>, making it suitable for
+      removing large directory hierarchies.
+    <p class="Pp">This flag may be combined with
+        <code class="Dv">REMOVEFILE_KEEP_PARENT</code>,
+        <code class="Dv">REMOVEFILE_CROSS_MOUNT</code>,
+        <code class="Dv">REMOVEFILE_CLEAR_PURGEABLE</code>, and
+        <code class="Dv">REMOVEFILE_SYSTEM_DISCARDED</code>.</p>
+    <p class="Pp" id="removefile~2">This flag is not compatible with the secure
+        deletion flags (<code class="Dv">REMOVEFILE_SECURE_7_PASS</code>,
+        <code class="Dv">REMOVEFILE_SECURE_35_PASS</code>,
+        <code class="Dv">REMOVEFILE_SECURE_1_PASS</code>,
+        <code class="Dv">REMOVEFILE_SECURE_3_PASS</code>,
+        <code class="Dv">REMOVEFILE_SECURE_1_PASS_ZERO</code>),
+        <code class="Dv">REMOVEFILE_ALLOW_LONG_PATHS</code>, or the
+        <code class="Dv">REMOVEFILE_STATE_CONFIRM_CALLBACK</code> and
+        <code class="Dv">REMOVEFILE_STATE_STATUS_CALLBACK</code> state
+        callbacks. If any of these are specified,
+        <a class="permalink" href="#removefile~2"><code class="Fn">removefile</code></a>()
+        will fail with <code class="Er">EINVAL</code>. The
+        <code class="Dv">REMOVEFILE_STATE_ERROR_CALLBACK</code> is
+      supported.</p>
+  </dd>
 </dl>
 <p class="Pp" id="removefile_state_get">The
     <a class="permalink" href="#removefile_state_get"><code class="Fn">removefile_state_get</code></a>()
@@ -212,7 +240,7 @@
 <dl class="Bl-tag">
   <dt id="REMOVEFILE_PROCEED"><a class="permalink" href="#REMOVEFILE_PROCEED"><code class="Dv">REMOVEFILE_PROCEED</code></a></dt>
   <dd>File is deleted and
-      <a class="permalink" href="#removefile~2"><code class="Fn" id="removefile~2">removefile</code></a>()
+      <a class="permalink" href="#removefile~3"><code class="Fn" id="removefile~3">removefile</code></a>()
       continues operation as normal.</dd>
   <dt id="REMOVEFILE_SKIP"><a class="permalink" href="#REMOVEFILE_SKIP"><code class="Dv">REMOVEFILE_SKIP</code></a></dt>
   <dd>Current file is not deleted and <code class="Fn">removefile</code>()
@@ -226,13 +254,13 @@
     function is used to cancel a remove that is in progress.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">The family of <code class="Fn">removefile</code>() functions
     returns less than 0 on error, and 0 on success.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp"><code class="Fn">removefile</code>() will fail if:</p>
 <dl class="Bl-tag">
   <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
@@ -273,26 +301,26 @@
     library or system call.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h1>
+<h2 class="Sh" id="NOTES"><a class="permalink" href="#NOTES">NOTES</a></h2>
 <p class="Pp">Write protected files owned by another user cannot be removed by
-    <a class="permalink" href="#removefile~3"><code class="Fn" id="removefile~3">removefile</code></a>(),
+    <a class="permalink" href="#removefile~4"><code class="Fn" id="removefile~4">removefile</code></a>(),
     regardless of the permissions on the directory containing the file.</p>
-<p class="Pp" id="removefile~4">If multiple of the REMOVEFILE_SECURE_1_PASS,
+<p class="Pp" id="removefile~5">If multiple of the REMOVEFILE_SECURE_1_PASS,
     REMOVEFILE_SECURE_7_PASS, and REMOVEFILE_SECURE_35_PASS flags are specified,
-    <a class="permalink" href="#removefile~4"><code class="Fn">removefile</code></a>()
+    <a class="permalink" href="#removefile~5"><code class="Fn">removefile</code></a>()
     will proceed using the flag that specifies the highest number of overwriting
     passes.</p>
-<p class="Pp" id="removefile~5"><a class="permalink" href="#removefile~5"><code class="Fn">removefile</code></a>()
+<p class="Pp" id="removefile~6"><a class="permalink" href="#removefile~6"><code class="Fn">removefile</code></a>()
     is pathname-based; this means that, when descending into a hierarchy, there
     are potential race conditions that may add risk when run with
   privileges.</p>
-<p class="Pp" id="removefile~6"><a class="permalink" href="#removefile~6"><code class="Fn">removefile</code></a>()
+<p class="Pp" id="removefile~7"><a class="permalink" href="#removefile~7"><code class="Fn">removefile</code></a>()
     operates on symbolic links, rather than the target of the link.</p>
 <p class="Pp">REMOVEFILE_ALLOW_LONG_PATHS may change the working directory of
     the process, making it not thread safe.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h1>
+<h2 class="Sh" id="EXAMPLE"><a class="permalink" href="#EXAMPLE">EXAMPLE</a></h2>
 <div class="Bd Bd-indent Li">
 <pre>/* Initialize a state variable */
 removefile_state_t s;
@@ -320,23 +348,23 @@ removefile_state_free(s);</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/unlink">unlink(1)</a>,
-    <a class="Xr" href="../2/sync">sync(2)</a>,
-    <a class="Xr" href="../3/sync_volume_np">sync_volume_np(3)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/unlink" aria-label="unlink, section
+    1">unlink(1)</a>, <a class="Xr" href="../2/sync" aria-label="sync, section
+    2">sync(2)</a>,
+    <a class="Xr" href="../3/sync_volume_np" aria-label="sync_volume_np, section
+    3">sync_volume_np(3)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The <code class="Fn">removefile</code>() API was introduced in Mac
     OS X 10.5.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">August 4, 2023</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">April 23, 2026</span>
+  <span class="foot-right">REMOVEFILE(3)</span></div>
 </body>
 </html>

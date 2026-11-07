@@ -1,46 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: gitfaq
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GITFAQ(7)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: gitfaq
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GITFAQ(7)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GITFAQ(7)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GITFAQ(7)</span> <span class="head-vol"><a href=".">Git
+  Manual</a></span> <span class="head-rtitle">GITFAQ(7)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">gitfaq - Frequently asked questions about using Git</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp">gitfaq</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The examples in this FAQ assume a standard POSIX shell, like
     <b>bash</b> or <b>dash</b>, and a user, A U Thor, who has the account
     <b>author</b> on the hosting provider <b>git.example.org</b>.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h1>
+<h2 class="Sh" id="CONFIGURATION"><a class="permalink" href="#CONFIGURATION">CONFIGURATION</a></h2>
 <p class="Pp">What should I put in <b>user.name</b>?</p>
 <div class="Bd-indent">You should put your personal name, generally a form using
   a given name and family name. For example, the current maintainer of Git uses
@@ -101,9 +97,25 @@
     quotes the filename with spaces and specifies the <b>--nofork</b> option to
     avoid backgrounding the process.</p>
 </div>
+<p class="Pp">Why not have <b>commit.signoff</b> and other configuration
+    variables?</p>
+<div class="Bd-indent">Git intentionally does not (and will not) provide a
+  configuration variable, such as <b>commit.signoff</b>, to automatically add
+  <b>--signoff</b> by default. The reason is to protect the legal and
+  intentional significance of a sign-off. If there were more automated and
+  widely publicized ways for sign-offs to be appended, it would become easier
+  for someone to argue later that a &quot;Signed-off-by&quot; trailer was just
+  added out of habit or by automation, without the committer&#x2019;s full
+  awareness or intent to certify their agreement with the Developer Certificate
+  of Origin (DCO) or a similar statement. This could undermine the
+  sign-off&#x2019;s credibility in legal or contractual situations.
+<p class="Pp">There exists <b>format.signoff</b>, but that is a historical
+    mistake, and it is not an excuse to add more mistakes of the same kind on
+    top.</p>
+</div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CREDENTIALS"><a class="permalink" href="#CREDENTIALS">CREDENTIALS</a></h1>
+<h2 class="Sh" id="CREDENTIALS"><a class="permalink" href="#CREDENTIALS">CREDENTIALS</a></h2>
 <p class="Pp">How do I specify my credentials when pushing over HTTP?</p>
 <div class="Bd-indent">The easiest way to do this is to use a credential helper
   via the <b>credential.helper</b> configuration. Most systems provide a
@@ -203,7 +215,7 @@ Host example_committer
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TRANSFERS"><a class="permalink" href="#TRANSFERS">TRANSFERS</a></h1>
+<h2 class="Sh" id="TRANSFERS"><a class="permalink" href="#TRANSFERS">TRANSFERS</a></h2>
 <p class="Pp">How do I sync a working tree across systems?</p>
 <div class="Bd-indent">First, decide whether you want to do this at all. Git
   works best when you push or pull your work using the typical <b>git</b>
@@ -230,12 +242,28 @@ Host example_committer
     causing data loss.</p>
 <p class="Pp">Therefore, it&#x2019;s better to push your work to either the
     other system or a central server using the normal push and pull mechanism.
-    However, this doesn&#x2019;t always preserve important data, like stashes,
-    so some people prefer to share a working tree across systems.</p>
-<p class="Pp">If you do this, the recommended approach is to use <b>rsync</b>
-    <b>-a</b> <b>--delete-after</b> (ideally with an encrypted connection such
-    as with <b>ssh</b>) on the root of repository. You should ensure several
-    things when you do this:</p>
+    In Git 2.51, Git learned to import and export stashes, so it&#x2019;s
+    possible to synchronize the state of the working tree by stashing it with
+    <b>git</b> <b>stash</b>, then exporting either all stashes with <b>git</b>
+    <b>stash</b> <b>export</b> <b>--to-ref</b> <b>refs/heads/stashes</b>
+    (assuming you want to export to the <b>stashes</b> branch) or selecting
+    stashes by adding their numbers to the end of that command. It&#x2019;s also
+    possible to include untracked files by using the <b>--include-untracked</b>
+    argument when stashing the data in the first place, but be careful not to do
+    this if any of these contain sensitive information.</p>
+<p class="Pp">You can then push the <b>stashes</b> branch (or whatever branch
+    you&#x2019;ve exported to), fetch them to the local system (such as with
+    <b>git</b> <b>fetch</b> <b>origin</b> <b>+stashes:stashes</b>), and import
+    the stashes on the other system with <b>git</b> <b>stash</b> <b>import</b>
+    <b>stashes</b> (again, changing the name as necessary). Applying the changes
+    to the working tree can be done with <b>git</b> <b>stash</b> <b>pop</b> or
+    <b>git</b> <b>stash</b> <b>apply</b>. This is the approach that is most
+    robust and most likely to avoid unintended problems.</p>
+<p class="Pp">Having said that, there are some cases where people nevertheless
+    prefer to share a working tree across systems. If you do this, the
+    recommended approach is to use <b>rsync</b> <b>-a</b> <b>--delete-after</b>
+    (ideally with an encrypted connection such as with <b>ssh</b>) on the root
+    of repository. You should ensure several things when you do this:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;If you have additional worktrees or a separate
   Git directory, they must be synced at the same time as the main working tree
@@ -249,17 +277,17 @@ Host example_committer
   Git directory) is in a quiescent state for the duration of the transfer (that
   is, no operations of any sort are taking place on it, including background
   operations like <b>git</b> <b>gc</b> and operations invoked by your editor).
-<p class="Pp">Be aware that even with these recommendations, syncing in this way
-    has some risk since it bypasses Git&#x2019;s normal integrity checking for
-    repositories, so having backups is advised. You may also wish to do a
-    <b>git</b> <b>fsck</b> to verify the integrity of your data on the
-    destination system after syncing.</p>
+<p class="Pp">Be aware that even with these recommendations, syncing working
+    trees in this way has some risk since it bypasses Git&#x2019;s normal
+    integrity checking for repositories, so having backups is advised. You may
+    also wish to do a <b>git</b> <b>fsck</b> to verify the integrity of your
+    data on the destination system after syncing.</p>
 </div>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="COMMON_ISSUES"><a class="permalink" href="#COMMON_ISSUES">COMMON
-  ISSUES</a></h1>
+<h2 class="Sh" id="COMMON_ISSUES"><a class="permalink" href="#COMMON_ISSUES">COMMON
+  ISSUES</a></h2>
 <p class="Pp">I&#x2019;ve made a mistake in the last commit. How do I change
   it?</p>
 <div class="Bd-indent">You can make the appropriate change to your working tree,
@@ -346,8 +374,8 @@ Host example_committer
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="MERGING_AND_REBASING"><a class="permalink" href="#MERGING_AND_REBASING">MERGING
-  AND REBASING</a></h1>
+<h2 class="Sh" id="MERGING_AND_REBASING"><a class="permalink" href="#MERGING_AND_REBASING">MERGING
+  AND REBASING</a></h2>
 <p class="Pp">What kinds of problems can occur when merging long-lived branches
     with squash merges?</p>
 <div class="Bd-indent">In general, there are a variety of problems that can
@@ -399,7 +427,7 @@ Host example_committer
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HOOKS"><a class="permalink" href="#HOOKS">HOOKS</a></h1>
+<h2 class="Sh" id="HOOKS"><a class="permalink" href="#HOOKS">HOOKS</a></h2>
 <p class="Pp">How do I use hooks to prevent users from making certain
   changes?</p>
 <div class="Bd-indent">The only safe place to make these changes is on the
@@ -421,8 +449,8 @@ Host example_committer
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CROSS"><a class="permalink" href="#CROSS">CROSS-PLATFORM
-  ISSUES</a></h1>
+<h2 class="Sh" id="CROSS-PLATFORM_ISSUES"><a class="permalink" href="#CROSS-PLATFORM_ISSUES">CROSS-PLATFORM
+  ISSUES</a></h2>
 <p class="Pp">I&#x2019;m on Windows and my text files are detected as
   binary.</p>
 <div class="Bd-indent">Git works best when you store text files as UTF-8. Many
@@ -547,15 +575,13 @@ $ git checkout .</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GITFAQ(7)</span></div>
 </body>
 </html>

@@ -1,41 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: git-sparse-checkout
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GIT-SPARSE-CHECKOUT(1)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: git-sparse-checkout
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GIT-SPARSE-CHECKOUT(1)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GIT-SPARSE-CHECKOUT(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GIT-SPARSE-CHECKOUT(1)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GIT-SPARSE-CHECKOUT(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">git-sparse-checkout - Reduce your working tree to a subset of
     tracked files</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
-<pre><i>git sparse-checkout</i> (init | list | set | add | reapply | disable | check-rules) [&lt;options&gt;]</pre>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
+<pre><i>git sparse-checkout</i> (init | list | set | add | reapply | disable | check-rules | clean) [&lt;options&gt;]</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">This command is used to create sparse checkouts, which change the
     working tree from having all tracked files present to only having a subset
     of those files. It can also switch which subset of files are present, or
@@ -54,7 +51,7 @@
     THE FUTURE.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="COMMANDS"><a class="permalink" href="#COMMANDS">COMMANDS</a></h1>
+<h2 class="Sh" id="COMMANDS"><a class="permalink" href="#COMMANDS">COMMANDS</a></h2>
 <p class="Pp"><i>list</i></p>
 <div class="Bd-indent">Describe the directories or patterns in the
   sparse-checkout file.</div>
@@ -124,6 +121,33 @@
     flags from the <b>set</b> command, in order to change which sparsity mode
     you are using without needing to also respecify all sparsity paths.</p>
 </div>
+<p class="Pp"><i>clean</i></p>
+<div class="Bd-indent">Opportunistically remove files outside of the
+  sparse-checkout definition. This command requires cone mode to use recursive
+  directory matches to determine which files should be removed. A file is
+  considered for removal if it is contained within a tracked directory that is
+  outside of the sparse-checkout definition.
+<p class="Pp">Some special cases, such as merge conflicts or modified files
+    outside of the sparse-checkout definition could lead to keeping files that
+    would otherwise be removed. Resolve conflicts, stage modifications, and use
+    <b>git</b> <b>sparse-checkout</b> <b>reapply</b> in conjunction with
+    <b>git</b> <b>sparse-checkout</b> <b>clean</b> to resolve these cases.</p>
+<p class="Pp">This command can be used to be sure the sparse index works
+    efficiently, though it does not require enabling the sparse index feature
+    via the <b>index.sparse=true</b> configuration.</p>
+<p class="Pp">To prevent accidental deletion of worktree files, the <b>clean</b>
+    subcommand will not delete any files without the <b>-f</b> or <b>--force</b>
+    option, unless the <b>clean.requireForce</b> config option is set to
+    <b>false</b>.</p>
+<p class="Pp">The <b>--dry-run</b> option will list the directories that would
+    be removed without deleting them. Running in this mode can be helpful to
+    predict the behavior of the clean comand or to determine which kinds of
+    files are left in the sparse directories.</p>
+<p class="Pp">The <b>--verbose</b> option will list every file within the
+    directories that are considered for removal. This option is helpful to
+    determine if those files are actually important or perhaps to explain why
+    the directory is still present despite the current sparse-checkout.</p>
+</div>
 <p class="Pp"><i>disable</i></p>
 <div class="Bd-indent">Disable the <b>core.sparseCheckout</b> config setting,
   and restore the working directory to include all files.</div>
@@ -169,7 +193,7 @@
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h1>
+<h2 class="Sh" id="EXAMPLES"><a class="permalink" href="#EXAMPLES">EXAMPLES</a></h2>
 <p class="Pp"><b>git</b> <b>sparse-checkout</b> <b>set</b> <b>MY/DIR1</b>
     <b>SUB/DIR2</b></p>
 <div class="Bd-indent">Change to a sparse checkout with all files (at any depth)
@@ -199,7 +223,7 @@
   directory match.</div>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; SPARSE CHECKOUT</h1>
+<h2 class="Sh">INTERNALS &#x2014; SPARSE CHECKOUT</h2>
 <p class="Pp">&quot;Sparse checkout&quot; allows populating the working
     directory sparsely. It uses the skip-worktree bit (see
     <b>git-update-index</b>(1)) to tell Git whether a file in the working
@@ -215,7 +239,7 @@
     the rest will not.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; NON-CONE PROBLEMS</h1>
+<h2 class="Sh">INTERNALS &#x2014; NON-CONE PROBLEMS</h2>
 <p class="Pp">The <b>$GIT_DIR/info/sparse-checkout</b> file populated by the
     <b>set</b> and <b>add</b> subcommands is defined to be a bunch of patterns
     (one per line) using the same syntax as .<b>gitignore</b> files. In cone
@@ -265,38 +289,43 @@
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;It has edge cases where the &quot;right&quot;
   behavior is unclear. Two examples:
+<p class="Pp">First, two users are in a subdirectory, and the first runs</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>First, two users are in a subdirectory, and the first runs
-   git sparse-checkout set '/toplevel-dir/*.c'
-while the second runs
-   git sparse-checkout set relative-dir
-Should those arguments be transliterated into
-   current/subdirectory/toplevel-dir/*.c
-and
-   current/subdirectory/relative-dir
-before inserting into the sparse-checkout file?  The user who typed
-the first command is probably aware that arguments to set/add are
-supposed to be patterns in non-cone mode, and probably would not be
-happy with such a transliteration.  However, many gitignore-style
-patterns are just paths, which might be what the user who typed the
-second command was thinking, and they'd be upset if their argument
-wasn't transliterated.</pre>
+<pre>git sparse-checkout set '/toplevel-dir/*.c'</pre>
 </div>
+<p class="Pp">while the second runs</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
-<pre>Second, what should bash-completion complete on for set/add commands
-for non-cone users?  If it suggests paths, is it exacerbating the
-problem above?  Also, if it suggests paths, what if the user has a
-file or directory that begins with either a '!' or '#' or has a '*',
-'\', '?', '[', or ']' in its name?  And if it suggests paths, will
-it complete &quot;/pro&quot; to &quot;/proc&quot; (in the root filesystem) rather than to
-&quot;/progress.txt&quot; in the current directory?  (Note that users are
-likely to want to start paths with a leading '/' in non-cone mode,
-for the same reason that .gitignore files often have one.)
-Completing on files or directories might give nasty surprises in
-all these cases.</pre>
+<pre>git sparse-checkout set relative-dir</pre>
 </div>
+<p class="Pp">Should those arguments be transliterated into</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>current/subdirectory/toplevel-dir/*.c</pre>
+</div>
+<p class="Pp">and</p>
+<p class="Pp"></p>
+<div class="Bd-indent">
+<pre>current/subdirectory/relative-dir</pre>
+</div>
+<p class="Pp">before inserting into the sparse-checkout file? The user who typed
+    the first command is probably aware that arguments to set/add are supposed
+    to be patterns in non-cone mode, and probably would not be happy with such a
+    transliteration. However, many gitignore-style patterns are just paths,
+    which might be what the user who typed the second command was thinking, and
+    they&#x2019;d be upset if their argument wasn&#x2019;t transliterated.</p>
+<p class="Pp">Second, what should bash-completion complete on for set/add
+    commands for non-cone users? If it suggests paths, is it exacerbating the
+    problem above? Also, if it suggests paths, what if the user has a file or
+    directory that begins with either a <i>!</i> or <i>#</i> or has a <i>*</i>,
+    <i>\</i>, <i>?</i>, <i>[</i>, or <i>]</i> in its name? And if it suggests
+    paths, will it complete &quot;/pro&quot; to &quot;/proc&quot; (in the root
+    filesystem) rather than to &quot;/progress.txt&quot; in the current
+    directory? (Note that users are likely to want to start paths with a leading
+    <i>/</i> in non-cone mode, for the same reason that .gitignore files often
+    have one.) Completing on files or directories might give nasty surprises in
+    all these cases.</p>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;The excessive flexibility made other extensions
@@ -309,7 +338,7 @@ all these cases.</pre>
     to using cone mode.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; CONE MODE HANDLING</h1>
+<h2 class="Sh">INTERNALS &#x2014; CONE MODE HANDLING</h2>
 <p class="Pp">The &quot;cone mode&quot;, which is the default, lets you specify
     only what directories to include. For any directory specified, all paths
     below that directory will be included, and any paths immediately under
@@ -340,7 +369,7 @@ all these cases.</pre>
     subset of the Full Pattern Set of sparse-checkout.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; FULL PATTERN SET</h1>
+<h2 class="Sh">INTERNALS &#x2014; FULL PATTERN SET</h2>
 <p class="Pp">The full pattern set allows for arbitrary pattern matches and
     complicated inclusion/exclusion rules. These can result in O(N*M) pattern
     matches when updating the index, where N is the number of patterns and M is
@@ -373,7 +402,7 @@ all these cases.</pre>
     used in sparse checkouts.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; CONE PATTERN SET</h1>
+<h2 class="Sh">INTERNALS &#x2014; CONE PATTERN SET</h2>
 <p class="Pp">In cone mode, only directories are accepted, but they are
     translated into the same gitignore-style patterns used in the full pattern
     set. We refer to the particular patterns used in those mode as being of one
@@ -435,7 +464,7 @@ A/B/C</pre>
     reflect the expected cone in the working directory.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">INTERNALS &#x2014; SUBMODULES</h1>
+<h2 class="Sh">INTERNALS &#x2014; SUBMODULES</h2>
 <p class="Pp">If your repository contains one or more submodules, then
     submodules are populated based on interactions with the <b>git</b>
     <b>submodule</b> command. Specifically, <b>git</b> <b>submodule</b>
@@ -464,20 +493,18 @@ A/B/C</pre>
     these restrictions.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
 <p class="Pp"><b>git-read-tree</b>(1) <b>gitignore</b>(5)</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GIT-SPARSE-CHECKOUT(1)</span></div>
 </body>
 </html>

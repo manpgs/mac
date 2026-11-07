@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>OPEN(2)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 2010 Apple Inc.  All rights reserved.
   
@@ -57,29 +63,19 @@
   
        @(#)open.2	8.2 (Berkeley) 11/16/93
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>OPEN(2)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">OPEN(2)</td>
-    <td class="head-vol"><a href=".">System Calls Manual</a></td>
-    <td class="head-rtitle">OPEN(2)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">OPEN(2)</span> <span class="head-vol"><a href=".">System
+  Calls Manual</a></span> <span class="head-rtitle">OPEN(2)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">open</code>, <code class="Nm">openat</code>
-    &#x2014; <span class="Nd">open or create a file for reading or
-    writing</span></p>
+    &#x2014; <span class="Nd" role="doc-subtitle">open or create a file for
+    reading or writing</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
   <a class="In">&lt;fcntl.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">int</var>
@@ -94,7 +90,7 @@
     <var class="Fa" style="white-space: nowrap;">...</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The file name specified by <var class="Fa">path</var> is opened
     for reading and/or writing, as specified by the argument
     <var class="Fa">oflag</var>; the file descriptor is returned to the calling
@@ -106,8 +102,10 @@
     <code class="Fn">openat</code>() require an additional argument
     <var class="Fa">mode_t mode</var>; the file is created with mode
     <var class="Fa">mode</var> as described in
-    <a class="Xr" href="../2/chmod">chmod(2)</a> and modified by the process'
-    umask value (see <a class="Xr" href="../2/umask">umask(2)</a>).</p>
+    <a class="Xr" href="../2/chmod" aria-label="chmod, section 2">chmod(2)</a>
+    and modified by the process' umask value (see
+    <a class="Xr" href="../2/umask" aria-label="umask, section
+  2">umask(2)</a>).</p>
 <p class="Pp" id="openat">The
     <a class="permalink" href="#openat"><code class="Fn">openat</code></a>()
     function is equivalent to the <code class="Fn">open</code>() function except
@@ -147,6 +145,7 @@ O_NOFOLLOW	do not follow symlinks
 O_SYMLINK	allow open of symlinks
 O_EVTONLY	descriptor requested for event notifications only
 O_CLOEXEC	mark as close-on-exec
+O_CLOFORK	mark as close-on-fork
 O_NOFOLLOW_ANY	do not follow symlinks in the entire path
 O_RESOLVE_BENEATH	path resolution must not escape the directory associated with the file descriptor
 O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
@@ -170,11 +169,12 @@ O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
     returns immediately. This flag also has the effect of making all subsequent
     I/O on the open file non-blocking.</p>
 <p class="Pp">When opening a file, a lock with
-    <a class="Xr" href="../2/flock">flock(2)</a> semantics can be obtained by
-    setting <code class="Dv">O_SHLOCK</code> for a shared lock, or
-    <code class="Dv">O_EXLOCK</code> for an exclusive lock. If creating a file
-    with <code class="Dv">O_CREAT</code>, the request for the lock will never
-    fail (provided that the underlying filesystem supports locking).</p>
+    <a class="Xr" href="../2/flock" aria-label="flock, section 2">flock(2)</a>
+    semantics can be obtained by setting <code class="Dv">O_SHLOCK</code> for a
+    shared lock, or <code class="Dv">O_EXLOCK</code> for an exclusive lock. If
+    creating a file with <code class="Dv">O_CREAT</code>, the request for the
+    lock will never fail (provided that the underlying filesystem supports
+    locking).</p>
 <p class="Pp" id="open~4">If <code class="Dv">O_DIRECTORY</code> is used in the
     mask and the target file passed to
     <a class="permalink" href="#open~4"><code class="Fn">open</code></a>() is
@@ -196,7 +196,11 @@ O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
     descriptor to be marked as close-on-exec, setting the
     <code class="Dv">FD_CLOEXEC</code> flag. The state of the file descriptor
     flags can be inspected using the F_GETFD fcntl. See
-    <a class="Xr" href="../2/fcntl">fcntl(2)</a>.</p>
+    <a class="Xr" href="../2/fcntl" aria-label="fcntl, section
+  2">fcntl(2)</a>.</p>
+<p class="Pp">The <code class="Dv">O_CLOFORK</code> flag causes the file
+    descriptor to be marked as close-on-fork, setting the
+    <code class="Dv">FD_CLOFORK</code> flag.</p>
 <p class="Pp" id="open~7">If <code class="Dv">O_NOFOLLOW_ANY</code> is used in
     the mask and any component of the path passed to
     <a class="permalink" href="#open~7"><code class="Fn">open</code></a>() is a
@@ -219,23 +223,25 @@ O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
     which contains it.</p>
 <p class="Pp">The new descriptor is set to remain open across
     <a class="Xr" href="../1/execve">execve</a> system calls; see
-    <a class="Xr" href="../2/close">close(2)</a> and
-    <a class="Xr" href="../2/fcntl">fcntl(2)</a>.</p>
+    <a class="Xr" href="../2/close" aria-label="close, section 2">close(2)</a>
+    and <a class="Xr" href="../2/fcntl" aria-label="fcntl, section
+    2">fcntl(2)</a>.</p>
 <p class="Pp">The system imposes a limit on the number of file descriptors that
     can be held open simultaneously by one process.</p>
 <p class="Pp">A file's metadata can be updated even if the file was opened in
-    read-only mode. <a class="Xr" href="../2/Getdtablesize">Getdtablesize(2)</a>
-    returns the current system limit.</p>
+    read-only mode.
+    <a class="Xr" href="../2/Getdtablesize" aria-label="Getdtablesize, section
+    2">Getdtablesize(2)</a> returns the current system limit.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">If successful, <code class="Fn">open</code>() returns a
     non-negative integer, termed a file descriptor. It returns -1 on failure,
     and sets <var class="Va">errno</var> to indicate the error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp">The named file is opened unless:</p>
 <dl class="Bl-tag">
   <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
@@ -322,12 +328,18 @@ O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
       is specified, the file does not exist, and there are no free inodes on the
       file system on which the file is being created.</dd>
   <dt id="ENOTDIR~3">[<a class="permalink" href="#ENOTDIR~3"><code class="Er">ENOTDIR</code></a>]</dt>
-  <dd>A component of the path prefix is not a directory.</dd>
+  <dd>A component of the path prefix of <var class="Fa">path</var> names an
+      existing file that is neither a directory nor a symbolic link to a
+      directory, or <var class="Fa">path</var> contains at least one
+      non-&lt;slash&gt; character and ends with one or more trailing
+      &lt;slash&gt; characters and the last pathname component names an existing
+      file that is neither a directory nor a symbolic link to a directory.</dd>
   <dt id="EDEADLK">[<a class="permalink" href="#EDEADLK"><code class="Er">EDEADLK</code></a>]</dt>
   <dd>A component of the pathname refers to a &#x201C;dataless&#x201D; directory
       that requires materialization and the I/O policy of the current thread or
       process disallows dataless directory materialization (see
-      <a class="Xr" href="../3/getiopolicy_np">getiopolicy_np(3)</a>).</dd>
+      <a class="Xr" href="../3/getiopolicy_np" aria-label="getiopolicy_np,
+      section 3">getiopolicy_np(3)</a>).</dd>
   <dt id="ENXIO">[<a class="permalink" href="#ENXIO"><code class="Er">ENXIO</code></a>]</dt>
   <dd>The named file is a character-special or block-special file and the device
       associated with this special file does not exist.</dd>
@@ -373,37 +385,38 @@ O_UNIQUE	ensure a file is opened only if it has a single hard link</pre>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="COMPATIBILITY"><a class="permalink" href="#COMPATIBILITY">COMPATIBILITY</a></h1>
+<h2 class="Sh" id="COMPATIBILITY"><a class="permalink" href="#COMPATIBILITY">COMPATIBILITY</a></h2>
 <p class="Pp"><code class="Fn">open</code>() on a terminal device (i.e.,
     /dev/console) will now make that device a controlling terminal for the
     process. Use the O_NOCTTY flag to open a terminal device without changing
     your controlling terminal.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../2/chmod">chmod(2)</a>,
-    <a class="Xr" href="../2/close">close(2)</a>,
-    <a class="Xr" href="../2/dup">dup(2)</a>,
-    <a class="Xr" href="../2/getdtablesize">getdtablesize(2)</a>,
-    <a class="Xr" href="../2/lseek">lseek(2)</a>,
-    <a class="Xr" href="../2/openat_authenticated_np">openat_authenticated_np(2)</a>,
-    <a class="Xr" href="../2/read">read(2)</a>,
-    <a class="Xr" href="../2/umask">umask(2)</a>,
-    <a class="Xr" href="../2/write">write(2)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../2/chmod" aria-label="chmod, section
+    2">chmod(2)</a>, <a class="Xr" href="../2/close" aria-label="close, section
+    2">close(2)</a>, <a class="Xr" href="../2/dup" aria-label="dup, section
+    2">dup(2)</a>,
+    <a class="Xr" href="../2/getdtablesize" aria-label="getdtablesize, section
+    2">getdtablesize(2)</a>, <a class="Xr" href="../2/lseek" aria-label="lseek,
+    section 2">lseek(2)</a>,
+    <a class="Xr" href="../2/openat_authenticated_np" aria-label="openat_authenticated_np,
+    section 2">openat_authenticated_np(2)</a>,
+    <a class="Xr" href="../2/read" aria-label="read, section 2">read(2)</a>,
+    <a class="Xr" href="../2/umask" aria-label="umask, section 2">umask(2)</a>,
+    <a class="Xr" href="../2/write" aria-label="write, section
+  2">write(2)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">An <code class="Fn">open</code>() function call appeared in
     <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>. The
     <code class="Fn">openat</code>() function was introduced in OS X 10.10</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">June 3, 2021</td>
-    <td class="foot-os"><a href="..">BSD 4</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">BSD 4</a></span> <span class="foot-date">June 3,
+  2021</span> <span class="foot-right">OPEN(2)</span></div>
 </body>
 </html>

@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>AUDIT_USER(5)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Copyright (c) 2004 Apple Inc.
    All rights reserved.
@@ -30,50 +36,43 @@
   
    $P4: //depot/projects/trustedbsd/openbsm/man/audit_user.5#14 $
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>AUDIT_USER(5)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">AUDIT_USER(5)</td>
-    <td class="head-vol"><a href=".">File Formats Manual</a></td>
-    <td class="head-rtitle">AUDIT_USER(5)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">AUDIT_USER(5)</span>
+  <span class="head-vol"><a href=".">File Formats Manual</a></span>
+  <span class="head-rtitle">AUDIT_USER(5)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">audit_user</code> &#x2014;
-    <span class="Nd">events to be audited for given users</span></p>
+    <span class="Nd" role="doc-subtitle">events to be audited for given
+    users</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DEPRECATION_NOTICE"><a class="permalink" href="#DEPRECATION_NOTICE">DEPRECATION
-  NOTICE</a></h1>
-<p class="Pp">The <a class="Xr" href="../4/audit">audit(4)</a> subsystem has
-    been deprecated since macOS 11.0, disabled since macOS 14.0, and <b>WILL BE
-    REMOVED</b> in a future version of macOS. Applications that require a
-    security event stream should use the
-    <a class="Xr" href="../7/EndpointSecurity">EndpointSecurity(7)</a> API
-    instead.</p>
+<h2 class="Sh" id="DEPRECATION_NOTICE"><a class="permalink" href="#DEPRECATION_NOTICE">DEPRECATION
+  NOTICE</a></h2>
+<p class="Pp">The <a class="Xr" href="../4/audit" aria-label="audit, section
+    4">audit(4)</a> subsystem has been deprecated since macOS 11.0, disabled
+    since macOS 14.0, and <b>WILL BE REMOVED</b> in a future version of macOS.
+    Applications that require a security event stream should use the
+    <a class="Xr" href="../7/EndpointSecurity" aria-label="EndpointSecurity,
+    section 7">EndpointSecurity(7)</a> API instead.</p>
 <p class="Pp">On this version of macOS, you can re-enable
-    <a class="Xr" href="../4/audit">audit(4)</a> by renaming or copying
+    <a class="Xr" href="../4/audit" aria-label="audit, section 4">audit(4)</a>
+    by renaming or copying
     <span class="Pa">/etc/security/audit_control.example</span> to
     <span class="Pa">/etc/security/audit_control</span>, re-enabling the
     <span class="Pa">system/com.apple.auditd</span> service by running
     <b>launchctl enable system/com.apple.auditd</b> as root, and rebooting.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The <code class="Nm">audit_user</code> file specifies which audit
     event classes are to be audited for the given users. If specified, these
     flags are combined with the system-wide audit flags in the
-    <a class="Xr" href="../5/audit_control">audit_control(5)</a> file to
-    determine which classes of events to audit for that user. These settings
-    take effect when the user logs in.</p>
+    <a class="Xr" href="../5/audit_control" aria-label="audit_control, section
+    5">audit_control(5)</a> file to determine which classes of events to audit
+    for that user. These settings take effect when the user logs in.</p>
 <p class="Pp">Each line maps a user name to a list of classes that should be
     audited and a list of classes that should not be audited. Entries are of the
     form:</p>
@@ -85,8 +84,8 @@
     is a set of event classes that should not be audited. These sets can
     indicate the inclusion or exclusion of multiple classes, and whether to
     audit successful or failed events. See
-    <a class="Xr" href="../5/audit_control">audit_control(5)</a> for more
-    information about audit flags.</p>
+    <a class="Xr" href="../5/audit_control" aria-label="audit_control, section
+    5">audit_control(5)</a> for more information about audit flags.</p>
 <p class="Pp">Example entries in this file are:</p>
 <div class="Bd Pp Bd-indent Li">
 <pre>root:lo,ad:no
@@ -101,8 +100,8 @@ jdoe:-fc,ad:+fw</pre>
     events are never audited.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="IMPLEMENTATION_NOTES"><a class="permalink" href="#IMPLEMENTATION_NOTES">IMPLEMENTATION
-  NOTES</a></h1>
+<h2 class="Sh" id="IMPLEMENTATION_NOTES"><a class="permalink" href="#IMPLEMENTATION_NOTES">IMPLEMENTATION
+  NOTES</a></h2>
 <p class="Pp">Per-user and global audit preselection configuration are evaluated
     at time of login, so users must log out and back in again for audit changes
     relating to preselection to take effect.</p>
@@ -111,37 +110,42 @@ jdoe:-fc,ad:+fw</pre>
     user or group ID. The audit identifier is set as part of the user credential
     context as part of login, and typically does not change as a result of
     running setuid or setgid applications, such as
-    <a class="Xr" href="../1/su">su(1)</a>. This has the advantage that events
-    that occur after running <a class="Xr" href="../1/su">su(1)</a> can be
+    <a class="Xr" href="../1/su" aria-label="su, section 1">su(1)</a>. This has
+    the advantage that events that occur after running
+    <a class="Xr" href="../1/su" aria-label="su, section 1">su(1)</a> can be
     audited to the original authenticated user, as required by CAPP, but may be
     surprising if not expected.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<h2 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h2>
 <dl class="Bl-tag Bl-compact">
   <dt><span class="Pa">/etc/security/audit_user</span></dt>
   <dd style="width: auto;">&#x00A0;</dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../1/login">login(1)</a>,
-    <a class="Xr" href="../1/su">su(1)</a>,
-    <a class="Xr" href="../4/audit">audit(4)</a>,
-    <a class="Xr" href="../5/audit_class">audit_class(5)</a>,
-    <a class="Xr" href="../5/audit_control">audit_control(5)</a>,
-    <a class="Xr" href="../5/audit_event">audit_event(5)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../1/login" aria-label="login, section
+    1">login(1)</a>, <a class="Xr" href="../1/su" aria-label="su, section
+    1">su(1)</a>, <a class="Xr" href="../4/audit" aria-label="audit, section
+    4">audit(4)</a>,
+    <a class="Xr" href="../5/audit_class" aria-label="audit_class, section
+    5">audit_class(5)</a>,
+    <a class="Xr" href="../5/audit_control" aria-label="audit_control, section
+    5">audit_control(5)</a>,
+    <a class="Xr" href="../5/audit_event" aria-label="audit_event, section
+    5">audit_event(5)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">The OpenBSM implementation was created by McAfee Research, the
     security division of McAfee Inc., under contract to Apple Computer Inc. in
     2004. It was subsequently adopted by the TrustedBSD Project as the
     foundation for the OpenBSM distribution.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<h2 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h2>
 <p class="Pp">This software was created by McAfee Research, the security
     research division of McAfee, Inc., under contract to Apple Computer Inc.
     Additional authors include <span class="An">Wayne Salamon</span>,
@@ -149,12 +153,10 @@ jdoe:-fc,ad:+fw</pre>
 <p class="Pp">The Basic Security Module (BSM) interface to audit records and
     audit event stream format were defined by Sun Microsystems.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">January 4, 2008</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">January 4, 2008</span>
+  <span class="foot-right">AUDIT_USER(5)</span></div>
 </body>
 </html>

@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- This is an automatically generated file.  Do not edit.
-   t
-       Title: gitformat-pack
-      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
-   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
-        Date: 2025-07-22
-      Manual: Git Manual
-      Source: Git 2.50.1.428.g0e8243a355
-    Language: English
-   -->
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
   <title>GITFORMAT-PACK(5)</title>
 </head>
+<!-- This is an automatically generated file.  Do not edit.
+   t
+       Title: gitformat-pack
+      Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+   Generator: DocBook XSL Stylesheets v1.79.2 <http://docbook.sf.net/>
+        Date: 2026-04-19
+      Manual: Git Manual
+      Source: Git 2.54.0
+    Language: English
+   -->
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">GITFORMAT-PACK(5)</td>
-    <td class="head-vol"><a href=".">Git Manual</a></td>
-    <td class="head-rtitle">GITFORMAT-PACK(5)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">GITFORMAT-PACK(5)</span>
+  <span class="head-vol"><a href=".">Git Manual</a></span>
+  <span class="head-rtitle">GITFORMAT-PACK(5)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp">gitformat-pack - Git pack format</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <pre>$GIT_DIR/objects/pack/pack-<b>.{pack,idx}</b>
 <b>$GIT_DIR/objects/pack/pack-</b>.rev
 $GIT_DIR/objects/pack/pack-*.mtimes
 $GIT_DIR/objects/pack/multi-pack-index</pre>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The Git pack format is how Git stores most of its primary
     repository data. Over the lifetime of a repository, loose objects (if any)
     and smaller packs are consolidated into larger pack(s). See <b>git-gc</b>(1)
@@ -47,15 +44,19 @@ $GIT_DIR/objects/pack/multi-pack-index</pre>
     in the case of <b>gitformat-bundle</b>(5).</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CHECKSUMS_AND_OBJECT_IDS"><a class="permalink" href="#CHECKSUMS_AND_OBJECT_IDS">CHECKSUMS
-  AND OBJECT IDS</a></h1>
+<h2 class="Sh" id="CHECKSUMS_AND_OBJECT_IDS"><a class="permalink" href="#CHECKSUMS_AND_OBJECT_IDS">CHECKSUMS
+  AND OBJECT IDS</a></h2>
 <p class="Pp">In a repository using the traditional SHA-1, pack checksums, index
     checksums, and object IDs (object names) mentioned below are all computed
     using SHA-1. Similarly, in SHA-256 repositories, these values are computed
     using SHA-256.</p>
+<p class="Pp">CRC32 checksums are always computed over the entire packed object,
+    including the header (n-byte type and length); the base object name or
+    offset, if any; and the entire compressed object. The CRC32 algorithm used
+    is that of zlib.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">PACK-*.PACK FILES HAVE THE FOLLOWING FORMAT:</h1>
+<h2 class="Sh">PACK-*.PACK FILES HAVE THE FOLLOWING FORMAT:</h2>
 <div class="Bd-indent">&#x2022;A header appears at the beginning and consists of
   the following:
 <p class="Pp"></p>
@@ -109,8 +110,8 @@ length format and is not constrained to 32-bit or anything.</pre>
 <div class="Bd-indent">&#x2022;The trailer records a pack checksum of all of the
   above.</div>
 <section class="Ss">
-<h2 class="Ss" id="Object_types"><a class="permalink" href="#Object_types">Object
-  types</a></h2>
+<h3 class="Ss" id="Object_types"><a class="permalink" href="#Object_types">Object
+  types</a></h3>
 <p class="Pp">Valid object types are:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;OBJ_COMMIT (1)</div>
@@ -127,8 +128,18 @@ length format and is not constrained to 32-bit or anything.</pre>
 <p class="Pp">Type 5 is reserved for future expansion. Type 0 is invalid.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Size_encoding"><a class="permalink" href="#Size_encoding">Size
-  encoding</a></h2>
+<h3 class="Ss" id="Object_encoding"><a class="permalink" href="#Object_encoding">Object
+  encoding</a></h3>
+<p class="Pp">Unlike loose objects, packed objects do not have a prefix
+    containing the type, size, and a NUL byte. These are not necessary because
+    they can be determined by the n-byte type and length that prefixes the data
+    and so they are omitted from the compressed and deltified data.</p>
+<p class="Pp">The computation of the object ID still uses this prefix by
+    reconstructing it from the type and length as needed.</p>
+</section>
+<section class="Ss">
+<h3 class="Ss" id="Size_encoding"><a class="permalink" href="#Size_encoding">Size
+  encoding</a></h3>
 <p class="Pp">This document uses the following &quot;size encoding&quot; of
     non-negative integers: From each byte, the seven least significant bits are
     used to form the resulting integer. As long as the most significant bit is
@@ -137,10 +148,14 @@ length format and is not constrained to 32-bit or anything.</pre>
   significant.</p>
 <p class="Pp">This size encoding should not be confused with the &quot;offset
     encoding&quot;, which is also used in this document.</p>
+<p class="Pp">When encoding the size of an undeltified object in a pack, the
+    size is that of the uncompressed raw object. For deltified objects, it is
+    the size of the uncompressed delta. The base object name or offset is not
+    included in the size computation.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Deltified_representation"><a class="permalink" href="#Deltified_representation">Deltified
-  representation</a></h2>
+<h3 class="Ss" id="Deltified_representation"><a class="permalink" href="#Deltified_representation">Deltified
+  representation</a></h3>
 <p class="Pp">Conceptually there are only four object types: commit, tree, tag
     and blob. However to save space, an object could be stored as a
     &quot;delta&quot; of another &quot;base&quot; object. These representations
@@ -230,8 +245,8 @@ length format and is not constrained to 32-bit or anything.</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ORIGINAL_(VERSION_1)_PACK"><a class="permalink" href="#ORIGINAL_(VERSION_1)_PACK">ORIGINAL
-  (VERSION 1) PACK-*.IDX FILES HAVE THE FOLLOWING FORMAT:</a></h1>
+<h2 class="Sh" id="ORIGINAL_(VERSION_1)_PACK-*"><a class="permalink" href="#ORIGINAL_(VERSION_1)_PACK-*">ORIGINAL
+  (VERSION 1) PACK-*.IDX FILES HAVE THE FOLLOWING FORMAT:</a></h2>
 <div class="Bd-indent">&#x2022;The header consists of 256 4-byte network byte
   order integers. N-th entry of this table records the number of objects in the
   corresponding pack, the first byte of whose object name is less than or equal
@@ -334,8 +349,8 @@ to the result.</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="VERSION_2_PACK"><a class="permalink" href="#VERSION_2_PACK">VERSION
-  2 PACK-*.IDX FILES SUPPORT PACKS LARGER THAN 4 GIB, AND</a></h1>
+<h2 class="Sh" id="VERSION_2_PACK-*"><a class="permalink" href="#VERSION_2_PACK-*">VERSION
+  2 PACK-*.IDX FILES SUPPORT PACKS LARGER THAN 4 GIB, AND</a></h2>
 <div class="Bd-indent">
 <pre>have some other reorganizations.  They have the format:</pre>
 </div>
@@ -377,7 +392,7 @@ corresponding packfile.</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh">PACK-*.REV FILES HAVE THE FORMAT:</h1>
+<h2 class="Sh">PACK-*.REV FILES HAVE THE FORMAT:</h2>
 <div class="Bd-indent">&#x2022;A 4-byte magic number <i>0x52494458</i>
   (<i>RIDX</i>).</div>
 <p class="Pp"></p>
@@ -403,7 +418,7 @@ corresponding packfile.</pre>
 <p class="Pp">All 4-byte numbers are in network order.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh">PACK-*.MTIMES FILES HAVE THE FORMAT:</h1>
+<h2 class="Sh">PACK-*.MTIMES FILES HAVE THE FORMAT:</h2>
 <p class="Pp">All 4-byte numbers are in network byte order.</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;A 4-byte magic number <i>0x4d544d45</i>
@@ -424,7 +439,8 @@ corresponding packfile.</pre>
   according to the specified hash function).</div>
 </section>
 <section class="Sh">
-<h1 class="Sh">MULTI-PACK-INDEX (MIDX) FILES HAVE THE FOLLOWING FORMAT:</h1>
+<h2 class="Sh" id="MULTI-PACK-INDEX_(MIDX)_FILES_HAVE_THE_FOLLOWING_FORMAT:"><a class="permalink" href="#MULTI-PACK-INDEX_(MIDX)_FILES_HAVE_THE_FOLLOWING_FORMAT:">MULTI-PACK-INDEX
+  (MIDX) FILES HAVE THE FOLLOWING FORMAT:</a></h2>
 <p class="Pp">The multi-pack-index files refer to multiple pack-files and loose
     objects.</p>
 <p class="Pp">In order to allow extensions that add extra data to the MIDX, we
@@ -442,7 +458,9 @@ corresponding packfile.</pre>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <pre>1-byte version number:
-    Git only writes or recognizes version 1.</pre>
+    Git writes the version specified by the &quot;midx.version&quot;
+    configuration option, which defaults to 2. It recognizes
+    both versions 1 and 2.</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
@@ -495,7 +513,9 @@ otherwise specified.</pre>
     strings. There is no extra padding between the filenames,
     and they are listed in lexicographic order. The chunk itself
     is padded at the end with between 0 and 3 NUL bytes to make the
-    chunk size a multiple of 4 bytes.</pre>
+    chunk size a multiple of 4 bytes. Version 1 MIDXs are required to
+    list their packs in lexicographic order, but version 2 MIDXs may
+    list their packs in any arbitrary order.</pre>
 </div>
 <p class="Pp"></p>
 <div class="Bd-indent">
@@ -555,7 +575,8 @@ otherwise specified.</pre>
 </div>
 </section>
 <section class="Sh">
-<h1 class="Sh">MULTI-PACK-INDEX REVERSE INDEXES</h1>
+<h2 class="Sh" id="MULTI-PACK-INDEX_REVERSE_INDEXES"><a class="permalink" href="#MULTI-PACK-INDEX_REVERSE_INDEXES">MULTI-PACK-INDEX
+  REVERSE INDEXES</a></h2>
 <p class="Pp">Similar to the pack-based reverse index, the multi-pack index can
     also be used to generate a reverse index.</p>
 <p class="Pp">Instead of mapping between offset, pack-, and index position, this
@@ -630,7 +651,7 @@ otherwise specified.</pre>
 <p class="Pp">The MIDX&#x2019;s reverse index is stored in the optional
     <i>RIDX</i> chunk within the MIDX itself.</p>
 <section class="Ss">
-<h2 class="Ss"><b>BTMP</b> chunk</h2>
+<h3 class="Ss"><b>BTMP</b> chunk</h3>
 <p class="Pp">The Bitmapped Packfiles (<b>BTMP</b>) chunk encodes additional
     information about the objects in the multi-pack index&#x2019;s reachability
     bitmap. Recall that objects from the MIDX are arranged in
@@ -704,14 +725,14 @@ otherwise specified.</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="CRUFT_PACKS"><a class="permalink" href="#CRUFT_PACKS">CRUFT
-  PACKS</a></h1>
+<h2 class="Sh" id="CRUFT_PACKS"><a class="permalink" href="#CRUFT_PACKS">CRUFT
+  PACKS</a></h2>
 <p class="Pp">The cruft packs feature offer an alternative to Git&#x2019;s
     traditional mechanism of removing unreachable objects. This document
     provides an overview of Git&#x2019;s pruning mechanism, and how a cruft pack
     can be used instead to accomplish the same.</p>
 <section class="Ss">
-<h2 class="Ss" id="Background"><a class="permalink" href="#Background">Background</a></h2>
+<h3 class="Ss" id="Background"><a class="permalink" href="#Background">Background</a></h3>
 <p class="Pp">To remove unreachable objects from your repository, Git offers
     <b>git</b> <b>repack</b> <b>-Ad</b> (see <b>git-repack</b>(1)). Quoting from
     the documentation:</p>
@@ -744,8 +765,8 @@ pruned according to normal expiry rules with the next 'git gc' invocation.</pre>
     not store them in delta chains.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Cruft_packs"><a class="permalink" href="#Cruft_packs">Cruft
-  packs</a></h2>
+<h3 class="Ss" id="Cruft_packs"><a class="permalink" href="#Cruft_packs">Cruft
+  packs</a></h3>
 <p class="Pp">A cruft pack eliminates the need for storing unreachable objects
     in a loose state by including the per-object mtimes in a separate file
     alongside a single pack containing all loose objects.</p>
@@ -784,7 +805,7 @@ pruned according to normal expiry rules with the next 'git gc' invocation.</pre>
     expired unreachable objects.</p>
 </section>
 <section class="Ss">
-<h2 class="Ss" id="Alternatives"><a class="permalink" href="#Alternatives">Alternatives</a></h2>
+<h3 class="Ss" id="Alternatives"><a class="permalink" href="#Alternatives">Alternatives</a></h3>
 <p class="Pp">Notable alternatives to this design include:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">&#x2022;The location of the per-object mtime data.</div>
@@ -796,15 +817,13 @@ pruned according to normal expiry rules with the next 'git gc' invocation.</pre>
 </section>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h1>
+<h2 class="Sh" id="GIT"><a class="permalink" href="#GIT">GIT</a></h2>
 <p class="Pp">Part of the <b>git</b>(1) suite</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">2025-07-22</td>
-    <td class="foot-os"><a href="..">Git 2.50.1.428.g0e8243</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">Git 2.54.0</a></span>
+  <span class="foot-date">2026-04-19</span>
+  <span class="foot-right">GITFORMAT-PACK(5)</span></div>
 </body>
 </html>

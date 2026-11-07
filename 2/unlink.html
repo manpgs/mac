@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>UNLINK(2)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
   	$NetBSD: unlink.2,v 1.7 1995/02/27 12:39:13 cgd Exp $
   
@@ -36,28 +42,19 @@
   
        @(#)unlink.2	8.1 (Berkeley) 6/4/93
    -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>UNLINK(2)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">UNLINK(2)</td>
-    <td class="head-vol"><a href=".">System Calls Manual</a></td>
-    <td class="head-rtitle">UNLINK(2)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">UNLINK(2)</span> <span class="head-vol"><a href=".">System
+  Calls Manual</a></span> <span class="head-rtitle">UNLINK(2)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">unlink</code>, <code class="Nm">unlinkat</code>
-    &#x2014; <span class="Nd">remove directory entry</span></p>
+    &#x2014; <span class="Nd" role="doc-subtitle">remove directory
+  entry</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <p class="Pp"><code class="In">#include
     <a class="In">&lt;unistd.h&gt;</a></code></p>
 <p class="Pp"><var class="Ft">int</var>
@@ -71,7 +68,7 @@
   flag</var>);</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp">The
     <a class="permalink" href="#unlink"><code class="Fn" id="unlink">unlink</code></a>()
     function removes the link named by <var class="Fa">path</var> from its
@@ -127,14 +124,14 @@
     <code class="Dv">AT_REMOVEDIR</code> bit is set in flag.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
-  VALUES</a></h1>
+<h2 class="Sh" id="RETURN_VALUES"><a class="permalink" href="#RETURN_VALUES">RETURN
+  VALUES</a></h2>
 <p class="Pp">Upon successful completion, a value of 0 is returned. Otherwise, a
     value of -1 is returned and <var class="Va">errno</var> is set to indicate
     the error.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h1>
+<h2 class="Sh" id="ERRORS"><a class="permalink" href="#ERRORS">ERRORS</a></h2>
 <p class="Pp">The <code class="Fn">unlink</code>() system call will fail if:</p>
 <dl class="Bl-tag">
   <dt id="EACCES">[<a class="permalink" href="#EACCES"><code class="Er">EACCES</code></a>]</dt>
@@ -170,7 +167,12 @@
   <dt id="ENOENT">[<a class="permalink" href="#ENOENT"><code class="Er">ENOENT</code></a>]</dt>
   <dd>The named file does not exist.</dd>
   <dt id="ENOTDIR">[<a class="permalink" href="#ENOTDIR"><code class="Er">ENOTDIR</code></a>]</dt>
-  <dd>A component of the path prefix is not a directory.</dd>
+  <dd>A component of the path prefix of <var class="Fa">path</var> names an
+      existing file that is neither a directory nor a symbolic link to a
+      directory, or <var class="Fa">path</var> contains at least one
+      non-&lt;slash&gt; character and ends with one or more trailing
+      &lt;slash&gt; characters and the last pathname component names an existing
+      file that is neither a directory nor a symbolic link to a directory.</dd>
   <dt id="EPERM">[<a class="permalink" href="#EPERM"><code class="Er">EPERM</code></a>]</dt>
   <dd>The named file is a directory and the effective user ID of the process is
       not the super-user.</dd>
@@ -202,6 +204,11 @@
       <var class="Fa">path</var> does not name a directory.</dd>
   <dt id="EINVAL">[<a class="permalink" href="#EINVAL"><code class="Er">EINVAL</code></a>]</dt>
   <dd>The value of the <var class="Fa">flag</var> argument is not valid.</dd>
+  <dt id="EINVAL~2">[<a class="permalink" href="#EINVAL~2"><code class="Er">EINVAL</code></a>]</dt>
+  <dd>The <var class="Fa">flag</var> parameter has the
+      <code class="Dv">AT_REMOVEDIR</code> bit set and
+      <var class="Fa">path</var> names the current directory or the parent
+      directory.</dd>
   <dt id="ENOTDIR~3">[<a class="permalink" href="#ENOTDIR~3"><code class="Er">ENOTDIR</code></a>]</dt>
   <dd>The <var class="Fa">path</var> argument is not an absolute path and
       <var class="Fa">fd</var> is neither <code class="Dv">AT_FDCWD</code> nor a
@@ -221,30 +228,28 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../2/close">close(2)</a>,
-    <a class="Xr" href="../2/link">link(2)</a>,
-    <a class="Xr" href="../2/rmdir">rmdir(2)</a>,
-    <a class="Xr" href="../7/symlink">symlink(7)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../2/close" aria-label="close, section
+    2">close(2)</a>, <a class="Xr" href="../2/link" aria-label="link, section
+    2">link(2)</a>, <a class="Xr" href="../2/rmdir" aria-label="rmdir, section
+    2">rmdir(2)</a>, <a class="Xr" href="../7/symlink" aria-label="symlink,
+    section 7">symlink(7)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h1>
+<h2 class="Sh" id="STANDARDS"><a class="permalink" href="#STANDARDS">STANDARDS</a></h2>
 <p class="Pp">The <code class="Fn">unlinkat</code>() system call is expected to
     conform to POSIX.1-2008 .</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<h2 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h2>
 <p class="Pp">An <code class="Fn">unlink</code>() function call appeared in
     <span class="Ux">Version&#x00A0;6 AT&amp;T UNIX</span>. The
     <code class="Fn">unlinkat</code>() system call appeared in OS X 10.10</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">June 4, 1993</td>
-    <td class="foot-os"><a href="..">BSD 4</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">BSD 4</a></span> <span class="foot-date">June 4,
+  1993</span> <span class="foot-right">UNLINK(2)</span></div>
 </body>
 </html>

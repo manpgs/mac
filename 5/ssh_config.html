@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
+  <title>SSH_CONFIG(5)</title>
+</head>
 <!-- This is an automatically generated file.  Do not edit.
    Author: Tatu Ylonen <ylo@cs.hut.fi>
    Copyright (c) 1995 Tatu Ylonen <ylo@cs.hut.fi>, Espoo, Finland
@@ -35,32 +41,25 @@
    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
    THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
-   $OpenBSD: ssh_config.5,v 1.420 2025/10/04 21:41:35 naddy Exp $
+   $OpenBSD: ssh_config.5,v 1.428 2026/07/11 11:15:03 naddy Exp $
  -->
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="../style.css" type="text/css" media="all"/>
-  <title>SSH_CONFIG(5)</title>
-</head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">SSH_CONFIG(5)</td>
-    <td class="head-vol"><a href=".">File Formats Manual</a></td>
-    <td class="head-rtitle">SSH_CONFIG(5)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">SSH_CONFIG(5)</span>
+  <span class="head-vol"><a href=".">File Formats Manual</a></span>
+  <span class="head-rtitle">SSH_CONFIG(5)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">ssh_config</code> &#x2014;
-    <span class="Nd">OpenSSH client configuration file</span></p>
+    <span class="Nd" role="doc-subtitle">OpenSSH client configuration
+    file</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp"><a class="Xr" href="../1/ssh">ssh(1)</a> obtains configuration
-    data from the following sources in the following order:</p>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
+<p class="Pp"><a class="Xr" href="../1/ssh" aria-label="ssh, section
+    1">ssh(1)</a> obtains configuration data from the following sources in the
+    following order:</p>
 <p class="Pp"></p>
 <ol class="Bl-enum Bd-indent Bl-compact">
   <li>command-line options</li>
@@ -68,25 +67,28 @@
   <li>system-wide configuration file
       (<span class="Pa">/etc/ssh/ssh_config</span>)</li>
 </ol>
-<p class="Pp">Unless noted otherwise, for each parameter, the first obtained
-    value will be used. The configuration files contain sections separated by
-    <code class="Cm">Host</code> specifications, and that section is only
-    applied for hosts that match one of the patterns given in the specification.
-    The matched host name is usually the one given on the command line (see the
-    <code class="Cm">CanonicalizeHostname</code> option for exceptions).</p>
-<p class="Pp">Since the first obtained value for each parameter is used, more
+<p class="Pp">Unless noted otherwise, for each configuration directive, the
+    first specified value will be used.</p>
+<p class="Pp">The configuration files may contain sections separated by
+    conditional <code class="Cm">Host</code> or <code class="Cm">Match</code>
+    directives. Configuration in these sections is only applied if the
+    conditional directive that started the section matches.</p>
+<p class="Pp">Since the first obtained value for each directive is used, more
     host-specific declarations should be given near the beginning of the file,
     and general defaults at the end.</p>
-<p class="Pp">The file contains keyword-argument pairs, one per line. Lines
+<p class="Pp">The file contains directive/values pairs, one per line. Lines
     starting with &#x2018;<code class="Li">#</code>&#x2019; and empty lines are
-    interpreted as comments. Arguments may optionally be enclosed in double
-    quotes (&quot;) in order to represent arguments containing spaces.
-    Configuration options may be separated by whitespace or optional whitespace
-    and exactly one &#x2018;<code class="Li">=</code>&#x2019;; the latter format
-    is useful to avoid the need to quote whitespace when specifying
-    configuration options using the <code class="Nm">ssh</code>,
-    <code class="Nm">scp</code>, and <code class="Nm">sftp</code>
-    <code class="Fl">-o</code> option.</p>
+    interpreted as comments. &#x2018;<code class="Li">#</code>&#x2019; outside
+    of a quoted string may be used to add a comment to the end of a line.
+    Whitespace at the beginning or end of lines is ignored. Values may
+    optionally be enclosed in double quotes (&quot;) in order to represent
+    arguments containing spaces.</p>
+<p class="Pp">Configuration directives are separated from their values by
+    whitespace or exactly one &#x2018;<code class="Li">=</code>&#x2019;
+    character (which may be surrounded by whitespace); the latter format is
+    useful to avoid the need to quote whitespace when specifying configuration
+    options using the <code class="Nm">ssh</code>, <code class="Nm">scp</code>,
+    and <code class="Nm">sftp</code> <code class="Fl">-o</code> option.</p>
 <p class="Pp">The possible keywords and their meanings are as follows (note that
     keywords are case-insensitive and arguments are case-sensitive):</p>
 <dl class="Bl-tag">
@@ -165,53 +167,75 @@
         hostname as it was specified on the command-line.</p>
     <p class="Pp">The <code class="Cm">tagged</code> keyword matches a tag name
         specified by a prior <code class="Cm">Tag</code> directive or on the
-        <a class="Xr" href="../1/ssh">ssh(1)</a> command-line using the
-        <code class="Fl">-P</code> flag. The <code class="Cm">command</code>
-        keyword matches the remote command that has been requested, or the
-        subsystem name that is being invoked (e.g. &quot;sftp&quot; for an SFTP
-        session). The empty string will match the case where a command or tag
-        has not been specified, i.e. &#x2018;Match tag &quot;&quot;&#x2019;. The
-        <code class="Cm">version</code> keyword matches against the version
-        string of <a class="Xr" href="../1/ssh">ssh(1)</a>, for example
-        &#x201C;OpenSSH_10.0&#x201D;.</p>
+        <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+        command-line using the <code class="Fl">-P</code> flag. The
+        <code class="Cm">command</code> keyword matches the remote command that
+        has been requested, or the subsystem name that is being invoked (e.g.
+        &quot;sftp&quot; for an SFTP session). The empty string will match the
+        case where a command or tag has not been specified, i.e. &#x2018;Match
+        tag &quot;&quot;&#x2019;. The <code class="Cm">version</code> keyword
+        matches against the version string of
+        <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>,
+        for example &#x201C;OpenSSH_10.0&#x201D;.</p>
     <p class="Pp">The <code class="Cm">user</code> keyword matches against the
         target username on the remote host. The
         <code class="Cm">localuser</code> keyword matches against the name of
-        the local user running <a class="Xr" href="../1/ssh">ssh(1)</a> (this
-        keyword may be useful in system-wide <code class="Nm">ssh_config</code>
-        files).</p>
+        the local user running <a class="Xr" href="../1/ssh" aria-label="ssh,
+        section 1">ssh(1)</a> (this keyword may be useful in system-wide
+        <code class="Nm">ssh_config</code> files).</p>
     <p class="Pp">Finally, the <code class="Cm">sessiontype</code> keyword
         matches the requested session type, which may be one of
         <code class="Cm">shell</code> for interactive sessions,
         <code class="Cm">exec</code> for command execution sessions,
         <code class="Cm">subsystem</code> for subsystem invocations such as
-        <a class="Xr" href="../1/sftp">sftp(1)</a>, or
-        <code class="Cm">none</code> for transport-only sessions, such as when
-        <a class="Xr" href="../1/ssh">ssh(1)</a> is started with the
-        <code class="Fl">-N</code> flag.</p>
+        <a class="Xr" href="../1/sftp" aria-label="sftp, section 1">sftp(1)</a>,
+        or <code class="Cm">none</code> for transport-only sessions, such as
+        when <a class="Xr" href="../1/ssh" aria-label="ssh, section
+        1">ssh(1)</a> is started with the <code class="Fl">-N</code> flag.</p>
   </dd>
+  <dt id="Include"><a class="permalink" href="#Include"><code class="Cm">Include</code></a></dt>
+  <dd>Include the specified configuration file(s). Multiple pathnames may be
+      specified and each pathname may contain
+      <a class="Xr" href="../7/glob" aria-label="glob, section 7">glob(7)</a>
+      wildcards, tokens as described in the
+      <a class="Sx" href="#TOKENS">TOKENS</a> section, environment variables as
+      described in the <a class="Sx" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
+      VARIABLES</a> section and, for user configurations, shell-like
+      &#x2018;~&#x2019; references to user home directories. Wildcards will be
+      expanded and processed in lexical order. Files without absolute paths are
+      assumed to be in <span class="Pa">~/.ssh</span> if included in a user
+      configuration file or <span class="Pa">/etc/ssh</span> if included from
+      the system configuration file. <code class="Cm">Include</code> directive
+      may appear inside a <code class="Cm">Match</code> or
+      <code class="Cm">Host</code> block to perform conditional inclusion.</dd>
   <dt id="AddKeysToAgent"><a class="permalink" href="#AddKeysToAgent"><code class="Cm">AddKeysToAgent</code></a></dt>
   <dd>Specifies whether keys should be automatically added to a running
-      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a>. If this option is
-      set to <code class="Cm">yes</code> and a key is loaded from a file, the
-      key and its passphrase are added to the agent with the default lifetime,
-      as if by <a class="Xr" href="../1/ssh-add">ssh-add(1)</a>. If this option
-      is set to <code class="Cm">ask</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will require confirmation using
-      the <code class="Ev">SSH_ASKPASS</code> program before adding a key (see
-      <a class="Xr" href="../1/ssh-add">ssh-add(1)</a> for details). If this
-      option is set to <code class="Cm">confirm</code>, each use of the key must
-      be confirmed, as if the <code class="Fl">-c</code> option was specified to
-      <a class="Xr" href="../1/ssh-add">ssh-add(1)</a>. If this option is set to
-      <code class="Cm">no</code>, no keys are added to the agent. Alternately,
-      this option may be specified as a time interval using the format described
-      in the <a class="Sx" href="#TIME_FORMATS">TIME FORMATS</a> section of
-      <a class="Xr" href="../5/sshd_config">sshd_config(5)</a> to specify the
-      key's lifetime in <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a>,
-      after which it will automatically be removed. The argument must be
-      <code class="Cm">no</code> (the default), <code class="Cm">yes</code>,
-      <code class="Cm">confirm</code> (optionally followed by a time interval),
-      <code class="Cm">ask</code> or a time interval.</dd>
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a>. If this option is set to <code class="Cm">yes</code>
+      and a key is loaded from a file, the key and its passphrase are added to
+      the agent with the default lifetime, as if by
+      <a class="Xr" href="../1/ssh-add" aria-label="ssh-add, section
+      1">ssh-add(1)</a>. If this option is set to <code class="Cm">ask</code>,
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      require confirmation using the <code class="Ev">SSH_ASKPASS</code> program
+      before adding a key (see
+      <a class="Xr" href="../1/ssh-add" aria-label="ssh-add, section
+      1">ssh-add(1)</a> for details). If this option is set to
+      <code class="Cm">confirm</code>, each use of the key must be confirmed, as
+      if the <code class="Fl">-c</code> option was specified to
+      <a class="Xr" href="../1/ssh-add" aria-label="ssh-add, section
+      1">ssh-add(1)</a>. If this option is set to <code class="Cm">no</code>, no
+      keys are added to the agent. Alternately, this option may be specified as
+      a time interval using the format described in the
+      <a class="Sx" href="#TIME_FORMATS">TIME FORMATS</a> section of
+      <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+      5">sshd_config(5)</a> to specify the key's lifetime in
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a>, after which it will automatically be removed. The
+      argument must be <code class="Cm">no</code> (the default),
+      <code class="Cm">yes</code>, <code class="Cm">confirm</code> (optionally
+      followed by a time interval), <code class="Cm">ask</code> or a time
+      interval.</dd>
   <dt id="AddressFamily"><a class="permalink" href="#AddressFamily"><code class="Cm">AddressFamily</code></a></dt>
   <dd>Specifies which address family to use when connecting. Valid arguments are
       <code class="Cm">any</code> (the default), <code class="Cm">inet</code>
@@ -220,9 +244,9 @@
   <dd>If set to <code class="Cm">yes</code>, user interaction such as password
       prompts and host key confirmation requests will be disabled. This option
       is useful in scripts and other batch jobs where no user is present to
-      interact with <a class="Xr" href="../1/ssh">ssh(1)</a>. The argument must
-      be <code class="Cm">yes</code> or <code class="Cm">no</code> (the
-      default).</dd>
+      interact with <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a>. The argument must be <code class="Cm">yes</code> or
+      <code class="Cm">no</code> (the default).</dd>
   <dt id="BindAddress"><a class="permalink" href="#BindAddress"><code class="Cm">BindAddress</code></a></dt>
   <dd>Use the specified address on the local machine as the source address of
       the connection. Only useful on systems with more than one address.</dd>
@@ -238,9 +262,9 @@
       fails. The default, <code class="Cm">yes</code>, will attempt to look up
       the unqualified hostname using the system resolver's search rules. A value
       of <code class="Cm">no</code> will cause
-      <a class="Xr" href="../1/ssh">ssh(1)</a> to fail instantly if
-      <code class="Cm">CanonicalizeHostname</code> is enabled and the target
-      hostname cannot be found in any of the domains specified by
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> to
+      fail instantly if <code class="Cm">CanonicalizeHostname</code> is enabled
+      and the target hostname cannot be found in any of the domains specified by
       <code class="Cm">CanonicalDomains</code>.</dd>
   <dt id="CanonicalizeHostname"><a class="permalink" href="#CanonicalizeHostname"><code class="Cm">CanonicalizeHostname</code></a></dt>
   <dd>Controls whether explicit hostname canonicalization is performed. The
@@ -248,9 +272,9 @@
       and let the system resolver handle all hostname lookups. If set to
       <code class="Cm">yes</code> then, for connections that do not use a
       <code class="Cm">ProxyCommand</code> or <code class="Cm">ProxyJump</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will attempt to canonicalize the
-      hostname specified on the command line using the
-      <code class="Cm">CanonicalDomains</code> suffixes and
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      attempt to canonicalize the hostname specified on the command line using
+      the <code class="Cm">CanonicalDomains</code> suffixes and
       <code class="Cm">CanonicalizePermittedCNAMEs</code> rules. If
       <code class="Cm">CanonicalizeHostname</code> is set to
       <code class="Cm">always</code>, then canonicalization is applied to
@@ -290,7 +314,8 @@
 ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256</pre>
+rsa-sha2-512,rsa-sha2-256,
+ssh-mldsa44-ed25519@openssh.com</pre>
     </div>
     <p class="Pp">If the specified list begins with a &#x2018;+&#x2019;
         character, then the specified algorithms will be appended to the default
@@ -298,17 +323,18 @@ rsa-sha2-512,rsa-sha2-256</pre>
         &#x2018;-&#x2019; character, then the specified algorithms (including
         wildcards) will be removed from the default set instead of replacing
         them.</p>
-    <p class="Pp"><a class="Xr" href="../1/ssh">ssh(1)</a> will not accept host
-        certificates signed using algorithms other than those specified.</p>
+    <p class="Pp"><a class="Xr" href="../1/ssh" aria-label="ssh, section
+        1">ssh(1)</a> will not accept host certificates signed using algorithms
+        other than those specified.</p>
   </dd>
   <dt id="CertificateFile"><a class="permalink" href="#CertificateFile"><code class="Cm">CertificateFile</code></a></dt>
   <dd>Specifies a file from which the user's certificate is read. A
       corresponding private key must be provided separately in order to use this
       certificate either from an <code class="Cm">IdentityFile</code> directive
       or <code class="Fl">-i</code> flag to
-      <a class="Xr" href="../1/ssh">ssh(1)</a>, via
-      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a>, or via a
-      <code class="Cm">PKCS11Provider</code> or
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>, via
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a>, or via a <code class="Cm">PKCS11Provider</code> or
       <code class="Cm">SecurityKeyProvider</code>.
     <p class="Pp">Arguments to <code class="Cm">CertificateFile</code> may use
         the tilde syntax to refer to a user's home directory, the tokens
@@ -322,7 +348,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
         the list of certificates used for authentication.</p>
   </dd>
   <dt id="ChannelTimeout"><a class="permalink" href="#ChannelTimeout"><code class="Cm">ChannelTimeout</code></a></dt>
-  <dd>Specifies whether and how quickly <a class="Xr" href="../1/ssh">ssh(1)</a>
+  <dd>Specifies whether and how quickly
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
       should close inactive channels. Timeouts are specified as one or more
       &#x201C;type=interval&#x201D; pairs separated by whitespace, where the
       &#x201C;type&#x201D; must be the special keyword &#x201C;global&#x201D; or
@@ -343,23 +370,27 @@ rsa-sha2-512,rsa-sha2-256</pre>
     <dl class="Bl-tag">
       <dt id="agent-connection"><a class="permalink" href="#agent-connection"><code class="Cm">agent-connection</code></a></dt>
       <dd>Open connections to
-          <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a>.</dd>
+          <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+          1">ssh-agent(1)</a>.</dd>
       <dt id="direct-tcpip"><a class="permalink" href="#direct-tcpip"><code class="Cm">direct-tcpip</code></a>,
         <code class="Cm">direct-streamlocal@openssh.com</code></dt>
       <dd>Open TCP or Unix socket (respectively) connections that have been
-          established from an <a class="Xr" href="../1/ssh">ssh(1)</a> local
-          forwarding, i.e. <code class="Cm">LocalForward</code> or
+          established from an <a class="Xr" href="../1/ssh" aria-label="ssh,
+          section 1">ssh(1)</a> local forwarding, i.e.
+          <code class="Cm">LocalForward</code> or
           <code class="Cm">DynamicForward</code>.</dd>
       <dt id="forwarded-tcpip"><a class="permalink" href="#forwarded-tcpip"><code class="Cm">forwarded-tcpip</code></a>,
         <code class="Cm">forwarded-streamlocal@openssh.com</code></dt>
       <dd>Open TCP or Unix socket (respectively) connections that have been
-          established to an <a class="Xr" href="../8/sshd">sshd(8)</a> listening
-          on behalf of an <a class="Xr" href="../1/ssh">ssh(1)</a> remote
-          forwarding, i.e. <code class="Cm">RemoteForward</code>.</dd>
+          established to an <a class="Xr" href="../8/sshd" aria-label="sshd,
+          section 8">sshd(8)</a> listening on behalf of an
+          <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+          remote forwarding, i.e. <code class="Cm">RemoteForward</code>.</dd>
       <dt id="session"><a class="permalink" href="#session"><code class="Cm">session</code></a></dt>
       <dd>The interactive main session, including shell session, command
-          execution, <a class="Xr" href="../1/scp">scp(1)</a>,
-          <a class="Xr" href="../1/sftp">sftp(1)</a>, etc.</dd>
+          execution, <a class="Xr" href="../1/scp" aria-label="scp, section
+          1">scp(1)</a>, <a class="Xr" href="../1/sftp" aria-label="sftp,
+          section 1">sftp(1)</a>, etc.</dd>
       <dt id="tun-connection"><a class="permalink" href="#tun-connection"><code class="Cm">tun-connection</code></a></dt>
       <dd>Open <code class="Cm">TunnelForward</code> connections.</dd>
       <dt id="x11-connection"><a class="permalink" href="#x11-connection"><code class="Cm">x11-connection</code></a></dt>
@@ -379,11 +410,12 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="CheckHostIP"><a class="permalink" href="#CheckHostIP"><code class="Cm">CheckHostIP</code></a></dt>
   <dd>If set to <code class="Cm">yes</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will additionally check the host
-      IP address in the <span class="Pa">known_hosts</span> file. This allows it
-      to detect if a host key changed due to DNS spoofing and will add addresses
-      of destination hosts to <span class="Pa">~/.ssh/known_hosts</span> in the
-      process, regardless of the setting of
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      additionally check the host IP address in the
+      <span class="Pa">known_hosts</span> file. This allows it to detect if a
+      host key changed due to DNS spoofing and will add addresses of destination
+      hosts to <span class="Pa">~/.ssh/known_hosts</span> in the process,
+      regardless of the setting of
       <code class="Cm">StrictHostKeyChecking</code>. If the option is set to
       <code class="Cm">no</code> (the default), the check will not be
     executed.</dd>
@@ -422,16 +454,22 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
   <dd>Specifies that all local, remote, and dynamic port forwardings specified
       in the configuration files or on the command line be cleared. This option
       is primarily useful when used from the
-      <a class="Xr" href="../1/ssh">ssh(1)</a> command line to clear port
-      forwardings set in configuration files, and is automatically set by
-      <a class="Xr" href="../1/scp">scp(1)</a> and
-      <a class="Xr" href="../1/sftp">sftp(1)</a>. The argument must be
-      <code class="Cm">yes</code> or <code class="Cm">no</code> (the
-    default).</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+      command line to clear port forwardings set in configuration files, and is
+      automatically set by <a class="Xr" href="../1/scp" aria-label="scp,
+      section 1">scp(1)</a> and <a class="Xr" href="../1/sftp" aria-label="sftp,
+      section 1">sftp(1)</a>. The argument must be <code class="Cm">yes</code>
+      or <code class="Cm">no</code> (the default).</dd>
   <dt id="Compression"><a class="permalink" href="#Compression"><code class="Cm">Compression</code></a></dt>
   <dd>Specifies whether to use compression. The argument must be
-      <code class="Cm">yes</code> or <code class="Cm">no</code> (the
-    default).</dd>
+      <code class="Cm">yes</code> or <code class="Cm">no</code> (the default).
+    <p class="Pp">Compression applies to all traffic that flows over the SSH
+        connection. If untrusted traffic (such as an open port-forward) is
+        permitted over the connection alongside trusted traffic, then
+        compression may leak information about session contents. For this
+        reason, it is not recommended to enable compression for connections that
+        share trusted and untrusted traffic.</p>
+  </dd>
   <dt id="ConnectionAttempts"><a class="permalink" href="#ConnectionAttempts"><code class="Cm">ConnectionAttempts</code></a></dt>
   <dd>Specifies the number of tries (one per second) to make before exiting. The
       argument must be an integer. This may be useful in scripts if the
@@ -444,27 +482,28 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
   <dt id="ControlMaster"><a class="permalink" href="#ControlMaster"><code class="Cm">ControlMaster</code></a></dt>
   <dd>Enables the sharing of multiple sessions over a single network connection.
       When set to <code class="Cm">yes</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will listen for connections on a
-      control socket specified using the <code class="Cm">ControlPath</code>
-      argument. Additional sessions can connect to this socket using the same
-      <code class="Cm">ControlPath</code> with
-      <code class="Cm">ControlMaster</code> set to <code class="Cm">no</code>
-      (the default). These sessions will try to reuse the master instance's
-      network connection rather than initiating new ones, but will fall back to
-      connecting normally if the control socket does not exist, or is not
-      listening.
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      listen for connections on a control socket specified using the
+      <code class="Cm">ControlPath</code> argument. Additional sessions can
+      connect to this socket using the same <code class="Cm">ControlPath</code>
+      with <code class="Cm">ControlMaster</code> set to
+      <code class="Cm">no</code> (the default). These sessions will try to reuse
+      the master instance's network connection rather than initiating new ones,
+      but will fall back to connecting normally if the control socket does not
+      exist, or is not listening.
     <p class="Pp">Setting this to <code class="Cm">ask</code> will cause
-        <a class="Xr" href="../1/ssh">ssh(1)</a> to listen for control
-        connections, but require confirmation using
-        <a class="Xr" href="../1/ssh-askpass">ssh-askpass(1)</a>. If the
-        <code class="Cm">ControlPath</code> cannot be opened,
-        <a class="Xr" href="../1/ssh">ssh(1)</a> will continue without
-        connecting to a master instance.</p>
-    <p class="Pp">X11 and <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a>
-        forwarding is supported over these multiplexed connections, however the
-        display and agent forwarded will be the one belonging to the master
-        connection i.e. it is not possible to forward multiple displays or
-        agents.</p>
+        <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> to
+        listen for control connections, but require confirmation using
+        <a class="Xr" href="../1/ssh-askpass" aria-label="ssh-askpass, section
+        1">ssh-askpass(1)</a>. If the <code class="Cm">ControlPath</code> cannot
+        be opened, <a class="Xr" href="../1/ssh" aria-label="ssh, section
+        1">ssh(1)</a> will continue without connecting to a master instance.</p>
+    <p class="Pp">X11 and
+        <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+        1">ssh-agent(1)</a> forwarding is supported over these multiplexed
+        connections, however the display and agent forwarded will be the one
+        belonging to the master connection i.e. it is not possible to forward
+        multiple displays or agents.</p>
     <p class="Pp">Two additional options allow for opportunistic multiplexing:
         try to use a master connection but fall back to creating a new one if
         one does not already exist. These options are:
@@ -497,9 +536,10 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
       connection will remain in the background indefinitely (until killed or
       closed via a mechanism such as the &quot;ssh -O exit&quot;). If set to a
       time in seconds, or a time in any of the formats documented in
-      <a class="Xr" href="../5/sshd_config">sshd_config(5)</a>, then the
-      backgrounded master connection will automatically terminate after it has
-      remained idle (with no client connections) for the specified time.</dd>
+      <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+      5">sshd_config(5)</a>, then the backgrounded master connection will
+      automatically terminate after it has remained idle (with no client
+      connections) for the specified time.</dd>
   <dt id="DynamicForward"><a class="permalink" href="#DynamicForward"><code class="Cm">DynamicForward</code></a></dt>
   <dd>Specifies that a TCP port on the local machine be forwarded over the
       secure channel, and the application protocol is then used to determine
@@ -515,10 +555,10 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
         bound for local use only, while an empty address or &#x2018;*&#x2019;
         indicates that the port should be available from all interfaces.</p>
     <p class="Pp">Currently the SOCKS4 and SOCKS5 protocols are supported, and
-        <a class="Xr" href="../1/ssh">ssh(1)</a> will act as a SOCKS server.
-        Multiple forwardings may be specified, and additional forwardings can be
-        given on the command line. Only the superuser can forward privileged
-        ports.</p>
+        <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+        will act as a SOCKS server. Multiple forwardings may be specified, and
+        additional forwardings can be given on the command line. Only the
+        superuser can forward privileged ports.</p>
   </dd>
   <dt id="EnableEscapeCommandline"><a class="permalink" href="#EnableEscapeCommandline"><code class="Cm">EnableEscapeCommandline</code></a></dt>
   <dd>Enables the command line option in the <code class="Cm">EscapeChar</code>
@@ -529,12 +569,13 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
   <dd>Setting this option to <code class="Cm">yes</code> in the global client
       configuration file <span class="Pa">/etc/ssh/ssh_config</span> enables the
       use of the helper program
-      <a class="Xr" href="../8/ssh-keysign">ssh-keysign(8)</a> during
+      <a class="Xr" href="../8/ssh-keysign" aria-label="ssh-keysign, section
+      8">ssh-keysign(8)</a> during
       <code class="Cm">HostbasedAuthentication</code>. The argument must be
       <code class="Cm">yes</code> or <code class="Cm">no</code> (the default).
       This option should be placed in the non-hostspecific section. See
-      <a class="Xr" href="../8/ssh-keysign">ssh-keysign(8)</a> for more
-      information.</dd>
+      <a class="Xr" href="../8/ssh-keysign" aria-label="ssh-keysign, section
+      8">ssh-keysign(8)</a> for more information.</dd>
   <dt id="EscapeChar"><a class="permalink" href="#EscapeChar"><code class="Cm">EscapeChar</code></a></dt>
   <dd>Sets the escape character (default:
       &#x2018;<code class="Li">~</code>&#x2019;). The escape character can also
@@ -543,16 +584,16 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
       <code class="Cm">none</code> to disable the escape character entirely
       (making the connection transparent for binary data).</dd>
   <dt id="ExitOnForwardFailure"><a class="permalink" href="#ExitOnForwardFailure"><code class="Cm">ExitOnForwardFailure</code></a></dt>
-  <dd>Specifies whether <a class="Xr" href="../1/ssh">ssh(1)</a> should
-      terminate the connection if it cannot set up all requested dynamic,
-      tunnel, local, and remote port forwardings, (e.g. if either end is unable
-      to bind and listen on a specified port). Note that
+  <dd>Specifies whether <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> should terminate the connection if it cannot set up all
+      requested dynamic, tunnel, local, and remote port forwardings, (e.g. if
+      either end is unable to bind and listen on a specified port). Note that
       <code class="Cm">ExitOnForwardFailure</code> does not apply to connections
       made over port forwardings and will not, for example, cause
-      <a class="Xr" href="../1/ssh">ssh(1)</a> to exit if TCP connections to the
-      ultimate forwarding destination fail. The argument must be
-      <code class="Cm">yes</code> or <code class="Cm">no</code> (the
-    default).</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> to
+      exit if TCP connections to the ultimate forwarding destination fail. The
+      argument must be <code class="Cm">yes</code> or <code class="Cm">no</code>
+      (the default).</dd>
   <dt id="FingerprintHash"><a class="permalink" href="#FingerprintHash"><code class="Cm">FingerprintHash</code></a></dt>
   <dd>Specifies the hash algorithm used when displaying key fingerprints. Valid
       options are: <code class="Cm">md5</code> and
@@ -605,33 +646,36 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
   <dt id="ForwardX11Timeout"><a class="permalink" href="#ForwardX11Timeout"><code class="Cm">ForwardX11Timeout</code></a></dt>
   <dd>Specify a timeout for untrusted X11 forwarding using the format described
       in the <a class="Sx" href="#TIME_FORMATS">TIME FORMATS</a> section of
-      <a class="Xr" href="../5/sshd_config">sshd_config(5)</a>. X11 connections
-      received by <a class="Xr" href="../1/ssh">ssh(1)</a> after this time will
-      be refused. Setting <code class="Cm">ForwardX11Timeout</code> to zero will
-      disable the timeout and permit X11 forwarding for the life of the
-      connection. The default is to disable untrusted X11 forwarding after
-      twenty minutes has elapsed.</dd>
+      <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+      5">sshd_config(5)</a>. X11 connections received by
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> after
+      this time will be refused. Setting
+      <code class="Cm">ForwardX11Timeout</code> to zero will disable the timeout
+      and permit X11 forwarding for the life of the connection. The default is
+      to disable untrusted X11 forwarding after twenty minutes has elapsed.</dd>
   <dt id="ForwardX11Trusted"><a class="permalink" href="#ForwardX11Trusted"><code class="Cm">ForwardX11Trusted</code></a></dt>
   <dd>If this option is set to <code class="Cm">yes</code>, remote X11 clients
       will have full access to the original X11 display.
     <p class="Pp">If this option is set to <code class="Cm">no</code> (the
         default), remote X11 clients will be considered untrusted and prevented
         from stealing or tampering with data belonging to trusted X11 clients.
-        Furthermore, the <a class="Xr" href="../1/xauth">xauth(1)</a> token used
-        for the session will be set to expire after 20 minutes. Remote clients
-        will be refused access after this time.</p>
+        Furthermore, the <a class="Xr" href="../1/xauth" aria-label="xauth,
+        section 1">xauth(1)</a> token used for the session will be set to expire
+        after 20 minutes. Remote clients will be refused access after this
+      time.</p>
     <p class="Pp">See the X11 SECURITY extension specification for full details
         on the restrictions imposed on untrusted clients.</p>
   </dd>
   <dt id="GatewayPorts"><a class="permalink" href="#GatewayPorts"><code class="Cm">GatewayPorts</code></a></dt>
   <dd>Specifies whether remote hosts are allowed to connect to local forwarded
-      ports. By default, <a class="Xr" href="../1/ssh">ssh(1)</a> binds local
-      port forwardings to the loopback address. This prevents other remote hosts
-      from connecting to forwarded ports. <code class="Cm">GatewayPorts</code>
-      can be used to specify that ssh should bind local port forwardings to the
-      wildcard address, thus allowing remote hosts to connect to forwarded
-      ports. The argument must be <code class="Cm">yes</code> or
-      <code class="Cm">no</code> (the default).</dd>
+      ports. By default, <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> binds local port forwardings to the loopback address. This
+      prevents other remote hosts from connecting to forwarded ports.
+      <code class="Cm">GatewayPorts</code> can be used to specify that ssh
+      should bind local port forwardings to the wildcard address, thus allowing
+      remote hosts to connect to forwarded ports. The argument must be
+      <code class="Cm">yes</code> or <code class="Cm">no</code> (the
+    default).</dd>
   <dt id="GlobalKnownHostsFile"><a class="permalink" href="#GlobalKnownHostsFile"><code class="Cm">GlobalKnownHostsFile</code></a></dt>
   <dd>Specifies one or more files to use for the global host key database,
       separated by whitespace. The default is
@@ -644,16 +688,17 @@ aes128-ctr,aes192-ctr,aes256-ctr</pre>
   <dd>Forward (delegate) credentials to the server. The default is
       <code class="Cm">no</code>.</dd>
   <dt id="HashKnownHosts"><a class="permalink" href="#HashKnownHosts"><code class="Cm">HashKnownHosts</code></a></dt>
-  <dd>Indicates that <a class="Xr" href="../1/ssh">ssh(1)</a> should hash host
-      names and addresses when they are added to
+  <dd>Indicates that <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> should hash host names and addresses when they are added to
       <span class="Pa">~/.ssh/known_hosts</span>. These hashed names may be used
-      normally by <a class="Xr" href="../1/ssh">ssh(1)</a> and
-      <a class="Xr" href="../8/sshd">sshd(8)</a>, but they do not visually
-      reveal identifying information if the file's contents are disclosed. The
-      default is <code class="Cm">no</code>. Note that existing names and
-      addresses in known hosts files will not be converted automatically, but
-      may be manually hashed using
-      <a class="Xr" href="../1/ssh-keygen">ssh-keygen(1)</a>.</dd>
+      normally by <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> and <a class="Xr" href="../8/sshd" aria-label="sshd, section
+      8">sshd(8)</a>, but they do not visually reveal identifying information if
+      the file's contents are disclosed. The default is
+      <code class="Cm">no</code>. Note that existing names and addresses in
+      known hosts files will not be converted automatically, but may be manually
+      hashed using <a class="Xr" href="../1/ssh-keygen" aria-label="ssh-keygen,
+      section 1">ssh-keygen(1)</a>.</dd>
   <dt id="HostbasedAcceptedAlgorithms"><a class="permalink" href="#HostbasedAcceptedAlgorithms"><code class="Cm">HostbasedAcceptedAlgorithms</code></a></dt>
   <dd>Specifies the signature algorithms that will be used for hostbased
       authentication as a comma-separated list of patterns. Alternately if the
@@ -672,17 +717,22 @@ ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
 sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
+ssh-mldsa44-ed25519-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256</pre>
+webauthn-sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512,rsa-sha2-256,
+ssh-mldsa44-ed25519@openssh.com</pre>
     </div>
     <p class="Pp">The <code class="Fl">-Q</code> option of
-        <a class="Xr" href="../1/ssh">ssh(1)</a> may be used to list supported
-        signature algorithms. This was formerly named HostbasedKeyTypes.</p>
+        <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> may
+        be used to list supported signature algorithms. This was formerly named
+        HostbasedKeyTypes.</p>
   </dd>
   <dt id="HostbasedAuthentication"><a class="permalink" href="#HostbasedAuthentication"><code class="Cm">HostbasedAuthentication</code></a></dt>
   <dd>Specifies whether to try rhosts based authentication with public key
@@ -705,13 +755,17 @@ ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
 sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
+ssh-mldsa44-ed25519-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ecdsa-sha2-nistp256@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256@openssh.com
 sk-ssh-ed25519@openssh.com,
-rsa-sha2-512,rsa-sha2-256</pre>
+rsa-sha2-512,rsa-sha2-256,
+ssh-mldsa44-ed25519@openssh.com</pre>
     </div>
     <p class="Pp">If hostkeys are known for the destination host then this
         default is modified to prefer their algorithms.</p>
@@ -732,19 +786,20 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <code class="Cm">Hostname</code> specifications). The default is the name
       given on the command line.</dd>
   <dt id="IdentitiesOnly"><a class="permalink" href="#IdentitiesOnly"><code class="Cm">IdentitiesOnly</code></a></dt>
-  <dd>Specifies that <a class="Xr" href="../1/ssh">ssh(1)</a> should only use
-      the configured authentication identity and certificate files (either the
-      default files, or those explicitly configured in the
-      <code class="Nm">ssh_config</code> files or passed on the
-      <a class="Xr" href="../1/ssh">ssh(1)</a> command-line), even if
-      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a> or a
-      <code class="Cm">PKCS11Provider</code> or
+  <dd>Specifies that <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> should only use the configured authentication identity and
+      certificate files (either the default files, or those explicitly
+      configured in the <code class="Nm">ssh_config</code> files or passed on
+      the <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+      command-line), even if
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a> or a <code class="Cm">PKCS11Provider</code> or
       <code class="Cm">SecurityKeyProvider</code> offers more identities. The
       argument to this keyword must be <code class="Cm">yes</code> or
       <code class="Cm">no</code> (the default). This option is intended for
       situations where ssh-agent offers many different identities.</dd>
   <dt id="IdentityAgent"><a class="permalink" href="#IdentityAgent"><code class="Cm">IdentityAgent</code></a></dt>
-  <dd>Specifies the <span class="Ux">UNIX</span>-domain socket used to
+  <dd>Specifies the <span class="Ux">Unix</span>-domain socket used to
       communicate with the authentication agent.
     <p class="Pp">This option overrides the
         <code class="Ev">SSH_AUTH_SOCK</code> environment variable and can be
@@ -768,19 +823,21 @@ rsa-sha2-512,rsa-sha2-256</pre>
       Ed25519, authenticator-hosted Ed25519 or RSA authentication identity is
       read. You can also specify a public key file to use the corresponding
       private key that is loaded in
-      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a> when the private key
-      file is not present locally. The default is
-      <span class="Pa">~/.ssh/id_rsa</span>,
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a> when the private key file is not present locally. The
+      default is <span class="Pa">~/.ssh/id_rsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa</span>,
       <span class="Pa">~/.ssh/id_ecdsa_sk</span>,
-      <span class="Pa">~/.ssh/id_ed25519</span> and
-      <span class="Pa">~/.ssh/id_ed25519_sk</span>. Additionally, any identities
-      represented by the authentication agent will be used for authentication
-      unless <code class="Cm">IdentitiesOnly</code> is set. If no certificates
-      have been explicitly specified by <code class="Cm">CertificateFile</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will try to load certificate
-      information from the filename obtained by appending
-      <span class="Pa">-cert.pub</span> to the path of a specified
+      <span class="Pa">~/.ssh/id_ed25519</span>,
+      <span class="Pa">~/.ssh/id_ed25519_sk</span> and
+      <span class="Pa">~/.ssh/id_mldsa44_ed25519</span>. Additionally, any
+      identities represented by the authentication agent will be used for
+      authentication unless <code class="Cm">IdentitiesOnly</code> is set. If no
+      certificates have been explicitly specified by
+      <code class="Cm">CertificateFile</code>,
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      try to load certificate information from the filename obtained by
+      appending <span class="Pa">-cert.pub</span> to the path of a specified
       <code class="Cm">IdentityFile</code>.
     <p class="Pp">Arguments to <code class="Cm">IdentityFile</code> may use the
         tilde syntax to refer to a user's home directory or the tokens described
@@ -803,25 +860,11 @@ rsa-sha2-512,rsa-sha2-256</pre>
   <dd>Specifies a pattern-list of unknown options to be ignored if they are
       encountered in configuration parsing. This may be used to suppress errors
       if <code class="Nm">ssh_config</code> contains options that are
-      unrecognised by <a class="Xr" href="../1/ssh">ssh(1)</a>. It is
-      recommended that <code class="Cm">IgnoreUnknown</code> be listed early in
-      the configuration file as it will not be applied to unknown options that
-      appear before it.</dd>
-  <dt id="Include"><a class="permalink" href="#Include"><code class="Cm">Include</code></a></dt>
-  <dd>Include the specified configuration file(s). Multiple pathnames may be
-      specified and each pathname may contain
-      <a class="Xr" href="../7/glob">glob(7)</a> wildcards, tokens as described
-      in the <a class="Sx" href="#TOKENS">TOKENS</a> section, environment
-      variables as described in the
-      <a class="Sx" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT VARIABLES</a>
-      section and, for user configurations, shell-like &#x2018;~&#x2019;
-      references to user home directories. Wildcards will be expanded and
-      processed in lexical order. Files without absolute paths are assumed to be
-      in <span class="Pa">~/.ssh</span> if included in a user configuration file
-      or <span class="Pa">/etc/ssh</span> if included from the system
-      configuration file. <code class="Cm">Include</code> directive may appear
-      inside a <code class="Cm">Match</code> or <code class="Cm">Host</code>
-      block to perform conditional inclusion.</dd>
+      unrecognised by <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a>. It is recommended that
+      <code class="Cm">IgnoreUnknown</code> be listed early in the configuration
+      file as it will not be applied to unknown options that appear before
+    it.</dd>
   <dt id="IPQoS"><a class="permalink" href="#IPQoS"><code class="Cm">IPQoS</code></a></dt>
   <dd>Specifies the
       <a class="permalink" href="#Differentiated"><i class="Em" id="Differentiated">Differentiated
@@ -891,15 +934,16 @@ diffie-hellman-group14-sha256</pre>
       after the files have been read. It may write host key lines to standard
       output in identical format to the usual files (described in the
       <a class="Sx" href="#VERIFYING_HOST_KEYS">VERIFYING HOST KEYS</a> section
-      in <a class="Xr" href="../1/ssh">ssh(1)</a>). Arguments to
-      <code class="Cm">KnownHostsCommand</code> accept the tokens described in
-      the <a class="Sx" href="#TOKENS">TOKENS</a> section. The command may be
-      invoked multiple times per connection: once when preparing the preference
-      list of host key algorithms to use, again to obtain the host key for the
-      requested host name and, if <code class="Cm">CheckHostIP</code> is
-      enabled, one more time to obtain the host key matching the server's
-      address. If the command exits abnormally or returns a non-zero exit status
-      then the connection is terminated.</dd>
+      in <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>).
+      Arguments to <code class="Cm">KnownHostsCommand</code> accept the tokens
+      described in the <a class="Sx" href="#TOKENS">TOKENS</a> section. The
+      command may be invoked multiple times per connection: once when preparing
+      the preference list of host key algorithms to use, again to obtain the
+      host key for the requested host name and, if
+      <code class="Cm">CheckHostIP</code> is enabled, one more time to obtain
+      the host key matching the server's address. If the command exits
+      abnormally or returns a non-zero exit status then the connection is
+      terminated.</dd>
   <dt id="LocalCommand"><a class="permalink" href="#LocalCommand"><code class="Cm">LocalCommand</code></a></dt>
   <dd>Specifies a command to execute on the local machine after successfully
       connecting to the server. The command string extends to the end of the
@@ -907,8 +951,9 @@ diffie-hellman-group14-sha256</pre>
       <code class="Cm">LocalCommand</code> accept the tokens described in the
       <a class="Sx" href="#TOKENS">TOKENS</a> section.
     <p class="Pp">The command is run synchronously and does not have access to
-        the session of the <a class="Xr" href="../1/ssh">ssh(1)</a> that spawned
-        it. It should not be used for interactive commands.</p>
+        the session of the <a class="Xr" href="../1/ssh" aria-label="ssh,
+        section 1">ssh(1)</a> that spawned it. It should not be used for
+        interactive commands.</p>
     <p class="Pp">This directive is ignored unless
         <code class="Cm">PermitLocalCommand</code> has been enabled.</p>
   </dd>
@@ -943,10 +988,10 @@ diffie-hellman-group14-sha256</pre>
   </dd>
   <dt id="LogLevel"><a class="permalink" href="#LogLevel"><code class="Cm">LogLevel</code></a></dt>
   <dd>Gives the verbosity level that is used when logging messages from
-      <a class="Xr" href="../1/ssh">ssh(1)</a>. The possible values are: QUIET,
-      FATAL, ERROR, INFO, VERBOSE, DEBUG, DEBUG1, DEBUG2, and DEBUG3. The
-      default is INFO. DEBUG and DEBUG1 are equivalent. DEBUG2 and DEBUG3 each
-      specify higher levels of verbose output.</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>. The
+      possible values are: QUIET, FATAL, ERROR, INFO, VERBOSE, DEBUG, DEBUG1,
+      DEBUG2, and DEBUG3. The default is INFO. DEBUG and DEBUG1 are equivalent.
+      DEBUG2 and DEBUG3 each specify higher levels of verbose output.</dd>
   <dt id="LogVerbose"><a class="permalink" href="#LogVerbose"><code class="Cm">LogVerbose</code></a></dt>
   <dd>Specify one or more overrides to LogLevel. An override consists of one or
       more pattern lists that matches the source file, function and line number
@@ -999,14 +1044,14 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
   <dd>Specifies the number of password prompts before giving up. The argument to
       this keyword must be an integer. The default is 3.</dd>
   <dt id="ObscureKeystrokeTiming"><a class="permalink" href="#ObscureKeystrokeTiming"><code class="Cm">ObscureKeystrokeTiming</code></a></dt>
-  <dd>Specifies whether <a class="Xr" href="../1/ssh">ssh(1)</a> should try to
-      obscure inter-keystroke timings from passive observers of network traffic.
-      If enabled, then for interactive sessions,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will send keystrokes at fixed
-      intervals of a few tens of milliseconds and will send fake keystroke
-      packets for some time after typing ceases. The argument to this keyword
-      must be <code class="Cm">yes</code>, <code class="Cm">no</code> or an
-      interval specifier of the form
+  <dd>Specifies whether <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> should try to obscure inter-keystroke timings from passive
+      observers of network traffic. If enabled, then for interactive sessions,
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      send keystrokes at fixed intervals of a few tens of milliseconds and will
+      send fake keystroke packets for some time after typing ceases. The
+      argument to this keyword must be <code class="Cm">yes</code>,
+      <code class="Cm">no</code> or an interval specifier of the form
       <code class="Cm">interval:milliseconds</code> (e.g.
       <code class="Cm">interval:80</code> for 80 milliseconds). The default is
       to obscure keystrokes using a 20ms packet interval. Note that smaller
@@ -1018,9 +1063,9 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
   <dt id="PermitLocalCommand"><a class="permalink" href="#PermitLocalCommand"><code class="Cm">PermitLocalCommand</code></a></dt>
   <dd>Allow local command execution via the <code class="Ic">LocalCommand</code>
       option or using the <code class="Ic">!</code><var class="Ar">command</var>
-      escape sequence in <a class="Xr" href="../1/ssh">ssh(1)</a>. The argument
-      must be <code class="Cm">yes</code> or <code class="Cm">no</code> (the
-      default).</dd>
+      escape sequence in <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a>. The argument must be <code class="Cm">yes</code> or
+      <code class="Cm">no</code> (the default).</dd>
   <dt id="PermitRemoteOpen"><a class="permalink" href="#PermitRemoteOpen"><code class="Cm">PermitRemoteOpen</code></a></dt>
   <dd>Specifies the destinations to which remote TCP port forwarding is
       permitted when <code class="Cm">RemoteForward</code> is used as a SOCKS
@@ -1046,10 +1091,10 @@ hmac-sha2-256,hmac-sha2-512,hmac-sha1</pre>
   <dd>Specifies which PKCS#11 provider to use or <code class="Cm">none</code> to
       indicate that no provider should be used (the default). The argument to
       this keyword is a path to the PKCS#11 shared library
-      <a class="Xr" href="../1/ssh">ssh(1)</a> should use to communicate with a
-      PKCS#11 token providing keys for user authentication. Setting
-      <code class="Cm">PKCS11Provider</code> will disable
-      <code class="Cm">UseKeychain</code>.</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+      should use to communicate with a PKCS#11 token providing keys for user
+      authentication. Setting <code class="Cm">PKCS11Provider</code> will
+      disable <code class="Cm">UseKeychain</code>.</dd>
   <dt id="Port"><a class="permalink" href="#Port"><code class="Cm">Port</code></a></dt>
   <dd>Specifies the port number to connect on the remote host. The default is
       22.</dd>
@@ -1072,17 +1117,18 @@ keyboard-interactive,password</pre>
         tokens described in the <a class="Sx" href="#TOKENS">TOKENS</a> section.
         The command can be basically anything, and should read from its standard
         input and write to its standard output. It should eventually connect an
-        <a class="Xr" href="../8/sshd">sshd(8)</a> server running on some
-        machine, or execute <code class="Ic">sshd -i</code> somewhere. Host key
-        management will be done using the <code class="Cm">Hostname</code> of
-        the host being connected (defaulting to the name typed by the user).
-        Setting the command to <code class="Cm">none</code> disables this option
-        entirely. Note that <code class="Cm">CheckHostIP</code> is not available
-        for connects with a proxy command.</p>
+        <a class="Xr" href="../8/sshd" aria-label="sshd, section 8">sshd(8)</a>
+        server running on some machine, or execute <code class="Ic">sshd
+        -i</code> somewhere. Host key management will be done using the
+        <code class="Cm">Hostname</code> of the host being connected (defaulting
+        to the name typed by the user). Setting the command to
+        <code class="Cm">none</code> disables this option entirely. Note that
+        <code class="Cm">CheckHostIP</code> is not available for connects with a
+        proxy command.</p>
     <p class="Pp">This directive is useful in conjunction with
-        <a class="Xr" href="../1/nc">nc(1)</a> and its proxy support. For
-        example, the following directive would connect via an HTTP proxy at
-        192.0.2.0:</p>
+        <a class="Xr" href="../1/nc" aria-label="nc, section 1">nc(1)</a> and
+        its proxy support. For example, the following directive would connect
+        via an HTTP proxy at 192.0.2.0:</p>
     <div class="Bd Pp Bd-indent Li">
     <pre>ProxyCommand /usr/bin/nc -X connect -x 192.0.2.0:8080 %h %p</pre>
     </div>
@@ -1092,11 +1138,13 @@ keyboard-interactive,password</pre>
       [<var class="Ar">user</var><span class="No">@</span>]<var class="Ar">host</var>[:<var class="Ar">port</var>]
       or an ssh URI. Multiple proxies may be separated by comma characters and
       will be visited sequentially. Setting this option will cause
-      <a class="Xr" href="../1/ssh">ssh(1)</a> to connect to the target host by
-      first making an <a class="Xr" href="../1/ssh">ssh(1)</a> connection to the
-      specified <code class="Cm">ProxyJump</code> host and then establishing a
-      TCP forwarding to the ultimate target from there. Setting the host to
-      <code class="Cm">none</code> disables this option entirely.
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> to
+      connect to the target host by first making an
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>
+      connection to the specified <code class="Cm">ProxyJump</code> host and
+      then establishing a TCP forwarding to the ultimate target from there.
+      Setting the host to <code class="Cm">none</code> disables this option
+      entirely.
     <p class="Pp">Note that this option will compete with the
         <code class="Cm">ProxyCommand</code> option - whichever is specified
         first will prevent later instances of the other from taking effect.</p>
@@ -1107,9 +1155,9 @@ keyboard-interactive,password</pre>
   </dd>
   <dt id="ProxyUseFdpass"><a class="permalink" href="#ProxyUseFdpass"><code class="Cm">ProxyUseFdpass</code></a></dt>
   <dd>Specifies that <code class="Cm">ProxyCommand</code> will pass a connected
-      file descriptor back to <a class="Xr" href="../1/ssh">ssh(1)</a> instead
-      of continuing to execute and pass data. The default is
-      <code class="Cm">no</code>.</dd>
+      file descriptor back to <a class="Xr" href="../1/ssh" aria-label="ssh,
+      section 1">ssh(1)</a> instead of continuing to execute and pass data. The
+      default is <code class="Cm">no</code>.</dd>
   <dt id="PubkeyAcceptedAlgorithms"><a class="permalink" href="#PubkeyAcceptedAlgorithms"><code class="Cm">PubkeyAcceptedAlgorithms</code></a></dt>
   <dd>Specifies the signature algorithms that will be used for public key
       authentication as a comma-separated list of patterns. If the specified
@@ -1127,13 +1175,17 @@ ecdsa-sha2-nistp384-cert-v01@openssh.com,
 ecdsa-sha2-nistp521-cert-v01@openssh.com,
 sk-ssh-ed25519-cert-v01@openssh.com,
 sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+webauthn-sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
 rsa-sha2-512-cert-v01@openssh.com,
 rsa-sha2-256-cert-v01@openssh.com,
+ssh-mldsa44-ed25519-cert-v01@openssh.com,
 ssh-ed25519,
 ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,
 sk-ssh-ed25519@openssh.com,
 sk-ecdsa-sha2-nistp256@openssh.com,
-rsa-sha2-512,rsa-sha2-256</pre>
+webauthn-sk-ecdsa-sha2-nistp256@openssh.com,
+rsa-sha2-512,rsa-sha2-256,
+ssh-mldsa44-ed25519@openssh.com</pre>
     </div>
     <p class="Pp">The list of available signature algorithms may also be
         obtained using &quot;ssh -Q PubkeyAcceptedAlgorithms&quot;.</p>
@@ -1145,15 +1197,16 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <code class="Cm">host-bound</code>. The final two options enable public
       key authentication while respectively disabling or enabling the OpenSSH
       host-bound authentication protocol extension required for restricted
-      <a class="Xr" href="../1/ssh-agent">ssh-agent(1)</a> forwarding.</dd>
+      <a class="Xr" href="../1/ssh-agent" aria-label="ssh-agent, section
+      1">ssh-agent(1)</a> forwarding.</dd>
   <dt id="RefuseConnection"><a class="permalink" href="#RefuseConnection"><code class="Cm">RefuseConnection</code></a></dt>
   <dd>Allows a connection to be refused by the configuration file. If this
-      option is specified, then <a class="Xr" href="../1/ssh">ssh(1)</a> will
-      terminate immediately before attempting to connect to the remote host,
-      display an error message that contains the argument to this keyword and
-      return a non-zero exit status. This option may be useful to express
-      reminders or warnings to the user via
-    <code class="Nm">ssh_config</code>.</dd>
+      option is specified, then <a class="Xr" href="../1/ssh" aria-label="ssh,
+      section 1">ssh(1)</a> will terminate immediately before attempting to
+      connect to the remote host, display an error message that contains the
+      argument to this keyword and return a non-zero exit status. This option
+      may be useful to express reminders or warnings to the user via
+      <code class="Nm">ssh_config</code>.</dd>
   <dt id="RekeyLimit"><a class="permalink" href="#RekeyLimit"><code class="Cm">RekeyLimit</code></a></dt>
   <dd>Specifies the maximum amount of data that may be transmitted or received
       before the session key is renegotiated, optionally followed by a maximum
@@ -1164,8 +1217,9 @@ rsa-sha2-512,rsa-sha2-256</pre>
       &#x2018;1G&#x2019; and &#x2018;4G&#x2019;, depending on the cipher. The
       optional second value is specified in seconds and may use any of the units
       documented in the TIME FORMATS section of
-      <a class="Xr" href="../5/sshd_config">sshd_config(5)</a>. The default
-      value for <code class="Cm">RekeyLimit</code> is <code class="Cm">default
+      <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+      5">sshd_config(5)</a>. The default value for
+      <code class="Cm">RekeyLimit</code> is <code class="Cm">default
       none</code>, which means that rekeying is performed after the cipher's
       default amount of data has been sent or received and no time based
       rekeying is done.</dd>
@@ -1213,7 +1267,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
         forwarding is requested to listen on all interfaces. Specifying a remote
         <var class="Ar">bind_address</var> will only succeed if the server's
         <code class="Cm">GatewayPorts</code> option is enabled (see
-        <a class="Xr" href="../5/sshd_config">sshd_config(5)</a>).</p>
+        <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+        5">sshd_config(5)</a>).</p>
   </dd>
   <dt id="RequestTTY"><a class="permalink" href="#RequestTTY"><code class="Cm">RequestTTY</code></a></dt>
   <dd>Specifies whether to request a pseudo-tty for the session. The argument
@@ -1223,27 +1278,28 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <code class="Cm">auto</code> (request a TTY when opening a login session).
       This option mirrors the <code class="Fl">-t</code> and
       <code class="Fl">-T</code> flags for
-      <a class="Xr" href="../1/ssh">ssh(1)</a>.</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>.</dd>
   <dt id="RequiredRSASize"><a class="permalink" href="#RequiredRSASize"><code class="Cm">RequiredRSASize</code></a></dt>
   <dd>Specifies the minimum RSA key size (in bits) that
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will accept. User authentication
-      keys smaller than this limit will be ignored. Servers that present host
-      keys smaller than this limit will cause the connection to be terminated.
-      The default is <code class="Cm">1024</code> bits. Note that this limit may
-      only be raised from the default.</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      accept. User authentication keys smaller than this limit will be ignored.
+      Servers that present host keys smaller than this limit will cause the
+      connection to be terminated. The default is <code class="Cm">1024</code>
+      bits. Note that this limit may only be raised from the default.</dd>
   <dt id="RevokedHostKeys"><a class="permalink" href="#RevokedHostKeys"><code class="Cm">RevokedHostKeys</code></a></dt>
   <dd>Specifies revoked host public keys. Keys listed in this file will be
       refused for host authentication. Note that if this file does not exist or
       is not readable, then host authentication will be refused for all hosts.
       Keys may be specified as a text file, listing one public key per line, or
       as an OpenSSH Key Revocation List (KRL) as generated by
-      <a class="Xr" href="../1/ssh-keygen">ssh-keygen(1)</a>. For more
-      information on KRLs, see the KEY REVOCATION LISTS section in
-      <a class="Xr" href="../1/ssh-keygen">ssh-keygen(1)</a>. Arguments to
-      <code class="Cm">RevokedHostKeys</code> may use the tilde syntax to refer
-      to a user's home directory, the tokens described in the
-      <a class="Sx" href="#TOKENS">TOKENS</a> section and environment variables
-      as described in the
+      <a class="Xr" href="../1/ssh-keygen" aria-label="ssh-keygen, section
+      1">ssh-keygen(1)</a>. For more information on KRLs, see the KEY REVOCATION
+      LISTS section in
+      <a class="Xr" href="../1/ssh-keygen" aria-label="ssh-keygen, section
+      1">ssh-keygen(1)</a>. Arguments to <code class="Cm">RevokedHostKeys</code>
+      may use the tilde syntax to refer to a user's home directory, the tokens
+      described in the <a class="Sx" href="#TOKENS">TOKENS</a> section and
+      environment variables as described in the
       <a class="Sx" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT VARIABLES</a>
       section.</dd>
   <dt id="SecurityKeyProvider"><a class="permalink" href="#SecurityKeyProvider"><code class="Cm">SecurityKeyProvider</code></a></dt>
@@ -1256,17 +1312,17 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="SendEnv"><a class="permalink" href="#SendEnv"><code class="Cm">SendEnv</code></a></dt>
   <dd>Specifies what variables from the local
-      <a class="Xr" href="../7/environ">environ(7)</a> should be sent to the
-      server. The server must also support it, and the server must be configured
-      to accept these environment variables. Note that the
-      <code class="Ev">TERM</code> environment variable is always sent whenever
-      a pseudo-terminal is requested as it is required by the protocol. Refer to
-      <code class="Cm">AcceptEnv</code> in
-      <a class="Xr" href="../5/sshd_config">sshd_config(5)</a> for how to
-      configure the server. Variables are specified by name, which may contain
-      wildcard characters. Multiple environment variables may be separated by
-      whitespace or spread across multiple <code class="Cm">SendEnv</code>
-      directives.
+      <a class="Xr" href="../7/environ" aria-label="environ, section
+      7">environ(7)</a> should be sent to the server. The server must also
+      support it, and the server must be configured to accept these environment
+      variables. Note that the <code class="Ev">TERM</code> environment variable
+      is always sent whenever a pseudo-terminal is requested as it is required
+      by the protocol. Refer to <code class="Cm">AcceptEnv</code> in
+      <a class="Xr" href="../5/sshd_config" aria-label="sshd_config, section
+      5">sshd_config(5)</a> for how to configure the server. Variables are
+      specified by name, which may contain wildcard characters. Multiple
+      environment variables may be separated by whitespace or spread across
+      multiple <code class="Cm">SendEnv</code> directives.
     <p class="Pp">See <a class="Sx" href="#PATTERNS">PATTERNS</a> for more
         information on patterns.</p>
     <p class="Pp">It is possible to clear previously set
@@ -1276,13 +1332,14 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="ServerAliveCountMax"><a class="permalink" href="#ServerAliveCountMax"><code class="Cm">ServerAliveCountMax</code></a></dt>
   <dd>Sets the number of server alive messages (see below) which may be sent
-      without <a class="Xr" href="../1/ssh">ssh(1)</a> receiving any messages
-      back from the server. If this threshold is reached while server alive
-      messages are being sent, ssh will disconnect from the server, terminating
-      the session. It is important to note that the use of server alive messages
-      is very different from <code class="Cm">TCPKeepAlive</code> (below). The
-      server alive messages are sent through the encrypted channel and therefore
-      will not be spoofable. The TCP keepalive option enabled by
+      without <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> receiving any messages back from the server. If this
+      threshold is reached while server alive messages are being sent, ssh will
+      disconnect from the server, terminating the session. It is important to
+      note that the use of server alive messages is very different from
+      <code class="Cm">TCPKeepAlive</code> (below). The server alive messages
+      are sent through the encrypted channel and therefore will not be
+      spoofable. The TCP keepalive option enabled by
       <code class="Cm">TCPKeepAlive</code> is spoofable. The server alive
       mechanism is valuable when the client or server depend on knowing when a
       connection has become unresponsive.
@@ -1294,10 +1351,10 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="ServerAliveInterval"><a class="permalink" href="#ServerAliveInterval"><code class="Cm">ServerAliveInterval</code></a></dt>
   <dd>Sets a timeout interval in seconds after which if no data has been
-      received from the server, <a class="Xr" href="../1/ssh">ssh(1)</a> will
-      send a message through the encrypted channel to request a response from
-      the server. The default is 0, indicating that these messages will not be
-      sent to the server.</dd>
+      received from the server, <a class="Xr" href="../1/ssh" aria-label="ssh,
+      section 1">ssh(1)</a> will send a message through the encrypted channel to
+      request a response from the server. The default is 0, indicating that
+      these messages will not be sent to the server.</dd>
   <dt id="SessionType"><a class="permalink" href="#SessionType"><code class="Cm">SessionType</code></a></dt>
   <dd>May be used to either request invocation of a subsystem on the remote
       system, or to prevent the execution of a remote command at all. The latter
@@ -1346,13 +1403,14 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="StrictHostKeyChecking"><a class="permalink" href="#StrictHostKeyChecking"><code class="Cm">StrictHostKeyChecking</code></a></dt>
   <dd>If this flag is set to <code class="Cm">yes</code>,
-      <a class="Xr" href="../1/ssh">ssh(1)</a> will never automatically add host
-      keys to the <span class="Pa">~/.ssh/known_hosts</span> file, and refuses
-      to connect to hosts whose host key has changed. This provides maximum
-      protection against man-in-the-middle (MITM) attacks, though it can be
-      annoying when the <span class="Pa">/etc/ssh/ssh_known_hosts</span> file is
-      poorly maintained or when connections to new hosts are frequently made.
-      This option forces the user to manually add all new hosts.
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> will
+      never automatically add host keys to the
+      <span class="Pa">~/.ssh/known_hosts</span> file, and refuses to connect to
+      hosts whose host key has changed. This provides maximum protection against
+      man-in-the-middle (MITM) attacks, though it can be annoying when the
+      <span class="Pa">/etc/ssh/ssh_known_hosts</span> file is poorly maintained
+      or when connections to new hosts are frequently made. This option forces
+      the user to manually add all new hosts.
     <p class="Pp">If this flag is set to <code class="Cm">accept-new</code> then
         ssh will automatically add new host keys to the user's
         <span class="Pa">known_hosts</span> file, but will not permit
@@ -1368,9 +1426,9 @@ rsa-sha2-512,rsa-sha2-256</pre>
   </dd>
   <dt id="SyslogFacility"><a class="permalink" href="#SyslogFacility"><code class="Cm">SyslogFacility</code></a></dt>
   <dd>Gives the facility code that is used when logging messages from
-      <a class="Xr" href="../1/ssh">ssh(1)</a>. The possible values are: DAEMON,
-      USER, AUTH, LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6,
-      LOCAL7. The default is USER.</dd>
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a>. The
+      possible values are: DAEMON, USER, AUTH, LOCAL0, LOCAL1, LOCAL2, LOCAL3,
+      LOCAL4, LOCAL5, LOCAL6, LOCAL7. The default is USER.</dd>
   <dt id="TCPKeepAlive"><a class="permalink" href="#TCPKeepAlive"><code class="Cm">TCPKeepAlive</code></a></dt>
   <dd>Specifies whether the system should send TCP keepalive messages to the
       other side. If they are sent, death of the connection or crash of one of
@@ -1391,16 +1449,17 @@ rsa-sha2-512,rsa-sha2-256</pre>
       <code class="Cm">Match</code> directive to select a block of
       configuration.</dd>
   <dt id="Tunnel"><a class="permalink" href="#Tunnel"><code class="Cm">Tunnel</code></a></dt>
-  <dd>Request <a class="Xr" href="../4/tun">tun(4)</a> device forwarding between
-      the client and the server. The argument must be
-      <code class="Cm">yes</code>, <code class="Cm">point-to-point</code> (layer
-      3), <code class="Cm">ethernet</code> (layer 2), or
-      <code class="Cm">no</code> (the default). Specifying
-      <code class="Cm">yes</code> requests the default tunnel mode, which is
-      <code class="Cm">point-to-point</code>.</dd>
+  <dd>Request <a class="Xr" href="../4/tun" aria-label="tun, section
+      4">tun(4)</a> device forwarding between the client and the server. The
+      argument must be <code class="Cm">yes</code>,
+      <code class="Cm">point-to-point</code> (layer 3),
+      <code class="Cm">ethernet</code> (layer 2), or <code class="Cm">no</code>
+      (the default). Specifying <code class="Cm">yes</code> requests the default
+      tunnel mode, which is <code class="Cm">point-to-point</code>.</dd>
   <dt id="TunnelDevice"><a class="permalink" href="#TunnelDevice"><code class="Cm">TunnelDevice</code></a></dt>
-  <dd>Specifies the <a class="Xr" href="../4/tun">tun(4)</a> devices to open on
-      the client (<var class="Ar">local_tun</var>) and the server
+  <dd>Specifies the <a class="Xr" href="../4/tun" aria-label="tun, section
+      4">tun(4)</a> devices to open on the client
+      (<var class="Ar">local_tun</var>) and the server
       (<var class="Ar">remote_tun</var>).
     <p class="Pp">The argument must be
         <var class="Ar">local_tun</var>[:<var class="Ar">remote_tun</var>]. The
@@ -1411,9 +1470,9 @@ rsa-sha2-512,rsa-sha2-256</pre>
         <code class="Cm">any:any</code>.</p>
   </dd>
   <dt id="UpdateHostKeys"><a class="permalink" href="#UpdateHostKeys"><code class="Cm">UpdateHostKeys</code></a></dt>
-  <dd>Specifies whether <a class="Xr" href="../1/ssh">ssh(1)</a> should accept
-      notifications of additional hostkeys from the server sent after
-      authentication has completed and add them to
+  <dd>Specifies whether <a class="Xr" href="../1/ssh" aria-label="ssh, section
+      1">ssh(1)</a> should accept notifications of additional hostkeys from the
+      server sent after authentication has completed and add them to
       <code class="Cm">UserKnownHostsFile</code>. The argument must be
       <code class="Cm">yes</code>, <code class="Cm">no</code> or
       <code class="Cm">ask</code>. This option allows learning alternate
@@ -1436,7 +1495,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
         modifications to the known_hosts file. Confirmation is currently
         incompatible with <code class="Cm">ControlPersist</code>, and will be
         disabled if it is enabled.</p>
-    <p class="Pp">Presently, only <a class="Xr" href="../8/sshd">sshd(8)</a>
+    <p class="Pp">Presently, only
+        <a class="Xr" href="../8/sshd" aria-label="sshd, section 8">sshd(8)</a>
         from OpenSSH 6.8 and greater support the
         &quot;hostkeys@openssh.com&quot; protocol extension used to inform the
         client of all the server's hostkeys.</p>
@@ -1466,8 +1526,9 @@ rsa-sha2-512,rsa-sha2-256</pre>
       as described in the
       <a class="Sx" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT VARIABLES</a>
       section. A value of <code class="Cm">none</code> causes
-      <a class="Xr" href="../1/ssh">ssh(1)</a> to ignore any user-specific known
-      hosts files. The default is <span class="Pa">~/.ssh/known_hosts</span>,
+      <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> to
+      ignore any user-specific known hosts files. The default is
+      <span class="Pa">~/.ssh/known_hosts</span>,
       <span class="Pa">~/.ssh/known_hosts2</span>.</dd>
   <dt id="VerifyHostKeyDNS"><a class="permalink" href="#VerifyHostKeyDNS"><code class="Cm">VerifyHostKeyDNS</code></a></dt>
   <dd>Specifies whether to verify the remote key using DNS and SSHFP resource
@@ -1480,7 +1541,8 @@ rsa-sha2-512,rsa-sha2-256</pre>
       to the <code class="Cm">StrictHostKeyChecking</code> option. The default
       is <code class="Cm">no</code>.
     <p class="Pp">See also <a class="Sx" href="#VERIFYING_HOST_KEYS">VERIFYING
-        HOST KEYS</a> in <a class="Xr" href="../1/ssh">ssh(1)</a>.</p>
+        HOST KEYS</a> in <a class="Xr" href="../1/ssh" aria-label="ssh, section
+        1">ssh(1)</a>.</p>
   </dd>
   <dt id="VersionAddendum"><a class="permalink" href="#VersionAddendum"><code class="Cm">VersionAddendum</code></a></dt>
   <dd>Optionally specifies additional text to append to the SSH protocol banner
@@ -1503,12 +1565,12 @@ rsa-sha2-512,rsa-sha2-256</pre>
       equivalent to <code class="Cm">yes</code>, is to enable all warnings.</dd>
   <dt id="XAuthLocation"><a class="permalink" href="#XAuthLocation"><code class="Cm">XAuthLocation</code></a></dt>
   <dd>Specifies the full pathname of the
-      <a class="Xr" href="../1/xauth">xauth(1)</a> program. The default is
-      <span class="Pa">/usr/X11R6/bin/xauth</span>.</dd>
+      <a class="Xr" href="../1/xauth" aria-label="xauth, section 1">xauth(1)</a>
+      program. The default is <span class="Pa">/usr/X11R6/bin/xauth</span>.</dd>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="PATTERNS"><a class="permalink" href="#PATTERNS">PATTERNS</a></h1>
+<h2 class="Sh" id="PATTERNS"><a class="permalink" href="#PATTERNS">PATTERNS</a></h2>
 <p class="Pp">A
     <a class="permalink" href="#pattern"><i class="Em" id="pattern">pattern</i></a>
     consists of zero or more non-whitespace characters, &#x2018;*&#x2019; (a
@@ -1545,9 +1607,13 @@ rsa-sha2-512,rsa-sha2-256</pre>
   Bd-indent"><code class="Li">from=&quot;!host1,!host2,*&quot;</code></div>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="TOKENS"><a class="permalink" href="#TOKENS">TOKENS</a></h1>
+<h2 class="Sh" id="TOKENS"><a class="permalink" href="#TOKENS">TOKENS</a></h2>
 <p class="Pp">Arguments to some keywords can make use of tokens, which are
-    expanded at runtime:</p>
+    expanded at runtime. Tokens are expanded without quoting or escaping of
+    shell characters. It is the user's responsibility to ensure they are safe in
+    the context of their use.</p>
+<p class="Pp">The supported tokens in <code class="Nm">ssh_config</code>
+  are:</p>
 <p class="Pp"></p>
 <div class="Bd-indent">
 <dl class="Bl-tag Bl-compact">
@@ -1593,9 +1659,10 @@ rsa-sha2-512,rsa-sha2-256</pre>
   <dt>%r</dt>
   <dd>The remote username.</dd>
   <dt>%T</dt>
-  <dd>The local <a class="Xr" href="../4/tun">tun(4)</a> or
-      <a class="Xr" href="../4/tap">tap(4)</a> network interface assigned if
-      tunnel forwarding was requested, or &quot;NONE&quot; otherwise.</dd>
+  <dd>The local <a class="Xr" href="../4/tun" aria-label="tun, section
+      4">tun(4)</a> or <a class="Xr" href="../4/tap" aria-label="tap, section
+      4">tap(4)</a> network interface assigned if tunnel forwarding was
+      requested, or &quot;NONE&quot; otherwise.</dd>
   <dt>%t</dt>
   <dd>The type of the server host key, e.g.
     <code class="Cm">ssh-ed25519</code>.</dd>
@@ -1622,15 +1689,17 @@ rsa-sha2-512,rsa-sha2-256</pre>
     <code class="Cm">ProxyJump</code> accept the tokens %%, %h, %n, %p, and
   %r.</p>
 <p class="Pp">Note that some of these directives build commands for execution
-    via the shell. Because <a class="Xr" href="../1/ssh">ssh(1)</a> performs no
-    filtering or escaping of characters that have special meaning in shell
-    commands (e.g. quotes), it is the user's responsibility to ensure that the
-    arguments passed to <a class="Xr" href="../1/ssh">ssh(1)</a> do not contain
-    such characters and that tokens are appropriately quoted when used.</p>
+    via the shell. Because <a class="Xr" href="../1/ssh" aria-label="ssh,
+    section 1">ssh(1)</a> performs no filtering or escaping of characters that
+    have special meaning in shell commands (e.g. quotes), it is the user's
+    responsibility to ensure that the arguments passed to
+    <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a> do not
+    contain such characters and that tokens are appropriately quoted when
+  used.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="ENVIRONMENT_VARIABLES"><a class="permalink" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
-  VARIABLES</a></h1>
+<h2 class="Sh" id="ENVIRONMENT_VARIABLES"><a class="permalink" href="#ENVIRONMENT_VARIABLES">ENVIRONMENT
+  VARIABLES</a></h2>
 <p class="Pp">Arguments to some keywords can be expanded at runtime from
     environment variables on the client by enclosing them in
     <code class="Ic">${}</code>, for example
@@ -1647,7 +1716,7 @@ rsa-sha2-512,rsa-sha2-256</pre>
     Unix domain socket paths.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h1>
+<h2 class="Sh" id="FILES"><a class="permalink" href="#FILES">FILES</a></h2>
 <dl class="Bl-tag">
   <dt><span class="Pa">~/.ssh/config</span></dt>
   <dd>This is the per-user configuration file. The format of this file is
@@ -1662,13 +1731,14 @@ rsa-sha2-512,rsa-sha2-256</pre>
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
-  ALSO</a></h1>
-<p class="Pp"><a class="Xr" href="../7/apple_ssh_and_fips">apple_ssh_and_fips(7)</a>,
-    <a class="Xr" href="../1/ssh">ssh(1)</a></p>
+<h2 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h2>
+<p class="Pp"><a class="Xr" href="../7/apple_ssh_and_fips" aria-label="apple_ssh_and_fips,
+    section 7">apple_ssh_and_fips(7)</a>,
+    <a class="Xr" href="../1/ssh" aria-label="ssh, section 1">ssh(1)</a></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h1>
+<h2 class="Sh" id="AUTHORS"><a class="permalink" href="#AUTHORS">AUTHORS</a></h2>
 <p class="Pp">OpenSSH is a derivative of the original and free ssh 1.2.12
     release by <span class="An">Tatu Ylonen</span>. <span class="An">Aaron
     Campbell</span>, <span class="An">Bob Beck</span>, <span class="An">Markus
@@ -1678,12 +1748,10 @@ rsa-sha2-512,rsa-sha2-256</pre>
     Friedl</span> contributed the support for SSH protocol versions 1.5 and
   2.0.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">October 4, 2025</td>
-    <td class="foot-os"><a href="..">macOS 26.6</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">&#xF8FF; macOS 27.2</a></span>
+  <span class="foot-date">July 11, 2026</span>
+  <span class="foot-right">SSH_CONFIG(5)</span></div>
 </body>
 </html>

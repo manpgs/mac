@@ -7,22 +7,19 @@
   <title>COMPRESSION_TOOL(1)</title>
 </head>
 <body>
-<table class="head">
-  <tr>
-    <td class="head-ltitle">COMPRESSION_TOOL(1)</td>
-    <td class="head-vol"><a href=".">General Commands Manual</a></td>
-    <td class="head-rtitle">COMPRESSION_TOOL(1)</td>
-  </tr>
-</table>
-<div class="manual-text">
+<div class="head" role="doc-pageheader" aria-label="Manual header
+  line"><span class="head-ltitle">COMPRESSION_TOOL(1)</span>
+  <span class="head-vol"><a href=".">General Commands Manual</a></span>
+  <span class="head-rtitle">COMPRESSION_TOOL(1)</span></div>
+<main class="manual-text">
 <section class="Sh">
-<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<h2 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h2>
 <p class="Pp"><code class="Nm">compression_tool</code> &#x2014;
-    <span class="Nd">encode/decode files using the Compression
-  library.</span></p>
+    <span class="Nd" role="doc-subtitle">encode/decode files using the
+    Compression library.</span></p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<h2 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h2>
 <table class="Nm">
   <tr>
     <td><code class="Nm">compression_tool</code></td>
@@ -33,23 +30,26 @@
 </table>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<h2 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h2>
 <p class="Pp"><code class="Nm">compression_tool</code> encodes (compresses), or
     decodes (uncompresses) files using the Compression library.</p>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h1>
+<h2 class="Sh" id="OPTIONS"><a class="permalink" href="#OPTIONS">OPTIONS</a></h2>
 <dl class="Bl-tag">
   <dt id="encode"><a class="permalink" href="#encode"><code class="Fl">-encode</code></a></dt>
   <dd>Encode (compress) the input</dd>
   <dt id="decode"><a class="permalink" href="#decode"><code class="Fl">-decode</code></a></dt>
   <dd>Decode (uncompress) the input</dd>
   <dt id="a"><a class="permalink" href="#a"><code class="Fl">--a&#x00A0;<i>algorithm</i></code></a></dt>
-  <dd>Set the compression algorithm, valid options are <b>zlib</b>, <b>lzma</b>,
-      <b>lzfse</b>, <b>lz4</b>, <b>lz4_raw</b>. Default is <b>lzfse</b>.
+  <dd>Set the compression algorithm, valid options are <b>lzraven</b>,
+      <b>zlib</b>, <b>lzma</b>, <b>lzfse</b>, <b>lz4</b>, <b>lz4_raw</b>.
+      Default is <b>lzfse</b>.
     <br/>
     - <b>zlib&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;</b> raw DEFLATE payload,
       as defined in IETF RFC 1951, encoder is zlib level 5,
+    <br/>
+    - <b>lzraven&#x00A0;&#x00A0;&#x00A0;</b>LZRAVEN payload
     <br/>
     - <b>lzma&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;</b>LZMA2 payload
       inside a XZ container, encoder is LZMA2 preset 6,
@@ -62,8 +62,8 @@
     - <b>lzfse&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;</b>LZFSE payload.</dd>
   <dt id="A"><a class="permalink" href="#A"><code class="Fl">--A&#x00A0;<i>algorithm</i></code></a></dt>
   <dd>Enable block compression, and set compression algorithm, valid options are
-      <b>zlib</b>, <b>lzma</b>, <b>lzfse</b>, <b>lz4</b>. Default is
-      <b>lzfse</b>.</dd>
+      <b>lzraven</b>, <b>zlib</b>, <b>lzma</b>, <b>lzfse</b>, <b>lz4</b>.
+      Default is <b>lzfse</b>.</dd>
   <dt id="b"><a class="permalink" href="#b"><code class="Fl">--b&#x00A0;<i>block_size</i></code></a></dt>
   <dd>Set block size for block compression. The integer value can be followed by
       <b>m</b> or <b>k</b> or <b>b</b>.</dd>
@@ -82,8 +82,8 @@
 </dl>
 </section>
 <section class="Sh">
-<h1 class="Sh" id="BLOCK_COMPRESSION_FILE_FORMAT"><a class="permalink" href="#BLOCK_COMPRESSION_FILE_FORMAT">BLOCK
-  COMPRESSION FILE FORMAT</a></h1>
+<h2 class="Sh" id="BLOCK_COMPRESSION_FILE_FORMAT"><a class="permalink" href="#BLOCK_COMPRESSION_FILE_FORMAT">BLOCK
+  COMPRESSION FILE FORMAT</a></h2>
 <p class="Pp">The file starts with a 4-byte header 'p','b','z',&lt;algo&gt;,
     where &lt;algo&gt; indicates the algorithm used to compress data. The header
     is followed by the 64-bit block size in bytes. Then for each block, we have
@@ -91,15 +91,12 @@
     last block), 64-bit compressed size, and the compressed payload. If both
     uncompressed and compressed sizes for a block are equal, the payload is
     stored uncompressed. All 64-bit values are stored big-endian. Valid values
-    for &lt;algo&gt; are: 'z' for zlib, 'x' for lzma, '4' for lz4, and 'e' for
-    lzfse.</p>
+    for &lt;algo&gt; are: 'm' for lzraven, 'z' for zlib, 'x' for lzma, '4' for
+    lz4, and 'e' for lzfse.</p>
 </section>
-</div>
-<table class="foot">
-  <tr>
-    <td class="foot-date">January 4, 2023</td>
-    <td class="foot-os"><a href="..">macOS</a></td>
-  </tr>
-</table>
+</main>
+<div class="foot" role="doc-pagefooter" aria-label="Manual footer
+  line"><span class="foot-left"><a href="..">macOS</a></span> <span class="foot-date">January 4,
+  2023</span> <span class="foot-right">COMPRESSION_TOOL(1)</span></div>
 </body>
 </html>
