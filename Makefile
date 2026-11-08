@@ -155,9 +155,9 @@ sitemap.xml:
 			s|\(href="[^"]*\)}|\1%7D|g; \
 		' -e 't escape' -e ' \
 			s|href="\./index"|href="./-index"|; \
-			s|^|          <tr><td class="names">|; \
+			s|^|          <tr><td>|; \
 			G; \
-			s|\n|</td><td class="summary">|; \
+			s|\n|</td><td>|; \
 			s|$$|</td></tr>|p; \
 		' whatis; \
 		printf '        </tbody>\n      </table>\n' \
